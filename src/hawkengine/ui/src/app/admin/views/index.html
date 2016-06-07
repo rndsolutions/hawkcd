@@ -1,0 +1,32 @@
+<h3 class="page-title"> {{admin.defaultText.pageHeader}}</h3>
+<div class="page-bar">
+  <ul class="page-breadcrumb">
+    <li>
+      <i class="icon-home"></i>
+      <span>{{admin.breadCrumb.admin}}</span>
+    </li>
+    <li>
+      <i class="fa fa-angle-right"></i>
+      <span>{{admin.state.current.data.pageTitle}}</span>
+    </li>
+  </ul>
+</div>
+<div class="tabbable-custom nav-justified">
+  <ul class="nav nav-tabs nav-justified">
+    <li ui-sref-active="active">
+      <a ui-sref="index.admin.groups"  aria-expanded="true"> {{admin.defaultText.group}} </a>
+    <li ui-sref-active="active">
+      <a ui-sref="index.admin.packages" data-target="#admin-packages" data-toggle="tab" aria-expanded="false">
+        {{admin.defaultText.packages}} </a>
+    <li ui-sref-active="active">
+      <a ui-sref="index.admin.servers" data-target="#admin-servers" data-toggle="tab" aria-expanded="false">
+        {{admin.defaultText.server}} </a>
+    <li ui-sref-active="active">
+      <a ui-sref="index.admin.users" data-target="#admin-users" data-toggle="tab" aria-expanded="false">
+        {{admin.defaultText.user}} </a>
+    </li>
+  </ul>
+  <div class="tab-content" ui-view>
+
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div style="margin: 2% 0 0 35%;" ng-controller="AppController">
+    <div class="content col-md-5">
+        <!-- BEGIN LOGIN FORM -->
+        <div>
+            <img src="/assets/images/logo.png" style="width: 270px; margin-left: 22%;">
+        </div>
+        <br>
+        <div>
+            <h1 style="color: white; text-align: center">Welcome!</h1>
+        </div>
+        <div class="clearfix"> </div>
+        <form class="login-form log-box" method="post" ng-hide="app.forgotPassword">
+            <div class="form-group form-md-line-input">
+                <input type="text" class="form-control" ng-model="username">
+                <label>Email</label>
+            </div>
+            <div class="form-group form-md-line-input">
+                <input type="password" class="form-control" ng-model="password">
+                <label>Password</label>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn green btn-block uppercase" ng-click="loginUser()">Login</button>
+            </div>
+            <div class="form-actions">
+                <!-- <div class="pull-left">
+    <label class="rememberme check">
+        <input type="checkbox" name="remember" value="1" />Remember me </label>
+</div>
+ -->
+                <div class="pull-right forget-password-block">
+                    <a id="forget-password" class="forget-password" ng-click="app.forgotPassword = true">Forgot Password?</a>
+                </div>
+            </div>
+            <!-- <div class="create-account">
+                <p>
+                    <a href="javascript:;" class="btn-primary btn" id="register-btn">Create an account</a>
+                </p>
+            </div> -->
+        </form>
+        <!-- END LOGIN FORM -->
+        <!-- BEGIN FORGOT PASSWORD FORM -->
+        <form class="forget-form log-box" ng-show="app.forgotPassword">
+            <div class="form-title">
+                <span class="form-title">Forget Password ?</span>
+                <span class="form-subtitle">Enter your e-mail to reset it.</span>
+            </div>
+            <br>
+            <div class="form-group form-md-line-input">
+                <input type="text" class="form-control">
+                <label>Email</label>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="back-btn" class="btn btn-default" ng-click="app.forgotPassword = false">Back</button>
+                <button type="submit" class="btn btn-primary uppercase pull-right">Submit</button>
+            </div>
+        </form>
+        <!-- END FORGOT PASSWORD FORM -->
+    </div>
+</div>

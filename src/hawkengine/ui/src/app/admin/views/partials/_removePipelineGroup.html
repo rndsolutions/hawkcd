@@ -1,0 +1,19 @@
+<div id="removePipelineGroupAdmin" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">{{admin.defaultText.deleteGroupModal.header}}</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          {{admin.defaultText.deleteGroupModal.confirm}}<strong>{{admin.groupForDeleteName}} </strong>
+          <br>
+          <hr>
+          <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.deleteGroup()">{{admin.defaultText.deletePipelineModal.delete}}</button>
+          <button class="btn" data-dismiss="modal">{{admin.defaultText.deletePipelineModal.cancel}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

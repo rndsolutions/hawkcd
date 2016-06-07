@@ -1,0 +1,66 @@
+<h3 class="page-title"> {{pipesHistory.labels.headers.history}}</h3>
+
+<div class="page-bar">
+  <ul class="page-breadcrumb">
+    <li>
+      <i class="icon-home"></i>
+      <a ui-sref="index.pipelines"> <span>{{pipesHistory.labels.breadCrumb.pipelines}}</span></a>
+    </li>
+    <li>
+      <i class="fa fa-angle-right"></i>
+      <a ui-sref="index.pipelineHistory({groupName:pipesHistory.groupName, pipelineName:pipesHistory.pipelineName})"> <span>{{pipesHistory.pipelineName}}</span></a>
+    </li>
+  </ul>
+</div>
+
+<div class="portlet box green">
+  <div class="portlet-title">
+    <div class="caption">
+      <i class="fa fa-cogs"></i>{{pipesHistory.pipelineName}}
+    </div>
+    <div class="tools right">
+      <a href="javascript:;" class="collapse"> </a>
+    </div>
+  </div>
+  <div class="portlet-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+          <th ng-repeat="heading in pipesHistory.labels.table">{{heading}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="run in pipesHistory.currentPipeline"
+            ui-sref="index.pipelineRunManagement({pipelineName:run.Name, executionID: run.ExecutionID, groupName: run.GroupName})">
+          <td>{{run.ExecutionID}}</td>
+          <td>{{run.Start | date:'dd.MM.yyyy \'at\' HH:MM'}}</td>
+          <td>{{run.TriggerReason}}</td>
+          <td>{{run.ExecutionMaterials.commit-id}}</td>
+          <td>{{run.State}}</td>
+          <td>TEMP</td>
+          <td>
+                            <span ng-repeat="stage in run.Stages">
+              <span ng-if="stage[stage.length-1].State == 'Completed' && stage[stage.length-1].Status=='Passed'">
+  <button type="button" class="btn btn-success s"></button>
+               </span>
+                            <span ng-if="stage[stage.length-1].State == 'Completed'  && stage[stage.length-1].Status=='Failed'">
+                <button type="button" class="btn btn-danger s"></button>
+                </span>
+                            <span ng-if="stage[stage.length-1].State == 'None'">
+                   <button type="button" class="btn default s"></button>
+                </span>
+                           <span ng-if="stage[stage.length-1].State == 'Running'">
+                   <button type="button" class="btn yellow s"></button>
+                </span>
+                            <span ng-if="stage[stage.length-1].State == 'Scheduled'">
+                    <button type="button" class="btn yellow-mint s"></button>
+                </span>
+                            </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

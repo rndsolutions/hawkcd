@@ -1,0 +1,19 @@
+<div id="removePipe" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Remove Pipeline</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          Are you sure you want to delete Pipeline: <strong class="uppercase">{{pipes.pipeName}}</strong>
+          <br>
+          <hr>
+          <button class="btn btn-danger" ng-click="pipes.removePipeline(pipes.pipeName)" data-dismiss="modal">DELETE</button>
+          <button class="btn" data-dismiss="modal">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

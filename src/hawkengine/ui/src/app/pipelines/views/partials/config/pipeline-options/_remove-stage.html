@@ -1,0 +1,19 @@
+<div id="removeStage" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Remove Stage</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          Are you sure you want to delete Stage: <strong class="uppercase">{{pipeConfig.currentStage}}</strong>
+          <br>
+          <hr>
+          <button class="btn btn-danger" ng-click="pipeConfig.stageDeleteButton = true;pipeConfig.deleteStage(pipeConfig.currentStage)" data-dismiss="modal">DELETE</button>
+          <button class="btn" data-dismiss="modal">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

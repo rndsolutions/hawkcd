@@ -1,0 +1,277 @@
+ <Project DefaultTargets="CompileInstallers" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+    <Import Project="C:\Program Files (x86)\MSBuild\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/> 
+
+	<PropertyGroup>
+		<Server_ProductCode_GUID>$([System.Guid]::NewGuid())</Server_ProductCode_GUID>
+		<Agent_ProductCode_GUID>$([System.Guid]::NewGuid())</Agent_ProductCode_GUID>
+		<BuildZoneServer>$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin</BuildZoneServer>
+		<InstallBuildZoneServerDir>$(BuildZoneServer)\InstallerImage</InstallBuildZoneServerDir>
+		<BuildZoneAgent>$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin</BuildZoneAgent>
+		<InstallBuildZoneAgentDir>$(BuildZoneAgent)\InstallerImage</InstallBuildZoneAgentDir>
+		<UpdateMergeModules>True</UpdateMergeModules>
+		<BuildServerInstaller>True</BuildServerInstaller>
+		<BuildAgentInstaller>True</BuildAgentInstaller>
+		<BuildVersion>1.0.0</BuildVersion>
+	</PropertyGroup>
+	
+<PropertyGroup>
+	<CreateInstallersDependsOn>
+      CreateServerMergeModules;
+	  <!-- CreateAgentMergeModules; -->
+	  CreateServerInstaller;
+	  <!-- CreateAgentInstaller; -->
+    </CreateInstallersDependsOn>
+  </PropertyGroup>
+  
+    <Target Name="CompileInstallers" DependsOnTargets="$(CreateInstallersDependsOn)" />
+	
+    <Target Name="CreateServerInstaller" Condition="'$(BuildServerInstaller)' == 'True'" >
+	
+	<!-- Modify the variables used in the installer project to match the proper directories on the build server-->
+    <CreateItem Include="$(MSBuildProjectDirectory)\WiX\Server\BuildVars.wxi">
+      <Output TaskParameter="Include" ItemName="BuildVars" />
+    </CreateItem>
+
+    <FileUpdate Files="@(BuildVars)"
+								Regex="Buildzone=&quot;.*&quot;"
+								ReplacementText="Buildzone=&quot;$(BuildZoneServer)&quot;" />
+
+    <FileUpdate Files="@(BuildVars)"
+						Regex="ProjectFolder=&quot;.*&quot;"
+						ReplacementText="ProjectFolder=&quot;$(MSBuildProjectDirectory)&quot;" />
+
+    <FileUpdate Files="@(BuildVars)"
+						Regex="BuildNumber=&quot;.*&quot;"
+						ReplacementText="BuildNumber=&quot;$(BuildVersion)&quot;" />
+
+    <!-- This particular FileUpdate task serves the Major upgrade
+         Hoe to implement major upgrades: http://wixtoolset.org/documentation/manual/v3/howtos/updates/major_upgrade.html  -->
+    <FileUpdate Files="@(BuildVars)"
+        Regex="ProductBuildGUID=&quot;.*&quot;"
+        ReplacementText="ProductBuildGUID=&quot;$(Server_ProductCode_GUID)&quot;" />
+
+    <!-- Gathering the necessary .wxs files that are going to be compiled by the candle.exe into .wixobj files-->
+    <CreateItem Include="$(MSBuildProjectDirectory)\WiX\Server\*.wxs">
+      <Output ItemName="WixInstallWxsFiles_Server" TaskParameter="Include" />
+    </CreateItem>
+
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\candle.exe&quot; -ext WixIISExtension &quot;@(WixInstallWxsFiles_Server)&quot; -dBuildZoneServer=&quot;$(BuildZoneServer)&quot; -out &quot;$(MSBuildProjectDirectory)\WiX\Server\%(Filename).wixobj&quot;"/>
+
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)\WiX\Server" Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\light.exe&quot; -ext WixIISExtension -loc &quot;$(MSBuildProjectDirectory)\Localization\English-US.wxl&quot; -loc &quot;$(MSBuildProjectDirectory)\Localization\Global.en-us.wxl&quot; -sval -out &quot;$(MSBuildProjectDirectory)\WiX\Server\HawkEngine_Server.msi&quot; &quot;Common.wixobj&quot; &quot;CreateInstallDir.wixobj&quot; &quot;ErrorText.wixobj&quot; &quot;HawkEngine_Server.wixobj&quot; &quot;LaunchConditionBypass.wixobj&quot; &quot;msifactui.wixobj&quot; &quot;ProgressText.wixobj&quot;" />
+
+    </Target>
+		
+    <Target Name="CreateAgentInstaller" Condition="'$(BuildAgentInstaller)' == 'True'" >
+	
+	<!-- Modify the variables used in the installer project to match the proper directories on the build server-->
+    <CreateItem Include="$(MSBuildProjectDirectory)\WiX\Agent\BuildVars.wxi">
+      <Output TaskParameter="Include" ItemName="BuildVars" />
+    </CreateItem>
+
+    <FileUpdate Files="@(BuildVars)"
+								Regex="Buildzone=&quot;.*&quot;"
+								ReplacementText="Buildzone=&quot;$(BuildZoneAgent)&quot;" />
+
+    <FileUpdate Files="@(BuildVars)"
+						Regex="ProjectFolder=&quot;.*&quot;"
+						ReplacementText="ProjectFolder=&quot;$(MSBuildProjectDirectory)&quot;" />
+
+    <FileUpdate Files="@(BuildVars)"
+						Regex="BuildNumber=&quot;.*&quot;"
+						ReplacementText="BuildNumber=&quot;$(BuildVersion)&quot;" />
+
+    <!-- This particular FileUpdate task serves the Major upgrade
+         Hoe to implement major upgrades: http://wixtoolset.org/documentation/manual/v3/howtos/updates/major_upgrade.html  -->
+    <FileUpdate Files="@(BuildVars)"
+        Regex="ProductBuildGUID=&quot;.*&quot;"
+        ReplacementText="ProductBuildGUID=&quot;$(Agent_ProductCode_GUID)&quot;" />
+
+    <!-- Gathering the necessary .wxs files that are going to be compiled by the candle.exe into .wixobj files-->
+    <CreateItem Include="$(MSBuildProjectDirectory)\WiX\Agent\*.wxs">
+      <Output ItemName="WixInstallWxsFiles_Agent" TaskParameter="Include" />
+    </CreateItem>
+
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\candle.exe&quot; -ext WixIISExtension &quot;@(WixInstallWxsFiles_Agent)&quot; -dBuildZoneServer=&quot;$(BuildZoneAgent)&quot; -out &quot;$(MSBuildProjectDirectory)\WiX\Agent\%(Filename).wixobj&quot;"/>
+
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)\WiX\Agent" Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\light.exe&quot; -ext WixIISExtension -loc &quot;$(MSBuildProjectDirectory)\Localization\English-US.wxl&quot; -loc &quot;$(MSBuildProjectDirectory)\Localization\Global.en-us.wxl&quot; -sval -out &quot;$(MSBuildProjectDirectory)\WiX\Agent\HawkEngine_Agent.msi&quot; &quot;Common.wixobj&quot; &quot;CreateInstallDir.wixobj&quot; &quot;ErrorText.wixobj&quot; &quot;HawkEngine_Agent.wixobj&quot; &quot;LaunchConditionBypass.wixobj&quot; &quot;msifactui.wixobj&quot; &quot;ProgressText.wixobj&quot;" />
+
+    </Target>
+	
+	<Target Name="CreateServerMergeModules" Condition="'$(BuildServerInstaller)' == 'True'">
+		
+    <Message Text="Build Definition - $(MSBuildProjectDirectory)" />
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\*.config;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\*.exe;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\*.dll;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\*.xml;"
+				Exclude="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\NativeBinaries\**\*.*;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\Resources\**\*.*;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\*.vshost.*">
+      <Output ItemName="ServerInstallationFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\www\**\*.*;">
+      <Output ItemName="hawkFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\NativeBinaries\amd64\*.dll;">
+      <Output ItemName="amd64GitFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\NativeBinaries\x86\*.dll;">
+      <Output ItemName="x86GitFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\Resources\*.*;">
+      <Output ItemName="ResourceFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\**\Configuration\*.*;">
+      <Output ItemName="ConfigurationFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<RemoveDir Directories="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage" />
+	
+	    <Copy
+			SourceFiles="@(ServerInstallationFiles)"
+			DestinationFiles="@(ServerInstallationFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage\%(Filename)%(Extension)')"/>
+		<Copy
+			SourceFiles="@(ResourceFiles)"
+			DestinationFiles="@(ResourceFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage\Resources\%(Filename)%(Extension)')"/>
+		<Copy
+			SourceFiles="@(ConfigurationFiles)"
+			DestinationFiles="@(ConfigurationFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage\Configuration\%(Filename)%(Extension)')"/>
+		<Copy
+			SourceFiles="@(hawkFiles)"
+			DestinationFiles="@(hawkFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage\www\%(RecursiveDir)%(Filename)%(Extension)')"/>	
+		<Copy
+			SourceFiles="@(amd64GitFiles)"
+			DestinationFiles="@(amd64GitFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage\NativeBinaries\amd64\%(Filename)%(Extension)')"/>
+	    <Copy
+			SourceFiles="@(x86GitFiles)"
+			DestinationFiles="@(x86GitFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage\NativeBinaries\x86\%(Filename)%(Extension)')"/>
+
+		<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Server\bin\InstallerImage\HawkEngine.Server.exe.config">
+           <Output TaskParameter="Include" ItemName="ConsoleConfigFile"/>
+        </CreateItem>
+		
+		<FileUpdate Files="@(ConsoleConfigFile)" 
+					Regex="&lt;add key=&quot;hawkServerDefinitionPath&quot;.*value=&quot;.*&quot; /&gt;" 
+					ReplacementText="&lt;add key=&quot;hawkServerDefinitionPath&quot; value=&quot;Configuration/hawkengine.xml&quot; /&gt;" />
+	
+    <!--Calling the harvest WiX tool to generate the necessary .wxs files from the directory file structure. 
+				This way the contents of the folder will be wrapped in WiX components and at later stage if we want to 
+				freexe the installer it will be easier for the patch to update only the files that were used in the RTM of the product-->
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\heat.exe&quot; dir &quot;$(InstallBuildZoneServerDir)&quot; -o &quot;$(MSBuildProjectDirectory)\Merge Module Definitions\HawkEngineServer_Files.wxs&quot; -gg -sreg -sfrag -suid -srd -template module -var var.SourceDir "  Condition="'$(UpdateMergeModules)' == 'True'"/>
+
+    <!--Using the generated from heat.exe .wxs files which actually describe which files are going to be included in the installer-->
+    <CreateItem Include="$(MSBuildProjectDirectory)\Merge Module Definitions\**\*.wxs">
+      <Output TaskParameter="Include" ItemName="WxsFiles" />
+    </CreateItem>
+
+    <FileUpdate Files="@(WxsFiles)"
+						Regex="PUT-COMPANY-NAME-HERE"
+						ReplacementText="RnD Solutions" />
+
+    <FileUpdate Files="@(WxsFiles)"
+				Regex="HelpDirectory=&quot;#.*?&quot;"
+				ReplacementText=" " />
+
+    <CreateItem Include="$(MSBuildProjectDirectory)\Merge Module Definitions\HawkEngineServer_Files.wxs">
+      <Output TaskParameter="Include" ItemName="WxsHawkEngineServerFiles" />
+    </CreateItem>
+
+    <!-- Adding information about the merge module (.msm) name and company name-->
+    <FileUpdate Files="@(WxsHawkEngineServerFiles)"
+									Regex="PUT-MODULE-NAME-HERE"
+									ReplacementText="WxsHawkEngineServer_Files" />
+									
+    <!-- Generate the necessary .wixobj files from the generated merge module definitions -->
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\candle.exe&quot; &quot;@(WxsHawkEngineServerFiles)&quot; -dSourceDir=&quot;$(InstallBuildZoneServerDir)&quot; -out &quot;$(MSBuildProjectDirectory)\Merge Module Definitions\%(RecursiveDir)%(Filename).wixobj&quot;" />
+
+
+    <CreateItem Include="$(MSBuildProjectDirectory)\Merge Module Definitions\HawkEngineServer*.wixobj">
+      <Output TaskParameter="Include" ItemName="HawkEngineServerWixObjFiles" />
+    </CreateItem>
+
+    <!-- 	Generate the real merge modules from the generated .wixobj files [The merge module should be referenes in the main WIX installer project] -->
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\light.exe&quot; &quot;@(HawkEngineServerWixObjFiles)&quot; -loc &quot;$(MSBuildProjectDirectory)\Localization\Global.en-us.wxl&quot; -out &quot;$(InstallBuildZoneServerDir)\..\%(Filename).msm&quot;" />
+
+    </Target>
+	
+	<Target Name="CreateAgentMergeModules" Condition="'$(BuildAgentInstaller)' == 'True'">
+		
+    <Message Text="Build Definition - $(MSBuildProjectDirectory)" />
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\*.config;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\*.exe;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\*.dll;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\*.xml;"
+				Exclude="$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\NativeBinaries\**\*.*;
+						 $(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\*.vshost.*">
+      <Output ItemName="AgentInstallationFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\NativeBinaries\amd64\*.dll;">
+      <Output ItemName="amd64GitAgentFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<CreateItem Include="$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\**\NativeBinaries\x86\*.dll;">
+      <Output ItemName="x86GitAgentFiles" TaskParameter="Include" />
+    </CreateItem>
+	
+	<RemoveDir Directories="$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\InstallerImage" />
+	
+	    <Copy
+			SourceFiles="@(AgentInstallationFiles)"
+			DestinationFiles="@(AgentInstallationFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\InstallerImage\%(Filename)%(Extension)')"/>
+	    <Copy
+			SourceFiles="@(amd64GitAgentFiles)"
+			DestinationFiles="@(amd64GitAgentFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\InstallerImage\NativeBinaries\amd64\%(Filename)%(Extension)')"/>
+	    <Copy
+			SourceFiles="@(x86GitAgentFiles)"
+			DestinationFiles="@(x86GitAgentFiles->'$(MSBuildProjectDirectory)\..\HawkEngine.Agent.Console\bin\InstallerImage\NativeBinaries\x86\%(Filename)%(Extension)')"/>
+	
+    <!--Calling the harvest WiX tool to generate the necessary .wxs files from the directory file structure. 
+				This way the contents of the folder will be wrapped in WiX components and at later stage if we want to 
+				freexe the installer it will be easier for the patch to update only the files that were used in the RTM of the product-->
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\heat.exe&quot; dir &quot;$(InstallBuildZoneAgentDir)&quot; -o &quot;$(MSBuildProjectDirectory)\Merge Module Definitions\HawkEngineAgent_Files.wxs&quot; -gg -sreg -sfrag -suid -srd -template module -var var.SourceDir "  Condition="'$(UpdateMergeModules)' == 'True'"/>
+
+    <!--Using the generated from heat.exe .wxs files which actually describe which files are going to be included in the installer-->
+    <CreateItem Include="$(MSBuildProjectDirectory)\Merge Module Definitions\**\*.wxs">
+      <Output TaskParameter="Include" ItemName="WxsFiles" />
+    </CreateItem>
+
+    <FileUpdate Files="@(WxsFiles)"
+						Regex="PUT-COMPANY-NAME-HERE"
+						ReplacementText="RnD Solutions" />
+
+    <FileUpdate Files="@(WxsFiles)"
+				Regex="HelpDirectory=&quot;#.*?&quot;"
+				ReplacementText=" " />
+
+    <CreateItem Include="$(MSBuildProjectDirectory)\Merge Module Definitions\HawkEngineAgent_Files.wxs">
+      <Output TaskParameter="Include" ItemName="WxsHawkEngineAgentFiles" />
+    </CreateItem>
+
+    <!-- Adding information about the merge module (.msm) name and company name-->
+    <FileUpdate Files="@(WxsHawkEngineAgentFiles)"
+									Regex="PUT-MODULE-NAME-HERE"
+									ReplacementText="WxsHawkEngineAgent_Files" />
+									
+    <!-- Generate the necessary .wixobj files from the generated merge module definitions -->
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\candle.exe&quot; &quot;@(WxsHawkEngineAgentFiles)&quot; -dSourceDir=&quot;$(InstallBuildZoneAgentDir)&quot; -out &quot;$(MSBuildProjectDirectory)\Merge Module Definitions\%(RecursiveDir)%(Filename).wixobj&quot;" />
+
+
+    <CreateItem Include="$(MSBuildProjectDirectory)\Merge Module Definitions\HawkEngineAgent*.wixobj">
+      <Output TaskParameter="Include" ItemName="HawkEngineAgentWixObjFiles" />
+    </CreateItem>
+
+    <!-- 	Generate the real merge modules from the generated .wixobj files [The merge module should be referenes in the main WIX installer project] -->
+    <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.8\bin\light.exe&quot; &quot;@(HawkEngineAgentWixObjFiles)&quot; -loc &quot;$(MSBuildProjectDirectory)\Localization\Global.en-us.wxl&quot; -out &quot;$(InstallBuildZoneAgentDir)\..\%(Filename).msm&quot;" />
+
+    </Target>
+	
+  </Project>
+ 

@@ -1,0 +1,35 @@
+<div id="jobs" ui-sref-active="active">
+  <div class="table-scrollable">
+    <table class="table table-bordered table-hover">
+      <thead>
+      <tr>
+        <th> Job </th>
+        <th> Resources </th>
+        <th> Run Type </th>
+        <th> Run Multiple instances </th>
+        <th> Controls </th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <!--ng-repeat-->
+      <tr ng-repeat="job in pipeConfig.allJobs">
+        <td> {{job.Name}} </td>
+        <td> to do </td>
+        <td> {{job.RunType}} </td>
+        <td> to do </td>
+        <td>
+          <button class="btn red" data-target="#removeJob" data-toggle="modal" 
+                  ng-click="pipeConfig.jobDeleteButton = true;pipeConfig.getJob(job.Name)" ng-if="pipeConfig.allJobs.length > 1" ng-class="{'disabled': pipeConfig.jobDeleteButton}">Delete</button>
+        </td>
+      </tr>
+      <!--end ng-repeat-->
+
+      </tbody>
+    </table>
+  </div>
+  <button class="btn green" data-target="#addJob" data-toggle="modal">Add Job</button>
+</div>
+
+<div ng-include src="'app/pipelines/views/partials/config/stage-options/_add-job.html'"></div>
+<div ng-include src="'app/pipelines/views/partials/config/stage-options/_remove-job.html'"></div>

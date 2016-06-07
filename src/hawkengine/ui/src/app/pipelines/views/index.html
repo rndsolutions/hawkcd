@@ -1,0 +1,32 @@
+<h3 class="page-title"> Pipelines
+  <small>pipelines &amp; statistics</small>
+</h3>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a ui-sref="index.pipelines"> <span>Pipelines</span></a>
+        </li>
+    </ul>
+</div>
+<div class="g-box">
+    <div class="panel panel-default" ng-repeat="pipegroup in pipes.allPipelines">
+        <div class="panel-heading">
+            <div class="g-head">
+                <a href="">
+                    <span class="g-name">{{pipegroup.Name}}</span>
+                </a>
+                <a class="pull-right" data-target="#pipeWizard" data-toggle="modal" ng-click="pipes.getGroupName(pipegroup)">
+                    <span class="btn btn-circle btn-default"><i class="fa fa-plus"></i> Add</span>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ng-include src="'app/pipelines/views/partials/pipeline-management/_pipeline.html'"></div>
+        </div>
+    </div>
+</div>
+<div ng-include src="'app/pipelines/views/partials/pipeline-management/_add-pipeline.html'">
+</div>
+<div ng-include src="'app/pipelines/views/partials/pipeline-management/_remove-pipeline.html'">
+</div>

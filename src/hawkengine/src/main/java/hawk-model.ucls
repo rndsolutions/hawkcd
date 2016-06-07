@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.9" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="hawkengine.net" project="hawkengine" 
+    file="/hawkengine/src/main/java/hawkengine/net" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="101" width="465" x="478" y="65"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="hawkengine.net.server.core.materials" project="hawkengine" 
+    file="/hawkengine/src/main/java/hawkengine/net/server/core/materials" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="55" width="284" x="-34" y="617"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

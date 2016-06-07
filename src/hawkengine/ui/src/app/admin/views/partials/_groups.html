@@ -1,0 +1,65 @@
+<div class="portlet-body">
+  <div class="mt-element-list">
+    <div class="mt-list-head list-todo green">
+      <div class="list-head-title-container">
+        <h3 class="list-title">{{admin.defalultGroupsText.pipeline}}</h3>
+        <div class="list-head-count">
+          <div class="list-head-count-item">
+            <i class="fa fa-check"></i> {{admin.allGroupDefs.length}}
+          </div>
+        </div>
+      </div>
+      <a data-target="#addNewPipelineGroup" data-toggle="modal">
+        <div class="list-count pull-right grey-mint">
+          <i class="fa fa-plus"></i>
+        </div>
+      </a>
+    </div>
+    <div class="mt-list-container list-todo">
+      <div class="list-todo-line"></div>
+      <ul>
+        <li class="mt-list-item custom-admin-pipeGroup" ng-repeat="pipeGroup in admin.allGroupDefs">
+          <div class="list-todo-icon bg-white">
+            <i class="fa fa-database"></i>
+          </div>
+          <div class="list-todo-item grey custom-todo">
+            <a class="list-toggle-container font-dark" data-toggle="collapse"
+               data-target="{{'#'+$index + 'pipelineAdmin'}}"
+               aria-expanded="false">
+              <div class="list-toggle done uppercase custom-pipegroup-list">
+                <div class="list-toggle-title bold ">{{pipeGroup.Name}}
+                  <a data-target="#removePipelineGroupAdmin"
+                     ng-if="pipeGroup.Pipelines.length==0"
+                     data-toggle="modal"
+                     ng-click="admin.setGroupForDelete(pipeGroup.Name)">
+                    <i class="fa fa-trash"></i> </a>
+                  <div class="badge badge-primary bold ">{{pipeGroup.Pipelines.length}}</div>
+                </div>
+              </div>
+            </a>
+            <div class="panel-collapse collapse" id="{{$index + 'pipelineAdmin'}}" aria-expanded="false">
+              <ul>
+                <li class="task-list-item  custom-admin-pipelines" ng-repeat="pipeline in pipeGroup.Pipelines">
+                  <div class="task-content bg-grey custom-admin-div">
+                    <strong class="uppercase bold">
+                      {{pipeline.Name}}
+                    </strong>
+                    <a aria-hidden="true"
+                       ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeGroup.Name,pipelineName:pipeline.Name})"><i
+                      class="fa fa-edit"></i></a>
+                    <a data-target="#removePipelineAdmin" data-toggle="modal"
+                       ng-if="pipeline.State!='Running'" ng-click="admin.setPipelineForDelete(pipeline.Name)">
+                      <i class="fa fa-trash"></i> </a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div ng-include src="'app/admin/views/partials/_addNewPipelineGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_removePipeline.html'"></div>
+<div ng-include src="'app/admin/views/partials/_removePipelineGroup.html'"></div>

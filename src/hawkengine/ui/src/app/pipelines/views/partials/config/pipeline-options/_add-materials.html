@@ -1,0 +1,179 @@
+<div id="addMaterials" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="pipeConfig.close()"></button>
+                <h4 class="modal-title">Add Materials</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="form-group form-md-radios" style="float: none;margin: 0 auto;text-align: center;">
+                        <div class="md-radio-inline">
+                            <div class="md-radio">
+                                <input type="radio" id="configGitType" name="material-type" class="md-radiobtn" checked ng-model="pipeConfig.materialType" value="git">
+                                <label for="configGitType">
+                                    <span class="inc"></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> Git </label>
+                            </div>
+                            <div class="md-radio" ng-hide="true">
+                                <input type="radio" id="tfsType" name="material-type" class="md-radiobtn" ng-model="pipeConfig.materialType" value="tfs">
+                                <label for="tfsType">
+                                    <span class="inc"></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> TFS </label>
+                            </div>
+                            <div class="md-radio">
+                                <input type="radio" id="configNugetType" name="material-type" class="md-radiobtn" ng-model="pipeConfig.materialType" value="nuget">
+                                <label for="configNugetType">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> NuGet </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"> </div>
+                    <div ng-show="pipeConfig.materialType == 'git'">
+                        <form role="form" name="addGitMaterialForm">
+                            <div class="form-group form-md-line-input text-right">
+                                <label class="contorl-label col-md-4">Material Name
+                                    <span class="required"> * </span>
+                                </label>
+                                <div class="col-md-6">
+                                    <input ng-model="pipeConfig.newMaterial.git.name" type="text" class="form-control" placeholder="Enter material name" ng-pattern="/^([\w-]+)$/" required/>
+                                    <div class="form-control-focus custom-focus"></div>
+                                </div>
+                            </div>
+                            <div class="form-group form-md-line-input text-right">
+                                <label class="control-label col-md-4">Git Url
+                                    <span class="required"> * </span>
+                                </label>
+                                <div class="col-md-6">
+                                    <input ng-model="pipeConfig.newMaterial.git.url" type="text" class="form-control" placeholder="Enter GIT url"
+                                            ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
+                                    <div class="form-control-focus custom-focus"></div>
+                                </div>
+                                <div></div>
+                            </div>
+                            <div class="form-group form-md-line-input text-right">
+                                <label class="control-label col-md-4">Git Branch</label>
+                                <div class="col-md-6">
+                                    <input ng-model="pipeConfig.newMaterial.git.branch" type="text" class="form-control" placeholder="Enter GIT branch (optional)" />
+                                    <div class="form-control-focus custom-focus"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                            <div class="form-group form-md-checkboxes trigger-container2">
+                                <div class="md-checkbox-list">
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" id="gitPoll" class="md-check" ng-model="pipeConfig.newMaterial.git.poll">
+                                        <label for="gitPoll">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> Poll for changes </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-md-checkboxes trigger-container2">
+                                <div class="md-checkbox-list">
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" id="gitCredentials" class="md-check" ng-model="pipeConfig.newMaterial.git.credentials">
+                                        <label for="gitCredentials">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> Credentials </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-if="pipeConfig.newMaterial.git.credentials">
+                                <div class="form-group form-md-line-input text-right">
+                                    <label class="control-label col-md-4">Username
+                                        <span class="required"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input ng-model="pipeConfig.newMaterial.git.username" type="text" class="form-control" placeholder="Enter GIT username" />
+                                        <div class="form-control-focus custom-focus"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input text-right">
+                                    <label class="control-label col-md-4">Password
+                                        <span class="required"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input ng-model="pipeConfig.newMaterial.git.password" type="password" class="form-control" placeholder="Enter GIT password" />
+                                        <div class="form-control-focus custom-focus"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <hr>
+                            <button class="btn green" type="submit" data-dismiss="modal" ng-disabled="addGitMaterialForm.$invalid"
+                                    ng-click="pipeConfig.addMaterial(pipeConfig.newMaterial)" ng-hide="pipeConfig.materialType == 'nuget'">Add Material</button>
+                            <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                        </form>
+                    </div>
+                    <!-- TODO tfs panel -->
+                    <div ng-show="pipeConfig.materialType == 'nuget'">
+                        <form role="form" name="addNugetMaterialForm">
+                            <div class="form-group form-md-line-input text-right">
+                                <label class="control-label col-md-4">Material Name
+                                    <span class="required"> * </span>
+                                </label>
+                                <div class="col-md-6">
+                                    <input ng-model="pipeConfig.newMaterial.nuget.name" type="text" class="form-control" placeholder="Enter material name" ng-pattern="/^([\w-]+)$/" required/>
+                                    <div class="form-control-focus custom-focus"></div>
+                                </div>
+                            </div>
+                            <div class="form-group form-md-line-input text-right">
+                                <label class="control-label col-md-4">NuGet Url
+                                    <span class="required"> * </span>
+                                </label>
+                                <div class="col-md-6">
+                                    <input ng-model="pipeConfig.newMaterial.nuget.url" type="url" class="form-control" placeholder="Enter NuGet url" required/>
+                                    <div class="form-control-focus custom-focus"></div>
+                                </div>
+                            </div>
+                            <div class="form-group form-md-line-input text-right">
+                                <label class="control-label col-md-4">NuGet Package
+                                    <span class="required"> * </span>
+                                </label>
+                                <div class="col-md-6">
+                                    <input ng-model="pipeConfig.newMaterial.nuget.packageId" type="text" class="form-control" placeholder="Enter NuGet Package" required />
+                                    <div class="form-control-focus custom-focus"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                            <div class="form-group form-md-checkboxes trigger-container2">
+                                <div class="md-checkbox-list">
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" id="nugetPoll" class="md-check" ng-model="pipeConfig.newMaterial.nuget.poll">
+                                        <label for="nugetPoll">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> Poll for changes </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-md-checkboxes trigger-container2">
+                                <div class="md-checkbox-list">
+                                    <div class="md-checkbox">
+                                        <input type="checkbox" id="nugetPrerelease" class="md-check" ng-model="pipeConfig.newMaterial.nuget.includePrerelease">
+                                        <label for="nugetPrerelease">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span> Include Pre-Release </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <hr>
+                            <button class="btn green" type="submit" data-dismiss="modal" ng-disabled="addNugetMaterialForm.$invalid"
+                                    ng-click="pipeConfig.addMaterial(pipeConfig.newMaterial)" ng-hide="pipeConfig.materialType == 'git'">Add Material</button>
+                            <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

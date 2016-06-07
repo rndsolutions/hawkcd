@@ -1,0 +1,39 @@
+<div id="jTasks">
+  <div class="table-scrollable">
+    <table class="table table-bordered table-hover">
+      <thead>
+      <tr>
+        <th width="2%"> # </th>
+        <th width="10%"> Task Type </th>
+        <th width="5%"> Conditions </th>
+        <th> Commands </th>
+        <th width="5%"> On Cancel </th>
+        <th width="15%"> Controls </th>
+      </tr>
+      </thead>
+      <tbody ui-sortable="pipeConfig.sortableOptions" class="sortable" ng-model="pipeConfig.allTasks">
+
+      <!--ng-repeat-->
+      <tr ng-repeat="task in pipeConfig.allTasks">
+        <td> {{$index+1}} </td>
+        <td> {{task.Type}} </td>
+        <td> {{task.RunIfCondition}} </td>
+        <td> {{task.Command + ' ' + task.Arguments}} </td>
+        <td> to do </td>
+        <td>
+          <button class="btn yellow" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTask($index)">Edit</button>
+          <button class="btn red" data-toggle="modal" data-target="#removeTask"
+                  ng-click="pipeConfig.taskDeleteButton = true;pipeConfig.getTask($index)" ng-if="pipeConfig.allTasks.length > 1" ng-class="{'disabled': pipeConfig.taskDeleteButton}">Delete</button>
+        </td>
+      </tr>
+      <!--end ng-repeat-->
+
+      </tbody>
+    </table>
+  </div>
+  <button class="btn green" data-target="#addTask" data-toggle="modal">Add Task</button>
+</div>
+
+<div ng-include src="'app/pipelines/views/partials/config/job-options/_add-task.html'"></div>
+<div ng-include src="'app/pipelines/views/partials/config/job-options/_edit-task.html'"></div>
+<div ng-include src="'app/pipelines/views/partials/config/job-options/_remove-task.html'"></div>

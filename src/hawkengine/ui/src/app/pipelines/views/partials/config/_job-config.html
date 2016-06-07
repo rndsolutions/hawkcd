@@ -1,0 +1,23 @@
+<div class="col-md-9">
+  <div class="tabbable-custom nav-justified">
+    <ul class="nav nav-tabs nav-justified">
+      <li ui-sref-active="active">
+        <a data-target="#jobSettings" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.job.settings"> Job Settings </a>
+      </li>
+      <li ui-sref-active="active">
+        <a data-target="#jTasks" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.job.tasks"> Tasks </a>
+      </li>
+      <li ui-sref-active="active">
+        <a data-target="#jEnvironmentVariables" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.job.variables"> Environment Variables </a>
+      </li>
+      <li ui-sref-active="active">
+        <a data-target="#jTabs" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.job.tabs"> Custom Tabs </a>
+      </li>
+    </ul>
+    <div class="tab-content" ui-view>
+
+    </div>
+  </div>
+</div>
+
+

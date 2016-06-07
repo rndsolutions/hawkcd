@@ -1,0 +1,17 @@
+<div id="deleteUser" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Delete User</h4>
+            </div>
+            <div class="modal-body">
+                <h1>Are you sure you want to delete User: {{admin.user.UserName}}</h1>
+            </div>
+            <div class="modal-footer">
+                <button class="btn green" data-dismiss="modal" ng-click="admin.deleteUser(admin.user.Id)">Delete User</button>
+                <button class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

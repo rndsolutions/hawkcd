@@ -1,0 +1,38 @@
+<div class="portlet light custom-portlet">
+    <div class="portlet-title custom-title">
+        <div class="caption custom-caption">
+            <div class="caption font-green-sharp bold uppercase custom-cap">
+                {{pipesRunManagement.selectedStage.Runs[0].Name}}
+            </div>
+        </div>
+        <div class="tools right">
+            <a href="javascript:;" class="collapse"> </a>
+        </div>
+
+        <!--</div> <div class="tools right custom-tools">-->
+      <!--<div class="form-group form-md-line-input custom-drop">-->
+        <!--<select class="form-control" ng-change="pipesRunManagement.selectRun(run)" ng-model="run">-->
+          <!--<option ng-if="run.ExecutionID != 0"  ng-repeat="run in pipesRunManagement.selectedStage.Runs"-->
+                  <!--value="{{run.ExecutionID}}" ng-selected="pipesRunManagement.statesSelected[pipesRunManagement.selectedStageIndexInMainDB] == run.ExecutionID" id="selectedOptionRuns">{{run.ExecutionID}}-->
+          <!--</option>-->
+        <!--</select>-->
+      <!--</div>-->
+        <!--<div class="tools right">-->
+            <!--<div class="control-label run-label"> {{pipesRunManagement.stagePanelDefault.run}}</div>-->
+        <!--</div>-->
+        <!--<div class="pull-right btn-rerun" ng-if='pipesRunManagement.currentPipeline[0].State == "Completed"' data-target="#rerunStage"-->
+        <!--data-toggle="modal">-->
+            <!--<i class="glyphicon glyphicon-repeat"> </i>-->
+        <!--</div>-->
+
+    </div>
+
+    <div class="portlet-body custom-body">
+        <div class="s-box" ng-repeat="stage in pipesRunManagement.groupStages">
+            <img ng-if="$index != pipesRunManagement.groupStages.length-1" class="arrow-right" src="../../../../../assets/images/right-arrow.png">
+
+            <div ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
+
+        </div>
+    </div>
+</div>

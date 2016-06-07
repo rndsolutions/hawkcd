@@ -1,0 +1,37 @@
+<div id="addJobVar" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="addJobVariableForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="pipeConfig.close()"></button>
+                    <h4 class="modal-title">Add Value</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group form-md-line-input">
+                        <input type="text" class="form-control" ng-model="pipeConfig.newJobVar.Name" ng-pattern="/^([\w-]+)$/" required>
+                        <label>Name</label>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        <input type="text" class="form-control" ng-model="pipeConfig.newJobVar.Value" required>
+                        <label>Value</label>
+                    </div>
+                    <div class="form-group form-md-checkboxes">
+                        <div class="md-checkbox-list">
+                            <div class="md-checkbox">
+                                <input type="checkbox" class="md-check" ng-model="pipeConfig.newJobVar.IsSecured" id="addJobVarSecured">
+                                <label for="addJobVarSecured">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> Secured? </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.addJobVar(pipeConfig.newJobVar)" ng-disabled="addJobVariableForm.$invalid">Add Value</button>
+                    <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                </div>
+                </form>
+            </div>
+    </div>
+</div>

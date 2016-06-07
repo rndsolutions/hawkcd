@@ -1,0 +1,200 @@
+<div id="editTask" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="editTaskForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="pipeConfig.close()"></button>
+                    <h4 class="modal-title">Edit Task</h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-if="pipeConfig.task.Type == 'Exec'">
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Command" required>
+                            <label>Task Command</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <textarea class="form-control" name="arguments" id="arguments" cols="30" rows="5" ng-model="pipeConfig.updatedTask.Arguments">
+                            </textarea>
+                            <label for="arguments">Arguments</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.WorkingDirectory">
+                            <label>Working Directory</label>
+                        </div>
+                        <div class="form-group form-md-radios">
+                            <label>Run If Condition</label>
+                            <div class="md-radio-list">
+                                <div class="md-radio">
+                                    <input type="radio" id="runIfPass" name="runIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="runIfPass">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Passed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="runIfFail" name="runIf" value="Failed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="runIfFail">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Failed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="runIfAny" name="runIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="runIfAny">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Any
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-checkboxes">
+                            <div class="md-checkbox-list">
+                                <div class="md-checkbox">
+                                    <input type="checkbox" class="md-check" id="ignoreErr" ng-model="pipeConfig.updatedTask.IgnoreErrors">
+                                    <label for="ignoreErr">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Ignore Errors</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="pipeConfig.task.Type == 'FetchArtifact'">
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Pipeline" required>
+                            <label>Pipeline</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Stage" required>
+                            <label>Stage</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Job" required>
+                            <label>Job</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Source" required>
+                            <label>Source</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Destination" required>
+                            <label>Destination</label>
+                        </div>
+                        <div class="form-group form-md-radios">
+                            <label>Run If Condition</label>
+                            <div class="md-radio-list">
+                                <div class="md-radio">
+                                    <input type="radio" id="pass" name="runIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="pass">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Passed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="fail" name="runIf" value="Failed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="fail">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Failed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="any" name="runIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="any">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Any
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="pipeConfig.task.Type == 'FetchMaterial'">
+                        <div class="form-group form-md-line-input">
+                            <select class="form-control" name="materialSelect" id="editMaterialSelect" ng-model="pipeConfig.updatedTask.MaterialName" required>
+                                <option ng-repeat="material in pipeConfig.allMaterials" value="{{material.Name}}">{{material.Name}}</option>
+                            </select>
+                            <label for="editMaterialSelect">Material</label>
+                        </div>
+                        <div class="form-group form-md-radios">
+                            <label>Run If Condition</label>
+                            <div class="md-radio-list">
+                                <div class="md-radio">
+                                    <input type="radio" id="runIfPass" name="runIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="runIfPass">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Passed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="runIfFail" name="runIf" value="Failed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="runIfFail">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Failed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="runIfAny" name="runIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="runIfAny">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Any
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="pipeConfig.task.Type == 'UploadArtifact'">
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Source" required>
+                            <label>Source</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.Destination" required>
+                            <label>Destination</label>
+                        </div>
+                        <div class="form-group form-md-radios">
+                            <label>Run If Condition</label>
+                            <div class="md-radio-list">
+                                <div class="md-radio">
+                                    <input type="radio" id="uploadArtifactPass" name="runIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="uploadArtifactPass">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Passed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="uploadArtifactFail" name="runIf" value="Failed" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="uploadArtifactFail">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Failed
+                                    </label>
+                                </div>
+                                <div class="md-radio">
+                                    <input type="radio" id="uploadArtifactAny" name="runIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.updatedTask.RunIfCondition">
+                                    <label for="uploadArtifactAny">
+                                        <span></span>
+                                        <span class="check"></span>
+                                        <span class="box"></span> Any
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" type="submit" ng-disabled="editTaskForm.$invalid" ng-click="pipeConfig.editTask(pipeConfig.updatedTask)">Edit Task</button>
+                    <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

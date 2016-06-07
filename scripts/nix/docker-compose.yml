@@ -1,0 +1,23 @@
+version: '2'
+services:
+  hawkserver:
+    image: registry.hawkengine.net:5000/hawkengine:0.1.13
+    depends_on:
+     - redis
+     - hawk-agent1
+  redis:
+    image: redis          
+    volumes:
+     - /srv/redis:/data
+  hawk-agent1:
+    image: registry.hawkengine.net:5000/hawkagent:0.1.10
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /usr/src/app/source:/usr/src/app/source
+  hawkproxy:
+    image: registry.hawkengine.net:5000/hawkproxy:0.1.9
+    ports:
+      - 80:80 
+    depends_on:
+      - hawkserver
+   

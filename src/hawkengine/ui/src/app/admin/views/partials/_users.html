@@ -1,0 +1,28 @@
+<div class="portlet-body">
+    <table class="table table-striped table-bordered table-hover table-checkable order-column" datatable="ng">
+        <thead>
+            <tr>
+                <th class="custom-datatable-btns-admin">{{admin.defaultText.tableHeaders.action}}</th>
+                <th>{{admin.defaultText.tableHeaders.user}}</th>
+                <th>{{admin.defaultText.tableHeaders.permissions}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in admin.allUsers">
+                <td class="custom-datatable-btns-admin">
+                    <button class="btn btn-default">{{admin.defaultText.status.enable}}
+                    </button>
+                    <button ng-hide="user.Id == admin.currentUserId" class="btn btn-danger" data-target="#deleteUser" data-toggle='modal' 
+                    ng-click="admin.getUser(user.Id)">{{admin.defaultText.status.delete}}</button>
+                </td>
+                <td>{{user.Email}}</td>
+                <td>
+                    <button class="btn green">View</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn green" data-target="#addUser" data-toggle="modal">Add User</button>
+</div>
+<div ng-include src="'app/admin/views/partials/_add-user.html'"></div>
+<div ng-include src="'app/admin/views/partials/_delete-user.html'"></div>

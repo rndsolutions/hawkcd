@@ -1,0 +1,539 @@
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloack],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+.form-wizard .steps > li.done > a.step .number {
+    background-color: #19B919;
+}
+
+p {
+    margin: 0 0;
+}
+
+.pipeline-box {
+    width: 250px;
+    margin: 5px;
+}
+
+.pipeline-box-inner {
+    padding: 2px;
+}
+
+.g-head {
+    height: 36px;
+}
+
+.p-name {
+    font-size: 1.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.g-name {
+    font-size: 1.3em;
+    vertical-align: -webkit-baseline-middle;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.p-box {
+    display: inline-block;
+    vertical-align: top;
+    width: 240px;
+    height: 250px;
+    margin: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.2s ease-in-out;
+}
+
+.s-box {
+    display: inline-block;
+    width: 290px;
+    margin: 5px;
+}
+
+.s-box-inner:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    transition: all 0.2s ease-in-out;
+}
+
+.s-box-inner {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.stage {
+    width: 240px;
+}
+
+.stage:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.2s ease-in-out;
+}
+
+.arrow-right {
+    float: right;
+    margin-top: 75px;
+    width: 40px
+}
+
+.p-box:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.p-box-inner,
+.s-box-inner {
+    margin-bottom: 0 !important;
+}
+
+.g-box {
+    width: inherit;
+}
+
+.stages {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 47px;
+}
+
+.s {
+    width: 35px;
+    height: 20px;
+    margin-top: 3px;
+}
+
+.controls {
+    text-align: center;
+    padding-top: 7px;
+}
+
+.control {
+    font-size: 15px;
+}
+
+.no-stages {
+    text-align: center;
+}
+
+.p-link {
+    text-decoration: none;
+    color: #A5B1C8;
+    text-underline: none;
+}
+
+.p-link:hover {
+    text-decoration: none;
+    text-underline: none;
+}
+
+.p-head-box,
+.s-head-box {
+    background: #26344B;
+}
+
+.s-head-box:hover {
+    background: #E55E09;
+}
+
+.selected-stage {
+    background-color: #E55E09 !important;
+    color: #26344B;
+    text-underline: none;
+}
+
+.mat-logo {
+    border: 0;
+    display: inline-block;
+    padding: 10px;
+}
+
+.m-box {
+    width: 35%;
+}
+
+.l-small {
+    width: 60px;
+    opacity: .6;
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+.l-small:hover {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+.logo-container {
+    display: inline-block;
+    width: 100px;
+}
+
+.material-content {
+    display: inline-block;
+    vertical-align: top;
+    width: 80%;
+}
+
+.material-content2 {
+    display: inline-block;
+    vertical-align: top;
+    width: 40%;
+}
+
+.l-active {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+.l-active2 {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+.trigger-container {
+    margin-left: 26% !important;
+}
+
+.portlet-wrap {
+    margin-bottom: 0 !important;
+}
+
+.ribbon-row {
+    display: inline-block;
+    height: 22% !important;
+}
+
+span,
+p {
+    word-wrap: break-word;
+}
+
+.m-info {
+    padding-bottom: 5px;
+}
+
+.tools {
+    float: left;
+    position: absolute;
+}
+
+.t-body {
+    /*box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);*/
+}
+
+.hover-row {
+    transition: all 0.2s ease-in-out;
+    border: 1px solid green;
+}
+
+.hover-row:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.p-inline {
+    display: inline-block;
+}
+
+.t-head,
+.t-wrap {
+    display: flex;
+}
+
+.t-heading,
+.t-content {
+    order: 5;
+}
+
+.tools {
+    float: left;
+    position: absolute;
+}
+
+.tools.right {
+    float: right;
+    position: relative;
+}
+
+.path-materials {
+    padding: 15px;
+    display: none;
+}
+
+.console {
+    height: auto;
+    max-height: 600px;
+    overflow: auto;
+    background-color: #333;
+    color: #FFFFFF;
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    font-family: Consolas, monospace;
+}
+
+.disabled-stage {
+    pointer-events: none;
+    cursor: default;
+}
+
+.disabled-stage:hover {
+    color: #A5B1C8;
+}
+
+.custom-title {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+}
+
+.custom-portlet {
+    padding: 0px 20px 0px !important;
+}
+
+.custom-caption {
+    font-size: 18px !important;
+    margin-top: 4px;
+}
+
+.run-label {
+    padding-right: 5px;
+    margin-top: 10px;
+}
+
+.custom-drop {
+    padding-top: 0 !important;
+    margin-top: 8px !important;
+}
+
+.custom-tools {
+    margin-top: -4px !important;
+    padding-right: 5px !important;
+}
+
+.custom-body {
+    padding-bottom: 10px !important;
+    padding-top: 0 !important;
+}
+
+.custom-cap {
+    margin-top: 12px;
+}
+
+.btn-rerun {
+    padding-top: 13px;
+    padding-right: 5px;
+    margin-top: 10px;
+}
+
+.btn-rerun:hover {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.run-navs {
+    margin-top: 20px
+}
+
+#pipeWizard {
+    display: none;
+}
+
+#rerunStage {
+    display: none;
+}
+
+.register-form {
+    display: block;
+}
+
+.login-form {
+    display: block;
+}
+
+.authorize {
+    background-color: #eceef1;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -ms-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+    width: 400px;
+    margin: 40px auto 10px;
+    padding: 10px 30px 30px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ico {
+    margin-top: 3px;
+    margin-left: 10px;
+    float: right;
+}
+
+.ico:hover {
+    cursor: pointer;
+    cursor: hand;
+    color: white;
+}
+
+.icon-close {
+    color: red;
+}
+
+.info {
+    height: 72px;
+}
+
+.p-bar1 {
+    width: 33%;
+}
+
+.p-bar2 {
+    width: 66%;
+}
+
+.p-bar3 {
+    width: 100%;
+}
+
+.custom-datatable-btns {
+    width: 350px !important;
+    overflow: hidden;
+}
+
+.custom-datatable-btns > button {
+    float: right;
+}
+
+.custom-datatable-btns-admin {
+    width: 190px;
+}
+
+.p-config-head {
+    background-color: #2C3E50;
+}
+
+.p-config-head:hover {
+    cursor: pointer;
+    cursor: hand;
+    background-color: #E55E09;
+    color: #2C3E50!important;
+}
+
+.nav-tabs>.active {
+    border-top: 3px solid #E55E09!important;
+}
+
+.selectedS {
+    background-color: #E55E09!important;
+    color: #2C3E50!important;
+}
+
+.clip {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.s-config:hover {
+    background-color: #E55E09!important;
+    color: #2C3E50!important;
+    /*border: 1px solid #2C3E50!important;*/
+}
+
+.job-name:hover {
+    color: #2C3E50!important;
+}
+
+.job-item:hover {
+    background-color: #E55E09!important;
+    color: #2C3E50!important;
+    cursor: pointer;
+    cursor: hand;
+}
+
+#general,
+#materials,
+#stages,
+#environmentVariables {
+    display: block;
+}
+
+#stageSettings,
+#jobs,
+#sEnvironmentVar {
+    display: block;
+}
+
+#jobSettings,
+#jTasks,
+#jArtifacts,
+#jEnvironmentVariables,
+#jTabs {
+    display: block;
+}
+
+.custom-admin-pipeGroup {
+    padding-bottom: 5px;
+}
+
+.custom-admin-pipelines {
+    list-style: none;
+}
+
+.custom-admin-div {
+    padding: 5px;
+    padding-left: 20px;
+}
+
+.custom-todo:first-of-type {
+    padding: 16px;
+    padding-bottom: 5px;
+}
+
+.custom-pipegroup-list {
+    padding: 12px;
+}
+
+.custom-add-resource {
+    margin: 7px;
+}
+
+.form-admin-server {
+    width: 80%;
+    margin: auto;
+}
+
+.steps>li.done>a.step .number {
+    background-color: #5FBD5F!important;
+}
+
+.trigger-container2 {
+    margin-left: 36%!important;
+}
+
+.custom-focus {
+    left: 15px!important;
+    width: 90%!important;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.log-box {
+    -webkit-box-shadow: 0px 0px 50px -13px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 50px -13px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 50px -13px rgba(0, 0, 0, 1);
+    padding: 50px;
+    background-color: aliceblue;
+}

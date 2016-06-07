@@ -1,0 +1,135 @@
+<div class="authorize">
+  <div class="logo" style="text-align: center">
+    <img src="../../../assets/images/logo-default.png" alt="" style="width: 50%"/>
+  </div>
+
+  <div class="content">
+    <!-- BEGIN LOGIN FORM -->
+    <div ng-show="!isRegisterClicked && !isForgotClicked && !isLogged">
+      <form class="login-form" method="post" role="form">
+        <h3 class="form-title font-green uppercase bold" style="text-align: center">Sign In</h3>
+        <div class="alert alert-danger display-hide">
+          <button class="close" data-close="alert"></button>
+          <span> Enter any username and password. </span>
+        </div>
+
+        <div class="form-group form-md-line-input form-md-floating-label has-success">
+          <input type="text" class="form-control" id="username">
+          <label for="username">Username</label>
+        </div>
+        <div class="form-group form-md-line-input form-md-floating-label has-success">
+          <input type="password" class="form-control" id="password">
+          <label for="password">Password</label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn green uppercase" ng-click="login()">Login</button>
+          <div class="md-checkbox" style="display: inline-block; margin-left: 15px">
+            <input type="checkbox" id="rememberme" class="md-check">
+            <label for="rememberme">
+              <span></span>
+              <span class="check"></span>
+              <span class="box"></span> Remember</label>
+          </div>
+
+          <div class="forgot" style="display: inline-block; margin-left: 20px">
+            <a href="javascript:;" id="forget-password" class="forget-password" ng-click="forgotBtnClicked()">Forgot
+              Password?</a>
+          </div>
+        </div>
+
+        <div class="clearfix"> </div>
+
+        <!--<div class="login-options">-->
+        <!--<h4>Or login with</h4>-->
+        <!--<ul class="social-icons">-->
+        <!--<li>-->
+        <!--<a class="social-icon-color facebook" data-original-title="facebook" href="javascript:;"></a>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<a class="social-icon-color twitter" data-original-title="Twitter" href="javascript:;"></a>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<a class="social-icon-color googleplus" data-original-title="Goole Plus" href="javascript:;"></a>-->
+        <!--</li>-->
+        <!--<li>-->
+        <!--<a class="social-icon-color linkedin" data-original-title="Linkedin" href="javascript:;"></a>-->
+        <!--</li>-->
+        <!--</ul>-->
+        <!--</div>-->
+
+        <div class="create-account" style="text-align: center">
+          <button ng-click="registerBtnClicked()" class="btn green uppercase">Create account</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div ng-show="isForgotClicked">
+      <form class="forget-form" method="post">
+        <h3 class="form-title font-green uppercase bold" style="text-align: center">Forget Password?</h3>
+
+        <div class="clearfix"> </div>
+
+        <p> Enter your e-mail address below to reset your password. </p>
+        <div class="form-group">
+          <div class="form-group form-md-line-input form-md-floating-label has-success">
+            <input type="text" class="form-control" id="email">
+            <label for="email">Email</label>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="back-btn" class="btn btn-default" ng-click="forgotBtnClicked()">Back</button>
+            <button type="submit" class="btn btn-success uppercase pull-right">Submit</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div ng-show="isRegisterClicked && !isLogged">
+      <form class="register-form">
+        <h3 class="font-green uppercase bold" style="text-align: center">Sign Up</h3>
+
+        <div class="form-group form-md-line-input form-md-floating-label has-success">
+          <input type="text" class="form-control" id="regUsername">
+          <label for="regUsername">Username</label>
+        </div>
+        <div class="form-group form-md-line-input form-md-floating-label has-success">
+          <input type="email" class="form-control" id="regEmail">
+          <label for="regEmail">Email</label>
+        </div>
+        <div class="form-group form-md-line-input form-md-floating-label has-success">
+          <input type="text" class="form-control" id="regPass">
+          <label for="regPass">Password</label>
+        </div>
+        <div class="form-group form-md-line-input form-md-floating-label has-success">
+          <input type="text" class="form-control" id="regPassConfirm">
+          <label for="regPassConfirm">Confirm Password</label>
+        </div>
+
+        <div class="md-checkbox">
+          <input type="checkbox" id="agree" class="md-check">
+          <label for="agree">
+            <span></span>
+            <span class="check"></span>
+            <span class="box"></span>
+            I agree the
+            <a href="">Terms of Service</a> &
+            <a href="">Privacy Policy</a>
+          </label>
+        </div>
+
+        <div class="clearfix"> </div>
+
+        <div class="form-actions">
+          <button type="button" id="register-back-btn" class="btn btn-default" ng-click="registerBtnClicked()">Back
+          </button>
+          <button type="submit" id="register-submit-btn" class="btn btn-success uppercase pull-right">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="copyright" style="margin-top: 20px"> 2016 © Hawk Continuous Delivery. R&D Solutions. </div>
+</div>

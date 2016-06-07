@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage='1252'>
+  <String Id='LANG'>1033</String>
+  <!--Product-->
+  <String Id='InitialDrivesMessage'>Please specify the drive letters to host ENPS server components. Under windows 2000 you may configure special mounted NTFS volumes. Make the selections below, then press NEXT to continue.</String>
+  <String Id='IndexesDrive'>Indexes</String>
+  <String Id='ArchivesDrive'>Archives</String>
+  <String Id='NewsWiresDrive'>News Wires</String>
+  <String Id='DataDrive'>Data</String>
+</WixLocalization>

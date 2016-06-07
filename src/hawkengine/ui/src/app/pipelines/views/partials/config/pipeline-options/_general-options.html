@@ -1,0 +1,31 @@
+<div id="general" style="padding: 0 0 10px 10px">
+
+  <form name="editPipeForm">
+    <div style="width: 300px">
+      <div class="form-group form-md-line-input">
+        <input type="text" class="form-control" ng-minlength="3" ng-model="pipeConfig.updatedPipeline.Name" ng-pattern="/^([\w-]+)$/" required>
+        <label>Pipeline Name</label>
+      </div>
+      <div class="form-group form-md-line-input">
+        <input type="text" class="form-control" ng-minlength="3" ng-model="pipeConfig.updatedPipeline.LabelTemplate" required>
+        <label>Label Template</label>
+      </div>
+      <div class="form-group form-md-checkboxes">
+        <div class="md-checkbox-list">
+          <div class="md-checkbox">
+            <input type="checkbox" class="md-check" id="autoPschedule" ng-model="pipeConfig.updatedPipeline.AutoScheduling">
+            <label for="autoPschedule">
+              <span></span>
+              <span class="check"></span>
+              <span class="box"></span> Automatic pipeline scheduling </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--<button class="btn green-sharp" data-toggle="confirmation" data-popout="true" data-placement="right" id="updatePipe" data-on-confirm="updatePipeline()">Update</button>-->
+    <!-- || pipeConfig.updatedPipeline.Name == pipeConfig.pipeline.Name -->
+    <button class="btn green-sharp" type="submit" ng-click="pipeConfig.editPipeline(pipeConfig.updatedPipeline)"
+    ng-disabled="editPipeForm.$invalid || pipeConfig.updatedPipeline.LabelTemplate == pipeConfig.pipeline.LabelTemplate && pipeConfig.updatedPipeline.Name == pipeConfig.pipeline.Name && pipeConfig.updatedPipeline.AutoScheduling == pipeConfig.pipeline.AutoScheduling">Update</button>
+  </form>
+
+</div>

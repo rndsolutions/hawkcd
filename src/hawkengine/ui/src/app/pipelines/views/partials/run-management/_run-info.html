@@ -1,0 +1,72 @@
+<div class="panel">
+    <div class="panel-heading bg-grey-cararra">
+        <div class="caption font-green-sharp uppercase custom-caption">
+            {{pipesRunManagement.selectedJob.Name}}
+        </div>
+    </div>
+    <div class="panel-body">
+        <div>
+            <div class="col-md-2"><strong class="uppercase">{{pipesRunManagement.runInfoDefaultText.scheduled}}</strong>
+                <p></p>{{pipesRunManagement.selectedJob.Start | date:'dd.MM.yyyy HH:mm' }} </div>
+            <div class="col-md-2"><strong class="uppercase">{{pipesRunManagement.runInfoDefaultText.state}}</strong>
+                <p></p>{{pipesRunManagement.selectedJob.State}} </div>
+            <div class="col-md-2"><strong class="uppercase">{{pipesRunManagement.runInfoDefaultText.duration}}</strong>
+                <p></p>{{pipesRunManagement.selectedJob.Duration | date:'HH:mm'}} </div>
+            <div class="col-md-2"><strong class="uppercase">{{pipesRunManagement.runInfoDefaultText.agent}}</strong>
+                <p></p>Temp</div>
+            <div class="col-md-2"><strong class="uppercase">{{pipesRunManagement.runInfoDefaultText.currentTask}}</strong>
+                <p></p>Temp</div>
+            <div class="col-md-2"><strong class="uppercase">{{pipesRunManagement.runInfoDefaultText.trigger}}</strong>
+                <p></p>TEMP </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="run-navs">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="" data-target="#console" data-toggle="tab">{{pipesRunManagement.runInfoDefaultText.tabConsole}}</a></li>
+                <li><a href="" data-target="#artifacts" data-toggle="tab">{{pipesRunManagement.runInfoDefaultText.tabArtifacts}}</a></li>
+                <li><a href="" data-target="#tests" data-toggle="tab">{{pipesRunManagement.runInfoDefaultText.tabTests}}</a></li>
+            </ul>
+            <div class="tab-content">
+                <!--console-->
+                <div id="console" class="tab-pane fade in active">
+                    <pre class="console" scroll-glue>{{pipesRunManagement.selectedJob.Result}}</pre>
+                </div>
+
+                <!--artifacts-->
+                <div id="artifacts" class="tab-pane fade">
+                    <div id="tree_1" class="tree-demo">
+                        <ul>
+                            <li> Root node 1
+                                <ul>
+                                    <li data-jstree='{ "selected" : true }'>
+                                        <a href="javascript:;"> Initially selected </a>
+                                    </li>
+                                    <li data-jstree='{ "icon" : "fa fa-briefcase icon-state-success " }'> custom icon URL</li>
+                                    <li data-jstree='{ "opened" : true }'> initially open
+                                        <ul>
+                                            <li data-jstree='{ "disabled" : true }'> Disabled Node</li>
+                                            <li data-jstree='{ "type" : "file" }'> Another node</li>
+                                        </ul>
+                                    </li>
+                                    <li data-jstree='{ "icon" : "fa fa-warning icon-state-danger" }'> Custom icon class (bootstrap)
+                                    </li>
+                                </ul>
+                            </li>
+                            <li data-jstree='{ "type" : "file" }'>
+                                <a href="http://www.jstree.com"> Clickanle link node </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--Tests-->
+                <div id="tests" class="tab-pane fade">
+                    TESTs
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

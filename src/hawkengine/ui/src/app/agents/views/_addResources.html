@@ -1,0 +1,23 @@
+<div id="addResourceAgent" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">{{agents.defaultText.addResourceModalHeader}}
+          {{agents.agentToAddResource.HostName}}</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <button class="btn green" ng-click="agents.addInputResource()">Add</button>
+          <button class="btn default" ng-click="agents.removeLastResource()">Remove Last</button>
+          <input ng-model="agents.currentAgentResources[$index]" class="form-control custom-add-resource" ng-repeat="resource in agents.resourcesToAdd"
+                 placeholder="{{'Resource' + ' ' + ($index + 1)}}">
+          <br>
+          <br>
+          <button class="btn green" ng-click="agents.updateAgent()" data-dismiss="modal">{{agents.defaultText.add}}</button>
+          <button class="btn" data-dismiss="modal">{{agents.defaultText.cancel}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="tab-pane">
+  <div class="row profile-account">
+    <div class="col-md-3">
+      <ul class="ver-inline-menu tabbable margin-bottom-10">
+        <li ng-class="{active: user.accountActiveMenu=='Personal info'}">
+          <a ng-click="user.accountActiveMenu='Personal info'">
+            <i class="fa fa-cog"></i> {{user.accountTabText.headers.personalInfo}} </a>
+          <span class="after"> </span>
+        </li>
+        <li ng-class="{active: user.accountActiveMenu=='Change Avatar'}">
+          <a ng-click="user.accountActiveMenu='Change Avatar'">
+            <i class="fa fa-picture-o"></i> {{user.accountTabText.headers.changeAvatar}} </a>
+        </li>
+        <li ng-class="{active: user.accountActiveMenu=='Change Password'}">
+          <a ng-click="user.accountActiveMenu='Change Password'">
+            <i class="fa fa-lock"></i> {{user.accountTabText.headers.changePassword}} </a>
+        </li>
+        <li ng-class="{active: user.accountActiveMenu=='Privacy Settings'}">
+          <a ng-click="user.accountActiveMenu='Privacy Settings'">
+            <i class="fa fa-eye"></i> {{user.accountTabText.headers.privacy}} </a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <div class="tab-content">
+        <div class="tab-pane" ng-class="{active: user.accountActiveMenu=='Personal info'}">
+          <div ng-include src="'app/profile/views/partials/_personalInfo.html'"
+               ng-if="user.accountActiveMenu=='Personal info'"></div>
+        </div>
+        <div class="tab-pane" ng-class="{active: user.accountActiveMenu=='Change Avatar'}">
+          <div ng-include src="'app/profile/views/partials/_changeAvatar.html'"
+               ng-if="user.accountActiveMenu=='Change Avatar'"></div>
+        </div>
+        <div class="tab-pane" ng-class="{active: user.accountActiveMenu=='Change Password'}">
+          <div ng-include src="'app/profile/views/partials/_changePassword.html'"
+               ng-if="user.accountActiveMenu=='Change Password'"></div>
+        </div>
+        <div class="tab-pane" ng-class="{active: user.accountActiveMenu=='Privacy Settings'}">
+          <div ng-include src="'app/profile/views/partials/_privacy.html'"
+               ng-if="user.accountActiveMenu=='Privacy Settings'"></div>
+        </div>
+      </div>
+    </div>
+    <!--end col-md-9-->
+  </div>
+</div>

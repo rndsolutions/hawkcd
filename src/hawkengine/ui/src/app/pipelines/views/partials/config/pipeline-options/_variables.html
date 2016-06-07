@@ -1,0 +1,29 @@
+<div id="environmentVariables">
+    <div class="table-scrollable">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th> Name </th>
+                    <th> Value </th>
+                    <th> Secured </th>
+                    <th> Controls </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="pipeVar in pipeConfig.allPipelineVars">
+                    <td> {{pipeVar.Name}} </td>
+                    <td> {{pipeVar.IsSecured ? '******' : pipeVar.Value}} </td>
+                    <td> {{pipeVar.IsSecured ? 'Yes' : 'No'}} </td>
+                    <td>
+                        <button class="btn yellow" data-target="#editPipeVar" data-toggle="modal" ng-click="pipeConfig.getPipelineVar(pipeVar.Name)">Edit</button>
+                        <button class="btn red" data-target="#removePipeVar" data-toggle="modal" ng-click="pipeConfig.variableDeleteButton = true;pipeConfig.getPipelineVar(pipeVar.Name)" ng-class="{'disabled': pipeConfig.variableDeleteButton}">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button class="btn green" data-target="#addPipeVar" data-toggle="modal">Add Environment Variable</button>
+</div>
+<div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_add-variable.html'"></div>
+<div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_edit-variable.html'"></div>
+<div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_remove-variable.html'"></div>

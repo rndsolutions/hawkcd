@@ -1,0 +1,22 @@
+version: '2'
+services:
+  hawkserver:
+    image: smoke:latest
+    volumes:
+     - .:/code
+    depends_on:
+     - redis
+     - hawk-agent1
+  redis:
+    image: redis          
+    volumes:
+     - .:/data
+  hawk-agent1:
+    image: registry.hawkengine.net:5000/agent:0.1.1
+  hawkproxy:
+    image: registry.hawkengine.net:5000/hawkproxy:0.1.9
+    ports:
+      - 81:80 
+    depends_on:
+      - hawkserver
+   

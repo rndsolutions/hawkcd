@@ -1,0 +1,23 @@
+<div class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-md" ng-class="{'page-sidebar-closed': pageSidebarClosed}">
+    <!-- HEADER -->
+    <div data-ng-include="'app/application/views/layout/header.html'" data-ng-controller="HeaderController" class="page-header navbar navbar-fixed-top"></div>
+    <!-- CONTAINER -->
+    <div class="page-container">
+        <!-- SIDEBAR -->
+        <div data-ng-include="'app/application/views/layout/sidebar.html'" data-ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
+        <div class="page-content-wrapper">
+            <div class="page-content">
+                <!-- CONTENT -->
+                <div ui-view class="fade-in-up">
+                </div>
+            </div>
+        </div>
+        <!-- QUICK SIDEBAR -->
+        <a href="javascript:;" class="page-quick-sidebar-toggler">
+            <i class="icon-login"></i>
+        </a>
+        <div data-ng-include="'app/application/views/layout/quick-sidebar.html'" data-ng-controller="QuickSidebarController" class="page-quick-sidebar-wrapper"></div>
+    </div>
+    <!-- FOOTER -->
+    <div data-ng-include="'app/application/views/layout/footer.html'" data-ng-controller="FooterController" class="page-footer"></div>
+</div>

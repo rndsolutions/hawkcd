@@ -1,0 +1,67 @@
+<div class="stage" ng-click="pipesRunManagement.selectStage(stage,$index);pipesRunManagement.toggleRun=$index">
+    <div class="panel panel-info s-box-inner">
+        <a class="p-link">
+            <div class="panel-heading s-head-box" data-ng-class="{'selected-stage':pipesRunManagement.toggleRun == $index}">
+                <div class="p-head">
+                    <p class="p-name" ng-model="stage">
+                        {{stage.Runs[0].Name}}
+                        <span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage.LastRun.Name})" class="icon-settings font-lg ico"></span>
+
+                    </p>
+
+                </div>
+            </div>
+        </a>
+        <div class="panel-body">
+            <div>
+                <p>
+                    <strong>{{pipesRunManagement.stageDefaultText.run}}</strong>
+                    <span ng-if="stage.LastRun.ExecutionID==0">Not Executed yet</span>
+                    <span ng-if="stage.LastRun.ExecutionID!=0">
+ <label>
+   <input type="number" name="input"
+          min="1" max="{{stage.Runs.length}}" class="spinner-custom" ng-value="{{stage.LastRunSelected}}"
+          ng-change="pipesRunManagement.selectStage(null,$index);pipesRunManagement.selectRun(stage.LastRunSelected)"
+          ng-model="stage.LastRunSelected" required>
+ </label>
+          of {{stage.Runs.length}}</span>
+                </p>
+                <p>
+                    <strong>{{pipesRunManagement.stageDefaultText.state}}</strong>
+                    <span class="btn btn-success btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Completed' && stage.Runs[stage.LastRunSelected-1].Status=='Passed'">{{stage.Runs[stage.LastRunSelected-1].Status}}</span>
+                    <span class="btn btn-danger btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Completed'  && stage.Runs[stage.LastRunSelected-1].Status=='Failed'">{{stage.Runs[stage.LastRunSelected-1].Status}}</span>
+                    <span class="btn yellow btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Running'">{{stage.Runs[stage.LastRunSelected-1].State}}</span>
+                    <span class="btn yellow-mint btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Scheduled'">{{stage.Runs[stage.LastRunSelected-1].State}}</span>
+                    <span class="btn yellow-mint btn-xs" ng-if="stage.LastRun.State=='Scheduled' && stage.Runs.LastRunSelected==undefined ">{{stage.LastRun.State}}</span>
+                    <span class="btn btn-default btn-xs" ng-if="stage.LastRun.State=='None'">{{stage.Runs[stage.LastRunSelected-1].State}}</span>
+                </p>
+
+                <p>
+                    <strong>{{pipesRunManagement.stageDefaultText.start}}</strong>
+                    <span ng-if="stage.LastRun.ExecutionID!=0">{{stage.Runs[stage.LastRunSelected-1].Start | date:'dd.MM.yyyy HH:mm'}}</span>
+
+                    <span ng-if="stage.LastRun.ExecutionID==0">Not Executed yet</span>
+                </p>
+
+                <p>
+                    <strong>{{pipesRunManagement.stageDefaultText.duration}}</strong>
+                    <span ng-if="stage.LastRun.ExecutionID!=0">{{stage.Runs[stage.LastRunSelected-1].Duration}}</span>
+                    <span ng-if="stage.LastRun.ExecutionID==0">Not Executed yet</span>
+
+                </p>
+
+                <p><strong>{{pipesRunManagement.stageDefaultText.trigger}}</strong> TEMP </p>
+                <div class="controls left-buttons-stage">
+                    <button class="btn btn-default" ng-click="pipesRunManagement.disabledBtn = true;pipesRunManagement.selectAlllJobs(stage);pipesRunManagement.reRunStageJobs(stage)" ng-class="{'disabled': pipesRunManagement.disabledBtn}">
+                        <span class="glyphicon glyphicon-play control"></span>
+                    </button>
+
+                    <button class="btn btn-default" data-target="#rerunStage" data-toggle="modal" ng-click="pipesRunManagement.setSelectedStageForReRun(stage)">
+                        <span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

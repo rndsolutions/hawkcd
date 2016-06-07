@@ -1,0 +1,36 @@
+<h3 class="page-title"> Profile</h3>
+<div class="page-bar ">
+    <ul class="page-breadcrumb ">
+        <li>
+            <i class="icon-home"></i>
+            <a> <span>Profile</span></a>
+        </li>
+    </ul>
+</div>
+<div class="tabbable-custom nav-justified">
+    <ul class="nav nav-tabs nav-justified">
+        <li class="active">
+            <a data-target="#profileSettings" data-toggle="tab" aria-expanded="true"> Settings </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div id="profileSettings" style="padding: 0 0 10px 10px">
+            <form name="editUser">
+                <div style="width: 300px">
+                    <!-- <div class="form-group form-md-line-input">
+                        <input type="text" class="form-control" ng-model="user.updatedUser.UserName" required>
+                        <label>Username</label>
+                    </div> -->
+                    <div class="form-group form-md-line-input">
+                        <input type="text" class="form-control" ng-model="updatedUser.Email" required>
+                        <label>Email</label>
+                    </div>
+                </div>
+                <button class="btn green-sharp" type="submit" ng-click="updateUser(updatedUser.Email)" 
+                        ng-disabled="editUser.$invalid">Update</button>
+                <button class="btn green-sharp" type="submit" data-target="#changePassword" data-toggle="modal">Change Password</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div ng-include src="'app/profile/views/partials/_change-password.html'"></div>
