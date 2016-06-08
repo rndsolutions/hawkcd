@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import net.hawkengine.model.dto.WsContractDto;
-import net.hawkengine.server.core.utilities.WsContractDeserializer;
+import net.hawkengine.core.utilities.WsContractDeserializer;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;

@@ -1,4 +1,4 @@
-package net.hawkengine.server.core;
+package net.hawkengine.core;
 
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.Account;

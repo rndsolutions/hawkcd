@@ -1,4 +1,4 @@
-package net.hawkengine.server.core.utilities;
+package net.hawkengine.core.utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

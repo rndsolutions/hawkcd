@@ -4,7 +4,7 @@ import javax.servlet.ServletException;
 import javax.websocket.DeploymentException;
 
 import net.hawkengine.db.redis.RedisManager;
-import net.hawkengine.server.core.HawkServer;
+import net.hawkengine.core.HawkServer;
 
 public class Main {
 

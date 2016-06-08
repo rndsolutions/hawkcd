@@ -2,7 +2,7 @@
 // Translated by CS2J (http://www.cs2j.com): 5/1/2016 4:17:15 PM
 //
 
-package net.hawkengine.server.core;
+package net.hawkengine.core;
 
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.services.IConfigService;

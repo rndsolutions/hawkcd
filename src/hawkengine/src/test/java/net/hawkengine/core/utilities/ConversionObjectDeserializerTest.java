@@ -1,10 +1,10 @@
-package net.hawkengine.server.core.utilities;
+package net.hawkengine.core.utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import net.hawkengine.model.dto.ConversionObject;
-import net.hawkengine.model.dto.WsContractDto;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.unitils.reflectionassert.ReflectionAssert;
