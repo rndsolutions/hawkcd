@@ -13,14 +13,14 @@ public class ServerResponseToAgent {
 		this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
 	}
 
-	private Pipeline __Pipeline;
+	private PipelineDefinition __PipelineDefinition;
 
-	public Pipeline getPipeline() {
-		return __Pipeline;
+	public PipelineDefinition getPipeline() {
+		return __PipelineDefinition;
 	}
 
-	public void setPipeline(Pipeline value) {
-		__Pipeline = value;
+	public void setPipeline(PipelineDefinition value) {
+		__PipelineDefinition = value;
 	}
 
 	private Job __Job;

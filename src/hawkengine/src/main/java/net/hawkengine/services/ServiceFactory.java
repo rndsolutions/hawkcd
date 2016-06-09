@@ -1,7 +1,7 @@
 package net.hawkengine.services;
 
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
 
 public class ServiceFactory implements IServiceFactory {
 
@@ -18,7 +18,7 @@ public class ServiceFactory implements IServiceFactory {
 	}
 
 	@Override
-	public IConfigService getConfigService(IDbRepository<Pipeline> pipelineRepository) {
+	public IConfigService getConfigService(IDbRepository<PipelineDefinition> pipelineRepository) {
 		// TODO Auto-generated method stub
 		return null;
 	}
