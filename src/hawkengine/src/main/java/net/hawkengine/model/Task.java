@@ -7,7 +7,7 @@ package net.hawkengine.model;
 import java.util.Date;
 import java.util.UUID;
 
-public abstract class TaskBase {
+public abstract class Task {
 	private UUID __Id;
 
 	public UUID getId() {
@@ -38,7 +38,7 @@ public abstract class TaskBase {
 		__Type = value;
 	}
 
-	public TaskBase() throws Exception {
+	public Task() throws Exception {
 		this.setId(UUID.randomUUID());
 	}
 
