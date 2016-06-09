@@ -4,5 +4,18 @@
 
 package net.hawkengine.services;
 
-public interface IPipelineDefinitionService {
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.ICrudService;
+
+public interface IPipelineDefinitionService extends ICrudService<PipelineDefinition> {
+    ServiceResult getById(String pipelineDefinitionId);
+
+    ServiceResult getAll();
+
+    ServiceResult add(PipelineDefinition pipelineDefinition);
+
+    ServiceResult update(PipelineDefinition pipelineDefinition);
+
+    ServiceResult delete(String pipelineDefinitionId);
 }
