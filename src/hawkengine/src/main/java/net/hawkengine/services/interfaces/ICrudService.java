@@ -8,7 +8,7 @@ import java.util.List;
 public interface ICrudService<T extends DbEntry> {
     ServiceResult getById(String id);
 
-    List<ServiceResult> getAll();
+    ServiceResult getAll();
 
     ServiceResult add(T object);
 
