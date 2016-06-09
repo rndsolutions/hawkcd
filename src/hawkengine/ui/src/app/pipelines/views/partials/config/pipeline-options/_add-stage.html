@@ -91,7 +91,7 @@
                   <select class="form-control" name="pipelineSelect" id="pipeStageSelect"
                           ng-model="pipeConfig.newStage.Jobs.Tasks.Pipeline"
                           ng-change="pipeConfig.getPipelineForTask(pipeConfig.newStage.Jobs.Tasks.Pipeline)" required>
-                      <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.Name}}" >{{pipeline.Name}}</option>
+                      <option ng-repeat="pipelineDefinition in pipeConfig.allPipelines" value="{{pipelineDefinition.Name}}" >{{pipelineDefinition.Name}}</option>
                   </select>
                   <label for="pipeStageSelect">Pipeline</label>
               </div>
@@ -158,7 +158,7 @@
               <div class="form-group form-md-line-input">
                 <select class="form-control" name="materialSelect" id="stageMaterialSelect"
                         ng-model="pipeConfig.newStage.Jobs.Tasks.MaterialName" required>
-                  <option ng-repeat="material in pipeConfig.pipeline.Materials" value="{{material.Name}}">{{material.Name}}</option>
+                  <option ng-repeat="material in pipeConfig.pipelineDefinition.Materials" value="{{material.Name}}">{{material.Name}}</option>
                 </select>
                 <label for="stageMaterialSelect">Material</label>
               </div>

@@ -6,30 +6,30 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Environment;
 import net.hawkengine.model.Material;
-import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.Server;
 
 public class ConfigService implements IConfigService{
 	
-	private IDbRepository<Pipeline> repository;
+	private IDbRepository<PipelineDefinition> repository;
 	
 	public ConfigService() {
 		// TODO Auto-generated constructor stub
 	}
 		
-	public ConfigService(IDbRepository<Pipeline> repository){
+	public ConfigService(IDbRepository<PipelineDefinition> repository){
 		this.repository = repository;
 	}
 	
 	@Override
-	public IDbRepository<Pipeline> getPipelineConfigRepository() throws Exception {
+	public IDbRepository<PipelineDefinition> getPipelineConfigRepository() throws Exception {
 		// TODO Auto-generated method stub
 		return null;				
 	}
 
 	@Override
-	public void setPipelineConfigRepository(IDbRepository<Pipeline> value) throws Exception {
+	public void setPipelineConfigRepository(IDbRepository<PipelineDefinition> value) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
@@ -59,43 +59,43 @@ public class ConfigService implements IConfigService{
 	}
 
 	@Override
-	public ArrayList<Pipeline> getAllPipelines() throws Exception {
+	public ArrayList<PipelineDefinition> getAllPipelines() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Pipeline getPipelineByName(String name) throws Exception {
+	public PipelineDefinition getPipelineByName(String name) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addPipeline(Pipeline pipeline) throws Exception {
+	public String addPipeline(PipelineDefinition pipelineDefinition) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deletePipeline(Pipeline pipeline) throws Exception {
+	public String deletePipeline(PipelineDefinition pipelineDefinition) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updatePipeline(String pipelineName, Pipeline newPipeline) throws Exception {
+	public String updatePipeline(String pipelineName, PipelineDefinition newPipelineDefinition) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Pipeline> getPipelineUpstream(String pipelineName) throws Exception {
+	public ArrayList<PipelineDefinition> getPipelineUpstream(String pipelineName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Pipeline> getPipelineDownstream(String pipelineName) throws Exception {
+	public ArrayList<PipelineDefinition> getPipelineDownstream(String pipelineName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

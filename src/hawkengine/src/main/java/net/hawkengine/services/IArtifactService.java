@@ -6,7 +6,7 @@ package net.hawkengine.services;
 
 import java.util.List;
 
-import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
 
 public interface IArtifactService {
 	String[] getFiles(String path) throws Exception;
@@ -24,6 +24,6 @@ public interface IArtifactService {
 	String listArtifacts(String pipelineName, String pipelineId, String stageName, String stageId, String jobName)
 			throws Exception;
 
-	void purgeArtifacts(List<Pipeline> pipelines, Double freeSpaceNeeded) throws Exception;
+	void purgeArtifacts(List<PipelineDefinition> pipelineDefinitions, Double freeSpaceNeeded) throws Exception;
 
 }
