@@ -2,23 +2,26 @@ package net.hawkengine.services;
 
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.ConfigState;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.ICrudService;
 
 import java.util.List;
 
-public interface IAgentService {
-	Agent getAgentById(String agentId) throws Exception;
+public interface IAgentService extends ICrudService<Agent> {
+	ServiceResult getById(String agentId);
 
-	List<Agent> getAllAgents() throws Exception;
+	ServiceResult getAll();
 
-	String addAgent(Agent agent) throws Exception;
+	ServiceResult add(Agent agent);
 
-	Agent updateAgent(Agent agent) throws Exception;
+	ServiceResult update(Agent agent);
 
-	String deleteAgent(String agentId) throws Exception;
+	ServiceResult delete(String agentId);
 
-	List<Agent> getAllEnabledAgents() throws Exception;
+	ServiceResult getAllEnabledAgents();
 
-	List<Agent> getAllEnabledIdleAgents() throws Exception;
+	ServiceResult getAllEnabledIdleAgents();
 
-	Agent setAgentConfigState(String agentId, ConfigState state) throws Exception;
+	ServiceResult setAgentConfigState(String agentId, ConfigState state);
 }

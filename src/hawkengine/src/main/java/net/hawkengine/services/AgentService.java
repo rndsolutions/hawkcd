@@ -5,107 +5,47 @@ import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.AgentExecutionState;
 import net.hawkengine.model.ConfigState;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.ServiceResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AgentService implements IAgentService {
+public class AgentService extends CrudService<Agent> implements IAgentService {
 	private IDbRepository<Agent> repository;
+	private ServiceResult serviceResult;
 
-
-	/**
-	 * The AgentService object provides a service that handles
-	 * agent configuration management to its caller.
-	 * It calls add, update, delete and more on the database
-	 * for a specific agent.
-	 */
 	public AgentService() {
-		this.repository = new RedisRepository(Agent.class);
+		super.repository = new RedisRepository(Agent.class);
 	}
 
-	public AgentService(IDbRepository<Agent> repository) {
-		this.repository = repository;
+	public AgentService(IDbRepository repository) {
+		super.repository = repository;
 	}
 
-	/**
-	 * Gets an Agent by ID.
-	 *
-	 * @param agentId The id of the Agent we want to access.
-	 * @return The agent of the specified id.
-	 * @throws Exception
-	 * @see Agent
-	 */
 	@Override
-	public Agent getAgentById(String agentId) throws Exception {
-		if (agentId == null || agentId.trim().length() == 0) {
-			return null;
-		}
-
-		Agent agent = this.repository.getById(agentId);
-		return agent;
+	public ServiceResult getById(String agentId) {
+		return super.getById(agentId);
 	}
 
-	/**
-	 * Returns a list of all agents that are in the database.
-	 *
-	 * @return list of all agents.
-	 * @see Agent
-	 */
 	@Override
-	public List<Agent> getAllAgents() throws Exception {
-		return this.repository.getAll();
+	public ServiceResult getAll() {
+		return super.getAll();
 	}
 
-	/**
-	 * Adds new agent to the database.
-	 *
-	 * @param agent Type stored in  a list.
-	 * @see Agent
-	 */
 	@Override
-	public String addAgent(Agent agent) throws Exception {
-		StringBuilder errorMessage = new StringBuilder("");
-		if (agent != null) {
-			this.repository.add(agent);
-		} else {
-			errorMessage.append("Unable to save Agent.");
-		}
-
-		return errorMessage.toString();
+	public ServiceResult add(Agent agent) {
+		return super.add(agent);
 	}
 
-	/**
-	 * Updates a specific Agent in the database, specified by the methods caller.
-	 *
-	 * @param agent Type stored in a list.
-	 * @see Agent
-	 */
 	@Override
-	public Agent updateAgent(Agent agent) throws Exception {
-		StringBuilder errorMessage = new StringBuilder("");
-		Agent updatedAgent = new Agent();
-		if (agent != null) {
-			updatedAgent = repository.update(agent);
-		}
-
-		return agent;
+	public ServiceResult update(Agent agent) {
+		return super.update(agent);
 	}
 
-	/**
-	 * Deletes an agent from the database.
-	 *
-	 * @param agentId Type stored in a list.
-	 * @see Agent
-	 */
 	@Override
-	public String deleteAgent(String agentId) throws Exception {
-		StringBuilder errorMessage = new StringBuilder("");
-		boolean isDeleted = repository.delete(agentId);
-		if (!isDeleted) {
-			errorMessage.append("Agent not deleted.");
-		}
-
-		return errorMessage.toString();
+	public ServiceResult delete(String agentId) {
+		return super.delete(agentId);
 	}
 
 	/**
@@ -114,14 +54,27 @@ public class AgentService implements IAgentService {
 	 * @return A list of enabled agents.
 	 * @see Agent
 	 */
+
 	@Override
-	public List<Agent> getAllEnabledAgents() throws Exception {
-		List<Agent> agents = repository.getAll()
+	public ServiceResult getAllEnabledAgents() {
+		List<Agent> agents = (List<Agent>) super.getAll().getObject();
+		agents = agents
 				.stream()
 				.filter(a -> a.getConfigState() == ConfigState.Enabled)
 				.collect(Collectors.toList());
 
-		return agents;
+		ServiceResult result = new ServiceResult();
+		if(agents == null){
+			result.setError(false);
+			result.setObject(null);
+		}
+		else{
+			result.setError(false);
+			result.setMessage("All enabled " + agents.get(0).getClass().getSimpleName() + "s retrieved successfully.");
+			result.setObject(agents);
+		}
+
+		return result;
 	}
 
 	/**
@@ -130,14 +83,27 @@ public class AgentService implements IAgentService {
 	 * @return A list of idle agents.
 	 * @see Agent
 	 */
+
 	@Override
-	public List<Agent> getAllEnabledIdleAgents() throws Exception {
-		List<Agent> agents = repository.getAll()
+	public ServiceResult getAllEnabledIdleAgents() {
+		List<Agent> agents = (List<Agent>) super.getAll().getObject();
+		agents = agents
 				.stream()
 				.filter(a -> a.getConfigState() == ConfigState.Enabled && a.getExecutionState() == AgentExecutionState.Idle)
 				.collect(Collectors.toList());
 
-		return agents;
+		ServiceResult result = new ServiceResult();
+		if(agents == null){
+			result.setError(false);
+			result.setObject(null);
+		}
+		else{
+			result.setError(false);
+			result.setMessage("All enabled idle " + agents.get(0).getClass().getSimpleName() + "s retrieved successfully.");
+			result.setObject(agents);
+		}
+
+		return result;
 	}
 
 	/**
@@ -146,15 +112,17 @@ public class AgentService implements IAgentService {
 	 *  @param agentId id of the agent.
 	 * @param state   state of the agent.
 	 */
+
 	@Override
-	public Agent setAgentConfigState(String agentId, ConfigState state) throws Exception {
-		Agent agent = this.repository.getById(agentId);
+	public ServiceResult setAgentConfigState(String agentId, ConfigState state) {
+		Agent agent = (Agent) super.getById(agentId).getObject();
+		ServiceResult result = new ServiceResult();
 
 		if (agent != null) {
 			agent.setConfigState(state);
-			agent = this.repository.update(agent);
+			result = super.update(agent);
 		}
 
-		return agent;
+		return result;
 	}
 }
