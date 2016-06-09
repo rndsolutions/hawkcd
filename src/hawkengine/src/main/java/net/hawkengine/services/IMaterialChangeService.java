@@ -6,12 +6,12 @@ package net.hawkengine.services;
 
 import java.util.ArrayList;
 
-import net.hawkengine.model.Material;
+import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.MaterialChange;
 
 public interface IMaterialChangeService {
-	ArrayList<MaterialChange> getAllMaterialChanges(Material material) throws Exception;
+	ArrayList<MaterialChange> getAllMaterialChanges(MaterialDefinition material) throws Exception;
 
-	MaterialChange getLatestMaterialChange(Material material) throws Exception;
+	MaterialChange getLatestMaterialChange(MaterialDefinition material) throws Exception;
 
 }

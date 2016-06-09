@@ -6,8 +6,8 @@ package net.hawkengine.model;
 
 import java.util.HashMap;
 
-public class Material {
-	public Material() throws Exception {
+public class MaterialDefinition {
+	public MaterialDefinition() throws Exception {
 	}
 
 	private String __PipelineName;

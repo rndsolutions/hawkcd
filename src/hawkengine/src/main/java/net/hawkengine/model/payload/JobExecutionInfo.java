@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import net.hawkengine.model.ExecutionState;
-import net.hawkengine.model.ExecutionStatus;
+import net.hawkengine.model.Status;
 
 public class JobExecutionInfo {
 	private UUID __PipelineId;
@@ -113,23 +112,13 @@ public class JobExecutionInfo {
 		__JobName = value;
 	}
 
-	private ExecutionState __State = ExecutionState.None;
+	private Status __Status = Status.PASSED;
 
-	public ExecutionState getState() {
-		return __State;
-	}
-
-	public void setState(ExecutionState value) {
-		__State = value;
-	}
-
-	private ExecutionStatus __Status = ExecutionStatus.Passed;
-
-	public ExecutionStatus getStatus() {
+	public Status getStatus() {
 		return __Status;
 	}
 
-	public void setStatus(ExecutionStatus value) {
+	public void setStatus(Status value) {
 		__Status = value;
 	}
 

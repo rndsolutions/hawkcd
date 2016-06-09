@@ -7,8 +7,7 @@ package net.hawkengine.model.payload;
 import java.util.Date;
 import java.util.UUID;
 
-import net.hawkengine.model.ExecutionState;
-import net.hawkengine.model.ExecutionStatus;
+import net.hawkengine.model.Status;
 
 public class JobTaskExecutionInfo {
 	private UUID __TaskId;
@@ -31,23 +30,13 @@ public class JobTaskExecutionInfo {
 		__Result = value;
 	}
 
-	private ExecutionState __State = ExecutionState.None;
+	private Status __Status = Status.PASSED;
 
-	public ExecutionState getState() {
-		return __State;
-	}
-
-	public void setState(ExecutionState value) {
-		__State = value;
-	}
-
-	private ExecutionStatus __Status = ExecutionStatus.Passed;
-
-	public ExecutionStatus getStatus() {
+	public Status getStatus() {
 		return __Status;
 	}
 
-	public void setStatus(ExecutionStatus value) {
+	public void setStatus(Status value) {
 		__Status = value;
 	}
 
@@ -75,8 +64,8 @@ public class JobTaskExecutionInfo {
 		setResult("");
 	}
 
-	public JobTaskExecutionInfo(UUID taskId, Date start, ExecutionState state) throws Exception {
-		setState(state);
+	public JobTaskExecutionInfo(UUID taskId, Date start, Status status) throws Exception {
+		setStatus(status);
 		setTaskId(taskId);
 		setStart(start);
 		setResult("");
@@ -85,7 +74,7 @@ public class JobTaskExecutionInfo {
 	public String toString() {
 		try {
 			return String.format("TaskId: {0}, Result: {1}, State: {2}, Start: {3}, End:{3} ", getTaskId(), getResult(),
-					getState(), getStart(), getEnd());
+					getStatus(), getStart(), getEnd());
 		} catch (RuntimeException __dummyCatchVar0) {
 			throw __dummyCatchVar0;
 		} catch (Exception __dummyCatchVar0) {

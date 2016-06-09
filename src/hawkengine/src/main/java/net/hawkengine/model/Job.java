@@ -143,24 +143,13 @@ public class Job {
 		__CancelAfter = value;
 	}
 
-	// [SD] Execution contexts props
-	private ExecutionState __State = ExecutionState.None;
+	private Status __Status = Status.PASSED;
 
-	public ExecutionState getState() {
-		return __State;
-	}
-
-	public void setState(ExecutionState value) {
-		__State = value;
-	}
-
-	private ExecutionStatus __Status = ExecutionStatus.Passed;
-
-	public ExecutionStatus getStatus() {
+	public Status getStatus() {
 		return __Status;
 	}
 
-	public void setStatus(ExecutionStatus value) {
+	public void setStatus(Status value) {
 		__Status = value;
 	}
 

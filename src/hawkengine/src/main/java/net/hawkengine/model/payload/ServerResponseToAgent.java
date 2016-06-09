@@ -53,13 +53,13 @@ public class ServerResponseToAgent {
 		__EnvironmentInfo = value;
 	}
 
-	private ArrayList<Material> __Materials;
+	private ArrayList<MaterialDefinition> __Materials;
 
-	public ArrayList<Material> getMaterials() {
+	public ArrayList<MaterialDefinition> getMaterials() {
 		return __Materials;
 	}
 
-	public void setMaterials(ArrayList<Material> value) {
+	public void setMaterials(ArrayList<MaterialDefinition> value) {
 		__Materials = value;
 	}
 
