@@ -84,7 +84,7 @@
             <div class="form-group form-md-line-input">
                 <select class="form-control" name="pipelineSelect" id="pipeJobSelect"
                         ng-model="pipeConfig.newJob.Tasks.Pipeline" ng-change="pipeConfig.getPipelineForTask(pipeConfig.newJob.Tasks.Pipeline)" required>
-                    <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.Name}}">{{pipeline.Name}}</option>
+                    <option ng-repeat="pipelineDefinition in pipeConfig.allPipelines" value="{{pipelineDefinition.Name}}">{{pipelineDefinition.Name}}</option>
                 </select>
                 <label for="pipeJobSelect">Pipeline</label>
             </div>
@@ -147,7 +147,7 @@
           <div ng-if="pipeConfig.newJob.Tasks.Type == 'FetchMaterial'">
             <div class="form-group form-md-line-input">
               <select class="form-control" name="materialSelect" id="jobMaterialSelect" ng-model="pipeConfig.newJob.Tasks.MaterialName" required>
-                <option ng-repeat="material in pipeConfig.pipeline.Materials" value="{{material.Name}}">{{material.Name}}</option>
+                <option ng-repeat="material in pipeConfig.pipelineDefinition.Materials" value="{{material.Name}}">{{material.Name}}</option>
               </select>
               <label for="jobMaterialSelect">Material</label>
             </div>

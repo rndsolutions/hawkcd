@@ -17,15 +17,15 @@
             <label for="autoPschedule">
               <span></span>
               <span class="check"></span>
-              <span class="box"></span> Automatic pipeline scheduling </label>
+              <span class="box"></span> Automatic pipelineDefinition scheduling </label>
           </div>
         </div>
       </div>
     </div>
     <!--<button class="btn green-sharp" data-toggle="confirmation" data-popout="true" data-placement="right" id="updatePipe" data-on-confirm="updatePipeline()">Update</button>-->
-    <!-- || pipeConfig.updatedPipeline.Name == pipeConfig.pipeline.Name -->
+    <!-- || pipeConfig.updatedPipeline.Name == pipeConfig.pipelineDefinition.Name -->
     <button class="btn green-sharp" type="submit" ng-click="pipeConfig.editPipeline(pipeConfig.updatedPipeline)"
-    ng-disabled="editPipeForm.$invalid || pipeConfig.updatedPipeline.LabelTemplate == pipeConfig.pipeline.LabelTemplate && pipeConfig.updatedPipeline.Name == pipeConfig.pipeline.Name && pipeConfig.updatedPipeline.AutoScheduling == pipeConfig.pipeline.AutoScheduling">Update</button>
+    ng-disabled="editPipeForm.$invalid || pipeConfig.updatedPipeline.LabelTemplate == pipeConfig.pipelineDefinition.LabelTemplate && pipeConfig.updatedPipeline.Name == pipeConfig.pipelineDefinition.Name && pipeConfig.updatedPipeline.AutoScheduling == pipeConfig.pipelineDefinition.AutoScheduling">Update</button>
   </form>
 
 </div>
