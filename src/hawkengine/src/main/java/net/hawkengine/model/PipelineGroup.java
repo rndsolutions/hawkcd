@@ -17,14 +17,14 @@ public class PipelineGroup extends DbEntry {
 		__Name = value;
 	}
 
-	private ArrayList<PipelineDefinition> __PipelineDefinitions;
+	private ArrayList<Pipeline> __Pipelines;
 
-	public ArrayList<PipelineDefinition> getPipelines() {
-		return __PipelineDefinitions;
+	public ArrayList<Pipeline> getPipelines() {
+		return __Pipelines;
 	}
 
-	public void setPipelines(ArrayList<PipelineDefinition> value) {
-		__PipelineDefinitions = value;
+	public void setPipelines(ArrayList<Pipeline> value) {
+		__Pipelines = value;
 	}
 
 }

@@ -4,7 +4,7 @@
 
 package net.hawkengine.core;
 
-import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.Pipeline;
 import net.hawkengine.services.IConfigService;
 import net.hawkengine.services.IPipelineExecutionService;
 
@@ -24,6 +24,6 @@ public interface IPipelineScheduller extends IServerComponent {
 
 	void startPipeline(String pipelineName, ArrayList<MaterialChange> materialChanges) throws Exception;
 
-	void startPipeline(PipelineDefinition pipelineDefinitionToStart) throws Exception;
+	void startPipeline(Pipeline pipelineToStart) throws Exception;
 
 }
