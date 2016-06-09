@@ -8,14 +8,16 @@ import java.util.ArrayList;
 
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Environment;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.ICrudService;
 
-public interface IEnvironmentService extends IDbRepository<Environment> {
-	ArrayList<Environment> getAllEnvironments() throws Exception;
+public interface IEnvironmentService extends ICrudService<Environment> {
+	ServiceResult getAllEnvironments();
 
-	String addEnvironment(Environment environment) throws Exception;
+	ServiceResult addEnvironment(Environment environment);
 
-	String deleteEnvironment(Environment environment) throws Exception;
+	ServiceResult deleteEnvironment(String environmentId);
 
-	String updateEnvironment(String environmentName, Environment newEnvironment) throws Exception;
+	ServiceResult updateEnvironment(Environment environment);
 
 }
