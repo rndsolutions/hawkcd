@@ -4,23 +4,19 @@
 
 package net.hawkengine.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.ICrudService;
 
-public interface IPipelineGroupService {
-	List<PipelineGroup> getAllPipelineGroups() throws Exception;
+public interface IPipelineGroupService extends ICrudService<PipelineGroup>{
+	ServiceResult getById(String pipelineGroupId);
 
-	PipelineGroup getPipelineGroup(String pipelineGroupName) throws Exception;
+	ServiceResult getAll();
 
-	PipelineGroup getPipelineGroupWithLatestPipelineExecution(String pipelineGroupName) throws Exception;
+	ServiceResult add(PipelineGroup pipelineGroup);
 
-	String addPipelineGroup(PipelineGroup pipelineGroup) throws Exception;
+	ServiceResult update(PipelineGroup pipelineGroup);
 
-	String updatePipelineGroup(String pipelineGroupName, PipelineGroup newPipelineGroup) throws Exception;
-
-	String deletePipelineGroup(String pipelineGroupName) throws Exception;
+	ServiceResult delete(String pipelineGroupId);
 
 }
