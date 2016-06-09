@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Pipeline extends DbEntry {
-    private int pipelineDefinitionId;
+    private String pipelineDefinitionId;
     private int executionId;
     private List<MaterialDefinition> materials;
     private List<EnvironmentVariable> environmentVariables;
@@ -25,11 +25,11 @@ public class Pipeline extends DbEntry {
         this.startTime = LocalDateTime.now();
     }
 
-    public int getPipelineDefinitionId() {
+    public String getPipelineDefinitionId() {
         return this.pipelineDefinitionId;
     }
 
-    public void setPipelineDefinitionId(int pipelineDefinitionId) {
+    public void setPipelineDefinitionId(String pipelineDefinitionId) {
         this.pipelineDefinitionId = pipelineDefinitionId;
     }
 
@@ -121,7 +121,7 @@ public class Pipeline extends DbEntry {
         this.triggerReason = triggerReason;
     }
 
-    public boolean isAreMaterialsUpdated() {
+    public boolean areMaterialsUpdated() {
         return this.areMaterialsUpdated;
     }
 

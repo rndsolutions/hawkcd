@@ -8,6 +8,7 @@ import javax.naming.OperationNotSupportedException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class PipelineDefinition extends DbEntry {
@@ -19,7 +20,7 @@ public class PipelineDefinition extends DbEntry {
     private ArrayList<MaterialDefinition> __Materials;
     private ArrayList<EnvironmentVariable> __EnvironmentVariables;
     private ArrayList<Parameter> __Parameters;
-    private Environment __Environment;
+    private List<Environment> environments;
     private ArrayList<Stage> __Stages;
     private Status __Status = Status.PASSED;
     // [SD] Execution contexts props
@@ -61,6 +62,14 @@ public class PipelineDefinition extends DbEntry {
         this.name = value;
     }
 
+    public List<Environment> getEnvironments() {
+        return this.environments;
+    }
+
+    public void setEnvironments(List<Environment> environments) {
+        this.environments = environments;
+    }
+
     public String getGroupName() {
         return __GroupName;
     }
@@ -99,14 +108,6 @@ public class PipelineDefinition extends DbEntry {
 
     public void setParameters(ArrayList<Parameter> value) {
         __Parameters = value;
-    }
-
-    public Environment getEnvironment() {
-        return __Environment;
-    }
-
-    public void setEnvironment(Environment value) {
-        __Environment = value;
     }
 
     public ArrayList<Stage> getStages() {
