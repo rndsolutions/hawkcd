@@ -14,6 +14,7 @@ public class EnvironmentService extends CrudService<Environment> implements IEnv
 
     public EnvironmentService() {
         super.repository = new RedisRepository(Environment.class);
+        super.type = "Environment";
     }
 
     public EnvironmentService(IDbRepository repository) {

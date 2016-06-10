@@ -9,6 +9,7 @@ import java.util.List;
 
 public abstract class CrudService<T extends DbEntry> implements ICrudService<T> {
     protected IDbRepository<T> repository;
+    protected String type;
 
     public void setRepository(IDbRepository<T> repository) {
         this.repository = repository;
@@ -26,12 +27,12 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
         ServiceResult result = new ServiceResult();
         if(dbCall != null){
             result.setError(false);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " retrieved successfully.");
+            result.setMessage(this.type + " " + id + " retrieved successfully.");
             result.setObject(dbCall);
         }
         else{
             result.setError(true);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " already exists.");
+            result.setMessage(this.type + " " + id + " already exists.");
             result.setObject(null);
         }
 
@@ -50,7 +51,7 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
         ServiceResult result = new ServiceResult();
         result.setError(false);
         if(dbCall != null){
-            result.setMessage(dbCall.get(0).getClass().getSimpleName() + "s retrieved successfully.");
+            result.setMessage(this.type + "s retrieved successfully.");
         }
         result.setObject(dbCall);
 
@@ -69,12 +70,12 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
         ServiceResult result = new ServiceResult();
         if(dbCall != null){
             result.setError(false);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " retrieved successfully.");
+            result.setMessage(this.type + " " + object.getId() + " retrieved successfully.");
             result.setObject(dbCall);
         }
         else{
             result.setError(true);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " already exists.");
+            result.setMessage(this.type + " " + object.getId() + " already exists.");
             result.setObject(null);
         }
 
@@ -93,12 +94,12 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
         ServiceResult result = new ServiceResult();
         if(dbCall != null){
             result.setError(false);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " updated successfully.");
+            result.setMessage(this.type + " " + object.getId() + " updated successfully.");
             result.setObject(dbCall);
         }
         else{
             result.setError(true);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " already exists.");
+            result.setMessage(this.type + " " + object.getId() + " not found.");
             result.setObject(null);
         }
 
@@ -117,12 +118,12 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
         ServiceResult result = new ServiceResult();
         if(dbCall){
             result.setError(false);
-            result.setMessage("Object with id " + id + " deleted successfully.");
+            result.setMessage(this.type + " deleted successfully.");
             result.setObject(id);
         }
         else{
             result.setError(true);
-            result.setMessage("Object with id " + id + " not found.");
+            result.setMessage(this.type + " not found.");
             result.setObject(null);
         }
 

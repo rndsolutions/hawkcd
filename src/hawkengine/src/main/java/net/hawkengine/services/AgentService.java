@@ -17,6 +17,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
 	public AgentService() {
 		super.repository = new RedisRepository(Agent.class);
+		super.type = "Agent";
 	}
 
 	public AgentService(IDbRepository repository) {

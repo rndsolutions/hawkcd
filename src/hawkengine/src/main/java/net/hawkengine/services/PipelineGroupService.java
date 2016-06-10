@@ -14,6 +14,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
 
 	public PipelineGroupService() {
 		super.repository = new RedisRepository(PipelineGroup.class);
+		super.type = "Pipeline Group";
 	}
 
 	public PipelineGroupService(IDbRepository repository) {

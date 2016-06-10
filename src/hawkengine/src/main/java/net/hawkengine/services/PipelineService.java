@@ -12,6 +12,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     public PipelineService() {
         super.repository = new RedisRepository(Pipeline.class);
+        super.type = "Pipeline";
     }
 
     public PipelineService(IDbRepository repository) {
