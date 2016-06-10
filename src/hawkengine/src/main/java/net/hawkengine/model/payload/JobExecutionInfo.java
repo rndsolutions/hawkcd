@@ -162,16 +162,6 @@ public class JobExecutionInfo {
 		__Duration = value;
 	}
 
-	private ArrayList<JobTaskExecutionInfo> __TaskExecutionInfo;
-
-	public ArrayList<JobTaskExecutionInfo> getTaskExecutionInfo() {
-		return __TaskExecutionInfo;
-	}
-
-	public void setTaskExecutionInfo(ArrayList<JobTaskExecutionInfo> value) {
-		__TaskExecutionInfo = value;
-	}
-
 	private String __Result;
 
 	public String getResult() {
@@ -181,9 +171,4 @@ public class JobExecutionInfo {
 	public void setResult(String value) {
 		__Result = value;
 	}
-
-	public JobExecutionInfo() throws Exception {
-		setTaskExecutionInfo(new ArrayList<JobTaskExecutionInfo>());
-	}
-
 }

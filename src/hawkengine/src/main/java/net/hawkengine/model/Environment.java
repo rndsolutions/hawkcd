@@ -1,54 +1,46 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.util.ArrayList;
 
 public class Environment extends DbEntry {
-	public Environment() throws Exception {
-		this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
-	}
+    private String environmentName;
+    private ArrayList<EnvironmentVariable> environmentVariables;
+    private ArrayList<String> pipelineNames;
+	private ArrayList<Agent> agents;
 
-	private ArrayList<Agent> __Agents;
+    public Environment() {
+        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+    }
 
-	public ArrayList<Agent> getAgents() {
-		return __Agents;
-	}
+    public String getEnvironmentName() {
+        return environmentName;
+    }
 
-	public void setAgents(ArrayList<Agent> value) {
-		__Agents = value;
-	}
+    public void setEnvironmentName(String value) {
+        environmentName = value;
+    }
 
-	private ArrayList<String> __PipelineNames;
+    public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
+        return environmentVariables;
+    }
 
-	public ArrayList<String> getPipelineNames() {
-		return __PipelineNames;
-	}
+    public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
+        environmentVariables = value;
+    }
 
-	public void setPipelineNames(ArrayList<String> value) {
-		__PipelineNames = value;
-	}
+    public ArrayList<String> getPipelineNames() {
+        return pipelineNames;
+    }
 
-	private ArrayList<EnvironmentVariable> __EnvironmentVariables;
+    public void setPipelineNames(ArrayList<String> value) {
+        pipelineNames = value;
+    }
 
-	public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-		return __EnvironmentVariables;
-	}
+    public ArrayList<Agent> getAgents() {
+        return agents;
+    }
 
-	public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-		__EnvironmentVariables = value;
-	}
-
-	private String __EnvironmentName;
-
-	public String getEnvironmentName() {
-		return __EnvironmentName;
-	}
-
-	public void setEnvironmentName(String value) {
-		__EnvironmentName = value;
-	}
-
+    public void setAgents(ArrayList<Agent> value) {
+        agents = value;
+    }
 }

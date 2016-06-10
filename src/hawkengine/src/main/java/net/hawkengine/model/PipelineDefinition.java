@@ -1,48 +1,43 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
-import javax.naming.OperationNotSupportedException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
+
+import javax.naming.OperationNotSupportedException;
 
 public class PipelineDefinition extends DbEntry {
     private String name;
     private String originalName;
-    private int __ExecutionID;
-    private String __GroupName;
-    private String __LabelTemplate;
-    private ArrayList<MaterialDefinition> __Materials;
-    private ArrayList<EnvironmentVariable> __EnvironmentVariables;
-    private ArrayList<Parameter> __Parameters;
-    private List<Environment> environments;
-    private ArrayList<Stage> __Stages;
-    private Status __Status = Status.PASSED;
+    private int executionId;
+    private String groupName;
+    private String labelTemplate;
+    private ArrayList<MaterialDefinition> materials;
+    private ArrayList<EnvironmentVariable> environmentVariables;
+    private Environment environment;
+    private ArrayList<Stage> stages;
+    private Status status = Status.PASSED;
     // [SD] Execution contexts props
-    private Date __Start;
-    private Date __End;
-    private Duration __Duration;
-    private ArrayList<MaterialChange> __ExecutionMaterials;
-    private String __TriggerReason;
-    private boolean __AutoScheduling;
-    private boolean __IsLocked;
+    private Date start;
+    private Date end;
+    private Duration duration;
+    private ArrayList<MaterialChange> executionMaterials;
+    private String triggerReason;
+    private boolean autoScheduling;
+    private boolean isLocked;
 
     public PipelineDefinition() throws Exception {
         this.setLabelTemplate("%COUNT%");
         this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
     }
 
-    public int getExecutionID() {
-        return __ExecutionID;
+    public int getExecutionId() {
+        return executionId;
     }
 
-    public void setExecutionID(int value) {
-        __ExecutionID = value;
+    public void setExecutionId(int value) {
+        executionId = value;
     }
 
     public String getOriginalName() throws Exception {
@@ -62,124 +57,116 @@ public class PipelineDefinition extends DbEntry {
         this.name = value;
     }
 
-    public List<Environment> getEnvironments() {
-        return this.environments;
-    }
-
-    public void setEnvironments(List<Environment> environments) {
-        this.environments = environments;
-    }
-
     public String getGroupName() {
-        return __GroupName;
+        return groupName;
     }
 
     public void setGroupName(String value) {
-        __GroupName = value;
+        groupName = value;
     }
 
     public String getLabelTemplate() {
-        return __LabelTemplate;
+        return labelTemplate;
     }
 
     public void setLabelTemplate(String value) {
-        __LabelTemplate = value;
+        labelTemplate = value;
     }
 
     public ArrayList<MaterialDefinition> getMaterials() {
-        return __Materials;
+        return materials;
     }
 
     public void setMaterials(ArrayList<MaterialDefinition> value) {
-        __Materials = value;
+        materials = value;
     }
 
     public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-        return __EnvironmentVariables;
+        return environmentVariables;
     }
 
     public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-        __EnvironmentVariables = value;
+        environmentVariables = value;
     }
 
-    public ArrayList<Parameter> getParameters() {
-        return __Parameters;
+    public Environment getEnvironment() {
+        return environment;
     }
 
-    public void setParameters(ArrayList<Parameter> value) {
-        __Parameters = value;
+    public void setEnvironment(Environment value) {
+        environment = value;
     }
 
     public ArrayList<Stage> getStages() {
-        return __Stages;
+        return stages;
     }
 
     public void setStages(ArrayList<Stage> value) {
-        __Stages = value;
+        stages = value;
     }
 
     public Status getStatus() {
-        return __Status;
+        return status;
     }
 
     public void setStatus(Status value) {
-        __Status = value;
+        status = value;
     }
 
     public Date getStart() {
-        return __Start;
+        return start;
     }
 
     public void setStart(Date value) {
-        __Start = value;
+        start = value;
     }
 
     public Date getEnd() {
-        return __End;
+        return end;
     }
 
     public void setEnd(Date value) {
-        __End = value;
+        end = value;
     }
 
     public Duration getDuration() {
-        return __Duration;
+        return duration;
     }
 
     public void setDuration(Duration value) {
-        __Duration = value;
+        duration = value;
     }
 
     public ArrayList<MaterialChange> getExecutionMaterials() {
-        return __ExecutionMaterials;
+        return executionMaterials;
     }
 
     public void setExecutionMaterials(ArrayList<MaterialChange> value) {
-        __ExecutionMaterials = value;
+        executionMaterials = value;
     }
 
     public String getTriggerReason() {
-        return __TriggerReason;
+        return triggerReason;
     }
 
     public void setTriggerReason(String value) {
-        __TriggerReason = value;
+        triggerReason = value;
     }
 
     public boolean getAutoScheduling() {
-        return __AutoScheduling;
+        return autoScheduling;
     }
 
     public void setAutoScheduling(boolean value) {
-        __AutoScheduling = value;
+        autoScheduling = value;
     }
 
     public boolean getIsLocked() {
-        return __IsLocked;
+        return isLocked;
     }
 
     public void setIsLocked(boolean value) {
-        __IsLocked = value;
+        isLocked = value;
     }
 
     public Stage getStageById(UUID id) throws Exception {
@@ -199,17 +186,17 @@ public class PipelineDefinition extends DbEntry {
 		 */
     }
 
-    public Job getJobById(UUID stageID, UUID jobID) throws Exception {
+    public JobDefinition getJobById(UUID stageID, UUID jobID) throws Exception {
 
         throw new OperationNotSupportedException("not implemented");
 		/*
 		 * Stage stage = getStageById(stageID); if (stage.getJobs() != null) {
-		 * Job job = stage.getJobs().Where( [UNSUPPORTED] to translate lambda
+		 * JobDefinition job = stage.getJobs().Where( [UNSUPPORTED] to translate lambda
 		 * expressions we need an explicit delegate type, try adding a cast "(j)
 		 * => { return j.Id == jobID; }" ).FirstOrDefault(); if (job == null)
 		 * throw new
 		 * ArgumentException(String.format(StringSupport.CSFmtStrToJFmtStr(
-		 * "Job wiht ID {0} was not found in Stage with ID {1}"
+		 * "JobDefinition wiht ID {0} was not found in Stage with ID {1}"
 		 * ),jobID,stageID));
 		 * 
 		 * return job; }
@@ -220,21 +207,21 @@ public class PipelineDefinition extends DbEntry {
 		 */
     }
 
-    public TaskBase getTaskById(UUID stageID, UUID jobID, UUID taskID) throws Exception {
+    public Task getTaskById(UUID stageID, UUID jobID, UUID taskID) throws Exception {
 
         throw new OperationNotSupportedException("not implemented");
 		/*
-		 * Job job = getJobById(stageID,jobID); if (job.getTasks() != null) {
-		 * TaskBase task = job.getTasks().Where( [UNSUPPORTED] to translate
+		 * JobDefinition job = getJobById(stageID,jobID); if (job.getTasks() != null) {
+		 * Task task = job.getTasks().Where( [UNSUPPORTED] to translate
 		 * lambda expressions we need an explicit delegate type, try adding a
 		 * cast "(j) => { return j.Id == taskID; }" ).FirstOrDefault(); if (task
 		 * == null) throw new
 		 * ArgumentException(String.format(StringSupport.CSFmtStrToJFmtStr(
-		 * "Task with ID {0} was not found in Job with ID {1}"),taskID,jobID));
+		 * "Task with ID {0} was not found in JobDefinition with ID {1}"),taskID,jobID));
 		 * 
 		 * return task; } throw new
 		 * NullReferenceException(String.format(StringSupport.CSFmtStrToJFmtStr(
-		 * "Tasks collection of Job {0} is null"),stageID));
+		 * "Tasks collection of JobDefinition {0} is null"),stageID));
 		 */
     }
 

@@ -13,6 +13,8 @@ angular
 
         viewModel.allMaterials = {};
 
+        viewModel.allPipelineGroups = {};
+
         viewModel.init = function() {
             viewModel.getAllAgents();
             viewModel.getAllPipelines();
@@ -62,6 +64,10 @@ angular
                 }
             })
         }
+
+        viewModel.updatePipelineGroups = function(object) {
+            viewModel.allPipelineGroups = object.result;
+        };
 
         // $rootScope.$on('updateAgents', function(event, args) {
         //     var object = args.object;

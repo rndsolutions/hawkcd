@@ -1,38 +1,32 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 public class Server extends DbEntry {
-	private String __ArtifactsDir;
+    private String artifactsDir;
+    private Double purgeStart;
+    private Double purgeUpTo;
 
-	public String getArtifactsDir() {
-		return __ArtifactsDir;
-	}
+    public String getArtifactsDir() {
+        return artifactsDir;
+    }
 
-	public void setArtifactsDir(String value) {
-		__ArtifactsDir = value;
-	}
+    public void setArtifactsDir(String value) {
+        artifactsDir = value;
+    }
 
-	private Double __PurgeStart;
+    public Double getPurgeStart() {
+        return purgeStart;
+    }
 
-	public Double getPurgeStart() {
-		return __PurgeStart;
-	}
+    public void setPurgeStart(Double value) {
+        purgeStart = value;
+    }
 
-	public void setPurgeStart(Double value) {
-		__PurgeStart = value;
-	}
+    public Double getPurgeUpTo() {
+        return purgeUpTo;
+    }
 
-	private Double __PurgeUpTo;
-
-	public Double getPurgeUpTo() {
-		return __PurgeUpTo;
-	}
-
-	public void setPurgeUpTo(Double value) {
-		__PurgeUpTo = value;
-	}
+    public void setPurgeUpTo(Double value) {
+        purgeUpTo = value;
+    }
 
 }

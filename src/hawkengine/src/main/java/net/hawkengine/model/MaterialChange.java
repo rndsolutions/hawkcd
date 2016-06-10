@@ -1,83 +1,74 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.util.Date;
 import java.util.HashMap;
 
 public class MaterialChange extends DbEntry {
-	private String __PipelineName;
+    private String pipelineName;
+    private String materialName;
+    private String url;
+    private MaterialType type = MaterialType.GIT;
+    private Date changeDate;
+    private HashMap<String, Object> materialSpecificDetails;
 
-	public String getPipelineName() {
-		return __PipelineName;
-	}
+    public String getPipelineName() {
+        return pipelineName;
+    }
 
-	public void setPipelineName(String value) {
-		__PipelineName = value;
-	}
+    public void setPipelineName(String value) {
+        pipelineName = value;
+    }
 
-	private String __MaterialName;
+    public String getMaterialName() {
+        return materialName;
+    }
 
-	public String getMaterialName() {
-		return __MaterialName;
-	}
+    public void setMaterialName(String value) {
+        materialName = value;
+    }
 
-	public void setMaterialName(String value) {
-		__MaterialName = value;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	private String __Url;
+    public void setUrl(String value) {
+        url = value;
+    }
 
-	public String getUrl() {
-		return __Url;
-	}
+    public MaterialType getType() {
+        return type;
+    }
 
-	public void setUrl(String value) {
-		__Url = value;
-	}
+    public void setType(MaterialType value) {
+        type = value;
+    }
 
-	private MaterialType __Type = MaterialType.Git;
+    public Date getChangeDate() {
+        return changeDate;
+    }
 
-	public MaterialType getType() {
-		return __Type;
-	}
+    public void setChangeDate(Date value) {
+        changeDate = value;
+    }
 
-	public void setType(MaterialType value) {
-		__Type = value;
-	}
+    public HashMap<String, Object> getMaterialSpecificDetails() {
+        return materialSpecificDetails;
+    }
 
-	private Date __ChangeDate;
+    public void setMaterialSpecificDetails(HashMap<String, Object> value) {
+        materialSpecificDetails = value;
+    }
 
-	public Date getChangeDate() {
-		return __ChangeDate;
-	}
+    public String toString() {
+        try {
+            return String.format(" ID={0} PipelineName={1} MaterialName={2} ChangeDate={3}", this.getId(),
+                    getPipelineName(), getMaterialName(), getChangeDate());
+        } catch (RuntimeException __dummyCatchVar0) {
+            throw __dummyCatchVar0;
+        } catch (Exception __dummyCatchVar0) {
+            throw new RuntimeException(__dummyCatchVar0);
+        }
 
-	public void setChangeDate(Date value) {
-		__ChangeDate = value;
-	}
-
-	private HashMap<String, Object> __MaterialSpecificDetails;
-
-	public HashMap<String, Object> getMaterialSpecificDetails() {
-		return __MaterialSpecificDetails;
-	}
-
-	public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-		__MaterialSpecificDetails = value;
-	}
-
-	public String toString() {
-		try {
-			return String.format(" ID={0} PipelineName={1} MaterialName={2} ChangeDate={3}", this.getId(),
-					getPipelineName(), getMaterialName(), getChangeDate());
-		} catch (RuntimeException __dummyCatchVar0) {
-			throw __dummyCatchVar0;
-		} catch (Exception __dummyCatchVar0) {
-			throw new RuntimeException(__dummyCatchVar0);
-		}
-
-	}
+    }
 
 }

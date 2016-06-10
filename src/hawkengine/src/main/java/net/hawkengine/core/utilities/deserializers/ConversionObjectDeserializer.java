@@ -1,4 +1,4 @@
-package net.hawkengine.core.utilities;
+package net.hawkengine.core.utilities.deserializers;
 
 import com.google.gson.*;
 import net.hawkengine.model.dto.ConversionObject;

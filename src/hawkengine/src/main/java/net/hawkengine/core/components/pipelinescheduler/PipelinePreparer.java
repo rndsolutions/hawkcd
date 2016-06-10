@@ -61,16 +61,17 @@ public class PipelinePreparer extends Thread {
         ServiceResult serviceResult = this.pipelineDefinitionService.getById(pipelineDefinitionId);
         PipelineDefinition pipelineDefinition = (PipelineDefinition) serviceResult.getObject();
 
-        pipelineToPrepare.setEnvironments(pipelineDefinition.getEnvironments());
+        //TODO: Modify Pipeline Definition Model
+        //pipelineToPrepare.setEnvironments(pipelineDefinition.getEnvironments());
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinition.getEnvironmentVariables());
 
         List<Stage> stages = pipelineDefinition.getStages();
-        List<Job> executionJobs = new ArrayList<>();
+        List<JobDefinition> executionJobs = new ArrayList<>();
 
         //TODO: Validate each stage
 
         for (Stage stage : stages) {
-            List<Job> stageJobs = stage.getJobs();
+            List<JobDefinition> stageJobs = stage.getJobs();
             executionJobs.addAll(stageJobs);
         }
 

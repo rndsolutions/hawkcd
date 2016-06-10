@@ -23,13 +23,13 @@ public class ServerResponseToAgent {
 		__Pipeline = value;
 	}
 
-	private Job __Job;
+	private JobDefinition __Job;
 
-	public Job getJob() {
+	public JobDefinition getJob() {
 		return __Job;
 	}
 
-	public void setJob(Job value) {
+	public void setJob(JobDefinition value) {
 		__Job = value;
 	}
 
