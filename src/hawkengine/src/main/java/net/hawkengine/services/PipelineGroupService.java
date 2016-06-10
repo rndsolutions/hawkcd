@@ -4,45 +4,40 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
-
-import java.util.List;
+import net.hawkengine.services.interfaces.IPipelineGroupService;
 
 public class PipelineGroupService extends CrudService<PipelineGroup> implements IPipelineGroupService {
+    public PipelineGroupService() {
+        super.repository = new RedisRepository(PipelineGroup.class);
+        super.objectType = "Pipeline Group";
+    }
 
-	private IDbRepository<PipelineGroup> repository;
-	private ServiceResult serviceResult;
+    public PipelineGroupService(IDbRepository repository) {
+        super.repository = repository;
+    }
 
-	public PipelineGroupService() {
-		super.repository = new RedisRepository(PipelineGroup.class);
-		super.type = "Pipeline Group";
-	}
+    @Override
+    public ServiceResult getById(String pipelineGroupId) {
+        return super.getById(pipelineGroupId);
+    }
 
-	public PipelineGroupService(IDbRepository repository) {
-		super.repository = repository;
-	}
+    @Override
+    public ServiceResult getAll() {
+        return super.getAll();
+    }
 
-	@Override
-	public ServiceResult getById(String pipelineGroupId) {
-		return super.getById(pipelineGroupId);
-	}
+    @Override
+    public ServiceResult add(PipelineGroup pipelineGroup) {
+        return super.add(pipelineGroup);
+    }
 
-	@Override
-	public ServiceResult getAll() {
-		return super.getAll();
-	}
+    @Override
+    public ServiceResult update(PipelineGroup pipelineGroup) {
+        return super.update(pipelineGroup);
+    }
 
-	@Override
-	public ServiceResult add(PipelineGroup pipelineGroup) {
-		return super.add(pipelineGroup);
-	}
-
-	@Override
-	public ServiceResult update(PipelineGroup pipelineGroup) {
-		return super.update(pipelineGroup);
-	}
-
-	@Override
-	public ServiceResult delete(String pipelineGroupId) {
-		return super.delete(pipelineGroupId);
-	}
+    @Override
+    public ServiceResult delete(String pipelineGroupId) {
+        return super.delete(pipelineGroupId);
+    }
 }

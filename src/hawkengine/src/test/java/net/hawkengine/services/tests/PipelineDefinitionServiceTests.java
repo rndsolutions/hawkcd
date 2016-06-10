@@ -6,9 +6,8 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.interfaces.ICrudService;
 
 import org.junit.Assert;
 import org.junit.Before;

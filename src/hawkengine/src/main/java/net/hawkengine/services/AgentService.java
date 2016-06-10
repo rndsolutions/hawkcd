@@ -6,22 +6,20 @@ import net.hawkengine.model.Agent;
 import net.hawkengine.model.AgentExecutionState;
 import net.hawkengine.model.ConfigState;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.IAgentService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AgentService extends CrudService<Agent> implements IAgentService {
-    private IDbRepository<Agent> repository;
-    private ServiceResult serviceResult;
-
     public AgentService() {
         super.repository = new RedisRepository(Agent.class);
-        super.type = "Agent";
+        super.objectType = "Agent";
     }
 
     public AgentService(IDbRepository repository) {
         super.repository = repository;
-        super.type = "Agent";
+        super.objectType = "Agent";
     }
 
     @Override
@@ -66,7 +64,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
         ServiceResult result = new ServiceResult();
         result.setError(false);
-        result.setMessage("All enabled " + super.type + "s retrieved successfully.");
+        result.setMessage("All enabled " + super.objectType + "s retrieved successfully.");
         result.setObject(agents);
 
         return result;
@@ -89,7 +87,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
         ServiceResult result = new ServiceResult();
         result.setError(false);
-        result.setMessage("All enabled idle " + super.type + "s retrieved successfully.");
+        result.setMessage("All enabled idle " + super.objectType + "s retrieved successfully.");
         result.setObject(agents);
 
         return result;

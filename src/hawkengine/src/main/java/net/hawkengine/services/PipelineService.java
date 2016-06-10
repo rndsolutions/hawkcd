@@ -4,15 +4,12 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.IPipelineService;
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
-
-    private IDbRepository<Pipeline> repository;
-    private ServiceResult serviceResult;
-
     public PipelineService() {
         super.repository = new RedisRepository(Pipeline.class);
-        super.type = "Pipeline";
+        super.objectType = "Pipeline";
     }
 
     public PipelineService(IDbRepository repository) {
