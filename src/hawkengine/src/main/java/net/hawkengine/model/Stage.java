@@ -1,7 +1,3 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.time.Duration;
@@ -10,176 +6,151 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Stage {
-	private StageType stageType = StageType.OnSuccess;
+    private StageType stageType = StageType.ON_SUCCESS;
+    private UUID id;
+    private int executionID;
+    private String name;
+    private ArrayList<JobDefinition> jobs;
+    private ArrayList<EnvironmentVariable> environmentVariables;
+    private String security;
+    private boolean fetchMaterials;
+    private boolean neverCleanArtifacts;
+    private boolean cleanWorkingDirectory;
+    private Status status = Status.PASSED;
+    private Date start;
+    private Date end;
+    private Duration duration;
+    private boolean canBeExecuted;
 
-	public Stage() throws Exception {
-		this.setID(UUID.randomUUID());
-		this.setFetchMaterials(true);
-		this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
-	}
+    public Stage() throws Exception {
+        this.setID(UUID.randomUUID());
+        this.setFetchMaterials(true);
+        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+    }
 
-	private UUID __ID;
+    public UUID getID() {
+        return id;
+    }
 
-	public UUID getID() {
-		return __ID;
-	}
+    public void setID(UUID value) {
+        id = value;
+    }
 
-	public void setID(UUID value) {
-		__ID = value;
-	}
+    public int getExecutionID() {
+        return executionID;
+    }
 
-	private int __ExecutionID;
+    public void setExecutionID(int value) {
+        executionID = value;
+    }
 
-	public int getExecutionID() {
-		return __ExecutionID;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setExecutionID(int value) {
-		__ExecutionID = value;
-	}
+    public void setName(String value) {
+        name = value;
+    }
 
-	private String __Name;
+    public ArrayList<JobDefinition> getJobs() {
+        return jobs;
+    }
 
-	public String getName() {
-		return __Name;
-	}
+    public void setJobs(ArrayList<JobDefinition> value) {
+        jobs = value;
+    }
 
-	public void setName(String value) {
-		__Name = value;
-	}
+    public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
+        return environmentVariables;
+    }
 
-	private ArrayList<Job> __Jobs;
+    public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
+        environmentVariables = value;
+    }
 
-	public ArrayList<Job> getJobs() {
-		return __Jobs;
-	}
+    public String getSecurity() {
+        return security;
+    }
 
-	public void setJobs(ArrayList<Job> value) {
-		__Jobs = value;
-	}
+    public void setSecurity(String value) {
+        security = value;
+    }
 
-	private ArrayList<EnvironmentVariable> __EnvironmentVariables;
+    public boolean getFetchMaterials() {
+        return fetchMaterials;
+    }
 
-	public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-		return __EnvironmentVariables;
-	}
+    public void setFetchMaterials(boolean value) {
+        fetchMaterials = value;
+    }
 
-	public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-		__EnvironmentVariables = value;
-	}
+    public boolean getNeverCleanArtifacts() {
+        return neverCleanArtifacts;
+    }
 
-	private String __Security;
+    public void setNeverCleanArtifacts(boolean value) {
+        neverCleanArtifacts = value;
+    }
 
-	public String getSecurity() {
-		return __Security;
-	}
+    public boolean getCleanWorkingDirectory() {
+        return cleanWorkingDirectory;
+    }
 
-	public void setSecurity(String value) {
-		__Security = value;
-	}
+    public void setCleanWorkingDirectory(boolean value) {
+        cleanWorkingDirectory = value;
+    }
 
-	private boolean __FetchMaterials;
+    public StageType getStageType() throws Exception {
+        return this.stageType;
+    }
 
-	public boolean getFetchMaterials() {
-		return __FetchMaterials;
-	}
+    public void setStageType(StageType value) throws Exception {
+        if (value == getStageType().MANUAL) {
+            this.setCanBeExecuted(false);
+        } else {
+            this.setCanBeExecuted(true);
+        }
+        this.stageType = value;
+    }
 
-	public void setFetchMaterials(boolean value) {
-		__FetchMaterials = value;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	private boolean __NeverCleanArtifacts;
+    public void setStatus(Status value) {
+        status = value;
+    }
 
-	public boolean getNeverCleanArtifacts() {
-		return __NeverCleanArtifacts;
-	}
+    public Date getStart() {
+        return start;
+    }
 
-	public void setNeverCleanArtifacts(boolean value) {
-		__NeverCleanArtifacts = value;
-	}
+    public void setStart(Date value) {
+        start = value;
+    }
 
-	private boolean __CleanWorkingDirectory;
+    public Date getEnd() {
+        return end;
+    }
 
-	public boolean getCleanWorkingDirectory() {
-		return __CleanWorkingDirectory;
-	}
+    public void setEnd(Date value) {
+        end = value;
+    }
 
-	public void setCleanWorkingDirectory(boolean value) {
-		__CleanWorkingDirectory = value;
-	}
+    public Duration getDuration() {
+        return duration;
+    }
 
-	public StageType getStageType() throws Exception {
-		return this.stageType;
-	}
+    public void setDuration(Duration value) {
+        duration = value;
+    }
 
-	public void setStageType(StageType value) throws Exception {
-		if (value == getStageType().Manual) {
-			this.setCanBeExecuted(false);
-		} else {
-			this.setCanBeExecuted(true);
-		}
-		this.stageType = value;
-	}
+    public boolean getCanBeExecuted() {
+        return canBeExecuted;
+    }
 
-	// [SD] Execution contexts props
-	private ExecutionState __State = ExecutionState.None;
-
-	public ExecutionState getState() {
-		return __State;
-	}
-
-	public void setState(ExecutionState value) {
-		__State = value;
-	}
-
-	private ExecutionStatus __Status = ExecutionStatus.Passed;
-
-	public ExecutionStatus getStatus() {
-		return __Status;
-	}
-
-	public void setStatus(ExecutionStatus value) {
-		__Status = value;
-	}
-
-	private Date __Start;
-
-	public Date getStart() {
-		return __Start;
-	}
-
-	public void setStart(Date value) {
-		__Start = value;
-	}
-
-	private Date __End;
-
-	public Date getEnd() {
-		return __End;
-	}
-
-	public void setEnd(Date value) {
-		__End = value;
-	}
-
-	private Duration __Duration;
-
-	public Duration getDuration() {
-		return __Duration;
-	}
-
-	public void setDuration(Duration value) {
-		__Duration = value;
-	}
-
-	private boolean __CanBeExecuted;
-
-	public boolean getCanBeExecuted() {
-		return __CanBeExecuted;
-	}
-
-	public void setCanBeExecuted(boolean value) {
-		__CanBeExecuted = value;
-	}
+    public void setCanBeExecuted(boolean value) {
+        canBeExecuted = value;
+    }
 
 }

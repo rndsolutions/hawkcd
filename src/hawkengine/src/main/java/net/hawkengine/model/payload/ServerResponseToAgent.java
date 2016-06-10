@@ -13,23 +13,23 @@ public class ServerResponseToAgent {
 		this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
 	}
 
-	private PipelineDefinition __PipelineDefinition;
+	private Pipeline __Pipeline;
 
-	public PipelineDefinition getPipeline() {
-		return __PipelineDefinition;
+	public Pipeline getPipeline() {
+		return __Pipeline;
 	}
 
-	public void setPipeline(PipelineDefinition value) {
-		__PipelineDefinition = value;
+	public void setPipeline(Pipeline value) {
+		__Pipeline = value;
 	}
 
-	private Job __Job;
+	private JobDefinition __Job;
 
-	public Job getJob() {
+	public JobDefinition getJob() {
 		return __Job;
 	}
 
-	public void setJob(Job value) {
+	public void setJob(JobDefinition value) {
 		__Job = value;
 	}
 
@@ -53,13 +53,13 @@ public class ServerResponseToAgent {
 		__EnvironmentInfo = value;
 	}
 
-	private ArrayList<Material> __Materials;
+	private ArrayList<MaterialDefinition> __Materials;
 
-	public ArrayList<Material> getMaterials() {
+	public ArrayList<MaterialDefinition> getMaterials() {
 		return __Materials;
 	}
 
-	public void setMaterials(ArrayList<Material> value) {
+	public void setMaterials(ArrayList<MaterialDefinition> value) {
 		__Materials = value;
 	}
 

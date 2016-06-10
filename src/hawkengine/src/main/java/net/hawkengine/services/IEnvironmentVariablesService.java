@@ -7,19 +7,19 @@ package net.hawkengine.services;
 import java.util.ArrayList;
 
 import net.hawkengine.model.EnvironmentVariable;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.Stage;
-import net.hawkengine.model.TaskBase;
+import net.hawkengine.model.Task;
 
 public interface IEnvironmentVariablesService {
 	ArrayList<EnvironmentVariable> getOverriddenEnvironentVariables(
 			ArrayList<EnvironmentVariable>... environmentVariableCollections) throws Exception;
 
-	ArrayList<EnvironmentVariable> getPredifinedEnvironentVariables(PipelineDefinition pipelineDefinition, Stage stage, Job job)
+	ArrayList<EnvironmentVariable> getPredifinedEnvironentVariables(Pipeline pipeline, Stage stage, JobDefinition job)
 			throws Exception;
 
-	void passEnvironmentVariablesToTask(TaskBase task, ArrayList<EnvironmentVariable> environmentVariables)
+	void passEnvironmentVariablesToTask(Task task, ArrayList<EnvironmentVariable> environmentVariables)
 			throws Exception;
 
 }

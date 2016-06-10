@@ -5,31 +5,31 @@ import java.util.ArrayList;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Environment;
-import net.hawkengine.model.Material;
-import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.Server;
 
 public class ConfigService implements IConfigService{
 	
-	private IDbRepository<PipelineDefinition> repository;
+	private IDbRepository<Pipeline> repository;
 	
 	public ConfigService() {
 		// TODO Auto-generated constructor stub
 	}
 		
-	public ConfigService(IDbRepository<PipelineDefinition> repository){
+	public ConfigService(IDbRepository<Pipeline> repository){
 		this.repository = repository;
 	}
 	
 	@Override
-	public IDbRepository<PipelineDefinition> getPipelineConfigRepository() throws Exception {
+	public IDbRepository<Pipeline> getPipelineConfigRepository() throws Exception {
 		// TODO Auto-generated method stub
 		return null;				
 	}
 
 	@Override
-	public void setPipelineConfigRepository(IDbRepository<PipelineDefinition> value) throws Exception {
+	public void setPipelineConfigRepository(IDbRepository<Pipeline> value) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
@@ -59,43 +59,43 @@ public class ConfigService implements IConfigService{
 	}
 
 	@Override
-	public ArrayList<PipelineDefinition> getAllPipelines() throws Exception {
+	public ArrayList<Pipeline> getAllPipelines() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PipelineDefinition getPipelineByName(String name) throws Exception {
+	public Pipeline getPipelineByName(String name) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addPipeline(PipelineDefinition pipelineDefinition) throws Exception {
+	public String addPipeline(Pipeline pipeline) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deletePipeline(PipelineDefinition pipelineDefinition) throws Exception {
+	public String deletePipeline(Pipeline pipeline) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updatePipeline(String pipelineName, PipelineDefinition newPipelineDefinition) throws Exception {
+	public String updatePipeline(String pipelineName, Pipeline newPipeline) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<PipelineDefinition> getPipelineUpstream(String pipelineName) throws Exception {
+	public ArrayList<Pipeline> getPipelineUpstream(String pipelineName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<PipelineDefinition> getPipelineDownstream(String pipelineName) throws Exception {
+	public ArrayList<Pipeline> getPipelineDownstream(String pipelineName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -134,25 +134,25 @@ public class ConfigService implements IConfigService{
 	}
 
 	@Override
-	public ArrayList<Material> getAllMaterials() throws Exception {
+	public ArrayList<MaterialDefinition> getAllMaterials() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Material getMaterialByName(String pipelineName, String materialName) throws Exception {
+	public MaterialDefinition getMaterialByName(String pipelineName, String materialName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addMaterial(String pipelineName, Material materialToAdd) throws Exception {
+	public String addMaterial(String pipelineName, MaterialDefinition materialToAdd) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updateMaterial(String pipelineName, String materialName, Material newMaterial) throws Exception {
+	public String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

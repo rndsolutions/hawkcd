@@ -1,7 +1,3 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.time.Duration;
@@ -12,205 +8,171 @@ import java.util.UUID;
 import javax.naming.OperationNotSupportedException;
 
 public class PipelineDefinition extends DbEntry {
-	public PipelineDefinition() throws Exception {
-		this.setLabelTemplate("%COUNT%");
-		this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
-	}
+    private String name;
+    private String originalName;
+    private int executionId;
+    private String groupName;
+    private String labelTemplate;
+    private ArrayList<MaterialDefinition> materials;
+    private ArrayList<EnvironmentVariable> environmentVariables;
+    private Environment environment;
+    private ArrayList<Stage> stages;
+    private Status status = Status.PASSED;
+    // [SD] Execution contexts props
+    private Date start;
+    private Date end;
+    private Duration duration;
+    private ArrayList<MaterialChange> executionMaterials;
+    private String triggerReason;
+    private boolean autoScheduling;
+    private boolean isLocked;
 
-	private String name;
-	private String originalName;
-	private int __ExecutionID;
+    public PipelineDefinition() throws Exception {
+        this.setLabelTemplate("%COUNT%");
+        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+    }
 
-	public int getExecutionID() {
-		return __ExecutionID;
-	}
+    public int getExecutionId() {
+        return executionId;
+    }
 
-	public void setExecutionID(int value) {
-		__ExecutionID = value;
-	}
+    public void setExecutionId(int value) {
+        executionId = value;
+    }
 
-	public String getOriginalName() throws Exception {
-		return this.originalName;
-	}
+    public String getOriginalName() throws Exception {
+        return this.originalName;
+    }
 
-	public String getName() throws Exception {
-		return this.name;
-	}
+    public String getName() throws Exception {
+        return this.name;
+    }
 
-	public void setName(String value) throws Exception {
-		if (this.name != null) {
-			this.originalName = value;
-		} else {
-			this.originalName = this.name;
-		}
-		this.name = value;
-	}
+    public void setName(String value) throws Exception {
+        if (this.name != null) {
+            this.originalName = value;
+        } else {
+            this.originalName = this.name;
+        }
+        this.name = value;
+    }
 
-	private String __GroupName;
+    public String getGroupName() {
+        return groupName;
+    }
 
-	public String getGroupName() {
-		return __GroupName;
-	}
+    public void setGroupName(String value) {
+        groupName = value;
+    }
 
-	public void setGroupName(String value) {
-		__GroupName = value;
-	}
+    public String getLabelTemplate() {
+        return labelTemplate;
+    }
 
-	private String __LabelTemplate;
+    public void setLabelTemplate(String value) {
+        labelTemplate = value;
+    }
 
-	public String getLabelTemplate() {
-		return __LabelTemplate;
-	}
+    public ArrayList<MaterialDefinition> getMaterials() {
+        return materials;
+    }
 
-	public void setLabelTemplate(String value) {
-		__LabelTemplate = value;
-	}
+    public void setMaterials(ArrayList<MaterialDefinition> value) {
+        materials = value;
+    }
 
-	private ArrayList<Material> __Materials;
+    public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
+        return environmentVariables;
+    }
 
-	public ArrayList<Material> getMaterials() {
-		return __Materials;
-	}
+    public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
+        environmentVariables = value;
+    }
 
-	public void setMaterials(ArrayList<Material> value) {
-		__Materials = value;
-	}
+    public Environment getEnvironment() {
+        return environment;
+    }
 
-	private ArrayList<EnvironmentVariable> __EnvironmentVariables;
+    public void setEnvironment(Environment value) {
+        environment = value;
+    }
 
-	public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-		return __EnvironmentVariables;
-	}
+    public ArrayList<Stage> getStages() {
+        return stages;
+    }
 
-	public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-		__EnvironmentVariables = value;
-	}
+    public void setStages(ArrayList<Stage> value) {
+        stages = value;
+    }
 
-	private ArrayList<Parameter> __Parameters;
+    public Status getStatus() {
+        return status;
+    }
 
-	public ArrayList<Parameter> getParameters() {
-		return __Parameters;
-	}
+    public void setStatus(Status value) {
+        status = value;
+    }
 
-	public void setParameters(ArrayList<Parameter> value) {
-		__Parameters = value;
-	}
+    public Date getStart() {
+        return start;
+    }
 
-	private Environment __Environment;
+    public void setStart(Date value) {
+        start = value;
+    }
 
-	public Environment getEnvironment() {
-		return __Environment;
-	}
+    public Date getEnd() {
+        return end;
+    }
 
-	public void setEnvironment(Environment value) {
-		__Environment = value;
-	}
+    public void setEnd(Date value) {
+        end = value;
+    }
 
-	private ArrayList<Stage> __Stages;
+    public Duration getDuration() {
+        return duration;
+    }
 
-	public ArrayList<Stage> getStages() {
-		return __Stages;
-	}
+    public void setDuration(Duration value) {
+        duration = value;
+    }
 
-	public void setStages(ArrayList<Stage> value) {
-		__Stages = value;
-	}
+    public ArrayList<MaterialChange> getExecutionMaterials() {
+        return executionMaterials;
+    }
 
-	private ExecutionState __State = ExecutionState.None;
+    public void setExecutionMaterials(ArrayList<MaterialChange> value) {
+        executionMaterials = value;
+    }
 
-	public ExecutionState getState() {
-		return __State;
-	}
+    public String getTriggerReason() {
+        return triggerReason;
+    }
 
-	public void setState(ExecutionState value) {
-		__State = value;
-	}
+    public void setTriggerReason(String value) {
+        triggerReason = value;
+    }
 
-	private ExecutionStatus __Status = ExecutionStatus.Passed;
+    public boolean getAutoScheduling() {
+        return autoScheduling;
+    }
 
-	public ExecutionStatus getStatus() {
-		return __Status;
-	}
+    public void setAutoScheduling(boolean value) {
+        autoScheduling = value;
+    }
 
-	public void setStatus(ExecutionStatus value) {
-		__Status = value;
-	}
+    public boolean getIsLocked() {
+        return isLocked;
+    }
 
-	// [SD] Execution contexts props
-	private Date __Start;
+    public void setIsLocked(boolean value) {
+        isLocked = value;
+    }
 
-	public Date getStart() {
-		return __Start;
-	}
+    public Stage getStageById(UUID id) throws Exception {
 
-	public void setStart(Date value) {
-		__Start = value;
-	}
-
-	private Date __End;
-
-	public Date getEnd() {
-		return __End;
-	}
-
-	public void setEnd(Date value) {
-		__End = value;
-	}
-
-	private Duration __Duration;
-
-	public Duration getDuration() {
-		return __Duration;
-	}
-
-	public void setDuration(Duration value) {
-		__Duration = value;
-	}
-
-	private ArrayList<MaterialChange> __ExecutionMaterials;
-
-	public ArrayList<MaterialChange> getExecutionMaterials() {
-		return __ExecutionMaterials;
-	}
-
-	public void setExecutionMaterials(ArrayList<MaterialChange> value) {
-		__ExecutionMaterials = value;
-	}
-
-	private String __TriggerReason;
-
-	public String getTriggerReason() {
-		return __TriggerReason;
-	}
-
-	public void setTriggerReason(String value) {
-		__TriggerReason = value;
-	}
-
-	private boolean __AutoScheduling;
-
-	public boolean getAutoScheduling() {
-		return __AutoScheduling;
-	}
-
-	public void setAutoScheduling(boolean value) {
-		__AutoScheduling = value;
-	}
-
-	private boolean __IsLocked;
-
-	public boolean getIsLocked() {
-		return __IsLocked;
-	}
-
-	public void setIsLocked(boolean value) {
-		__IsLocked = value;
-	}
-
-	public Stage getStageById(UUID id) throws Exception {
-
-		throw new OperationNotSupportedException("not implemented");
-		/*
+        throw new OperationNotSupportedException("not implemented");
+        /*
 		 * if (getStages() != null) { Stage stage = getStages().Where(
 		 * [UNSUPPORTED] to translate lambda expressions we need an explicit
 		 * delegate type, try adding a cast "(s) => { return s.ID == id; }"
@@ -222,19 +184,19 @@ public class PipelineDefinition extends DbEntry {
 		 * return stage; } throw new NullReferenceException(String.Format(
 		 * "Stages collection is null"));
 		 */
-	}
+    }
 
-	public Job getJobById(UUID stageID, UUID jobID) throws Exception {
+    public JobDefinition getJobById(UUID stageID, UUID jobID) throws Exception {
 
-		throw new OperationNotSupportedException("not implemented");
+        throw new OperationNotSupportedException("not implemented");
 		/*
 		 * Stage stage = getStageById(stageID); if (stage.getJobs() != null) {
-		 * Job job = stage.getJobs().Where( [UNSUPPORTED] to translate lambda
+		 * JobDefinition job = stage.getJobs().Where( [UNSUPPORTED] to translate lambda
 		 * expressions we need an explicit delegate type, try adding a cast "(j)
 		 * => { return j.Id == jobID; }" ).FirstOrDefault(); if (job == null)
 		 * throw new
 		 * ArgumentException(String.format(StringSupport.CSFmtStrToJFmtStr(
-		 * "Job wiht ID {0} was not found in Stage with ID {1}"
+		 * "JobDefinition wiht ID {0} was not found in Stage with ID {1}"
 		 * ),jobID,stageID));
 		 * 
 		 * return job; }
@@ -242,28 +204,29 @@ public class PipelineDefinition extends DbEntry {
 		 * throw new
 		 * NullReferenceException(String.format(StringSupport.CSFmtStrToJFmtStr(
 		 * "Jobs collection of Stage {0} is null"),stageID));
-		 */ }
+		 */
+    }
 
-	public TaskBase getTaskById(UUID stageID, UUID jobID, UUID taskID) throws Exception {
+    public Task getTaskById(UUID stageID, UUID jobID, UUID taskID) throws Exception {
 
-		throw new OperationNotSupportedException("not implemented");
+        throw new OperationNotSupportedException("not implemented");
 		/*
-		 * Job job = getJobById(stageID,jobID); if (job.getTasks() != null) {
-		 * TaskBase task = job.getTasks().Where( [UNSUPPORTED] to translate
+		 * JobDefinition job = getJobById(stageID,jobID); if (job.getTasks() != null) {
+		 * Task task = job.getTasks().Where( [UNSUPPORTED] to translate
 		 * lambda expressions we need an explicit delegate type, try adding a
 		 * cast "(j) => { return j.Id == taskID; }" ).FirstOrDefault(); if (task
 		 * == null) throw new
 		 * ArgumentException(String.format(StringSupport.CSFmtStrToJFmtStr(
-		 * "Task with ID {0} was not found in Job with ID {1}"),taskID,jobID));
+		 * "Task with ID {0} was not found in JobDefinition with ID {1}"),taskID,jobID));
 		 * 
 		 * return task; } throw new
 		 * NullReferenceException(String.format(StringSupport.CSFmtStrToJFmtStr(
-		 * "Tasks collection of Job {0} is null"),stageID));
+		 * "Tasks collection of JobDefinition {0} is null"),stageID));
 		 */
-	}
+    }
 
-	public void resetIdentifier() throws Exception {
-		this.originalName = this.name;
-	}
+    public void resetIdentifier() throws Exception {
+        this.originalName = this.name;
+    }
 
 }

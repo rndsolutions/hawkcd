@@ -11,9 +11,9 @@ import net.hawkengine.model.*;
 
 public interface IConfigService {
 			
-	IDbRepository<PipelineDefinition> getPipelineConfigRepository() throws Exception;
+	IDbRepository<Pipeline> getPipelineConfigRepository() throws Exception;
 
-	void setPipelineConfigRepository(IDbRepository<PipelineDefinition> value) throws Exception;
+	void setPipelineConfigRepository(IDbRepository<Pipeline> value) throws Exception;
 
 	IDbRepository<Agent> getAgentConfigRepository() throws Exception;
 
@@ -23,19 +23,19 @@ public interface IConfigService {
 
 	void setEnvironmentConfigRepository(IDbRepository<Environment> value) throws Exception;
 
-	ArrayList<PipelineDefinition> getAllPipelines() throws Exception;
+	ArrayList<Pipeline> getAllPipelines() throws Exception;
 
-	PipelineDefinition getPipelineByName(String name) throws Exception;
+	Pipeline getPipelineByName(String name) throws Exception;
 
-	String addPipeline(PipelineDefinition pipelineDefinition) throws Exception;
+	String addPipeline(Pipeline pipeline) throws Exception;
 
-	String deletePipeline(PipelineDefinition pipelineDefinition) throws Exception;
+	String deletePipeline(Pipeline pipeline) throws Exception;
 
-	String updatePipeline(String pipelineName, PipelineDefinition newPipelineDefinition) throws Exception;
+	String updatePipeline(String pipelineName, Pipeline newPipeline) throws Exception;
 
-	ArrayList<PipelineDefinition> getPipelineUpstream(String pipelineName) throws Exception;
+	ArrayList<Pipeline> getPipelineUpstream(String pipelineName) throws Exception;
 
-	ArrayList<PipelineDefinition> getPipelineDownstream(String pipelineName) throws Exception;
+	ArrayList<Pipeline> getPipelineDownstream(String pipelineName) throws Exception;
 
 	ArrayList<PipelineGroup> getAllPipelineGroups() throws Exception;
 
@@ -47,13 +47,13 @@ public interface IConfigService {
 
 	String updatePipelineGroup(String pipelineGroupName, PipelineGroup newPipelineGroup) throws Exception;
 
-	ArrayList<Material> getAllMaterials() throws Exception;
+	ArrayList<MaterialDefinition> getAllMaterials() throws Exception;
 
-	Material getMaterialByName(String pipelineName, String materialName) throws Exception;
+	MaterialDefinition getMaterialByName(String pipelineName, String materialName) throws Exception;
 
-	String addMaterial(String pipelineName, Material materialToAdd) throws Exception;
+	String addMaterial(String pipelineName, MaterialDefinition materialToAdd) throws Exception;
 
-	String updateMaterial(String pipelineName, String materialName, Material newMaterial) throws Exception;
+	String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) throws Exception;
 
 	String deleteMaterial(String pipelineName, String materialName) throws Exception;
 
