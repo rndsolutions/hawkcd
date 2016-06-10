@@ -15,12 +15,31 @@ import java.util.stream.Collectors;
 
 public class PipelinePreparer extends Thread {
     private final Logger logger = LogManager.getLogger(this.getClass());
-    private IPipelineDefinitionService pipelineDefinitionService;
-    private IPipelineService pipelineService;
+    private final IPipelineDefinitionService pipelineDefinitionService;
+    private final IPipelineService pipelineService;
 
     public PipelinePreparer(PipelineService pipelineService, PipelineDefinitionService pipelineDefinitionService) {
         this.pipelineService = pipelineService;
         this.pipelineDefinitionService = pipelineDefinitionService;
+    }
+
+
+    @Override
+    public synchronized void start() {
+        this.logger.info(String.format(LoggerMessages.PREPARER_STARTED, "Pipeline Preparer"));
+        super.start();
+    }
+
+
+    @Override
+    public void run() {
+        this.logger.info(String.format(LoggerMessages.PREPARER_RUN, "Pipeline Preparer"));
+        List<Pipeline> filteredPipelines = this.getAllUpdatedPipelines();
+        for (Pipeline filteredPipeline: filteredPipelines) {
+            Pipeline preparedPipeline = this.preparePipeline(filteredPipeline);
+            this.pipelineService.update(preparedPipeline);
+        }
+        super.run();
     }
 
     private List<Pipeline> getAllUpdatedPipelines() {
@@ -29,7 +48,7 @@ public class PipelinePreparer extends Thread {
         List<Pipeline> pipelines = (List<Pipeline>) serviceResult.getObject();
 
         List<Pipeline> filteredPipelines = pipelines.stream()
-                .filter(p -> p.areMaterialsUpdated() == true)
+                .filter(Pipeline::areMaterialsUpdated)
                 .filter(p -> p.getStatus() == Status.IN_PROGRESS)
                 .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
                 .collect(Collectors.toList());
@@ -53,7 +72,6 @@ public class PipelinePreparer extends Thread {
         for (Stage stage : stages) {
             List<Job> stageJobs = stage.getJobs();
             executionJobs.addAll(stageJobs);
-            //TODO: check if working properly
         }
 
         //pipelineToPrepare.setJobsForExecution(executionJobs);
@@ -62,17 +80,5 @@ public class PipelinePreparer extends Thread {
         pipelineToPrepare.setPrepared(true);
 
         return pipelineToPrepare;
-    }
-
-    @Override
-    public synchronized void start() {
-        this.logger.info(String.format(LoggerMessages.PREPARER_STARTED, "Pipeline Preparer"));
-        super.start();
-    }
-
-
-    @Override
-    public void run() {
-        super.run();
     }
 }
