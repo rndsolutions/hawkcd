@@ -51,7 +51,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     @Override
     public List<T> getAll() throws Exception {
         List<T> result;
-        try (Jedis jedis = RedisManager.getJedis()) {
+        try (Jedis jedis = this.jedisPool.getResource()) {
             Set<String> entitiesIds = jedis.smembers(this.idNamespace);
 
             result = new ArrayList<>();
@@ -83,7 +83,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     @Override
     public T update(T entry) throws Exception {
         T result = null;
-        try (Jedis jedis = RedisManager.getJedis()) {
+        try (Jedis jedis = this.jedisPool.getResource()) {
             T existingObject = this.getById(entry.getId());
             if (existingObject != null) {
                 String entryKey = String.format("%s:%s", this.entryNamespace, entry.getId());
@@ -99,7 +99,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     @Override
     public boolean delete(String id) throws Exception {
         boolean result = false;
-        try (Jedis jedis = RedisManager.getJedis()) {
+        try (Jedis jedis = this.jedisPool.getResource()) {
             T existingObject = this.getById(id);
             if (existingObject != null) {
                 String entryKey = String.format("%s:%s", this.entryNamespace, id);

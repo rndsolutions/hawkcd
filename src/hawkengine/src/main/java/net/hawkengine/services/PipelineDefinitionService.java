@@ -10,18 +10,17 @@ import java.util.List;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
 
-    private IDbRepository<PipelineDefinition> repository;
-    private ServiceResult serviceResult;
     //TODO: Find a way to make CrudService know what type the child is
     //public String type = "PipelineDefinition";
 
     public PipelineDefinitionService() {
         super.repository = new RedisRepository(PipelineDefinition.class);
-        super.type = "Pipeline Definition";
+        super.type = "PipelineDefinition";
     }
 
     public PipelineDefinitionService(IDbRepository repository) {
         super.repository = repository;
+        super.type = "PipelineDefinition";
     }
 
     @Override
