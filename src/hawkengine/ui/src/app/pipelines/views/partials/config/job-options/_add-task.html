@@ -75,7 +75,7 @@
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="pipelineSelect" id="pipelineSelect"
                                     ng-model="pipeConfig.newTask.Pipeline" ng-change="pipeConfig.getPipelineForTask(pipeConfig.newTask.Pipeline)" required>
-                                <option ng-repeat="pipelineDefinition in pipeConfig.allPipelines" value="{{pipelineDefinition.Name}}" >{{pipelineDefinition.Name}}</option>
+                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.Name}}" >{{pipeline.Name}}</option>
                             </select>
                             <label for="pipelineSelect">Pipeline</label>
                         </div>

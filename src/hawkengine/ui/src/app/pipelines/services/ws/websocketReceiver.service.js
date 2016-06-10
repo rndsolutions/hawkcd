@@ -24,6 +24,9 @@ angular
                 case "setAgentConfigState":
                     viewModel.updateAgentStatus(data);
                     break;
+                case "getAllPipelineGroups":
+                    viewModel.updatePipelineGroups(data);
+                    break;
             }
         };
 

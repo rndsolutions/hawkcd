@@ -3,7 +3,7 @@
         <div class="p-link">
             <div class="panel-heading p-head-box">
                 <span aria-hidden="true" class="icon-close font-lg ico" data-target="#removePipe" data-toggle="modal" ng-click="pipes.getPipeName(pipe)"></span>
-                <span aria-hidden="true" class="icon-settings font-lg ico" ui-sref="index.pipelineConfig.pipelineDefinition.general({groupName:pipe.GroupName,pipelineName:pipe.Name})"></span>
+                <span aria-hidden="true" class="icon-settings font-lg ico" ui-sref="index.pipelineConfig.pipeline.general({groupName:pipe.GroupName,pipelineName:pipe.Name})"></span>
                 <span ng-hide="pipe.ExecutionID==0" aria-hidden="true" class="icon-info font-lg ico" ui-sref="index.pipelineHistory({groupName:pipe.GroupName,pipelineName:pipe.Name})"></span>
                 <div>
                     <p class="p-name">{{pipe.Name}}</p>

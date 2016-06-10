@@ -2,7 +2,7 @@
   <div class="mt-element-list">
     <div class="mt-list-head list-todo green">
       <div class="list-head-title-container">
-        <h3 class="list-title">{{admin.defalultGroupsText.pipelineDefinition}}</h3>
+        <h3 class="list-title">{{admin.defalultGroupsText.pipeline}}</h3>
         <div class="list-head-count">
           <div class="list-head-count-item">
             <i class="fa fa-check"></i> {{admin.allGroupDefs.length}}
@@ -39,16 +39,16 @@
             </a>
             <div class="panel-collapse collapse" id="{{$index + 'pipelineAdmin'}}" aria-expanded="false">
               <ul>
-                <li class="task-list-item  custom-admin-pipelineDefinitions" ng-repeat="pipelineDefinition in pipeGroup.Pipelines">
+                <li class="task-list-item  custom-admin-pipelines" ng-repeat="pipeline in pipeGroup.Pipelines">
                   <div class="task-content bg-grey custom-admin-div">
                     <strong class="uppercase bold">
-                      {{pipelineDefinition.Name}}
+                      {{pipeline.Name}}
                     </strong>
                     <a aria-hidden="true"
-                       ui-sref="index.pipelineConfig.pipelineDefinition.general({groupName:pipeGroup.Name,pipelineName:pipelineDefinition.Name})"><i
+                       ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeGroup.Name,pipelineName:pipeline.Name})"><i
                       class="fa fa-edit"></i></a>
                     <a data-target="#removePipelineAdmin" data-toggle="modal"
-                       ng-if="pipelineDefinition.State!='Running'" ng-click="admin.setPipelineForDelete(pipelineDefinition.Name)">
+                       ng-if="pipeline.State!='Running'" ng-click="admin.setPipelineForDelete(pipeline.Name)">
                       <i class="fa fa-trash"></i> </a>
                   </div>
                 </li>

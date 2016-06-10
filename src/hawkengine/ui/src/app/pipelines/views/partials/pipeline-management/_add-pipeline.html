@@ -61,7 +61,7 @@
                                 <span class="required"> * </span>
                               </label>
                               <div class="col-md-5">
-                                <input ng-model="pipes.formData.pipelineDefinition.name" id="pipelineName" type="text"
+                                <input ng-model="pipes.formData.pipeline.name" id="pipelineName" type="text"
                                        class="form-control"
                                        placeholder="{{pipes.wizardInfo.placeholders.pipelineName}}" ng-pattern="/^([\w-]+)$/" required/>
                                 <div class="form-control-focus"></div>
@@ -71,7 +71,7 @@
                               <div class="md-checkbox-list">
                                 <div class="md-checkbox">
                                   <input type="checkbox" id="pipeTrigger" class="md-check"
-                                         ng-model="pipes.formData.pipelineDefinition.autoSchedule">
+                                         ng-model="pipes.formData.pipeline.autoSchedule">
                                   <label for="pipeTrigger">
                                     <span></span>
                                     <span class="check"></span>
@@ -302,14 +302,14 @@
                                 <label class="col-md-4 control-label">Pipeline Name</label>
                                 <div class="col-md-6">
                                     <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.pipelineDefinition.name}}</strong>
+                                      <strong>{{pipes.formData.pipeline.name}}</strong>
                                     </div>
                                     <div class="form-control-focus"> </div>
                                 </div>
                                 <label class="col-md-4 control-label">Automatic Scheduling</label>
                                 <div class="col-md-6">
                                     <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.pipelineDefinition.autoSchedule ? 'Yes' : 'No'}}</strong>
+                                      <strong>{{pipes.formData.pipeline.autoSchedule ? 'Yes' : 'No'}}</strong>
                                     </div>
                                     <div class="form-control-focus"> </div>
                                 </div>

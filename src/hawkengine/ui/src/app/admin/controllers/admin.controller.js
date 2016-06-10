@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.adminManagement')
-    .controller('AdminController', function ($state, $interval, $scope, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, profileService, adminGroupService, authDataService) {
+    .controller('AdminController', function ($state, $interval, $scope, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, profileService, adminGroupService, authDataService, viewModel) {
         var vm = this;
 
 
@@ -427,6 +427,15 @@ angular
 
 
         //endregion
+
+        vm.allGroupDefs = [];
+
+        vm.allGroupDefs = viewModel.allPipelineGroups;
+
+        $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
+            vm.allGroupDefs = viewModel.allPipelineGroups;
+            console.log(vm.allGroupDefs);
+        });
 
         //region Packages
         vm.packageTab = {
