@@ -142,6 +142,7 @@ angular
     $rootScope.socket.onopen = function(event){
         //pipeStatsService.getAgentById();
         pipeStatsService.getAllAgents();
+        pipeStatsService.getAllPipelineGroups();
     };
 }]);
 

@@ -1,9 +1,8 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 public enum TaskType {
-	Exec, FetchArtifact, UploadArtifact, FetchMaterial
+    EXEC,
+    FETCH_ARTIFACT,
+    UPLOAD_ARTIFACT,
+    FETCH_MATERIAL
 }

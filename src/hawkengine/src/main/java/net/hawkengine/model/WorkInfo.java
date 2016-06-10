@@ -1,155 +1,138 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class WorkInfo {
-	public WorkInfo() throws Exception {
-		this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
-	}
+    private UUID pipelineId;
+    private int pipelineExecutionID;
+    private String pipelineName;
+    private String pipelineEnvironmentName;
+    private String pipelineTriggerReason;
+    private String labelTemplate;
+    private String stageId;
+    private int stageExecutionId;
+    private String stageName;
+    private String stageTriggerReason;
+    private boolean shouldFetchMaterials;
+    private JobDefinition job;
+    private ArrayList<MaterialDefinition> materials;
+    private ArrayList<EnvironmentVariable> environmentVariables;
 
-	private UUID __PipelineId;
+    public WorkInfo() throws Exception {
+        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+    }
 
-	public UUID getPipelineId() {
-		return __PipelineId;
-	}
+    public UUID getPipelineId() {
+        return pipelineId;
+    }
 
-	public void setPipelineId(UUID value) {
-		__PipelineId = value;
-	}
+    public void setPipelineId(UUID value) {
+        pipelineId = value;
+    }
 
-	private int __PipelineExecutionID;
+    public int getPipelineExecutionID() {
+        return pipelineExecutionID;
+    }
 
-	public int getPipelineExecutionID() {
-		return __PipelineExecutionID;
-	}
+    public void setPipelineExecutionID(int value) {
+        pipelineExecutionID = value;
+    }
 
-	public void setPipelineExecutionID(int value) {
-		__PipelineExecutionID = value;
-	}
+    public String getPipelineName() {
+        return pipelineName;
+    }
 
-	private String __PipelineName;
+    public void setPipelineName(String value) {
+        pipelineName = value;
+    }
 
-	public String getPipelineName() {
-		return __PipelineName;
-	}
+    public String getPipelineEnvironmentName() {
+        return pipelineEnvironmentName;
+    }
 
-	public void setPipelineName(String value) {
-		__PipelineName = value;
-	}
+    public void setPipelineEnvironmentName(String value) {
+        pipelineEnvironmentName = value;
+    }
 
-	private String __PipelineEnvironmentName;
+    public String getPipelineTriggerReason() {
+        return pipelineTriggerReason;
+    }
 
-	public String getPipelineEnvironmentName() {
-		return __PipelineEnvironmentName;
-	}
+    public void setPipelineTriggerReason(String value) {
+        pipelineTriggerReason = value;
+    }
 
-	public void setPipelineEnvironmentName(String value) {
-		__PipelineEnvironmentName = value;
-	}
+    public String getLabelTemplate() {
+        return labelTemplate;
+    }
 
-	private String __PipelineTriggerReason;
+    public void setLabelTemplate(String value) {
+        labelTemplate = value;
+    }
 
-	public String getPipelineTriggerReason() {
-		return __PipelineTriggerReason;
-	}
+    public String getStageId() {
+        return stageId;
+    }
 
-	public void setPipelineTriggerReason(String value) {
-		__PipelineTriggerReason = value;
-	}
+    public void setStageId(String value) {
+        stageId = value;
+    }
 
-	private String __LabelTemplate;
+    public int getStageExecutionId() {
+        return stageExecutionId;
+    }
 
-	public String getLabelTemplate() {
-		return __LabelTemplate;
-	}
+    public void setStageExecutionId(int value) {
+        stageExecutionId = value;
+    }
 
-	public void setLabelTemplate(String value) {
-		__LabelTemplate = value;
-	}
+    public String getStageName() {
+        return stageName;
+    }
 
-	private String __StageId;
+    public void setStageName(String value) {
+        stageName = value;
+    }
 
-	public String getStageId() {
-		return __StageId;
-	}
+    public String getStageTriggerReason() {
+        return stageTriggerReason;
+    }
 
-	public void setStageId(String value) {
-		__StageId = value;
-	}
+    public void setStageTriggerReason(String value) {
+        stageTriggerReason = value;
+    }
 
-	private int __StageExecutionID;
+    public boolean getShouldFetchMaterials() {
+        return shouldFetchMaterials;
+    }
 
-	public int getStageExecutionID() {
-		return __StageExecutionID;
-	}
+    public void setShouldFetchMaterials(boolean value) {
+        shouldFetchMaterials = value;
+    }
 
-	public void setStageExecutionID(int value) {
-		__StageExecutionID = value;
-	}
+    public JobDefinition getJob() {
+        return job;
+    }
 
-	private String __StageName;
+    public void setJob(JobDefinition value) {
+        job = value;
+    }
 
-	public String getStageName() {
-		return __StageName;
-	}
+    public ArrayList<MaterialDefinition> getMaterials() {
+        return materials;
+    }
 
-	public void setStageName(String value) {
-		__StageName = value;
-	}
+    public void setMaterials(ArrayList<MaterialDefinition> value) {
+        materials = value;
+    }
 
-	private String __StageTriggerReason;
+    public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
+        return environmentVariables;
+    }
 
-	public String getStageTriggerReason() {
-		return __StageTriggerReason;
-	}
-
-	public void setStageTriggerReason(String value) {
-		__StageTriggerReason = value;
-	}
-
-	private boolean __ShouldFetchMaterials;
-
-	public boolean getShouldFetchMaterials() {
-		return __ShouldFetchMaterials;
-	}
-
-	public void setShouldFetchMaterials(boolean value) {
-		__ShouldFetchMaterials = value;
-	}
-
-	private Job __Job;
-
-	public Job getJob() {
-		return __Job;
-	}
-
-	public void setJob(Job value) {
-		__Job = value;
-	}
-
-	private ArrayList<Material> __Materials;
-
-	public ArrayList<Material> getMaterials() {
-		return __Materials;
-	}
-
-	public void setMaterials(ArrayList<Material> value) {
-		__Materials = value;
-	}
-
-	private ArrayList<EnvironmentVariable> __EnvironmentVariables;
-
-	public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-		return __EnvironmentVariables;
-	}
-
-	public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-		__EnvironmentVariables = value;
-	}
+    public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
+        environmentVariables = value;
+    }
 
 }

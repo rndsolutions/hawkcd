@@ -1,4 +1,4 @@
-package net.hawkengine.core.utilities;
+package net.hawkengine.core.utilities.deserializers;
 
 import com.google.gson.*;
 import net.hawkengine.model.dto.ConversionObject;
@@ -26,7 +26,7 @@ public class ConversionObjectDeserializer implements JsonDeserializer<Conversion
 		}
 
 		String packageName = jsonObject.get("packageName").getAsString();
-		String object = jsonObject.get("object").getAsString();
+		String object = jsonObject.get("object").toString();
 		if (packageName == null || packageName.trim().length() == 0 || object == null) {
 			return null;
 		}
