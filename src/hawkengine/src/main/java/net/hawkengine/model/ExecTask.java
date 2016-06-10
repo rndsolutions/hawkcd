@@ -1,62 +1,53 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
-public class ExecTask extends TaskBase {
-	public ExecTask() throws Exception {
-		this.setType(TaskType.Exec);
-	}
+public class ExecTask extends Task {
+    private String command;
+    private String[] arguments;
+    private String lookUpCommands;
+    private String workingDirectory;
+    private boolean ignoreErrors;
 
-	private String __Command;
+    public ExecTask() throws Exception {
+        this.setType(TaskType.EXEC);
+    }
 
-	public String getCommand() {
-		return __Command;
-	}
+    public String getCommand() {
+        return command;
+    }
 
-	public void setCommand(String value) {
-		__Command = value;
-	}
+    public void setCommand(String value) {
+        command = value;
+    }
 
-	private String[] __Arguments;
+    public String[] getArguments() {
+        return arguments;
+    }
 
-	public String[] getArguments() {
-		return __Arguments;
-	}
+    public void setArguments(String[] value) {
+        arguments = value;
+    }
 
-	public void setArguments(String[] value) {
-		__Arguments = value;
-	}
+    public String getLookUpCommands() {
+        return lookUpCommands;
+    }
 
-	private String __LookUpCommands;
+    public void setLookUpCommands(String value) {
+        lookUpCommands = value;
+    }
 
-	public String getLookUpCommands() {
-		return __LookUpCommands;
-	}
+    public String getWorkingDirectory() {
+        return workingDirectory;
+    }
 
-	public void setLookUpCommands(String value) {
-		__LookUpCommands = value;
-	}
+    public void setWorkingDirectory(String value) {
+        workingDirectory = value;
+    }
 
-	private String __WorkingDirectory;
+    public boolean getIgnoreErrors() {
+        return ignoreErrors;
+    }
 
-	public String getWorkingDirectory() {
-		return __WorkingDirectory;
-	}
-
-	public void setWorkingDirectory(String value) {
-		__WorkingDirectory = value;
-	}
-
-	private boolean __IgnoreErrors;
-
-	public boolean getIgnoreErrors() {
-		return __IgnoreErrors;
-	}
-
-	public void setIgnoreErrors(boolean value) {
-		__IgnoreErrors = value;
-	}
-
+    public void setIgnoreErrors(boolean value) {
+        ignoreErrors = value;
+    }
 }

@@ -82,8 +82,16 @@ angular
             websocketSenderService.call(json);
             console.log(json);
         };
-        pipeStatsService.getAgentStatusReport = function () {
-
+        pipeStatsService.getAllPipelineGroups = function () {
+            var methodName = "getAllPipelineGroups";
+            var className = "PipelineGroupService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
         //endregion
 

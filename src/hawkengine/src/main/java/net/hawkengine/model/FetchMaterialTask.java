@@ -1,74 +1,64 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.util.HashMap;
 
-public class FetchMaterialTask extends TaskBase {
-	public FetchMaterialTask() throws Exception {
-		this.setType(TaskType.FetchMaterial);
-	}
+public class FetchMaterialTask extends Task {
+    private String materialName;
+    private String pipelineName;
+    private MaterialType materialType = MaterialType.GIT;
+    private String source;
+    private String destination;
+    private HashMap<String, Object> materialSpecificDetails;
 
-	private String __MaterialName;
+    public FetchMaterialTask() throws Exception {
+        this.setType(TaskType.FETCH_MATERIAL);
+    }
 
-	public String getMaterialName() {
-		return __MaterialName;
-	}
+    public String getMaterialName() {
+        return materialName;
+    }
 
-	public void setMaterialName(String value) {
-		__MaterialName = value;
-	}
+    public void setMaterialName(String value) {
+        materialName = value;
+    }
 
-	private String __PipelineName;
+    public String getPipelineName() {
+        return pipelineName;
+    }
 
-	public String getPipelineName() {
-		return __PipelineName;
-	}
+    public void setPipelineName(String value) {
+        pipelineName = value;
+    }
 
-	public void setPipelineName(String value) {
-		__PipelineName = value;
-	}
+    public MaterialType getMaterialType() {
+        return materialType;
+    }
 
-	private MaterialType __MaterialType = MaterialType.Git;
+    public void setMaterialType(MaterialType value) {
+        materialType = value;
+    }
 
-	public MaterialType getMaterialType() {
-		return __MaterialType;
-	}
+    public String getSource() {
+        return source;
+    }
 
-	public void setMaterialType(MaterialType value) {
-		__MaterialType = value;
-	}
+    public void setSource(String value) {
+        source = value;
+    }
 
-	private String __Source;
+    public String getDestination() {
+        return destination;
+    }
 
-	public String getSource() {
-		return __Source;
-	}
+    public void setDestination(String value) {
+        destination = value;
+    }
 
-	public void setSource(String value) {
-		__Source = value;
-	}
+    public HashMap<String, Object> getMaterialSpecificDetails() {
+        return materialSpecificDetails;
+    }
 
-	private String __Destination;
-
-	public String getDestination() {
-		return __Destination;
-	}
-
-	public void setDestination(String value) {
-		__Destination = value;
-	}
-
-	private HashMap<String, Object> __MaterialSpecificDetails;
-
-	public HashMap<String, Object> getMaterialSpecificDetails() {
-		return __MaterialSpecificDetails;
-	}
-
-	public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-		__MaterialSpecificDetails = value;
-	}
-
+    public void setMaterialSpecificDetails(HashMap<String, Object> value) {
+        materialSpecificDetails = value;
+    }
 }

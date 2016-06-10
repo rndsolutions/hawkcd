@@ -1,83 +1,73 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.util.HashMap;
 
 public class MaterialDefinition {
-	public MaterialDefinition() throws Exception {
-	}
+    private String pipelineName;
+    private String name;
+    private MaterialType type = MaterialType.GIT;
+    private String url;
+    private boolean autoTriggerOnChange;
+    private String destination;
+    private HashMap<String, Object> materialSpecificDetails;
 
-	private String __PipelineName;
+    public MaterialDefinition() throws Exception {
+    }
 
-	public String getPipelineName() {
-		return __PipelineName;
-	}
+    public String getPipelineName() {
+        return pipelineName;
+    }
 
-	public void setPipelineName(String value) {
-		__PipelineName = value;
-	}
+    public void setPipelineName(String value) {
+        pipelineName = value;
+    }
 
-	private String __Name;
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return __Name;
-	}
+    public void setName(String value) {
+        name = value;
+    }
 
-	public void setName(String value) {
-		__Name = value;
-	}
+    public MaterialType getType() {
+        return type;
+    }
 
-	private MaterialType __Type = MaterialType.Git;
+    public void setType(MaterialType value) {
+        type = value;
+    }
 
-	public MaterialType getType() {
-		return __Type;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setType(MaterialType value) {
-		__Type = value;
-	}
+    public void setUrl(String value) {
+        url = value;
+    }
 
-	private String __Url;
+    public boolean getAutoTriggerOnChange() {
+        return autoTriggerOnChange;
+    }
 
-	public String getUrl() {
-		return __Url;
-	}
+    public void setAutoTriggerOnChange(boolean value) {
+        autoTriggerOnChange = value;
+    }
 
-	public void setUrl(String value) {
-		__Url = value;
-	}
+    public String getDestination() {
+        return destination;
+    }
 
-	private boolean __AutoTriggerOnChange;
+    public void setDestination(String value) {
+        destination = value;
+    }
 
-	public boolean getAutoTriggerOnChange() {
-		return __AutoTriggerOnChange;
-	}
+    public HashMap<String, Object> getMaterialSpecificDetails() {
+        return materialSpecificDetails;
+    }
 
-	public void setAutoTriggerOnChange(boolean value) {
-		__AutoTriggerOnChange = value;
-	}
-
-	private String __Destination;
-
-	public String getDestination() {
-		return __Destination;
-	}
-
-	public void setDestination(String value) {
-		__Destination = value;
-	}
-
-	private HashMap<String, Object> __MaterialSpecificDetails;
-
-	public HashMap<String, Object> getMaterialSpecificDetails() {
-		return __MaterialSpecificDetails;
-	}
-
-	public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-		__MaterialSpecificDetails = value;
-	}
+    public void setMaterialSpecificDetails(HashMap<String, Object> value) {
+        materialSpecificDetails = value;
+    }
 
 }

@@ -47,13 +47,13 @@ public interface IConfigService {
 
 	String updatePipelineGroup(String pipelineGroupName, PipelineGroup newPipelineGroup) throws Exception;
 
-	ArrayList<Material> getAllMaterials() throws Exception;
+	ArrayList<MaterialDefinition> getAllMaterials() throws Exception;
 
-	Material getMaterialByName(String pipelineName, String materialName) throws Exception;
+	MaterialDefinition getMaterialByName(String pipelineName, String materialName) throws Exception;
 
-	String addMaterial(String pipelineName, Material materialToAdd) throws Exception;
+	String addMaterial(String pipelineName, MaterialDefinition materialToAdd) throws Exception;
 
-	String updateMaterial(String pipelineName, String materialName, Material newMaterial) throws Exception;
+	String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) throws Exception;
 
 	String deleteMaterial(String pipelineName, String materialName) throws Exception;
 

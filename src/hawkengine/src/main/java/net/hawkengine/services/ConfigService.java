@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Environment;
-import net.hawkengine.model.Material;
+import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.Server;
@@ -134,25 +134,25 @@ public class ConfigService implements IConfigService{
 	}
 
 	@Override
-	public ArrayList<Material> getAllMaterials() throws Exception {
+	public ArrayList<MaterialDefinition> getAllMaterials() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Material getMaterialByName(String pipelineName, String materialName) throws Exception {
+	public MaterialDefinition getMaterialByName(String pipelineName, String materialName) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addMaterial(String pipelineName, Material materialToAdd) throws Exception {
+	public String addMaterial(String pipelineName, MaterialDefinition materialToAdd) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updateMaterial(String pipelineName, String materialName, Material newMaterial) throws Exception {
+	public String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

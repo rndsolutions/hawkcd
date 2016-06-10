@@ -1,96 +1,75 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model;
 
 import java.util.Date;
 import java.util.UUID;
 
 public abstract class Task {
-	private UUID __Id;
+    private UUID id;
+    private RunIf runIfCondition = RunIf.PASSED;
+    private TaskType type = TaskType.EXEC;
+    private Status status = Status.PASSED;
+    private String result;
+    private Date start;
+    private Date end;
 
-	public UUID getId() {
-		return __Id;
-	}
+    public Task() throws Exception {
+        this.setId(UUID.randomUUID());
+    }
 
-	public void setId(UUID value) {
-		__Id = value;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	private RunIf __RunIfCondition = RunIf.Passed;
+    public void setId(UUID value) {
+        id = value;
+    }
 
-	public RunIf getRunIfCondition() {
-		return __RunIfCondition;
-	}
+    public RunIf getRunIfCondition() {
+        return runIfCondition;
+    }
 
-	public void setRunIfCondition(RunIf value) {
-		__RunIfCondition = value;
-	}
+    public void setRunIfCondition(RunIf value) {
+        runIfCondition = value;
+    }
 
-	private TaskType __Type = TaskType.Exec;
+    public TaskType getType() {
+        return type;
+    }
 
-	public TaskType getType() {
-		return __Type;
-	}
+    public void setType(TaskType value) {
+        type = value;
+    }
 
-	public void setType(TaskType value) {
-		__Type = value;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	public Task() throws Exception {
-		this.setId(UUID.randomUUID());
-	}
+    public void setStatus(Status value) {
+        status = value;
+    }
 
-	// [SD] Execution contexts props
-	private ExecutionState __State = ExecutionState.None;
+    public String getResult() {
+        return result;
+    }
 
-	public ExecutionState getState() {
-		return __State;
-	}
+    public void setResult(String value) {
+        result = value;
+    }
 
-	public void setState(ExecutionState value) {
-		__State = value;
-	}
+    public Date getStart() {
+        return start;
+    }
 
-	private ExecutionStatus __Status = ExecutionStatus.Passed;
+    public void setStart(Date value) {
+        start = value;
+    }
 
-	public ExecutionStatus getStatus() {
-		return __Status;
-	}
+    public Date getEnd() {
+        return end;
+    }
 
-	public void setStatus(ExecutionStatus value) {
-		__Status = value;
-	}
-
-	private String __Result;
-
-	public String getResult() {
-		return __Result;
-	}
-
-	public void setResult(String value) {
-		__Result = value;
-	}
-
-	private Date __Start;
-
-	public Date getStart() {
-		return __Start;
-	}
-
-	public void setStart(Date value) {
-		__Start = value;
-	}
-
-	private Date __End;
-
-	public Date getEnd() {
-		return __End;
-	}
-
-	public void setEnd(Date value) {
-		__End = value;
-	}
+    public void setEnd(Date value) {
+        end = value;
+    }
 
 }
