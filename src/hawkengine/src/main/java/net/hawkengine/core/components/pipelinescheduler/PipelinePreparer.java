@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PipelinePreparer extends Thread {
-    private final Logger logger = LogManager.getLogger(this.getClass());
+   //private final Logger logger = LogManager.getLogger(this.getClass());
     private final IPipelineDefinitionService pipelineDefinitionService;
     private final IPipelineService pipelineService;
 
@@ -26,16 +26,16 @@ public class PipelinePreparer extends Thread {
 
     @Override
     public synchronized void start() {
-        this.logger.info(String.format(LoggerMessages.PREPARER_STARTED, "Pipeline Preparer"));
+       // this.logger.info(String.format(LoggerMessages.PREPARER_STARTED, "Pipeline Preparer"));
         super.start();
     }
 
 
     @Override
     public void run() {
-        this.logger.info(String.format(LoggerMessages.PREPARER_RUN, "Pipeline Preparer"));
+       // this.logger.info(String.format(LoggerMessages.PREPARER_RUN, "Pipeline Preparer"));
         List<Pipeline> filteredPipelines = this.getAllUpdatedPipelines();
-        for (Pipeline filteredPipeline: filteredPipelines) {
+        for (Pipeline filteredPipeline : filteredPipelines) {
             Pipeline preparedPipeline = this.preparePipeline(filteredPipeline);
             this.pipelineService.update(preparedPipeline);
         }
@@ -44,13 +44,13 @@ public class PipelinePreparer extends Thread {
 
     private List<Pipeline> getAllUpdatedPipelines() {
 
-        ServiceResult serviceResult = this.pipelineDefinitionService.getAll();
+        ServiceResult serviceResult = this.pipelineService.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) serviceResult.getObject();
 
         List<Pipeline> filteredPipelines = pipelines.stream()
                 .filter(Pipeline::areMaterialsUpdated)
                 .filter(p -> p.getStatus() == Status.IN_PROGRESS)
-                .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
         return filteredPipelines;
@@ -63,7 +63,7 @@ public class PipelinePreparer extends Thread {
 
         //TODO: Modify Pipeline Definition Model
         //pipelineToPrepare.setEnvironments(pipelineDefinition.getEnvironments());
-        pipelineToPrepare.setEnvironmentVariables(pipelineDefinition.getEnvironmentVariables());
+        //pipelineToPrepare.setEnvironmentVariables(pipelineDefinition.getEnvironmentVariables());
 
         List<Stage> stages = pipelineDefinition.getStages();
         List<JobDefinition> executionJobs = new ArrayList<>();
