@@ -10,13 +10,12 @@ public class Job {
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
     private List<JobDefinition> jobs;
-    private Status status;
+    private JobStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
 
     public Job() {
-        this.status = Status.IN_PROGRESS;
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());
@@ -54,11 +53,11 @@ public class Job {
         this.jobs = jobs;
     }
 
-    public Status getStatus() {
+    public JobStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(JobStatus status) {
         this.status = status;
     }
 

@@ -10,7 +10,7 @@ public class PipelineDefinition extends DbEntry {
     private List<MaterialDefinition> materials;
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
-    private List<StageDefinition> stages;
+    private List<StageDefinition> stageDefinitions;
     private boolean isAutoSchedulingEnabled;
     private boolean isLocked;
 
@@ -19,7 +19,7 @@ public class PipelineDefinition extends DbEntry {
         this.setEnvironmentVariables(new ArrayList<>());
         this.setMaterials(new ArrayList<>());
         this.setEnvironments(new ArrayList<>());
-        this.setStages(new ArrayList<>());
+        this.setStageDefinitions(new ArrayList<>());
     }
 
     public String getName() {
@@ -70,12 +70,12 @@ public class PipelineDefinition extends DbEntry {
         this.environments = environments;
     }
 
-    public List<StageDefinition> getStages() {
-        return this.stages;
+    public List<StageDefinition> getStageDefinitions() {
+        return this.stageDefinitions;
     }
 
-    public void setStages(List<StageDefinition> stages) {
-        this.stages = stages;
+    public void setStageDefinitions(List<StageDefinition> stageDefinitions) {
+        this.stageDefinitions = stageDefinitions;
     }
 
     public boolean isAutoSchedulingEnabled() {

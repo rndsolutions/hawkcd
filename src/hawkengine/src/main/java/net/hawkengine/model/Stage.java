@@ -16,7 +16,6 @@ public class Stage {
     private Duration duration;
 
     public Stage() {
-        this.status = Status.IN_PROGRESS;
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());

@@ -59,7 +59,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         List<Agent> agents = (List<Agent>) super.getAll().getObject();
         agents = agents
                 .stream()
-                .filter(a -> a.getConfigState() == ConfigState.ENABLED)
+                .filter(a -> a.isEnabled())
                 .collect(Collectors.toList());
 
         ServiceResult result = new ServiceResult();
@@ -82,34 +82,13 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         List<Agent> agents = (List<Agent>) super.getAll().getObject();
         agents = agents
                 .stream()
-                .filter(a -> a.getConfigState() == ConfigState.ENABLED && a.getExecutionState() == AgentExecutionState.Idle)
+                .filter(a -> a.isEnabled() && !a.isRunning())
                 .collect(Collectors.toList());
 
         ServiceResult result = new ServiceResult();
         result.setError(false);
         result.setMessage("All enabled idle " + super.objectType + "s retrieved successfully.");
         result.setObject(agents);
-
-        return result;
-    }
-
-    /**
-     * This methods sets the agents configuration state which can be one of two states: 'ENABLED' or
-     * 'DISABLED'.
-     *
-     * @param agentId id of the agent.
-     * @param state   state of the agent.
-     */
-
-    @Override
-    public ServiceResult setAgentConfigState(String agentId, ConfigState state) {
-        Agent agent = (Agent) super.getById(agentId).getObject();
-        ServiceResult result = new ServiceResult();
-
-        if (agent != null) {
-            agent.setConfigState(state);
-            result = super.update(agent);
-        }
 
         return result;
     }

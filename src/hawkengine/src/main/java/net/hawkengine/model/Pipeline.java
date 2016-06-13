@@ -22,7 +22,6 @@ public class Pipeline extends DbEntry {
     private boolean isPrepared;
 
     public Pipeline() {
-        this.status = Status.IN_PROGRESS;
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setMaterials(new ArrayList<>());

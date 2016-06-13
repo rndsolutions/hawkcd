@@ -1,75 +1,74 @@
 package net.hawkengine.model;
 
-import java.util.Date;
-import java.util.UUID;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public abstract class Task {
-    private UUID id;
-    private RunIf runIfCondition = RunIf.PASSED;
-    private TaskType type = TaskType.EXEC;
-    private Status status = Status.PASSED;
-    private String result;
-    private Date start;
-    private Date end;
+    private RunIf runIfCondition;
+    private TaskType type;
+    private Status status;
+    private String output;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private Duration duration;
 
-    public Task() throws Exception {
-        this.setId(UUID.randomUUID());
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID value) {
-        id = value;
+    public Task() {
+        this.startTime = LocalDateTime.now();
     }
 
     public RunIf getRunIfCondition() {
         return runIfCondition;
     }
 
-    public void setRunIfCondition(RunIf value) {
-        runIfCondition = value;
+    public void setRunIfCondition(RunIf runIfCondition) {
+        this.runIfCondition = runIfCondition;
     }
 
     public TaskType getType() {
         return type;
     }
 
-    public void setType(TaskType value) {
-        type = value;
+    public void setType(TaskType type) {
+        this.type = type;
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status value) {
-        status = value;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public String getResult() {
-        return result;
+    public String getOutput() {
+        return output;
     }
 
-    public void setResult(String value) {
-        result = value;
+    public void setOutput(String output) {
+        this.output = output;
     }
 
-    public Date getStart() {
-        return start;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setStart(Date value) {
-        start = value;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public Date getEnd() {
-        return end;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setEnd(Date value) {
-        end = value;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
 }
