@@ -15,41 +15,43 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import redis.clients.jedis.JedisPoolConfig;
 
 public class PipelineDefinitionServiceTests {
 
-    private IDbRepository<PipelineDefinition> mockedPipelineRepo;
+    private IDbRepository<PipelineDefinition> mockedRepository;
     private IPipelineDefinitionService mockedPipeLineDefinitionService;
 
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineService");
-        this.mockedPipelineRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedPipelineRepo);
+        this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository);
     }
 
     @Test
-    public void getById_withValidId_shouldReturnValidModelState() {
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        this.mockedPipelineRepo.add(pipelineDefinition);
+    public void getById_withValidId_validObject() {
+        PipelineDefinition expectedResult = new PipelineDefinition();
+        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + expectedResult.getId() + " retrieved successfully.";
+        this.mockedRepository.add(expectedResult);
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getById(pipelineDefinition.getId());
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getById(expectedResult.getId());
         PipelineDefinition actualResultObject = (PipelineDefinition) actualResult.getObject();
-        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + actualResultObject.getId() + " retrieved successfully.";
 
         Assert.assertNotNull(actualResultObject);
-        Assert.assertEquals(pipelineDefinition.getId(), actualResultObject.getId());
+        Assert.assertEquals(expectedResult.getId(), actualResultObject.getId());
         Assert.assertFalse(actualResult.hasError());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void getById_withInvalidId_shouldReturnInvalidModelState() {
-        UUID fakeID = UUID.randomUUID();
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getById(fakeID.toString());
-        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + fakeID + " not found.";
+    public void getById_withInvalidId_null() {
+        UUID invalidId = UUID.randomUUID();
+        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + invalidId + " not found.";
+
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getById(invalidId.toString());
 
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNull(actualResult.getObject());
@@ -57,131 +59,129 @@ public class PipelineDefinitionServiceTests {
     }
 
     @Test
-    public void add_nonExistingObject_shouldReturnValidObject() throws Exception {
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("Test PipelineDefinition");
-
-        ServiceResult actualResultObject = this.mockedPipeLineDefinitionService.add(pipelineDefinition);
-        PipelineDefinition actualObjectResult = (PipelineDefinition) actualResultObject.getObject();
-        String expectedMessage = actualObjectResult.getClass().getSimpleName() + " " + actualObjectResult.getId() + " created successfully.";
-        int actualCollectionSize = this.mockedPipelineRepo.getAll().size();
-
-        Assert.assertEquals(1, actualCollectionSize);
-        Assert.assertNotNull(actualObjectResult);
-        Assert.assertFalse(actualResultObject.hasError());
-        Assert.assertEquals(pipelineDefinition.getId(), actualObjectResult.getId());
-        Assert.assertEquals(pipelineDefinition.getName(), actualObjectResult.getName());
-        Assert.assertEquals(expectedMessage, actualResultObject.getMessage());
-    }
-
-    @Test
-    public void add_existingObject_shouldReturnInvalidObject() throws Exception {
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-
-        this.mockedPipeLineDefinitionService.add(pipelineDefinition);
-        ServiceResult actualResultObject = this.mockedPipeLineDefinitionService.add(pipelineDefinition);
-        String expectedMessage = pipelineDefinition.getClass().getSimpleName() + " " + pipelineDefinition.getId() + " already exists.";
-
-        Assert.assertTrue(actualResultObject.hasError());
-        Assert.assertNull(actualResultObject.getObject());
-        Assert.assertEquals(expectedMessage, actualResultObject.getMessage());
-    }
-
-    @Test
-    public void getAll_shouldReturnValidObject() throws Exception {
-        int expectedCollectionSize = 2;
-        PipelineDefinition firstExpectedPipeline = new PipelineDefinition();
-        firstExpectedPipeline.setName("firstPipeLineName");
-        PipelineDefinition secondExpectedPipeline = new PipelineDefinition();
-        secondExpectedPipeline.setName("secondPipeLineName");
-
-        this.mockedPipeLineDefinitionService.add(firstExpectedPipeline);
-        this.mockedPipeLineDefinitionService.add(secondExpectedPipeline);
-        ServiceResult actualResultObject = this.mockedPipeLineDefinitionService.getAll();
-        List<PipelineDefinition> actualCollection = (List<PipelineDefinition>) actualResultObject.getObject();
+    public void getAll_withExistingObjects_validObjects() {
+        PipelineDefinition firstExpectedResult = new PipelineDefinition();
+        PipelineDefinition secondExpectedResult = new PipelineDefinition();
         String expectedMessage = PipelineDefinition.class.getSimpleName() + "s retrieved successfully.";
+        int expectedCollectionSize = 2;
 
-        PipelineDefinition firstActualPipeline = (PipelineDefinition) this.mockedPipeLineDefinitionService
-                .getById(firstExpectedPipeline.getId())
-                .getObject();
+        this.mockedPipeLineDefinitionService.add(firstExpectedResult);
+        this.mockedPipeLineDefinitionService.add(secondExpectedResult);
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getAll();
+        List<PipelineDefinition> actualResultObject = (List<PipelineDefinition>) actualResult.getObject();
+        PipelineDefinition firstActualResult = actualResultObject
+                .stream()
+                .filter(p -> p.getId().equals(firstExpectedResult.getId()))
+                .collect(Collectors.toList())
+                .get(0);
 
-        PipelineDefinition secondActualPipeline = (PipelineDefinition) this.mockedPipeLineDefinitionService
-                .getById(secondExpectedPipeline.getId())
-                .getObject();
+        PipelineDefinition secondActualResult = actualResultObject
+                .stream()
+                .filter(p -> p.getId().equals(secondExpectedResult.getId()))
+                .collect(Collectors.toList())
+                .get(0);
 
-        Assert.assertEquals(expectedCollectionSize, actualCollection.size());
-        Assert.assertFalse(actualResultObject.hasError());
-        Assert.assertEquals(firstExpectedPipeline.getName(), firstActualPipeline.getName());
-        Assert.assertEquals(secondExpectedPipeline.getName(), secondActualPipeline.getName());
-        Assert.assertEquals(expectedMessage, actualResultObject.getMessage());
+        Assert.assertEquals(expectedCollectionSize, actualResultObject.size());
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(firstExpectedResult.getId(), firstActualResult.getId());
+        Assert.assertEquals(secondExpectedResult.getId(), secondActualResult.getId());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void getAll_shouldReturnInvalidObject() {
+    public void getAll_withNonexistentObjects_null() {
+        String expectedMessage = PipelineDefinition.class.getSimpleName() + "s retrieved successfully.";
         int expectedCollectionSize = 0;
 
-        ServiceResult result = this.mockedPipeLineDefinitionService.getAll();
-        List<PipelineDefinition> actual = (List<PipelineDefinition>) result.getObject();
-        String expectedMessage = PipelineDefinition.class.getSimpleName() + "s retrieved successfully.";
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getAll();
+        List<PipelineDefinition> actualResultObject = (List<PipelineDefinition>) actualResult.getObject();
 
-        Assert.assertEquals(actual.size(), expectedCollectionSize);
-        Assert.assertFalse(result.hasError());
-        Assert.assertEquals(expectedMessage, result.getMessage());
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+        Assert.assertEquals(expectedCollectionSize, actualResultObject.size());
     }
 
     @Test
-    public void update_withValidInput_shouldReturnValidObject() throws Exception {
+    public void add_newObject_validObject() {
+        PipelineDefinition expectedResult = new PipelineDefinition();
+        String expectedMessage = expectedResult.getClass().getSimpleName() + " " + expectedResult.getId() + " created successfully.";
+        int expectedCollectionSize = 1;
+
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.add(expectedResult);
+        PipelineDefinition actualResultObject = (PipelineDefinition) actualResult.getObject();
+        int actualCollectionSize = this.mockedRepository.getAll().size();
+
+        Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
+        Assert.assertNotNull(actualResultObject);
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(expectedResult.getId(), actualResultObject.getId());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void add_existingObject_null() throws Exception {
+        PipelineDefinition expectedResult = new PipelineDefinition();
+        String expectedMessage = expectedResult.getClass().getSimpleName() + " " + expectedResult.getId() + " already exists.";
+
+        this.mockedPipeLineDefinitionService.add(expectedResult);
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.add(expectedResult);
+
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void update_existingObject_validObject() {
+        PipelineDefinition expectedResult = new PipelineDefinition();
+        expectedResult.setName("BeforeUpdateName");
+        this.mockedPipeLineDefinitionService.add(expectedResult);
         String expectedName = "AfterUpdateName";
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("BeforeUpdateName");
+        expectedResult.setName(expectedName);
+        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + expectedResult.getId() + " updated successfully.";
 
-        this.mockedPipeLineDefinitionService.add(pipelineDefinition);
-        PipelineDefinition fromDB = (PipelineDefinition) this.mockedPipeLineDefinitionService
-                .getById(pipelineDefinition.getId())
-                .getObject();
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.update(expectedResult);
+        PipelineDefinition actualResultObject = (PipelineDefinition) actualResult.getObject();
 
-        fromDB.setName(expectedName);
-        ServiceResult actualResultObject = this.mockedPipeLineDefinitionService.update(fromDB);
-        PipelineDefinition actualObject = (PipelineDefinition) actualResultObject.getObject();
-        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + actualObject.getId() + " updated successfully.";
-
-        Assert.assertFalse(actualResultObject.hasError());
-        Assert.assertEquals(expectedName, actualObject.getName());
-        Assert.assertEquals(expectedMessage, actualResultObject.getMessage());
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(expectedName, actualResultObject.getName());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void update_withInvalidInput_shouldReturnInvalidObject() throws Exception {
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        ServiceResult actualResultObject = this.mockedPipeLineDefinitionService.update(pipelineDefinition);
-        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + pipelineDefinition.getId() + " not found.";
+    public void update_nonexistentObject_null() {
+        PipelineDefinition expectedResult = new PipelineDefinition();
+        String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + expectedResult.getId() + " not found.";
 
-        Assert.assertTrue(actualResultObject.hasError());
-        Assert.assertNull(actualResultObject.getObject());
-        Assert.assertEquals(expectedMessage, actualResultObject.getMessage());
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.update(expectedResult);
+
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void delete_withValidInput_shouldReturnValidObject() throws Exception {
+    public void delete_existingObject_true() {
         PipelineDefinition pipelineToDelete = new PipelineDefinition();
-
         this.mockedPipeLineDefinitionService.add(pipelineToDelete);
-        ServiceResult actual = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " deleted successfully.";
 
-        Assert.assertFalse(actual.hasError());
-        Assert.assertNull(actual.getObject());
-        Assert.assertEquals(expectedMessage, actual.getMessage());
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
+
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void delete_withInvalidInput_shouldReturnInvalidObject() throws Exception {
+    public void delete_nonexistentObject_false() throws Exception {
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        ServiceResult actual = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " not found.";
 
-        Assert.assertTrue(actual.hasError());
-        Assert.assertNull(actual.getObject());
-        Assert.assertEquals(expectedMessage, actual.getMessage());
+        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
+
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 }
