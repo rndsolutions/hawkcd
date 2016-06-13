@@ -27,7 +27,7 @@ public class PipelineDefinition extends DbEntry {
     private boolean autoScheduling;
     private boolean isLocked;
 
-    public PipelineDefinition() throws Exception {
+    public PipelineDefinition() {
         this.setLabelTemplate("%COUNT%");
         this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
     }
@@ -40,15 +40,15 @@ public class PipelineDefinition extends DbEntry {
         executionId = value;
     }
 
-    public String getOriginalName() throws Exception {
+    public String getOriginalName() {
         return this.originalName;
     }
 
-    public String getName() throws Exception {
+    public String getName() {
         return this.name;
     }
 
-    public void setName(String value) throws Exception {
+    public void setName(String value) {
         if (this.name != null) {
             this.originalName = value;
         } else {
@@ -173,7 +173,7 @@ public class PipelineDefinition extends DbEntry {
 
         throw new OperationNotSupportedException("not implemented");
         /*
-		 * if (getStages() != null) { Stage stage = getStages().Where(
+         * if (getStages() != null) { Stage stage = getStages().Where(
 		 * [UNSUPPORTED] to translate lambda expressions we need an explicit
 		 * delegate type, try adding a cast "(s) => { return s.ID == id; }"
 		 * ).FirstOrDefault(); if (stage == null) throw new

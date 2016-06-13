@@ -36,7 +36,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public T getById(String id) throws Exception {
+    public T getById(String id) {
         T result;
         try {
             BasicDBObject query = new BasicDBObject("id", id);
@@ -57,7 +57,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public List<T> getAll() throws Exception {
+    public List<T> getAll() {
         T resultElement;
         try {
             DBCursor documents = this.collection.find();
@@ -79,7 +79,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public T add(T entry) throws Exception {
+    public T add(T entry) {
         if (getById(entry.getId()) == null) {
             try {
                 String entryToJson = jsonConverter.toJson(entry);
@@ -93,12 +93,13 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
                 throw e;
             }
         }else {
-            throw new Exception("Entry already present");
+            return null;
+            //throw new Exception("Entry already present");
         }
     }
 
     @Override
-    public T update(T entry) throws Exception {
+    public T update(T entry) {
         try {
             BasicDBObject newDocument = (BasicDBObject) JSON.parse(jsonConverter.toJson(entry));
 
@@ -114,7 +115,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public boolean delete(String id) throws Exception {
+    public boolean delete(String id) {
         try {
             BasicDBObject searchQuery = new BasicDBObject().append("id", id);
             this.collection.findAndRemove(searchQuery);

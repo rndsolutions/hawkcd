@@ -4,21 +4,17 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
-
-    private IDbRepository<PipelineDefinition> repository;
-    private ServiceResult serviceResult;
-
     public PipelineDefinitionService() {
         super.repository = new RedisRepository(PipelineDefinition.class);
+        super.objectType = "PipelineDefinition";
     }
 
     public PipelineDefinitionService(IDbRepository repository) {
         super.repository = repository;
+        super.objectType = "PipelineDefinition";
     }
 
     @Override
