@@ -5,29 +5,29 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stage {
-    private String stageDefinitionId;
+public class Job {
+    private String jobDefinitionId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
-    private List<Job> jobs;
+    private List<JobDefinition> jobs;
     private Status status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
 
-    public Stage() {
+    public Job() {
         this.status = Status.IN_PROGRESS;
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());
     }
 
-    public String getStageDefinitionId() {
-        return stageDefinitionId;
+    public String getJobDefinitionId() {
+        return jobDefinitionId;
     }
 
-    public void setStageDefinitionId(String stageDefinitionId) {
-        this.stageDefinitionId = stageDefinitionId;
+    public void setJobDefinitionId(String jobDefinitionId) {
+        this.jobDefinitionId = jobDefinitionId;
     }
 
     public int getExecutionId() {
@@ -46,11 +46,11 @@ public class Stage {
         this.environmentVariables = environmentVariables;
     }
 
-    public List<Job> getJobs() {
+    public List<JobDefinition> getJobs() {
         return jobs;
     }
 
-    public void setJobs(List<Job> jobs) {
+    public void setJobs(List<JobDefinition> jobs) {
         this.jobs = jobs;
     }
 

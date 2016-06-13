@@ -38,7 +38,7 @@ public class AgentServiceTests {
         Agent firstAgent = new Agent();
         Agent secondAgent = new Agent();
         Agent thirdAgent = new Agent();
-        thirdAgent.setConfigState(ConfigState.DISABLED);
+        thirdAgent.setEnabled(false);
         this.mockedAgentService.add(firstAgent);
         this.mockedAgentService.add(secondAgent);
         this.mockedAgentService.add(thirdAgent);

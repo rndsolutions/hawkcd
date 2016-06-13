@@ -1,12 +1,7 @@
 package net.hawkengine.model;
 
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
-import javax.naming.OperationNotSupportedException;
 
 public class PipelineDefinition extends DbEntry {
     private String name;
