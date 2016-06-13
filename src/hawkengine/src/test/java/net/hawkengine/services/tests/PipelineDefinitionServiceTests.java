@@ -89,7 +89,7 @@ public class PipelineDefinitionServiceTests {
     }
 
     @Test
-    public void getAll_withNonexistentObjects_null() {
+    public void getAll_withNonexistentObjects_noObjects() {
         String expectedMessage = PipelineDefinition.class.getSimpleName() + "s retrieved successfully.";
         int expectedCollectionSize = 0;
 
