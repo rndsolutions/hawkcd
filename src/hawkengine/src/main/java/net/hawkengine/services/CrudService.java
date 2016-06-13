@@ -9,121 +9,85 @@ import java.util.List;
 
 public abstract class CrudService<T extends DbEntry> implements ICrudService<T> {
     protected IDbRepository<T> repository;
-
-    public void setRepository(IDbRepository<T> repository) {
-        this.repository = repository;
-    }
+    protected String objectType;
 
     @Override
     public ServiceResult getById(String id) {
-        T dbCall = null;
-        try {
-            dbCall = this.repository.getById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        T dbObject = this.repository.getById(id);
 
         ServiceResult result = new ServiceResult();
-        if(dbCall != null){
+        if (dbObject != null) {
             result.setError(false);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " retrieved successfully.");
-            result.setObject(dbCall);
-        }
-        else{
+            result.setMessage(this.objectType + " " + id + " retrieved successfully.");
+        } else {
             result.setError(true);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " already exists.");
-            result.setObject(null);
+            result.setMessage(this.objectType + " " + id + " not found.");
         }
+
+        result.setObject(dbObject);
 
         return result;
     }
 
     @Override
     public ServiceResult getAll() {
-        List<T> dbCall = null;
-        try {
-            dbCall = this.repository.getAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<T> dbObjects = this.repository.getAll();
 
         ServiceResult result = new ServiceResult();
         result.setError(false);
-        if(dbCall != null){
-            result.setMessage(dbCall.get(0).getClass().getSimpleName() + "s retrieved successfully.");
-        }
-        result.setObject(dbCall);
+        result.setMessage(this.objectType + "s retrieved successfully.");
+        result.setObject(dbObjects);
 
         return result;
     }
 
     @Override
     public ServiceResult add(T object) {
-        T dbCall = null;
-        try {
-            dbCall = this.repository.add(object);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        T dbObject = this.repository.add(object);
 
         ServiceResult result = new ServiceResult();
-        if(dbCall != null){
+        if (dbObject != null) {
             result.setError(false);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " retrieved successfully.");
-            result.setObject(dbCall);
-        }
-        else{
+            result.setMessage(this.objectType + " " + object.getId() + " created successfully.");
+        } else {
             result.setError(true);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " already exists.");
-            result.setObject(null);
+            result.setMessage(this.objectType + " " + object.getId() + " already exists.");
         }
+
+        result.setObject(dbObject);
 
         return result;
     }
 
     @Override
     public ServiceResult update(T object) {
-        T dbCall = null;
-        try {
-            dbCall = this.repository.update(object);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        T dbObject = this.repository.update(object);
 
         ServiceResult result = new ServiceResult();
-        if(dbCall != null){
+        if (dbObject != null) {
             result.setError(false);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " updated successfully.");
-            result.setObject(dbCall);
-        }
-        else{
+            result.setMessage(this.objectType + " " + object.getId() + " updated successfully.");
+        } else {
             result.setError(true);
-            result.setMessage(dbCall.getClass().getSimpleName() + " with id " + dbCall.getId() + " already exists.");
-            result.setObject(null);
+            result.setMessage(this.objectType + " " + object.getId() + " not found.");
         }
+
+        result.setObject(dbObject);
 
         return result;
     }
 
     @Override
     public ServiceResult delete(String id) {
-        boolean dbCall = false;
-        try {
-            dbCall = this.repository.delete(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        boolean isDeleted = this.repository.delete(id);
 
         ServiceResult result = new ServiceResult();
-        if(dbCall){
+        if (isDeleted) {
             result.setError(false);
-            result.setMessage("Object with id " + id + " deleted successfully.");
-            result.setObject(id);
-        }
-        else{
+            result.setMessage(this.objectType + " deleted successfully.");
+        } else {
             result.setError(true);
-            result.setMessage("Object with id " + id + " not found.");
-            result.setObject(null);
+            result.setMessage(this.objectType + " not found.");
         }
 
         return result;
