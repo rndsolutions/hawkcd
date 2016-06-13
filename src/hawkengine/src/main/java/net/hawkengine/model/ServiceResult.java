@@ -1,9 +1,9 @@
 package net.hawkengine.model;
 
 public class ServiceResult {
-    private Object object;
     private boolean error;
     private String message;
+    private Object object;
 
     public Object getObject() {
         return this.object;

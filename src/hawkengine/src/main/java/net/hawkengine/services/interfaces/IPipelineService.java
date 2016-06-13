@@ -1,8 +1,8 @@
 package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.ICrudService;
 
 public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getById(String pipelineId);
