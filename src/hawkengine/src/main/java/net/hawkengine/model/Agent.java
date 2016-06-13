@@ -4,130 +4,103 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Agent extends DbEntry {
-	private String name;
-	private String hostName;
-	private String ipAddress;
-	private String sandbox;
-	private ArrayList<String> resources;
-	private ArrayList<String> environments;
-	private AgentExecutionState executionState = AgentExecutionState.Idle;
-	private ConfigState configState = ConfigState.Enabled;
-	private String executingPipelineId;
-	private String executingStageId;
-	private String executingJobId;
-	private boolean isConnected;
-	private Date lastReported;
-	private Object os;
+    private String name;
+    private String hostName;
+    private String ipAddress;
+    private String rootPath;
+    private Object os;
+    private ArrayList<String> resources;
+    private Environment environment;
+    private boolean isRunning;
+    private boolean isEnabled;
+    private boolean isConnected;
+    private Date lastReported;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void setName(String value) {
-		name = value;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getHostName() {
-		return hostName;
-	}
+    public String getHostName() {
+        return this.hostName;
+    }
 
-	public void setHostName(String value) {
-		hostName = value;
-	}
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 
-	public String getIPAddress() {
-		return ipAddress;
-	}
+    public String getIpAddress() {
+        return this.ipAddress;
+    }
 
-	public void setIPAddress(String value) {
-		ipAddress = value;
-	}
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
 
-	public String getSandbox() {
-		return sandbox;
-	}
+    public String getRootPath() {
+        return this.rootPath;
+    }
 
-	public void setSandbox(String value) {
-		sandbox = value;
-	}
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
+    }
 
-	public ArrayList<String> getResources() {
-		return resources;
-	}
+    public Object getOs() {
+        return this.os;
+    }
 
-	public void setResources(ArrayList<String> value) {
-		resources = value;
-	}
+    public void setOs(Object os) {
+        this.os = os;
+    }
 
-	public ArrayList<String> getEnvironments() {
-		return environments;
-	}
+    public ArrayList<String> getResources() {
+        return this.resources;
+    }
 
-	public void setEnvironments(ArrayList<String> value) {
-		environments = value;
-	}
+    public void setResources(ArrayList<String> resources) {
+        this.resources = resources;
+    }
 
-	public AgentExecutionState getExecutionState() {
-		return executionState;
-	}
+    public Environment getEnvironment() {
+        return this.environment;
+    }
 
-	public void setExecutionState(AgentExecutionState value) {
-		executionState = value;
-	}
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
-	public ConfigState getConfigState() {
-		return configState;
-	}
+    public boolean isRunning() {
+        return this.isRunning;
+    }
 
-	public void setConfigState(ConfigState value) {
-		configState = value;
-	}
+    public void setRunning(boolean running) {
+        this.isRunning = running;
+    }
 
-	public String getExecutingPipelineID() {
-		return executingPipelineId;
-	}
+    public boolean isEnabled() {
+        return this.isEnabled;
+    }
 
-	public void setExecutingPipelineID(String value) {
-		executingPipelineId = value;
-	}
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
 
-	public String getExecutingStageId() {
-		return executingStageId;
-	}
+    public boolean isConnected() {
+        return this.isConnected;
+    }
 
-	public void setExecutingStageId(String value) {
-		executingStageId = value;
-	}
+    public void setConnected(boolean connected) {
+        this.isConnected = connected;
+    }
 
-	public String getExecutingJobId() {
-		return executingJobId;
-	}
+    public Date getLastReported() {
+        return this.lastReported;
+    }
 
-	public void setExecutingJobId(String value) {
-		executingJobId = value;
-	}
-
-	public boolean getIsConnected() {
-		return isConnected;
-	}
-
-	public void setIsConnected(boolean value) {
-		isConnected = value;
-	}
-
-	public Date getLastReported() {
-		return lastReported;
-	}
-
-	public void setLastReported(Date value) {
-		lastReported = value;
-	}
-
-	public Object getOS() {
-		return os;
-	}
-
-	public void setOS(Object value) {
-		os = value;
-	}
+    public void setLastReported(Date lastReported) {
+        this.lastReported = lastReported;
+    }
 }
