@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Job {
     private String jobDefinitionId;
+    private String stageId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
     private List<JobDefinition> jobs;

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Stage {
     private String stageDefinitionId;
+    private String pipelineId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
     private List<Job> jobs;
@@ -35,6 +36,14 @@ public class Stage {
 
     public void setExecutionId(int executionId) {
         this.executionId = executionId;
+    }
+
+    public String getPipelineId() {
+        return pipelineId;
+    }
+
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {

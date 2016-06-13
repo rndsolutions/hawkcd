@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public abstract class Task {
+    private String taskDefinitionId;
+    private String jobId;
     private RunIf runIfCondition;
     private TaskType type;
     private Status status;
@@ -14,6 +16,22 @@ public abstract class Task {
 
     public Task() {
         this.startTime = LocalDateTime.now();
+    }
+
+    public String getTaskDefinitionId() {
+        return taskDefinitionId;
+    }
+
+    public void setTaskDefinitionId(String taskDefinitionId) {
+        this.taskDefinitionId = taskDefinitionId;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
     public RunIf getRunIfCondition() {
