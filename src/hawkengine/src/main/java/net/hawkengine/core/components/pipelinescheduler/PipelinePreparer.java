@@ -1,24 +1,19 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
-import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.*;
-import net.hawkengine.services.IPipelineDefinitionService;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("UnnecessaryLocalVariable")
 public class PipelinePreparer extends Thread {
-   //private final Logger logger = LogManager.getLogger(this.getClass());
     private final IPipelineDefinitionService pipelineDefinitionService;
     private final IPipelineService pipelineService;
 
-    public PipelinePreparer(PipelineService pipelineService, PipelineDefinitionService pipelineDefinitionService) {
+    public PipelinePreparer(IPipelineService pipelineService, IPipelineDefinitionService pipelineDefinitionService) {
         this.pipelineService = pipelineService;
         this.pipelineDefinitionService = pipelineDefinitionService;
     }
@@ -26,7 +21,6 @@ public class PipelinePreparer extends Thread {
 
     @Override
     public synchronized void start() {
-       // this.logger.info(String.format(LoggerMessages.PREPARER_STARTED, "Pipeline Preparer"));
         super.start();
         this.run();
     }
@@ -34,7 +28,7 @@ public class PipelinePreparer extends Thread {
 
     @Override
     public void run() {
-       // this.logger.info(String.format(LoggerMessages.PREPARER_RUN, "Pipeline Preparer"));
+        // this.logger.info(String.format(LoggerMessages.PREPARER_RUN, "Pipeline Preparer"));
         List<Pipeline> filteredPipelines = this.getAllUpdatedPipelines();
         for (Pipeline filteredPipeline : filteredPipelines) {
             Pipeline preparedPipeline = this.preparePipeline(filteredPipeline);

@@ -1,11 +1,14 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
+import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,25 +18,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings({"unchecked", "PackageVisibleField", "InstanceMethodNamingConvention"})
 public class PipelinePreparerTest {
-    IDbRepository pipelineRepo;
-    IDbRepository pipelineDefinitionRepo;
-    PipelineService pipelineService;
-    PipelineDefinitionService pipelineDefinitionService;
+    private IPipelineService pipelineService;
+    private IPipelineDefinitionService pipelineDefinitionService;
+    @SuppressWarnings("InstanceVariableOfConcreteClass")
+    private
     PipelinePreparer pipelinePreparer;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineService");
-        this.pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
-        this.pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.pipelineService = new PipelineService(this.pipelineRepo);
-        this.pipelineDefinitionService = new PipelineDefinitionService(this.pipelineDefinitionRepo);
-        this.pipelinePreparer = new PipelinePreparer(pipelineService, pipelineDefinitionService);
+        IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
+        IDbRepository pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.pipelineService = new PipelineService(pipelineRepo);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo);
+        this.pipelinePreparer = new PipelinePreparer(this.pipelineService, this.pipelineDefinitionService);
     }
 
     @Test
-    public void getAllPreparedPipelines_withOneInvalidStatus_threeObjects() {
+    public void getAllPreparedPipelines_withOneStatusFailed_threeObjects() {
+        //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setAreMaterialsUpdated(true);
         firstExpectedResult.setStatus(Status.IN_PROGRESS);
@@ -55,9 +60,10 @@ public class PipelinePreparerTest {
         this.pipelineService.add(thirdExpectedResult);
         this.pipelineService.add(fourthExpectedResult);
 
-        int expectedCollectionSize = 3;
+        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_THREE_OBJECTS;
 
-        List<Pipeline> actualResult = pipelinePreparer.getAllUpdatedPipelines().stream()
+        //Act
+        List<Pipeline> actualResult = this.pipelinePreparer.getAllUpdatedPipelines().stream()
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -82,6 +88,7 @@ public class PipelinePreparerTest {
                 .get(0)
                 .getId();
 
+        //Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
         Assert.assertEquals(firstExpectedResult.getId(), firstActualResultObjectId);
         Assert.assertEquals(secondExpectedResult.getId(), secondActualResultObjectId);
@@ -90,6 +97,7 @@ public class PipelinePreparerTest {
 
     @Test
     public void getAllPreparedPipelines_withOneNotUpdatedMaterial_oneObject() throws Exception {
+        //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setAreMaterialsUpdated(true);
         firstExpectedResult.setStatus(Status.IN_PROGRESS);
@@ -101,63 +109,70 @@ public class PipelinePreparerTest {
         this.pipelineService.add(firstExpectedResult);
         this.pipelineService.add(secondExpectedResult);
 
-        int expectedCollectionSize = 1;
+        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
 
-        List<Pipeline> actualResult = pipelinePreparer.getAllUpdatedPipelines();
+        //Act
+        List<Pipeline> actualResult = this.pipelinePreparer.getAllUpdatedPipelines();
 
+        //Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
         Assert.assertEquals(firstExpectedResult.getId(), actualResult.get(0).getId());
     }
 
     @Test
-    public void preparePipeline_withValidObject_validModelState() throws Exception {
+    public void getAllPreparedPipelines_withOneNotUpdatedMaterialAndOneStatusFailed_oneObject() throws Exception {
+        //Arrange
+        Pipeline firstExpectedResult = new Pipeline();
+        firstExpectedResult.setAreMaterialsUpdated(true);
+        firstExpectedResult.setStatus(Status.IN_PROGRESS);
+
+        Pipeline secondExpectedResult = new Pipeline();
+        secondExpectedResult.setAreMaterialsUpdated(false);
+        secondExpectedResult.setStatus(Status.IN_PROGRESS);
+
+        Pipeline thirdExpectedResult = new Pipeline();
+        thirdExpectedResult.setAreMaterialsUpdated(true);
+        thirdExpectedResult.setStatus(Status.FAILED);
+
+        this.pipelineService.add(firstExpectedResult);
+        this.pipelineService.add(secondExpectedResult);
+        this.pipelineService.add(thirdExpectedResult);
+
+        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+
+        //Act
+        List<Pipeline> actualResult = this.pipelinePreparer.getAllUpdatedPipelines();
+
+        //Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(firstExpectedResult.getId(), actualResult.get(0).getId());
+    }
+
+    @Test
+    public void preparePipeline_withValidObject_object() throws Exception {
+        //Act
         List<Pipeline> actualResult = this.injectDataForTestingPreparePipeline();
 
+        //Assert
         for (Pipeline actualResultObject : actualResult) {
-            Pipeline preparedPipeline = pipelinePreparer.preparePipeline(actualResultObject);
+            Pipeline preparedPipeline = this.pipelinePreparer.preparePipeline(actualResultObject);
             Assert.assertEquals(preparedPipeline.isPrepared(), true);
-        }
-    }
-
-    @Test
-    public void preparePipeline_withValidInput_addedJobs() throws Exception {
-        List<Pipeline> filteredPipelines = this.injectDataForTestingPreparePipeline();
-
-        for (Pipeline filteredPipeline : filteredPipelines) {
-            Pipeline preparedPipeline = pipelinePreparer.preparePipeline(filteredPipeline);
             Assert.assertNotNull(preparedPipeline.getJobsForExecution());
-        }
-    }
-
-    @Test
-    public void preparePipeline_withValidInput_addedEnvironmentVariables() throws Exception {
-        List<Pipeline> filteredPipelines = this.injectDataForTestingPreparePipeline();
-
-        for (Pipeline filteredPipeline : filteredPipelines) {
-            Pipeline preparedPipeline = pipelinePreparer.preparePipeline(filteredPipeline);
             Assert.assertNotNull(preparedPipeline.getEnvironmentVariables());
         }
     }
 
     private List<Pipeline> injectDataForTestingPreparePipeline() throws Exception {
+        //Assert
         ArrayList<Stage> stages = new ArrayList<>();
         ArrayList<JobDefinition> jobDefinitions = new ArrayList<>();
 
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
 
-        for (int i = 0; i < 5; i++) {
-            Stage stage = new Stage();
-            JobDefinition jobDefinition = new JobDefinition();
-
-            stages.add(stage);
-            jobDefinitions.add(jobDefinition);
-        }
-
-        for (Stage stage : stages) {
-            stage.setJobs(jobDefinitions);
-        }
+        stages.add(new Stage());
+        jobDefinitions.add(new JobDefinition());
+        stages.get(0).setJobs(jobDefinitions);
         pipelineDefinition.setStages(stages);
-
         this.pipelineDefinitionService.add(pipelineDefinition);
 
         Pipeline firstPipeline = new Pipeline();
@@ -165,13 +180,10 @@ public class PipelinePreparerTest {
         firstPipeline.setAreMaterialsUpdated(true);
         firstPipeline.setStatus(Status.IN_PROGRESS);
 
-
         Pipeline secondPipeline = new Pipeline();
         secondPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
         secondPipeline.setAreMaterialsUpdated(true);
         secondPipeline.setStatus(Status.IN_PROGRESS);
-
-        int expectedCollectionSize = 2;
 
         this.pipelineService.add(firstPipeline);
         this.pipelineService.add(secondPipeline);
@@ -179,10 +191,8 @@ public class PipelinePreparerTest {
         ServiceResult serviceResult = this.pipelineService.getAll();
         List<Pipeline> actualObjects = (List<Pipeline>) serviceResult.getObject();
 
-        List<Pipeline> filteredPipelines = actualObjects.stream()
+        return actualObjects.stream()
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
-
-        return filteredPipelines;
     }
 }
