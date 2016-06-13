@@ -1,75 +1,92 @@
 package net.hawkengine.model;
 
-import java.util.Date;
-import java.util.UUID;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public abstract class Task {
-    private UUID id;
-    private RunIf runIfCondition = RunIf.PASSED;
-    private TaskType type = TaskType.EXEC;
-    private Status status = Status.PASSED;
-    private String result;
-    private Date start;
-    private Date end;
+    private String taskDefinitionId;
+    private String jobId;
+    private RunIf runIfCondition;
+    private TaskType type;
+    private Status status;
+    private String output;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private Duration duration;
 
-    public Task() throws Exception {
-        this.setId(UUID.randomUUID());
+    public Task() {
+        this.startTime = LocalDateTime.now();
     }
 
-    public UUID getId() {
-        return this.id;
+    public String getTaskDefinitionId() {
+        return taskDefinitionId;
     }
 
-    public void setId(UUID value) {
-        this.id = value;
+    public void setTaskDefinitionId(String taskDefinitionId) {
+        this.taskDefinitionId = taskDefinitionId;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
     public RunIf getRunIfCondition() {
         return this.runIfCondition;
     }
 
-    public void setRunIfCondition(RunIf value) {
-        this.runIfCondition = value;
+    public void setRunIfCondition(RunIf runIfCondition) {
+        this.runIfCondition = runIfCondition;
     }
 
     public TaskType getType() {
         return this.type;
     }
 
-    public void setType(TaskType value) {
-        this.type = value;
+    public void setType(TaskType type) {
+        this.type = type;
     }
 
     public Status getStatus() {
         return this.status;
     }
 
-    public void setStatus(Status value) {
-        this.status = value;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public String getResult() {
-        return this.result;
+    public String getOutput() {
+        return output;
     }
 
-    public void setResult(String value) {
-        this.result = value;
+    public void setOutput(String output) {
+        this.output = output;
     }
 
-    public Date getStart() {
-        return this.start;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setStart(Date value) {
-        this.start = value;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public Date getEnd() {
-        return this.end;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setEnd(Date value) {
-        this.end = value;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
 }

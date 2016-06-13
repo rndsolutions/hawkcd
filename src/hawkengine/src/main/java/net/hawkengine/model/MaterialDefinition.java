@@ -3,23 +3,22 @@ package net.hawkengine.model;
 import java.util.HashMap;
 
 public class MaterialDefinition {
-    private String pipelineName;
+    private String pipelineDefinitionId;
     private String name;
-    private MaterialType type = MaterialType.GIT;
+    private MaterialType type;
     private String url;
     private boolean autoTriggerOnChange;
-    private String destination;
     private HashMap<String, Object> materialSpecificDetails;
 
-    public MaterialDefinition() throws Exception {
+    public MaterialDefinition() {
     }
 
-    public String getPipelineName() {
-        return this.pipelineName;
+    public String getPipelineDefinitionId() {
+        return pipelineDefinitionId;
     }
 
-    public void setPipelineName(String value) {
-        this.pipelineName = value;
+    public void setPipelineDefinitionId(String value) {
+        pipelineDefinitionId = value;
     }
 
     public String getName() {
@@ -52,14 +51,6 @@ public class MaterialDefinition {
 
     public void setAutoTriggerOnChange(boolean value) {
         this.autoTriggerOnChange = value;
-    }
-
-    public String getDestination() {
-        return this.destination;
-    }
-
-    public void setDestination(String value) {
-        this.destination = value;
     }
 
     public HashMap<String, Object> getMaterialSpecificDetails() {

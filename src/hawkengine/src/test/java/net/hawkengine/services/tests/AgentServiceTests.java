@@ -5,8 +5,6 @@ import com.fiftyonred.mock_jedis.MockJedisPool;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
-import net.hawkengine.model.AgentExecutionState;
-import net.hawkengine.model.ConfigState;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.interfaces.IAgentService;
@@ -34,11 +32,12 @@ public class AgentServiceTests {
     }
 
     @Test
-    public void getAllEnabledAgents_withExistingObjects_validObjects() {
+    public void getAllEnabledAgents_withExistingObjects_twoObjects() {
         Agent firstAgent = new Agent();
         Agent secondAgent = new Agent();
         Agent thirdAgent = new Agent();
-        thirdAgent.setConfigState(ConfigState.Disabled);
+        firstAgent.setEnabled(true);
+        secondAgent.setEnabled(true);
         this.mockedAgentService.add(firstAgent);
         this.mockedAgentService.add(secondAgent);
         this.mockedAgentService.add(thirdAgent);
@@ -54,7 +53,7 @@ public class AgentServiceTests {
         Assert.assertFalse(actualResult.hasError());
 
         for (Agent agent : actualResultObject) {
-            Assert.assertEquals(agent.getConfigState(), ConfigState.Enabled);
+            Assert.assertEquals(agent.isEnabled(), true);
         }
     }
 
@@ -73,12 +72,14 @@ public class AgentServiceTests {
     }
 
     @Test
-    public void getAllEnabledIdleAgents_withExistingObjects_validObjects() {
+    public void getAllEnabledIdleAgents_withExistingObjects_oneObject() {
         Agent firstAgent = new Agent();
+        firstAgent.setEnabled(true);
+        firstAgent.setRunning(false);
         Agent secondAgent = new Agent();
-        secondAgent.setExecutionState(AgentExecutionState.Running);
+        secondAgent.setRunning(true);
         Agent thirdAgent = new Agent();
-        thirdAgent.setConfigState(ConfigState.Disabled);
+        thirdAgent.setEnabled(false);
         this.mockedAgentService.add(firstAgent);
         this.mockedAgentService.add(secondAgent);
         this.mockedAgentService.add(thirdAgent);
@@ -93,8 +94,8 @@ public class AgentServiceTests {
         Assert.assertEquals(this.expectedEnabledIdleMessage, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertEquals(firstAgent.getId(), actualAgent.getId());
-        Assert.assertTrue(actualAgent.getConfigState() == ConfigState.Enabled);
-        Assert.assertTrue(actualAgent.getExecutionState() == AgentExecutionState.Idle);
+        Assert.assertTrue(actualAgent.isEnabled());
+        Assert.assertFalse(actualAgent.isRunning());
     }
 
     @Test
