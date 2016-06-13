@@ -164,15 +164,15 @@ public class PipelinePreparerTest {
 
     private List<Pipeline> injectDataForTestingPreparePipeline() throws Exception {
         //Assert
-        ArrayList<Stage> stages = new ArrayList<>();
+        ArrayList<StageDefinition> stages = new ArrayList<>();
         ArrayList<JobDefinition> jobDefinitions = new ArrayList<>();
 
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
 
-        stages.add(new Stage());
+        stages.add(new StageDefinition());
         jobDefinitions.add(new JobDefinition());
-        stages.get(0).setJobs(jobDefinitions);
-        pipelineDefinition.setStages(stages);
+        stages.get(0).setJobDefinitions(jobDefinitions);
+        pipelineDefinition.setStageDefinitions(stages);
         this.pipelineDefinitionService.add(pipelineDefinition);
 
         Pipeline firstPipeline = new Pipeline();
