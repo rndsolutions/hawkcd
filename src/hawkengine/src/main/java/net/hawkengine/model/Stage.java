@@ -20,7 +20,6 @@ public class Stage {
     private Date start;
     private Date end;
     private Duration duration;
-    private boolean canBeExecuted;
 
     public Stage() throws Exception {
         this.setID(UUID.randomUUID());

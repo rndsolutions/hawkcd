@@ -4,7 +4,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.AgentExecutionState;
-import net.hawkengine.model.ConfigState;
+import net.hawkengine.model.enums.ConfigState;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.interfaces.IAgentService;
 
@@ -48,7 +48,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     }
 
     /**
-     * Gets all agents from the database whom status is set to 'Enabled'.
+     * Gets all agents from the database whom status is set to 'ENABLED'.
      *
      * @return A list of enabled agents.
      * @see Agent
@@ -59,7 +59,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         List<Agent> agents = (List<Agent>) super.getAll().getObject();
         agents = agents
                 .stream()
-                .filter(a -> a.getConfigState() == ConfigState.Enabled)
+                .filter(a -> a.getConfigState() == ConfigState.ENABLED)
                 .collect(Collectors.toList());
 
         ServiceResult result = new ServiceResult();
@@ -82,7 +82,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         List<Agent> agents = (List<Agent>) super.getAll().getObject();
         agents = agents
                 .stream()
-                .filter(a -> a.getConfigState() == ConfigState.Enabled && a.getExecutionState() == AgentExecutionState.Idle)
+                .filter(a -> a.getConfigState() == ConfigState.ENABLED && a.getExecutionState() == AgentExecutionState.Idle)
                 .collect(Collectors.toList());
 
         ServiceResult result = new ServiceResult();
@@ -94,8 +94,8 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     }
 
     /**
-     * This methods sets the agents configuration state which can be one of two states: 'Enabled' or
-     * 'Disabled'.
+     * This methods sets the agents configuration state which can be one of two states: 'ENABLED' or
+     * 'DISABLED'.
      *
      * @param agentId id of the agent.
      * @param state   state of the agent.

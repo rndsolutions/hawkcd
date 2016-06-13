@@ -6,7 +6,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.AgentExecutionState;
-import net.hawkengine.model.ConfigState;
+import net.hawkengine.model.enums.ConfigState;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.interfaces.IAgentService;
@@ -38,7 +38,7 @@ public class AgentServiceTests {
         Agent firstAgent = new Agent();
         Agent secondAgent = new Agent();
         Agent thirdAgent = new Agent();
-        thirdAgent.setConfigState(ConfigState.Disabled);
+        thirdAgent.setConfigState(ConfigState.DISABLED);
         this.mockedAgentService.add(firstAgent);
         this.mockedAgentService.add(secondAgent);
         this.mockedAgentService.add(thirdAgent);
@@ -54,7 +54,7 @@ public class AgentServiceTests {
         Assert.assertFalse(actualResult.hasError());
 
         for (Agent agent : actualResultObject) {
-            Assert.assertEquals(agent.getConfigState(), ConfigState.Enabled);
+            Assert.assertEquals(agent.getConfigState(), ConfigState.ENABLED);
         }
     }
 
@@ -78,7 +78,7 @@ public class AgentServiceTests {
         Agent secondAgent = new Agent();
         secondAgent.setExecutionState(AgentExecutionState.Running);
         Agent thirdAgent = new Agent();
-        thirdAgent.setConfigState(ConfigState.Disabled);
+        thirdAgent.setConfigState(ConfigState.DISABLED);
         this.mockedAgentService.add(firstAgent);
         this.mockedAgentService.add(secondAgent);
         this.mockedAgentService.add(thirdAgent);
@@ -93,7 +93,7 @@ public class AgentServiceTests {
         Assert.assertEquals(expectedEnabledIdleMessage, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertEquals(firstAgent.getId(), actualAgent.getId());
-        Assert.assertTrue(actualAgent.getConfigState() == ConfigState.Enabled);
+        Assert.assertTrue(actualAgent.getConfigState() == ConfigState.ENABLED);
         Assert.assertTrue(actualAgent.getExecutionState() == AgentExecutionState.Idle);
     }
 

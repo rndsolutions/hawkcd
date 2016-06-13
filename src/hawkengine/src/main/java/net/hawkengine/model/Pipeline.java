@@ -7,7 +7,7 @@ import java.util.List;
 public class Pipeline extends DbEntry {
 	private String pipelineDefinitionId;
 	private int executionId;
-	private List<MaterialDefinition> materials;
+	private List<MaterialChange> materials;
 	private List<EnvironmentVariable> environmentVariables;
 	private List<Environment> environments;
 	private List<Stage> stages;
@@ -41,11 +41,11 @@ public class Pipeline extends DbEntry {
 		this.executionId = executionId;
 	}
 
-	public List<MaterialDefinition> getMaterials() {
+	public List<MaterialChange> getMaterials() {
 		return this.materials;
 	}
 
-	public void setMaterials(List<MaterialDefinition> materials) {
+	public void setMaterials(List<MaterialChange> materials) {
 		this.materials = materials;
 	}
 

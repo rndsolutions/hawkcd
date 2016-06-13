@@ -3,146 +3,67 @@ package net.hawkengine.model;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
-public class JobDefinition {
-    private UUID id;
+public class JobDefinition extends DbEntry{
     private String name;
-    private String result;
-    private String executedBy;
-    private ArrayList<Task> tasks;
-    private ArrayList<EnvironmentVariable> environmentVariables;
-    private int runInstaceCount;
-    /**
-     * Comma separated values in the UI;
-     */
-    private ArrayList<String> resources;
-    /**
-     * The amount of time in minutes.
-     */
+    private String output;
+    private List<TaskDefinition> tasks;
+    private List<EnvironmentVariable> environmentVariables;
+    private List<String> resources;
     private int cancelAfter;
-    private Status status = Status.PASSED;
-    private Date start;
-    private Date end;
-    private Duration duration;
-    private boolean canBeExecuted;
 
-    public JobDefinition() throws Exception {
-        this.setId(UUID.randomUUID());
-        this.setCanBeExecuted(true);
-        this.setResources(new ArrayList<String>());
-        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID value) {
-        id = value;
+    public JobDefinition() {
+        this.setResources(new ArrayList<>());
+        this.setEnvironmentVariables(new ArrayList<>());
+        this.setTasks(new ArrayList<>());
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    public void setName(String value) {
-        name = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getResult() {
-        return result;
+    public String getOutput() {
+        return this.output;
     }
 
-    public void setResult(String value) {
-        result = value;
+    public void setOutput(String output) {
+        this.output = output;
     }
 
-    public String getExecutedBy() {
-        return executedBy;
+    public List<TaskDefinition> getTasks() {
+        return this.tasks;
     }
 
-    public void setExecutedBy(String value) {
-        executedBy = value;
+    public void setTasks(List<TaskDefinition> tasks) {
+        this.tasks = tasks;
     }
 
-    public ArrayList<Task> getTasks() {
-        return tasks;
+    public List<EnvironmentVariable> getEnvironmentVariables() {
+        return this.environmentVariables;
     }
 
-    public void setTasks(ArrayList<Task> value) {
-        tasks = value;
+    public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
+        this.environmentVariables = environmentVariables;
     }
 
-    public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+    public List<String> getResources() {
+        return this.resources;
     }
 
-    public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-        environmentVariables = value;
-    }
-
-    public int getRunInstaceCount() {
-        return runInstaceCount;
-    }
-
-    public void setRunInstaceCount(int value) {
-        runInstaceCount = value;
-    }
-
-    public ArrayList<String> getResources() {
-        return resources;
-    }
-
-    public void setResources(ArrayList<String> value) {
-        resources = value;
+    public void setResources(List<String> resources) {
+        this.resources = resources;
     }
 
     public int getCancelAfter() {
-        return cancelAfter;
+        return this.cancelAfter;
     }
 
-    public void setCancelAfter(int value) {
-        cancelAfter = value;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status value) {
-        status = value;
-    }
-
-    public Date getStart() {
-        return start;
-    }
-
-    public void setStart(Date value) {
-        start = value;
-    }
-
-    public Date getEnd() {
-        return end;
-    }
-
-    public void setEnd(Date value) {
-        end = value;
-    }
-
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Duration value) {
-        duration = value;
-    }
-
-    public boolean getCanBeExecuted() {
-        return canBeExecuted;
-    }
-
-    public void setCanBeExecuted(boolean value) {
-        canBeExecuted = value;
+    public void setCancelAfter(int cancelAfter) {
+        this.cancelAfter = cancelAfter;
     }
 }
