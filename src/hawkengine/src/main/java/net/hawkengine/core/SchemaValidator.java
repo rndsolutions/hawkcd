@@ -4,6 +4,7 @@ import net.hawkengine.model.Agent;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.MaterialType;
+import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +38,25 @@ public class SchemaValidator {
         return message;
     }
 
+
+    //PIPELINEDEFINITION
+
+    public String validate(PipelineDefinition pipelineDefinition){
+        if (pipelineDefinition != null){
+            String pipelineDefinitionName = pipelineDefinition.getName();
+            String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
+            String pipelineLabelTemplate = pipelineDefinition.getLabelTemplate();
+            //int pipelineMaterial = pipelineDefinition.
+
+        } else {
+            return this.message = "ERROR: PIPELINE DEFINITION IS NULL.";
+        }
+
+        return this.message;
+    }
+
+
+    /*
     //AGENT
     public String validate(Agent agent){
         if (agent != null){
@@ -66,6 +86,8 @@ public class SchemaValidator {
         }
         return this.message;
     }
+
+    */
 
     //MATERIAL DEFINITION
     public String validate(MaterialDefinition materialDefinition){
