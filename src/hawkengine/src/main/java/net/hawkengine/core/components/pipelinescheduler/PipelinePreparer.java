@@ -28,6 +28,7 @@ public class PipelinePreparer extends Thread {
     public synchronized void start() {
        // this.logger.info(String.format(LoggerMessages.PREPARER_STARTED, "Pipeline Preparer"));
         super.start();
+        this.run();
     }
 
 
@@ -42,7 +43,7 @@ public class PipelinePreparer extends Thread {
         super.run();
     }
 
-    private List<Pipeline> getAllUpdatedPipelines() {
+    public List<Pipeline> getAllUpdatedPipelines() {
 
         ServiceResult serviceResult = this.pipelineService.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) serviceResult.getObject();
@@ -56,14 +57,14 @@ public class PipelinePreparer extends Thread {
         return filteredPipelines;
     }
 
-    private Pipeline preparePipeline(Pipeline pipelineToPrepare) {
+    public Pipeline preparePipeline(Pipeline pipelineToPrepare) {
         String pipelineDefinitionId = pipelineToPrepare.getPipelineDefinitionId();
         ServiceResult serviceResult = this.pipelineDefinitionService.getById(pipelineDefinitionId);
         PipelineDefinition pipelineDefinition = (PipelineDefinition) serviceResult.getObject();
 
         //TODO: Modify Pipeline Definition Model
         //pipelineToPrepare.setEnvironments(pipelineDefinition.getEnvironments());
-        //pipelineToPrepare.setEnvironmentVariables(pipelineDefinition.getEnvironmentVariables());
+        pipelineToPrepare.setEnvironmentVariables(pipelineDefinition.getEnvironmentVariables());
 
         List<Stage> stages = pipelineDefinition.getStages();
         List<JobDefinition> executionJobs = new ArrayList<>();
@@ -75,7 +76,7 @@ public class PipelinePreparer extends Thread {
             executionJobs.addAll(stageJobs);
         }
 
-        //pipelineToPrepare.setJobsForExecution(executionJobs);
+        pipelineToPrepare.setJobsForExecution(executionJobs);
         //TODO: Change to List of JobDefinitions in Stage Model
 
         pipelineToPrepare.setPrepared(true);
