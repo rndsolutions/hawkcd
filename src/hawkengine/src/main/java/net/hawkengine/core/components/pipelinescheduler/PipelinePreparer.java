@@ -1,6 +1,8 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
 import net.hawkengine.model.*;
+import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
@@ -8,43 +10,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("UnnecessaryLocalVariable")
 public class PipelinePreparer extends Thread {
     private final IPipelineDefinitionService pipelineDefinitionService;
     private final IPipelineService pipelineService;
 
-    public PipelinePreparer(IPipelineService pipelineService, IPipelineDefinitionService pipelineDefinitionService) {
-        this.pipelineService = pipelineService;
-        this.pipelineDefinitionService = pipelineDefinitionService;
+    public PipelinePreparer() {
+        this.pipelineDefinitionService = new PipelineDefinitionService();
+        this.pipelineService = new PipelineService();
     }
 
+    public PipelinePreparer(IPipelineService pipelineService, IPipelineDefinitionService pipelineDefinitionService) {
+        this.pipelineDefinitionService = pipelineDefinitionService;
+        this.pipelineService = pipelineService;
+    }
 
     @Override
     public synchronized void start() {
         super.start();
+        // TODO: Log this
         this.run();
     }
 
-
     @Override
     public void run() {
-        // this.logger.info(String.format(LoggerMessages.PREPARER_RUN, "Pipeline Preparer"));
+        // TODO: Redo worker threading
         List<Pipeline> filteredPipelines = this.getAllUpdatedPipelines();
-        for (Pipeline filteredPipeline : filteredPipelines) {
-            Pipeline preparedPipeline = this.preparePipeline(filteredPipeline);
+        for (Pipeline pipeline : filteredPipelines) {
+            Pipeline preparedPipeline = this.preparePipeline(pipeline);
             this.pipelineService.update(preparedPipeline);
         }
         super.run();
     }
 
     public List<Pipeline> getAllUpdatedPipelines() {
+        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
 
-        ServiceResult serviceResult = this.pipelineService.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) serviceResult.getObject();
-
-        List<Pipeline> filteredPipelines = pipelines.stream()
-                .filter(Pipeline::areMaterialsUpdated)
-                .filter(p -> p.getStatus() == Status.IN_PROGRESS)
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == Status.IN_PROGRESS))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 

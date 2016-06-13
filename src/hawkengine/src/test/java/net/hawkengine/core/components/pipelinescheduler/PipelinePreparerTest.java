@@ -23,8 +23,7 @@ public class PipelinePreparerTest {
     private IPipelineService pipelineService;
     private IPipelineDefinitionService pipelineDefinitionService;
     @SuppressWarnings("InstanceVariableOfConcreteClass")
-    private
-    PipelinePreparer pipelinePreparer;
+    private PipelinePreparer pipelinePreparer;
 
     @Before
     public void setUp() {
@@ -96,7 +95,7 @@ public class PipelinePreparerTest {
     }
 
     @Test
-    public void getAllPreparedPipelines_withOneNotUpdatedMaterial_oneObject() throws Exception {
+    public void getAllPreparedPipelines_withOneNotUpdatedMaterial_oneObject() {
         //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setAreMaterialsUpdated(true);
@@ -120,7 +119,7 @@ public class PipelinePreparerTest {
     }
 
     @Test
-    public void getAllPreparedPipelines_withOneNotUpdatedMaterialAndOneStatusFailed_oneObject() throws Exception {
+    public void getAllPreparedPipelines_withOneNotUpdatedMaterialAndOneStatusFailed_oneObject() {
         //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setAreMaterialsUpdated(true);
@@ -162,7 +161,7 @@ public class PipelinePreparerTest {
         }
     }
 
-    private List<Pipeline> injectDataForTestingPreparePipeline() throws Exception {
+    private List<Pipeline> injectDataForTestingPreparePipeline() {
         //Assert
         ArrayList<StageDefinition> stages = new ArrayList<>();
         ArrayList<JobDefinition> jobDefinitions = new ArrayList<>();
