@@ -5,16 +5,12 @@ import net.hawkengine.model.Pipeline;
 
 public class ServiceFactory implements IServiceFactory {
 
-	private IConfigService configService;
-
-	public ServiceFactory() {
-
-	}
+	IConfigService configService;
 
 	@Override
 	public IConfigService getConfigService() {
 		this.configService = new ConfigService();
-		return configService;
+		return this.configService;
 	}
 
 	@Override

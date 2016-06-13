@@ -20,114 +20,114 @@ public class Agent extends DbEntry {
 	private Object os;
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String value) {
-		name = value;
+		this.name = value;
 	}
 
 	public String getHostName() {
-		return hostName;
+		return this.hostName;
 	}
 
 	public void setHostName(String value) {
-		hostName = value;
+		this.hostName = value;
 	}
 
 	public String getIPAddress() {
-		return ipAddress;
+		return this.ipAddress;
 	}
 
 	public void setIPAddress(String value) {
-		ipAddress = value;
+		this.ipAddress = value;
 	}
 
 	public String getSandbox() {
-		return sandbox;
+		return this.sandbox;
 	}
 
 	public void setSandbox(String value) {
-		sandbox = value;
+		this.sandbox = value;
 	}
 
 	public ArrayList<String> getResources() {
-		return resources;
+		return this.resources;
 	}
 
 	public void setResources(ArrayList<String> value) {
-		resources = value;
+		this.resources = value;
 	}
 
 	public ArrayList<String> getEnvironments() {
-		return environments;
+		return this.environments;
 	}
 
 	public void setEnvironments(ArrayList<String> value) {
-		environments = value;
+		this.environments = value;
 	}
 
 	public AgentExecutionState getExecutionState() {
-		return executionState;
+		return this.executionState;
 	}
 
 	public void setExecutionState(AgentExecutionState value) {
-		executionState = value;
+		this.executionState = value;
 	}
 
 	public ConfigState getConfigState() {
-		return configState;
+		return this.configState;
 	}
 
 	public void setConfigState(ConfigState value) {
-		configState = value;
+		this.configState = value;
 	}
 
 	public String getExecutingPipelineID() {
-		return executingPipelineId;
+		return this.executingPipelineId;
 	}
 
 	public void setExecutingPipelineID(String value) {
-		executingPipelineId = value;
+		this.executingPipelineId = value;
 	}
 
 	public String getExecutingStageId() {
-		return executingStageId;
+		return this.executingStageId;
 	}
 
 	public void setExecutingStageId(String value) {
-		executingStageId = value;
+		this.executingStageId = value;
 	}
 
 	public String getExecutingJobId() {
-		return executingJobId;
+		return this.executingJobId;
 	}
 
 	public void setExecutingJobId(String value) {
-		executingJobId = value;
+		this.executingJobId = value;
 	}
 
 	public boolean getIsConnected() {
-		return isConnected;
+		return this.isConnected;
 	}
 
 	public void setIsConnected(boolean value) {
-		isConnected = value;
+		this.isConnected = value;
 	}
 
 	public Date getLastReported() {
-		return lastReported;
+		return this.lastReported;
 	}
 
 	public void setLastReported(Date value) {
-		lastReported = value;
+		this.lastReported = value;
 	}
 
 	public Object getOS() {
-		return os;
+		return this.os;
 	}
 
 	public void setOS(Object value) {
-		os = value;
+		this.os = value;
 	}
 }

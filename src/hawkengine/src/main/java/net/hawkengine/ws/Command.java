@@ -5,9 +5,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class Command {
-	private Object object;
-	private String methodName;
-	private List<Object> methodArgs;
+	final Object object;
+	final String methodName;
+	final List<Object> methodArgs;
 
 	public Command(Object object, String methodName, List<Object> methodArgs) {
 		this.object = object;
@@ -16,10 +16,10 @@ public class Command {
 	}
 
 	public Object execute() {
-		Class objectClass = object.getClass();
+		Class objectClass = this.object.getClass();
 		Method method;
 		try {
-			if (this.methodArgs == null || this.methodArgs.size() == 0) {
+			if ((this.methodArgs == null) || this.methodArgs.isEmpty()) {
 				method = objectClass.getMethod(this.methodName);
 				return method.invoke(this.object);
 			} else {

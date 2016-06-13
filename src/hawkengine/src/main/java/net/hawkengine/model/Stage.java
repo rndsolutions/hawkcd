@@ -29,75 +29,75 @@ public class Stage {
     }
 
     public UUID getID() {
-        return id;
+        return this.id;
     }
 
     public void setID(UUID value) {
-        id = value;
+        this.id = value;
     }
 
     public int getExecutionID() {
-        return executionID;
+        return this.executionID;
     }
 
     public void setExecutionID(int value) {
-        executionID = value;
+        this.executionID = value;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String value) {
-        name = value;
+        this.name = value;
     }
 
     public ArrayList<JobDefinition> getJobs() {
-        return jobs;
+        return this.jobs;
     }
 
     public void setJobs(ArrayList<JobDefinition> value) {
-        jobs = value;
+        this.jobs = value;
     }
 
     public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-        environmentVariables = value;
+        this.environmentVariables = value;
     }
 
     public String getSecurity() {
-        return security;
+        return this.security;
     }
 
     public void setSecurity(String value) {
-        security = value;
+        this.security = value;
     }
 
     public boolean getFetchMaterials() {
-        return fetchMaterials;
+        return this.fetchMaterials;
     }
 
     public void setFetchMaterials(boolean value) {
-        fetchMaterials = value;
+        this.fetchMaterials = value;
     }
 
     public boolean getNeverCleanArtifacts() {
-        return neverCleanArtifacts;
+        return this.neverCleanArtifacts;
     }
 
     public void setNeverCleanArtifacts(boolean value) {
-        neverCleanArtifacts = value;
+        this.neverCleanArtifacts = value;
     }
 
     public boolean getCleanWorkingDirectory() {
-        return cleanWorkingDirectory;
+        return this.cleanWorkingDirectory;
     }
 
     public void setCleanWorkingDirectory(boolean value) {
-        cleanWorkingDirectory = value;
+        this.cleanWorkingDirectory = value;
     }
 
     public StageType getStageType() throws Exception {
@@ -105,7 +105,7 @@ public class Stage {
     }
 
     public void setStageType(StageType value) throws Exception {
-        if (value == getStageType().MANUAL) {
+        if (value == this.getStageType().MANUAL) {
             this.setCanBeExecuted(false);
         } else {
             this.setCanBeExecuted(true);
@@ -114,43 +114,43 @@ public class Stage {
     }
 
     public Status getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Status value) {
-        status = value;
+        this.status = value;
     }
 
     public Date getStart() {
-        return start;
+        return this.start;
     }
 
     public void setStart(Date value) {
-        start = value;
+        this.start = value;
     }
 
     public Date getEnd() {
-        return end;
+        return this.end;
     }
 
     public void setEnd(Date value) {
-        end = value;
+        this.end = value;
     }
 
     public Duration getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(Duration value) {
-        duration = value;
+        this.duration = value;
     }
 
     public boolean getCanBeExecuted() {
-        return canBeExecuted;
+        return this.canBeExecuted;
     }
 
     public void setCanBeExecuted(boolean value) {
-        canBeExecuted = value;
+        this.canBeExecuted = value;
     }
 
 }

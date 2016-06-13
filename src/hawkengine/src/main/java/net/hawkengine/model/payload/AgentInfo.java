@@ -12,51 +12,51 @@ public class AgentInfo {
 	private UUID __AgentId;
 
 	public UUID getAgentId() {
-		return __AgentId;
+		return this.__AgentId;
 	}
 
 	public void setAgentId(UUID value) {
-		__AgentId = value;
+		this.__AgentId = value;
 	}
 
 	private String __Name;
 
 	public String getName() {
-		return __Name;
+		return this.__Name;
 	}
 
 	public void setName(String value) {
-		__Name = value;
+		this.__Name = value;
 	}
 
 	private String __IPAddress;
 
 	public String getIPAddress() {
-		return __IPAddress;
+		return this.__IPAddress;
 	}
 
 	public void setIPAddress(String value) {
-		__IPAddress = value;
+		this.__IPAddress = value;
 	}
 
 	private String __Sandbox;
 
 	public String getSandbox() {
-		return __Sandbox;
+		return this.__Sandbox;
 	}
 
 	public void setSandbox(String value) {
-		__Sandbox = value;
+		this.__Sandbox = value;
 	}
 
 	private AgentExecutionState __State = AgentExecutionState.Idle;
 
 	public AgentExecutionState getState() {
-		return __State;
+		return this.__State;
 	}
 
 	public void setState(AgentExecutionState value) {
-		__State = value;
+		this.__State = value;
 	}
 
 }

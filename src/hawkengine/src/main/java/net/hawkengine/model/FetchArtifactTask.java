@@ -38,42 +38,42 @@ public class FetchArtifactTask extends Task {
     }
 
     public String getPipeline() {
-        return pipeline;
+        return this.pipeline;
     }
 
     public void setPipeline(String value) {
-        pipeline = value;
+        this.pipeline = value;
     }
 
     public String getStage() {
-        return stage;
+        return this.stage;
     }
 
     public void setStage(String value) {
-        stage = value;
+        this.stage = value;
     }
 
     public String getJob() {
-        return job;
+        return this.job;
     }
 
     public void setJob(String value) {
-        job = value;
+        this.job = value;
     }
 
     public String getSource() {
-        return source;
+        return this.source;
     }
 
     public void setSource(String value) {
-        source = value;
+        this.source = value;
     }
 
     public String getDestination() {
-        return destination;
+        return this.destination;
     }
 
     public void setDestination(String value) {
-        destination = value;
+        this.destination = value;
     }
 }

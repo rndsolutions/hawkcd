@@ -28,7 +28,7 @@ public class WsEndpoint extends WebSocketAdapter {
 	}
 
 	public UUID getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(UUID id) {
@@ -59,7 +59,7 @@ public class WsEndpoint extends WebSocketAdapter {
 			}
 
 			Object result = this.call(contract);
-			if (result.getClass() != String.class || result.toString().length() != 0) {
+			if ((result.getClass() != String.class) || !result.toString().isEmpty()) {
 				contract.setResult(result);
 			} else {
 				contract.setError("Contract Failed");
@@ -73,7 +73,7 @@ public class WsEndpoint extends WebSocketAdapter {
 		} catch (Exception e) {
 			// TODO: log this
 			e.printStackTrace();
-			errorDetails(contract, serializer, e, remoteEndpoint);
+			this.errorDetails(contract, serializer, e, remoteEndpoint);
 		}
 	}
 
@@ -104,7 +104,8 @@ public class WsEndpoint extends WebSocketAdapter {
 		String fullPackageName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
 		Object service = Class.forName(fullPackageName).newInstance();
 		List<Object> methodArgs = new ArrayList<>();
-		for (int i = 0; i < contract.getArgs().length; i++) {
+		int contractArgsLength = contract.getArgs().length;
+		for (int i = 0; i < contractArgsLength; i++) {
 			if (contract.getArgs()[i] != null) {
 				Class objectClass = Class.forName(contract.getArgs()[i].getPackageName());
 				Object object = this.jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);

@@ -8,31 +8,31 @@ public class AgentReport {
 	private AgentInfo __AgentInfo;
 
 	public AgentInfo getAgentInfo() {
-		return __AgentInfo;
+		return this.__AgentInfo;
 	}
 
 	public void setAgentInfo(AgentInfo value) {
-		__AgentInfo = value;
+		this.__AgentInfo = value;
 	}
 
 	private EnvironmentInfo __EnvironmentInfo;
 
 	public EnvironmentInfo getEnvironmentInfo() {
-		return __EnvironmentInfo;
+		return this.__EnvironmentInfo;
 	}
 
 	public void setEnvironmentInfo(EnvironmentInfo value) {
-		__EnvironmentInfo = value;
+		this.__EnvironmentInfo = value;
 	}
 
 	private JobExecutionInfo __JobExecutionInfo;
 
 	public JobExecutionInfo getJobExecutionInfo() {
-		return __JobExecutionInfo;
+		return this.__JobExecutionInfo;
 	}
 
 	public void setJobExecutionInfo(JobExecutionInfo value) {
-		__JobExecutionInfo = value;
+		this.__JobExecutionInfo = value;
 	}
 
 }

@@ -2,7 +2,6 @@ package net.hawkengine;
 
 import net.hawkengine.core.HawkServer;
 import net.hawkengine.db.redis.RedisManager;
-import net.hawkengine.services.PipelineService;
 
 import javax.servlet.ServletException;
 import javax.websocket.DeploymentException;

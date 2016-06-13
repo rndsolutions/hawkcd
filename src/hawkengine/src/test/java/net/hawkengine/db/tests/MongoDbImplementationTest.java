@@ -17,6 +17,7 @@ import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@SuppressWarnings("UnusedAssignment")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MongoDbImplementationTest {
 

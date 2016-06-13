@@ -12,42 +12,42 @@ public class ExecTask extends Task {
     }
 
     public String getCommand() {
-        return command;
+        return this.command;
     }
 
     public void setCommand(String value) {
-        command = value;
+        this.command = value;
     }
 
     public String[] getArguments() {
-        return arguments;
+        return this.arguments;
     }
 
     public void setArguments(String[] value) {
-        arguments = value;
+        this.arguments = value;
     }
 
     public String getLookUpCommands() {
-        return lookUpCommands;
+        return this.lookUpCommands;
     }
 
     public void setLookUpCommands(String value) {
-        lookUpCommands = value;
+        this.lookUpCommands = value;
     }
 
     public String getWorkingDirectory() {
-        return workingDirectory;
+        return this.workingDirectory;
     }
 
     public void setWorkingDirectory(String value) {
-        workingDirectory = value;
+        this.workingDirectory = value;
     }
 
     public boolean getIgnoreErrors() {
-        return ignoreErrors;
+        return this.ignoreErrors;
     }
 
     public void setIgnoreErrors(boolean value) {
-        ignoreErrors = value;
+        this.ignoreErrors = value;
     }
 }

@@ -16,71 +16,71 @@ public class ServerResponseToAgent {
 	private Pipeline __Pipeline;
 
 	public Pipeline getPipeline() {
-		return __Pipeline;
+		return this.__Pipeline;
 	}
 
 	public void setPipeline(Pipeline value) {
-		__Pipeline = value;
+		this.__Pipeline = value;
 	}
 
 	private JobDefinition __Job;
 
 	public JobDefinition getJob() {
-		return __Job;
+		return this.__Job;
 	}
 
 	public void setJob(JobDefinition value) {
-		__Job = value;
+		this.__Job = value;
 	}
 
 	private Stage __Stage;
 
 	public Stage getStage() {
-		return __Stage;
+		return this.__Stage;
 	}
 
 	public void setStage(Stage value) {
-		__Stage = value;
+		this.__Stage = value;
 	}
 
 	private EnvironmentInfo __EnvironmentInfo;
 
 	public EnvironmentInfo getEnvironmentInfo() {
-		return __EnvironmentInfo;
+		return this.__EnvironmentInfo;
 	}
 
 	public void setEnvironmentInfo(EnvironmentInfo value) {
-		__EnvironmentInfo = value;
+		this.__EnvironmentInfo = value;
 	}
 
 	private ArrayList<MaterialDefinition> __Materials;
 
 	public ArrayList<MaterialDefinition> getMaterials() {
-		return __Materials;
+		return this.__Materials;
 	}
 
 	public void setMaterials(ArrayList<MaterialDefinition> value) {
-		__Materials = value;
+		this.__Materials = value;
 	}
 
 	private ArrayList<MaterialChange> __ExecutionMaterials;
 
 	public ArrayList<MaterialChange> getExecutionMaterials() {
-		return __ExecutionMaterials;
+		return this.__ExecutionMaterials;
 	}
 
 	public void setExecutionMaterials(ArrayList<MaterialChange> value) {
-		__ExecutionMaterials = value;
+		this.__ExecutionMaterials = value;
 	}
 
 	private ArrayList<EnvironmentVariable> __EnvironmentVariables;
 
 	public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-		return __EnvironmentVariables;
+		return this.__EnvironmentVariables;
 	}
 
 	public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-		__EnvironmentVariables = value;
+		this.__EnvironmentVariables = value;
 	}
 
 }

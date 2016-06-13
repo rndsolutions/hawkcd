@@ -12,57 +12,57 @@ public class MaterialChange extends DbEntry {
     private HashMap<String, Object> materialSpecificDetails;
 
     public String getPipelineName() {
-        return pipelineName;
+        return this.pipelineName;
     }
 
     public void setPipelineName(String value) {
-        pipelineName = value;
+        this.pipelineName = value;
     }
 
     public String getMaterialName() {
-        return materialName;
+        return this.materialName;
     }
 
     public void setMaterialName(String value) {
-        materialName = value;
+        this.materialName = value;
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public void setUrl(String value) {
-        url = value;
+        this.url = value;
     }
 
     public MaterialType getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(MaterialType value) {
-        type = value;
+        this.type = value;
     }
 
     public Date getChangeDate() {
-        return changeDate;
+        return this.changeDate;
     }
 
     public void setChangeDate(Date value) {
-        changeDate = value;
+        this.changeDate = value;
     }
 
     public HashMap<String, Object> getMaterialSpecificDetails() {
-        return materialSpecificDetails;
+        return this.materialSpecificDetails;
     }
 
     public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-        materialSpecificDetails = value;
+        this.materialSpecificDetails = value;
     }
 
     public String toString() {
         try {
             return String.format(" ID={0} PipelineName={1} MaterialName={2} ChangeDate={3}", this.getId(),
-                    getPipelineName(), getMaterialName(), getChangeDate());
+                    this.getPipelineName(), this.getMaterialName(), this.getChangeDate());
         } catch (RuntimeException __dummyCatchVar0) {
             throw __dummyCatchVar0;
         } catch (Exception __dummyCatchVar0) {

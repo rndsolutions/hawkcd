@@ -9,19 +9,19 @@ public class UploadArtifactTask extends Task {
     }
 
     public String getSource() {
-        return source;
+        return this.source;
     }
 
     public void setSource(String value) {
-        source = value;
+        this.source = value;
     }
 
     public String getDestination() {
-        return destination;
+        return this.destination;
     }
 
     public void setDestination(String value) {
-        destination = value;
+        this.destination = value;
     }
 
 }

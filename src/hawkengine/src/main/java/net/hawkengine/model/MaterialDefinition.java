@@ -15,59 +15,59 @@ public class MaterialDefinition {
     }
 
     public String getPipelineName() {
-        return pipelineName;
+        return this.pipelineName;
     }
 
     public void setPipelineName(String value) {
-        pipelineName = value;
+        this.pipelineName = value;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String value) {
-        name = value;
+        this.name = value;
     }
 
     public MaterialType getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(MaterialType value) {
-        type = value;
+        this.type = value;
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public void setUrl(String value) {
-        url = value;
+        this.url = value;
     }
 
     public boolean getAutoTriggerOnChange() {
-        return autoTriggerOnChange;
+        return this.autoTriggerOnChange;
     }
 
     public void setAutoTriggerOnChange(boolean value) {
-        autoTriggerOnChange = value;
+        this.autoTriggerOnChange = value;
     }
 
     public String getDestination() {
-        return destination;
+        return this.destination;
     }
 
     public void setDestination(String value) {
-        destination = value;
+        this.destination = value;
     }
 
     public HashMap<String, Object> getMaterialSpecificDetails() {
-        return materialSpecificDetails;
+        return this.materialSpecificDetails;
     }
 
     public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-        materialSpecificDetails = value;
+        this.materialSpecificDetails = value;
     }
 
 }

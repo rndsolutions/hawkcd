@@ -16,15 +16,15 @@ public class EnvironmentVariable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String value) {
-        name = value;
+        this.name = value;
     }
 
     public String getValue() {
-        return value;
+        return this.value;
     }
 
     public void setValue(String value) {
@@ -32,10 +32,10 @@ public class EnvironmentVariable {
     }
 
     public boolean isSecured() {
-        return isSecured;
+        return this.isSecured;
     }
 
     public void setSecured(boolean value) {
-        isSecured = value;
+        this.isSecured = value;
     }
 }

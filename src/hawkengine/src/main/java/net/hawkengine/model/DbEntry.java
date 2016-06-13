@@ -10,6 +10,6 @@ public class DbEntry {
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 }

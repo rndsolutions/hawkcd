@@ -17,59 +17,59 @@ public abstract class Task {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID value) {
-        id = value;
+        this.id = value;
     }
 
     public RunIf getRunIfCondition() {
-        return runIfCondition;
+        return this.runIfCondition;
     }
 
     public void setRunIfCondition(RunIf value) {
-        runIfCondition = value;
+        this.runIfCondition = value;
     }
 
     public TaskType getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(TaskType value) {
-        type = value;
+        this.type = value;
     }
 
     public Status getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Status value) {
-        status = value;
+        this.status = value;
     }
 
     public String getResult() {
-        return result;
+        return this.result;
     }
 
     public void setResult(String value) {
-        result = value;
+        this.result = value;
     }
 
     public Date getStart() {
-        return start;
+        return this.start;
     }
 
     public void setStart(Date value) {
-        start = value;
+        this.start = value;
     }
 
     public Date getEnd() {
-        return end;
+        return this.end;
     }
 
     public void setEnd(Date value) {
-        end = value;
+        this.end = value;
     }
 
 }

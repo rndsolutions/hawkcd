@@ -3,7 +3,6 @@ package net.hawkengine.db.redis;
 import com.fiftyonred.mock_jedis.MockJedis;
 import com.fiftyonred.mock_jedis.MockJedisPool;
 
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 

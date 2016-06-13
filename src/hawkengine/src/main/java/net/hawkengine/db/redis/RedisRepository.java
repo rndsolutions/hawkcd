@@ -12,8 +12,8 @@ import java.util.Set;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
 
+@SuppressWarnings("UnusedAssignment")
 public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     private Type type;
     private String entryNamespace;

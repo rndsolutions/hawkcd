@@ -14,9 +14,9 @@ import java.util.List;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
-    private DB mongoDatabase;
-    private DBCollection collection;
-    private Type entryType;
+    DB mongoDatabase;
+    DBCollection collection;
+    Type entryType;
 
     private Gson jsonConverter;
 
@@ -25,7 +25,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
         this.jsonConverter = new GsonBuilder().create();
         this.mongoDatabase = MongoDbManager.getInstance().db;
-        this.collection = mongoDatabase.getCollection(this.entryType.getTypeName());
+        this.collection = this.mongoDatabase.getCollection(this.entryType.getTypeName());
     }
 
     public MongoDbRepository(Class entry, DBCollection mockedMongoCollection) {
@@ -45,7 +45,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             if (documents.size() > 0) {
                 String document = JSON.serialize(documents.next());
 
-                result = jsonConverter.fromJson(document, this.entryType);
+                result = this.jsonConverter.fromJson(document, this.entryType);
 
                 return result;
             }
@@ -66,7 +66,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
             for (DBObject document : documents) {
                 String documentToJson = JSON.serialize(document);
-                resultElement = jsonConverter.fromJson(documentToJson, this.entryType);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
                 result.add(resultElement);
             }
 
@@ -80,9 +80,9 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
     @Override
     public T add(T entry) {
-        if (getById(entry.getId()) == null) {
+        if (this.getById(entry.getId()) == null) {
             try {
-                String entryToJson = jsonConverter.toJson(entry);
+                String entryToJson = this.jsonConverter.toJson(entry);
                 DBObject myDoc = (DBObject) JSON.parse(entryToJson);
 
                 this.collection.insert(myDoc);
@@ -101,7 +101,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     @Override
     public T update(T entry) {
         try {
-            BasicDBObject newDocument = (BasicDBObject) JSON.parse(jsonConverter.toJson(entry));
+            BasicDBObject newDocument = (BasicDBObject) JSON.parse(this.jsonConverter.toJson(entry));
 
             BasicDBObject searchQuery = new BasicDBObject().append("id", entry.getId());
 

@@ -33,11 +33,11 @@ public class PipelineDefinition extends DbEntry {
     }
 
     public int getExecutionId() {
-        return executionId;
+        return this.executionId;
     }
 
     public void setExecutionId(int value) {
-        executionId = value;
+        this.executionId = value;
     }
 
     public String getOriginalName() {
@@ -58,115 +58,115 @@ public class PipelineDefinition extends DbEntry {
     }
 
     public String getGroupName() {
-        return groupName;
+        return this.groupName;
     }
 
     public void setGroupName(String value) {
-        groupName = value;
+        this.groupName = value;
     }
 
     public String getLabelTemplate() {
-        return labelTemplate;
+        return this.labelTemplate;
     }
 
     public void setLabelTemplate(String value) {
-        labelTemplate = value;
+        this.labelTemplate = value;
     }
 
     public ArrayList<MaterialDefinition> getMaterials() {
-        return materials;
+        return this.materials;
     }
 
     public void setMaterials(ArrayList<MaterialDefinition> value) {
-        materials = value;
+        this.materials = value;
     }
 
     public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-        environmentVariables = value;
+        this.environmentVariables = value;
     }
 
     public Environment getEnvironment() {
-        return environment;
+        return this.environment;
     }
 
     public void setEnvironment(Environment value) {
-        environment = value;
+        this.environment = value;
     }
 
     public ArrayList<Stage> getStages() {
-        return stages;
+        return this.stages;
     }
 
     public void setStages(ArrayList<Stage> value) {
-        stages = value;
+        this.stages = value;
     }
 
     public Status getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Status value) {
-        status = value;
+        this.status = value;
     }
 
     public Date getStart() {
-        return start;
+        return this.start;
     }
 
     public void setStart(Date value) {
-        start = value;
+        this.start = value;
     }
 
     public Date getEnd() {
-        return end;
+        return this.end;
     }
 
     public void setEnd(Date value) {
-        end = value;
+        this.end = value;
     }
 
     public Duration getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(Duration value) {
-        duration = value;
+        this.duration = value;
     }
 
     public ArrayList<MaterialChange> getExecutionMaterials() {
-        return executionMaterials;
+        return this.executionMaterials;
     }
 
     public void setExecutionMaterials(ArrayList<MaterialChange> value) {
-        executionMaterials = value;
+        this.executionMaterials = value;
     }
 
     public String getTriggerReason() {
-        return triggerReason;
+        return this.triggerReason;
     }
 
     public void setTriggerReason(String value) {
-        triggerReason = value;
+        this.triggerReason = value;
     }
 
     public boolean getAutoScheduling() {
-        return autoScheduling;
+        return this.autoScheduling;
     }
 
     public void setAutoScheduling(boolean value) {
-        autoScheduling = value;
+        this.autoScheduling = value;
     }
 
     public boolean getIsLocked() {
-        return isLocked;
+        return this.isLocked;
     }
 
     public void setIsLocked(boolean value) {
-        isLocked = value;
+        this.isLocked = value;
     }
 
     public Stage getStageById(UUID id) throws Exception {

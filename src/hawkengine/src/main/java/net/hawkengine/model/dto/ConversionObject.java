@@ -5,7 +5,7 @@ public class ConversionObject {
 	private String object;
 
 	public String getPackageName() {
-		return packageName;
+		return this.packageName;
 	}
 
 	public void setPackageName(String packageName) {
@@ -13,7 +13,7 @@ public class ConversionObject {
 	}
 
 	public String getObject() {
-		return object;
+		return this.object;
 	}
 
 	public void setObject(String object) {

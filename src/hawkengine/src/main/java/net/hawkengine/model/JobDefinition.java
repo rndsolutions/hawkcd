@@ -35,114 +35,114 @@ public class JobDefinition {
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID value) {
-        id = value;
+        this.id = value;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String value) {
-        name = value;
+        this.name = value;
     }
 
     public String getResult() {
-        return result;
+        return this.result;
     }
 
     public void setResult(String value) {
-        result = value;
+        this.result = value;
     }
 
     public String getExecutedBy() {
-        return executedBy;
+        return this.executedBy;
     }
 
     public void setExecutedBy(String value) {
-        executedBy = value;
+        this.executedBy = value;
     }
 
     public ArrayList<Task> getTasks() {
-        return tasks;
+        return this.tasks;
     }
 
     public void setTasks(ArrayList<Task> value) {
-        tasks = value;
+        this.tasks = value;
     }
 
     public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-        environmentVariables = value;
+        this.environmentVariables = value;
     }
 
     public int getRunInstaceCount() {
-        return runInstaceCount;
+        return this.runInstaceCount;
     }
 
     public void setRunInstaceCount(int value) {
-        runInstaceCount = value;
+        this.runInstaceCount = value;
     }
 
     public ArrayList<String> getResources() {
-        return resources;
+        return this.resources;
     }
 
     public void setResources(ArrayList<String> value) {
-        resources = value;
+        this.resources = value;
     }
 
     public int getCancelAfter() {
-        return cancelAfter;
+        return this.cancelAfter;
     }
 
     public void setCancelAfter(int value) {
-        cancelAfter = value;
+        this.cancelAfter = value;
     }
 
     public Status getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Status value) {
-        status = value;
+        this.status = value;
     }
 
     public Date getStart() {
-        return start;
+        return this.start;
     }
 
     public void setStart(Date value) {
-        start = value;
+        this.start = value;
     }
 
     public Date getEnd() {
-        return end;
+        return this.end;
     }
 
     public void setEnd(Date value) {
-        end = value;
+        this.end = value;
     }
 
     public Duration getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(Duration value) {
-        duration = value;
+        this.duration = value;
     }
 
     public boolean getCanBeExecuted() {
-        return canBeExecuted;
+        return this.canBeExecuted;
     }
 
     public void setCanBeExecuted(boolean value) {
-        canBeExecuted = value;
+        this.canBeExecuted = value;
     }
 }

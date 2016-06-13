@@ -6,7 +6,6 @@ package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.interfaces.ICrudService;
 
 public interface IPipelineGroupService extends ICrudService<PipelineGroup>{
 	ServiceResult getById(String pipelineGroupId);

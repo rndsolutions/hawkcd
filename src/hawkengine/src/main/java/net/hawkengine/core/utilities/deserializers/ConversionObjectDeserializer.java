@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConversionObjectDeserializer implements JsonDeserializer<ConversionObject> {
-	private List<String> requiredFields;
+	private final List<String> requiredFields;
 
 	public ConversionObjectDeserializer() {
 		this.requiredFields = new ArrayList<>(Arrays.asList("packageName", "object"));
@@ -19,7 +19,7 @@ public class ConversionObjectDeserializer implements JsonDeserializer<Conversion
 	public ConversionObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
 		JsonObject jsonObject = json.getAsJsonObject();
-		for (String fieldName : requiredFields) {
+		for (String fieldName : this.requiredFields) {
 			if (jsonObject.get(fieldName) == null) {
 				throw new JsonParseException("Required field not found");
 			}
@@ -27,7 +27,7 @@ public class ConversionObjectDeserializer implements JsonDeserializer<Conversion
 
 		String packageName = jsonObject.get("packageName").getAsString();
 		String object = jsonObject.get("object").toString();
-		if (packageName == null || packageName.trim().length() == 0 || object == null) {
+		if ((packageName == null) || packageName.trim().isEmpty() || (object == null)) {
 			return null;
 		}
 

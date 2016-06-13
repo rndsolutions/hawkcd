@@ -21,10 +21,10 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class AgentServiceTests {
 
-    private IDbRepository<Agent> mockedRepository;
-    private IAgentService mockedAgentService;
-    private String expectedEnabledAgentMessage = "All enabled Agents retrieved successfully.";
-    private String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
+    IDbRepository<Agent> mockedRepository;
+    IAgentService mockedAgentService;
+    String expectedEnabledAgentMessage = "All enabled Agents retrieved successfully.";
+    String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
 
     @Before
     public void setUp() throws Exception {
@@ -49,7 +49,7 @@ public class AgentServiceTests {
         int actualCollectionSize = actualResultObject.size();
 
         Assert.assertNotNull(actualResultObject);
-        Assert.assertEquals(expectedEnabledAgentMessage, actualResult.getMessage());
+        Assert.assertEquals(this.expectedEnabledAgentMessage, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertFalse(actualResult.hasError());
 
@@ -67,7 +67,7 @@ public class AgentServiceTests {
         int actualCollectionSize = actualResultObject.size();
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedEnabledAgentMessage, actualResult.getMessage());
+        Assert.assertEquals(this.expectedEnabledAgentMessage, actualResult.getMessage());
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals(expectedSizeOfCollection, actualCollectionSize);
     }
@@ -90,7 +90,7 @@ public class AgentServiceTests {
         Agent actualAgent = actualResultObject.get(0);
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedEnabledIdleMessage, actualResult.getMessage());
+        Assert.assertEquals(this.expectedEnabledIdleMessage, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertEquals(firstAgent.getId(), actualAgent.getId());
         Assert.assertTrue(actualAgent.getConfigState() == ConfigState.Enabled);
@@ -107,7 +107,7 @@ public class AgentServiceTests {
 
         Assert.assertNotNull(actualResultObject);
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedEnabledIdleMessage, actualResult.getMessage());
+        Assert.assertEquals(this.expectedEnabledIdleMessage, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
     }
 }

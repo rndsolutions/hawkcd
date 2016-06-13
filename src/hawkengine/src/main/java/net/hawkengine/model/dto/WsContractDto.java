@@ -10,7 +10,7 @@ public class WsContractDto {
 	private ConversionObject[] args;
 
 	public String getClassName() {
-		return className;
+		return this.className;
 	}
 
 	public void setClassName(String className) {
@@ -18,7 +18,7 @@ public class WsContractDto {
 	}
 
 	public String getPackageName() {
-		return packageName;
+		return this.packageName;
 	}
 
 	public void setPackageName(String packageName) {
@@ -26,7 +26,7 @@ public class WsContractDto {
 	}
 
 	public String getMethodName() {
-		return methodName;
+		return this.methodName;
 	}
 
 	public void setMethodName(String methodName) {
@@ -34,7 +34,7 @@ public class WsContractDto {
 	}
 
 	public Object getResult() {
-		return result;
+		return this.result;
 	}
 
 	public void setResult(Object result) {
@@ -42,7 +42,7 @@ public class WsContractDto {
 	}
 
 	public String getError() {
-		return error;
+		return this.error;
 	}
 
 	public void setError(String error) {
@@ -50,7 +50,7 @@ public class WsContractDto {
 	}
 
 	public String getErrorMessage() {
-		return errorMessage;
+		return this.errorMessage;
 	}
 
 	public void setErrorMessage(String errorMessage) {
@@ -58,7 +58,7 @@ public class WsContractDto {
 	}
 
 	public ConversionObject[] getArgs() {
-		return args;
+		return this.args;
 	}
 
 	public void setArgs(ConversionObject[] args) {

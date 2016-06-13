@@ -24,115 +24,115 @@ public class WorkInfo {
     }
 
     public UUID getPipelineId() {
-        return pipelineId;
+        return this.pipelineId;
     }
 
     public void setPipelineId(UUID value) {
-        pipelineId = value;
+        this.pipelineId = value;
     }
 
     public int getPipelineExecutionID() {
-        return pipelineExecutionID;
+        return this.pipelineExecutionID;
     }
 
     public void setPipelineExecutionID(int value) {
-        pipelineExecutionID = value;
+        this.pipelineExecutionID = value;
     }
 
     public String getPipelineName() {
-        return pipelineName;
+        return this.pipelineName;
     }
 
     public void setPipelineName(String value) {
-        pipelineName = value;
+        this.pipelineName = value;
     }
 
     public String getPipelineEnvironmentName() {
-        return pipelineEnvironmentName;
+        return this.pipelineEnvironmentName;
     }
 
     public void setPipelineEnvironmentName(String value) {
-        pipelineEnvironmentName = value;
+        this.pipelineEnvironmentName = value;
     }
 
     public String getPipelineTriggerReason() {
-        return pipelineTriggerReason;
+        return this.pipelineTriggerReason;
     }
 
     public void setPipelineTriggerReason(String value) {
-        pipelineTriggerReason = value;
+        this.pipelineTriggerReason = value;
     }
 
     public String getLabelTemplate() {
-        return labelTemplate;
+        return this.labelTemplate;
     }
 
     public void setLabelTemplate(String value) {
-        labelTemplate = value;
+        this.labelTemplate = value;
     }
 
     public String getStageId() {
-        return stageId;
+        return this.stageId;
     }
 
     public void setStageId(String value) {
-        stageId = value;
+        this.stageId = value;
     }
 
     public int getStageExecutionId() {
-        return stageExecutionId;
+        return this.stageExecutionId;
     }
 
     public void setStageExecutionId(int value) {
-        stageExecutionId = value;
+        this.stageExecutionId = value;
     }
 
     public String getStageName() {
-        return stageName;
+        return this.stageName;
     }
 
     public void setStageName(String value) {
-        stageName = value;
+        this.stageName = value;
     }
 
     public String getStageTriggerReason() {
-        return stageTriggerReason;
+        return this.stageTriggerReason;
     }
 
     public void setStageTriggerReason(String value) {
-        stageTriggerReason = value;
+        this.stageTriggerReason = value;
     }
 
     public boolean getShouldFetchMaterials() {
-        return shouldFetchMaterials;
+        return this.shouldFetchMaterials;
     }
 
     public void setShouldFetchMaterials(boolean value) {
-        shouldFetchMaterials = value;
+        this.shouldFetchMaterials = value;
     }
 
     public JobDefinition getJob() {
-        return job;
+        return this.job;
     }
 
     public void setJob(JobDefinition value) {
-        job = value;
+        this.job = value;
     }
 
     public ArrayList<MaterialDefinition> getMaterials() {
-        return materials;
+        return this.materials;
     }
 
     public void setMaterials(ArrayList<MaterialDefinition> value) {
-        materials = value;
+        this.materials = value;
     }
 
     public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-        environmentVariables = value;
+        this.environmentVariables = value;
     }
 
 }

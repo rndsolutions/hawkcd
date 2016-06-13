@@ -8,71 +8,71 @@ public class EnvironmentInfo {
 	private String __OsName;
 
 	public String getOsName() {
-		return __OsName;
+		return this.__OsName;
 	}
 
 	public void setOsName(String value) {
-		__OsName = value;
+		this.__OsName = value;
 	}
 
 	private String __OsVersion;
 
 	public String getOsVersion() {
-		return __OsVersion;
+		return this.__OsVersion;
 	}
 
 	public void setOsVersion(String value) {
-		__OsVersion = value;
+		this.__OsVersion = value;
 	}
 
 	private String __HostName;
 
 	public String getHostName() {
-		return __HostName;
+		return this.__HostName;
 	}
 
 	public void setHostName(String value) {
-		__HostName = value;
+		this.__HostName = value;
 	}
 
 	private double __TotalRamMBytes;
 
 	public double getTotalRamMBytes() {
-		return __TotalRamMBytes;
+		return this.__TotalRamMBytes;
 	}
 
 	public void setTotalRamMBytes(double value) {
-		__TotalRamMBytes = value;
+		this.__TotalRamMBytes = value;
 	}
 
 	private double __FreeRamMBytes;
 
 	public double getFreeRamMBytes() {
-		return __FreeRamMBytes;
+		return this.__FreeRamMBytes;
 	}
 
 	public void setFreeRamMBytes(double value) {
-		__FreeRamMBytes = value;
+		this.__FreeRamMBytes = value;
 	}
 
 	private long __TotalDiskSpaceGBytes;
 
 	public long getTotalDiskSpaceGBytes() {
-		return __TotalDiskSpaceGBytes;
+		return this.__TotalDiskSpaceGBytes;
 	}
 
 	public void setTotalDiskSpaceGBytes(long value) {
-		__TotalDiskSpaceGBytes = value;
+		this.__TotalDiskSpaceGBytes = value;
 	}
 
 	private long __FreeDiskSpaceGBytes;
 
 	public long getFreeDiskSpaceGBytes() {
-		return __FreeDiskSpaceGBytes;
+		return this.__FreeDiskSpaceGBytes;
 	}
 
 	public void setFreeDiskSpaceGBytes(long value) {
-		__FreeDiskSpaceGBytes = value;
+		this.__FreeDiskSpaceGBytes = value;
 	}
 
 }

@@ -7,19 +7,19 @@ public class PipelineGroup extends DbEntry {
     private ArrayList<Pipeline> pipelines;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String value) {
-        name = value;
+        this.name = value;
     }
 
     public ArrayList<Pipeline> getPipelines() {
-        return pipelines;
+        return this.pipelines;
     }
 
     public void setPipelines(ArrayList<Pipeline> value) {
-        pipelines = value;
+        this.pipelines = value;
     }
 
 }
