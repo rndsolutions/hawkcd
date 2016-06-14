@@ -2,34 +2,38 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', function (pipeStatsService, agentService, viewModel) {
-        var websocketReceiverService = this;
+    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'toaster', 'invokerService',
+        function (pipeStatsService, agentService, viewModel, toaster, invokerService) {
+            var websocketReceiverService = this;
 
-        this.processEvent = function (data) {
+            this.processEvent = function (data) {
+                console.log(data);
+                invokerService(data, dispatcher);
+            };
 
-            switch (data.methodName){
-                case "GetAllPipelines":
-                    pipeConfigService.updatePipelines(data);
-                    break;
-                case "GetAllPipelineDefs":
-                    break;
-                case "getById":
-                    agentService.updatewsAgent(data);
-                    console.log(data);
-                    break;
-                case "getAll":
-                    viewModel.updateAgents(data);
-                    console.log(data);
-                    break;
-                case "setAgentConfigState":
-                    viewModel.updateAgentStatus(data);
-                    break;
-                case "getAllPipelineGroups":
-                    viewModel.updatePipelineGroups(data);
-                    break;
-            }
-        };
+            var dispatcher = {
+                AgentService: {
+                    getById: function (data) {
+                        agentService.updatewsAgent(data)
+                    },
+                    getAll: function (data) {
+                        viewModel.updateAgents(data);
+                    },
+                    setAgentConfigState: function (data) {
+                        viewModel.updateAgentStatus(data);
+                    }
+                },
+                Pipeline: {
+                    getById: function () {
+                        console.log('Pipeline : getAll');
+                    },
+                    getAll: function () {
+                        console.log('Pipeline : getAll');
+                    }
+                }
+            };
 
-        return websocketReceiverService;
+            return websocketReceiverService;
 
-    }]);
+        }]);
+
