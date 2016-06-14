@@ -18,9 +18,9 @@ public class Account {
 	public UserInfoDto getUserInfo() {
 
 		UserInfoDto usr = new UserInfoDto();
-		usr.email = "rado@rnd.com";
-		usr.loginProvider = "no idea";
-		usr.hasRegistered = false;
+		usr.setEmail("rado@rnd.com");
+		usr.setLoginProvider("no idea");
+		usr.setRegistered(false);
 
 		return usr; // usr.toString();
 

@@ -2,6 +2,7 @@ package net.hawkengine.db.mongodb;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import net.hawkengine.db.IDbRepository;
@@ -59,10 +60,9 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     @Override
     public List<T> getAll() {
         T resultElement;
+        List<T> result = new ArrayList<>();
         try {
             DBCursor documents = this.collection.find();
-
-            List<T> result = new ArrayList<>();
 
             for (DBObject document : documents) {
                 String documentToJson = JSON.serialize(document);
@@ -70,12 +70,13 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
                 result.add(resultElement);
             }
 
-            return result;
-
-        } catch (Exception e) {
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
             e.printStackTrace();
             throw e;
         }
+        return result;
     }
 
     @Override
@@ -88,7 +89,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
                 this.collection.insert(myDoc);
 
                 return entry;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
                 throw e;
             }
@@ -108,7 +109,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             this.collection.findAndModify(searchQuery, newDocument);
 
             return entry;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return entry;
         }
@@ -121,7 +122,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             this.collection.findAndRemove(searchQuery);
 
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return false;
         }

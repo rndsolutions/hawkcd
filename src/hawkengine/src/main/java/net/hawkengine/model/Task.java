@@ -14,7 +14,7 @@ public abstract class Task {
     private LocalDateTime endTime;
     private Duration duration;
 
-    public Task() {
+    protected Task() {
         this.startTime = LocalDateTime.now();
     }
 

@@ -11,7 +11,7 @@ public class RedisManager {
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
 		//poolConfig.setMaxTotal(20);
 		poolConfig.setTestOnBorrow(true);
-		pool = new JedisPool(poolConfig, "redis");
+		pool = new JedisPool(poolConfig, "192.168.99.100");
 	}
 
 	public static JedisPool getPool() {

@@ -2,10 +2,33 @@ package net.hawkengine.model.dto;
 
 public class UserInfoDto {
 
-	public String email;
+	private String email;
 
-	public Boolean hasRegistered;
+	private Boolean isRegistered;
 
-	public String loginProvider;
+	private String loginProvider;
 
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Boolean isRegistered() {
+		return this.isRegistered;
+	}
+
+	public void setRegistered(Boolean registered) {
+		this.isRegistered = registered;
+	}
+
+	public String getLoginProvider() {
+		return this.loginProvider;
+	}
+
+	public void setLoginProvider(String loginProvider) {
+		this.loginProvider = loginProvider;
+	}
 }

@@ -8,13 +8,13 @@ import net.hawkengine.services.interfaces.IEnvironmentService;
 
 public class EnvironmentService extends CrudService<Environment> implements IEnvironmentService {
     public EnvironmentService() {
-        super.repository = new RedisRepository(Environment.class);
-        super.objectType = "Environment";
+        super.setRepository(new RedisRepository(Environment.class));
+        super.setObjectType("Environment");
     }
 
     public EnvironmentService(IDbRepository repository) {
-        super.repository = repository;
-        super.objectType = "Environment";
+        super.setRepository(repository);
+        super.setObjectType("Environment");
     }
 
     @Override

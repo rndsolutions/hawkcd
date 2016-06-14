@@ -7,6 +7,7 @@ public final class MongoDbManager {
     public static final String HOST = "localhost";
     public static final int PORT = 27017;
     private static MongoDbManager ourInstance;
+    @SuppressWarnings("PublicField")
     public DB db;
 
     private MongoDbManager() {
@@ -31,7 +32,7 @@ public final class MongoDbManager {
 
             System.out.println("Successfully connected to MongoDB");
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.err.println(e.getClass().getName() + ": " +
                     e.getMessage());
         }

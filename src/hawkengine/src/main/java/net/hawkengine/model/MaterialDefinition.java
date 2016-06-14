@@ -8,7 +8,7 @@ public class MaterialDefinition {
     private String name;
     private MaterialType type;
     private String url;
-    private boolean autoTriggerOnChange;
+    private boolean isAutoTriggerOnChange;
     private HashMap<String, Object> materialSpecificDetails;
 
     public MaterialDefinition() {
@@ -46,12 +46,12 @@ public class MaterialDefinition {
         this.url = value;
     }
 
-    public boolean getAutoTriggerOnChange() {
-        return this.autoTriggerOnChange;
+    public boolean isAutoTriggerOnChange() {
+        return isAutoTriggerOnChange;
     }
 
-    public void setAutoTriggerOnChange(boolean value) {
-        this.autoTriggerOnChange = value;
+    public void setAutoTriggerOnChange(boolean autoTriggerOnChange) {
+        isAutoTriggerOnChange = autoTriggerOnChange;
     }
 
     public HashMap<String, Object> getMaterialSpecificDetails() {

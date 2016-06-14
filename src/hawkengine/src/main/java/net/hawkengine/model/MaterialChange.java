@@ -1,7 +1,6 @@
 package net.hawkengine.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 
 public class MaterialChange extends DbEntry {
@@ -64,8 +63,8 @@ public class MaterialChange extends DbEntry {
         try {
             return String.format(" ID={0} PipelineName={1} MaterialName={2} ChangeDate={3}", this.getId(),
                     this.getPipelineName(), this.getMaterialName(), this.getChangeDate());
-        } catch (RuntimeException __dummyCatchVar0) {
-            throw __dummyCatchVar0;
+        } catch (RuntimeException dummyCatchVar0) {
+            throw dummyCatchVar0;
         } catch (Exception __dummyCatchVar0) {
             throw new RuntimeException(__dummyCatchVar0);
         }

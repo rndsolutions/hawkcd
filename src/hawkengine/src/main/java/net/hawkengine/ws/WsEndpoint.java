@@ -3,12 +3,14 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +72,15 @@ public class WsEndpoint extends WebSocketAdapter {
 
 			remoteEndpoint.sendString(jsonResult);
 
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
 			// TODO: log this
 			e.printStackTrace();
 			this.errorDetails(contract, serializer, e, remoteEndpoint);
@@ -93,6 +103,8 @@ public class WsEndpoint extends WebSocketAdapter {
 		WsContractDto contract = null;
 		try {
 			contract = this.jsonConverter.fromJson(message, WsContractDto.class);
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		}
@@ -123,7 +135,9 @@ public class WsEndpoint extends WebSocketAdapter {
 		try {
 			String errDetails = serializer.toJson(contract);
 			endPoint.sendString(errDetails);
-		} catch (Exception ex) {
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (RuntimeException ex) {
 			ex.printStackTrace();
 		}
 	}

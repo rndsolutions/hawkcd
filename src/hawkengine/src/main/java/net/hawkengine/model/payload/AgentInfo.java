@@ -9,7 +9,7 @@ public class AgentInfo {
     private String name;
     private String ipAddress;
     private String rootPath;
-    private AgentExecutionState state = AgentExecutionState.Idle;
+    private AgentExecutionState state = AgentExecutionState.IDLE;
 
     public UUID getAgentId() {
         return this.agentId;
