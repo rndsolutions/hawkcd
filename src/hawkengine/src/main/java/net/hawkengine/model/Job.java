@@ -23,7 +23,7 @@ public class Job {
     }
 
     public String getJobDefinitionId() {
-        return jobDefinitionId;
+        return this.jobDefinitionId;
     }
 
     public void setJobDefinitionId(String jobDefinitionId) {
@@ -31,7 +31,7 @@ public class Job {
     }
 
     public int getExecutionId() {
-        return executionId;
+        return this.executionId;
     }
 
     public void setExecutionId(int executionId) {
@@ -39,7 +39,7 @@ public class Job {
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
@@ -47,7 +47,7 @@ public class Job {
     }
 
     public List<JobDefinition> getJobs() {
-        return jobs;
+        return this.jobs;
     }
 
     public void setJobs(List<JobDefinition> jobs) {
@@ -55,7 +55,7 @@ public class Job {
     }
 
     public JobStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(JobStatus status) {
@@ -63,7 +63,7 @@ public class Job {
     }
 
     public LocalDateTime getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -71,7 +71,7 @@ public class Job {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     public void setEndTime(LocalDateTime endTime) {
@@ -79,7 +79,7 @@ public class Job {
     }
 
     public Duration getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(Duration duration) {

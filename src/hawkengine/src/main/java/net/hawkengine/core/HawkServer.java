@@ -17,7 +17,7 @@ import javax.websocket.DeploymentException;
 
 public class HawkServer {
 
-    private Server server;
+    private final Server server;
     private final int port = 8080;
 
     public HawkServer() {

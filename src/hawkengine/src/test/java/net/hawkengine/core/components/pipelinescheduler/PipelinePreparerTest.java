@@ -59,7 +59,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(thirdExpectedResult);
         this.mockedPipelineService.add(fourthExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_THREE_OBJECTS;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_THREE_OBJECTS;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines().stream()
@@ -108,7 +108,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(firstExpectedResult);
         this.mockedPipelineService.add(secondExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
@@ -133,7 +133,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(firstExpectedResult);
         this.mockedPipelineService.add(secondExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
@@ -162,7 +162,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(secondExpectedResult);
         this.mockedPipelineService.add(thirdExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();

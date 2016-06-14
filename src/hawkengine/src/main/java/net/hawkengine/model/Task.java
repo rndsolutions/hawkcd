@@ -19,7 +19,7 @@ public abstract class Task {
     }
 
     public String getTaskDefinitionId() {
-        return taskDefinitionId;
+        return this.taskDefinitionId;
     }
 
     public void setTaskDefinitionId(String taskDefinitionId) {
@@ -27,7 +27,7 @@ public abstract class Task {
     }
 
     public String getJobId() {
-        return jobId;
+        return this.jobId;
     }
 
     public void setJobId(String jobId) {
@@ -59,7 +59,7 @@ public abstract class Task {
     }
 
     public String getOutput() {
-        return output;
+        return this.output;
     }
 
     public void setOutput(String output) {
@@ -67,7 +67,7 @@ public abstract class Task {
     }
 
     public LocalDateTime getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -75,7 +75,7 @@ public abstract class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     public void setEndTime(LocalDateTime endTime) {
@@ -83,7 +83,7 @@ public abstract class Task {
     }
 
     public Duration getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(Duration duration) {

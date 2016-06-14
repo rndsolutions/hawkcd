@@ -1,79 +1,69 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model.payload;
 
 public class EnvironmentInfo {
-	private String __OsName;
+    private String osName;
+    private String osVersion;
+    private String hostName;
+    private double totalRamMBytes;
+    private double freeRamMBytes;
+    private long totalDiskSpaceGBytes;
+    private long freeDiskSpaceGBytes;
 
-	public String getOsName() {
-		return this.__OsName;
-	}
+    public String getOsName() {
+        return this.osName;
+    }
 
-	public void setOsName(String value) {
-		this.__OsName = value;
-	}
+    public void setOsName(String value) {
+        this.osName = value;
+    }
 
-	private String __OsVersion;
+    public String getOsVersion() {
+        return this.osVersion;
+    }
 
-	public String getOsVersion() {
-		return this.__OsVersion;
-	}
+    public void setOsVersion(String value) {
+        this.osVersion = value;
+    }
 
-	public void setOsVersion(String value) {
-		this.__OsVersion = value;
-	}
+    public String getHostName() {
+        return this.hostName;
+    }
 
-	private String __HostName;
+    public void setHostName(String value) {
+        this.hostName = value;
+    }
 
-	public String getHostName() {
-		return this.__HostName;
-	}
+    public double getTotalRamMBytes() {
+        return this.totalRamMBytes;
+    }
 
-	public void setHostName(String value) {
-		this.__HostName = value;
-	}
+    public void setTotalRamMBytes(double value) {
+        this.totalRamMBytes = value;
+    }
 
-	private double __TotalRamMBytes;
+    public double getFreeRamMBytes() {
+        return this.freeRamMBytes;
+    }
 
-	public double getTotalRamMBytes() {
-		return this.__TotalRamMBytes;
-	}
+    public void setFreeRamMBytes(double value) {
+        this.freeRamMBytes = value;
+    }
 
-	public void setTotalRamMBytes(double value) {
-		this.__TotalRamMBytes = value;
-	}
+    public long getTotalDiskSpaceGBytes() {
+        return this.totalDiskSpaceGBytes;
+    }
 
-	private double __FreeRamMBytes;
+    public void setTotalDiskSpaceGBytes(long value) {
+        this.totalDiskSpaceGBytes = value;
+    }
 
-	public double getFreeRamMBytes() {
-		return this.__FreeRamMBytes;
-	}
+    public long getFreeDiskSpaceGBytes() {
+        return this.freeDiskSpaceGBytes;
+    }
 
-	public void setFreeRamMBytes(double value) {
-		this.__FreeRamMBytes = value;
-	}
-
-	private long __TotalDiskSpaceGBytes;
-
-	public long getTotalDiskSpaceGBytes() {
-		return this.__TotalDiskSpaceGBytes;
-	}
-
-	public void setTotalDiskSpaceGBytes(long value) {
-		this.__TotalDiskSpaceGBytes = value;
-	}
-
-	private long __FreeDiskSpaceGBytes;
-
-	public long getFreeDiskSpaceGBytes() {
-		return this.__FreeDiskSpaceGBytes;
-	}
-
-	public void setFreeDiskSpaceGBytes(long value) {
-		this.__FreeDiskSpaceGBytes = value;
-	}
+    public void setFreeDiskSpaceGBytes(long value) {
+        this.freeDiskSpaceGBytes = value;
+    }
 
 }
 

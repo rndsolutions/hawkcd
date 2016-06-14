@@ -25,7 +25,7 @@ public class JobDefinition extends DbEntry {
     }
 
     public String getStageDefinitionId() {
-        return stageDefinitionId;
+        return this.stageDefinitionId;
     }
 
     public void setStageDefinitionId(String stageDefinitionId) {
@@ -41,7 +41,7 @@ public class JobDefinition extends DbEntry {
     }
 
     public List<TaskDefinition> getTaskDefinitions() {
-        return taskDefinitions;
+        return this.taskDefinitions;
     }
 
     public void setTaskDefinitions(List<TaskDefinition> taskDefinitions) {

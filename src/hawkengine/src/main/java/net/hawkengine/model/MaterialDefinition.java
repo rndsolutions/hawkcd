@@ -2,6 +2,7 @@ package net.hawkengine.model;
 
 import java.util.HashMap;
 
+@SuppressWarnings("UnqualifiedFieldAccess")
 public class MaterialDefinition {
     private String pipelineDefinitionId;
     private String name;
@@ -14,11 +15,11 @@ public class MaterialDefinition {
     }
 
     public String getPipelineDefinitionId() {
-        return pipelineDefinitionId;
+        return this.pipelineDefinitionId;
     }
 
     public void setPipelineDefinitionId(String value) {
-        pipelineDefinitionId = value;
+        this.pipelineDefinitionId = value;
     }
 
     public String getName() {

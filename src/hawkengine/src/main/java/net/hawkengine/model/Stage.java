@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("UnqualifiedFieldAccess")
 public class Stage {
     private String stageDefinitionId;
     private String pipelineId;
@@ -23,7 +24,7 @@ public class Stage {
     }
 
     public String getStageDefinitionId() {
-        return stageDefinitionId;
+        return this.stageDefinitionId;
     }
 
     public void setStageDefinitionId(String stageDefinitionId) {
@@ -31,7 +32,7 @@ public class Stage {
     }
 
     public int getExecutionId() {
-        return executionId;
+        return this.executionId;
     }
 
     public void setExecutionId(int executionId) {
@@ -39,7 +40,7 @@ public class Stage {
     }
 
     public String getPipelineId() {
-        return pipelineId;
+        return this.pipelineId;
     }
 
     public void setPipelineId(String pipelineId) {
@@ -55,7 +56,7 @@ public class Stage {
     }
 
     public List<Job> getJobs() {
-        return jobs;
+        return this.jobs;
     }
 
     public void setJobs(List<Job> jobs) {
@@ -71,7 +72,7 @@ public class Stage {
     }
 
     public LocalDateTime getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -79,7 +80,7 @@ public class Stage {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     public void setEndTime(LocalDateTime endTime) {

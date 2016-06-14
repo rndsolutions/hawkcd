@@ -1,86 +1,76 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model.payload;
-
-import java.util.ArrayList;
 
 import net.hawkengine.model.*;
 
+import java.util.ArrayList;
+
 public class ServerResponseToAgent {
-	public ServerResponseToAgent() throws Exception {
-		this.setEnvironmentVariables(new ArrayList<>());
-	}
+    private Pipeline pipeline;
+    private JobDefinition jobDefinition;
+    private Stage stage;
+    private EnvironmentInfo environmentInfo;
+    private ArrayList<MaterialDefinition> materialDefinitions;
+    private ArrayList<MaterialChange> materials;
+    private ArrayList<EnvironmentVariable> environmentVariables;
 
-	private Pipeline __Pipeline;
+    public ServerResponseToAgent() throws Exception {
+        this.setEnvironmentVariables(new ArrayList<>());
+    }
 
-	public Pipeline getPipeline() {
-		return this.__Pipeline;
-	}
+    public Pipeline getPipeline() {
+        return this.pipeline;
+    }
 
-	public void setPipeline(Pipeline value) {
-		this.__Pipeline = value;
-	}
+    public void setPipeline(Pipeline value) {
+        this.pipeline = value;
+    }
 
-	private JobDefinition __Job;
+    public JobDefinition getJob() {
+        return this.jobDefinition;
+    }
 
-	public JobDefinition getJob() {
-		return this.__Job;
-	}
+    public void setJob(JobDefinition value) {
+        this.jobDefinition = value;
+    }
 
-	public void setJob(JobDefinition value) {
-		this.__Job = value;
-	}
+    public Stage getStage() {
+        return this.stage;
+    }
 
-	private Stage __Stage;
+    public void setStage(Stage value) {
+        this.stage = value;
+    }
 
-	public Stage getStage() {
-		return this.__Stage;
-	}
+    public EnvironmentInfo getEnvironmentInfo() {
+        return this.environmentInfo;
+    }
 
-	public void setStage(Stage value) {
-		this.__Stage = value;
-	}
+    public void setEnvironmentInfo(EnvironmentInfo value) {
+        this.environmentInfo = value;
+    }
 
-	private EnvironmentInfo __EnvironmentInfo;
+    public ArrayList<MaterialDefinition> getMaterials() {
+        return this.materialDefinitions;
+    }
 
-	public EnvironmentInfo getEnvironmentInfo() {
-		return this.__EnvironmentInfo;
-	}
+    public void setMaterials(ArrayList<MaterialDefinition> value) {
+        this.materialDefinitions = value;
+    }
 
-	public void setEnvironmentInfo(EnvironmentInfo value) {
-		this.__EnvironmentInfo = value;
-	}
+    public ArrayList<MaterialChange> getExecutionMaterials() {
+        return this.materials;
+    }
 
-	private ArrayList<MaterialDefinition> __Materials;
+    public void setExecutionMaterials(ArrayList<MaterialChange> value) {
+        this.materials = value;
+    }
 
-	public ArrayList<MaterialDefinition> getMaterials() {
-		return this.__Materials;
-	}
+    public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
+        return this.environmentVariables;
+    }
 
-	public void setMaterials(ArrayList<MaterialDefinition> value) {
-		this.__Materials = value;
-	}
-
-	private ArrayList<MaterialChange> __ExecutionMaterials;
-
-	public ArrayList<MaterialChange> getExecutionMaterials() {
-		return this.__ExecutionMaterials;
-	}
-
-	public void setExecutionMaterials(ArrayList<MaterialChange> value) {
-		this.__ExecutionMaterials = value;
-	}
-
-	private ArrayList<EnvironmentVariable> __EnvironmentVariables;
-
-	public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-		return this.__EnvironmentVariables;
-	}
-
-	public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-		this.__EnvironmentVariables = value;
-	}
+    public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
+        this.environmentVariables = value;
+    }
 
 }

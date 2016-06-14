@@ -15,10 +15,10 @@ import java.util.List;
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
     private DB mongoDatabase;
-    private DBCollection collection;
-    private Type entryType;
+    private final DBCollection collection;
+    private final Type entryType;
 
-    private Gson jsonConverter;
+    private final Gson jsonConverter;
 
     public MongoDbRepository(Class<T> entry) {
         this.entryType = entry;

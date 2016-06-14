@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class WsEndpoint extends WebSocketAdapter {
 	private UUID id;
-	private Gson jsonConverter;
+	private final Gson jsonConverter;
 
 	public WsEndpoint() {
 		this.id = UUID.randomUUID();

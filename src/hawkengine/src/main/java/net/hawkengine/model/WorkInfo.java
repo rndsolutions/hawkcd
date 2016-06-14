@@ -15,7 +15,7 @@ public class WorkInfo {
     private String stageName;
     private String stageTriggerReason;
     private boolean shouldFetchMaterials;
-    private JobDefinition job;
+    private JobDefinition jobDefinition;
     private ArrayList<MaterialDefinition> materials;
     private ArrayList<EnvironmentVariable> environmentVariables;
 
@@ -111,12 +111,12 @@ public class WorkInfo {
         this.shouldFetchMaterials = value;
     }
 
-    public JobDefinition getJob() {
-        return this.job;
+    public JobDefinition getJobDefinition() {
+        return this.jobDefinition;
     }
 
-    public void setJob(JobDefinition value) {
-        this.job = value;
+    public void setJobDefinition(JobDefinition value) {
+        this.jobDefinition = value;
     }
 
     public ArrayList<MaterialDefinition> getMaterials() {

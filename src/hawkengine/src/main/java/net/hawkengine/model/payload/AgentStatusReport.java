@@ -1,38 +1,32 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model.payload;
 
 public class AgentStatusReport {
-	private AgentInfo __AgentInfo;
+    private AgentInfo agentInfo;
+    private JobExecutionInfo jobExecutionInfo;
+    private EnvironmentInfo anvironmentInfo;
 
-	public AgentInfo getAgentInfo() {
-		return this.__AgentInfo;
-	}
+    public AgentInfo getAgentInfo() {
+        return this.agentInfo;
+    }
 
-	public void setAgentInfo(AgentInfo value) {
-		this.__AgentInfo = value;
-	}
+    public void setAgentInfo(AgentInfo value) {
+        this.agentInfo = value;
+    }
 
-	private JobExecutionInfo __JobExecutionInfo;
+    public JobExecutionInfo getJobExecutionInfo() {
+        return this.jobExecutionInfo;
+    }
 
-	public JobExecutionInfo getJobExecutionInfo() {
-		return this.__JobExecutionInfo;
-	}
+    public void setJobExecutionInfo(JobExecutionInfo value) {
+        this.jobExecutionInfo = value;
+    }
 
-	public void setJobExecutionInfo(JobExecutionInfo value) {
-		this.__JobExecutionInfo = value;
-	}
+    public EnvironmentInfo getEnvironmentInfo() {
+        return this.anvironmentInfo;
+    }
 
-	private EnvironmentInfo __EnvironmentInfo;
-
-	public EnvironmentInfo getEnvironmentInfo() {
-		return this.__EnvironmentInfo;
-	}
-
-	public void setEnvironmentInfo(EnvironmentInfo value) {
-		this.__EnvironmentInfo = value;
-	}
+    public void setEnvironmentInfo(EnvironmentInfo value) {
+        this.anvironmentInfo = value;
+    }
 
 }

@@ -11,6 +11,7 @@ import net.hawkengine.services.interfaces.IAgentService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("UnnecessarySuperQualifier")
 public class AgentService extends CrudService<Agent> implements IAgentService {
     public AgentService() {
         super.repository = new RedisRepository(Agent.class);

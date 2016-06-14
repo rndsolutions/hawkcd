@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -14,7 +15,7 @@ public class Agent extends DbEntry {
     private boolean isRunning;
     private boolean isEnabled;
     private boolean isConnected;
-    private Date lastReported;
+    private LocalDateTime lastReported;
 
     public String getName() {
         return this.name;
@@ -96,11 +97,11 @@ public class Agent extends DbEntry {
         this.isConnected = connected;
     }
 
-    public Date getLastReported() {
+    public LocalDateTime getLastReported() {
         return this.lastReported;
     }
 
-    public void setLastReported(Date lastReported) {
+    public void setLastReported(LocalDateTime lastReported) {
         this.lastReported = lastReported;
     }
 }

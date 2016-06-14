@@ -5,34 +5,32 @@
 package net.hawkengine.model.payload;
 
 public class AgentReport {
-	private AgentInfo __AgentInfo;
+    private AgentInfo agentInfo;
+    private EnvironmentInfo environmentInfo;
+    private JobExecutionInfo jobExecutionInfo;
 
-	public AgentInfo getAgentInfo() {
-		return this.__AgentInfo;
-	}
+    public AgentInfo getAgentInfo() {
+        return this.agentInfo;
+    }
 
-	public void setAgentInfo(AgentInfo value) {
-		this.__AgentInfo = value;
-	}
+    public void setAgentInfo(AgentInfo value) {
+        this.agentInfo = value;
+    }
 
-	private EnvironmentInfo __EnvironmentInfo;
+    public EnvironmentInfo getEnvironmentInfo() {
+        return this.environmentInfo;
+    }
 
-	public EnvironmentInfo getEnvironmentInfo() {
-		return this.__EnvironmentInfo;
-	}
+    public void setEnvironmentInfo(EnvironmentInfo value) {
+        this.environmentInfo = value;
+    }
 
-	public void setEnvironmentInfo(EnvironmentInfo value) {
-		this.__EnvironmentInfo = value;
-	}
+    public JobExecutionInfo getJobExecutionInfo() {
+        return this.jobExecutionInfo;
+    }
 
-	private JobExecutionInfo __JobExecutionInfo;
-
-	public JobExecutionInfo getJobExecutionInfo() {
-		return this.__JobExecutionInfo;
-	}
-
-	public void setJobExecutionInfo(JobExecutionInfo value) {
-		this.__JobExecutionInfo = value;
-	}
+    public void setJobExecutionInfo(JobExecutionInfo value) {
+        this.jobExecutionInfo = value;
+    }
 
 }

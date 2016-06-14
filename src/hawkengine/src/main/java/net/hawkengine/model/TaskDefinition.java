@@ -7,7 +7,7 @@ public class TaskDefinition extends DbEntry {
     private RunIf runIfCondition;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -15,7 +15,7 @@ public class TaskDefinition extends DbEntry {
     }
 
     public String getJobDefinitionId() {
-        return jobDefinitionId;
+        return this.jobDefinitionId;
     }
 
     public void setJobDefinitionId(String jobDefinitionId) {
@@ -23,7 +23,7 @@ public class TaskDefinition extends DbEntry {
     }
 
     public TaskType getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(TaskType type) {
@@ -31,7 +31,7 @@ public class TaskDefinition extends DbEntry {
     }
 
     public RunIf getRunIfCondition() {
-        return runIfCondition;
+        return this.runIfCondition;
     }
 
     public void setRunIfCondition(RunIf runIfCondition) {

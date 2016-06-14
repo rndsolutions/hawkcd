@@ -16,7 +16,7 @@ public class StageDefinition extends DbEntry{
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -24,7 +24,7 @@ public class StageDefinition extends DbEntry{
     }
 
     public String getPipelineDefinitionId() {
-        return pipelineDefinitionId;
+        return this.pipelineDefinitionId;
     }
 
     public void setPipelineDefinitionId(String pipelineDefinitionId) {
@@ -32,7 +32,7 @@ public class StageDefinition extends DbEntry{
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
@@ -40,7 +40,7 @@ public class StageDefinition extends DbEntry{
     }
 
     public List<JobDefinition> getJobDefinitions() {
-        return jobDefinitions;
+        return this.jobDefinitions;
     }
 
     public void setJobDefinitions(List<JobDefinition> jobDefinitions) {
@@ -48,7 +48,7 @@ public class StageDefinition extends DbEntry{
     }
 
     public boolean isTriggeredManually() {
-        return isTriggeredManually;
+        return this.isTriggeredManually;
     }
 
     public void setTriggeredManually(boolean triggeredManually) {

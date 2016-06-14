@@ -1,6 +1,7 @@
 package net.hawkengine.db.redis;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
+import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.DbEntry;
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,7 +9,7 @@ import org.junit.Test;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisRepositoryTest {
-	private RedisRepository repository;
+	private IDbRepository repository;
 
 	@Before
 	public void setUp() throws Exception {

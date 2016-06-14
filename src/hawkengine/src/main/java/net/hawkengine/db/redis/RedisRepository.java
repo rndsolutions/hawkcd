@@ -15,11 +15,11 @@ import redis.clients.jedis.JedisPool;
 
 @SuppressWarnings("UnusedAssignment")
 public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
-    private Type type;
-    private String entryNamespace;
-    private String idNamespace;
+    private final Type type;
+    private final String entryNamespace;
+    private final String idNamespace;
     private JedisPool jedisPool;
-    private Gson jsonConverter;
+    private final Gson jsonConverter;
 
     public RedisRepository(Class<T> type) {
         this.type = type;

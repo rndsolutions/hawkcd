@@ -1,62 +1,54 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model.payload;
-
-import java.util.UUID;
 
 import net.hawkengine.model.AgentExecutionState;
 
+import java.util.UUID;
+
 public class AgentInfo {
-	private UUID __AgentId;
+    private UUID agentId;
+    private String name;
+    private String ipAddress;
+    private String rootPath;
+    private AgentExecutionState state = AgentExecutionState.Idle;
 
-	public UUID getAgentId() {
-		return this.__AgentId;
-	}
+    public UUID getAgentId() {
+        return this.agentId;
+    }
 
-	public void setAgentId(UUID value) {
-		this.__AgentId = value;
-	}
+    public void setAgentId(UUID value) {
+        this.agentId = value;
+    }
 
-	private String __Name;
+    public String getName() {
+        return this.name;
+    }
 
-	public String getName() {
-		return this.__Name;
-	}
+    public void setName(String value) {
+        this.name = value;
+    }
 
-	public void setName(String value) {
-		this.__Name = value;
-	}
+    public String getIPAddress() {
+        return this.ipAddress;
+    }
 
-	private String __IPAddress;
+    public void setIPAddress(String value) {
+        this.ipAddress = value;
+    }
 
-	public String getIPAddress() {
-		return this.__IPAddress;
-	}
+    public String getSandbox() {
+        return this.rootPath;
+    }
 
-	public void setIPAddress(String value) {
-		this.__IPAddress = value;
-	}
+    public void setSandbox(String value) {
+        this.rootPath = value;
+    }
 
-	private String __Sandbox;
+    public AgentExecutionState getState() {
+        return this.state;
+    }
 
-	public String getSandbox() {
-		return this.__Sandbox;
-	}
-
-	public void setSandbox(String value) {
-		this.__Sandbox = value;
-	}
-
-	private AgentExecutionState __State = AgentExecutionState.Idle;
-
-	public AgentExecutionState getState() {
-		return this.__State;
-	}
-
-	public void setState(AgentExecutionState value) {
-		this.__State = value;
-	}
+    public void setState(AgentExecutionState value) {
+        this.state = value;
+    }
 
 }

@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -8,7 +9,7 @@ public class MaterialChange extends DbEntry {
     private String materialName;
     private String url;
     private MaterialType type;
-    private Date changeDate;
+    private LocalDateTime changeDate;
     private HashMap<String, Object> materialSpecificDetails;
 
     public String getPipelineName() {
@@ -43,11 +44,11 @@ public class MaterialChange extends DbEntry {
         this.type = value;
     }
 
-    public Date getChangeDate() {
+    public LocalDateTime getChangeDate() {
         return this.changeDate;
     }
 
-    public void setChangeDate(Date value) {
+    public void setChangeDate(LocalDateTime value) {
         this.changeDate = value;
     }
 
