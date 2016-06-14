@@ -33,7 +33,7 @@ public class FetchArtifactTask extends Task {
     private String source;
     private String destination;
 
-    public FetchArtifactTask() throws Exception {
+    public FetchArtifactTask() {
         this.setType(TaskType.FETCH_ARTIFACT);
     }
 

@@ -19,7 +19,7 @@ public class WorkInfo {
     private ArrayList<MaterialDefinition> materials;
     private ArrayList<EnvironmentVariable> environmentVariables;
 
-    public WorkInfo() throws Exception {
+    public WorkInfo() {
         this.setEnvironmentVariables(new ArrayList<>());
     }
 

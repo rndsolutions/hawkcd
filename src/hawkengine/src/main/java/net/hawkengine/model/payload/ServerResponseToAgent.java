@@ -13,7 +13,7 @@ public class ServerResponseToAgent {
     private ArrayList<MaterialChange> materials;
     private ArrayList<EnvironmentVariable> environmentVariables;
 
-    public ServerResponseToAgent() throws Exception {
+    public ServerResponseToAgent() {
         this.setEnvironmentVariables(new ArrayList<>());
     }
 

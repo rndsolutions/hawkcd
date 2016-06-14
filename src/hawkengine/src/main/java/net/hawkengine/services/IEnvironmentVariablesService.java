@@ -14,12 +14,12 @@ import net.hawkengine.model.Task;
 
 public interface IEnvironmentVariablesService {
 	ArrayList<EnvironmentVariable> getOverriddenEnvironentVariables(
-			ArrayList<EnvironmentVariable>... environmentVariableCollections) throws Exception;
+			ArrayList<EnvironmentVariable>... environmentVariableCollections);
 
 	ArrayList<EnvironmentVariable> getPredifinedEnvironentVariables(Pipeline pipeline, Stage stage, JobDefinition job)
-			throws Exception;
+			;
 
 	void passEnvironmentVariablesToTask(Task task, ArrayList<EnvironmentVariable> environmentVariables)
-			throws Exception;
+			;
 
 }

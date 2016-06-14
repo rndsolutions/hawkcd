@@ -7,78 +7,78 @@ import net.hawkengine.model.*;
 
 public interface IConfigService {
 			
-	IDbRepository<Pipeline> getPipelineConfigRepository() throws Exception;
+	IDbRepository<Pipeline> getPipelineConfigRepository();
 
-	void setPipelineConfigRepository(IDbRepository<Pipeline> value) throws Exception;
+	void setPipelineConfigRepository(IDbRepository<Pipeline> value);
 
-	IDbRepository<Agent> getAgentConfigRepository() throws Exception;
+	IDbRepository<Agent> getAgentConfigRepository();
 
-	void setAgentConfigRepository(IDbRepository<Agent> value) throws Exception;
+	void setAgentConfigRepository(IDbRepository<Agent> value);
 
-	IDbRepository<Environment> getEnvironmentConfigRepository() throws Exception;
+	IDbRepository<Environment> getEnvironmentConfigRepository();
 
-	void setEnvironmentConfigRepository(IDbRepository<Environment> value) throws Exception;
+	void setEnvironmentConfigRepository(IDbRepository<Environment> value);
 
-	ArrayList<Pipeline> getAllPipelines() throws Exception;
+	ArrayList<Pipeline> getAllPipelines();
 
-	Pipeline getPipelineByName(String name) throws Exception;
+	Pipeline getPipelineByName(String name);
 
-	String addPipeline(Pipeline pipeline) throws Exception;
+	String addPipeline(Pipeline pipeline);
 
-	String deletePipeline(Pipeline pipeline) throws Exception;
+	String deletePipeline(Pipeline pipeline);
 
-	String updatePipeline(String pipelineName, Pipeline newPipeline) throws Exception;
+	String updatePipeline(String pipelineName, Pipeline newPipeline);
 
-	ArrayList<Pipeline> getPipelineUpstream(String pipelineName) throws Exception;
+	ArrayList<Pipeline> getPipelineUpstream(String pipelineName);
 
-	ArrayList<Pipeline> getPipelineDownstream(String pipelineName) throws Exception;
+	ArrayList<Pipeline> getPipelineDownstream(String pipelineName);
 
-	ArrayList<PipelineGroup> getAllPipelineGroups() throws Exception;
+	ArrayList<PipelineGroup> getAllPipelineGroups();
 
-	PipelineGroup getPipelineGroup(String pipelineGroupName) throws Exception;
+	PipelineGroup getPipelineGroup(String pipelineGroupName);
 
-	String addPipelineGroup(PipelineGroup pipelineGroup) throws Exception;
+	String addPipelineGroup(PipelineGroup pipelineGroup);
 
-	String deletePipelineGroup(String pipelineGroupName) throws Exception;
+	String deletePipelineGroup(String pipelineGroupName);
 
-	String updatePipelineGroup(String pipelineGroupName, PipelineGroup newPipelineGroup) throws Exception;
+	String updatePipelineGroup(String pipelineGroupName, PipelineGroup newPipelineGroup);
 
-	ArrayList<MaterialDefinition> getAllMaterials() throws Exception;
+	ArrayList<MaterialDefinition> getAllMaterials();
 
-	MaterialDefinition getMaterialByName(String pipelineName, String materialName) throws Exception;
+	MaterialDefinition getMaterialByName(String pipelineName, String materialName);
 
-	String addMaterial(String pipelineName, MaterialDefinition materialToAdd) throws Exception;
+	String addMaterial(String pipelineName, MaterialDefinition materialToAdd);
 
-	String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) throws Exception;
+	String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial);
 
-	String deleteMaterial(String pipelineName, String materialName) throws Exception;
+	String deleteMaterial(String pipelineName, String materialName);
 
-	ArrayList<Agent> getAllAgents() throws Exception;
+	ArrayList<Agent> getAllAgents();
 
-	Agent getAgentById(String Id) throws Exception;
+	Agent getAgentById(String Id);
 
-	String addAgent(Agent agent) throws Exception;
+	String addAgent(Agent agent);
 
-	String deleteAgent(Agent agent) throws Exception;
+	String deleteAgent(Agent agent);
 
-	String updateAgent(String agentId, Agent newAgent) throws Exception;
+	String updateAgent(String agentId, Agent newAgent);
 
-	Server getServer() throws Exception;
+	Server getServer();
 
-	Server getServerById(Object id) throws Exception;
+	Server getServerById(Object id);
 
-	String addServer(Server server) throws Exception;
+	String addServer(Server server);
 
-	String deleteServer(Server server) throws Exception;
+	String deleteServer(Server server);
 
-	String updateServer(String serverId, Server newServer) throws Exception;
+	String updateServer(String serverId, Server newServer);
 
-	ArrayList<Environment> getAllEnvironments() throws Exception;
+	ArrayList<Environment> getAllEnvironments();
 
-	String addEnvironment(Environment environment) throws Exception;
+	String addEnvironment(Environment environment);
 
-	String deleteEnvironment(Environment environment) throws Exception;
+	String deleteEnvironment(Environment environment);
 
-	String updateEnvironment(String agentId, Environment newEnvironment) throws Exception;
+	String updateEnvironment(String agentId, Environment newEnvironment);
 
 }

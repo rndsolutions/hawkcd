@@ -119,7 +119,7 @@ public class PipelineDefinitionServiceTests {
     }
 
     @Test
-    public void add_existingObject_null() throws Exception {
+    public void add_existingObject_null() {
         PipelineDefinition expectedResult = new PipelineDefinition();
         String expectedMessage = expectedResult.getClass().getSimpleName() + " " + expectedResult.getId() + " already exists.";
 
@@ -174,7 +174,7 @@ public class PipelineDefinitionServiceTests {
     }
 
     @Test
-    public void delete_nonexistentObject_false() throws Exception {
+    public void delete_nonexistentObject_false() {
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " not found.";
 

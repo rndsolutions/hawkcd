@@ -5,8 +5,8 @@
 package net.hawkengine.services;
 
 public interface ISecurityService {
-	String encrypt(String plainText) throws Exception;
+	String encrypt(String plainText);
 
-	String decrypt(String cipherText) throws Exception;
+	String decrypt(String cipherText);
 
 }

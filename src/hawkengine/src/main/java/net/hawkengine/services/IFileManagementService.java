@@ -5,16 +5,16 @@
 package net.hawkengine.services;
 
 public interface IFileManagementService {
-	String[] getFiles(String path) throws Exception;
+	String[] getFiles(String path);
 
-	String zipItems(String zipFileFullPath, String sourcePath) throws Exception;
+	String zipItems(String zipFileFullPath, String sourcePath);
 
-	String zipItems(String zipFilePath, String zipFileName, String sourcePath) throws Exception;
+	String zipItems(String zipFilePath, String zipFileName, String sourcePath);
 
-	String zipFilesAndPreserveStructure(String zipFileFullPath, String[] files, String root) throws Exception;
+	String zipFilesAndPreserveStructure(String zipFileFullPath, String[] files, String root);
 
-	void unzipFile(String zipFileFullPath, String unpackDirectory) throws Exception;
+	void unzipFile(String zipFileFullPath, String unpackDirectory);
 
-	double getCurrentDriveAvailableFreeSpaceInGb() throws Exception;
+	double getCurrentDriveAvailableFreeSpaceInGb();
 
 }

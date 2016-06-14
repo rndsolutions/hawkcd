@@ -12,13 +12,13 @@ public class RedisRepositoryTest {
 	private IDbRepository repository;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "test");
 		this.repository = new RedisRepository(DbEntry.class, mockedPool);
 	}
 
 	@Test
-	public void getById() throws Exception {
+	public void getById() {
 		//Arrange
 		DbEntry entry = new DbEntry();
 		this.repository.add(entry);
@@ -32,7 +32,7 @@ public class RedisRepositoryTest {
 	}
 
 	@Test
-	public void add() throws Exception {
+	public void add() {
 		//Arrange
 		DbEntry entry = new DbEntry();
 		String expectedResult = entry.getId();

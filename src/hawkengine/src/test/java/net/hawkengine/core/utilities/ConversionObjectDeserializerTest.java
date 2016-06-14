@@ -16,13 +16,13 @@ public class ConversionObjectDeserializerTest {
 	private ConversionObjectDeserializer deserializer;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		this.jsonConverter = new Gson();
 		this.deserializer = new ConversionObjectDeserializer();
 	}
 
 	@Test
-	public void deserialize_WithValidJson() throws Exception {
+	public void deserialize_WithValidJson() {
 		//Arrange
 		String jsonAsString = "{\n" +
 				"\"packageName\": \"testPackage\",\n" +

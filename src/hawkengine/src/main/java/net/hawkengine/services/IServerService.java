@@ -8,14 +8,14 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Server;
 
 public interface IServerService extends IDbRepository<Server> {
-	Server getServer() throws Exception;
+	Server getServer();
 
-	Server getServerById(Object id) throws Exception;
+	Server getServerById(Object id);
 
-	String addServer(Server server) throws Exception;
+	String addServer(Server server);
 
-	String deleteServer(Server server) throws Exception;
+	String deleteServer(Server server);
 
-	String updateServer(String serverId, Server newServer) throws Exception;
+	String updateServer(String serverId, Server newServer);
 
 }

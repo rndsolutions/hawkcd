@@ -10,8 +10,8 @@ import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.MaterialChange;
 
 public interface IMaterialChangeService {
-	ArrayList<MaterialChange> getAllMaterialChanges(MaterialDefinition material) throws Exception;
+	ArrayList<MaterialChange> getAllMaterialChanges(MaterialDefinition material);
 
-	MaterialChange getLatestMaterialChange(MaterialDefinition material) throws Exception;
+	MaterialChange getLatestMaterialChange(MaterialDefinition material);
 
 }

@@ -173,7 +173,7 @@ public class PipelinePreparerTest {
     }
 
     @Test
-    public void preparePipeline_withValidObject_object() throws Exception {
+    public void preparePipeline_withValidObject_object() {
         //Act
         List<Pipeline> actualResult = this.injectDataForTestingPreparePipeline();
 

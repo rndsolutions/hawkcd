@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import net.hawkengine.model.MaterialDefinition;
 
 public interface IMaterialService {
-	ArrayList<MaterialDefinition> getAllMaterials() throws Exception;
+	ArrayList<MaterialDefinition> getAllMaterials();
 
-	MaterialDefinition getMaterialByName(String pipelineName, String materialName) throws Exception;
+	MaterialDefinition getMaterialByName(String pipelineName, String materialName);
 
-	String addMaterial(String pipelineName, MaterialDefinition materialToAdd) throws Exception;
+	String addMaterial(String pipelineName, MaterialDefinition materialToAdd);
 
-	String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) throws Exception;
+	String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial);
 
-	String deleteMaterial(String pipelineName, String materialName) throws Exception;
+	String deleteMaterial(String pipelineName, String materialName);
 }

@@ -23,91 +23,91 @@ public class ConfigService implements IConfigService{
 	}
 	
 	@Override
-	public IDbRepository<Pipeline> getPipelineConfigRepository() throws Exception {
+	public IDbRepository<Pipeline> getPipelineConfigRepository() {
 		// TODO Auto-generated method stub
 		return null;				
 	}
 
 	@Override
-	public void setPipelineConfigRepository(IDbRepository<Pipeline> value) throws Exception {
+	public void setPipelineConfigRepository(IDbRepository<Pipeline> value) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public IDbRepository<Agent> getAgentConfigRepository() throws Exception {
+	public IDbRepository<Agent> getAgentConfigRepository() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setAgentConfigRepository(IDbRepository<Agent> value) throws Exception {
+	public void setAgentConfigRepository(IDbRepository<Agent> value) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public IDbRepository<Environment> getEnvironmentConfigRepository() throws Exception {
+	public IDbRepository<Environment> getEnvironmentConfigRepository() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setEnvironmentConfigRepository(IDbRepository<Environment> value) throws Exception {
+	public void setEnvironmentConfigRepository(IDbRepository<Environment> value) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public ArrayList<Pipeline> getAllPipelines() throws Exception {
+	public ArrayList<Pipeline> getAllPipelines() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Pipeline getPipelineByName(String name) throws Exception {
+	public Pipeline getPipelineByName(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addPipeline(Pipeline pipeline) throws Exception {
+	public String addPipeline(Pipeline pipeline) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deletePipeline(Pipeline pipeline) throws Exception {
+	public String deletePipeline(Pipeline pipeline) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updatePipeline(String pipelineName, Pipeline newPipeline) throws Exception {
+	public String updatePipeline(String pipelineName, Pipeline newPipeline) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Pipeline> getPipelineUpstream(String pipelineName) throws Exception {
+	public ArrayList<Pipeline> getPipelineUpstream(String pipelineName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Pipeline> getPipelineDownstream(String pipelineName) throws Exception {
+	public ArrayList<Pipeline> getPipelineDownstream(String pipelineName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<PipelineGroup> getAllPipelineGroups() throws Exception {
+	public ArrayList<PipelineGroup> getAllPipelineGroups() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PipelineGroup getPipelineGroup(String pipelineGroupName) throws Exception {
+	public PipelineGroup getPipelineGroup(String pipelineGroupName) {
 		
 		PipelineGroup g = new PipelineGroup();
 		g.setName("this mocked pipeline group");
@@ -116,133 +116,133 @@ public class ConfigService implements IConfigService{
 	}
 
 	@Override
-	public String addPipelineGroup(PipelineGroup pipelineGroup) throws Exception {
+	public String addPipelineGroup(PipelineGroup pipelineGroup) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deletePipelineGroup(String pipelineGroupName) throws Exception {
+	public String deletePipelineGroup(String pipelineGroupName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updatePipelineGroup(String pipelineGroupName, PipelineGroup newPipelineGroup) throws Exception {
+	public String updatePipelineGroup(String pipelineGroupName, PipelineGroup newPipelineGroup) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<MaterialDefinition> getAllMaterials() throws Exception {
+	public ArrayList<MaterialDefinition> getAllMaterials() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public MaterialDefinition getMaterialByName(String pipelineName, String materialName) throws Exception {
+	public MaterialDefinition getMaterialByName(String pipelineName, String materialName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addMaterial(String pipelineName, MaterialDefinition materialToAdd) throws Exception {
+	public String addMaterial(String pipelineName, MaterialDefinition materialToAdd) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) throws Exception {
+	public String updateMaterial(String pipelineName, String materialName, MaterialDefinition newMaterial) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deleteMaterial(String pipelineName, String materialName) throws Exception {
+	public String deleteMaterial(String pipelineName, String materialName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Agent> getAllAgents() throws Exception {
+	public ArrayList<Agent> getAllAgents() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Agent getAgentById(String Id) throws Exception {
+	public Agent getAgentById(String Id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addAgent(Agent agent) throws Exception {
+	public String addAgent(Agent agent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deleteAgent(Agent agent) throws Exception {
+	public String deleteAgent(Agent agent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updateAgent(String agentId, Agent newAgent) throws Exception {
+	public String updateAgent(String agentId, Agent newAgent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Server getServer() throws Exception {
+	public Server getServer() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Server getServerById(Object id) throws Exception {
+	public Server getServerById(Object id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addServer(Server server) throws Exception {
+	public String addServer(Server server) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deleteServer(Server server) throws Exception {
+	public String deleteServer(Server server) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updateServer(String serverId, Server newServer) throws Exception {
+	public String updateServer(String serverId, Server newServer) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Environment> getAllEnvironments() throws Exception {
+	public ArrayList<Environment> getAllEnvironments() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String addEnvironment(Environment environment) throws Exception {
+	public String addEnvironment(Environment environment) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String deleteEnvironment(Environment environment) throws Exception {
+	public String deleteEnvironment(Environment environment) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String updateEnvironment(String agentId, Environment newEnvironment) throws Exception {
+	public String updateEnvironment(String agentId, Environment newEnvironment) {
 		// TODO Auto-generated method stub
 		return null;
 	}

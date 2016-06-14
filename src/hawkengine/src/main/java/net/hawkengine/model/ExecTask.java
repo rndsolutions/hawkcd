@@ -7,7 +7,7 @@ public class ExecTask extends Task {
     private String workingDirectory;
     private boolean ignoreErrors;
 
-    public ExecTask() throws Exception {
+    public ExecTask() {
         this.setType(TaskType.EXEC);
     }
 

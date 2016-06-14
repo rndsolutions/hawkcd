@@ -16,7 +16,7 @@ public class WsContractDeserializerTests {
 	private WsContractDeserializer deserializer;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		this.jsonConverter = new Gson();
 		this.deserializer = new WsContractDeserializer();
 	}

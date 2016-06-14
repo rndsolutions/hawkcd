@@ -10,7 +10,7 @@ public class FetchMaterialTask extends Task {
     private String destination;
     private HashMap<String, Object> materialSpecificDetails;
 
-    public FetchMaterialTask() throws Exception {
+    public FetchMaterialTask() {
         this.setType(TaskType.FETCH_MATERIAL);
     }
 

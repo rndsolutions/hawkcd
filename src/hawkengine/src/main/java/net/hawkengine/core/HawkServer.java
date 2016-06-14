@@ -29,7 +29,7 @@ public class HawkServer {
         //bind(IConfigService.class).to(ConfigService.class);
     }
 
-    public void configureJetty() throws ServletException, DeploymentException {
+    public void configureJetty() {
 
         // HTTP connector
         ServerConnector connector = new ServerConnector(this.server);

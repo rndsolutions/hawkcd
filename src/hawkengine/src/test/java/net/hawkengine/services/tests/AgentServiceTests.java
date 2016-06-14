@@ -26,7 +26,7 @@ public class AgentServiceTests {
     private final String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testAgentService");
         IDbRepository<Agent> mockedRepository = new RedisRepository(Agent.class, mockedPool);
         this.mockedAgentService = new AgentService(mockedRepository);

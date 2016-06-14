@@ -4,7 +4,7 @@ public class UploadArtifactTask extends Task {
     private String source;
     private String destination;
 
-    public UploadArtifactTask() throws Exception {
+    public UploadArtifactTask() {
         this.setType(TaskType.UPLOAD_ARTIFACT);
     }
 

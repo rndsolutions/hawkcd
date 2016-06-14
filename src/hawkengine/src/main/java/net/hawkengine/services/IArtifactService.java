@@ -9,21 +9,21 @@ import java.util.List;
 import net.hawkengine.model.Pipeline;
 
 public interface IArtifactService {
-	String[] getFiles(String path) throws Exception;
+	String[] getFiles(String path);
 
-	String zipItems(String zipFileFullPath, String sourcePath) throws Exception;
+	String zipItems(String zipFileFullPath, String sourcePath);
 
-	String zipItems(String zipFilePath, String zipFileName, String sourcePath) throws Exception;
+	String zipItems(String zipFilePath, String zipFileName, String sourcePath);
 
-	String zipFilesAndPreserveStructure(String zipFileFullPath, String[] files, String root) throws Exception;
+	String zipFilesAndPreserveStructure(String zipFileFullPath, String[] files, String root);
 
-	void unzipFile(String zipFileFullPath, String unpackDirectory) throws Exception;
+	void unzipFile(String zipFileFullPath, String unpackDirectory);
 
-	String resolvePath(String... args) throws Exception;
+	String resolvePath(String... args);
 
 	String listArtifacts(String pipelineName, String pipelineId, String stageName, String stageId, String jobName)
-			throws Exception;
+			;
 
-	void purgeArtifacts(List<Pipeline> pipelines, Double freeSpaceNeeded) throws Exception;
+	void purgeArtifacts(List<Pipeline> pipelines, Double freeSpaceNeeded);
 
 }
