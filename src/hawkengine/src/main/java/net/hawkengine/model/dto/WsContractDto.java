@@ -5,7 +5,7 @@ public class WsContractDto {
 	private String packageName;
 	private String methodName;
 	private Object result;
-	private String error;
+	private boolean error;
 	private String errorMessage;
 	private ConversionObject[] args;
 
@@ -41,14 +41,6 @@ public class WsContractDto {
 		this.result = result;
 	}
 
-	public String getError() {
-		return error;
-	}
-
-	public void setError(String error) {
-		this.error = error;
-	}
-
 	public String getErrorMessage() {
 		return errorMessage;
 	}
@@ -63,6 +55,14 @@ public class WsContractDto {
 
 	public void setArgs(ConversionObject[] args) {
 		this.args = args;
+	}
+
+	public boolean isError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
 	}
 }
 

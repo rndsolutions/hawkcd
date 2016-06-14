@@ -13,11 +13,11 @@ angular
                     break;
                 case "GetAllPipelineDefs":
                     break;
-                case "getAgentById":
+                case "getById":
                     agentService.updatewsAgent(data);
                     console.log(data);
                     break;
-                case "getAllAgents":
+                case "getAll":
                     viewModel.updateAgents(data);
                     console.log(data);
                     break;
