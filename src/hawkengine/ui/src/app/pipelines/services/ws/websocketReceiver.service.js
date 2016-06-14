@@ -2,38 +2,33 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'toaster', 'invokerService',
-        function (pipeStatsService, agentService, viewModel, toaster, invokerService) {
-            var websocketReceiverService = this;
+    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', function (pipeStatsService, agentService, viewModel) {
+        var webSocketReceiverService = this;
 
-            this.processEvent = function (data) {
-                console.log(data);
-                invokerService(data, dispatcher);
-            };
+        webSocketReceiverService.processEvent = function (data) {
+            invoker(data, dispatcher);
+        };
 
-            var dispatcher = {
-                AgentService: {
-                    getById: function (data) {
-                        agentService.updatewsAgent(data)
-                    },
-                    getAll: function (data) {
-                        viewModel.updateAgents(data);
-                    },
-                    setAgentConfigState: function (data) {
-                        viewModel.updateAgentStatus(data);
-                    }
+        var invoker = function (obj, dispatcher) {
+            var className = obj['className'];
+            var methodName = obj['methodName'];
+            dispatcher[className][methodName](obj.result);
+        };
+
+        var dispatcher = {
+            AgentService: {
+                getById: function (data) {
+                    agentService.updatewsAgent(data);
                 },
-                Pipeline: {
-                    getById: function () {
-                        console.log('Pipeline : getAll');
-                    },
-                    getAll: function () {
-                        console.log('Pipeline : getAll');
-                    }
+                getAll: function (data) {
+                    viewModel.updateAgents(data);
+                },
+                setAgentConfigState: function (data) {
+                    viewModel.updateAgentStatus(data);
                 }
-            };
+            }
+        };
 
-            return websocketReceiverService;
+        return webSocketReceiverService;
 
-        }]);
-
+    }]);
