@@ -20,19 +20,19 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings({"unchecked", "PackageVisibleField", "InstanceMethodNamingConvention"})
 public class PipelinePreparerTest {
-    private IPipelineService pipelineService;
-    private IPipelineDefinitionService pipelineDefinitionService;
+    private IPipelineService mockedPipelineService;
+    private IPipelineDefinitionService mockedPipelineDefinitionService;
     @SuppressWarnings("InstanceVariableOfConcreteClass")
-    private PipelinePreparer pipelinePreparer;
+    private PipelinePreparer mockedPipelinePreparer;
 
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineService");
-        IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
-        IDbRepository pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.pipelineService = new PipelineService(pipelineRepo);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo);
-        this.pipelinePreparer = new PipelinePreparer(this.pipelineService, this.pipelineDefinitionService);
+        IDbRepository mockedPipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
+        IDbRepository mockedPipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.mockedPipelineService = new PipelineService(mockedPipelineRepo);
+        this.mockedPipelineDefinitionService = new PipelineDefinitionService(mockedPipelineDefinitionRepo);
+        this.mockedPipelinePreparer = new PipelinePreparer(this.mockedPipelineService, this.mockedPipelineDefinitionService);
     }
 
     @Test
@@ -54,15 +54,15 @@ public class PipelinePreparerTest {
         fourthExpectedResult.setAreMaterialsUpdated(true);
         fourthExpectedResult.setStatus(Status.IN_PROGRESS);
 
-        this.pipelineService.add(firstExpectedResult);
-        this.pipelineService.add(secondExpectedResult);
-        this.pipelineService.add(thirdExpectedResult);
-        this.pipelineService.add(fourthExpectedResult);
+        this.mockedPipelineService.add(firstExpectedResult);
+        this.mockedPipelineService.add(secondExpectedResult);
+        this.mockedPipelineService.add(thirdExpectedResult);
+        this.mockedPipelineService.add(fourthExpectedResult);
 
         int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_THREE_OBJECTS;
 
         //Act
-        List<Pipeline> actualResult = this.pipelinePreparer.getAllUpdatedPipelines().stream()
+        List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines().stream()
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -105,13 +105,38 @@ public class PipelinePreparerTest {
         secondExpectedResult.setAreMaterialsUpdated(false);
         secondExpectedResult.setStatus(Status.IN_PROGRESS);
 
-        this.pipelineService.add(firstExpectedResult);
-        this.pipelineService.add(secondExpectedResult);
+        this.mockedPipelineService.add(firstExpectedResult);
+        this.mockedPipelineService.add(secondExpectedResult);
 
         int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
 
         //Act
-        List<Pipeline> actualResult = this.pipelinePreparer.getAllUpdatedPipelines();
+        List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
+
+        //Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(firstExpectedResult.getId(), actualResult.get(0).getId());
+    }
+
+    @Test
+    public void getAllPreparedPipelines_withOneIsPrepared_oneObject() {
+        //Arrange
+        Pipeline firstExpectedResult = new Pipeline();
+        firstExpectedResult.setAreMaterialsUpdated(true);
+        firstExpectedResult.setStatus(Status.IN_PROGRESS);
+
+        Pipeline secondExpectedResult = new Pipeline();
+        secondExpectedResult.setAreMaterialsUpdated(true);
+        secondExpectedResult.setPrepared(true);
+        secondExpectedResult.setStatus(Status.IN_PROGRESS);
+
+        this.mockedPipelineService.add(firstExpectedResult);
+        this.mockedPipelineService.add(secondExpectedResult);
+
+        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+
+        //Act
+        List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
 
         //Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -133,14 +158,14 @@ public class PipelinePreparerTest {
         thirdExpectedResult.setAreMaterialsUpdated(true);
         thirdExpectedResult.setStatus(Status.FAILED);
 
-        this.pipelineService.add(firstExpectedResult);
-        this.pipelineService.add(secondExpectedResult);
-        this.pipelineService.add(thirdExpectedResult);
+        this.mockedPipelineService.add(firstExpectedResult);
+        this.mockedPipelineService.add(secondExpectedResult);
+        this.mockedPipelineService.add(thirdExpectedResult);
 
         int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
 
         //Act
-        List<Pipeline> actualResult = this.pipelinePreparer.getAllUpdatedPipelines();
+        List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
 
         //Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -154,7 +179,7 @@ public class PipelinePreparerTest {
 
         //Assert
         for (Pipeline actualResultObject : actualResult) {
-            Pipeline preparedPipeline = this.pipelinePreparer.preparePipeline(actualResultObject);
+            Pipeline preparedPipeline = this.mockedPipelinePreparer.preparePipeline(actualResultObject);
             Assert.assertEquals(preparedPipeline.isPrepared(), true);
             Assert.assertNotNull(preparedPipeline.getJobsForExecution());
             Assert.assertNotNull(preparedPipeline.getEnvironmentVariables());
@@ -163,8 +188,8 @@ public class PipelinePreparerTest {
 
     private List<Pipeline> injectDataForTestingPreparePipeline() {
         //Assert
-        ArrayList<StageDefinition> stages = new ArrayList<>();
-        ArrayList<JobDefinition> jobDefinitions = new ArrayList<>();
+        List<StageDefinition> stages = new ArrayList<>();
+        List<JobDefinition> jobDefinitions = new ArrayList<>();
 
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
 
@@ -172,7 +197,7 @@ public class PipelinePreparerTest {
         jobDefinitions.add(new JobDefinition());
         stages.get(0).setJobDefinitions(jobDefinitions);
         pipelineDefinition.setStageDefinitions(stages);
-        this.pipelineDefinitionService.add(pipelineDefinition);
+        this.mockedPipelineDefinitionService.add(pipelineDefinition);
 
         Pipeline firstPipeline = new Pipeline();
         firstPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
@@ -184,14 +209,17 @@ public class PipelinePreparerTest {
         secondPipeline.setAreMaterialsUpdated(true);
         secondPipeline.setStatus(Status.IN_PROGRESS);
 
-        this.pipelineService.add(firstPipeline);
-        this.pipelineService.add(secondPipeline);
+        this.mockedPipelineService.add(firstPipeline);
+        this.mockedPipelineService.add(secondPipeline);
 
-        ServiceResult serviceResult = this.pipelineService.getAll();
+        ServiceResult serviceResult = this.mockedPipelineService.getAll();
         List<Pipeline> actualObjects = (List<Pipeline>) serviceResult.getObject();
 
-        return actualObjects.stream()
+        actualObjects
+                .stream()
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
+
+        return  actualObjects;
     }
 }
