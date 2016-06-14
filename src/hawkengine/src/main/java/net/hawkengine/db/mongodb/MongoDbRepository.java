@@ -14,9 +14,9 @@ import java.util.List;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
-    DB mongoDatabase;
-    DBCollection collection;
-    Type entryType;
+    private DB mongoDatabase;
+    private DBCollection collection;
+    private Type entryType;
 
     private Gson jsonConverter;
 

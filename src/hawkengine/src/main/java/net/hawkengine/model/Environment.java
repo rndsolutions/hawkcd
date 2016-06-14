@@ -9,7 +9,7 @@ public class Environment extends DbEntry {
 	private ArrayList<Agent> agents;
 
     public Environment() {
-        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+        this.setEnvironmentVariables(new ArrayList<>());
     }
 
     public String getEnvironmentName() {

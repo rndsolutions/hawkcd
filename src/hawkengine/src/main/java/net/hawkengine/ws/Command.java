@@ -5,9 +5,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class Command {
-	final Object object;
-	final String methodName;
-	final List<Object> methodArgs;
+	private final Object object;
+	private final String methodName;
+	private final List<Object> methodArgs;
 
 	public Command(Object object, String methodName, List<Object> methodArgs) {
 		this.object = object;

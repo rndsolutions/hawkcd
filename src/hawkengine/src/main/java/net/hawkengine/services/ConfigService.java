@@ -12,7 +12,7 @@ import net.hawkengine.model.Server;
 
 public class ConfigService implements IConfigService{
 	
-	IDbRepository<Pipeline> repository;
+	private IDbRepository<Pipeline> repository;
 	
 	public ConfigService() {
 		// TODO Auto-generated constructor stub

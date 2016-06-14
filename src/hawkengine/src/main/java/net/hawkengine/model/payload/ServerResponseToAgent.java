@@ -10,7 +10,7 @@ import net.hawkengine.model.*;
 
 public class ServerResponseToAgent {
 	public ServerResponseToAgent() throws Exception {
-		this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+		this.setEnvironmentVariables(new ArrayList<>());
 	}
 
 	private Pipeline __Pipeline;

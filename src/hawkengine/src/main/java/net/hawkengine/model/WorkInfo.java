@@ -20,7 +20,7 @@ public class WorkInfo {
     private ArrayList<EnvironmentVariable> environmentVariables;
 
     public WorkInfo() throws Exception {
-        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+        this.setEnvironmentVariables(new ArrayList<>());
     }
 
     public UUID getPipelineId() {

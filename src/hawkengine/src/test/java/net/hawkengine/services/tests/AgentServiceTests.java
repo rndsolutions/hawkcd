@@ -14,15 +14,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import redis.clients.jedis.JedisPoolConfig;
 
 public class AgentServiceTests {
 
-    IDbRepository<Agent> mockedRepository;
-    IAgentService mockedAgentService;
-    String expectedEnabledAgentMessage = "All enabled Agents retrieved successfully.";
-    String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
+    private IDbRepository<Agent> mockedRepository;
+    private IAgentService mockedAgentService;
+    private String expectedEnabledAgentMessage = "All enabled Agents retrieved successfully.";
+    private String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
 
     @Before
     public void setUp() throws Exception {
@@ -86,9 +87,9 @@ public class AgentServiceTests {
         int expectedCollectionSize = 1;
 
         ServiceResult actualResult = this.mockedAgentService.getAllEnabledIdleAgents();
-        List<Agent> actualResultObject = (List<Agent>) actualResult.getObject();
-        int actualCollectionSize = actualResultObject.size();
-        Agent actualAgent = actualResultObject.get(0);
+        AtomicReference<List<Agent>> actualResultObject = new AtomicReference<>((List<Agent>) actualResult.getObject());
+        int actualCollectionSize = actualResultObject.get().size();
+        Agent actualAgent = actualResultObject.get().get(0);
 
         Assert.assertFalse(actualResult.hasError());
         Assert.assertEquals(this.expectedEnabledIdleMessage, actualResult.getMessage());
