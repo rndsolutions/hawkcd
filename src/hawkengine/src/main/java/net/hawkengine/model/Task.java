@@ -3,7 +3,7 @@ package net.hawkengine.model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public abstract class Task {
+public abstract class Task extends DbEntry{
     private String taskDefinitionId;
     private String jobId;
     private RunIf runIfCondition;

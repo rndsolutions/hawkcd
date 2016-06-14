@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stage {
+public class Stage extends DbEntry{
     private String stageDefinitionId;
     private String pipelineId;
     private int executionId;
