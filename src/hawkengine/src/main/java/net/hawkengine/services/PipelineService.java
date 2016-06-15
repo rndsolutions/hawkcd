@@ -4,7 +4,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Status;
+import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         ServiceResult result = new ServiceResult();
         result.setObject(pipelines);
-        result.setMessage("Updated" + this.objectType + "s retrieved successfully.");
+        result.setMessage("Updated" + this.getObjectType() + "s retrieved successfully.");
 
         return result;
     }
@@ -72,7 +72,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         ServiceResult result = new ServiceResult();
         result.setObject(pipelines);
-        result.setMessage("Prepared" + this.objectType + "s retrieved successfully.");
+        result.setMessage("Prepared" + this.getObjectType() + "s retrieved successfully.");
 
         return result;
     }
