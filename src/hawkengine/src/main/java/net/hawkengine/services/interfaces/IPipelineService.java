@@ -2,7 +2,6 @@ package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.interfaces.ICrudService;
 
 public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getById(String pipelineId);
@@ -14,4 +13,8 @@ public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult update(Pipeline pipeline);
 
     ServiceResult delete(String pipelineId);
+
+    ServiceResult getAllUpdatedPipelines();
+
+    ServiceResult getAllPreparedPipelines();
 }
