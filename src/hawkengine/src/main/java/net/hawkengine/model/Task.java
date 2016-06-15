@@ -7,7 +7,7 @@ import net.hawkengine.model.enums.TaskType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public abstract class Task {
+public class Task {
     private TaskDefinition taskDefinition;
     private String jobId;
     private RunIf runIfCondition;
@@ -18,7 +18,7 @@ public abstract class Task {
     private LocalDateTime endTime;
     private Duration duration;
 
-    protected Task() {
+    public Task() {
         this.startTime = LocalDateTime.now();
     }
 
