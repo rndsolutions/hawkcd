@@ -8,9 +8,6 @@ import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.enums.TaskType;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -89,7 +86,7 @@ public class SchemaValidator {
     public String validate(StageDefinition stageDefinition){
         if(stageDefinition != null){
             String stageDefinitionName = stageDefinition.getName();
-            String stageDefinitionPipelineId = stageDefinition.getPipelineDefinitionId();
+         //   String stageDefinitionPipelineId = stageDefinition.getPipelineDefinitionId();
             //int enviromentVariables = stageDefinition.getEnvironmentVariables().size();
             int jobDefinitions = stageDefinition.getJobDefinitions().size();
             if (stageDefinitionName == null){
@@ -99,12 +96,12 @@ public class SchemaValidator {
             if (this.isValidRegEx(stageDefinitionName,NAME_PATTERN) == false) {
                 return this.message = "ERROR: STAGE DEFINITION NAME IS INVALID.";
             }
-            if (stageDefinitionPipelineId == null){
-                return this.message = "ERROR: PIPELINE DEFINITION ID IS NULL.";
-            }
+         //   if (stageDefinitionPipelineId == null){
+           //     return this.message = "ERROR: PIPELINE STAGE DEFINITION ID IS NULL.";
+           // }
 
             if (jobDefinitions <= 0) {
-                return this.message = "ERROR: JOB NOT ADDED.";
+                return this.message = "ERROR: STAGE DEFINITION JOB NOT ADDED.";
             }
 
         }else {
