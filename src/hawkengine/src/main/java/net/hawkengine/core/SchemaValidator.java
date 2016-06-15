@@ -3,13 +3,14 @@ package net.hawkengine.core;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.MaterialType;
+import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.TaskType;
+import net.hawkengine.model.enums.TaskType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,12 +50,6 @@ public class SchemaValidator {
     public String validate(PipelineDefinition pipelineDefinition){
         if (pipelineDefinition != null){
             String pipelineDefinitionName = pipelineDefinition.getName();
-            String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
-            int pipelineMaterial = pipelineDefinition.getMaterials().size();
-            //int environmentVariables = pipelineDefinition.getEnvironmentVariables().size();
-            //int environments = pipelineDefinition.getEnvironments().size();
-            int stageDefinitions = pipelineDefinition.getStageDefinitions().size();
-
             if (pipelineDefinitionName == null){
                 return this.message = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
             }
@@ -63,16 +58,25 @@ public class SchemaValidator {
                 return this.message = "ERROR: PIPELINE DEFINITION NAME IS INVALID.";
             }
 
+            String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
             if (pipelineGroupId == null) {
                 return this.message = "ERROR: PIPELINE GROUP ID IS NULL.";
             }
 
-            if (pipelineMaterial <= 0) {
-                return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
+            int stageDefinitionSize = pipelineDefinition.getStageDefinitions().size();
+            if (stageDefinitionSize <= 0) {
+                return this.message = "ERROR: STAGE NOT ADDED.";
+            }else {
+                List<StageDefinition> stageDefinition = pipelineDefinition.getStageDefinitions();
+                stageDefinition.forEach(this::validate);
             }
 
-            if (stageDefinitions <= 0) {
-                return this.message = "ERROR: STAGE NOT ADDED.";
+            int pipelineMaterial = pipelineDefinition.getMaterials().size();
+            if (pipelineMaterial <= 0) {
+                return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
+            }else {
+                List<MaterialDefinition> materials = pipelineDefinition.getMaterials();
+                materials.forEach(this::validate);
             }
 
         } else {
@@ -177,8 +181,6 @@ public class SchemaValidator {
         return this.message;
     }
 
-
-
     //AGENT
     public String validate(Agent agent){
         if (agent != null){
@@ -186,7 +188,7 @@ public class SchemaValidator {
             String hostname = agent.getHostName();
             String ipAdress = agent.getIpAddress();
             String rootPath = agent.getRootPath();
-            String os = agent.getOs();
+            String os = agent.getOperatingSystem();
             Object environment = agent.getEnvironment();
             if (agentName == null){
                 return this.message = "ERROR: AGENT NAME IS NULL.";
