@@ -1,32 +1,29 @@
 package net.hawkengine.db.redis;
 
 import com.google.gson.Gson;
-
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.DbEntry;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
-
 public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     private Type type;
     private String entryNamespace;
     private String idNamespace;
-    private JedisPool jedisPool;
     private Gson jsonConverter;
+    private JedisPool jedisPool;
 
     public RedisRepository(Class<T> type) {
         this.type = type;
         this.entryNamespace = String.format("%s:%s", "Entries", type.getSimpleName());
         this.idNamespace = String.format("%s:%s", "Ids", type.getSimpleName());
-        this.jedisPool = RedisManager.getPool();
         this.jsonConverter = new Gson();
+        this.jedisPool = RedisManager.getJedisPool();
 
     }
 

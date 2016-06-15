@@ -7,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/stats")
 public class Stats {
-
 	@GET
 	@Path("test")
 	@Produces(MediaType.TEXT_PLAIN)

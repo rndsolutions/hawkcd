@@ -3,8 +3,6 @@ package net.hawkengine.services;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
-import net.hawkengine.model.AgentExecutionState;
-import net.hawkengine.model.enums.ConfigState;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.interfaces.IAgentService;
 
@@ -13,13 +11,13 @@ import java.util.stream.Collectors;
 
 public class AgentService extends CrudService<Agent> implements IAgentService {
     public AgentService() {
-        super.repository = new RedisRepository(Agent.class);
-        super.objectType = "Agent";
+        super.setRepository(new RedisRepository(Agent.class));
+        super.setObjectType("Agent");
     }
 
     public AgentService(IDbRepository repository) {
-        super.repository = repository;
-        super.objectType = "Agent";
+        super.setRepository(repository);
+        super.setObjectType("Agent");
     }
 
     @Override
@@ -59,12 +57,12 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         List<Agent> agents = (List<Agent>) super.getAll().getObject();
         agents = agents
                 .stream()
-                .filter(a -> a.isEnabled())
+                .filter(Agent::isEnabled)
                 .collect(Collectors.toList());
 
         ServiceResult result = new ServiceResult();
         result.setError(false);
-        result.setMessage("All enabled " + super.objectType + "s retrieved successfully.");
+        result.setMessage("All enabled " + super.getObjectType() + "s retrieved successfully.");
         result.setObject(agents);
 
         return result;
@@ -87,7 +85,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
         ServiceResult result = new ServiceResult();
         result.setError(false);
-        result.setMessage("All enabled idle " + super.objectType + "s retrieved successfully.");
+        result.setMessage("All enabled idle " + super.getObjectType() + "s retrieved successfully.");
         result.setObject(agents);
 
         return result;

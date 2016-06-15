@@ -5,6 +5,7 @@ import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -59,7 +60,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(thirdExpectedResult);
         this.mockedPipelineService.add(fourthExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_THREE_OBJECTS;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_THREE_OBJECTS;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines().stream()
@@ -108,7 +109,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(firstExpectedResult);
         this.mockedPipelineService.add(secondExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
@@ -133,7 +134,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(firstExpectedResult);
         this.mockedPipelineService.add(secondExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
@@ -162,7 +163,7 @@ public class PipelinePreparerTest {
         this.mockedPipelineService.add(secondExpectedResult);
         this.mockedPipelineService.add(thirdExpectedResult);
 
-        int expectedCollectionSize = TestsConstants.PIPELINE_PREPARER_TESTS_ONE_OBJECT;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         //Act
         List<Pipeline> actualResult = this.mockedPipelinePreparer.getAllUpdatedPipelines();
@@ -173,7 +174,7 @@ public class PipelinePreparerTest {
     }
 
     @Test
-    public void preparePipeline_withValidObject_object() throws Exception {
+    public void preparePipeline_withValidObject_object() {
         //Act
         List<Pipeline> actualResult = this.injectDataForTestingPreparePipeline();
 
@@ -220,6 +221,6 @@ public class PipelinePreparerTest {
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
-        return  actualObjects;
+        return actualObjects;
     }
 }

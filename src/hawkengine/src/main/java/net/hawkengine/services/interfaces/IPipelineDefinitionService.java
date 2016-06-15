@@ -6,7 +6,6 @@ package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.interfaces.ICrudService;
 
 public interface IPipelineDefinitionService extends ICrudService<PipelineDefinition> {
     @Override
