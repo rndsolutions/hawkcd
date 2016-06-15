@@ -1,10 +1,12 @@
-package net.hawkengine.core.components.jobassigner;
+package net.hawkengine.core.components.pipelinescheduler;
 
 import net.hawkengine.core.components.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IAgentService;
@@ -40,19 +42,26 @@ public class JobAssigner extends Thread {
     public void run() {
         try {
             while (true) {
+                // TODO: call getAllWorkingIdleAgents
                 List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
-                // TODO: Filter agents or write method
-
                 List<Pipeline> pipelines = 
                         (List<Pipeline>) this.pipelineService.getAllPreparedPipelines().getObject();
 
+                // TODO: Replace iterations with call to JobService
                 for (Pipeline pipeline : pipelines) {
-                    for (Pipeline pipeline1 : pipeline.getJ) {
-                        
+                    for (Stage stage : pipeline.getStages()) {
+                        for (Job job : stage.getJobs()) {
+                            if (job.getStatus() == JobStatus.AWAITING) {
+                                // TODO: Assign Agent to Job method
+                            } else if (job.getStatus() == JobStatus.SCHEDULED) {
+                                // TODO: Check if Agent is still eligible method
+                                if (!true) {
+                                    // TODO: Assign Agent to Job method
+                                }
+                            }
+                        }
                     }
                 }
-
-
 
                 Thread.sleep(4 * 1000);
             }
