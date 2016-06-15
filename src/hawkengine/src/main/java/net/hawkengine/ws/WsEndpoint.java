@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.dto.WsContractDto;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
@@ -54,18 +55,18 @@ public class WsEndpoint extends WebSocketAdapter {
             contract = this.resolve(message);
             if (contract == null) {
                 contract = new WsContractDto();
-                contract.setError("Contract Failed");
+				contract.setError(true);
                 contract.setErrorMessage("Invalid Json was provided");
                 remoteEndpoint.sendString(serializer.toJson(contract));
                 return;
             }
 
-            Object result = this.call(contract);
-            if ((result.getClass() != String.class) || !result.toString().isEmpty()) {
-                contract.setResult(result);
+			ServiceResult result = (ServiceResult) this.call(contract);
+			if (result.getObject().getClass() != String.class || result.getObject().toString().length() != 0) {
+				contract.setResult(result.getObject());
             } else {
-                contract.setError("Contract Failed");
-                contract.setErrorMessage(result.toString());
+				contract.setError(result.hasError());
+				contract.setErrorMessage(result.getMessage());
             }
 
             String jsonResult = serializer.toJson(contract);
@@ -125,7 +126,7 @@ public class WsEndpoint extends WebSocketAdapter {
     }
 
     private void errorDetails(WsContractDto contract, Gson serializer, Exception e, RemoteEndpoint endPoint) {
-        contract.setError(e.getClass().getName());
+		contract.setError(true);
         contract.setErrorMessage(e.getMessage());
         try {
             String errDetails = serializer.toJson(contract);
