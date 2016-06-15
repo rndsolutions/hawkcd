@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.MaterialType;
+
 import java.util.HashMap;
 
 @SuppressWarnings("UnqualifiedFieldAccess")
@@ -61,5 +63,4 @@ public class MaterialDefinition {
     public void setMaterialSpecificDetails(HashMap<String, Object> value) {
         this.materialSpecificDetails = value;
     }
-
 }

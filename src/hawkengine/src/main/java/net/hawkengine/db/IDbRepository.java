@@ -10,9 +10,9 @@ public interface IDbRepository<T extends DbEntry> {
 
     List<T> getAll();
 
-	T add(T entry);
+    T add(T entry);
 
     T update(T entry);
 
-	boolean delete(String id);
+    boolean delete(String id);
 }

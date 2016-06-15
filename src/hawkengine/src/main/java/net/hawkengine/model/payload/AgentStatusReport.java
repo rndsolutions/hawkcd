@@ -28,5 +28,4 @@ public class AgentStatusReport {
     public void setEnvironmentInfo(EnvironmentInfo value) {
         this.anvironmentInfo = value;
     }
-
 }

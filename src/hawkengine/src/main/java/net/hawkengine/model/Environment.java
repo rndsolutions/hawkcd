@@ -6,7 +6,7 @@ public class Environment extends DbEntry {
     private String environmentName;
     private ArrayList<EnvironmentVariable> environmentVariables;
     private ArrayList<String> pipelineNames;
-	private ArrayList<Agent> agents;
+    private ArrayList<Agent> agents;
 
     public Environment() {
         this.setEnvironmentVariables(new ArrayList<>());

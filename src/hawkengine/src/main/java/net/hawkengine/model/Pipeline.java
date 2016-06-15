@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.Status;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

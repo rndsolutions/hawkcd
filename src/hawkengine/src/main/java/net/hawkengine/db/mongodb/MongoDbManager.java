@@ -14,7 +14,7 @@ public final class MongoDbManager {
         this.initDatabase();
     }
 
-    public static synchronized  MongoDbManager getInstance() {
+    public static synchronized MongoDbManager getInstance() {
 
         if (ourInstance == null) {
             ourInstance = new MongoDbManager();

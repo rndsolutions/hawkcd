@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.MaterialType;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -63,12 +65,10 @@ public class MaterialChange extends DbEntry {
         try {
             return String.format(" ID={0} PipelineName={1} MaterialName={2} ChangeDate={3}", this.getId(),
                     this.getPipelineName(), this.getMaterialName(), this.getChangeDate());
-        } catch (RuntimeException dummyCatchVar0) {
-            throw dummyCatchVar0;
-        } catch (Exception __dummyCatchVar0) {
-            throw new RuntimeException(__dummyCatchVar0);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
     }
-
 }

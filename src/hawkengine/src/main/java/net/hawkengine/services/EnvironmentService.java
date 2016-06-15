@@ -18,22 +18,22 @@ public class EnvironmentService extends CrudService<Environment> implements IEnv
     }
 
     @Override
-    public ServiceResult getAllEnvironments() {
+    public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    public ServiceResult addEnvironment(Environment environment) {
+    public ServiceResult add(Environment environment) {
         return super.add(environment);
     }
 
     @Override
-    public ServiceResult deleteEnvironment(String environmentId) {
+    public ServiceResult delete(String environmentId) {
         return super.delete(environmentId);
     }
 
     @Override
-    public ServiceResult updateEnvironment(Environment environment) {
+    public ServiceResult update(Environment environment) {
         return super.update(environment);
     }
 }

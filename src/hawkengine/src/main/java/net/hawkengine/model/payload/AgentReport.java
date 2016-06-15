@@ -1,7 +1,3 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model.payload;
 
 public class AgentReport {
@@ -32,5 +28,4 @@ public class AgentReport {
     public void setJobExecutionInfo(JobExecutionInfo value) {
         this.jobExecutionInfo = value;
     }
-
 }

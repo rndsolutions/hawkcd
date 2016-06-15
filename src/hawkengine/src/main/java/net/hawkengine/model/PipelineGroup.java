@@ -21,5 +21,4 @@ public class PipelineGroup extends DbEntry {
     public void setPipelines(ArrayList<Pipeline> value) {
         this.pipelines = value;
     }
-
 }

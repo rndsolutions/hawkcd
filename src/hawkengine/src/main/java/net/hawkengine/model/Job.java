@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.JobStatus;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,10 +9,11 @@ import java.util.List;
 
 public class Job {
     private String jobDefinitionId;
+    private String pipelineId;
     private String stageId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
-    private List<JobDefinition> jobs;
+    private List<Task> tasks;
     private JobStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -19,7 +22,7 @@ public class Job {
     public Job() {
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
-        this.setJobs(new ArrayList<>());
+        this.setTasks(new ArrayList<>());
     }
 
     public String getJobDefinitionId() {
@@ -28,6 +31,22 @@ public class Job {
 
     public void setJobDefinitionId(String jobDefinitionId) {
         this.jobDefinitionId = jobDefinitionId;
+    }
+
+    public String getPipelineId() {
+        return this.pipelineId;
+    }
+
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
+    }
+
+    public String getStageId() {
+        return this.stageId;
+    }
+
+    public void setStageId(String stageId) {
+        this.stageId = stageId;
     }
 
     public int getExecutionId() {
@@ -46,12 +65,12 @@ public class Job {
         this.environmentVariables = environmentVariables;
     }
 
-    public List<JobDefinition> getJobs() {
-        return this.jobs;
+    public List<Task> getTasks() {
+        return this.tasks;
     }
 
-    public void setJobs(List<JobDefinition> jobs) {
-        this.jobs = jobs;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public JobStatus getStatus() {

@@ -1,6 +1,4 @@
-package net.hawkengine.model;
-
-//To Be Deleted
+package net.hawkengine.model.enums;
 
 public enum AgentExecutionState {
     IDLE,

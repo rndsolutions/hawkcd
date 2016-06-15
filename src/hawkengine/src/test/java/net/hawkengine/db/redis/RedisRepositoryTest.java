@@ -9,40 +9,40 @@ import org.junit.Test;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisRepositoryTest {
-	private IDbRepository repository;
+    private IDbRepository repository;
 
-	@Before
-	public void setUp() {
-		MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "test");
-		this.repository = new RedisRepository(DbEntry.class, mockedPool);
-	}
+    @Before
+    public void setUp() {
+        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "test");
+        this.repository = new RedisRepository(DbEntry.class, mockedPool);
+    }
 
-	@Test
-	public void getById() {
-		//Arrange
-		DbEntry entry = new DbEntry();
-		this.repository.add(entry);
-		String expectedResult = entry.getId();
+    @Test
+    public void getById() {
+        //Arrange
+        DbEntry entry = new DbEntry();
+        this.repository.add(entry);
+        String expectedResult = entry.getId();
 
-		//Act
-		String actualResult = this.repository.getById(entry.getId()).getId();
+        //Act
+        String actualResult = this.repository.getById(entry.getId()).getId();
 
-		//Assert
-		Assert.assertEquals(expectedResult, actualResult);
-	}
+        //Assert
+        Assert.assertEquals(expectedResult, actualResult);
+    }
 
-	@Test
-	public void add() {
-		//Arrange
-		DbEntry entry = new DbEntry();
-		String expectedResult = entry.getId();
+    @Test
+    public void add() {
+        //Arrange
+        DbEntry entry = new DbEntry();
+        String expectedResult = entry.getId();
 
-		//Act
-		String actualResult = this.repository.add(entry).getId();
+        //Act
+        String actualResult = this.repository.add(entry).getId();
 
-		//Assert
-		Assert.assertEquals(expectedResult, actualResult);
-	}
+        //Assert
+        Assert.assertEquals(expectedResult, actualResult);
+    }
 
 //	@Test
 //	public void update() throws Exception {

@@ -15,11 +15,10 @@ import java.util.List;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
-    private DB mongoDatabase;
     private final DBCollection collection;
     private final Type entryType;
-
     private final Gson jsonConverter;
+    private DB mongoDatabase;
 
     public MongoDbRepository(Class<T> entry) {
         this.entryType = entry;
@@ -93,7 +92,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
                 e.printStackTrace();
                 throw e;
             }
-        }else {
+        } else {
             return null;
             //throw new Exception("Entry already present");
         }

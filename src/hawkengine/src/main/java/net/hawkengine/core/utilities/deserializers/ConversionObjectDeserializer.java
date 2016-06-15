@@ -9,31 +9,31 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConversionObjectDeserializer implements JsonDeserializer<ConversionObject> {
-	private final List<String> requiredFields;
+    private final List<String> requiredFields;
 
-	public ConversionObjectDeserializer() {
-		this.requiredFields = new ArrayList<>(Arrays.asList("packageName", "object"));
-	}
+    public ConversionObjectDeserializer() {
+        this.requiredFields = new ArrayList<>(Arrays.asList("packageName", "object"));
+    }
 
-	@Override
-	public ConversionObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-			throws JsonParseException {
-		JsonObject jsonObject = json.getAsJsonObject();
-		for (String fieldName : this.requiredFields) {
-			if (jsonObject.get(fieldName) == null) {
-				throw new JsonParseException("Required field not found");
-			}
-		}
+    @Override
+    public ConversionObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+        JsonObject jsonObject = json.getAsJsonObject();
+        for (String fieldName : this.requiredFields) {
+            if (jsonObject.get(fieldName) == null) {
+                throw new JsonParseException("Required field not found");
+            }
+        }
 
-		String packageName = jsonObject.get("packageName").getAsString();
-		String object = jsonObject.get("object").toString();
-		if ((packageName == null) || packageName.trim().isEmpty() || (object == null)) {
-			return null;
-		}
+        String packageName = jsonObject.get("packageName").getAsString();
+        String object = jsonObject.get("object").toString();
+        if ((packageName == null) || packageName.trim().isEmpty() || (object == null)) {
+            return null;
+        }
 
-		ConversionObject result = new ConversionObject();
-		result.setPackageName(packageName);
-		result.setObject(object);
-		return result;
-	}
+        ConversionObject result = new ConversionObject();
+        result.setPackageName(packageName);
+        result.setObject(object);
+        return result;
+    }
 }

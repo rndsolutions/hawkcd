@@ -1,23 +1,20 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import redis.clients.jedis.JedisPoolConfig;
 
 public class PipelineDefinitionServiceTests {
 

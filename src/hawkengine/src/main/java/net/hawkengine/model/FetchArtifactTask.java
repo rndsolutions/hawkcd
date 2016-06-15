@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.TaskType;
+
 //[SD] I think we need a bool property to indicate if the request is for a file or folder. Although the agent will download it in any case because it will use the fetch\zip method. We need it to know SrcDir or SrcFile is the source.
 public class FetchArtifactTask extends Task {
     /// <summary>

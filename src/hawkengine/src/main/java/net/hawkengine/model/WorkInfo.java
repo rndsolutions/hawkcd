@@ -1,10 +1,9 @@
 package net.hawkengine.model;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class WorkInfo {
-    private UUID pipelineId;
+    private String pipelineId;
     private int pipelineExecutionID;
     private String pipelineName;
     private String pipelineEnvironmentName;
@@ -23,11 +22,11 @@ public class WorkInfo {
         this.setEnvironmentVariables(new ArrayList<>());
     }
 
-    public UUID getPipelineId() {
+    public String getPipelineId() {
         return this.pipelineId;
     }
 
-    public void setPipelineId(UUID value) {
+    public void setPipelineId(String value) {
         this.pipelineId = value;
     }
 

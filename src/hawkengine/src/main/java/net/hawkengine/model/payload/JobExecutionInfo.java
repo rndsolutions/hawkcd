@@ -1,6 +1,6 @@
 package net.hawkengine.model.payload;
 
-import net.hawkengine.model.Status;
+import net.hawkengine.model.enums.Status;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

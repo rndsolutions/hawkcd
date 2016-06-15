@@ -1,6 +1,8 @@
 package net.hawkengine.model;
 
-public class ExecTask extends Task {
+import net.hawkengine.model.enums.TaskType;
+
+public class ExecTask extends TaskDefinition {
     private String command;
     private String[] arguments;
     private String lookUpCommands;

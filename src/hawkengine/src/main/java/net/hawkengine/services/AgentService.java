@@ -57,7 +57,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         List<Agent> agents = (List<Agent>) super.getAll().getObject();
         agents = agents
                 .stream()
-                .filter(a -> a.isEnabled())
+                .filter(Agent::isEnabled)
                 .collect(Collectors.toList());
 
         ServiceResult result = new ServiceResult();

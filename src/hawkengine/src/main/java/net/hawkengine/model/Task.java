@@ -1,10 +1,14 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.RunIf;
+import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.TaskType;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public abstract class Task {
-    private String taskDefinitionId;
+    private TaskDefinition taskDefinition;
     private String jobId;
     private RunIf runIfCondition;
     private TaskType type;
@@ -18,12 +22,12 @@ public abstract class Task {
         this.startTime = LocalDateTime.now();
     }
 
-    public String getTaskDefinitionId() {
-        return this.taskDefinitionId;
+    public TaskDefinition getTaskDefinition() {
+        return this.taskDefinition;
     }
 
-    public void setTaskDefinitionId(String taskDefinitionId) {
-        this.taskDefinitionId = taskDefinitionId;
+    public void setTaskDefinition(TaskDefinition taskDefinition) {
+        this.taskDefinition = taskDefinition;
     }
 
     public String getJobId() {

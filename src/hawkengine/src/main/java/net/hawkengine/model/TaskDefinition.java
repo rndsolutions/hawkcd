@@ -1,6 +1,9 @@
 package net.hawkengine.model;
 
-public class TaskDefinition extends DbEntry {
+import net.hawkengine.model.enums.RunIf;
+import net.hawkengine.model.enums.TaskType;
+
+public abstract class TaskDefinition extends DbEntry {
     private String name;
     private String jobDefinitionId;
     private TaskType type;

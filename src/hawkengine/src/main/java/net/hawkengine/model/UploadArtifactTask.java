@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.TaskType;
+
 public class UploadArtifactTask extends Task {
     private String source;
     private String destination;

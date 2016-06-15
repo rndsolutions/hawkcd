@@ -3,7 +3,7 @@ package net.hawkengine.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StageDefinition extends DbEntry{
+public class StageDefinition extends DbEntry {
     private String name;
     private String pipelineDefinitionId;
     private List<EnvironmentVariable> environmentVariables;

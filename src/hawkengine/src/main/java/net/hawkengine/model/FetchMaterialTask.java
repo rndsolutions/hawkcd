@@ -1,5 +1,8 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.MaterialType;
+import net.hawkengine.model.enums.TaskType;
+
 import java.util.HashMap;
 
 public class FetchMaterialTask extends Task {

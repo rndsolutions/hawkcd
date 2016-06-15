@@ -1,6 +1,6 @@
 package net.hawkengine.model.payload;
 
-import net.hawkengine.model.AgentExecutionState;
+import net.hawkengine.model.enums.AgentExecutionState;
 
 import java.util.UUID;
 

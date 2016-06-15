@@ -1,7 +1,6 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
@@ -9,21 +8,19 @@ import net.hawkengine.model.Agent;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.interfaces.IAgentService;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import redis.clients.jedis.JedisPoolConfig;
-
 public class AgentServiceTests {
 
-    private IAgentService mockedAgentService;
     private final String expectedEnabledAgentMessage = "All enabled Agents retrieved successfully.";
     private final String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
+    private IAgentService mockedAgentService;
 
     @Before
     public void setUp() {
