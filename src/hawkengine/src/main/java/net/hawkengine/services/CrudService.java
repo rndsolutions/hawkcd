@@ -83,9 +83,11 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
 
         ServiceResult result = new ServiceResult();
         if (isDeleted) {
+            result.setObject(true);
             result.setError(false);
             result.setMessage(this.getObjectType() + " deleted successfully.");
         } else {
+            result.setObject(false);
             result.setError(true);
             result.setMessage(this.getObjectType() + " not found.");
         }

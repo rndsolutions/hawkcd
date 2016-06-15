@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster',
-        function (pipeStatsService, agentService, viewModel, validationService, toaster) {
+    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater',
+        function (pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function (data) {
@@ -23,14 +23,22 @@ angular
 
             var dispatcher = {
                 AgentService: {
-                    getById: function (data) {
-                        agentService.updatewsAgent(data);
+                    getById: function (agent) {
+                        viewModelUpdater.updateAgent(agent);
                     },
-                    getAll: function (data) {
-                        viewModel.updateAgents(data);
+                    getAll: function (agents) {
+                        viewModelUpdater.updateAgents(agents);
                     },
                     setAgentConfigState: function (data) {
                         viewModel.updateAgentStatus(data);
+                    },
+                    delete: function (isDeleted){
+                        if(isDeleted){
+                            agentService.getAllAgents();
+                        }
+                    },
+                    update: function (agent) {
+                        viewModelUpdater.updateAgent(agent);
                     }
                 }
             };

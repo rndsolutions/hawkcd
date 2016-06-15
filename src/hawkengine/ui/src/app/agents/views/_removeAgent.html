@@ -7,10 +7,10 @@
       </div>
       <div class="modal-body">
         <div>
-          {{agents.defaultText.deleteModalConfirm}}<strong>{{agents.agentToDelete.HostName}}</strong>
+          {{agents.defaultText.deleteModalConfirm}}<strong>{{agents.agentToDelete.hostName + "-" +agents.agentToDelete.id.substr(0,8)}}</strong>
           <br>
           <hr>
-          <button class="btn btn-danger" ng-click="agents.deleteAgent(agents.agentToDelete.ID)" data-dismiss="modal">{{agents.defaultText.delete}}</button>
+          <button class="btn btn-danger" ng-click="agents.delete(agents.agentToDelete.id)" data-dismiss="modal">{{agents.defaultText.delete}}</button>
           <button class="btn" data-dismiss="modal">{{agents.defaultText.cancel}}</button>
         </div>
       </div>

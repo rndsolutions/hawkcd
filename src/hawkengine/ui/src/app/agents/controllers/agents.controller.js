@@ -3,7 +3,7 @@
 angular
     .module('hawk.agentsManagement')
     // add DTOptionsBuilder, DTColumnDefBuilder to func
-    .controller('AgentsController', function ($rootScope, $scope, $interval, pipeStats, pipeExec, pipeConfig, agentService, websocketReceiverService, authDataService, viewModel, toaster) {
+    .controller('AgentsController', function ($rootScope, $scope, $interval, pipeStats, pipeExec, pipeConfig, agentService, websocketReceiverService, authDataService, viewModel) {
         var vm = this;
         vm.agentToDelete = {};
 
@@ -66,6 +66,24 @@ angular
             vm.resourcesToAdd.pop();
             vm.currentAgentResources.pop();
 
+        };
+        
+        vm.delete = function (id) {
+            agentService.delete(id);
+        };
+
+        vm.changeAgentStatus = function (index, currentStatus) {
+            if (!currentStatus) {
+                var newAgent = vm.currentAgents[index];
+                newAgent.isEnabled = true;
+                agentService.update(newAgent);
+            }
+
+            if (currentStatus) {
+                var newAgent = vm.currentAgents[index];
+                newAgent.isEnabled = false;
+                agentService.update(newAgent);
+            }
         };
 
         // vm.getAllAgents = function () {
@@ -232,21 +250,21 @@ angular
         //     }
         // };
         //
-        vm.changeAgentStatus = function (index, currentStatus) {
-            var currentAgentId = vm.currentAgents[index].id;
-        
-            if (currentStatus == 'Disabled') {
-                //vm.currentAgents[index].configState = 'Enabled';
-                agentService.changeAgentStatus(currentAgentId, 'Enabled');
-                // toaster.pop('success', "Notification", "Agent " + vm.currentAgents[index].hostName + "-" + vm.currentAgents[index].id.substr(0,8) + " enabled!");
-            }
-        
-            if (currentStatus == 'Enabled') {
-                //vm.currentAgents[index].configState = 'Disabled';
-                agentService.changeAgentStatus(currentAgentId, 'Disabled');
-                // toaster.pop('success', "Notification", "Agent " + vm.currentAgents[index].hostName + "-" + vm.currentAgents[index].id.substr(0,8) + " disabled!");
-            }
-        };
+        // vm.changeAgentStatus = function (index, currentStatus) {
+        //     var currentAgentId = vm.currentAgents[index].id;
+        //
+        //     if (currentStatus == 'Disabled') {
+        //         //vm.currentAgents[index].configState = 'Enabled';
+        //         agentService.changeAgentStatus(currentAgentId, 'Enabled');
+        //         // toaster.pop('success', "Notification", "Agent " + vm.currentAgents[index].hostName + "-" + vm.currentAgents[index].id.substr(0,8) + " enabled!");
+        //     }
+        //
+        //     if (currentStatus == 'Enabled') {
+        //         //vm.currentAgents[index].configState = 'Disabled';
+        //         agentService.changeAgentStatus(currentAgentId, 'Disabled');
+        //         // toaster.pop('success', "Notification", "Agent " + vm.currentAgents[index].hostName + "-" + vm.currentAgents[index].id.substr(0,8) + " disabled!");
+        //     }
+        // };
 
         // $scope.$on('updatewsAgent', function(event, args) {
         //     var data = args.object;
