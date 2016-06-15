@@ -5,7 +5,7 @@ import net.hawkengine.model.enums.TaskType;
 
 import java.util.HashMap;
 
-public class FetchMaterialTask extends Task {
+public class FetchMaterialTask extends TaskDefinition {
     private String materialName;
     private String pipelineName;
     private MaterialType materialType = MaterialType.GIT;
