@@ -1,16 +1,18 @@
 package net.hawkengine.core.utilities;
 import net.hawkengine.core.SchemaValidator;
+import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.MaterialType;
+import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
-import net.hawkengine.model.RunIf;
+import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.Task;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.TaskType;
+import net.hawkengine.model.enums.TaskType;
 
 import org.junit.Test;
 
@@ -21,7 +23,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
+
 
 
 /**
@@ -120,9 +122,20 @@ public class SchemaValidatorTests {
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinition.setName("pipelineDefinition");
         pipelineDefinition.setPipelineGroupId("pipelineGroupId");
-        this.material.add(0,new MaterialDefinition());
+
+        MaterialDefinition mt1 = new MaterialDefinition();
+        mt1.setName("materialName");
+        mt1.setType(MaterialType.GIT);
+        mt1.setUrl("dasdasdas");
+        mt1.setPipelineDefinitionId("dasdasda");
+        this.material.add(0,mt1);
         pipelineDefinition.setMaterials(material);
-        this.stage.add(0,new StageDefinition());
+        StageDefinition st1 = new StageDefinition();
+        st1.setName("stageName");
+        job.add(0,new JobDefinition());
+        st1.setJobDefinitions(job);
+        this.stage.add(0,st1);
+
         pipelineDefinition.setStageDefinitions(stage);
 
 
@@ -343,7 +356,7 @@ public class SchemaValidatorTests {
         JobDefinition jobDefinition = new JobDefinition();
         jobDefinition.setName("jobDefinition");
         jobDefinition.setStageDefinitionId("stageDefinitionId");
-        task.add(0, new TaskDefinition());
+        task.add(0, new ExecTask());
         jobDefinition.setTaskDefinitions(task);
 
         //Act
@@ -430,70 +443,8 @@ public class SchemaValidatorTests {
 
 
     //----------------------------------------------------------------------------------------------
-    //TaskDefinition TESTS
-    @Test
-    public void validate_TaskDefinition(){
-        //Arrange
-        TaskDefinition taskDefinition = new TaskDefinition();
-        taskDefinition.setName("taskDefinition");
-        taskDefinition.setJobDefinitionId("jobDefinitionId");
-        taskDefinition.setType(TaskType.EXEC);
-        taskDefinition.setRunIfCondition(RunIf.ANY);
+    //Tasks TESTS
 
-
-        //Act
-        String actualResult = this.validator.validate(taskDefinition);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(this.expectedResult,actualResult);
-
-    }
-
-    @Test
-    public void validate_TaskDefinition_Null(){
-        //Arrange
-        String expectedResult = "ERROR: TASK DEFINITION IS NULL.";
-
-        //Act
-        String actualResult = this.validator.validate(this.taskDefinition);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
-    }
-
-    @Test
-    public void validate_TaskDefinition_Name_Null(){
-        //Arrange
-        TaskDefinition taskDefinition = new TaskDefinition();
-        String expectedResult = "ERROR: TASK DEFINITION NAME IS NULL.";
-
-
-        //Act
-        String actualResult = this.validator.validate(taskDefinition);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
-
-    }
-
-    @Test
-    public void validate_TaskDefinition_Name_RegExMismatch(){
-        //Arrange
-        TaskDefinition taskDefinition = new TaskDefinition();
-        String expectedResult = "ERROR: TASK DEFINITION NAME IS NULL.";
-
-
-        //Act
-        String actualResult = this.validator.validate(taskDefinition);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
-
-    }
 
 
 
