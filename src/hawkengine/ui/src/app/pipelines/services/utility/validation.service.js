@@ -2,33 +2,25 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('validationService', ['toaster', function (toaster) {
+    .factory('validationService', [function () {
         var validationService = this;
 
-        this.validateNull = function (obj) {
+        validationService.isValid = function (obj) {
+            var isValid = true;
             for (var prop in obj) {
-                if (typeof obj[prop] != 'function' && obj[prop] === null) {
-                    toaster.error('Missing Agent data ');
+                if ((prop === 'className' || prop === 'methodName') && ((obj[prop] === null || obj[prop] === 'undefined') || isEmpty(obj[prop]))) {
+                    isValid = false;
                 }
             }
+
+            return isValid;
         }
 
-        this.validateResult = function (obj) {
-            for (var prop in obj) {
-                if (prop == 'result' && (obj[prop] === null || obj[prop] === 'undefined')) {
-                    toaster.error('Missing Agent details data');
-                }
-            }
+        function isEmpty(str){
+            var result = (!str || str.length === 0);
+            return result;
         }
 
-        this.validateProperties = function(obj){
-            for (var prop in obj) {
-                if (obj[prop] === null || obj[prop] === 'undefined') {
-                    toaster.error('Missing Agent details data');
-                }
-            }
-        }
-
-        return this;
+        return validationService;
 
     }]);

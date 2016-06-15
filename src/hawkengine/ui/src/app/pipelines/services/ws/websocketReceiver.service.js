@@ -2,17 +2,20 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'validationService',
-        function (pipeStatsService, agentService, viewModel, validationService) {
+    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster',
+        function (pipeStatsService, agentService, viewModel, validationService, toaster) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function (data) {
-                invoker(data, dispatcher);
+                if(!validationService.isValid(data)){
+                    toaster.error('Invalid JSON format!');
+                    return;
+                }
+
+                invoker(data,dispatcher);
             };
 
             var invoker = function (obj, dispatcher) {
-                validationService.validateNull(obj);
-                validationService.validateResult(obj);
                 var className = obj['className'];
                 var methodName = obj['methodName'];
                 dispatcher[className][methodName](obj.result);
