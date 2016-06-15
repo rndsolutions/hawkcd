@@ -61,7 +61,7 @@ angular
 
         // region /agents
         pipeStatsService.getAllAgents = function () {
-            var methodName = "getAllAgents";
+            var methodName = "getAll";
             var className = "AgentService";
             var packageName = "net.hawkengine.services";
             var result = "";
@@ -72,7 +72,7 @@ angular
             console.log(json);
         };
         pipeStatsService.getAgentById = function () {
-            var methodName = "getAgentById";
+            var methodName = "getById";
             var className = "AgentService";
             var packageName = "net.hawkengine.services";
             var result = "";
@@ -83,7 +83,7 @@ angular
             console.log(json);
         };
         pipeStatsService.getAllPipelineGroups = function () {
-            var methodName = "getAllPipelineGroups";
+            var methodName = "getAll";
             var className = "PipelineGroupService";
             var packageName = "net.hawkengine.services";
             var result = "";

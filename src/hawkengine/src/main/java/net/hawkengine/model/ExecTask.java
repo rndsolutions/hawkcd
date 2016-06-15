@@ -1,53 +1,55 @@
 package net.hawkengine.model;
 
-public class ExecTask extends Task {
+import net.hawkengine.model.enums.TaskType;
+
+public class ExecTask extends TaskDefinition {
     private String command;
     private String[] arguments;
     private String lookUpCommands;
     private String workingDirectory;
-    private boolean ignoreErrors;
+    private boolean isIgnoringErrors;
 
-    public ExecTask() throws Exception {
+    public ExecTask() {
         this.setType(TaskType.EXEC);
     }
 
     public String getCommand() {
-        return command;
+        return this.command;
     }
 
     public void setCommand(String value) {
-        command = value;
+        this.command = value;
     }
 
     public String[] getArguments() {
-        return arguments;
+        return this.arguments;
     }
 
     public void setArguments(String[] value) {
-        arguments = value;
+        this.arguments = value;
     }
 
     public String getLookUpCommands() {
-        return lookUpCommands;
+        return this.lookUpCommands;
     }
 
     public void setLookUpCommands(String value) {
-        lookUpCommands = value;
+        this.lookUpCommands = value;
     }
 
     public String getWorkingDirectory() {
-        return workingDirectory;
+        return this.workingDirectory;
     }
 
     public void setWorkingDirectory(String value) {
-        workingDirectory = value;
+        this.workingDirectory = value;
     }
 
-    public boolean getIgnoreErrors() {
-        return ignoreErrors;
+    public boolean isIgnoringErrors() {
+        return this.isIgnoringErrors;
     }
 
-    public void setIgnoreErrors(boolean value) {
-        ignoreErrors = value;
+    public void setIgnoringErrors(boolean ignoringErrors) {
+        this.isIgnoringErrors = ignoringErrors;
     }
 }

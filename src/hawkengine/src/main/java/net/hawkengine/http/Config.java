@@ -7,14 +7,10 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/config")
 public class Config {
-
-	@GET
-	@Path("test")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String test() {
-		return "Test";
-	}
-	
-	
-	
+    @GET
+    @Path("test")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String test() {
+        return "Test";
+    }
 }

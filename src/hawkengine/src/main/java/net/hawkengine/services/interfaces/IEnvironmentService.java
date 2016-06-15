@@ -4,20 +4,20 @@
 
 package net.hawkengine.services.interfaces;
 
-import java.util.ArrayList;
-
-import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Environment;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.interfaces.ICrudService;
 
 public interface IEnvironmentService extends ICrudService<Environment> {
-	ServiceResult getAllEnvironments();
+    @Override
+    ServiceResult getAll();
 
-	ServiceResult addEnvironment(Environment environment);
+    @Override
+    ServiceResult add(Environment environment);
 
-	ServiceResult deleteEnvironment(String environmentId);
+    @Override
+    ServiceResult delete(String environmentId);
 
-	ServiceResult updateEnvironment(Environment environment);
+    @Override
+    ServiceResult update(Environment environment);
 
 }

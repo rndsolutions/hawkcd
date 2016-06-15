@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.Status;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.List;
 public class Pipeline extends DbEntry {
     private String pipelineDefinitionId;
     private int executionId;
-    private List<MaterialChange> materials;
+    private List<Material> materials;
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
     private List<Stage> stages;
@@ -45,11 +47,11 @@ public class Pipeline extends DbEntry {
         this.executionId = executionId;
     }
 
-    public List<MaterialChange> getMaterials() {
+    public List<Material> getMaterials() {
         return this.materials;
     }
 
-    public void setMaterials(List<MaterialChange> materials) {
+    public void setMaterials(List<Material> materials) {
         this.materials = materials;
     }
 

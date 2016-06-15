@@ -1,21 +1,25 @@
 package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.Agent;
-import net.hawkengine.model.enums.ConfigState;
 import net.hawkengine.model.ServiceResult;
 
 public interface IAgentService extends ICrudService<Agent> {
-	ServiceResult getById(String agentId);
+    @Override
+    ServiceResult getById(String agentId);
 
-	ServiceResult getAll();
+    @Override
+    ServiceResult getAll();
 
-	ServiceResult add(Agent agent);
+    @Override
+    ServiceResult add(Agent agent);
 
-	ServiceResult update(Agent agent);
+    @Override
+    ServiceResult update(Agent agent);
 
-	ServiceResult delete(String agentId);
+    @Override
+    ServiceResult delete(String agentId);
 
-	ServiceResult getAllEnabledAgents();
+    ServiceResult getAllEnabledAgents();
 
-	ServiceResult getAllEnabledIdleAgents();
+    ServiceResult getAllEnabledIdleAgents();
 }

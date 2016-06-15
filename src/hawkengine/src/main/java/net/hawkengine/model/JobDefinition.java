@@ -17,7 +17,7 @@ public class JobDefinition extends DbEntry {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -25,7 +25,7 @@ public class JobDefinition extends DbEntry {
     }
 
     public String getStageDefinitionId() {
-        return stageDefinitionId;
+        return this.stageDefinitionId;
     }
 
     public void setStageDefinitionId(String stageDefinitionId) {
@@ -33,7 +33,7 @@ public class JobDefinition extends DbEntry {
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
@@ -41,7 +41,7 @@ public class JobDefinition extends DbEntry {
     }
 
     public List<TaskDefinition> getTaskDefinitions() {
-        return taskDefinitions;
+        return this.taskDefinitions;
     }
 
     public void setTaskDefinitions(List<TaskDefinition> taskDefinitions) {
@@ -49,7 +49,7 @@ public class JobDefinition extends DbEntry {
     }
 
     public List<String> getResources() {
-        return resources;
+        return this.resources;
     }
 
     public void setResources(List<String> resources) {

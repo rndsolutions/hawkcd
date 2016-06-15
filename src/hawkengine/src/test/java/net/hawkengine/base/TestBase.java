@@ -8,7 +8,7 @@ public abstract class TestBase {
 
         testResult.set(testResult.get() && statement);
         if (!statement) {
-            errorMessages.append(errorMsg + ";");
+            errorMessages.append(errorMsg).append(";");
             errorMessages.append(System.getProperty("line.separator"));
         }
     }

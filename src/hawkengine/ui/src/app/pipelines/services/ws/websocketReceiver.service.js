@@ -2,34 +2,39 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', function (pipeStatsService, agentService, viewModel) {
-        var websocketReceiverService = this;
+    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster',
+        function (pipeStatsService, agentService, viewModel, validationService, toaster) {
+            var webSocketReceiverService = this;
 
-        this.processEvent = function (data) {
+            webSocketReceiverService.processEvent = function (data) {
+                if(!validationService.isValid(data)){
+                    toaster.error('Invalid JSON format!');
+                    return;
+                }
 
-            switch (data.methodName){
-                case "GetAllPipelines":
-                    pipeConfigService.updatePipelines(data);
-                    break;
-                case "GetAllPipelineDefs":
-                    break;
-                case "getAgentById":
-                    agentService.updatewsAgent(data);
-                    console.log(data);
-                    break;
-                case "getAllAgents":
-                    viewModel.updateAgents(data);
-                    console.log(data);
-                    break;
-                case "setAgentConfigState":
-                    viewModel.updateAgentStatus(data);
-                    break;
-                case "getAllPipelineGroups":
-                    viewModel.updatePipelineGroups(data);
-                    break;
-            }
-        };
+                invoker(data,dispatcher);
+            };
 
-        return websocketReceiverService;
+            var invoker = function (obj, dispatcher) {
+                var className = obj['className'];
+                var methodName = obj['methodName'];
+                dispatcher[className][methodName](obj.result);
+            };
 
-    }]);
+            var dispatcher = {
+                AgentService: {
+                    getById: function (data) {
+                        agentService.updatewsAgent(data);
+                    },
+                    getAll: function (data) {
+                        viewModel.updateAgents(data);
+                    },
+                    setAgentConfigState: function (data) {
+                        viewModel.updateAgentStatus(data);
+                    }
+                }
+            };
+
+            return webSocketReceiverService;
+
+        }]);
