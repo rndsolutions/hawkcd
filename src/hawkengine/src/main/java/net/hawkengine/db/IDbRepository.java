@@ -4,7 +4,6 @@ import net.hawkengine.model.DbEntry;
 
 import java.util.List;
 
-@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
 public interface IDbRepository<T extends DbEntry> {
     T getById(String id);
 

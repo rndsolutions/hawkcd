@@ -4,13 +4,12 @@ import net.hawkengine.model.enums.MaterialType;
 
 import java.util.HashMap;
 
-@SuppressWarnings("UnqualifiedFieldAccess")
 public class MaterialDefinition {
     private String pipelineDefinitionId;
     private String name;
     private MaterialType type;
     private String url;
-    private boolean isAutoTriggerOnChange;
+    private boolean isAutoTriggeredOnChange;
     private HashMap<String, Object> materialSpecificDetails;
 
     public MaterialDefinition() {
@@ -48,12 +47,12 @@ public class MaterialDefinition {
         this.url = value;
     }
 
-    public boolean isAutoTriggerOnChange() {
-        return isAutoTriggerOnChange;
+    public boolean isAutoTriggeredOnChange() {
+        return this.isAutoTriggeredOnChange;
     }
 
-    public void setAutoTriggerOnChange(boolean autoTriggerOnChange) {
-        isAutoTriggerOnChange = autoTriggerOnChange;
+    public void setAutoTriggeredOnChange(boolean autoTriggeredOnChange) {
+        this.isAutoTriggeredOnChange = autoTriggeredOnChange;
     }
 
     public HashMap<String, Object> getMaterialSpecificDetails() {

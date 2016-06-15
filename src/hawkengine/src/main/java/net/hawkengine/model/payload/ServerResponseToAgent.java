@@ -10,7 +10,7 @@ public class ServerResponseToAgent {
     private Stage stage;
     private EnvironmentInfo environmentInfo;
     private ArrayList<MaterialDefinition> materialDefinitions;
-    private ArrayList<MaterialChange> materials;
+    private ArrayList<Material> materials;
     private ArrayList<EnvironmentVariable> environmentVariables;
 
     public ServerResponseToAgent() {
@@ -57,11 +57,11 @@ public class ServerResponseToAgent {
         this.materialDefinitions = value;
     }
 
-    public ArrayList<MaterialChange> getExecutionMaterials() {
+    public ArrayList<Material> getExecutionMaterials() {
         return this.materials;
     }
 
-    public void setExecutionMaterials(ArrayList<MaterialChange> value) {
+    public void setExecutionMaterials(ArrayList<Material> value) {
         this.materials = value;
     }
 

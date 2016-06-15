@@ -5,7 +5,7 @@ import net.hawkengine.model.enums.MaterialType;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-public class MaterialChange extends DbEntry {
+public class Material extends DbEntry {
     private String pipelineName;
     private String materialName;
     private String url;
@@ -59,16 +59,5 @@ public class MaterialChange extends DbEntry {
 
     public void setMaterialSpecificDetails(HashMap<String, Object> value) {
         this.materialSpecificDetails = value;
-    }
-
-    public String toString() {
-        try {
-            return String.format(" ID={0} PipelineName={1} MaterialName={2} ChangeDate={3}", this.getId(),
-                    this.getPipelineName(), this.getMaterialName(), this.getChangeDate());
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

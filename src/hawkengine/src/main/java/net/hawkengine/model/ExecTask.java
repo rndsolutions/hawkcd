@@ -7,7 +7,7 @@ public class ExecTask extends TaskDefinition {
     private String[] arguments;
     private String lookUpCommands;
     private String workingDirectory;
-    private boolean isIgnoreErrors;
+    private boolean isIgnoringErrors;
 
     public ExecTask() {
         this.setType(TaskType.EXEC);
@@ -45,11 +45,11 @@ public class ExecTask extends TaskDefinition {
         this.workingDirectory = value;
     }
 
-    public boolean isIgnoreErrors() {
-        return this.isIgnoreErrors;
+    public boolean isIgnoringErrors() {
+        return this.isIgnoringErrors;
     }
 
-    public void setIgnoreErrors(boolean ignoreErrors) {
-        this.isIgnoreErrors = ignoreErrors;
+    public void setIgnoringErrors(boolean ignoringErrors) {
+        this.isIgnoringErrors = ignoringErrors;
     }
 }

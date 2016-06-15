@@ -14,8 +14,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
 
-    private final Server server;
-    private final int port = 8080;
+    private Server server;
+    private static final int PORT = 8080;
 
     public HawkServer() {
         this.server = new Server();
@@ -30,7 +30,7 @@ public class HawkServer {
 
         // HTTP connector
         ServerConnector connector = new ServerConnector(this.server);
-        connector.setPort(this.port);
+        connector.setPort(PORT);
         this.server.addConnector(connector);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

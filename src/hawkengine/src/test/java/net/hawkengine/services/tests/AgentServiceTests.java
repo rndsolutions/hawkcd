@@ -18,8 +18,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class AgentServiceTests {
 
-    private final String expectedEnabledAgentMessage = "All enabled Agents retrieved successfully.";
-    private final String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
     private IAgentService mockedAgentService;
 
     @Before
@@ -46,7 +44,7 @@ public class AgentServiceTests {
         int actualCollectionSize = actualResultObject.size();
 
         Assert.assertNotNull(actualResultObject);
-        Assert.assertEquals(this.expectedEnabledAgentMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_ENABLED_AGEND_MESSAGE, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertFalse(actualResult.hasError());
 
@@ -64,7 +62,7 @@ public class AgentServiceTests {
         int actualCollectionSize = actualResultObject.size();
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(this.expectedEnabledAgentMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_ENABLED_AGEND_MESSAGE, actualResult.getMessage());
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals(expectedSizeOfCollection, actualCollectionSize);
     }
@@ -89,7 +87,7 @@ public class AgentServiceTests {
         Agent actualAgent = actualResultObject.get().get(0);
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(this.expectedEnabledIdleMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_IDLE_AGENT_MESSAGE, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertEquals(firstAgent.getId(), actualAgent.getId());
         Assert.assertTrue(actualAgent.isEnabled());
@@ -106,7 +104,7 @@ public class AgentServiceTests {
 
         Assert.assertNotNull(actualResultObject);
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(this.expectedEnabledIdleMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_IDLE_AGENT_MESSAGE, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
     }
 }

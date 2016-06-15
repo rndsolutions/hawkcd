@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@SuppressWarnings("UnusedAssignment")
 public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
-    private final Type type;
-    private final String entryNamespace;
-    private final String idNamespace;
-    private final Gson jsonConverter;
+    private Type type;
+    private String entryNamespace;
+    private String idNamespace;
+    private Gson jsonConverter;
     private JedisPool jedisPool;
 
     public RedisRepository(Class<T> type) {

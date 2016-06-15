@@ -15,16 +15,16 @@ import java.util.List;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
-    private final DBCollection collection;
-    private final Type entryType;
-    private final Gson jsonConverter;
+    private DBCollection collection;
+    private Type entryType;
+    private Gson jsonConverter;
     private DB mongoDatabase;
 
     public MongoDbRepository(Class<T> entry) {
         this.entryType = entry;
 
         this.jsonConverter = new GsonBuilder().create();
-        this.mongoDatabase = MongoDbManager.getInstance().db;
+        this.mongoDatabase = MongoDbManager.getInstance().getDb();
         this.collection = this.mongoDatabase.getCollection(this.entryType.getTypeName());
     }
 
@@ -94,7 +94,6 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             }
         } else {
             return null;
-            //throw new Exception("Entry already present");
         }
     }
 
@@ -110,7 +109,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             return entry;
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return entry;
+            return null;
         }
     }
 

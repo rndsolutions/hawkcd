@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class WsEndpoint extends WebSocketAdapter {
     static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
-    private final Gson jsonConverter;
+    private Gson jsonConverter;
     private UUID id;
 
     public WsEndpoint() {

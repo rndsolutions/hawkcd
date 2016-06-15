@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("UnqualifiedFieldAccess")
 public class Stage {
     private String stageDefinitionId;
     private String pipelineId;

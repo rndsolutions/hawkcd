@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WsContractDeserializer implements JsonDeserializer<WsContractDto> {
-    private final List<String> requiredFields;
-    private final Gson jsonConverter;
+    private List<String> requiredFields;
+    private Gson jsonConverter;
 
     public WsContractDeserializer() {
         this.requiredFields = new ArrayList<>(
