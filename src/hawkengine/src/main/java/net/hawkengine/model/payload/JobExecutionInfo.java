@@ -1,174 +1,154 @@
-//
-// Translated by CS2J (http://www.cs2j.com): 4/24/2016 12:58:55 AM
-//
-
 package net.hawkengine.model.payload;
 
+import net.hawkengine.model.enums.Status;
+
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-import net.hawkengine.model.Status;
-
 public class JobExecutionInfo {
-	private UUID __PipelineId;
+    private String pipelineDefinitionId;
+    private int pipelineExecutionId;
+    private String pipelineLabel;
+    private String pipelineName;
+    private String executedBy;
+    private UUID stageId;
+    private int stageExecutionId;
+    private String stageName;
+    private String jobId;
+    private String jobName;
+    private Status status = Status.PASSED;
+    private String jobStateString;
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private Duration duration;
+    private String result;
 
-	public UUID getPipelineId() {
-		return __PipelineId;
-	}
+    public String getPipelineId() {
+        return this.pipelineDefinitionId;
+    }
 
-	public void setPipelineId(UUID value) {
-		__PipelineId = value;
-	}
+    public void setPipelineId(String value) {
+        this.pipelineDefinitionId = value;
+    }
 
-	private int __PipelineExecutionId;
+    public int getPipelineExecutionId() {
+        return this.pipelineExecutionId;
+    }
 
-	public int getPipelineExecutionId() {
-		return __PipelineExecutionId;
-	}
+    public void setPipelineExecutionId(int value) {
+        this.pipelineExecutionId = value;
+    }
 
-	public void setPipelineExecutionId(int value) {
-		__PipelineExecutionId = value;
-	}
+    public String getPipelineLabel() {
+        return this.pipelineLabel;
+    }
 
-	private String __PipelineLabel;
+    public void setPipelineLabel(String value) {
+        this.pipelineLabel = value;
+    }
 
-	public String getPipelineLabel() {
-		return __PipelineLabel;
-	}
+    public String getPipelineName() {
+        return this.pipelineName;
+    }
 
-	public void setPipelineLabel(String value) {
-		__PipelineLabel = value;
-	}
+    public void setPipelineName(String value) {
+        this.pipelineName = value;
+    }
 
-	private String __PipelineName;
+    public String getExecutedBy() {
+        return this.executedBy;
+    }
 
-	public String getPipelineName() {
-		return __PipelineName;
-	}
+    public void setExecutedBy(String value) {
+        this.executedBy = value;
+    }
 
-	public void setPipelineName(String value) {
-		__PipelineName = value;
-	}
+    public UUID getStageId() {
+        return this.stageId;
+    }
 
-	private String __ExecutedBy;
+    public void setStageId(UUID value) {
+        this.stageId = value;
+    }
 
-	public String getExecutedBy() {
-		return __ExecutedBy;
-	}
+    public int getStageExecutionId() {
+        return this.stageExecutionId;
+    }
 
-	public void setExecutedBy(String value) {
-		__ExecutedBy = value;
-	}
+    public void setStageExecutionId(int value) {
+        this.stageExecutionId = value;
+    }
 
-	private UUID __StageId;
+    public String getStageName() {
+        return this.stageName;
+    }
 
-	public UUID getStageId() {
-		return __StageId;
-	}
+    public void setStageName(String value) {
+        this.stageName = value;
+    }
 
-	public void setStageId(UUID value) {
-		__StageId = value;
-	}
+    public String getJobId() {
+        return this.jobId;
+    }
 
-	private int __StageExecutionId;
+    public void setJobId(String value) {
+        this.jobId = value;
+    }
 
-	public int getStageExecutionId() {
-		return __StageExecutionId;
-	}
+    public String getJobName() {
+        return this.jobName;
+    }
 
-	public void setStageExecutionId(int value) {
-		__StageExecutionId = value;
-	}
+    public void setJobName(String value) {
+        this.jobName = value;
+    }
 
-	private String __StageName;
+    public Status getStatus() {
+        return this.status;
+    }
 
-	public String getStageName() {
-		return __StageName;
-	}
+    public void setStatus(Status value) {
+        this.status = value;
+    }
 
-	public void setStageName(String value) {
-		__StageName = value;
-	}
+    public String getJobStateString() {
+        return this.jobStateString;
+    }
 
-	private UUID __JobId;
+    public void setJobStateString(String value) {
+        this.jobStateString = value;
+    }
 
-	public UUID getJobId() {
-		return __JobId;
-	}
+    public LocalDateTime getStart() {
+        return this.start;
+    }
 
-	public void setJobId(UUID value) {
-		__JobId = value;
-	}
+    public void setStart(LocalDateTime value) {
+        this.start = value;
+    }
 
-	private String __JobName;
+    public LocalDateTime getEnd() {
+        return this.end;
+    }
 
-	public String getJobName() {
-		return __JobName;
-	}
+    public void setEnd(LocalDateTime value) {
+        this.end = value;
+    }
 
-	public void setJobName(String value) {
-		__JobName = value;
-	}
+    public Duration getDuration() {
+        return this.duration;
+    }
 
-	private Status __Status = Status.PASSED;
+    public void setDuration(Duration value) {
+        this.duration = value;
+    }
 
-	public Status getStatus() {
-		return __Status;
-	}
+    public String getResult() {
+        return this.result;
+    }
 
-	public void setStatus(Status value) {
-		__Status = value;
-	}
-
-	private String __JobStateString;
-
-	public String getJobStateString() {
-		return __JobStateString;
-	}
-
-	public void setJobStateString(String value) {
-		__JobStateString = value;
-	}
-
-	private Date __Start;
-
-	public Date getStart() {
-		return __Start;
-	}
-
-	public void setStart(Date value) {
-		__Start = value;
-	}
-
-	private Date __End;
-
-	public Date getEnd() {
-		return __End;
-	}
-
-	public void setEnd(Date value) {
-		__End = value;
-	}
-
-	private Duration __Duration;
-
-	public Duration getDuration() {
-		return __Duration;
-	}
-
-	public void setDuration(Duration value) {
-		__Duration = value;
-	}
-
-	private String __Result;
-
-	public String getResult() {
-		return __Result;
-	}
-
-	public void setResult(String value) {
-		__Result = value;
-	}
+    public void setResult(String value) {
+        this.result = value;
+    }
 }

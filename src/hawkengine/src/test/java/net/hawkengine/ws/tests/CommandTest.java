@@ -6,8 +6,5 @@ public class CommandTest {
 
 	@Test
 	public final void testExecute() {
-		
-		//Command =  
-		//fail("Not yet implemented"); // TODO
 	}
 }

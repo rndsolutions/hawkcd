@@ -1,34 +1,30 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
+import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.interfaces.IAgentService;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.List;
-
-import redis.clients.jedis.JedisPoolConfig;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AgentServiceTests {
 
-    private IDbRepository<Agent> mockedRepository;
     private IAgentService mockedAgentService;
-    private String expectedEnabledAgentMessage = "All enabled Agents retrieved successfully.";
-    private String expectedEnabledIdleMessage = "All enabled idle Agents retrieved successfully.";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testAgentService");
-        this.mockedRepository = new RedisRepository(Agent.class, mockedPool);
-        this.mockedAgentService = new AgentService(this.mockedRepository);
+        IDbRepository<Agent> mockedRepository = new RedisRepository(Agent.class, mockedPool);
+        this.mockedAgentService = new AgentService(mockedRepository);
     }
 
     @Test
@@ -41,14 +37,14 @@ public class AgentServiceTests {
         this.mockedAgentService.add(firstAgent);
         this.mockedAgentService.add(secondAgent);
         this.mockedAgentService.add(thirdAgent);
-        int expectedCollectionSize = 2;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS;
 
         ServiceResult actualResult = this.mockedAgentService.getAllEnabledAgents();
         List<Agent> actualResultObject = (List<Agent>) actualResult.getObject();
         int actualCollectionSize = actualResultObject.size();
 
         Assert.assertNotNull(actualResultObject);
-        Assert.assertEquals(expectedEnabledAgentMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_ENABLED_AGEND_MESSAGE, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertFalse(actualResult.hasError());
 
@@ -59,14 +55,14 @@ public class AgentServiceTests {
 
     @Test
     public void getAllEnabledAgents_withNonexistentObjects_noObjects() {
-        int expectedSizeOfCollection = 0;
+        int expectedSizeOfCollection = TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS;
 
         ServiceResult actualResult = this.mockedAgentService.getAllEnabledAgents();
         List<Agent> actualResultObject = (List<Agent>) actualResult.getObject();
         int actualCollectionSize = actualResultObject.size();
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedEnabledAgentMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_ENABLED_AGEND_MESSAGE, actualResult.getMessage());
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals(expectedSizeOfCollection, actualCollectionSize);
     }
@@ -83,15 +79,15 @@ public class AgentServiceTests {
         this.mockedAgentService.add(firstAgent);
         this.mockedAgentService.add(secondAgent);
         this.mockedAgentService.add(thirdAgent);
-        int expectedCollectionSize = 1;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         ServiceResult actualResult = this.mockedAgentService.getAllEnabledIdleAgents();
-        List<Agent> actualResultObject = (List<Agent>) actualResult.getObject();
-        int actualCollectionSize = actualResultObject.size();
-        Agent actualAgent = actualResultObject.get(0);
+        AtomicReference<List<Agent>> actualResultObject = new AtomicReference<>((List<Agent>) actualResult.getObject());
+        int actualCollectionSize = actualResultObject.get().size();
+        Agent actualAgent = actualResultObject.get().get(0);
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedEnabledIdleMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_IDLE_AGENT_MESSAGE, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
         Assert.assertEquals(firstAgent.getId(), actualAgent.getId());
         Assert.assertTrue(actualAgent.isEnabled());
@@ -100,7 +96,7 @@ public class AgentServiceTests {
 
     @Test
     public void getAllEnabledIdleAgents_withNonexistentObjects_noObjects() {
-        int expectedCollectionSize = 0;
+        int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS;
 
         ServiceResult actualResult = this.mockedAgentService.getAllEnabledIdleAgents();
         List<Agent> actualResultObject = (List<Agent>) actualResult.getObject();
@@ -108,7 +104,7 @@ public class AgentServiceTests {
 
         Assert.assertNotNull(actualResultObject);
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedEnabledIdleMessage, actualResult.getMessage());
+        Assert.assertEquals(TestsConstants.EXPECTED_IDLE_AGENT_MESSAGE, actualResult.getMessage());
         Assert.assertEquals(expectedCollectionSize, actualCollectionSize);
     }
 }

@@ -6,27 +6,27 @@ public class Server extends DbEntry {
     private Double purgeUpTo;
 
     public String getArtifactsDir() {
-        return artifactsDir;
+        return this.artifactsDir;
     }
 
     public void setArtifactsDir(String value) {
-        artifactsDir = value;
+        this.artifactsDir = value;
     }
 
     public Double getPurgeStart() {
-        return purgeStart;
+        return this.purgeStart;
     }
 
     public void setPurgeStart(Double value) {
-        purgeStart = value;
+        this.purgeStart = value;
     }
 
     public Double getPurgeUpTo() {
-        return purgeUpTo;
+        return this.purgeUpTo;
     }
 
     public void setPurgeUpTo(Double value) {
-        purgeUpTo = value;
+        this.purgeUpTo = value;
     }
 
 }

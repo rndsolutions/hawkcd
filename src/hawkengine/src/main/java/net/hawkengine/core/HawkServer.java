@@ -10,16 +10,15 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
-import javax.servlet.ServletException;
-import javax.websocket.DeploymentException;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
 
     private Server server;
+    private static final int PORT = 8080;
 
     public HawkServer() {
-        server = new Server();
+        this.server = new Server();
     }
 
     protected void configure() {
@@ -27,41 +26,40 @@ public class HawkServer {
         //bind(IConfigService.class).to(ConfigService.class);
     }
 
-    public void configureJetty() throws ServletException, DeploymentException {
+    public void configureJetty() {
 
         // HTTP connector
-        ServerConnector connector = new ServerConnector(server);
-        connector.setPort(8080);
-        server.addConnector(connector);
+        ServerConnector connector = new ServerConnector(this.server);
+        connector.setPort(PORT);
+        this.server.addConnector(connector);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
 
         // REST
-        ServletHolder restServlet = context.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+        ServletHolder restServlet = context.addServlet(ServletContainer.class, "/*");
         restServlet.setInitOrder(0);
 
         // Tells the Jersey Servlet which REST service/class to load.
-        StringBuilder classes = new StringBuilder();
-        classes.append(Account.class.getCanonicalName() + ", ");
-        classes.append(Config.class.getCanonicalName() + ", ");
-        classes.append(Stats.class.getCanonicalName() + ", ");
-        classes.append(Exec.class.getCanonicalName() + ", ");
+        String classes = Account.class.getCanonicalName() + ", " +
+                Config.class.getCanonicalName() + ", " +
+                Stats.class.getCanonicalName() + ", " +
+                Exec.class.getCanonicalName() + ", ";
 
-        restServlet.setInitParameter("jersey.config.server.provider.classnames", classes.toString());
+        restServlet.setInitParameter("jersey.config.server.provider.classnames", classes);
 
         // localhost:8080/ws/v1
 
         // WebSockets
         context.addServlet(WsServlet.class, "/ws/v1");
 
-        server.setHandler(context);
+        this.server.setHandler(context);
     }
 
     public void start() throws Exception {
 
-        server.start();
-        server.join();
+        this.server.start();
+        this.server.join();
     }
 
     public void stop() {

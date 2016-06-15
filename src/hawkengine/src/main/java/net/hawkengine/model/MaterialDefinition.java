@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.MaterialType;
+
 import java.util.HashMap;
 
 public class MaterialDefinition {
@@ -7,58 +9,57 @@ public class MaterialDefinition {
     private String name;
     private MaterialType type;
     private String url;
-    private boolean autoTriggerOnChange;
+    private boolean isAutoTriggeredOnChange;
     private HashMap<String, Object> materialSpecificDetails;
 
     public MaterialDefinition() {
     }
 
     public String getPipelineDefinitionId() {
-        return pipelineDefinitionId;
+        return this.pipelineDefinitionId;
     }
 
     public void setPipelineDefinitionId(String value) {
-        pipelineDefinitionId = value;
+        this.pipelineDefinitionId = value;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String value) {
-        name = value;
+        this.name = value;
     }
 
     public MaterialType getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(MaterialType value) {
-        type = value;
+        this.type = value;
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public void setUrl(String value) {
-        url = value;
+        this.url = value;
     }
 
-    public boolean getAutoTriggerOnChange() {
-        return autoTriggerOnChange;
+    public boolean isAutoTriggeredOnChange() {
+        return this.isAutoTriggeredOnChange;
     }
 
-    public void setAutoTriggerOnChange(boolean value) {
-        autoTriggerOnChange = value;
+    public void setAutoTriggeredOnChange(boolean autoTriggeredOnChange) {
+        this.isAutoTriggeredOnChange = autoTriggeredOnChange;
     }
 
     public HashMap<String, Object> getMaterialSpecificDetails() {
-        return materialSpecificDetails;
+        return this.materialSpecificDetails;
     }
 
     public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-        materialSpecificDetails = value;
+        this.materialSpecificDetails = value;
     }
-
 }

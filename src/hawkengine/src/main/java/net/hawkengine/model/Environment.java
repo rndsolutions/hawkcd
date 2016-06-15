@@ -6,41 +6,41 @@ public class Environment extends DbEntry {
     private String environmentName;
     private ArrayList<EnvironmentVariable> environmentVariables;
     private ArrayList<String> pipelineNames;
-	private ArrayList<Agent> agents;
+    private ArrayList<Agent> agents;
 
     public Environment() {
-        this.setEnvironmentVariables(new ArrayList<EnvironmentVariable>());
+        this.setEnvironmentVariables(new ArrayList<>());
     }
 
     public String getEnvironmentName() {
-        return environmentName;
+        return this.environmentName;
     }
 
     public void setEnvironmentName(String value) {
-        environmentName = value;
+        this.environmentName = value;
     }
 
     public ArrayList<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(ArrayList<EnvironmentVariable> value) {
-        environmentVariables = value;
+        this.environmentVariables = value;
     }
 
     public ArrayList<String> getPipelineNames() {
-        return pipelineNames;
+        return this.pipelineNames;
     }
 
     public void setPipelineNames(ArrayList<String> value) {
-        pipelineNames = value;
+        this.pipelineNames = value;
     }
 
     public ArrayList<Agent> getAgents() {
-        return agents;
+        return this.agents;
     }
 
     public void setAgents(ArrayList<Agent> value) {
-        agents = value;
+        this.agents = value;
     }
 }

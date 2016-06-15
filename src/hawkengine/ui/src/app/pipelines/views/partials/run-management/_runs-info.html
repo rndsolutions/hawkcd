@@ -16,53 +16,62 @@
                 </div>
                 <div class="mt-list-container list-simple ext-1 group">
 
-                    <a class="list-toggle-container" data-toggle="collapse" data-target="#skipped" aria-expanded="false">
-                        <div class="list-toggle uppercase bg-grey-salt border-dark">{{pipesRunManagement.runsInfoMenu.skipped}}
+                    <a class="list-toggle-container" data-toggle="collapse" data-target="#skipped"
+                       aria-expanded="false">
+                        <div class="list-toggle uppercase bg-grey-salt border-dark">
+                            {{pipesRunManagement.runsInfoMenu.skipped}}
                             <span class="badge badge-default pull-right bg-white font-dark bold">{{pipesRunManagement.getJobResults().skippedJobs}}</span>
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="skipped" aria-expanded="false">
                         <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
-                            <li class="mt-list-item border-grey-salt" ng-if="job.Status == 'Passed' && job.State == 'None'" ng-click="pipesRunManagement.selectJob($index)">
+                            <li class="mt-list-item border-grey-salt"
+                                ng-if="job.Status == 'Passed' && job.State == 'None'"
+                                ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                    <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
-                  </h3>
+                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                    </h3>
                                 </div>
                             </li>
                         </ul>
                     </div>
 
-                    <a class="list-toggle-container" data-toggle="collapse" data-target="#scheduled" aria-expanded="false">
+                    <a class="list-toggle-container" data-toggle="collapse" data-target="#scheduled"
+                       aria-expanded="false">
                         <div class="list-toggle uppercase bg-grey-salt">{{pipesRunManagement.runsInfoMenu.scheduled}}
                             <span class="badge badge-default pull-right bg-white font-dark bold">{{pipesRunManagement.getJobResults().scheduledJobs}}</span>
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="scheduled" aria-expanded="false">
                         <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
-                            <li class="mt-list-item border-yellow-lemon bg-hover-yellow-saffron" ng-if="job.Status == 'Passed' && job.State == 'Scheduled'"
-                            ng-click="pipesRunManagement.selectJob($index)">
+                            <li class="mt-list-item border-yellow-lemon bg-hover-yellow-saffron"
+                                ng-if="job.Status == 'Passed' && job.State == 'Scheduled'"
+                                ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                    <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
-                  </h3>
+                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                    </h3>
                                 </div>
                             </li>
                         </ul>
                     </div>
 
-                    <a class="list-toggle-container" data-toggle="collapse" data-target="#running" aria-expanded="false">
+                    <a class="list-toggle-container" data-toggle="collapse" data-target="#running"
+                       aria-expanded="false">
                         <div class="list-toggle uppercase bg-grey-salt">{{pipesRunManagement.runsInfoMenu.inProgress}}
                             <span class="badge badge-default pull-right bg-white font-dark bold">{{pipesRunManagement.getJobResults().inProgress}}</span>
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="running" aria-expanded="false">
                         <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
-                            <li class="mt-list-item border-dark" ng-if="job.Status == 'Passed' && job.State == 'Running'" ng-click="pipesRunManagement.selectJob($index)">
+                            <li class="mt-list-item border-dark"
+                                ng-if="job.Status == 'Passed' && job.State == 'Running'"
+                                ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                    <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
-                  </h3>
+                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                    </h3>
                                 </div>
                             </li>
                         </ul>
@@ -87,14 +96,15 @@
                     </a>
                     <div class="panel-collapse collapse" id="passed" aria-expanded="false">
                         <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
-                            <li class="mt-list-item done" ng-if="job.Status == 'Passed' && job.State == 'Completed'" ng-click="pipesRunManagement.selectJob($index)">
+                            <li class="mt-list-item done" ng-if="job.Status == 'Passed' && job.State == 'Completed'"
+                                ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-icon-container">
                                     <i class="icon-check"></i>
                                 </div>
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                    <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
-                  </h3>
+                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                    </h3>
                                 </div>
                             </li>
                         </ul>
@@ -107,76 +117,20 @@
                     </a>
                     <div class="panel-collapse collapse" id="failed" aria-expanded="false">
                         <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
-                            <li class="mt-list-item bg-hover-red-sunglo border-red-thunderbird" ng-if="job.Status == 'Failed'" ng-click="pipesRunManagement.selectJob($index)">
+                            <li class="mt-list-item bg-hover-red-sunglo border-red-thunderbird"
+                                ng-if="job.Status == 'Failed'" ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-icon-container">
                                     <i class="icon-close"></i>
                                 </div>
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                    <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
-                  </h3>
+                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                    </h3>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </div>
-            </div>
-            <div>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                  &nbsp
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                 &nbsp
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-                </br>
-                &nbsp
-                </br>
-                &nbsp
-                </br>
-        
             </div>
         </div>
 

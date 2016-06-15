@@ -3,90 +3,86 @@ package net.hawkengine.db.tests;
 import com.github.fakemongo.Fongo;
 import com.mongodb.DBCollection;
 import com.mongodb.FongoDB;
+import junit.framework.TestCase;
 import net.hawkengine.db.mongodb.MongoDbRepository;
 import net.hawkengine.model.Agent;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-import java.io.IOException;
-
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MongoDbImplementationTest {
 
-	private static DBCollection collection;
-	private static Agent agent;
+    private DBCollection collection;
+    private Agent agent;
 
-	private static MongoDbRepository<Agent> mockedRepository;
+    private MongoDbRepository<Agent> mockedRepository;
 
-	@BeforeClass
-	public static void initializeDB() throws IOException {
-		Fongo fongo = new Fongo("mongo server 1");
-		FongoDB db = fongo.getDB("mydb");
-		collection = db.getCollection("mycollection");
-		agent = new Agent();
-		agent.setHostName("ggg");
-	}
+    @Before
+    public void setUp() {
+        Fongo fongo = new Fongo("mongo server 1");
+        FongoDB db = fongo.getDB("mydb");
+        this.collection = db.getCollection("mycollection");
+        this.agent = new Agent();
+        this.agent.setHostName("ggg");
+        this.mockedRepository = new MongoDbRepository<>(Agent.class, this.collection);
 
-	@Before
-	public void setUp() throws Exception {
+    }
 
-		this.mockedRepository = new MongoDbRepository<>(Agent.class, this.collection);
-	}
+    @Test
+    public void add_oneObject_theObject() {
+        Agent agentFromDb = this.mockedRepository.add(this.agent);
 
-	@Test
-	public void add_OneObject_TheObject() throws Exception {
-		Object agentFromDb = this.mockedRepository.add(this.agent);
-	}
+        Assert.assertEquals(this.agent.getId(), agentFromDb.getId());
+    }
 
-	@Test
-	public void getAll_OneObject() throws Exception {
+    @Test
+    public void getAll_oneObject() {
 
-		long repositoryCollectionCount = this.mockedRepository.getAll().size();
-		assertEquals(1, repositoryCollectionCount);
-	}
+        this.mockedRepository.add(this.agent);
+        long repositoryCollectionCount = this.mockedRepository.getAll().size();
+        Assert.assertEquals(1, repositoryCollectionCount);
+    }
 
-	@Test
-	public void getById_ValidId_TheObject() throws Exception {
+    @Test
+    public void getById_validId_theObject() {
 
-		Agent dbObj = this.mockedRepository.getById(this.agent.getId());
+        this.mockedRepository.add(this.agent);
 
-		assertNotEquals(null, dbObj);
-	}
+        Agent dbObj = this.mockedRepository.getById(this.agent.getId());
 
-	@Test
-	public void getById_InvalidId_Null() throws Exception {
-		assertNull(this.mockedRepository.getById("ghrjyyhjtdhg"));
-	}
+        Assert.assertNotEquals(null, dbObj);
+    }
 
-	@Test
-	public void update_ValidObject_UpdatedObject() throws Exception {
+    @Test
+    public void getById_invalidId_null() {
+        this.mockedRepository.add(this.agent);
 
-		this.agent.setHostName("newName");
+        TestCase.assertNull(this.mockedRepository.getById("ghrjyyhjtdhg"));
+    }
 
-		this.mockedRepository.update(this.agent);
+    @Test
+    public void update_validObject_updatedObject() {
 
-		Agent result = this.mockedRepository.getAll().get(0);
+        this.mockedRepository.add(this.agent);
 
-		assertEquals(this.agent.getHostName(), result.getHostName());
-	}
+        this.agent.setHostName("newName");
 
-//	@Test
-//	public void delete_ValidId_True() throws Exception {
-//		//Arrange
-//
-//		boolean expectedResult = true;
-//
-//		//Act
-//		boolean actualResult = mockedRepository.delete(agent.getId());
-//
-//		//Assert
-//		assertEquals(expectedResult, actualResult);
-//	}
+        this.mockedRepository.update(this.agent);
+
+        Agent result = this.mockedRepository.getAll().get(0);
+
+        Assert.assertEquals(this.agent.getHostName(), result.getHostName());
+    }
+
+    @Test
+    public void delete_validId_true() {
+        //Arrange
+        this.mockedRepository.add(this.agent);
+
+        //Act
+        boolean actualResult = this.mockedRepository.delete(this.agent.getId());
+
+        //Assert
+        Assert.assertTrue(actualResult);
+    }
 }

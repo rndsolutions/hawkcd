@@ -2,6 +2,7 @@ package net.hawkengine.db.mongodb;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import net.hawkengine.db.IDbRepository;
@@ -14,18 +15,17 @@ import java.util.List;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
-    private DB mongoDatabase;
     private DBCollection collection;
     private Type entryType;
-
     private Gson jsonConverter;
+    private DB mongoDatabase;
 
     public MongoDbRepository(Class<T> entry) {
         this.entryType = entry;
 
         this.jsonConverter = new GsonBuilder().create();
-        this.mongoDatabase = MongoDbManager.getInstance().db;
-        this.collection = mongoDatabase.getCollection(this.entryType.getTypeName());
+        this.mongoDatabase = MongoDbManager.getInstance().getDb();
+        this.collection = this.mongoDatabase.getCollection(this.entryType.getTypeName());
     }
 
     public MongoDbRepository(Class entry, DBCollection mockedMongoCollection) {
@@ -45,7 +45,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             if (documents.size() > 0) {
                 String document = JSON.serialize(documents.next());
 
-                result = jsonConverter.fromJson(document, this.entryType);
+                result = this.jsonConverter.fromJson(document, this.entryType);
 
                 return result;
             }
@@ -59,58 +59,57 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     @Override
     public List<T> getAll() {
         T resultElement;
+        List<T> result = new ArrayList<>();
         try {
             DBCursor documents = this.collection.find();
 
-            List<T> result = new ArrayList<>();
-
             for (DBObject document : documents) {
                 String documentToJson = JSON.serialize(document);
-                resultElement = jsonConverter.fromJson(documentToJson, this.entryType);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
                 result.add(resultElement);
             }
 
-            return result;
-
-        } catch (Exception e) {
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
             e.printStackTrace();
             throw e;
         }
+        return result;
     }
 
     @Override
     public T add(T entry) {
-        if (getById(entry.getId()) == null) {
+        if (this.getById(entry.getId()) == null) {
             try {
-                String entryToJson = jsonConverter.toJson(entry);
+                String entryToJson = this.jsonConverter.toJson(entry);
                 DBObject myDoc = (DBObject) JSON.parse(entryToJson);
 
                 this.collection.insert(myDoc);
 
                 return entry;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 e.printStackTrace();
                 throw e;
             }
-        }else {
+        } else {
             return null;
-            //throw new Exception("Entry already present");
         }
     }
 
     @Override
     public T update(T entry) {
         try {
-            BasicDBObject newDocument = (BasicDBObject) JSON.parse(jsonConverter.toJson(entry));
+            BasicDBObject newDocument = (BasicDBObject) JSON.parse(this.jsonConverter.toJson(entry));
 
             BasicDBObject searchQuery = new BasicDBObject().append("id", entry.getId());
 
             this.collection.findAndModify(searchQuery, newDocument);
 
             return entry;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
-            return entry;
+            return null;
         }
     }
 
@@ -121,7 +120,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             this.collection.findAndRemove(searchQuery);
 
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return false;
         }
