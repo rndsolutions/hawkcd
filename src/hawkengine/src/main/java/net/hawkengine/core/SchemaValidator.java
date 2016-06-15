@@ -6,8 +6,15 @@ import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.MaterialType;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.TaskType;
+
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.print.attribute.standard.MediaSize;
 
 /**
  * Created by boris on 09.06.16.
@@ -17,20 +24,20 @@ public class SchemaValidator {
     private static final String NAME_PATTERN = "[A-Za-z]{3,20}"; //TODO enter name pattern
     private static final String GIT_PATTERN = "[a-zA-Z]{5,50}"; //TODO define git url pattern
     private static final String NUGET_PATTERN = "[a-zA-Z]{5,50}"; //TODO define git url pattern
-
-
+    //TODO to be handaled non-required insertation of Environments into PipelineDefinition,
+    //TODO StageDefinition.
 
     //PIPELINEGROUP
     public String validate(PipelineGroup pipelineGroup) {
         if (pipelineGroup != null) {
             String name = pipelineGroup.getName();
-                if (name == null) {
-                   return this.message = "ERROR: PIPELINEGROUP NAME IS NULL.";
-                }
+            if (name == null) {
+                return this.message = "ERROR: PIPELINEGROUP NAME IS NULL.";
+            }
 
-                if(isValidRegEx(name,NAME_PATTERN) == false){
-                    return this.message = "ERROR: PIPELINEGROUP NAME IS INVALID.";
-                }
+            if(isValidRegEx(name,NAME_PATTERN) == false){
+                return this.message = "ERROR: PIPELINEGROUP NAME IS INVALID.";
+            }
         }
         else {
             return this.message = "ERROR: PIPELINEGROUP IS NULL.";
@@ -38,34 +45,149 @@ public class SchemaValidator {
         return message;
     }
 
-
     //PIPELINEDEFINITION
-
     public String validate(PipelineDefinition pipelineDefinition){
         if (pipelineDefinition != null){
             String pipelineDefinitionName = pipelineDefinition.getName();
             String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
-            String pipelineLabelTemplate = pipelineDefinition.getLabelTemplate();
-            //int pipelineMaterial = pipelineDefinition.
+            int pipelineMaterial = pipelineDefinition.getMaterials().size();
+            //int environmentVariables = pipelineDefinition.getEnvironmentVariables().size();
+            //int environments = pipelineDefinition.getEnvironments().size();
+            int stageDefinitions = pipelineDefinition.getStageDefinitions().size();
+
+            if (pipelineDefinitionName == null){
+                return this.message = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
+            }
+
+            if (this.isValidRegEx(pipelineDefinitionName, NAME_PATTERN) == false){
+                return this.message = "ERROR: PIPELINE DEFINITION NAME IS INVALID.";
+            }
+
+            if (pipelineGroupId == null) {
+                return this.message = "ERROR: PIPELINE GROUP ID IS NULL.";
+            }
+
+            if (pipelineMaterial <= 0) {
+                return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
+            }
+
+            if (stageDefinitions <= 0) {
+                return this.message = "ERROR: STAGE NOT ADDED.";
+            }
 
         } else {
             return this.message = "ERROR: PIPELINE DEFINITION IS NULL.";
+        }
+        return this.message;
+    }
+
+    //STAGEDEFINITION
+    public String validate(StageDefinition stageDefinition){
+        if(stageDefinition != null){
+            String stageDefinitionName = stageDefinition.getName();
+            String stageDefinitionPipelineId = stageDefinition.getPipelineDefinitionId();
+            //int enviromentVariables = stageDefinition.getEnvironmentVariables().size();
+            int jobDefinitions = stageDefinition.getJobDefinitions().size();
+            if (stageDefinitionName == null){
+                return this.message = "ERROR: STAGE DEFINITION NAME IS NULL.";
+            }
+
+            if (this.isValidRegEx(stageDefinitionName,NAME_PATTERN) == false) {
+                return this.message = "ERROR: STAGE DEFINITION NAME IS INVALID.";
+            }
+            if (stageDefinitionPipelineId == null){
+                return this.message = "ERROR: PIPELINE DEFINITION ID IS NULL.";
+            }
+
+            if (jobDefinitions <= 0) {
+                return this.message = "ERROR: JOB NOT ADDED.";
+            }
+
+        }else {
+            return this.message = "ERROR: STAGE DEFINITION IS NULL.";
+        }
+        return this.message;
+    }
+
+    //JOBDEFINITION
+    public String validate (JobDefinition jobDefinition){
+        if (jobDefinition != null){
+            String name = jobDefinition.getName();
+            String stageDefinitionId = jobDefinition.getStageDefinitionId();
+            //int environmentVariables = jobDefinition.getEnvironmentVariables().size();
+            int taskDefinitions = jobDefinition.getTaskDefinitions().size();
+
+            if (name == null){
+                return this.message = "ERROR: JOB DEFINITION NAME IS NULL.";
+            }
+
+            if (this.isValidRegEx(name, NAME_PATTERN) == false) {
+                return this.message = "ERROR: JOB DEFINITION NAME IS INVALID.";
+            }
+
+            if (stageDefinitionId == null){
+                return this.message = "ERROR: STAGE DEFINITION ID IS NULL.";
+            }
+
+            if (taskDefinitions <= 0) {
+                return this.message = "ERROR: TASK NOT ADDED.";
+            }
+
+        }else {
+            return this.message = "ERROR: JOB DEFINITION IS NULL.";
+        }
+
+        return this.message;
+    }
+
+    //TASKDEFINITION
+    public String validate (TaskDefinition taskDefinition) {
+        if (taskDefinition != null) {
+            String name = taskDefinition.getName();
+            String jobDefinitionId = taskDefinition.getJobDefinitionId();
+
+            if (name == null) {
+                return this.message = "ERROR: TASK DEFINITION NAME IS NULL.";
+            }
+
+            if (this.isValidRegEx(name, NAME_PATTERN) == false) {
+                return this.message = "ERROR: TASK DEFINITION NAME IS INVALID.";
+            }
+
+            if (jobDefinitionId == null) {
+                return this.message = "ERROR: JOB DEFINITION ID IS NULL.";
+            }
+
+            if (this.isValidRegEx(jobDefinitionId, NAME_PATTERN) == false) {
+                return this.message = "ERROR: JOB DEFINITION ID IS INVALID.";
+            }
+
+            if (taskDefinition.getType() == null) {
+                return this.message = "ERROR: TASK TYPE IS NULL.";
+            }
+
+            if (taskDefinition.getRunIfCondition() == null) {
+                this.message = "ERROR: RUN IF CONDITION IS NULL.";
+            }
+
+        }else {
+            return this.message = "ERROR: TASK DEFINITION IS NULL.";
         }
 
         return this.message;
     }
 
 
-    /*
+
     //AGENT
     public String validate(Agent agent){
         if (agent != null){
             String agentName = agent.getName();
             String hostname = agent.getHostName();
-            String ipAdress = agent.getIPAddress();
-
-
-
+            String ipAdress = agent.getIpAddress();
+            String rootPath = agent.getRootPath();
+            String os = agent.getOs();
+            Object environment = agent.getEnvironment();
             if (agentName == null){
                 return this.message = "ERROR: AGENT NAME IS NULL.";
             }
@@ -78,23 +200,32 @@ public class SchemaValidator {
                 return this.message = "ERROR: AGENT HOSTNAME IS NULL.";
             }
 
-            if (this.isValidRegEx(hostname,NAME_PATTERN) == false){
-                return this.message = "ERROR: AGENT HOSTNAME IS INVALID.";
+            if (ipAdress == null){
+                return this.message = "ERROR: AGENT IP ADRESS IS NULL.";
             }
 
+            if (rootPath == null){
+                return this.message = "ERROR: AGENT ROOT PATH IS NULL.";
+            }
 
+            if (os == null){
+                return this.message = "ERROR: AGENT OPERATIONAL SYSTEM IS NULL.";
+            }
+
+            if (environment == null){
+                return this.message = "ERROR: AGENT ENVIRONMENT IS NULL.";
+            }
         }
         return this.message;
     }
 
-    */
 
     //MATERIAL DEFINITION
     public String validate(MaterialDefinition materialDefinition){
         if (materialDefinition != null){
             String materialName = materialDefinition.getName();
             String materialURL = materialDefinition.getUrl();
-            String materialPipeline = materialDefinition.getPipelineName();
+            String materialPipeline = materialDefinition.getPipelineDefinitionId();
             if (materialName == null){
                 return this.message = "ERROR: MATERIAL DEFINITION NAME IS NULL.";
             }
@@ -124,9 +255,8 @@ public class SchemaValidator {
         } else {
             return this.message = "ERROR: Material Definition is NULL";
         }
-        return message;
+        return this.message;
     }
-
 
     private boolean isValidRegEx(String input, String string_pattern){
         Pattern pattern = Pattern.compile(string_pattern);
