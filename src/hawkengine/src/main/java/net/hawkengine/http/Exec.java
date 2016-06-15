@@ -7,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/exec")
 public class Exec {
-
 	@GET
 	@Path("test")
 	@Produces(MediaType.TEXT_PLAIN)

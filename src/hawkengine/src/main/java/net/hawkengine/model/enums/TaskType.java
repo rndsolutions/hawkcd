@@ -1,4 +1,4 @@
-package net.hawkengine.model;
+package net.hawkengine.model.enums;
 
 public enum TaskType {
     NONE,

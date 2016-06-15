@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.JobStatus;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,8 +13,7 @@ public class Job extends DbEntry{
     private String stageId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
-    private List<String> resources;
-    private List<JobDefinition> jobs;
+    private List<Task> tasks;
     private JobStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -21,12 +22,11 @@ public class Job extends DbEntry{
     public Job() {
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
-        this.setResources(new ArrayList<>());
-        this.setJobs(new ArrayList<>());
+        this.setTasks(new ArrayList<>());
     }
 
     public String getJobDefinitionId() {
-        return jobDefinitionId;
+        return this.jobDefinitionId;
     }
 
     public void setJobDefinitionId(String jobDefinitionId) {
@@ -34,7 +34,7 @@ public class Job extends DbEntry{
     }
 
     public String getPipelineId() {
-        return pipelineId;
+        return this.pipelineId;
     }
 
     public void setPipelineId(String pipelineId) {
@@ -42,7 +42,7 @@ public class Job extends DbEntry{
     }
 
     public String getStageId() {
-        return stageId;
+        return this.stageId;
     }
 
     public void setStageId(String stageId) {
@@ -50,7 +50,7 @@ public class Job extends DbEntry{
     }
 
     public int getExecutionId() {
-        return executionId;
+        return this.executionId;
     }
 
     public void setExecutionId(int executionId) {
@@ -58,31 +58,23 @@ public class Job extends DbEntry{
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {
-        return environmentVariables;
+        return this.environmentVariables;
     }
 
     public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
         this.environmentVariables = environmentVariables;
     }
 
-    public List<String> getResources() {
-        return resources;
+    public List<Task> getTasks() {
+        return this.tasks;
     }
 
-    public void setResources(List<String> resources) {
-        this.resources = resources;
-    }
-
-    public List<JobDefinition> getJobs() {
-        return jobs;
-    }
-
-    public void setJobs(List<JobDefinition> jobs) {
-        this.jobs = jobs;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public JobStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(JobStatus status) {
@@ -90,7 +82,7 @@ public class Job extends DbEntry{
     }
 
     public LocalDateTime getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -98,7 +90,7 @@ public class Job extends DbEntry{
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     public void setEndTime(LocalDateTime endTime) {
@@ -106,7 +98,7 @@ public class Job extends DbEntry{
     }
 
     public Duration getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(Duration duration) {

@@ -8,13 +8,13 @@ import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
     public PipelineDefinitionService() {
-        super.repository = new RedisRepository(PipelineDefinition.class);
-        super.objectType = "PipelineDefinition";
+        super.setRepository(new RedisRepository(PipelineDefinition.class));
+        super.setObjectType("PipelineDefinition");
     }
 
     public PipelineDefinitionService(IDbRepository repository) {
-        super.repository = repository;
-        super.objectType = "PipelineDefinition";
+        super.setRepository(repository);
+        super.setObjectType("PipelineDefinition");
     }
 
     @Override

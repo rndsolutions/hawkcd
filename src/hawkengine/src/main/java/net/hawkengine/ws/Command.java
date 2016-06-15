@@ -5,36 +5,36 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class Command {
-	private Object object;
-	private String methodName;
-	private List<Object> methodArgs;
+    private final Object object;
+    private final String methodName;
+    private final List<Object> methodArgs;
 
-	public Command(Object object, String methodName, List<Object> methodArgs) {
-		this.object = object;
-		this.methodName = methodName;
-		this.methodArgs = methodArgs;
-	}
+    public Command(Object object, String methodName, List<Object> methodArgs) {
+        this.object = object;
+        this.methodName = methodName;
+        this.methodArgs = methodArgs;
+    }
 
-	public Object execute() {
-		Class objectClass = object.getClass();
-		Method method;
-		try {
-			if (this.methodArgs == null || this.methodArgs.size() == 0) {
-				method = objectClass.getMethod(this.methodName);
-				return method.invoke(this.object);
-			} else {
-				Class[] argTypes = new Class[this.methodArgs.size()];
-				for (int i = 0; i < this.methodArgs.size(); i++) {
-					argTypes[i] = this.methodArgs.get(i).getClass();
-				}
+    public Object execute() {
+        Class objectClass = this.object.getClass();
+        Method method;
+        try {
+            if ((this.methodArgs == null) || this.methodArgs.isEmpty()) {
+                method = objectClass.getMethod(this.methodName);
+                return method.invoke(this.object);
+            } else {
+                Class[] argTypes = new Class[this.methodArgs.size()];
+                for (int i = 0; i < this.methodArgs.size(); i++) {
+                    argTypes[i] = this.methodArgs.get(i).getClass();
+                }
 
-				method = objectClass.getMethod(this.methodName, argTypes);
-				return method.invoke(this.object, this.methodArgs.toArray());
-			}
-		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-		}
+                method = objectClass.getMethod(this.methodName, argTypes);
+                return method.invoke(this.object, this.methodArgs.toArray());
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     public PipelineService() {
-        super.repository = new RedisRepository(Pipeline.class);
-        super.objectType = "Pipeline";
+        super.setRepository(new RedisRepository(Pipeline.class));
+        super.setObjectType("Pipeline");
     }
 
     public PipelineService(IDbRepository repository) {
-        super.repository = repository;
+        super.setRepository(repository);
     }
 
     @Override

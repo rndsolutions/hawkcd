@@ -1,5 +1,8 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.MaterialType;
+import net.hawkengine.model.enums.TaskType;
+
 import java.util.HashMap;
 
 public class FetchMaterialTask extends Task {
@@ -10,55 +13,55 @@ public class FetchMaterialTask extends Task {
     private String destination;
     private HashMap<String, Object> materialSpecificDetails;
 
-    public FetchMaterialTask() throws Exception {
+    public FetchMaterialTask() {
         this.setType(TaskType.FETCH_MATERIAL);
     }
 
     public String getMaterialName() {
-        return materialName;
+        return this.materialName;
     }
 
     public void setMaterialName(String value) {
-        materialName = value;
+        this.materialName = value;
     }
 
     public String getPipelineName() {
-        return pipelineName;
+        return this.pipelineName;
     }
 
     public void setPipelineName(String value) {
-        pipelineName = value;
+        this.pipelineName = value;
     }
 
     public MaterialType getMaterialType() {
-        return materialType;
+        return this.materialType;
     }
 
     public void setMaterialType(MaterialType value) {
-        materialType = value;
+        this.materialType = value;
     }
 
     public String getSource() {
-        return source;
+        return this.source;
     }
 
     public void setSource(String value) {
-        source = value;
+        this.source = value;
     }
 
     public String getDestination() {
-        return destination;
+        return this.destination;
     }
 
     public void setDestination(String value) {
-        destination = value;
+        this.destination = value;
     }
 
     public HashMap<String, Object> getMaterialSpecificDetails() {
-        return materialSpecificDetails;
+        return this.materialSpecificDetails;
     }
 
     public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-        materialSpecificDetails = value;
+        this.materialSpecificDetails = value;
     }
 }

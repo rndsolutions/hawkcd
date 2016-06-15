@@ -41,12 +41,12 @@ angular
         //region Updaters
 
         viewModel.updateAgents = function(object) {
-            viewModel.allAgents = object.result;
+            viewModel.allAgents = object;
             toaster.pop('success', "Notification", "Agents updated!");
         };
 
         viewModel.updateAgentStatus = function(data){
-            findAndReplaceState(viewModel.allAgents, data.result.id, data.result.configState);
+            findAndReplaceState(viewModel.allAgents, data.id, data.configState);
         };
 
         function findAndReplaceState(object, id, newConfigState) {
