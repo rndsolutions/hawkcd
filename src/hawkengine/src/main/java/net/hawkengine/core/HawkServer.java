@@ -1,10 +1,12 @@
 package net.hawkengine.core;
 
+import net.hawkengine.core.components.pipelinescheduler.JobAssigner;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.Account;
 import net.hawkengine.http.Config;
 import net.hawkengine.http.Exec;
 import net.hawkengine.http.Stats;
+import net.hawkengine.model.Job;
 import net.hawkengine.ws.WsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -13,9 +15,9 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
+    private static final int PORT = 8080;
 
     private Server server;
-    private static final int PORT = 8080;
 
     public HawkServer() {
         this.server = new Server();
@@ -57,7 +59,10 @@ public class HawkServer {
     }
 
     public void start() throws Exception {
-
+        JobAssigner jobAssigner = new JobAssigner();
+        Thread thread = new Thread(jobAssigner);
+        //thread.setDaemon(true);
+        thread.start();
         this.server.start();
         this.server.join();
     }

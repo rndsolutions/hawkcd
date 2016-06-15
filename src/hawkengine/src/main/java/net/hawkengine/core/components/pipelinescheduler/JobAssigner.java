@@ -1,6 +1,5 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
-import net.hawkengine.core.components.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;
@@ -16,10 +15,10 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-public class JobAssigner extends Thread {
+public class JobAssigner implements Runnable {
+    private static final Logger logger = Logger.getLogger(PipelinePreparer.class.getName());
     private IAgentService agentService;
     private IPipelineService pipelineService;
-    private static final Logger logger = Logger.getLogger(PipelinePreparer.class.getName());
 
     public JobAssigner() {
         this.agentService = new AgentService();
@@ -32,19 +31,13 @@ public class JobAssigner extends Thread {
     }
 
     @Override
-    public synchronized void start() {
-        super.start();
-        logger.info(String.format(LoggerMessages.WORKER_STARTED, "Job Assigner"));
-        this.run();
-    }
-
-    @Override
     public void run() {
+        logger.info(String.format(LoggerMessages.WORKER_STARTED, "Job Assigner"));
         try {
             while (true) {
                 // TODO: call getAllWorkingIdleAgents
                 List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
-                List<Pipeline> pipelines = 
+                List<Pipeline> pipelines =
                         (List<Pipeline>) this.pipelineService.getAllPreparedPipelines().getObject();
 
                 // TODO: Replace iterations with call to JobService
