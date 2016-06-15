@@ -1,8 +1,7 @@
 package net.hawkengine.model;
 
 public enum MaterialType {
+    NONE,
     GIT,
-    TFS,
-    NUGET,
-    PIPELINE
+    NUGET
 }

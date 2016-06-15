@@ -7,7 +7,7 @@ public class MaterialChange extends DbEntry {
     private String pipelineName;
     private String materialName;
     private String url;
-    private MaterialType type = MaterialType.GIT;
+    private MaterialType type;
     private Date changeDate;
     private HashMap<String, Object> materialSpecificDetails;
 

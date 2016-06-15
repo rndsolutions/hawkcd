@@ -24,9 +24,9 @@ dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.13'    
         
-    compile 'javax.servlet:javax.servlet-api:3.1.0'       
-    
-    compile 'org.apache.logging.log4j:log4j-core:2.2'
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
+
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.13'
     
     compile 'org.eclipse.jetty:jetty-webapp:9.3.8.v20160314'
     
