@@ -2,9 +2,11 @@ package net.hawkengine.model;
 
 import net.hawkengine.model.enums.TaskType;
 
+import java.util.List;
+
 public class ExecTask extends TaskDefinition {
     private String command;
-    private String[] arguments;
+    private List arguments;
     private String lookUpCommands;
     private String workingDirectory;
     private boolean isIgnoringErrors;
@@ -21,11 +23,11 @@ public class ExecTask extends TaskDefinition {
         this.command = value;
     }
 
-    public String[] getArguments() {
+    public List getArguments() {
         return this.arguments;
     }
 
-    public void setArguments(String[] value) {
+    public void setArguments(List value) {
         this.arguments = value;
     }
 
