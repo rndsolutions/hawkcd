@@ -71,6 +71,10 @@ angular
             vm.newUser = {};
         };
 
+        vm.addNewPipelineGroup = function (){
+            
+        };
+
         // function getAllUsers() {
         //     var tokenIsValid = authDataService.checkTokenExpiration();
         //     if (tokenIsValid) {

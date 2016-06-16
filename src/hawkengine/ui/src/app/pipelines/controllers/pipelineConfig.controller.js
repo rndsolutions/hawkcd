@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelineConfigController', function($state, $interval, $scope, oldpipeConfig, authDataService) {
+    .controller('PipelineConfigController', function($state, $interval, $scope, authDataService) {
         var vm = this;
         vm.toggleLogo = 1;
         vm.materialType = "git";

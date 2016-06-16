@@ -17,7 +17,10 @@ angular
             }
 
             return isTheSame;
-        }
+        };
+        
+        adminGroupService.addNewPipelineGroup = function () {
+        };
 
         return adminGroupService;
     }]);
