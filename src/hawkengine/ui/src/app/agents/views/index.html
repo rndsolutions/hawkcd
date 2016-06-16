@@ -28,7 +28,7 @@
           <tr>
             <th>{{agents.defaultText.tableHeaders.agentName}}</th>
             <th class="custom-datatable-btns">{{agents.defaultText.tableHeaders.path}}</th>
-            <th>{{agents.defaultText.tableHeaders.operatingSystem}}</th>
+            <th>{{agents.defaultText.tableHeaders.os}}</th>
             <th>{{agents.defaultText.tableHeaders.ip}}</th>
             <th>{{agents.defaultText.tableHeaders.status}}</th>
             <th>{{agents.defaultText.tableHeaders.freeSpace}}</th>
@@ -42,7 +42,7 @@
 
           <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
             <td>{{agent.hostName + "-" +  agent.id.substr(0,8)}}</td>
-            <td class="custom-datatable-btns">{{agent.sandbox}}</td>
+            <td class="custom-datatable-btns">{{agent.rootPath}}</td>
             <td>{{agent.operatingSystem}}</td>
             <td>{{agent.ipAddress}}</td>
             <td>{{agent.executionState}}</td>
@@ -55,14 +55,14 @@
               <button ng-click="agents.setAgentToAddResource(agent)" class="btn btn-info"  data-target="#addResourceAgent" data-toggle="modal"
               >{{agents.status.resource}}
               </button>
-              <button ng-click="agents.changeAgentStatus($index,agent.configState)" class="btn btn-default"
-                       ng-if="agent.configState=='Disabled'" ng-show="agent.isConnected != false">{{agents.status.enable}}
+              <button ng-click="agents.changeAgentStatus(agent)" class="btn btn-default"
+                       ng-if="agent.isEnabled == false" ng-show="agent.isConnected != false">{{agents.status.enable}}
               </button>
               <button class="btn default"
                       ng-if="agent.isConnected == false" ng-class="{'disabled' : agent.isConnected == false}">Disconnected
               </button>
-              <button ng-click="agents.changeAgentStatus($index,agent.configState)" class="btn default"
-                      ng-if="agent.configState=='Enabled'" ng-show="agent.isConnected != false">{{agents.status.disable}}
+              <button ng-click="agents.changeAgentStatus(agent)" class="btn default"
+                      ng-if="agent.isEnabled == true" ng-show="agent.isConnected != false">{{agents.status.disable}}
               </button>
             </td>
 

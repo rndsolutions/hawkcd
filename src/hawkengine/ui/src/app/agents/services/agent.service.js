@@ -7,36 +7,67 @@ angular
 
         //region Senders
 
-        agentService.changeAgentStatus = function (id, configState){
-            var methodName = "setAgentConfigState";
+        // agentService.changeAgentStatus = function (id, configState){
+        //     var methodName = "update";
+        //     var className = "AgentService";
+        //     var packageName = "net.hawkengine.services";
+        //     var result = "";
+        //     var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}",
+        //                 "{\"packageName\": \"net.hawkengine.model.ConfigState\", \"object\": \"" + configState + "\"}"];
+        //     var error = "";
+        //     var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+        //     websocketSenderService.call(json);
+        //     console.log(json);
+        // };
+
+        //endregion
+
+        agentService.getAllAgents = function () {
+            var methodName = "getAll";
             var className = "AgentService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}",
-                        "{\"packageName\": \"net.hawkengine.model.ConfigState\", \"object\": \"" + configState + "\"}"];
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+        agentService.getAgentById = function (id) {
+            var methodName = "getById";
+            var className = "AgentService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
             console.log(json);
         };
 
-        //endregion
-
-        //region Receivers
-
-        agentService.updatewsAgent = function (data) {
-            $timeout(function(){
-                $rootScope.$broadcast('updatewsAgent', { object: data.result });
-            });
+        agentService.deleteAgent = function (id) {
+            var methodName = "delete";
+            var className = "AgentService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
 
-        agentService.updateAgents = function (data) {
-            $timeout(function(){
-                $rootScope.$broadcast('updateAgents', { object: data.result });
-            });
+        agentService.update = function (agent) {
+            var methodName = "update";
+            var className = "AgentService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.Agent\", \"object\": " + JSON.stringify(agent) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-
-        
 
         //endregion
 

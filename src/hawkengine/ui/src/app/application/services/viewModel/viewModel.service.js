@@ -13,7 +13,7 @@ angular
 
         viewModel.allMaterials = {};
 
-        viewModel.allPipelineGroups = {};
+        viewModel.allPipelineGroups = [];
 
         viewModel.init = function() {
             viewModel.getAllAgents();
@@ -44,26 +44,6 @@ angular
             viewModel.allAgents = object;
             toaster.pop('success', "Notification", "Agents updated!");
         };
-
-        viewModel.updateAgentStatus = function(data){
-            findAndReplaceState(viewModel.allAgents, data.id, data.configState);
-        };
-
-        function findAndReplaceState(object, id, newConfigState) {
-            object.map(function (a) {
-                if (a.id == id) {
-                    a.configState = newConfigState;
-                    var text = "";
-                    if(newConfigState == 'Enabled'){
-                        text = " enabled!";
-                    }
-                    else{
-                        text = " disabled!";
-                    }
-                    toaster.pop('success', "Notification", "Agent " + a.hostName + "-" + a.id.substr(0,8) + text);
-                }
-            })
-        }
 
         viewModel.updatePipelineGroups = function(object) {
             viewModel.allPipelineGroups = object.result;
