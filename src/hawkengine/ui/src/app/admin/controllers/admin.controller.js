@@ -2,7 +2,8 @@
 
 angular
     .module('hawk.adminManagement')
-    .controller('AdminController', function ($state, $interval, $scope, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, profileService, adminGroupService, authDataService, viewModel) {
+    .controller('AdminController',
+    function ($state, $interval, $scope, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, profileService, adminGroupService, authDataService, viewModel, $rootScope) {
         var vm = this;
 
 
@@ -51,8 +52,8 @@ angular
         };
 
         vm.newPipelineGroup = {
-            Name: '',
-            Pipelines: []
+            name: '',
+            pipelines: []
         };
 
         vm.defalultGroupsText = {
@@ -71,9 +72,32 @@ angular
             vm.newUser = {};
         };
 
-        vm.addNewPipelineGroup = function (){
-            
+        vm.currentPipelineGroups = {};
+
+        vm.currentPipelineGroups = viewModel.allPipelineGroups;
+
+        $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
+            vm.currentPipelineGroups = viewModel.allPipelineGroups;
+            console.log(vm.currentPipelineGroups);
+        });
+
+        vm.addNewPipelineGroup = function () {
+            adminGroupService.addNewPipelineGroup(vm.newPipelineGroup);
         };
+
+        vm.setPipelineForDelete = function (pipelineName) {
+            vm.pipelineToDeleteName = pipelineName;
+        };
+        
+        vm.pipelineGroupToDelete;
+
+        vm.setPipelineGroupToDelete = function (pipelineGroup) {
+            vm.pipelineGroupToDelete = pipelineGroup;
+        };
+
+        vm.deletePipelineGroup = function(){
+            adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete.id);
+        }
 
         // function getAllUsers() {
         //     var tokenIsValid = authDataService.checkTokenExpiration();
@@ -319,13 +343,7 @@ angular
         //     }
         // };
         //
-        // vm.setPipelineForDelete = function (pipelineName) {
-        //     vm.pipelineToDeleteName = pipelineName;
-        // };
-        //
-        // vm.setGroupForDelete = function (groupName) {
-        //     vm.groupForDeleteName = groupName;
-        // };
+
         //
         // vm.deleteGroup = function () {
         //     var tokenIsValid = authDataService.checkTokenExpiration();
@@ -432,14 +450,14 @@ angular
 
         //endregion
 
-        vm.allGroupDefs = [];
+        // vm.allGroupDefs = [];
 
-        vm.allGroupDefs = viewModel.allPipelineGroups;
+        // vm.allGroupDefs = viewModel.allPipelineGroups;
 
-        $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
-            vm.allGroupDefs = viewModel.allPipelineGroups;
-            console.log(vm.allGroupDefs);
-        });
+        // $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
+        //     vm.allGroupDefs = viewModel.allPipelineGroups;
+        //     console.log(vm.allGroupDefs);
+        // });
 
         //region Packages
         vm.packageTab = {

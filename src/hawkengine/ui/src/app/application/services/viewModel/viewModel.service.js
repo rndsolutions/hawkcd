@@ -13,7 +13,7 @@ angular
 
         viewModel.allMaterials = {};
 
-        viewModel.allPipelineGroups = {};
+        viewModel.allPipelineGroups = [];
 
         viewModel.init = function() {
             viewModel.getAllAgents();

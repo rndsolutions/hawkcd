@@ -9,7 +9,7 @@ import net.hawkengine.services.interfaces.IPipelineGroupService;
 public class PipelineGroupService extends CrudService<PipelineGroup> implements IPipelineGroupService {
     public PipelineGroupService() {
         super.setRepository(new RedisRepository(PipelineGroup.class));
-        super.setObjectType("Pipeline Group");
+        super.setObjectType("PipelineGroup");
     }
 
     public PipelineGroupService(IDbRepository repository) {
