@@ -17,6 +17,7 @@ import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unchecked", "PackageVisibleField", "InstanceMethodNamingConvention"})
@@ -176,7 +177,8 @@ public class PipelinePreparerTest {
     @Test
     public void preparePipeline_withValidObject_object() {
         //Act
-        List<Pipeline> actualResult = this.injectDataForTestingPreparePipeline();
+        PipelineDefinition actualPipelineDefinition = this.preparePipelineDefinition();
+        List<Pipeline> actualResult = this.injectDataForTestingPreparePipeline(actualPipelineDefinition);
 
         //Assert
         for (Pipeline actualResultObject : actualResult) {
@@ -187,19 +189,84 @@ public class PipelinePreparerTest {
         }
     }
 
-    private List<Pipeline> injectDataForTestingPreparePipeline() {
+    @Test
+    public void preparePipelineStages_withValidObjects_listWithOneObject(){
+        //Act
+        PipelineDefinition actualPipelineDefinition = this.preparePipelineDefinition();
+        Pipeline pipeline = new Pipeline();
+        List<StageDefinition> actualStageDefinitions = actualPipelineDefinition.getStageDefinitions();
+        List<Stage> preparedStages = this.mockedPipelinePreparer.preparePipelineStages(actualStageDefinitions, pipeline.getId());
+
         //Assert
-        List<StageDefinition> stages = new ArrayList<>();
-        List<JobDefinition> jobDefinitions = new ArrayList<>();
+        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, preparedStages.size());
+        Assert.assertNotNull(preparedStages.get(0).getEnvironmentVariables());
+        Assert.assertNotNull(preparedStages.get(0).getPipelineId());
+        Assert.assertNotNull(preparedStages.get(0).getStageDefinitionId());
+    }
 
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+    @Test
+    public void preparePipelineJobs_withValidObjects_listWithOneObject(){
+        //Act
+        PipelineDefinition actualPipelineDefinition = this.preparePipelineDefinition();
+        Pipeline pipeline = new Pipeline();
 
-        stages.add(new StageDefinition());
-        jobDefinitions.add(new JobDefinition());
-        stages.get(0).setJobDefinitions(jobDefinitions);
-        pipelineDefinition.setStageDefinitions(stages);
-        this.mockedPipelineDefinitionService.add(pipelineDefinition);
+        List<StageDefinition> actualStageDefinitions = actualPipelineDefinition.getStageDefinitions();
+        List<Stage> preparedStages = this.mockedPipelinePreparer.preparePipelineStages(actualStageDefinitions, pipeline.getId());
 
+        for (StageDefinition actualStageDefinitionObject: actualStageDefinitions) {
+            List<JobDefinition> actualJobDefintions = actualStageDefinitionObject.getJobDefinitions();
+
+            List<Job> preparedJobs = this.mockedPipelinePreparer.preparePipelineJobs(actualJobDefintions, pipeline.getId(), preparedStages.get(0).getId());
+
+            //Assert
+            Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, preparedJobs.size());
+            Assert.assertNotNull(preparedJobs.get(0).getEnvironmentVariables());
+            Assert.assertNotNull(preparedJobs.get(0).getPipelineId());
+            Assert.assertEquals(pipeline.getId(),preparedJobs.get(0).getPipelineId());
+            Assert.assertNotNull(preparedJobs.get(0).getStageId());
+            Assert.assertEquals(preparedStages.get(0).getId(), preparedJobs.get(0).getStageId());
+        }
+    }
+
+    //TODO: Add when json deserializer for Task is ready
+//    @Test
+//    public void preparePipelineJobsTasks_withValidObjects_listWithOneObject(){
+//        //Act
+//        PipelineDefinition actualPipelineDefinition = this.preparePipelineDefinition();
+//        Pipeline pipeline = new Pipeline();
+//
+//        List<Stage> pipelineStages = new ArrayList<>();
+//        Stage pipelineStage = new Stage();
+//        pipelineStages.add(pipelineStage);
+//
+//        List<Job> pipelineJobs = new ArrayList<>();
+//        Job pipelineJob = new Job();
+//        pipelineJobs.add(pipelineJob);
+//
+//        pipeline.setStages(pipelineStages);
+//        pipeline.getStages().get(0).setJobs(pipelineJobs);
+//
+//        for (StageDefinition stageDefinition: actualPipelineDefinition.getStageDefinitions()) {
+//            for (JobDefinition jobDefinition: stageDefinition.getJobDefinitions()) {
+//                List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+//
+//                List<Task> preparedTasks = this.mockedPipelinePreparer.prepareTasks(taskDefinitions, pipelineJob.getId(), pipelineStage.getId(), pipeline.getId());
+//
+//                //Assert
+//                Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, preparedTasks.size());
+//                Assert.assertNotNull(preparedTasks.get(0).getPipelineId());
+//                Assert.assertEquals(pipeline.getId(),preparedTasks.get(0).getPipelineId());
+//                Assert.assertNotNull(preparedTasks.get(0).getJobId());
+//                Assert.assertEquals(pipelineJob.getId(), preparedTasks.get(0).getJobId());
+//                Assert.assertNotNull(preparedTasks.get(0).getStageId());
+//                Assert.assertEquals(pipelineStage.getId(), preparedTasks.get(0).getStageId());
+//
+//            }
+//        }
+//    }
+
+    private List<Pipeline> injectDataForTestingPreparePipeline(PipelineDefinition pipelineDefinition) {
+        //Assert
         Pipeline firstPipeline = new Pipeline();
         firstPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
         firstPipeline.setAreMaterialsUpdated(true);
@@ -222,5 +289,61 @@ public class PipelinePreparerTest {
                 .collect(Collectors.toList());
 
         return actualObjects;
+    }
+
+    private PipelineDefinition preparePipelineDefinition(){
+        //Arrange
+        List<StageDefinition> stages = new ArrayList<>();
+        List<JobDefinition> jobDefinitions = new ArrayList<>();
+        List<TaskDefinition> taskDefinitions = new ArrayList<>();
+        List<EnvironmentVariable> stageDefinitionEvironmentVariables = this.prepareEnvironmentVariables();
+        List<EnvironmentVariable> jobDefinitionEnvironmentVariables = this.prepareEnvironmentVariables();
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+
+        StageDefinition stageDefinitionToAdd = new StageDefinition();
+        stageDefinitionToAdd.setName("stageDefinitionToAddName");
+        stageDefinitionToAdd.setPipelineDefinitionId(pipelineDefinition.getId());
+        stageDefinitionToAdd.setEnvironmentVariables(stageDefinitionEvironmentVariables);
+
+        JobDefinition jobDefinitionToAdd = new JobDefinition();
+        jobDefinitionToAdd.setName("jobDefinitionToAdd");
+        jobDefinitionToAdd.setStageDefinitionId(stageDefinitionToAdd.getId());
+        jobDefinitionToAdd.setPipelineDefinitionId(pipelineDefinition.getId());
+        jobDefinitionToAdd.setEnvironmentVariables(jobDefinitionEnvironmentVariables);
+
+        //TODO: Add when json deserializer is ready
+//        ExecTask taskDefinition = new ExecTask();
+//        taskDefinition.setCommand("echo");
+//        taskDefinition.setArguments(new String[]{"fdfdfd"});
+//        taskDefinition.setJobDefinitionId(jobDefinitionToAdd.getId());
+//        taskDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
+//        taskDefinition.setName("taskDefinitionToAdd");
+//        taskDefinition.setStageDefinitionId(stageDefinitionToAdd.getId());
+
+        stages.add(stageDefinitionToAdd);
+        jobDefinitions.add(jobDefinitionToAdd);
+        //TODO: Add when json deserializer is ready
+        //taskDefinitions.add(taskDefinition);
+
+        //jobDefinitions.get(0).setTaskDefinitions(taskDefinitions);
+        stages.get(0).setJobDefinitions(jobDefinitions);
+        pipelineDefinition.setStageDefinitions(stages);
+
+        this.mockedPipelineDefinitionService.add(pipelineDefinition);
+
+        return pipelineDefinition;
+    }
+
+    private List<EnvironmentVariable> prepareEnvironmentVariables(){
+        List<EnvironmentVariable> environmentVariables = new ArrayList<>();
+
+        EnvironmentVariable environmentVariable = new EnvironmentVariable();
+        environmentVariable.setName(UUID.randomUUID().toString().replaceAll("-", ""));
+        environmentVariable.setValue(UUID.randomUUID().toString().replaceAll("-", ""));
+
+        environmentVariables.add(environmentVariable);
+
+        return environmentVariables;
     }
 }
