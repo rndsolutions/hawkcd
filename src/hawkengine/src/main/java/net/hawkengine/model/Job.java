@@ -5,14 +5,17 @@ import net.hawkengine.model.enums.JobStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class Job extends DbEntry{
+public class Job extends DbEntry {
     private String jobDefinitionId;
     private String pipelineId;
     private String stageId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
+    private Set<String> resources;
     private List<Task> tasks;
     private JobStatus status;
     private LocalDateTime startTime;
@@ -22,6 +25,7 @@ public class Job extends DbEntry{
     public Job() {
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
+        this.setResources(new HashSet<>());
         this.setTasks(new ArrayList<>());
     }
 
@@ -63,6 +67,14 @@ public class Job extends DbEntry{
 
     public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
         this.environmentVariables = environmentVariables;
+    }
+
+    public Set<String> getResources() {
+        return resources;
+    }
+
+    public void setResources(Set<String> resources) {
+        this.resources = resources;
     }
 
     public List<Task> getTasks() {
