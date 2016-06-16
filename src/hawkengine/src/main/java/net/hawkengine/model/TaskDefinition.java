@@ -6,6 +6,8 @@ import net.hawkengine.model.enums.TaskType;
 public abstract class TaskDefinition extends DbEntry {
     private String name;
     private String jobDefinitionId;
+    private String stageDefinitionId;
+    private String pipelineDefinitionId;
     private TaskType type;
     private RunIf runIfCondition;
 
@@ -23,6 +25,22 @@ public abstract class TaskDefinition extends DbEntry {
 
     public void setJobDefinitionId(String jobDefinitionId) {
         this.jobDefinitionId = jobDefinitionId;
+    }
+
+    public String getStageDefinitionId() {
+        return this.stageDefinitionId;
+    }
+
+    public void setStageDefinitionId(String stageDefinitionId) {
+        this.stageDefinitionId = stageDefinitionId;
+    }
+
+    public String getPipelineDefinitionId() {
+        return this.pipelineDefinitionId;
+    }
+
+    public void setPipelineDefinitionId(String pipelineDefinitionId) {
+        this.pipelineDefinitionId = pipelineDefinitionId;
     }
 
     public TaskType getType() {

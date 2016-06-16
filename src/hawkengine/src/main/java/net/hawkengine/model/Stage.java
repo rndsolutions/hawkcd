@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stage {
+public class Stage extends DbEntry{
     private String stageDefinitionId;
     private String pipelineId;
     private int executionId;
@@ -22,6 +22,7 @@ public class Stage {
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());
+        this.status = Status.IN_PROGRESS;
     }
 
     public String getStageDefinitionId() {
