@@ -29,6 +29,7 @@ public class Pipeline extends DbEntry {
         this.setMaterials(new ArrayList<>());
         this.setEnvironments(new ArrayList<>());
         this.setStages(new ArrayList<>());
+        this.status = Status.IN_PROGRESS;
     }
 
     public String getPipelineDefinitionId() {

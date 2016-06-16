@@ -347,11 +347,12 @@ public class SchemaValidator {
                 return this.message = "ERROR: AGENT ROOT PATH IS NULL.";
             }
 
+            /*
             String os = agent.getOperatingSystem();
             if (os == null){
                 return this.message = "ERROR: AGENT OPERATIONAL SYSTEM IS NULL.";
             }
-
+*/
             Object environment = agent.getEnvironment();
             if (environment == null){
                 return this.message = "ERROR: AGENT ENVIRONMENT IS NULL.";

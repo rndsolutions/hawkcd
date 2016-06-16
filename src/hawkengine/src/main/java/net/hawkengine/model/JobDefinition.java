@@ -6,6 +6,7 @@ import java.util.List;
 public class JobDefinition extends DbEntry {
     private String name;
     private String stageDefinitionId;
+    private String pipelineDefinitionId;
     private List<EnvironmentVariable> environmentVariables;
     private List<TaskDefinition> taskDefinitions;
     private List<String> resources;
@@ -30,6 +31,14 @@ public class JobDefinition extends DbEntry {
 
     public void setStageDefinitionId(String stageDefinitionId) {
         this.stageDefinitionId = stageDefinitionId;
+    }
+
+    public String getPipelineDefinitionId() {
+        return this.pipelineDefinitionId;
+    }
+
+    public void setPipelineDefinitionId(String pipelineDefinitionId) {
+        this.pipelineDefinitionId = pipelineDefinitionId;
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {

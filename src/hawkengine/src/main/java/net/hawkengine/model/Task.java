@@ -7,9 +7,11 @@ import net.hawkengine.model.enums.TaskType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public abstract class Task {
+public class Task {
     private TaskDefinition taskDefinition;
     private String jobId;
+    private String stageId;
+    private String pipelineId;
     private RunIf runIfCondition;
     private TaskType type;
     private Status status;
@@ -18,7 +20,7 @@ public abstract class Task {
     private LocalDateTime endTime;
     private Duration duration;
 
-    protected Task() {
+    public Task() {
         this.startTime = LocalDateTime.now();
     }
 
@@ -36,6 +38,22 @@ public abstract class Task {
 
     public void setJobId(String jobId) {
         this.jobId = jobId;
+    }
+
+    public String getStageId() {
+        return this.stageId;
+    }
+
+    public void setStageId(String stageId) {
+        this.stageId = stageId;
+    }
+
+    public String getPipelineId() {
+        return this.pipelineId;
+    }
+
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
     }
 
     public RunIf getRunIfCondition() {
