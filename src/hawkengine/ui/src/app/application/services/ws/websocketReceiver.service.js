@@ -2,17 +2,18 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater',
-        function (pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService',
+        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function (data) {
-                if(!validationService.isValid(data)){
+                if (!validationService.isValid(data)) {
                     toaster.error('Invalid JSON format!');
                     return;
                 }
 
-                invoker(data,dispatcher);
+                invoker(data, dispatcher);
+                $rootScope.$apply();
             };
 
             var invoker = function (obj, dispatcher) {
@@ -32,13 +33,26 @@ angular
                     setAgentConfigState: function (data) {
                         viewModel.updateAgentStatus(data);
                     },
-                    delete: function (isDeleted){
-                        if(isDeleted){
+                    delete: function (isDeleted) {
+                        if (isDeleted) {
                             agentService.getAllAgents();
                         }
                     },
                     update: function (agent) {
                         viewModelUpdater.updateAgent(agent);
+                    }
+                },
+                PipelineGroupService: {
+                    add: function (pipelineGroup) {
+                        viewModelUpdater.updatePipelineGroup(pipelineGroup);
+                    },
+                    getAll: function (pipelineGroups) {
+                        viewModelUpdater.updatePipelineGroups(pipelineGroups);
+                    },
+                    delete: function (isDeleted) {
+                        if (isDeleted) {
+                            adminGroupService.getAllPipelineGroups();
+                        }
                     }
                 }
             };
