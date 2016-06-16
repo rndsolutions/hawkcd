@@ -72,15 +72,14 @@ angular
             agentService.delete(id);
         };
 
-        vm.changeAgentStatus = function (index, currentStatus) {
-            if (!currentStatus) {
-                var newAgent = vm.currentAgents[index];
+        vm.changeAgentStatus = function (agent) {
+            var newAgent;
+            if (agent.isEnabled == false) {
+                newAgent = JSON.parse(JSON.stringify(agent));
                 newAgent.isEnabled = true;
                 agentService.update(newAgent);
-            }
-
-            if (currentStatus) {
-                var newAgent = vm.currentAgents[index];
+            }else {
+                newAgent = JSON.parse(JSON.stringify(agent));
                 newAgent.isEnabled = false;
                 agentService.update(newAgent);
             }
