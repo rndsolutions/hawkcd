@@ -5,16 +5,6 @@ public class EnvironmentVariable {
     private String value;
     private boolean isSecured;
 
-    public EnvironmentVariable(String name, String value, boolean isSecured) {
-        this(name, value);
-        this.setSecured(isSecured);
-    }
-
-    public EnvironmentVariable(String name, String value) {
-        this.setName(name);
-        this.setValue(value);
-    }
-
     public String getName() {
         return this.name;
     }
