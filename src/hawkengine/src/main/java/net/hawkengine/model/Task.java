@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 public class Task {
     private TaskDefinition taskDefinition;
     private String jobId;
+    private String stageId;
+    private String pipelineId;
     private RunIf runIfCondition;
     private TaskType type;
     private Status status;
@@ -36,6 +38,22 @@ public class Task {
 
     public void setJobId(String jobId) {
         this.jobId = jobId;
+    }
+
+    public String getStageId() {
+        return this.stageId;
+    }
+
+    public void setStageId(String stageId) {
+        this.stageId = stageId;
+    }
+
+    public String getPipelineId() {
+        return this.pipelineId;
+    }
+
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
     }
 
     public RunIf getRunIfCondition() {

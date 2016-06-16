@@ -9,10 +9,11 @@ import java.util.List;
 
 public class Job extends DbEntry{
     private String jobDefinitionId;
-    private String pipelineId;
     private String stageId;
+    private String pipelineId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
+    private List<String> resources;
     private List<Task> tasks;
     private JobStatus status;
     private LocalDateTime startTime;
@@ -33,20 +34,20 @@ public class Job extends DbEntry{
         this.jobDefinitionId = jobDefinitionId;
     }
 
-    public String getPipelineId() {
-        return this.pipelineId;
-    }
-
-    public void setPipelineId(String pipelineId) {
-        this.pipelineId = pipelineId;
-    }
-
     public String getStageId() {
         return this.stageId;
     }
 
     public void setStageId(String stageId) {
         this.stageId = stageId;
+    }
+
+    public String getPipelineId() {
+        return this.pipelineId;
+    }
+
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
     }
 
     public int getExecutionId() {
@@ -63,6 +64,14 @@ public class Job extends DbEntry{
 
     public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
         this.environmentVariables = environmentVariables;
+    }
+
+    public List<String> getResources() {
+        return this.resources;
+    }
+
+    public void setResources(List<String> resources) {
+        this.resources = resources;
     }
 
     public List<Task> getTasks() {

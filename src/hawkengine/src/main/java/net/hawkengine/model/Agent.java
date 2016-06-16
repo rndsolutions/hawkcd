@@ -2,6 +2,7 @@ package net.hawkengine.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Agent extends DbEntry {
     private String name;
@@ -9,7 +10,7 @@ public class Agent extends DbEntry {
     private String ipAddress;
     private String rootPath;
     private Object operatingSystem;
-    private ArrayList<String> resources;
+    private List<String> resources;
     private Environment environment;
     private boolean isRunning;
     private boolean isEnabled;
@@ -56,11 +57,11 @@ public class Agent extends DbEntry {
         this.operatingSystem = operatingSystem;
     }
 
-    public ArrayList<String> getResources() {
+    public List<String> getResources() {
         return this.resources;
     }
 
-    public void setResources(ArrayList<String> resources) {
+    public void setResources(List<String> resources) {
         this.resources = resources;
     }
 
