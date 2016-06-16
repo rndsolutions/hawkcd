@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('jsonHandlerService', [function (pipesStatsSenderService, websocketSenderService) {
+    .factory('jsonHandlerService', [function () {
         var jsonHandlerService = this;
 
         jsonHandlerService.createJson = function(className, packageName, methodName, result, error, args){
