@@ -16,18 +16,16 @@ import org.apache.log4j.Logger;
 import java.util.List;
 
 public class JobAssigner implements Runnable {
-    private static final Logger logger = Logger.getLogger(PipelinePreparer.class.getName());
     private IAgentService agentService;
     private IPipelineService pipelineService;
+    private AssignerHelper helper;
+
+    private static final Logger logger = Logger.getLogger(PipelinePreparer.class.getName());
 
     public JobAssigner() {
         this.agentService = new AgentService();
         this.pipelineService = new PipelineService();
-    }
-
-    public JobAssigner(IAgentService agentService, IPipelineService pipelineService) {
-        this.agentService = agentService;
-        this.pipelineService = pipelineService;
+        this.helper = new AssignerHelper();
     }
 
     @Override
@@ -45,7 +43,10 @@ public class JobAssigner implements Runnable {
                     for (Stage stage : pipeline.getStages()) {
                         for (Job job : stage.getJobs()) {
                             if (job.getStatus() == JobStatus.AWAITING) {
-                                // TODO: Assign Agent to Job method
+                                List<Agent> eligibleAgents = this.helper.getEligibleAgentsForJob(job, agents);
+                                this.helper.getAgentForJob(job, eligibleAgents);
+                                // TODO: Update Agent
+                                // TODO: Call updateJob
                             } else if (job.getStatus() == JobStatus.SCHEDULED) {
                                 // TODO: Check if Agent is still eligible method
                                 if (!true) {
