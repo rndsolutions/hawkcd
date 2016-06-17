@@ -9,7 +9,7 @@ public class Agent extends DbEntry {
     private String hostName;
     private String ipAddress;
     private String rootPath;
-    private Object operatingSystem;
+    private String operatingSystem;
     private List<String> resources;
     private Environment environment;
     private boolean isRunning;
@@ -49,11 +49,11 @@ public class Agent extends DbEntry {
         this.rootPath = rootPath;
     }
 
-    public Object getOperatingSystem() {
+    public String getOperatingSystem() {
         return this.operatingSystem;
     }
 
-    public void setOperatingSystem(Object operatingSystem) {
+    public void setOperatingSystem(String operatingSystem) {
         this.operatingSystem = operatingSystem;
     }
 
