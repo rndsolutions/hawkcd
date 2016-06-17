@@ -21,6 +21,7 @@ public class Job extends DbEntry {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
+    private String assignedAgentId;
 
     public Job() {
         this.startTime = LocalDateTime.now();
@@ -115,5 +116,13 @@ public class Job extends DbEntry {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public String getAssignedAgentId() {
+        return assignedAgentId;
+    }
+
+    public void setAssignedAgentId(String assignedAgentId) {
+        this.assignedAgentId = assignedAgentId;
     }
 }
