@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class StatusUpdater extends Thread {
@@ -33,9 +34,8 @@ public class StatusUpdater extends Thread {
     public void run() {
         try {
             while (true) {
-
                 List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
-                this.getStageForUpdate(pipelinesInProgress);
+                pipelinesInProgress.forEach(this::updateAllStatuses);
                 int a = 5;
 
                 Thread.sleep(4 * 1000);
@@ -59,42 +59,79 @@ public class StatusUpdater extends Thread {
         return pipelinesInProgress;
     }
 
-    public void updateStageStatus(Stage stage){
+    public boolean updateAllStatuses(Object pipeline){
+        Stack stack = new Stack();
+        stack.push(pipeline);
+        while(!stack.isEmpty()){
+            Object node = stack.pop();
+            if (node.getClass() == Job.class){
+                Job jobNode = (Job) node;
+                this.updateJobStatus(jobNode);
+                return true;
+            }
+            if(node.getClass() == Pipeline.class){
+                Pipeline pipelineNode = (Pipeline) node;
+                stack.addAll(pipelineNode.getStages());
+                this.updatePipelineStatus(pipelineNode);
+            }
+            else{
+                Stage stageNode = (Stage) node;
+                stack.addAll(stageNode.getJobs());
+                this.updateStageStatus(stageNode);
+            }
+        }
+        return false;
+    }
+
+    public void updateJobStatus(Job job){
+        if (!job.getAssignedAgentId().isEmpty()){
+            job.setStatus(JobStatus.SCHEDULED);
+        }
+    }
+
+    public void updateStageStatus(Stage stage) {
         List<JobStatus> jobStatuses = new ArrayList<>();
         List<Job> jobs = stage.getJobs();
-        for (Job job: jobs) {
+        for (Job job : jobs) {
             JobStatus jobStatus = job.getStatus();
             jobStatuses.add(jobStatus);
         }
-        if (jobStatuses.contains(JobStatus.FAILED)){
+        if (jobStatuses.contains(JobStatus.FAILED)) {
             stage.setStatus(Status.FAILED);
-        }
-        else if (this.areAllPassed(jobStatuses)){
+        } else if (this.areAllPassed(jobStatuses)) {
             stage.setStatus(Status.PASSED);
         }
         int a = 5;
     }
 
-    public void getStageForUpdate(List<Pipeline> pipelines){
-        for (Pipeline pipeline: pipelines) {
-            List<Stage> stages = pipeline.getStages();
-
-            for (Stage stage: stages) {
-                updateStageStatus(stage);
-            }
+    public void updatePipelineStatus(Pipeline pipeline) {
+        List<Stage> stages = pipeline.getStages();
+        List<Status> stageStatuses = new ArrayList<>();
+        for (Stage stage : stages) {
+            Status stageStatus = stage.getStatus();
+            stageStatuses.add(stageStatus);
         }
+        if (stageStatuses.contains(Status.FAILED)) {
+            pipeline.setStatus(Status.FAILED);
+        } else if (this.areAllPassed(stageStatuses)) {
+            pipeline.setStatus(Status.PASSED);
+        }
+        int a = 5;
     }
-    public boolean areAllPassed(List<JobStatus> jobStatuses){
-        boolean areAllPassedStatus = false;
-        for (JobStatus jobStatus: jobStatuses) {
-            if (jobStatus == JobStatus.PASSED){
-                areAllPassedStatus = true;
-            }
-            else{
-                areAllPassedStatus = false;
-                return areAllPassedStatus;
+
+    public boolean areAllPassed(List<?> statuses) {
+        String[] statusesAsString = new String[statuses.size()];
+        int index = 0;
+        for (Object status : statuses) {
+            statusesAsString[index] = status.toString();
+            index++;
+        }
+        int statusesCollectionSize = statusesAsString.length;
+        for (String aStatusesAsString : statusesAsString) {
+            if (!aStatusesAsString.equals("PASSED")) {
+                return false;
             }
         }
-        return areAllPassedStatus;
+        return true;
     }
 }
