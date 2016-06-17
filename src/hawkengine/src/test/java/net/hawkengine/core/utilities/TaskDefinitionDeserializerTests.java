@@ -19,6 +19,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.HashMap;
+
 public class TaskDefinitionDeserializerTests {
 
     private static TaskDefinitionDeserializer mockedDeserializer;
@@ -35,10 +37,15 @@ public class TaskDefinitionDeserializerTests {
 
     @Test
     public void deserializeExecTask_validJSON_correctObject() {
+        String fakeId = "c93aeb3f-f818-4871-9729-7cebf3fcd517";
+
         //Arrange
         String jsonAsString = "{\n" +
                 "\"type\": \"EXEC\",\n" +
                 "\"name\": \"execTask\",\n" +
+                "\"jobDefinitionId\": \""+ fakeId +"\",\n" +
+                "\"stageDefinitionId\": \""+ fakeId +"\",\n" +
+                "\"pipelineDefinitionId\": \""+ fakeId +"\",\n" +
                 "\"command\": \"testMethod\",\n" +
                 "\"lookUpCommands\": \"testLookUp\",\n" +
                 "\"workingDirectory\": \"testDirectory\",\n" +
@@ -54,6 +61,9 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertNotNull(actualResult);
         Assert.assertEquals(TaskType.EXEC, actualResult.getType());
         Assert.assertEquals("testMethod", actualResult.getCommand());
+        Assert.assertEquals(fakeId, actualResult.getJobDefinitionId());
+        Assert.assertEquals(fakeId, actualResult.getPipelineDefinitionId());
+        Assert.assertEquals(fakeId, actualResult.getStageDefinitionId());
         Assert.assertEquals("testLookUp",actualResult.getLookUpCommands());
         Assert.assertEquals("testDirectory",actualResult.getWorkingDirectory());
         Assert.assertTrue(actualResult.isIgnoringErrors());
@@ -94,7 +104,10 @@ public class TaskDefinitionDeserializerTests {
                 "\"type\": \"FETCH_MATERIAL\",\n" +
                 "\"materialName\": \"fetchMaterial\",\n" +
                 "\"pipelineName\": \"testPipe\",\n" +
-                "\"materialType\": \"GIT\"\n" +
+                "\"source\": \"testSource\",\n" +
+                "\"destination\": \"testDestination\",\n" +
+                "\"materialType\": \"GIT\",\n" +
+                "\"materialSpecificDetails\": {\"first\":{}}\n" +
                 "}";
         JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
@@ -106,7 +119,10 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertEquals(TaskType.FETCH_MATERIAL, actualResult.getType());
         Assert.assertEquals("fetchMaterial",actualResult.getMaterialName());
         Assert.assertEquals("testPipe",actualResult.getPipelineName());
+        Assert.assertEquals("testSource",actualResult.getSource());
+        Assert.assertEquals("testDestination",actualResult.getDestination());
         Assert.assertEquals(MaterialType.GIT,actualResult.getMaterialType());
+        Assert.assertEquals(HashMap.class,actualResult.getMaterialSpecificDetails().getClass());
     }
 
     @Test
