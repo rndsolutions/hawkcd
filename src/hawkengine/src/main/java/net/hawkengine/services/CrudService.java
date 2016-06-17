@@ -11,6 +11,22 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
     private IDbRepository<T> repository;
     private String objectType;
 
+    public IDbRepository<T> getRepository() {
+        return this.repository;
+    }
+
+    public void setRepository(IDbRepository<T> repository) {
+        this.repository = repository;
+    }
+
+    public String getObjectType() {
+        return this.objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
+
     @Override
     public ServiceResult getById(String id) {
         T dbObject = this.getRepository().getById(id);
@@ -83,31 +99,16 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
 
         ServiceResult result = new ServiceResult();
         if (isDeleted) {
-            result.setObject(result.getObject());
             result.setError(false);
             result.setMessage(this.getObjectType() + " deleted successfully.");
         } else {
-            result.setObject(result.getObject());
             result.setError(true);
             result.setMessage(this.getObjectType() + " not found.");
         }
 
+        result.setObject(isDeleted);
+
         return result;
     }
 
-    public IDbRepository<T> getRepository() {
-        return this.repository;
-    }
-
-    public void setRepository(IDbRepository<T> repository) {
-        this.repository = repository;
-    }
-
-    public String getObjectType() {
-        return this.objectType;
-    }
-
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
-    }
 }
