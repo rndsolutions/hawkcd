@@ -23,4 +23,5 @@ public interface IPipelineGroupService extends ICrudService<PipelineGroup>{
 	@Override
 	ServiceResult delete(String pipelineGroupId);
 
+	ServiceResult getAllPipelineGroupDTOs();
 }
