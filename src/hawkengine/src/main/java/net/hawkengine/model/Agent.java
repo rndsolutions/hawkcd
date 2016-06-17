@@ -9,13 +9,14 @@ public class Agent extends DbEntry {
     private String hostName;
     private String ipAddress;
     private String rootPath;
-    private Object operatingSystem;
+    private String operatingSystem;
     private Set<String> resources;
     private Environment environment;
     private boolean isRunning;
     private boolean isEnabled;
     private boolean isConnected;
-    private LocalDateTime lastReported;
+    private boolean isAssigned;
+    private LocalDateTime lastReportedTime;
 
     public Agent() {
         this.setResources(new HashSet<>());
@@ -53,11 +54,11 @@ public class Agent extends DbEntry {
         this.rootPath = rootPath;
     }
 
-    public Object getOperatingSystem() {
+    public String getOperatingSystem() {
         return this.operatingSystem;
     }
 
-    public void setOperatingSystem(Object operatingSystem) {
+    public void setOperatingSystem(String operatingSystem) {
         this.operatingSystem = operatingSystem;
     }
 
@@ -101,11 +102,19 @@ public class Agent extends DbEntry {
         this.isConnected = connected;
     }
 
-    public LocalDateTime getLastReported() {
-        return this.lastReported;
+    public boolean isAssigned() {
+        return isAssigned;
     }
 
-    public void setLastReported(LocalDateTime lastReported) {
-        this.lastReported = lastReported;
+    public void setAssigned(boolean assigned) {
+        isAssigned = assigned;
+    }
+
+    public LocalDateTime getLastReportedTime() {
+        return this.lastReportedTime;
+    }
+
+    public void setLastReportedTime(LocalDateTime lastReportedTime) {
+        this.lastReportedTime = lastReportedTime;
     }
 }
