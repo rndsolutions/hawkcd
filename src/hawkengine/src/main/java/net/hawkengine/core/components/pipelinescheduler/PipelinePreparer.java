@@ -95,12 +95,12 @@ public class PipelinePreparer extends Thread {
 
         int stageDefinitionCollectionSize = stageDefinitions.size();
 
-        for (int i = 0; i < stageDefinitionCollectionSize; i++) {
+        for (StageDefinition stageDefinition : stageDefinitions) {
             Stage currentStage = new Stage();
-            currentStage.setStageDefinitionId(stageDefinitions.get(i).getId());
+            currentStage.setStageDefinitionId(stageDefinition.getId());
             currentStage.setPipelineId(pipelineId);
-            currentStage.setEnvironmentVariables(stageDefinitions.get(i).getEnvironmentVariables());
-            currentStage.setJobs(this.preparePipelineJobs(stageDefinitions.get(i).getJobDefinitions(), pipelineId, currentStage.getId()));
+            currentStage.setEnvironmentVariables(stageDefinition.getEnvironmentVariables());
+            currentStage.setJobs(this.preparePipelineJobs(stageDefinition.getJobDefinitions(), pipelineId, currentStage.getId()));
             currentStage.setStatus(Status.IN_PROGRESS);
 
             stages.add(currentStage);
@@ -114,15 +114,15 @@ public class PipelinePreparer extends Thread {
 
         int jobDefinitionCollectionSize = jobDefinitions.size();
 
-        for (int i = 0; i < jobDefinitionCollectionSize; i++) {
+        for (JobDefinition jobDefinition : jobDefinitions) {
             Job currentJob = new Job();
-            currentJob.setJobDefinitionId(jobDefinitions.get(i).getId());
+            currentJob.setJobDefinitionId(jobDefinition.getId());
             currentJob.setPipelineId(pipelineId);
             currentJob.setStageId(stageId);
             currentJob.setPipelineId(pipelineId);
-            currentJob.setEnvironmentVariables(jobDefinitions.get(i).getEnvironmentVariables());
+            currentJob.setEnvironmentVariables(jobDefinition.getEnvironmentVariables());
             currentJob.setResources(jobDefinitions.get(0).getResources());
-            currentJob.setTasks(this.prepareTasks(jobDefinitions.get(i).getTaskDefinitions(), currentJob.getId(), stageId, pipelineId));
+            currentJob.setTasks(this.prepareTasks(jobDefinition.getTaskDefinitions(), currentJob.getId(), stageId, pipelineId));
             currentJob.setStatus(JobStatus.AWAITING);
 
             jobs.add(currentJob);
@@ -136,9 +136,9 @@ public class PipelinePreparer extends Thread {
 
         int taskDefinitionCollectionSize = taskDefinitions.size();
 
-        for (int i = 0; i < taskDefinitionCollectionSize; i++) {
+        for (TaskDefinition taskDefinition : taskDefinitions) {
             Task currentTask = new Task();
-            currentTask.setTaskDefinition(taskDefinitions.get(i));
+            currentTask.setTaskDefinition(taskDefinition);
             currentTask.setJobId(jobId);
             currentTask.setStageId(stageId);
             currentTask.setPipelineId(pipelineId);

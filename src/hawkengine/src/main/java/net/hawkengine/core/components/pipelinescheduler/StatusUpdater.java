@@ -23,6 +23,10 @@ public class StatusUpdater extends Thread {
         this.pipelineService = new PipelineService();
     }
 
+    public StatusUpdater(IPipelineService pipelineService){
+        this.pipelineService = pipelineService;
+    }
+
     @Override
     public synchronized void start() {
         super.start();
@@ -35,7 +39,10 @@ public class StatusUpdater extends Thread {
         try {
             while (true) {
                 List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
-                pipelinesInProgress.forEach(this::updateAllStatuses);
+                for (Pipeline pipeline: pipelinesInProgress) {
+                    this.updateAllStatuses(pipeline);
+                    this.pipelineService.update(pipeline);
+                }
                 int a = 5;
 
                 Thread.sleep(4 * 1000);
@@ -84,7 +91,7 @@ public class StatusUpdater extends Thread {
     }
 
     public void updateJobStatus(Job job){
-        if (!job.getAssignedAgentId().isEmpty()){
+        if (job.getAssignedAgentId() == null){
             job.setStatus(JobStatus.SCHEDULED);
         }
     }
