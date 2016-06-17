@@ -1,4 +1,4 @@
-package net.hawkengine.core;
+package net.hawkengine.core.utilities;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.FetchArtifactTask;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  */
 public class SchemaValidator {
     private String message = "OK";
-    private static final String NAME_PATTERN = "[A-Za-z]{3,20}"; //TODO enter name pattern
+    private static final String NAME_PATTERN = "[a-zA-Z]{4,20}"; //TODO enter name pattern
     private static final String GIT_PATTERN = "(git|ssh|http(s)?)(:)(\\/\\/)";
     private static final String NUGET_PATTERN = "[a-z]{5,50}"; //TODO define git url pattern
     //TODO to be handaled non-required insertation of Environments into PipelineDefinition,
@@ -142,42 +142,42 @@ public class SchemaValidator {
                 return this.message = "ERROR: TASK DEFINITION NAME IS NULL.";
             }
 
-            if (this.isValidRegEx(name,NAME_PATTERN)){
+            if (this.isValidRegEx(name,NAME_PATTERN) == false){
                 return this.message = "ERROR: TASK DEFINITION NAME IS INVALID.";
             }
 
-            if (taskDefinition.getType() == TaskType.EXEC){
+                if (taskDefinition.getType() == TaskType.EXEC) {
 
-                this.validate((ExecTask)taskDefinition);
+                    this.validate((ExecTask) taskDefinition);
 
-            } else if (taskDefinition.getType() == TaskType.FETCH_ARTIFACT){
+                } else if (taskDefinition.getType() == TaskType.FETCH_ARTIFACT) {
 
-                this.validate((FetchArtifactTask)taskDefinition);
+                    this.validate((FetchArtifactTask) taskDefinition);
 
-            } else if (taskDefinition.getType() == TaskType.FETCH_MATERIAL){
+                } else if (taskDefinition.getType() == TaskType.FETCH_MATERIAL) {
 
-                this.validate((FetchMaterialTask)taskDefinition);
+                    this.validate((FetchMaterialTask) taskDefinition);
 
-            } else if (taskDefinition.getType() == TaskType.UPLOAD_ARTIFACT){
+                } else if (taskDefinition.getType() == TaskType.UPLOAD_ARTIFACT) {
 
-                this.validate((UploadArtifactTask)taskDefinition);
+                    this.validate((UploadArtifactTask) taskDefinition);
 
+                } else {
+                    return  this.message = "ERROR: INVALID TASK TYPE.";
+                }
             } else {
-
-                return this.message = "ERROR: INVALID TASK TYPE";
+                return this.message = "ERROR: TASK TYPE IS NULL.";
             }
 
             if (taskDefinition.getRunIfCondition() == null){
                 return this.message = "ERROR: RUN IF CONDITION IS NULL.";
             }
 
-        } else {
-            return this.message = "ERROR: TASK DEFINITION IS NULL.";
-        }
         return this.message;
     }
 
-    public String validate (ExecTask execTask){
+
+    private String validate (ExecTask execTask){
         if (execTask != null){
             String command = execTask.getCommand();
             if (command == null){
@@ -186,7 +186,12 @@ public class SchemaValidator {
 
             List arguments = execTask.getArguments();
             if (arguments == null) {
-                return this.message = "ERROR TASK ARGUMENTS IS NULL.";
+                return this.message = "ERROR TASK ARGUMENTS LIST IS NULL.";
+            }
+
+            int argumentsList = execTask.getArguments().size();
+            if ( argumentsList == 0) {
+                return  this.message = "ERROR: TASK ARGUMENT LIST IS EMPTY.";
             }
 
         }else {
@@ -196,7 +201,7 @@ public class SchemaValidator {
         return this.message;
     }
 
-    public String validate (FetchArtifactTask fetchArtifactTask){
+    private String validate (FetchArtifactTask fetchArtifactTask){
         if (fetchArtifactTask != null) {
             String pipelineName = fetchArtifactTask.getPipeline();
             if (pipelineName == null){
@@ -230,8 +235,8 @@ public class SchemaValidator {
         return this.message;
     }
 
-    public String validate (FetchMaterialTask fetchMaterialTask){
-        if (fetchMaterialTask != fetchMaterialTask){
+    private String validate (FetchMaterialTask fetchMaterialTask){
+        if (fetchMaterialTask != null){
             String materialName = fetchMaterialTask.getMaterialName();
             if (materialName == null){
                 return this.message = "ERROR: FETCH TASK MATERIAL NAME IS NULL.";
@@ -260,7 +265,7 @@ public class SchemaValidator {
         return this.message;
     }
 
-    public String validate (UploadArtifactTask uploadArtifactTask){
+    private String validate (UploadArtifactTask uploadArtifactTask){
         if (uploadArtifactTask != null){
 
             String source = uploadArtifactTask.getSource();
@@ -347,12 +352,12 @@ public class SchemaValidator {
                 return this.message = "ERROR: AGENT ROOT PATH IS NULL.";
             }
 
-            /*
+
             String os = agent.getOperatingSystem();
             if (os == null){
                 return this.message = "ERROR: AGENT OPERATIONAL SYSTEM IS NULL.";
             }
-*/
+
             Object environment = agent.getEnvironment();
             if (environment == null){
                 return this.message = "ERROR: AGENT ENVIRONMENT IS NULL.";
