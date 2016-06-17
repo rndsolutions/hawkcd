@@ -31,6 +31,7 @@ public class WsContractDeserializer implements JsonDeserializer<WsContractDto> {
             }
         }
 
-        return this.jsonConverter.fromJson(json, WsContractDto.class);
+        WsContractDto result = this.jsonConverter.fromJson(json, WsContractDto.class);
+        return result;
     }
 }
