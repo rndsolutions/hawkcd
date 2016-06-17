@@ -43,7 +43,6 @@ public class StatusUpdater extends Thread {
                     this.updateAllStatuses(pipeline);
                     this.pipelineService.update(pipeline);
                 }
-                int a = 5;
 
                 Thread.sleep(4 * 1000);
             }
@@ -72,8 +71,6 @@ public class StatusUpdater extends Thread {
         while(!stack.isEmpty()){
             Object node = stack.pop();
             if (node.getClass() == Job.class){
-                Job jobNode = (Job) node;
-                this.updateJobStatus(jobNode);
                 return true;
             }
             if(node.getClass() == Pipeline.class){
@@ -90,12 +87,6 @@ public class StatusUpdater extends Thread {
         return false;
     }
 
-    public void updateJobStatus(Job job){
-        if (job.getAssignedAgentId() == null){
-            job.setStatus(JobStatus.SCHEDULED);
-        }
-    }
-
     public void updateStageStatus(Stage stage) {
         List<JobStatus> jobStatuses = new ArrayList<>();
         List<Job> jobs = stage.getJobs();
@@ -108,7 +99,6 @@ public class StatusUpdater extends Thread {
         } else if (this.areAllPassed(jobStatuses)) {
             stage.setStatus(Status.PASSED);
         }
-        int a = 5;
     }
 
     public void updatePipelineStatus(Pipeline pipeline) {
@@ -123,7 +113,6 @@ public class StatusUpdater extends Thread {
         } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
         }
-        int a = 5;
     }
 
     public boolean areAllPassed(List<?> statuses) {
