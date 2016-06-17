@@ -12,36 +12,41 @@ import net.hawkengine.model.FetchArtifactTask;
 import net.hawkengine.model.FetchMaterialTask;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.UploadArtifactTask;
+import net.hawkengine.model.enums.TaskType;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TaskDefinitionDeserializer implements JsonDeserializer<TaskDefinition> {
-
     private Map<String, Type> taskTypeMap;
-    private Gson gson;
+    private Gson jsonConverter;
 
     public TaskDefinitionDeserializer() {
         this.taskTypeMap = new HashMap() {{
-            put("EXEC", ExecTask.class);
-            put("FETCH_ARTIFACT", FetchArtifactTask.class);
-            put("FETCH_MATERIAL", FetchMaterialTask.class);
-            put("UPLOAD_ARTIFACT", UploadArtifactTask.class);
+            put(TaskType.EXEC.toString(), ExecTask.class);
+            put(TaskType.FETCH_ARTIFACT.toString(), FetchArtifactTask.class);
+            put(TaskType.FETCH_MATERIAL.toString(), FetchMaterialTask.class);
+            put(TaskType.UPLOAD_ARTIFACT.toString(), UploadArtifactTask.class);
         }};
-        this.gson = new Gson();
+        this.jsonConverter = new Gson();
     }
 
     @Override
-    public TaskDefinition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject jsonAsJsonObject = json.getAsJsonObject();
-        String typeOfTask = jsonAsJsonObject.get("type").getAsString();
-        Type taskClass = this.taskTypeMap.get(typeOfTask);
-        if (taskClass == null) {
-            throw new JsonParseException("Required field not found");
+    public TaskDefinition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+        JsonObject jsonObject = json.getAsJsonObject();
+        if (jsonObject.get("type") == null) {
+            throw new JsonParseException("Field type is null!");
         }
 
-        TaskDefinition result = this.gson.fromJson(json, taskClass);
+        String typeOfTask = jsonObject.get("type").getAsString();
+        Type taskClass = this.taskTypeMap.get(typeOfTask);
+        if (taskClass == null) {
+            throw new JsonParseException("Invalid Task Definition type!");
+        }
+
+        TaskDefinition result = this.jsonConverter.fromJson(json, taskClass);
         return result;
     }
 }
