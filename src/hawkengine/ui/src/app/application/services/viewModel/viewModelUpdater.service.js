@@ -21,12 +21,31 @@ angular
 
         viewModelUpdater.updatePipelineGroup = function (pipelineGroup) {
             viewModel.allPipelineGroups.push(pipelineGroup);
-        }
+        };
 
         viewModelUpdater.updatePipelineGroups = function (pipelineGroups) {
             viewModel.allPipelineGroups = pipelineGroups;
             toaster.pop('success', 'Notification', 'Pipeline Groups updated!');
-        }
+        };
+
+        viewModelUpdater.updatePipelineDefinitions = function (pipelineDefinitions){
+            viewModel.allPipelineDefinitions = pipelineDefinitions;
+            toaster.pop('success', "Notification", "Pipelines updated!");
+        };
+
+        viewModelUpdater.updatePipelineGroupDTOs = function (pipelineGroupDTOs) {
+            viewModel.allPipelineDefinitions = pipelineGroupDTOs;
+            viewModel.allPipelines = pipelineGroupDTOs;
+            toaster.pop('success', "Notification", "Pipelines updated!");
+        };
+
+        viewModelUpdater.addPipelineDefinition = function (pipelineDefinition) {
+            viewModel.allPipelineDefinitions.forEach(function (currentPipelineGroup, index, array) {
+                if(currentPipelineGroup.id == pipelineDefinition.pipelineGroupId){
+                    array[index].pipelines.push(pipelineDefinition);
+                }
+            });
+        };
 
         return viewModelUpdater;
     }]);

@@ -127,7 +127,7 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "pipeConfigService", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, pipeConfigService) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
@@ -141,6 +141,7 @@ angular
 
         $rootScope.socket.onopen = function (event) {
             //pipeStatsService.getAgentById();
+            pipeConfigService.getAllPipelineGroupDTOs();
             agentService.getAllAgents();
             adminGroupService.getAllPipelineGroups();
             //pipeStatsService.getAllPipelineGroups();

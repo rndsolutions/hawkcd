@@ -13,6 +13,8 @@ angular
 
         viewModel.allMaterials = {};
 
+        viewModel.allPipelineDefinitions = {};
+
         viewModel.allPipelineGroups = [];
 
         viewModel.init = function() {

@@ -97,7 +97,7 @@ angular
 
         vm.deletePipelineGroup = function(){
             adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete.id);
-        }
+        };
 
         // function getAllUsers() {
         //     var tokenIsValid = authDataService.checkTokenExpiration();

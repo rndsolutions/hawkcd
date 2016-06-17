@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService',
-        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'pipeConfigService',
+        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, pipeConfigService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function (data) {
@@ -52,6 +52,22 @@ angular
                     delete: function (isDeleted) {
                         if (isDeleted) {
                             adminGroupService.getAllPipelineGroups();
+                        }
+                    },
+                    getAllPipelineGroupDTOs: function (pipelineGroups) {
+                        viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
+                    }
+                },
+                PipelineDefinitionService: {
+                    add: function (pipeline) {
+                        viewModelUpdater.addPipelineDefinition(pipeline);
+                    },
+                    getAll: function (pipelines) {
+                        viewModelUpdater.updatePipelineDefinitions(pipelines);
+                    },
+                    delete: function (isDeleted) {
+                        if (isDeleted) {
+                            pipeConfigService.getAllPipelineGroupDTOs();
                         }
                     }
                 }
