@@ -2,16 +2,61 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('pipeConfigService', [function () {
+    .factory('pipeConfigService', ['jsonHandlerService', 'websocketSenderService', function (jsonHandlerService, websocketSenderService) {
         var pipeConfigService = this;
         
         //region Senders
         
         //region /pipeline
         
-        pipeConfigService.getAllPipelineDefs = function (token) {
-
+        pipeConfigService.getAllPipelineDefinitions = function () {
+            var methodName = "getAll";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
+
+        pipeConfigService.getAllPipelineGroupDTOs = function () {
+            var methodName = "getAllPipelineGroupDTOs";
+            var className = "PipelineGroupService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.addPipelineDefinition = function (pipelineDefinition) {
+            var methodName = "add";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.deletePipelineDefinition = function (id) {
+            var methodName = "delete";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeConfigService.createPipeline = function (pipeline, token) {
 
         };

@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function ($scope, $log, $interval, pipeStats, pipeConfig, pipeExec, pipesService, pipeStatsService, authDataService) {
+    .controller('PipelinesController', function ($scope, $log, $interval, pipeStats, pipeConfig, pipeExec, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService) {
         var vm = this;
         vm.toggleLogo = 1;
 
@@ -12,11 +12,38 @@ angular
 
         vm.formData = {};
         vm.allPipelines = [];
+
         vm.allDefinitionsAndRuns = [];
+
+        // vm.allDefinitionsAndRuns = viewModel.allPipelineDefinitions;
+
+        // $scope.$watch(function() { return viewModel.allPipelineDefinitions }, function(newVal, oldVal) {
+        //     vm.allDefinitionsAndRuns = viewModel.allPipelineDefinitions;
+        //     console.log(vm.allDefinitionsAndRuns);
+        // });
+
+        vm.allPipelines = viewModel.allPipelines;
+
+        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+            vm.allPipelines = viewModel.allPipelines;
+            console.log(vm.allPipelines);
+        });
+
+        vm.all = [];
+
+        vm.groupId = {};
+
+        vm.pipeId = {};
+
+        vm.all = vm.allPipelines;
 
         vm.disabledBtn = false;
 
         vm.materialType = "git";
+
+        vm.deletePipelineDefinition = function (id) {
+            pipeConfigService.deletePipelineDefinition(id);
+        };
 
         //region add pipeline modal config
         vm.bar = 1;
@@ -80,10 +107,12 @@ angular
         //endregion
 
         vm.getGroupName = function (input) {
-            vm.groupName = input.Name;
+            vm.groupName = input.groupName;
+            vm.groupId = input.id;
         };
         vm.getPipeName = function (input) {
-            vm.pipeName = input.OriginalName;
+            vm.pipeName = input.name;
+            vm.pipeId = input.id;
         };
 
         // vm.getAll = function () {
@@ -221,19 +250,19 @@ angular
             var material = {};
             if (vm.materialType == 'git') {
                 material = {
-                    "PipelineName": vm.formData.pipeline.name,
-                    "Name": vm.formData.material.git.name,
-                    "Type": 'GIT',
-                    "Url": vm.formData.material.git.url,
-                    "AutoTriggerOnChange": vm.formData.material.git.poll,
-                    "Destination": vm.formData.material.git.name,
-                    "MaterialSpecificDetails": {
+                    "pipelineName": vm.formData.pipeline.name,
+                    "name": vm.formData.material.git.name,
+                    "type": 'GIT',
+                    "url": vm.formData.material.git.url,
+                    "autoTriggerOnChange": vm.formData.material.git.poll,
+                    "destination": vm.formData.material.git.name,
+                    "materialSpecificDetails": {
                         "branch": vm.formData.material.git.branch || 'master'
                     }
                 };
                 if (formData.material.git.credentials) {
-                    material.MaterialSpecificDetails.username = formData.material.git.username;
-                    material.MaterialSpecificDetails.password = formData.material.git.password;
+                    material.materialSpecificDetails.username = formData.material.git.username;
+                    material.materialSpecificDetails.password = formData.material.git.password;
                 }
             }
             //TODO
@@ -257,13 +286,13 @@ angular
             //
             if (vm.materialType == 'nuget') {
                 material = {
-                    "PipelineName": vm.formData.pipeline.name,
-                    "Name": vm.formData.material.nuget.name,
-                    "Type": 'NUGET',
-                    "Url": vm.formData.material.nuget.url,
-                    "AutoTriggerOnChange": vm.formData.material.nuget.poll,
-                    "Destination": vm.formData.material.nuget.name,
-                    "MaterialSpecificDetails": {
+                    "pipelineName": vm.formData.pipeline.name,
+                    "name": vm.formData.material.nuget.name,
+                    "type": 'NUGET',
+                    "url": vm.formData.material.nuget.url,
+                    "autoTriggerOnChange": vm.formData.material.nuget.poll,
+                    "destination": vm.formData.material.nuget.name,
+                    "materialSpecificDetails": {
                         "packageId": vm.formData.material.nuget.packageId,
                         "includePrerelease": vm.formData.material.nuget.includePrerelease
                     }
@@ -271,65 +300,67 @@ angular
             }
 
             var pipeline = {
-                "OriginalName": vm.formData.pipeline.name,
-                "Name": vm.formData.pipeline.name,
-                "GroupName": vm.groupName,
-                "Materials": [material],
-                "EnvironmentVariables": [],
-                "Parameters": [],
-                "Environment": {},
-                "Stages": [{
-                    "Name": vm.formData.stage.name,
-                    "Jobs": [{
-                        "Name": "defaultJob",
-                        "Tasks": [{
-                            "Command": "cmd",
-                            "Arguments": ["/c"],
-                            "RunIfCondition": 'Passed',
-                            "Type": 'Exec'
+                "name": vm.formData.pipeline.name,
+                "groupName": vm.groupName,
+                "pipelineGroupId": vm.groupId,
+                "materials": [material],
+                "environmentVariables": [],
+                "parameters": [],
+                "environment": {},
+                "stageDefinitions": [{
+                    "name": vm.formData.stage.name,
+                    "jobDefinitions": [{
+                        "name": "defaultJob",
+                        "tasks": [{
+                            "command": "cmd",
+                            "arguments": ["/c"],
+                            "runIfCondition": 'Passed',
+                            "type": 'EXEC'
                         }],
-                        "EnvironmentVariables": []
+                        "environmentVariables": []
                     }],
-                    "EnvironmentVariables": [],
-                    "NeverCleanArtifacts": false,
-                    "CleanWorkingDirectory": false,
-                    "StageType": vm.formData.stage.trigger
+                    "environmentVariables": [],
+                    "neverCleanArtifacts": false,
+                    "cleanWorkingDirectory": false,
+                    "stageType": vm.formData.stage.trigger
                 }],
-                "AutoScheduling": vm.formData.pipeline.autoSchedule
+                "autoScheduling": vm.formData.pipeline.autoSchedule
             };
+            
+            pipeConfigService.addPipelineDefinition(pipeline);
 
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeConfig.createPipeline(pipeline, token)
-                    .then(function (res) {
-                        vm.formData = {};
-                        vm.getAll();
-                        console.log(res);
-                    }, function (err) {
-                        vm.formData = {};
-                        vm.getAll();
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function (res) {
-                        var token = res.access_token;
-                        pipeConfig.createPipeline(pipeline, token)
-                            .then(function (res) {
-                                vm.formData = {};
-                                vm.getAll();
-                                console.log(res);
-                            }, function (err) {
-                                vm.formData = {};
-                                vm.getAll();
-                                console.log(err);
-                            })
-                    }, function (err) {
-                        console.log(err);
-                    })
-            }
+            // var tokenIsValid = authDataService.checkTokenExpiration();
+            // if (tokenIsValid) {
+            //     var token = window.localStorage.getItem("accessToken");
+            //     pipeConfig.createPipeline(pipeline, token)
+            //         .then(function (res) {
+            //             vm.formData = {};
+            //             vm.getAll();
+            //             console.log(res);
+            //         }, function (err) {
+            //             vm.formData = {};
+            //             vm.getAll();
+            //             console.log(err);
+            //         })
+            // } else {
+            //     var currentRefreshToken = window.localStorage.getItem("refreshToken");
+            //     authDataService.getNewToken(currentRefreshToken)
+            //         .then(function (res) {
+            //             var token = res.access_token;
+            //             pipeConfig.createPipeline(pipeline, token)
+            //                 .then(function (res) {
+            //                     vm.formData = {};
+            //                     vm.getAll();
+            //                     console.log(res);
+            //                 }, function (err) {
+            //                     vm.formData = {};
+            //                     vm.getAll();
+            //                     console.log(err);
+            //                 })
+            //         }, function (err) {
+            //             console.log(err);
+            //         })
+            // }
         };
 
         vm.removePipeline = function (pipeName) {
