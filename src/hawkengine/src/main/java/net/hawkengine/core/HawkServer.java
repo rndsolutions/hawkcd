@@ -1,11 +1,13 @@
 package net.hawkengine.core;
 
+import net.hawkengine.core.components.pipelinescheduler.JobAssigner;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.Account;
 import net.hawkengine.http.Config;
 import net.hawkengine.http.Exec;
 import net.hawkengine.http.Stats;
 import net.hawkengine.ws.WsServlet;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -13,21 +15,18 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
-
-    private Server server;
     private static final int PORT = 8080;
 
+    private Server server;
+    private Thread assigner;
+
     public HawkServer() {
+        RedisManager.connect();
         this.server = new Server();
-    }
-
-    protected void configure() {
-
-        //bind(IConfigService.class).to(ConfigService.class);
+        this.assigner = new Thread(new JobAssigner());
     }
 
     public void configureJetty() {
-
         // HTTP connector
         ServerConnector connector = new ServerConnector(this.server);
         connector.setPort(PORT);
@@ -45,7 +44,6 @@ public class HawkServer {
                 Config.class.getCanonicalName() + ", " +
                 Stats.class.getCanonicalName() + ", " +
                 Exec.class.getCanonicalName() + ", ";
-
         restServlet.setInitParameter("jersey.config.server.provider.classnames", classes);
 
         // localhost:8080/ws/v1
@@ -57,7 +55,7 @@ public class HawkServer {
     }
 
     public void start() throws Exception {
-
+        assigner.start();
         this.server.start();
         this.server.join();
     }

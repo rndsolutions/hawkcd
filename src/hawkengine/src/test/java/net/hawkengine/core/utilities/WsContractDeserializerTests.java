@@ -28,7 +28,7 @@ public class WsContractDeserializerTests {
                 "\"packageName\": \"testPackage\",\n" +
                 "\"methodName\": \"testMethod\",\n" +
                 "\"result\": \"testResult\",\n" +
-                "\"error\": \"testError\",\n" +
+                "\"error\": false,\n" +
                 "\"errorMessage\": \"testErrorMessage\",\n" +
                 "\"args\": [{\n" +
                 "\"packageName\": \"testPackage\",\n" +
@@ -42,7 +42,7 @@ public class WsContractDeserializerTests {
         expectedResult.setPackageName("testPackage");
         expectedResult.setMethodName("testMethod");
         expectedResult.setResult("testResult");
-		expectedResult.setError(true);
+		expectedResult.setError(false);
         expectedResult.setErrorMessage("testErrorMessage");
         ConversionObject[] args = {new ConversionObject()};
         args[0].setPackageName("testPackage");

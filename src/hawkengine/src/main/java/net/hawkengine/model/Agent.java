@@ -1,20 +1,26 @@
 package net.hawkengine.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Agent extends DbEntry {
     private String name;
     private String hostName;
     private String ipAddress;
     private String rootPath;
-    private Object operatingSystem;
-    private List<String> resources;
+    private String operatingSystem;
+    private Set<String> resources;
     private Environment environment;
     private boolean isRunning;
     private boolean isEnabled;
     private boolean isConnected;
-    private LocalDateTime lastReported;
+    private boolean isAssigned;
+    private LocalDateTime lastReportedTime;
+
+    public Agent() {
+        this.setResources(new HashSet<>());
+    }
 
     public String getName() {
         return this.name;
@@ -48,19 +54,19 @@ public class Agent extends DbEntry {
         this.rootPath = rootPath;
     }
 
-    public Object getOperatingSystem() {
+    public String getOperatingSystem() {
         return this.operatingSystem;
     }
 
-    public void setOperatingSystem(Object operatingSystem) {
+    public void setOperatingSystem(String operatingSystem) {
         this.operatingSystem = operatingSystem;
     }
 
-    public List<String> getResources() {
+    public Set<String> getResources() {
         return this.resources;
     }
 
-    public void setResources(List<String> resources) {
+    public void setResources(Set<String> resources) {
         this.resources = resources;
     }
 
@@ -96,11 +102,19 @@ public class Agent extends DbEntry {
         this.isConnected = connected;
     }
 
-    public LocalDateTime getLastReported() {
-        return this.lastReported;
+    public boolean isAssigned() {
+        return isAssigned;
     }
 
-    public void setLastReported(LocalDateTime lastReported) {
-        this.lastReported = lastReported;
+    public void setAssigned(boolean assigned) {
+        isAssigned = assigned;
+    }
+
+    public LocalDateTime getLastReportedTime() {
+        return this.lastReportedTime;
+    }
+
+    public void setLastReportedTime(LocalDateTime lastReportedTime) {
+        this.lastReportedTime = lastReportedTime;
     }
 }
