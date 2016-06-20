@@ -134,8 +134,6 @@ angular
 
         var wsServerLocation = "ws://hawkserver:8080/ws/v1";
 
-        var toasterPopped = false;
-
         var timerID=0;
 
         function start(wsServerLocation){
@@ -148,11 +146,11 @@ angular
             $rootScope.socket.onopen = function (event) {
                 toaster.clear();
                 toaster.pop('success', "Notification", "Connection to server successful!");
-                toasterPopped = true;
                 if(window.timerID){
                     window.clearInterval(window.timerID);
                     window.timerID=0;
                 }
+
                 //pipeStatsService.getAgentById();
                 pipeConfigService.getAllPipelineGroupDTOs();
                 agentService.getAllAgents();
@@ -161,14 +159,12 @@ angular
             };
 
             $rootScope.socket.onclose = function (event) {
-                toasterPopped = false;
                 if(!window.timerID){
                     window.timerID=setInterval(function(){start(wsServerLocation)}, 5000);
                 }
-                if(toasterPopped == false){
-                    toaster.clear();
-                    toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
-                }
+
+                toaster.clear();
+                toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
                 $rootScope.$apply();
             }
         }
