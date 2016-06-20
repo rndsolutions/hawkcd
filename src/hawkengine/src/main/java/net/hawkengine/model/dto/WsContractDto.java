@@ -58,7 +58,7 @@ public class WsContractDto {
 	}
 
 	public boolean isError() {
-		return error;
+		return this.error;
 	}
 
 	public void setError(boolean error) {
