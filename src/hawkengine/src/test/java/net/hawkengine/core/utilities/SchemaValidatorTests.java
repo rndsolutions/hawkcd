@@ -39,7 +39,6 @@ public class SchemaValidatorTests {
     private List <MaterialDefinition> material = new ArrayList<MaterialDefinition>();
     private List <StageDefinition> stage = new ArrayList<StageDefinition>();
     private List <JobDefinition> job = new ArrayList<JobDefinition>();
-   // private List <TaskDefinition> task = new ArrayList<TaskDefinition>();
     private List <TaskDefinition> execTaskList = new ArrayList<TaskDefinition>();
 
 
@@ -53,7 +52,7 @@ public class SchemaValidatorTests {
     private ExecTask execTask;
     private UploadArtifactTask uploadArtifactTask;
     private MaterialDefinition materialDefinition;
-    ;
+
     //--------------------------------------------------
 
 
@@ -63,7 +62,7 @@ public class SchemaValidatorTests {
     public void validate_PielineGroup(){
         //Arrange
         PipelineGroup pipelineGroup = new PipelineGroup();
-        pipelineGroup.setName("PIPELINEGROUPBRO");
+        pipelineGroup.setName("pieline_das");
 
         //Act
         String actualResult = validator.validate(pipelineGroup);
@@ -107,7 +106,7 @@ public class SchemaValidatorTests {
     public void validate_PipelineGroup_Name_RegExMismatch(){
         //Arrange
         PipelineGroup pipelineGroup = new PipelineGroup();
-        pipelineGroup.setName("#$!13das");
+        pipelineGroup.setName("   ");
         String expectedResult = "ERROR: PIPELINEGROUP NAME IS INVALID.";
 
         //Act
@@ -128,7 +127,7 @@ public class SchemaValidatorTests {
         MaterialDefinition materialDefinition = new MaterialDefinition();
         materialDefinition.setName("materialName");
         materialDefinition.setType(MaterialType.GIT);
-        materialDefinition.setUrl("http://");
+        materialDefinition.setUrl("git://host.xz/path/to/repo.git/");
         materialDefinition.setPipelineDefinitionId("MaterialPipelineId");
         this.material.add(0,materialDefinition);
 
@@ -431,6 +430,38 @@ public class SchemaValidatorTests {
     }
 //--------------------------------------------------------------------------------------------------
 
+    //----------------------------------------------------------------------------------------------
+    //TaskDefinition TESTS
+    @Test
+    public void validate_TaskDefinition_EXEC(){
+        //Arrange
+        TaskDefinition taskDefinition = new ExecTask();
+        taskDefinition.setName("execDefinition");
+        taskDefinition.setRunIfCondition(RunIf.PASSED);
+        String expectedResult = "ERROR: TASK COMMAND IS NULL.";
+
+        //Act
+        String actualResult = this.validator.validate(taskDefinition);
+
+        //Assert
+        assertNotNull(actualResult);
+        assertEquals(expectedResult,actualResult);
+    }
+
+
+    @Test
+    public void validate_TaskDefinition(){
+        //Arrange
+        String expectedResult = "ERROR: TASK TYPE IS NULL.";
+
+        //Act
+        String actualResult = this.validator.validate(taskDefinition);
+
+        //Assert
+        assertNotNull(actualResult);
+        assertEquals(expectedResult,actualResult);
+    }
+//--------------------------------------------------------------------------------------------------
 
 
 
@@ -526,32 +557,99 @@ public class SchemaValidatorTests {
 
     }
 
-
-
-
-
     @Test
-    public void validate_FetchMaterialtTask(){
+    public void validate_FetchArtifactTask_Pipeline_NameNull(){
         //Arrange
-        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
-        fetchMaterialTask.setName("taskDefinition");
-        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
-        fetchMaterialTask.setMaterialName("materialName");
-        fetchMaterialTask.setPipelineName("pipelineName");
-        fetchMaterialTask.setSource("source");
-        fetchMaterialTask.setDestination("destination");
+        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
+        fetchArtifactTask.setName("TaksDefinitionName");
+        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
+        String expectedResult = "ERROR: FETCH ARTIFACT PIPELINE NAME IS NULL.";
 
-
-        //Arrange
-        String actualResult = this.validator.validate(fetchMaterialTask);
+        //Act
+        String actualResult = this.validator.validate(fetchArtifactTask);
 
         //Assert
-        assertEquals(this.expectedResult,actualResult);
-
+        assertEquals(expectedResult, actualResult);
     }
 
+    @Test
+    public void validate_FetchArtifactTask_Stage_NameNull(){
+        //Arrange
+        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
+        fetchArtifactTask.setName("TaksDefinitionName");
+        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
+        fetchArtifactTask.setPipeline("pipelineName");
+        String expectedResult = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
+
+        //Act
+        String actualResult = this.validator.validate(fetchArtifactTask);
+
+        //Assert
+        assertNotNull(actualResult);
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void validate_FetchArtifactTask_Job_NameNull(){
+        //Arrange
+        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
+        fetchArtifactTask.setName("TaksDefinitionName");
+        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
+        fetchArtifactTask.setPipeline("pipelineName");
+        fetchArtifactTask.setStage("stageName");
+        String expectedResult = "ERROR: FETCH ARTIFACT JOB NAME IS NULL.";
+
+        //Act
+        String actualResult = this.validator.validate(fetchArtifactTask);
+
+        //Assert
+        assertNotNull(actualResult);
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void validate_FetchArtifactTask_TaskFolder_Null(){
+        //Arrange
+        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
+        fetchArtifactTask.setName("TaksDefinitionName");
+        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
+        fetchArtifactTask.setPipeline("pipelineName");
+        fetchArtifactTask.setStage("stageName");
+        fetchArtifactTask.setJob("jobNae");
+        String expectedResult = "ERROR: FETCH ARTIFACT TASK SOURCE FOLDER IS NULL.";
+
+        //Act
+        String actualResult = this.validator.validate(fetchArtifactTask);
+
+        //Assert
+        assertNotNull(actualResult);
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void validate_FetchArtifactTask_DestinationFolder_Null(){
+        //Arrange
+        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
+        fetchArtifactTask.setName("TaksDefinitionName");
+        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
+        fetchArtifactTask.setPipeline("pipelineName");
+        fetchArtifactTask.setStage("stageName");
+        fetchArtifactTask.setJob("jobNae");
+        fetchArtifactTask.setSource("sourcefolder");
+        String expectedResult = "ERROR: FETCH ARTIFACT TASK DESTINATION FOLDER IS NULL.";
+
+        //Act
+        String actualResult = this.validator.validate(fetchArtifactTask);
+
+        //Assert
+        assertNotNull(actualResult);
+        assertEquals(expectedResult, actualResult);
+    }
+//--------------------------------------------------------------------------------------------------
 
 
+    //----------------------------------------------------------------------------------------------
+    //UploadArtifactTask
     @Test
     public void validate_UploadArtifactTask(){
         //Arrane
@@ -602,7 +700,102 @@ public class SchemaValidatorTests {
         assertNotNull(actualResult);
         assertEquals(expectedResult,actualResult);
     }
+//--------------------------------------------------------------------------------------------------
 
+
+
+    //----------------------------------------------------------------------------------------------
+    //FetchMaterialTask
+    @Test
+    public void validate_FetchMaterialtTask(){
+        //Arrange
+        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
+        fetchMaterialTask.setName("taskDefinition");
+        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
+        fetchMaterialTask.setMaterialName("materialName");
+        fetchMaterialTask.setPipelineName("pipelineName");
+        fetchMaterialTask.setSource("source");
+        fetchMaterialTask.setDestination("destination");
+
+        //Arrange
+        String actualResult = this.validator.validate(fetchMaterialTask);
+
+        //Assert
+        assertEquals(this.expectedResult,actualResult);
+
+    }
+
+
+    @Test
+    public void validate_FetchMaterialtTask_MaterialName_Null(){
+        //Arrange
+        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
+        fetchMaterialTask.setName("definitionName");
+        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
+        String expectedResult = "ERROR: FETCH TASK MATERIAL NAME IS NULL.";
+
+        //Arrange
+        String actualResult = this.validator.validate(fetchMaterialTask);
+
+        //Assert
+        assertEquals(expectedResult,actualResult);
+
+    }
+
+    @Test
+    public void validate_FetchMaterialtTask_PipelineName_Null(){
+        //Arrange
+        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
+        fetchMaterialTask.setName("definitionName");
+        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
+        fetchMaterialTask.setMaterialName("fetchMaterial");
+        String expectedResult = "ERROR: FETCH MATERIAL PIPELINE NAME IS NULL.";
+
+        //Arrange
+        String actualResult = this.validator.validate(fetchMaterialTask);
+
+        //Assert
+        assertEquals(expectedResult,actualResult);
+
+    }
+
+    @Test
+    public void validate_FetchMaterialtTask_SourceFolder_Null(){
+        //Arrange
+        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
+        fetchMaterialTask.setName("definitionName");
+        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
+        fetchMaterialTask.setMaterialName("fetchMaterial");
+        fetchMaterialTask.setPipelineName("taskPipeline");
+        String expectedResult = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
+
+        //Arrange
+        String actualResult = this.validator.validate(fetchMaterialTask);
+
+        //Assert
+        assertEquals(expectedResult,actualResult);
+    }
+
+    @Test
+    public void validate_FetchMaterialtTask_DestinationFolder_Null(){
+        //Arrange
+        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
+        fetchMaterialTask.setName("definitionName");
+        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
+        fetchMaterialTask.setMaterialName("fetchMaterial");
+        fetchMaterialTask.setPipelineName("taskPipeline");
+        fetchMaterialTask.setSource("sourceFolder");
+        String expectedResult = "ERROR: FETCH MATERIAL TASK DESTINATION FOLDER IS NULL.";
+
+        //Arrange
+        String actualResult = this.validator.validate(fetchMaterialTask);
+
+        //Assert
+        assertEquals(expectedResult,actualResult);
+
+    }
+
+//--------------------------------------------------------------------------------------------------
 
 
 
@@ -756,7 +949,7 @@ public class SchemaValidatorTests {
         MaterialDefinition materialDefinition = new MaterialDefinition();
         materialDefinition.setName("materialDefinition");
         materialDefinition.setType(MaterialType.GIT);
-        materialDefinition.setUrl("http://");
+        materialDefinition.setUrl("http://dakljsdla.com/kjdlas.git");
         materialDefinition.setPipelineDefinitionId("materialPipeline");
 
 
@@ -857,7 +1050,7 @@ public class SchemaValidatorTests {
         //Arrange
         MaterialDefinition materialDefinition = new MaterialDefinition();
         materialDefinition.setName("materialDefinition");
-        materialDefinition.setUrl("materialUrl");
+        materialDefinition.setUrl("material");
         materialDefinition.setType(MaterialType.NUGET);
         materialDefinition.setPipelineDefinitionId(null);
         String expectedResult = "ERROR: MATERIAL PIPELINE ID CAN NOT BE NULL.";

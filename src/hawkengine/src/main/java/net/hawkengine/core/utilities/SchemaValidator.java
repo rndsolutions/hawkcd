@@ -20,10 +20,12 @@ import java.util.regex.Pattern;
 /**
  * Created by boris on 09.06.16.
  */
+
+
 public class SchemaValidator {
     private String message = "OK";
-    private static final String NAME_PATTERN = "[a-zA-Z]{4,20}"; //TODO enter name pattern
-    private static final String GIT_PATTERN = "(git|ssh|http(s)?)(:)(\\/\\/)";
+    private static final String NAME_PATTERN = "^[A-Za-z][A-Za-z0-9_-]*${3,20}";
+    private static final String GIT_PATTERN = "((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
     private static final String NUGET_PATTERN = "[a-z]{5,50}"; //TODO define git url pattern
     //TODO to be handaled non-required insertation of Environments into PipelineDefinition,
     //TODO StageDefinition.
@@ -244,7 +246,7 @@ public class SchemaValidator {
 
             String pipelineName = fetchMaterialTask.getPipelineName();
             if (pipelineName == null){
-                return this.message = "ERROR: FETCH MATERLIAL PIPELINE NAME IS NULL.";
+                return this.message = "ERROR: FETCH MATERIAL PIPELINE NAME IS NULL.";
             }
 
             String source = fetchMaterialTask.getSource();
