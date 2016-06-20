@@ -127,25 +127,53 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "pipeConfigService", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, pipeConfigService) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "pipeConfigService", "toaster", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, pipeConfigService, toaster) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
 
-        $rootScope.socket = new WebSocket("ws://hawkserver:8080/ws/v1");
+        var wsServerLocation = "ws://hawkserver:8080/ws/v1";
 
-        $rootScope.socket.onmessage = function (event) {
-            console.log(event.data);
-            websocketReceiverService.processEvent(JSON.parse(event.data));
-        };
+        var toasterPopped = false;
 
-        $rootScope.socket.onopen = function (event) {
-            //pipeStatsService.getAgentById();
-            pipeConfigService.getAllPipelineGroupDTOs();
-            agentService.getAllAgents();
-            adminGroupService.getAllPipelineGroups();
-            //pipeStatsService.getAllPipelineGroups();
-        };
+        var timerID=0;
+
+        function start(wsServerLocation){
+            $rootScope.socket = new WebSocket(wsServerLocation);
+            $rootScope.socket.onmessage = function (event) {
+                console.log(event.data);
+                websocketReceiverService.processEvent(JSON.parse(event.data));
+            };
+
+            $rootScope.socket.onopen = function (event) {
+                toaster.clear();
+                toaster.pop('success', "Notification", "Connection to server successful!");
+                toasterPopped = true;
+                if(window.timerID){
+                    window.clearInterval(window.timerID);
+                    window.timerID=0;
+                }
+                //pipeStatsService.getAgentById();
+                pipeConfigService.getAllPipelineGroupDTOs();
+                agentService.getAllAgents();
+                adminGroupService.getAllPipelineGroups();
+                //pipeStatsService.getAllPipelineGroups();
+            };
+
+            $rootScope.socket.onclose = function (event) {
+                toasterPopped = false;
+                if(!window.timerID){
+                    window.timerID=setInterval(function(){start(wsServerLocation)}, 5000);
+                }
+                if(toasterPopped == false){
+                    toaster.clear();
+                    toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
+                }
+                $rootScope.$apply();
+            }
+        }
+        start(wsServerLocation);
+
     }]);
 
 /* Fix for Bootstrap modal behavior */
