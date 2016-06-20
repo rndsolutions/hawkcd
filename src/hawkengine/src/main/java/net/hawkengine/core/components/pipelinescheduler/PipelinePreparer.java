@@ -84,7 +84,6 @@ public class PipelinePreparer extends Thread {
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
         pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
         pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare.getId()));
-        pipelineToPrepare.setJobsForExecution(executionJobs);
         pipelineToPrepare.setPrepared(true);
 
         return pipelineToPrepare;
@@ -121,7 +120,6 @@ public class PipelinePreparer extends Thread {
             currentJob.setStageId(stageId);
             currentJob.setPipelineId(pipelineId);
             currentJob.setEnvironmentVariables(jobDefinition.getEnvironmentVariables());
-            currentJob.setResources(jobDefinitions.get(0).getResources());
             currentJob.setTasks(this.prepareTasks(jobDefinition.getTaskDefinitions(), currentJob.getId(), stageId, pipelineId));
             currentJob.setStatus(JobStatus.AWAITING);
 

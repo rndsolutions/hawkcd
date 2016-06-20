@@ -18,12 +18,12 @@ public class HawkServer {
     private static final int PORT = 8080;
 
     private Server server;
-    private Thread assigner;
+    private Thread jobAssigner;
 
     public HawkServer() {
         RedisManager.connect();
         this.server = new Server();
-        this.assigner = new Thread(new JobAssigner());
+        this.jobAssigner = new Thread(new JobAssigner());
     }
 
     public void configureJetty() {
@@ -55,7 +55,7 @@ public class HawkServer {
     }
 
     public void start() throws Exception {
-        assigner.start();
+        jobAssigner.start();
         this.server.start();
         this.server.join();
     }

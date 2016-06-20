@@ -14,7 +14,6 @@ public class Pipeline extends DbEntry {
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
     private List<Stage> stages;
-    private List<JobDefinition> jobsForExecution;
     private Status status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -78,14 +77,6 @@ public class Pipeline extends DbEntry {
 
     public void setStages(List<Stage> stages) {
         this.stages = stages;
-    }
-
-    public List<JobDefinition> getJobsForExecution() {
-        return this.jobsForExecution;
-    }
-
-    public void setJobsForExecution(List<JobDefinition> jobsForExecution) {
-        this.jobsForExecution = jobsForExecution;
     }
 
     public Status getStatus() {
