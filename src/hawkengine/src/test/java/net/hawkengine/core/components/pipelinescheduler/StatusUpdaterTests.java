@@ -66,9 +66,10 @@ public class StatusUpdaterTests {
                     }
                 }
                 if (passedJobsIterator == jobs.size()) {
+                    this.mockedPipelineService.update(expectedPipelineObject);
                     String pipelineId = expectedPipelineObject.getId();
                     Pipeline actualPipeline = (Pipeline) this.mockedPipelineService.getById(pipelineId).getObject();
-                    Assert.assertEquals(Status.PASSED, actualPipeline.getStatus());
+                    assertEquals(Status.PASSED, actualPipeline.getStatus());
                 }
             }
         }
@@ -111,7 +112,7 @@ public class StatusUpdaterTests {
     }
 
     @Test
-    public void runStatusUpdater_interruptedThred_throwInterruptedException() {
+    public void runStatusUpdater_interruptedThread_throwInterruptedException() {
         final InterruptedException interrupt = new InterruptedException();
         try {
             Thread.currentThread().interrupt();

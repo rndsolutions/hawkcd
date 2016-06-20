@@ -23,7 +23,7 @@ public class StatusUpdater extends Thread {
         this.pipelineService = new PipelineService();
     }
 
-    public StatusUpdater(IPipelineService pipelineService){
+    public StatusUpdater(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
     }
 
@@ -39,7 +39,7 @@ public class StatusUpdater extends Thread {
         try {
             while (true) {
                 List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
-                for (Pipeline pipeline: pipelinesInProgress) {
+                for (Pipeline pipeline : pipelinesInProgress) {
                     this.updateAllStatuses(pipeline);
                     this.pipelineService.update(pipeline);
                 }
@@ -65,35 +65,40 @@ public class StatusUpdater extends Thread {
         return pipelinesInProgress;
     }
 
-    public boolean updateAllStatuses(Object pipeline){
+    public boolean updateAllStatuses(Object pipeline) {
         Stack stack = new Stack();
         stack.push(pipeline);
-        while(!stack.isEmpty()){
+
+        while (!stack.isEmpty()) {
             Object node = stack.pop();
-            if (node.getClass() == Job.class){
+            if (node.getClass() == Job.class) {
+                Pipeline pipelineToUpdate = (Pipeline) pipeline;
+                this.updatePipelineStatus(pipelineToUpdate);
                 return true;
             }
-            if(node.getClass() == Pipeline.class){
+
+            if (node.getClass() == Pipeline.class) {
                 Pipeline pipelineNode = (Pipeline) node;
                 stack.addAll(pipelineNode.getStages());
-                this.updatePipelineStatus(pipelineNode);
-            }
-            else{
+            } else {
                 Stage stageNode = (Stage) node;
                 stack.addAll(stageNode.getJobs());
                 this.updateStageStatus(stageNode);
             }
         }
+
         return false;
     }
 
     public void updateStageStatus(Stage stage) {
         List<JobStatus> jobStatuses = new ArrayList<>();
         List<Job> jobs = stage.getJobs();
+
         for (Job job : jobs) {
             JobStatus jobStatus = job.getStatus();
             jobStatuses.add(jobStatus);
         }
+
         if (jobStatuses.contains(JobStatus.FAILED)) {
             stage.setStatus(Status.FAILED);
         } else if (this.areAllPassed(jobStatuses)) {
@@ -104,10 +109,12 @@ public class StatusUpdater extends Thread {
     public void updatePipelineStatus(Pipeline pipeline) {
         List<Stage> stages = pipeline.getStages();
         List<Status> stageStatuses = new ArrayList<>();
+
         for (Stage stage : stages) {
             Status stageStatus = stage.getStatus();
             stageStatuses.add(stageStatus);
         }
+
         if (stageStatuses.contains(Status.FAILED)) {
             pipeline.setStatus(Status.FAILED);
         } else if (this.areAllPassed(stageStatuses)) {
@@ -118,16 +125,18 @@ public class StatusUpdater extends Thread {
     public boolean areAllPassed(List<?> statuses) {
         String[] statusesAsString = new String[statuses.size()];
         int index = 0;
+
         for (Object status : statuses) {
             statusesAsString[index] = status.toString();
             index++;
         }
-        int statusesCollectionSize = statusesAsString.length;
+
         for (String aStatusesAsString : statusesAsString) {
             if (!aStatusesAsString.equals("PASSED")) {
                 return false;
             }
         }
+
         return true;
     }
 }
