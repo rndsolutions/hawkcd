@@ -1,6 +1,5 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
-import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.Stage;
@@ -15,41 +14,24 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-public class StatusUpdater extends Thread {
-    private final Logger logger = Logger.getLogger(this.getClass());
+public class StatusUpdaterService extends Thread {
     private IPipelineService pipelineService;
+    private static final Logger logger = Logger.getLogger(StatusUpdaterService.class.getName());
 
-    public StatusUpdater() {
+    public StatusUpdaterService() {
         this.pipelineService = new PipelineService();
     }
 
-    public StatusUpdater(IPipelineService pipelineService) {
+    public StatusUpdaterService(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
     }
 
-    @Override
-    public synchronized void start() {
-        super.start();
-        this.logger.info(String.format(LoggerMessages.WORKER_STARTED, "Status Updater"));
-        this.run();
-    }
-
-    @Override
-    public void run() {
-        try {
-            while (true) {
-                List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
-                for (Pipeline pipeline : pipelinesInProgress) {
-                    this.updateAllStatuses(pipeline);
-                    this.pipelineService.update(pipeline);
-                }
-
-                Thread.sleep(4 * 1000);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void updateStatuses() {
+        List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
+        for (Pipeline pipeline : pipelinesInProgress) {
+            this.updateAllStatuses(pipeline);
+            this.pipelineService.update(pipeline);
         }
-        super.run();
     }
 
     public List<Pipeline> getAllPipelinesInProgress() {

@@ -186,7 +186,6 @@ public class PipelinePreparerTests {
         for (Pipeline actualResultObject : actualResult) {
             Pipeline preparedPipeline = this.mockedPipelinePreparer.preparePipeline(actualResultObject);
             Assert.assertEquals(preparedPipeline.isPrepared(), true);
-            Assert.assertNotNull(preparedPipeline.getJobsForExecution());
             Assert.assertNotNull(preparedPipeline.getEnvironmentVariables());
         }
     }

@@ -5,20 +5,14 @@ import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class AssignerHelperTest {
-    private AssignerHelper service = new AssignerHelper();
-
-    @Before
-    public void setUp() {
-
-    }
+public class JobAssignerServiceTest {
+    private JobAssignerService jobAssignerService = new JobAssignerService();
 
     @Test
     public void getEligibleAgentsForJob_matchingResources_oneObject() {
@@ -30,7 +24,7 @@ public class AssignerHelperTest {
         int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         // Act
-        List<Agent> actualResult = this.service.getEligibleAgentsForJob(job, agents);
+        List<Agent> actualResult = this.jobAssignerService.getEligibleAgentsForJob(job, agents);
         String actualId = actualResult.get(agentZero).getId();
         int actualCollectionSize = actualResult.size();
 
@@ -40,7 +34,7 @@ public class AssignerHelperTest {
     }
 
     @Test
-    public void getEligibleAgentsForJob_nonmathchingResources_noObject() {
+    public void getEligibleAgentsForJob_nonMatchingResources_noObject() {
         // Arrange
         int agentZero = 0;
         Job job = this.getJobWithResources(1);
@@ -50,7 +44,7 @@ public class AssignerHelperTest {
         int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS;
 
         // Act
-        List<Agent> actualResult = this.service.getEligibleAgentsForJob(job, agents);
+        List<Agent> actualResult = this.jobAssignerService.getEligibleAgentsForJob(job, agents);
         int actualCollectionSize = actualResult.size();
 
         // Assert
@@ -65,7 +59,7 @@ public class AssignerHelperTest {
         int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS;
 
         // Act
-        List<Agent> actualResult = this.service.getEligibleAgentsForJob(job, agents);
+        List<Agent> actualResult = this.jobAssignerService.getEligibleAgentsForJob(job, agents);
         int actualCollectionSize = actualResult.size();
 
         // Assert
@@ -82,7 +76,7 @@ public class AssignerHelperTest {
         int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         // Act
-        List<Agent> actualResult = this.service.getEligibleAgentsForJob(job, agents);
+        List<Agent> actualResult = this.jobAssignerService.getEligibleAgentsForJob(job, agents);
         String actualId = actualResult.get(agentZero).getId();
         int actualCollectionSize = actualResult.size();
 
@@ -104,7 +98,7 @@ public class AssignerHelperTest {
         int expectedCollectionSize = TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT;
 
         // Act
-        List<Agent> actualResult = this.service.getEligibleAgentsForJob(job, agents);
+        List<Agent> actualResult = this.jobAssignerService.getEligibleAgentsForJob(job, agents);
         String actualId = actualResult.get(agentZero).getId();
         int actualCollectionSize = actualResult.size();
 
@@ -114,47 +108,142 @@ public class AssignerHelperTest {
     }
 
     @Test
-    public void assignJobToAgent_oneAgent_jobAssigned() {
+    public void pickMostSuitableAgent_oneAgent_sameAgent() {
         // Arrange
-        Job job = new Job();
         int agentZero = 0;
         List<Agent> agents = this.getAgentsWithResources(1, 1);
         String expectedResult = agents.get(agentZero).getId();
 
         //Act
-        String actualResult = this.service.getAgentForJob(job, agents).getId();
+        String actualResult = this.jobAssignerService.pickMostSuitableAgent(agents).getId();
 
         // Assert
         Assert.assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void assignJobToAgent_twoAgents_jobAssignedToAgentWithLessResources() {
+    public void pickMostSuitableAgent_twoAgents_AgentWithLessResources() {
         // Arrange
-        Job job = new Job();
         int agentZero = 0;
         List<Agent> agents = this.getAgentsWithResources(2, 1);
         agents.get(agentZero).getResources().remove("Resource0");
         String expectedResult = agents.get(agentZero).getId();
 
         //Act
-        String actualResult = this.service.getAgentForJob(job, agents).getId();
+        String actualResult = this.jobAssignerService.pickMostSuitableAgent(agents).getId();
 
         // Assert
         Assert.assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void assignJobToAgent_noAgents_jobNotAssigned() {
+    public void assignJobToAgent_noAgents_null() {
         // Arrange
-        Job job = new Job();
         List<Agent> agents = this.getAgentsWithResources(0, 0);
 
         //Act
-        String actualResult = this.service.getAgentForJob(job, agents).getId();
+        Agent actualResult = this.jobAssignerService.pickMostSuitableAgent(agents);
 
         // Assert
         Assert.assertNull(actualResult);
+    }
+
+    @Test
+    public void isAgentEligibleForJob_eligibleAgent_true() {
+        // Arrange
+        int agentZero = 0;
+        Job job = this.getJobWithResources(3);
+        List<Agent> agents = this.getAgentsWithResources(1, 3);
+        Agent agent = agents.get(agentZero);
+        agent.setConnected(true);
+        agent.setEnabled(true);
+        agent.setRunning(false);
+
+        // Act
+        boolean actualResult = this.jobAssignerService.isAgentEligibleForJob(job, agent);
+
+        // Assert
+        Assert.assertTrue(actualResult);
+    }
+
+    @Test
+    public void isAgentEligibleForJob_agentIsNull_false() {
+        // Arrange
+        Job job = new Job();
+        Agent agent = null;
+
+        // Act
+        boolean actualResult = this.jobAssignerService.isAgentEligibleForJob(job, agent);
+
+        // Assert
+        Assert.assertFalse(actualResult);
+    }
+
+    @Test
+    public void isAgentEligibleForJob_agentIsNotConnected_false() {
+        // Arrange
+        Job job = new Job();
+        Agent agent = new Agent();
+        agent.setConnected(false);
+        agent.setEnabled(true);
+        agent.setRunning(false);
+
+        // Act
+        boolean actualResult = this.jobAssignerService.isAgentEligibleForJob(job, agent);
+
+        // Assert
+        Assert.assertFalse(actualResult);
+    }
+
+    @Test
+    public void isAgentEligibleForJob_agentIsNotEnabled_false() {
+        // Arrange
+        Job job = new Job();
+        Agent agent = new Agent();
+        agent.setConnected(true);
+        agent.setEnabled(false);
+        agent.setRunning(false);
+
+        // Act
+        boolean actualResult = this.jobAssignerService.isAgentEligibleForJob(job, agent);
+
+        // Assert
+        Assert.assertFalse(actualResult);
+    }
+
+    @Test
+    public void isAgentEligibleForJob_agentIsRunning_false() {
+        // Arrange
+        Job job = new Job();
+        Agent agent = new Agent();
+        agent.setConnected(true);
+        agent.setEnabled(true);
+        agent.setRunning(true);
+
+        // Act
+        boolean actualResult = this.jobAssignerService.isAgentEligibleForJob(job, agent);
+
+        // Assert
+        Assert.assertFalse(actualResult);
+    }
+
+    @Test
+    public void isAgentEligibleForJob_agentHasWrongResources_false() {
+        // Arrange
+        int agentZero = 0;
+        Job job = this.getJobWithResources(1);
+        List<Agent> agents = this.getAgentsWithResources(1, 0);
+        Agent agent = agents.get(agentZero);
+        agent.setConnected(true);
+        agent.setEnabled(true);
+        agent.setRunning(false);
+        agents.get(agentZero).getResources().add("Non-matching resource");
+
+        // Act
+        boolean actualResult = this.jobAssignerService.isAgentEligibleForJob(job, agent);
+
+        // Assert
+        Assert.assertFalse(actualResult);
     }
 
     private Job getJobWithResources(int numberOfResources) {
