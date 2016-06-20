@@ -3,19 +3,15 @@ package net.hawkengine.services.interfaces;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
 
-public interface IStageDefinitionService extends ICrudService<StageDefinition> {
-    @Override
-    ServiceResult getById(String stageDefinitionId);
+public interface IStageDefinitionService{
 
-    @Override
-    ServiceResult getAll();
+    ServiceResult getById(String stageDefinitionId, String pipelineDefinitionId);
 
-    @Override
+    ServiceResult getAll(String pipelineDefinitionId);
+
     ServiceResult add(StageDefinition stageDefinition);
 
-    @Override
     ServiceResult update(StageDefinition stageDefinition);
 
-    @Override
-    ServiceResult delete(String stageDefinitionId);
+    ServiceResult delete(String stageDefinitionId, String pipelineDefinitionId);
 }
