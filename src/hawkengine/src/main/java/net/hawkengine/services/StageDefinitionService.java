@@ -23,20 +23,21 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
     }
 
     @Override
-    public ServiceResult getById(String stageDefinitionId){
+    public ServiceResult getById(String stageDefinitionId) {
         ServiceResult serviceResult = new ServiceResult();
         serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not found");
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
 
-        for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
+        for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
 
-            for (StageDefinition stageDefinition: stageDefinitions) {
-                if (stageDefinition.getId().equals(stageDefinitionId)){
-                    serviceResult =  this.getByIdInPipeline(stageDefinitionId, pipelineDefinition.getId());
+            for (StageDefinition stageDefinition : stageDefinitions) {
+                if (stageDefinition.getId().equals(stageDefinitionId)) {
+                    serviceResult = this.getByIdInPipeline(stageDefinitionId, pipelineDefinition.getId());
                 }
             }
         }
+
         return serviceResult;
     }
 
@@ -62,11 +63,11 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
     }
 
     @Override
-    public ServiceResult getAll(){
+    public ServiceResult getAll() {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         List<StageDefinition> stageDefinitions = new ArrayList<>();
 
-        for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
+        for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             stageDefinitions.addAll(pipelineDefinition.getStageDefinitions());
         }
         ServiceResult result = super.createServiceResultArray(stageDefinitions, false, "retrieved successfully");
@@ -90,13 +91,14 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
         PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
+
         for (StageDefinition stDefinition : stageDefinitions) {
-            if ((stDefinition.getId().equals(stageDefinition.getId()))) {
+            if (stDefinition.getId().equals(stageDefinition.getId())) {
                 return super.createServiceResult((StageDefinition) result.getObject(), true, "already exists");
             }
         }
 
-        if ((this.isPresentWithSameName(stageDefinitions, stageDefinition))){
+        if ((this.isPresentWithSameName(stageDefinitions, stageDefinition))) {
             return super.createServiceResult((StageDefinition) result.getObject(), true, "with that name already exists");
         }
 
@@ -110,6 +112,7 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
         } else {
             result = super.createServiceResult(stageDefinition, false, "created successfully");
         }
+
         return result;
     }
 
@@ -123,7 +126,7 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
         int stageDefinitionLength = stageDefinitions.size();
         boolean isPresent = false;
         for (int i = 0; i < stageDefinitionLength; i++) {
-            if ((stageDefinitions.get(i).getId().equals(stageDefinition.getId()))) {
+            if (stageDefinitions.get(i).getId().equals(stageDefinition.getId())) {
                 isPresent = true;
                 if (this.isPresentWithSameName(stageDefinitions, stageDefinition)) {
                     return super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "with that name already exists");
@@ -132,17 +135,20 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
                 }
             }
         }
-        if (!isPresent){
+
+        if (!isPresent) {
             return super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not found");
         }
 
         pipeline.setStageDefinitions(stageDefinitions);
         ServiceResult pipelineServiceResult = this.pipelineDefinitionService.update(pipeline);
+
         if (pipelineServiceResult.hasError()) {
             serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not updated");
         } else {
             serviceResult = super.createServiceResult(stageDefinition, false, "updated successfully");
         }
+
         return serviceResult;
     }
 
@@ -152,11 +158,11 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
         PipelineDefinition pipeline = new PipelineDefinition();
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
 
-        for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
+        for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
 
-            for (StageDefinition stageDefinition: stageDefinitions) {
-                if (stageDefinition.getId().equals(stageDefinitionId)){
+            for (StageDefinition stageDefinition : stageDefinitions) {
+                if (stageDefinition.getId().equals(stageDefinitionId)) {
                     pipeline = pipelineDefinition;
                 }
             }
@@ -170,9 +176,10 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
                 .filter(st -> st.getId().equals(stageDefinitionId))
                 .findFirst()
                 .orElse(null);
+
         if (stageDefinitions.size() > 1) {
             isRemoved = stageDefinitions.remove(stageDefinition);
-        } else{
+        } else {
             return super.createServiceResult(stageDefinition, true, "is the last Stage and cannot be deleted");
         }
 
@@ -191,16 +198,14 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
         boolean isPresent = false;
 
         for (StageDefinition stDefinition : stageDefinitions) {
-            if (stageDefinition.getId().equals(stDefinition.getId())) {
-                continue;
-            }
             if (stDefinition.getName() != null) {
-                if (stDefinition.getName().equals(stageDefinition.getName())) {
+                if (stDefinition.getName().equals(stageDefinition.getName()) && !stageDefinition.getId().equals(stDefinition.getId())) {
                     isPresent = true;
                     return isPresent;
                 }
             }
         }
+
         return isPresent;
     }
 }
