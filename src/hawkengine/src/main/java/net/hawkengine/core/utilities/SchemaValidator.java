@@ -14,41 +14,34 @@ public class SchemaValidator {
     private static final String NUGET_PATTERN = "[a-z]{5,50}";
 
     public String validate(Object object) {
-         if (object.getClass() == PipelineGroup.class) {
-
-            this.message = this.validate((PipelineGroup) object);
-
-        } else if (object.getClass() == PipelineDefinition.class) {
-
-            this.message = this.validate((PipelineDefinition) object);
-
-        }else if (object.getClass() == StageDefinition.class) {
-
-            this.message = this.validate((StageDefinition) object);
-
-        }else if(object.getClass() == JobDefinition.class){
-
-             this.message = this.validate((JobDefinition)object);
-         }
-
-         else if (object.getClass() == ExecTask.class || object.getClass() == UploadArtifactTask.class
-                || object.getClass() == FetchArtifactTask.class || object.getClass() == FetchMaterialTask.class) {
-
-            this.message = this.validate((TaskDefinition) object);
-
-        } else if (object.getClass() == MaterialDefinition.class){
-
-             this.message = this.validate((MaterialDefinition) object);
-
-         } else if (object.getClass() == Agent.class){
-
-             this.message = this.validate((Agent) object);
-         } else {
-
-             this.message  = "ERROR: INVALID OBJECT.";
-
-         }
-
+        switch (object.getClass().getSimpleName()){
+            case "PipelineGroup":
+                this.message = this.validate((PipelineGroup) object);
+                break;
+            case "PipelineDefinition":
+                this.message = this.validate((PipelineDefinition) object);
+                break;
+            case "StageDefinition":
+                this.message = this.validate((StageDefinition) object);
+                break;
+            case "JobDefinition":
+                this.message  = this.validate((JobDefinition)object);
+                break;
+            case "ExecTask":
+            case "UploadArtifactTask":
+            case "FetchArtifactTask":
+            case "FetchMaterialTask":
+                this.message = this.validate((TaskDefinition) object);
+                break;
+            case "MaterialDefinition":
+                this.message = this.validate((MaterialDefinition) object);
+                break;
+            case "Agent":
+                this.message = this.validate((Agent) object);
+                break;
+            default:
+                this.message = "ERROR: INVALID OBJECT.";
+        }
         return this.message;
     }
 
@@ -59,7 +52,7 @@ public class SchemaValidator {
                 return this.message = "ERROR: PIPELINEGROUP NAME IS NULL.";
             }
 
-            if (isValidRegEx(name, NAME_PATTERN) == false) {
+            if (!isValidRegEx(name, NAME_PATTERN)) {
                 return this.message = "ERROR: PIPELINEGROUP NAME IS INVALID.";
             }
         } else {
@@ -75,12 +68,12 @@ public class SchemaValidator {
                 return this.message = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
             }
 
-            if (this.isValidRegEx(pipelineDefinitionName, NAME_PATTERN) == false) {
+            if (!this.isValidRegEx(pipelineDefinitionName, NAME_PATTERN)) {
                 return this.message = "ERROR: PIPELINE DEFINITION NAME IS INVALID.";
             }
 
             int pipelineMaterial = pipelineDefinition.getMaterials().size();
-            if (pipelineMaterial <= 0) {
+            if (pipelineMaterial == 0) {
                 return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
             } else {
                 List<MaterialDefinition> materials = pipelineDefinition.getMaterials();
@@ -108,12 +101,12 @@ public class SchemaValidator {
                 return this.message = "ERROR: STAGE DEFINITION NAME IS NULL.";
             }
 
-            if (this.isValidRegEx(stageDefinitionName, NAME_PATTERN) == false) {
+            if (!this.isValidRegEx(stageDefinitionName, NAME_PATTERN)) {
                 return this.message = "ERROR: STAGE DEFINITION NAME IS INVALID.";
             }
 
             int jobDefinitions = stageDefinition.getJobDefinitions().size();
-            if (jobDefinitions <= 0) {
+            if (jobDefinitions == 0) {
                 return this.message = "ERROR: STAGE DEFINITION JOB NOT ADDED.";
             } else {
                 List<JobDefinition> jobDefinition = stageDefinition.getJobDefinitions();
@@ -133,12 +126,12 @@ public class SchemaValidator {
                 return this.message = "ERROR: JOB DEFINITION NAME IS NULL.";
             }
 
-            if (this.isValidRegEx(name, NAME_PATTERN) == false) {
+            if (!this.isValidRegEx(name, NAME_PATTERN)) {
                 return this.message = "ERROR: JOB DEFINITION NAME IS INVALID.";
             }
 
             int taskDefinitions = jobDefinition.getTaskDefinitions().size();
-            if (taskDefinitions <= 0) {
+            if (taskDefinitions == 0) {
                 return this.message = "ERROR: TASK NOT ADDED.";
             } else {
                 List<TaskDefinition> taskDefinition = jobDefinition.getTaskDefinitions();
@@ -159,7 +152,7 @@ public class SchemaValidator {
                 return this.message = "ERROR: TASK DEFINITION NAME IS NULL.";
             }
 
-            if (this.isValidRegEx(name, NAME_PATTERN) == false) {
+            if (!this.isValidRegEx(name, NAME_PATTERN)) {
                 return this.message = "ERROR: TASK DEFINITION NAME IS INVALID.";
             }
             switch (taskDefinition.getType()) {
@@ -176,7 +169,7 @@ public class SchemaValidator {
                     this.validate((UploadArtifactTask) taskDefinition);
                     break;
                 default:
-                    return "ERROR: TASK TYPE IS INVALID.";
+                    return this.message = "ERROR: TASK TYPE IS INVALID.";
             }
         } else {
             return this.message = "ERROR: TASK TYPE IS NULL.";
@@ -302,7 +295,7 @@ public class SchemaValidator {
                 return this.message = "ERROR: MATERIAL DEFINITION NAME IS NULL.";
             }
 
-            if (this.isValidRegEx(materialName, NAME_PATTERN) == false) {
+            if (!this.isValidRegEx(materialName, NAME_PATTERN)) {
                 return this.message = "ERROR: MATERIAL DEFINITION NAME IS INVALID.";
             }
 
@@ -310,11 +303,11 @@ public class SchemaValidator {
             if (materialURL != null) {
 
                 if (materialDefinition.getType() == MaterialType.GIT) {
-                    if (this.isValidRegEx(materialURL, GIT_PATTERN) == false) {
+                    if (!this.isValidRegEx(materialURL, GIT_PATTERN)) {
                         return this.message = "ERROR: INVALID GIT URL.";
                     }
                 } else if (materialDefinition.getType() == MaterialType.NUGET) {
-                    if (this.isValidRegEx(materialURL, NUGET_PATTERN) == false) {
+                    if (!this.isValidRegEx(materialURL, NUGET_PATTERN)) {
                         return this.message = "ERROR: INVALID NUGET URL.";
                     }
                 } else {
@@ -338,7 +331,7 @@ public class SchemaValidator {
                 return this.message = "ERROR: AGENT NAME IS NULL.";
             }
 
-            if (this.isValidRegEx(agentName, NAME_PATTERN) == false) {
+            if (!this.isValidRegEx(agentName, NAME_PATTERN) == false) {
                 return this.message = "ERROR: AGENT NAME IS INVALID.";
             }
 
@@ -370,8 +363,8 @@ public class SchemaValidator {
         return this.message;
     }
 
-    private boolean isValidRegEx(String input, String string_pattern) {
-        Pattern pattern = Pattern.compile(string_pattern);
+    private boolean isValidRegEx(String input, String string) {
+        Pattern pattern = Pattern.compile(string      );
         Matcher matcher = pattern.matcher(input);
         boolean isMatch = matcher.matches();
         return isMatch;
