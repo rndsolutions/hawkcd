@@ -46,6 +46,9 @@ public class JobAssignerService {
                             agentForJob.setAssigned(true);
                             this.agentService.update(agentForJob);
                             job.setAssignedAgentId(agentForJob.getId());
+                            this.pipelineService.update(pipeline);
+
+
                             // TODO: this.jobService.update(job);
                         }
                     } else if (job.getStatus() == JobStatus.SCHEDULED) {
@@ -58,6 +61,8 @@ public class JobAssignerService {
                                 agentForJob.setAssigned(true);
                                 this.agentService.update(agentForJob);
                                 job.setAssignedAgentId(agentForJob.getId());
+
+                                this.pipelineService.update(pipeline);
                                 // TODO: this.jobService.update(job);
                             }
                         }
@@ -65,6 +70,10 @@ public class JobAssignerService {
                 }
             }
         }
+    }
+
+    public void tempMethod(String pipeId, String stageId, Job job) {
+//        this.pipelineService
     }
 
     public List<Agent> getEligibleAgentsForJob(Job job, List<Agent> agents) {
