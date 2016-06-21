@@ -24,10 +24,10 @@ public class TaskDefinitionDeserializer implements JsonDeserializer<TaskDefiniti
 
     public TaskDefinitionDeserializer() {
         this.taskTypeMap = new HashMap() {{
-            put(TaskType.EXEC.toString(), ExecTask.class);
-            put(TaskType.FETCH_ARTIFACT.toString(), FetchArtifactTask.class);
-            put(TaskType.FETCH_MATERIAL.toString(), FetchMaterialTask.class);
-            put(TaskType.UPLOAD_ARTIFACT.toString(), UploadArtifactTask.class);
+            this.put(TaskType.EXEC.toString(), ExecTask.class);
+            this.put(TaskType.FETCH_ARTIFACT.toString(), FetchArtifactTask.class);
+            this.put(TaskType.FETCH_MATERIAL.toString(), FetchMaterialTask.class);
+            this.put(TaskType.UPLOAD_ARTIFACT.toString(), UploadArtifactTask.class);
         }};
         this.jsonConverter = new Gson();
     }

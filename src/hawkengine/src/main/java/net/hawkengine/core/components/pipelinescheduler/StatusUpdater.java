@@ -65,7 +65,7 @@ public class StatusUpdater extends Thread {
         return pipelinesInProgress;
     }
 
-    public boolean updateAllStatuses(Object pipeline) {
+    public void updateAllStatuses(Object pipeline) {
         Stack stack = new Stack();
         stack.push(pipeline);
 
@@ -74,7 +74,7 @@ public class StatusUpdater extends Thread {
             if (node.getClass() == Job.class) {
                 Pipeline pipelineToUpdate = (Pipeline) pipeline;
                 this.updatePipelineStatus(pipelineToUpdate);
-                return true;
+                return;
             }
 
             if (node.getClass() == Pipeline.class) {
@@ -87,7 +87,6 @@ public class StatusUpdater extends Thread {
             }
         }
 
-        return false;
     }
 
     public void updateStageStatus(Stage stage) {
