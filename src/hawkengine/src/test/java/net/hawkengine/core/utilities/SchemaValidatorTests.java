@@ -1,24 +1,8 @@
 package net.hawkengine.core.utilities;
-import com.sun.jmx.snmp.tasks.TaskServer;
 
-import net.hawkengine.http.Exec;
-import net.hawkengine.model.Agent;
-import net.hawkengine.model.Environment;
-import net.hawkengine.model.ExecTask;
-import net.hawkengine.model.FetchArtifactTask;
-import net.hawkengine.model.FetchMaterialTask;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.Task;
-import net.hawkengine.model.UploadArtifactTask;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.PipelineGroup;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.enums.RunIf;
-import net.hawkengine.model.enums.TaskType;
-
 import org.junit.Test;
 
 import java.util.ArrayList;
