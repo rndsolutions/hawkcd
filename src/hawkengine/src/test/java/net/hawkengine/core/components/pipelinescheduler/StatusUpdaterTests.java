@@ -19,8 +19,6 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 public class StatusUpdaterTests {
     private IPipelineService mockedPipelineService;
     private StatusUpdater mockedStatusUpdater;
@@ -69,7 +67,7 @@ public class StatusUpdaterTests {
                     this.mockedPipelineService.update(expectedPipelineObject);
                     String pipelineId = expectedPipelineObject.getId();
                     Pipeline actualPipeline = (Pipeline) this.mockedPipelineService.getById(pipelineId).getObject();
-                    assertEquals(Status.PASSED, actualPipeline.getStatus());
+                    Assert.assertEquals(Status.PASSED, actualPipeline.getStatus());
                 }
             }
         }
@@ -113,12 +111,12 @@ public class StatusUpdaterTests {
 
     @Test
     public void runStatusUpdater_interruptedThread_throwInterruptedException() {
-        final InterruptedException interrupt = new InterruptedException();
+        InterruptedException interrupt = new InterruptedException();
         try {
             Thread.currentThread().interrupt();
             this.mockedStatusUpdater.start();
         } catch (IllegalStateException e) {
-            assertEquals(interrupt, e.getCause());
+            Assert.assertEquals(interrupt, e.getCause());
         }
     }
 

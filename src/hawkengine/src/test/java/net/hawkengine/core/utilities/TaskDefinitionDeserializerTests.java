@@ -52,10 +52,10 @@ public class TaskDefinitionDeserializerTests {
                 "\"isIgnoringErrors\": \"true\",\n" +
                 "\"runIfCondition\": \"PASSED\"\n" +
                 "}";
-        JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
+        JsonElement jsonElement = jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
         //Act
-        ExecTask actualResult = (ExecTask) this.mockedDeserializer.deserialize(jsonElement,null,null);
+        ExecTask actualResult = (ExecTask) mockedDeserializer.deserialize(jsonElement,null,null);
 
         //Assert
         Assert.assertNotNull(actualResult);
@@ -82,10 +82,10 @@ public class TaskDefinitionDeserializerTests {
                 "\"source\": \"mySource\",\n" +
                 "\"destination\": \"dist\"\n" +
                 "}";
-        JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
+        JsonElement jsonElement = jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
         //Act
-        FetchArtifactTask actualResult = (FetchArtifactTask) this.mockedDeserializer.deserialize(jsonElement,null,null);
+        FetchArtifactTask actualResult = (FetchArtifactTask) mockedDeserializer.deserialize(jsonElement,null,null);
 
         //Assert
         Assert.assertNotNull(actualResult);
@@ -109,10 +109,10 @@ public class TaskDefinitionDeserializerTests {
                 "\"materialType\": \"GIT\",\n" +
                 "\"materialSpecificDetails\": {\"first\":{}}\n" +
                 "}";
-        JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
+        JsonElement jsonElement = jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
         //Act
-        FetchMaterialTask actualResult = (FetchMaterialTask) this.mockedDeserializer.deserialize(jsonElement,null,null);
+        FetchMaterialTask actualResult = (FetchMaterialTask) mockedDeserializer.deserialize(jsonElement,null,null);
 
         //Assert
         Assert.assertNotNull(actualResult);
@@ -133,10 +133,10 @@ public class TaskDefinitionDeserializerTests {
                 "\"source\": \"mySource\",\n" +
                 "\"destination\": \"myDestination\"\n" +
                 "}";
-        JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
+        JsonElement jsonElement = jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
         //Act
-        UploadArtifactTask actualResult = (UploadArtifactTask) this.mockedDeserializer.deserialize(jsonElement,null,null);
+        UploadArtifactTask actualResult = (UploadArtifactTask) mockedDeserializer.deserialize(jsonElement,null,null);
 
         //Assert
         Assert.assertNotNull(actualResult);
@@ -151,12 +151,12 @@ public class TaskDefinitionDeserializerTests {
         String jsonAsString = "{\n" +
                 "\"type\": \"nonExisting\"\n" +
                 "}";
-        JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
+        JsonElement jsonElement = jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
         //Act
         this.expectedException.expect(JsonParseException.class);
         this.expectedException.expectMessage("Invalid Task Definition type!");
-        this.mockedDeserializer.deserialize(jsonElement,null,null);
+        mockedDeserializer.deserialize(jsonElement,null,null);
     }
 
     @Test
@@ -165,11 +165,11 @@ public class TaskDefinitionDeserializerTests {
         String jsonAsString = "{\n" +
                 "\"nonExisting\": \"nonExisting\"\n" +
                 "}";
-        JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
+        JsonElement jsonElement = jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
         //Act
         this.expectedException.expect(JsonParseException.class);
         this.expectedException.expectMessage("Field type is null!");
-        this.mockedDeserializer.deserialize(jsonElement,null,null);
+        mockedDeserializer.deserialize(jsonElement,null,null);
     }
 }

@@ -5,7 +5,6 @@ import net.hawkengine.model.DbEntry;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.interfaces.ICrudService;
 
-import java.security.Provider;
 import java.util.List;
 
 public abstract class CrudService<T extends DbEntry> extends Service<T> implements ICrudService<T> {

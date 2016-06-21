@@ -73,10 +73,10 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
 
         ServiceResult serviceResult = this.pipelineDefinitionService.update(pipeline);
 
-        if (!serviceResult.hasError()) {
-            result = super.createServiceResult(stageDefinition, false, "created successfully");
-        } else {
+        if (serviceResult.hasError()) {
             result = super.createServiceResult((StageDefinition) result.getObject(), true, "not created");
+        } else {
+            result = super.createServiceResult(stageDefinition, false, "created successfully");
         }
         return result;
     }
@@ -106,10 +106,10 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
 
         pipeline.setStageDefinitions(stageDefinitions);
         ServiceResult pipelineServiceResult = this.pipelineDefinitionService.update(pipeline);
-        if (!pipelineServiceResult.hasError()) {
-            serviceResult = super.createServiceResult(stageDefinition, false, "updated successfully");
-        } else {
+        if (pipelineServiceResult.hasError()) {
             serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not updated");
+        } else {
+            serviceResult = super.createServiceResult(stageDefinition, false, "updated successfully");
         }
         return serviceResult;
     }
@@ -157,6 +157,5 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
             }
         }
         return isPresent;
-       // boolean result = stageDefinitions.stream().forEach(s -> s.getName() == stageDefinition.getName() ? true : false);
     }
 }
