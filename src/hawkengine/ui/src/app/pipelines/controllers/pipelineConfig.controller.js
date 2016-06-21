@@ -26,11 +26,16 @@ angular
 
         vm.allJobs = [];
         vm.allTasks = [];
-        vm.allStages = viewModel.allPipelineDefinitions.stages;
+        vm.allStages = viewModel.allPipelines.stages;
         vm.allMaterials = {};
         vm.allPipelineVars = {};
         vm.allStageVars = {};
         vm.allJobVars = {};
+
+        $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
+            vm.allMaterials = viewModel.allPipelines.materials;
+            console.log(vm.allPipelines.materials);
+        });
 
         vm.stageDeleteButton = false;
         vm.jobDeleteButton = false;

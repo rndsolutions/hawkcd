@@ -90,31 +90,60 @@ angular
         //endregion
 
         //region /stages
-        pipeConfigService.getAllStages = function (pipeName, token) {
-
+        pipeConfigService.getAllStageDefinitions = function () {
+            var methodName = "getAll";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.createStage = function (pipeName, stage, token) {
-            if(token == isValid){
-                if(error == "") {
-                    var methodName = "AddStage";
-                    var className = "PipelineDefinitionService";
-                    var packageName = "hawkengine.net.services.PipelineDefinitionService";
-                    var result = "";
-                    var args = ["Pipelinebro", "Stagebro"];
-                    var error = "";
-                    var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
-                    websocketSenderService.call(json);
-                }
-            }
+        pipeConfigService.getStageDefinitionById = function (id) {
+            var methodName = "getById";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.deleteStage = function (pipeName, stageName, token) {
-
+        pipeConfigService.addStageDefinition = function (stageDefinition) {
+            var methodName = "add";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.StageDefinition\", \"object\": " + JSON.stringify(stageDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.getStage = function (pipeName, stageName, token) {
-
+        pipeConfigService.updateStageDefinition = function (stageDefinition) {
+            var methodName = "update";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.StageDefinition\", \"object\": " + JSON.stringify(stageDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.updateStage = function (pipeName, stageName, stage, token) {
-
+        pipeConfigService.deleteStageDefinition = function (id) {
+            var methodName = "delete";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
         //endregion
 

@@ -24,50 +24,78 @@ angular
 
             var dispatcher = {
                 AgentService: {
-                    getById: function (agent) {
-                        viewModelUpdater.updateAgent(agent);
-                    },
                     getAll: function (agents) {
                         viewModelUpdater.updateAgents(agents);
                     },
-                    setAgentConfigState: function (data) {
-                        viewModel.updateAgentStatus(data);
+                    getById: function (agent) {
+                        viewModelUpdater.updateAgent(agent);
+                    },
+                    update: function (agent) {
+                        viewModelUpdater.updateAgent(agent);
                     },
                     delete: function (isDeleted) {
                         if (isDeleted) {
                             agentService.getAllAgents();
                         }
-                    },
-                    update: function (agent) {
-                        viewModelUpdater.updateAgent(agent);
                     }
                 },
                 PipelineGroupService: {
+                    getAll: function (pipelineGroups) {
+                        viewModelUpdater.getAllPipelineGroups(pipelineGroups);
+                    },
+                    getAllPipelineGroupDTOs: function (pipelineGroups) {
+                        viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
+                    },
+                    getById: function (pipelineGroup) {
+
+                    },
                     add: function (pipelineGroup) {
                         viewModelUpdater.updatePipelineGroup(pipelineGroup);
                     },
-                    getAll: function (pipelineGroups) {
-                        viewModelUpdater.updatePipelineGroups(pipelineGroups);
+                    update: function (pipelineGroup) {
+
                     },
                     delete: function (isDeleted) {
                         if (isDeleted) {
                             adminGroupService.getAllPipelineGroups();
                         }
-                    },
-                    getAllPipelineGroupDTOs: function (pipelineGroups) {
-                        viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
                     }
                 },
                 PipelineDefinitionService: {
+                    getAll: function (pipelines) {
+                        viewModelUpdater.getAllPipelineDefinitions(pipelines);
+                    },
+                    getById: function (pipeline) {
+
+                    },
                     add: function (pipeline) {
                         viewModelUpdater.addPipelineDefinition(pipeline);
                     },
-                    getAll: function (pipelines) {
-                        viewModelUpdater.updatePipelineDefinitions(pipelines);
+                    update: function (pipeline) {
+
                     },
                     delete: function (isDeleted) {
                         if (isDeleted) {
                             pipeConfigService.getAllPipelineGroupDTOs();
+                        }
+                    }
+                },
+                StageDefinitionService: {
+                    getAll:function (stages) {
+
+                    },
+                    getById: function (stage) {
+
+                    },
+                    add: function (stage) {
+
+                    },
+                    update: function (stage) {
+
+                    },
+                    delete: function (isDeleted) {
+                        if(isDeleted) {
+
                         }
                     }
                 }

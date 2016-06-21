@@ -76,8 +76,8 @@ angular
 
         vm.currentPipelineGroups = viewModel.allPipelineGroups;
 
-        $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
-            vm.currentPipelineGroups = viewModel.allPipelineGroups;
+        $scope.$watch(function () { return viewModel.allPipelines }, function (newVal, oldVal) {
+            vm.currentPipelineGroups = viewModel.allPipelines;
             console.log(vm.currentPipelineGroups);
         });
 
