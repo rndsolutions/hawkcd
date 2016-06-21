@@ -11,7 +11,6 @@ import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.enums.TaskType;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,10 +26,8 @@ public class SchemaValidator {
     private static final String NAME_PATTERN = "^[A-Za-z][A-Za-z0-9_-]*${3,20}";
     private static final String GIT_PATTERN = "((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
     private static final String NUGET_PATTERN = "[a-z]{5,50}"; //TODO define git url pattern
-    //TODO to be handaled non-required insertation of Environments into PipelineDefinition,
-    //TODO StageDefinition.
 
-    //PIPELINEGROUP
+
     public String validate(PipelineGroup pipelineGroup) {
         if (pipelineGroup != null) {
             String name = pipelineGroup.getName();
@@ -48,7 +45,6 @@ public class SchemaValidator {
         return message;
     }
 
-    //PIPELINEDEFINITION
     public String validate(PipelineDefinition pipelineDefinition){
         if (pipelineDefinition != null){
             String pipelineDefinitionName = pipelineDefinition.getName();
@@ -65,7 +61,7 @@ public class SchemaValidator {
                 return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
             }else {
                 List<MaterialDefinition> materials = pipelineDefinition.getMaterials();
-                materials.forEach(this::validate); //TODO CHECK MATERIAL VALIDATOR AGAIND
+                materials.forEach(this::validate);
             }
 
             int stageDefinitionSize = pipelineDefinition.getStageDefinitions().size();
@@ -82,11 +78,9 @@ public class SchemaValidator {
         return this.message;
     }
 
-    //STAGEDEFINITION
     public String validate(StageDefinition stageDefinition){
         if(stageDefinition != null){
             String stageDefinitionName = stageDefinition.getName();
-
             if (stageDefinitionName == null){
                 return this.message = "ERROR: STAGE DEFINITION NAME IS NULL.";
             }
@@ -109,7 +103,6 @@ public class SchemaValidator {
         return this.message;
     }
 
-    //JOBDEFINITION
     public String validate (JobDefinition jobDefinition){
         if (jobDefinition != null){
             String name = jobDefinition.getName();
@@ -136,7 +129,6 @@ public class SchemaValidator {
         return this.message;
     }
 
-    //TASKDEFINITION
     public String validate (TaskDefinition taskDefinition) {
         if (taskDefinition != null) {
             String name = taskDefinition.getName();
@@ -147,26 +139,22 @@ public class SchemaValidator {
             if (this.isValidRegEx(name,NAME_PATTERN) == false){
                 return this.message = "ERROR: TASK DEFINITION NAME IS INVALID.";
             }
-
-                if (taskDefinition.getType() == TaskType.EXEC) {
-
-                    this.validate((ExecTask) taskDefinition);
-
-                } else if (taskDefinition.getType() == TaskType.FETCH_ARTIFACT) {
-
-                    this.validate((FetchArtifactTask) taskDefinition);
-
-                } else if (taskDefinition.getType() == TaskType.FETCH_MATERIAL) {
-
-                    this.validate((FetchMaterialTask) taskDefinition);
-
-                } else if (taskDefinition.getType() == TaskType.UPLOAD_ARTIFACT) {
-
-                    this.validate((UploadArtifactTask) taskDefinition);
-
-                } else {
-                    return  this.message = "ERROR: INVALID TASK TYPE.";
-                }
+             switch (taskDefinition.getType()) {
+                 case EXEC:
+                     this.validate((ExecTask) taskDefinition);
+                     break;
+                 case FETCH_ARTIFACT:
+                     this.validate((FetchArtifactTask) taskDefinition);
+                     break;
+                 case FETCH_MATERIAL:
+                     this.validate((FetchMaterialTask)taskDefinition);
+                     break;
+                 case UPLOAD_ARTIFACT:
+                     this.validate((UploadArtifactTask)taskDefinition);
+                     break;
+                 default:
+                     return "ERROR: TASK TYPE IS INVALID.";
+             }
             } else {
                 return this.message = "ERROR: TASK TYPE IS NULL.";
             }
@@ -177,7 +165,6 @@ public class SchemaValidator {
 
         return this.message;
     }
-
 
     private String validate (ExecTask execTask){
         if (execTask != null){
@@ -263,13 +250,11 @@ public class SchemaValidator {
             return this.message = "ERROR: FETCH MATERIAL TASK IS NULL.";
         }
 
-        //TODO MATERIAL SPECIFIC DETAILS TO BE HANDALED.
         return this.message;
     }
 
     private String validate (UploadArtifactTask uploadArtifactTask){
         if (uploadArtifactTask != null){
-
             String source = uploadArtifactTask.getSource();
             if (source == null){
                 return this.message = "ERROR: UPLOAD ARTIFACT TASK SOURCE FOLDER IS NULL.";
@@ -287,7 +272,6 @@ public class SchemaValidator {
         return this.message;
     }
 
-    //MATERIAL DEFINITION
     public String validate(MaterialDefinition materialDefinition){
         if (materialDefinition != null){
             String materialName = materialDefinition.getName();
@@ -301,24 +285,20 @@ public class SchemaValidator {
 
             String materialURL = materialDefinition.getUrl();
             if (materialURL != null){
+
                 if(materialDefinition.getType() == MaterialType.GIT){
                     if(this.isValidRegEx(materialURL, GIT_PATTERN) == false){
-                       return this.message = "ERROR: INVALID GIT URL.";
+                        return this.message = "ERROR: INVALID GIT URL.";
                     }
                 } else if (materialDefinition.getType() == MaterialType.NUGET){
                     if (this.isValidRegEx(materialURL, NUGET_PATTERN) == false){
-                       return this.message = "ERROR: INVALID NUGET URL.";
+                        return this.message = "ERROR: INVALID NUGET URL.";
                     }
                 }else {
                     return this.message = "ERROR: MATERIAL URL IS INVALID.";
                 }
             } else {
                 return this.message = "ERROR: Material URL is NULL.";
-            }
-
-            String materialPipeline = materialDefinition.getPipelineDefinitionId();
-            if (materialPipeline == null){
-                return this.message = "ERROR: MATERIAL PIPELINE ID CAN NOT BE NULL.";
             }
 
         } else {
@@ -328,7 +308,6 @@ public class SchemaValidator {
         return this.message;
     }
 
-    //AGENT
     public String validate(Agent agent){
         if (agent != null){
             String agentName = agent.getName();

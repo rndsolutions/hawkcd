@@ -36,10 +36,10 @@ public class SchemaValidatorTests {
     private String expectedResult = "OK";
     private SchemaValidator validator = new SchemaValidator();
 
-    private List <MaterialDefinition> material = new ArrayList<MaterialDefinition>();
-    private List <StageDefinition> stage = new ArrayList<StageDefinition>();
-    private List <JobDefinition> job = new ArrayList<JobDefinition>();
-    private List <TaskDefinition> execTaskList = new ArrayList<TaskDefinition>();
+    private List material = new ArrayList();
+    private List stage = new ArrayList();
+    private List job = new ArrayList();
+    private List execTaskList = new ArrayList();
 
 
     //Arranging null objects
@@ -86,7 +86,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_PipelineGroupe_Name_Null(){
+    public void validate_PipelineGroupeName_Null(){
         //Arrange
         PipelineGroup pipelineGroup = new PipelineGroup();
         pipelineGroup.setName(null);
@@ -103,7 +103,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_PipelineGroup_Name_RegExMismatch(){
+    public void validate_PipelineGroup_Name_Invalid(){
         //Arrange
         PipelineGroup pipelineGroup = new PipelineGroup();
         pipelineGroup.setName("   ");
@@ -178,10 +178,9 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_PipelineDefinition_Name_Null(){
+    public void validate_PipelineDefinitionName_Null(){
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setPipelineGroupId("pipelineGroupId");
         pipelineDefinition.setMaterials(material);
         pipelineDefinition.setStageDefinitions(stage);
         String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
@@ -195,7 +194,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_PipelineDefinition_Name_RegExMismatch(){
+    public void validate_PipelineDefinitionName_Invalid(){
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinition.setName("#%$%@");
@@ -210,7 +209,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_PipelineDefinition_Materials(){
+    public void validate_PipelineDefinitionMaterials_NotAdded(){
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinition.setName("pipelineDefinition");
@@ -227,11 +226,10 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_PipelineDefinition_Stages(){
+    public void validate_PipelineDefinitionStages_NotAdded(){
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinition.setName("pipelineDefinition");
-        pipelineDefinition.setPipelineGroupId("pipelineGroupId");
         material.add(0,new MaterialDefinition());
         pipelineDefinition.setMaterials(material);
         String expectedResult = "ERROR: STAGE NOT ADDED.";
@@ -256,7 +254,6 @@ public class SchemaValidatorTests {
         //Arrange
         StageDefinition stageDefinition = new StageDefinition();
         stageDefinition.setName("StageDefinition");
-        stageDefinition.setPipelineDefinitionId("pipelineDefinition");
         JobDefinition jobDefinition = new JobDefinition();
         jobDefinition.setName("jobDefinition");
         ExecTask execTask = new ExecTask();
@@ -294,7 +291,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_StageDefinition_Name_Null(){
+    public void validate_StageDefinitionName_Null(){
         //Arrange
         StageDefinition stageDefinition = new StageDefinition();
         String exptectedResult = "ERROR: STAGE DEFINITION NAME IS NULL.";
@@ -309,7 +306,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_StageDefinition_Name_RegExMismatch(){
+    public void validate_StageDefinitionName_Invalid(){
         //Arrange
         StageDefinition stageDefinition = new StageDefinition();
         stageDefinition.setName("#$@%%^");
@@ -325,11 +322,10 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_StageDefinition_Job_Null(){
+    public void validate_StageDefinitionJob_Null(){
         //Arrange
         StageDefinition stageDefinition = new StageDefinition();
         stageDefinition.setName("stageDefinitionName");
-        stageDefinition.setPipelineDefinitionId("pipelineDefinitionId");
         String exptectedResult = "ERROR: STAGE DEFINITION JOB NOT ADDED.";
 
         //Act
@@ -351,7 +347,7 @@ public class SchemaValidatorTests {
         //Arrange
         JobDefinition jobDefinition = new JobDefinition();
         jobDefinition.setName("jobDefinition");
-        jobDefinition.setStageDefinitionId("stageDefinitionId");
+
         ExecTask execTask = new ExecTask();
         ArrayList arguments = new ArrayList();
         arguments.add("command1");
@@ -384,7 +380,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_JobDefinition_Name_Null(){
+    public void validate_JobDefinitionName_Null(){
         //Arrange
         JobDefinition jobDefinition = new JobDefinition();
         String expectedResult = "ERROR: JOB DEFINITION NAME IS NULL.";
@@ -398,7 +394,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_JobDefinition_Name_RegExMismatch(){
+    public void validate_JobDefinitionName_Invalid(){
         //Arrange
         JobDefinition jobDefinition = new JobDefinition();
         jobDefinition.setName("#@$@!");
@@ -414,11 +410,10 @@ public class SchemaValidatorTests {
 
 
     @Test
-    public void validate_JobDefinition_Task_Null(){
+    public void validate_JobDefinitionTask_Null(){
         //Arrange
         JobDefinition jobDefinition = new JobDefinition();
         jobDefinition.setName("jobDefinitionName");
-        jobDefinition.setStageDefinitionId("stageDefinition");
         String expectedResult = "ERROR: TASK NOT ADDED.";
 
         //Act
@@ -433,7 +428,7 @@ public class SchemaValidatorTests {
     //----------------------------------------------------------------------------------------------
     //TaskDefinition TESTS
     @Test
-    public void validate_TaskDefinition_EXEC(){
+    public void validate_TaskDefinitionEXEC_Null(){
         //Arrange
         TaskDefinition taskDefinition = new ExecTask();
         taskDefinition.setName("execDefinition");
@@ -450,7 +445,7 @@ public class SchemaValidatorTests {
 
 
     @Test
-    public void validate_TaskDefinition(){
+    public void validate_TaskDefinition_Null(){
         //Arrange
         String expectedResult = "ERROR: TASK TYPE IS NULL.";
 
@@ -488,7 +483,7 @@ public class SchemaValidatorTests {
 
 
     @Test
-    public void validate_ExecTask_Commnad_Null(){
+    public void validate_ExecTaskCommnad_Null(){
         //Arrange
         ExecTask execTask = new ExecTask();
         execTask.setName("taskDefinition");
@@ -503,7 +498,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_ExecTask_ArgumentList_Null(){
+    public void validate_ExecTaskArgumentList_Null(){
         //Arrange
         ExecTask execTask = new ExecTask();
         execTask.setName("taskDefinition");
@@ -519,7 +514,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_ExecTask_ArgumentList_Empty(){
+    public void validate_ExecTaskArgumentList_Empty(){
         //Arrange
         ExecTask execTask = new ExecTask();
         execTask.setName("taskDefinition");
@@ -558,7 +553,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchArtifactTask_Pipeline_NameNull(){
+    public void validate_FetchArtifactTaskPipelineName_Null(){
         //Arrange
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
@@ -573,7 +568,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchArtifactTask_Stage_NameNull(){
+    public void validate_FetchArtifactTaskStage_NameNull(){
         //Arrange
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
@@ -590,7 +585,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchArtifactTask_Job_NameNull(){
+    public void validate_FetchArtifactTaskJob_NameNull(){
         //Arrange
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
@@ -608,7 +603,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchArtifactTask_TaskFolder_Null(){
+    public void validate_FetchArtifactTaskTaskFolder_Null(){
         //Arrange
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
@@ -627,7 +622,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchArtifactTask_DestinationFolder_Null(){
+    public void validate_FetchArtifactTaskDestinationFolder_Null(){
         //Arrange
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
@@ -669,7 +664,7 @@ public class SchemaValidatorTests {
 
 
     @Test
-    public void validate_UploadArtifactTask_Source(){
+    public void validate_UploadArtifactTaskSource_Null(){
         //Arrane
         UploadArtifactTask uploadArtifactTask = new UploadArtifactTask();
         uploadArtifactTask.setName("taskDefinition");
@@ -685,7 +680,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_UploadArtifactTask_Destination(){
+    public void validate_UploadArtifactTaskDestination_Null(){
         //Arrane
         UploadArtifactTask uploadArtifactTask = new UploadArtifactTask();
         uploadArtifactTask.setName("taskDefinition");
@@ -727,7 +722,7 @@ public class SchemaValidatorTests {
 
 
     @Test
-    public void validate_FetchMaterialtTask_MaterialName_Null(){
+    public void validate_FetchMaterialtTaskMaterialName_Null(){
         //Arrange
         FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
         fetchMaterialTask.setName("definitionName");
@@ -743,7 +738,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchMaterialtTask_PipelineName_Null(){
+    public void validate_FetchMaterialtTaskPipelineName_Null(){
         //Arrange
         FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
         fetchMaterialTask.setName("definitionName");
@@ -760,7 +755,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchMaterialtTask_SourceFolder_Null(){
+    public void validate_FetchMaterialtTaskSourceFolder_Null(){
         //Arrange
         FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
         fetchMaterialTask.setName("definitionName");
@@ -777,7 +772,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchMaterialtTask_DestinationFolder_Null(){
+    public void validate_FetchMaterialtTaskDestinationFolder_Null(){
         //Arrange
         FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
         fetchMaterialTask.setName("definitionName");
@@ -823,7 +818,7 @@ public class SchemaValidatorTests {
 
 
     @Test
-    public void validate_Agent_Name_Null(){
+    public void validate_AgentName_Null(){
         //Arrange
         Agent agent = new Agent();;
         String expectedResult = "ERROR: AGENT NAME IS NULL.";
@@ -837,7 +832,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_Agent_Name_RegExMismatch(){
+    public void validate_AgentName_Invalid(){
         //Arrange
         Agent agent = new Agent();
         agent.setName("##$@#");
@@ -852,7 +847,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_Agent_Hostname_Null(){
+    public void validate_AgentHostname_Null(){
         //Arrange
         Agent agent = new Agent();
         agent.setName("agentBro");
@@ -867,7 +862,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_Agent_IPAdress(){
+    public void validate_AgentIPAdress_Null(){
         //Arrange
         Agent agent = new Agent();
         agent.setName("agentBro");
@@ -883,7 +878,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_Agent_RootPath(){
+    public void validate_AgentRootPath_Null(){
         //Arrange
         Agent agent = new Agent();
         agent.setName("agentBro");
@@ -900,7 +895,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_Agent_OS(){
+    public void validate_AgentOS_Null(){
         //Arrange
         Agent agent = new Agent();
         agent.setName("agentBro");
@@ -918,7 +913,7 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_Agent_Env(){
+    public void validate_AgentEnvironment(){
         //Arrange
         Agent agent = new Agent();
         agent.setName("agentBro");
@@ -950,7 +945,6 @@ public class SchemaValidatorTests {
         materialDefinition.setName("materialDefinition");
         materialDefinition.setType(MaterialType.GIT);
         materialDefinition.setUrl("http://dakljsdla.com/kjdlas.git");
-        materialDefinition.setPipelineDefinitionId("materialPipeline");
 
 
         //Act
@@ -976,11 +970,10 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_MaterialDefinition_Name_Null() throws Exception {
+    public void validate_MaterialDefinitionName_Null() throws Exception {
         //Arrange
         MaterialDefinition materialDefinition = new MaterialDefinition();
         materialDefinition.setName(null);
-        this.validator.validate(materialDefinition);
         String expectedResult = "ERROR: MATERIAL DEFINITION NAME IS NULL.";
 
         //Act
@@ -992,13 +985,12 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_MaterialDefinition_Name_RegExMismatch() throws Exception {
+    public void validate_MaterialDefinitionName_Invalid() throws Exception {
         //Arrange
         MaterialDefinition materialDefinition = new MaterialDefinition();
         materialDefinition.setName("#$@#%!");
         materialDefinition.setUrl("materialUrl");
         materialDefinition.setType(MaterialType.GIT);
-        materialDefinition.setPipelineDefinitionId("materialPipeline");
         String expectedResult = "ERROR: MATERIAL DEFINITION NAME IS INVALID.";
 
         //Act
@@ -1010,13 +1002,12 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_MaterialDefinition_GitUrl_Mismatch() throws Exception {
+    public void validate_MaterialDefinitionGit_UrlMismatch() throws Exception {
         //Arrange
         MaterialDefinition materialDefinition = new MaterialDefinition();
         materialDefinition.setName("materialDefinition");
         materialDefinition.setUrl("#$@^#&^#&!");
         materialDefinition.setType(MaterialType.GIT);
-        materialDefinition.setPipelineDefinitionId("materialPipeline");
         String expectedResult = "ERROR: INVALID GIT URL.";
 
         //Act
@@ -1027,33 +1018,13 @@ public class SchemaValidatorTests {
         assertEquals(expectedResult,actualResult);
     }
     @Test
-    public void validate_MaterialDefinition_NugetUrl_Mismatch() throws Exception {
+    public void validate_MaterialDefinitionNuget_UrlMismatch() throws Exception {
         //Arrange
         MaterialDefinition materialDefinition = new MaterialDefinition();
         materialDefinition.setName("materialDefinition");
         materialDefinition.setUrl("#$@^#&^#&!");
         materialDefinition.setType(MaterialType.NUGET);
-        materialDefinition.setPipelineDefinitionId("materialPipeline");
         String expectedResult = "ERROR: INVALID NUGET URL.";
-
-        //Act
-        String actualResult = this.validator.validate(materialDefinition);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
-
-    }
-
-    @Test
-    public void validate_MaterialDefinition_NullPipeline() throws Exception {
-        //Arrange
-        MaterialDefinition materialDefinition = new MaterialDefinition();
-        materialDefinition.setName("materialDefinition");
-        materialDefinition.setUrl("material");
-        materialDefinition.setType(MaterialType.NUGET);
-        materialDefinition.setPipelineDefinitionId(null);
-        String expectedResult = "ERROR: MATERIAL PIPELINE ID CAN NOT BE NULL.";
 
         //Act
         String actualResult = this.validator.validate(materialDefinition);
@@ -1071,7 +1042,7 @@ public class SchemaValidatorTests {
         materialDefinition.setName("materialDefinition");
         materialDefinition.setType(MaterialType.NONE);
         materialDefinition.setUrl("INVALID URL");
-        materialDefinition.setPipelineDefinitionId("pipelineName");
+
         String expectedResult = "ERROR: MATERIAL URL IS INVALID.";
 
         //Act
