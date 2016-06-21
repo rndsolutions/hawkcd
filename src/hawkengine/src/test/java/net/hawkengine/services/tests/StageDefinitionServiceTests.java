@@ -40,7 +40,7 @@ public class StageDefinitionServiceTests {
     public void stageDefinitionService_getByIdWithValidInput_oneObject() {
         this.injectDataForTestingStageDefinitionService(3);
 
-        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.getById(this.expectedStageDefinition.getId(), this.expectedPipelineDefinition.getId()).getObject();
+        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.getById(this.expectedStageDefinition.getId()).getObject();
 
         Assert.assertNotNull(actualStageDefinition);
         Assert.assertEquals(this.expectedStageDefinition.getId(), actualStageDefinition.getId());
@@ -48,10 +48,30 @@ public class StageDefinitionServiceTests {
 
     @Test
     public void stageDefinitionService_getByIdWithInvalidInput_noObject() {
+        this.injectDataForTestingStageDefinitionService(1);
+
+        ServiceResult actualServiceResult = this.mockedStageDefinitionService.getById("invalidId");
+
+        Assert.assertNull(actualServiceResult.getObject());
+        Assert.assertTrue(actualServiceResult.hasError());
+    }
+
+    @Test
+    public void stageDefinitionService_getByIdInPipelineWithValidInput_oneObject() {
+        this.injectDataForTestingStageDefinitionService(3);
+
+        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.getByIdInPipeline(this.expectedStageDefinition.getId(), this.expectedPipelineDefinition.getId()).getObject();
+
+        Assert.assertNotNull(actualStageDefinition);
+        Assert.assertEquals(this.expectedStageDefinition.getId(), actualStageDefinition.getId());
+    }
+
+    @Test
+    public void stageDefinitionService_getByIdInPipelineWithInvalidInput_noObject() {
         this.injectDataForTestingStageDefinitionService(3);
         String expectedServiceResultMessage = String.format(TestsConstants.SERVICE_RESULT_NOT_FOUND_MESSAGE, "StageDefinition");
 
-        ServiceResult actualServiceResult = this.mockedStageDefinitionService.getById("invalidId", this.expectedPipelineDefinition.getId());
+        ServiceResult actualServiceResult = this.mockedStageDefinitionService.getByIdInPipeline("invalidId", this.expectedPipelineDefinition.getId());
 
         Assert.assertNull(actualServiceResult.getObject());
         Assert.assertTrue(actualServiceResult.hasError());
@@ -59,10 +79,20 @@ public class StageDefinitionServiceTests {
     }
 
     @Test
-    public void stageDefinitionService_getAll_twoObjects(){
+    public void stageDefinitionService_getAll_threeObjects() {
         this.injectDataForTestingStageDefinitionService(1);
 
-        ServiceResult serviceResult = this.mockedStageDefinitionService.getAll(this.expectedPipelineDefinition.getId());
+        ServiceResult serviceResult = this.mockedStageDefinitionService.getAll();
+        List<StageDefinition> actualStageDefinitions = (List<StageDefinition>) serviceResult.getObject();
+
+        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_THREE_OBJECTS, actualStageDefinitions.size());
+    }
+
+    @Test
+    public void stageDefinitionService_getAllInPipeline_twoObjects() {
+        this.injectDataForTestingStageDefinitionService(1);
+
+        ServiceResult serviceResult = this.mockedStageDefinitionService.getAllInPipeline(this.expectedPipelineDefinition.getId());
         List<StageDefinition> actualStageDefinitions = (List<StageDefinition>) serviceResult.getObject();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualStageDefinitions.size());
@@ -104,7 +134,7 @@ public class StageDefinitionServiceTests {
     }
 
     @Test
-    public void stageDefinitionService_updateWithValidInput_oneObject(){
+    public void stageDefinitionService_updateWithValidInput_oneObject() {
         this.injectDataForTestingStageDefinitionService(1);
 
         this.expectedStageDefinition.setName("changedName");
@@ -115,7 +145,7 @@ public class StageDefinitionServiceTests {
     }
 
     @Test
-    public void stageDefinitionService_updateWithInvalidId_noObject(){
+    public void stageDefinitionService_updateWithInvalidId_noObject() {
         this.injectDataForTestingStageDefinitionService(1);
 
         StageDefinition stageDefinitionToUpdate = new StageDefinition();
@@ -128,14 +158,14 @@ public class StageDefinitionServiceTests {
     }
 
     @Test
-    public void stageDefinitionService_updateWithInvalidName_noObject(){
+    public void stageDefinitionService_updateWithInvalidName_noObject() {
         this.injectDataForTestingStageDefinitionService(1);
 
         StageDefinition stageDefinitionToUpdate = new StageDefinition();
         List<StageDefinition> expectedStageDefinitions = this.expectedPipelineDefinition.getStageDefinitions();
 
-        for (StageDefinition stDefinition: expectedStageDefinitions) {
-            if (stDefinition.getName() == null){
+        for (StageDefinition stDefinition : expectedStageDefinitions) {
+            if (stDefinition.getName() == null) {
                 stDefinition.setName("someName");
                 stageDefinitionToUpdate = stDefinition;
             }
@@ -148,26 +178,26 @@ public class StageDefinitionServiceTests {
     }
 
     @Test
-    public void stageDefinitionService_deleteWithValidId_noError(){
+    public void stageDefinitionService_deleteWithValidId_noError() {
         this.injectDataForTestingStageDefinitionService(1);
 
-        ServiceResult result = this.mockedStageDefinitionService.delete(this.expectedStageDefinition.getId(), this.expectedPipelineDefinition.getId());
+        ServiceResult result = this.mockedStageDefinitionService.delete(this.expectedStageDefinition.getId());
 
         Assert.assertFalse(result.hasError());
     }
 
     @Test
-    public void stageDefinitionService_deleteWithInvalidId_noError(){
+    public void stageDefinitionService_deleteWithInvalidId_noError() {
         this.injectDataForTestingStageDefinitionService(1);
 
-        ServiceResult result = this.mockedStageDefinitionService.delete("someInvalidName", this.expectedPipelineDefinition.getId());
+        ServiceResult result = this.mockedStageDefinitionService.delete("someInvalidName");
 
         Assert.assertTrue(result.hasError());
     }
 
     private void injectDataForTestingStageDefinitionService(int numberOfStagesToAdd) {
         List<StageDefinition> expectedStageDefinitions = new ArrayList<>();
-        for (int i = 0; i < numberOfStagesToAdd; i++){
+        for (int i = 0; i < numberOfStagesToAdd; i++) {
             StageDefinition stageDefinitionToAdd = new StageDefinition();
             stageDefinitionToAdd.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
             expectedStageDefinitions.add(stageDefinitionToAdd);
@@ -176,5 +206,16 @@ public class StageDefinitionServiceTests {
         expectedStageDefinitions.add(this.expectedStageDefinition);
         this.expectedPipelineDefinition.setStageDefinitions(expectedStageDefinitions);
         this.mockedPipelineDefinitionService.add(this.expectedPipelineDefinition);
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        expectedStageDefinitions = new ArrayList<>();
+        for (int i = 0; i < numberOfStagesToAdd; i++) {
+            StageDefinition stageDefinitionToAdd = new StageDefinition();
+            stageDefinitionToAdd.setPipelineDefinitionId(pipelineDefinition.getId());
+            expectedStageDefinitions.add(stageDefinitionToAdd);
+        }
+        pipelineDefinition.setStageDefinitions(expectedStageDefinitions);
+        this.mockedPipelineDefinitionService.add(pipelineDefinition);
+
     }
 }

@@ -6,6 +6,7 @@ import net.hawkengine.model.StageDefinition;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StageDefinitionService extends Service<StageDefinition> implements IStageDefinitionService {
@@ -22,7 +23,25 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
     }
 
     @Override
-    public ServiceResult getById(String stageDefinitionId, String pipelineDefinitionId) {
+    public ServiceResult getById(String stageDefinitionId){
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not found");
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+
+        for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
+            List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
+
+            for (StageDefinition stageDefinition: stageDefinitions) {
+                if (stageDefinition.getId().equals(stageDefinitionId)){
+                    serviceResult =  this.getByIdInPipeline(stageDefinitionId, pipelineDefinition.getId());
+                }
+            }
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult getByIdInPipeline(String stageDefinitionId, String pipelineDefinitionId) {
         ServiceResult serviceResult;
         PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
 
@@ -43,7 +62,20 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
     }
 
     @Override
-    public ServiceResult getAll(String pipelineDefinitionId) {
+    public ServiceResult getAll(){
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<StageDefinition> stageDefinitions = new ArrayList<>();
+
+        for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
+            stageDefinitions.addAll(pipelineDefinition.getStageDefinitions());
+        }
+        ServiceResult result = super.createServiceResultArray(stageDefinitions, false, "retrieved successfully");
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult getAllInPipeline(String pipelineDefinitionId) {
         PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         List<StageDefinition> stageDefinitions = pipelineFromDatabase.getStageDefinitions();
 
@@ -115,9 +147,22 @@ public class StageDefinitionService extends Service<StageDefinition> implements 
     }
 
     @Override
-    public ServiceResult delete(String stageDefinitionId, String pipelineDefinitionId) {
+    public ServiceResult delete(String stageDefinitionId) {
+
+        PipelineDefinition pipeline = new PipelineDefinition();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+
+        for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
+            List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
+
+            for (StageDefinition stageDefinition: stageDefinitions) {
+                if (stageDefinition.getId().equals(stageDefinitionId)){
+                    pipeline = pipelineDefinition;
+                }
+            }
+        }
+
         boolean isRemoved = false;
-        PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         ServiceResult serviceResult;
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
         StageDefinition stageDefinition = stageDefinitions
