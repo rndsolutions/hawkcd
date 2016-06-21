@@ -81,9 +81,9 @@ public class WsEndpoint extends WebSocketAdapter {
                 }
             }
 
-			ServiceResult result = (ServiceResult) this.call(contract);
-			if ((result.getObject().getClass() != String.class) || !result.getObject().toString().isEmpty()) {
-				contract.setResult(result.getObject());
+            ServiceResult result = (ServiceResult) this.call(contract);
+            if ((result.getObject().getClass() != String.class) || !result.getObject().toString().isEmpty()) {
+                contract.setResult(result.getObject());
             } else {
                 contract.setError(result.hasError());
                 contract.setErrorMessage(result.getMessage());

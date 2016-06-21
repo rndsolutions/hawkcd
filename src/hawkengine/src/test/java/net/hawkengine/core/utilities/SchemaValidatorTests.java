@@ -40,6 +40,19 @@ public class SchemaValidatorTests {
     //--------------------------------------------------
 
 
+    @Test
+    public void validate_Object_InvalidType(){
+        //Arrange
+        Object object = new Object();
+        String expectedResult = "ERROR: INVALID OBJECT.";
+        //Act
+        String actualResult = this.validator.validate(object);
+
+        //Assert
+        assertNotNull(actualResult);
+        assertEquals(expectedResult,actualResult);
+    }
+
     //----------------------------------------------------------------------------------------------
     //PipelineGroup TESTS
     @Test

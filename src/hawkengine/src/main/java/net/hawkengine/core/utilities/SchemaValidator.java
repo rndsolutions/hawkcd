@@ -14,9 +14,40 @@ public class SchemaValidator {
     private static final String NUGET_PATTERN = "[a-z]{5,50}";
 
     public String validate(Object object) {
-        if (object.getClass() == Agent.class) {
-            this.message = this.validate((Agent) object);
-        }
+         if (object.getClass() == PipelineGroup.class) {
+
+            this.message = this.validate((PipelineGroup) object);
+
+        } else if (object.getClass() == PipelineDefinition.class) {
+
+            this.message = this.validate((PipelineDefinition) object);
+
+        }else if (object.getClass() == StageDefinition.class) {
+
+            this.message = this.validate((StageDefinition) object);
+
+        }else if(object.getClass() == JobDefinition.class){
+
+             this.message = this.validate((JobDefinition)object);
+         }
+
+         else if (object.getClass() == ExecTask.class || object.getClass() == UploadArtifactTask.class
+                || object.getClass() == FetchArtifactTask.class || object.getClass() == FetchMaterialTask.class) {
+
+            this.message = this.validate((TaskDefinition) object);
+
+        } else if (object.getClass() == MaterialDefinition.class){
+
+             this.message = this.validate((MaterialDefinition) object);
+
+         } else if (object.getClass() == Agent.class){
+
+             this.message = this.validate((Agent) object);
+         } else {
+
+             this.message  = "ERROR: INVALID OBJECT.";
+
+         }
 
         return this.message;
     }
