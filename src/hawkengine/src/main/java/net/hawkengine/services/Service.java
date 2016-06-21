@@ -6,7 +6,7 @@ import net.hawkengine.services.interfaces.IService;
 
 import java.util.List;
 
-public class Service<T extends DbEntry> implements IService<T> {
+public abstract class Service<T extends DbEntry> implements IService<T> {
     private String objectType;
 
     @Override
