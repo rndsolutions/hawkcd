@@ -9,7 +9,9 @@ import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,12 +24,14 @@ import java.util.List;
 public class StatusUpdaterTests {
     private IPipelineService mockedPipelineService;
     private StatusUpdater mockedStatusUpdater;
+    private IPipelineDefinitionService mockedPipelineDefinitionService;
 
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testStatusUpdater");
         IDbRepository mockedPipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
-        this.mockedPipelineService = new PipelineService(mockedPipelineRepo);
+        this.mockedPipelineDefinitionService = new PipelineDefinitionService();
+        this.mockedPipelineService = new PipelineService(mockedPipelineRepo,this.mockedPipelineDefinitionService);
         this.mockedStatusUpdater = new StatusUpdater(this.mockedPipelineService);
     }
 
