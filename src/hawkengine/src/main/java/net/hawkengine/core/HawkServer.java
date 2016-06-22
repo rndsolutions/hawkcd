@@ -2,6 +2,7 @@ package net.hawkengine.core;
 
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.Account;
+import net.hawkengine.http.AgentController;
 import net.hawkengine.http.Config;
 import net.hawkengine.http.Exec;
 import net.hawkengine.http.Stats;
@@ -41,10 +42,7 @@ public class HawkServer {
         restServlet.setInitOrder(0);
 
         // Tells the Jersey Servlet which REST service/class to load.
-        String classes = Account.class.getCanonicalName() + ", " +
-                Config.class.getCanonicalName() + ", " +
-                Stats.class.getCanonicalName() + ", " +
-                Exec.class.getCanonicalName() + ", ";
+        String classes = AgentController.class.getCanonicalName();
 
         restServlet.setInitParameter("jersey.config.server.provider.classnames", classes);
 
