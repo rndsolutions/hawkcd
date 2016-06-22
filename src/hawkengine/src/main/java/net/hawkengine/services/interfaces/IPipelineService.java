@@ -18,4 +18,8 @@ public interface IPipelineService extends ICrudService<Pipeline> {
 
     @Override
     ServiceResult delete(String pipelineId);
+
+    ServiceResult getAllUpdatedPipelines();
+
+    ServiceResult getAllPreparedPipelines();
 }

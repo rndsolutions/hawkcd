@@ -1,6 +1,6 @@
 package net.hawkengine.model;
 
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.StageStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ public class Stage extends DbEntry{
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
     private List<Job> jobs;
-    private Status status;
+    private StageStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
@@ -22,7 +22,7 @@ public class Stage extends DbEntry{
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());
-        this.status = Status.IN_PROGRESS;
+        this.status = StageStatus.NOT_RUN;
     }
 
     public String getStageDefinitionId() {
@@ -65,11 +65,11 @@ public class Stage extends DbEntry{
         this.jobs = jobs;
     }
 
-    public Status getStatus() {
+    public StageStatus getStatus() {
         return this.status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(StageStatus status) {
         this.status = status;
     }
 

@@ -3,6 +3,7 @@ package net.hawkengine.core.components.pipelinescheduler;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -84,7 +85,6 @@ public class PipelinePreparer extends Thread {
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
         pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
         pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare.getId()));
-        pipelineToPrepare.setJobsForExecution(executionJobs);
         pipelineToPrepare.setPrepared(true);
 
         return pipelineToPrepare;
@@ -101,7 +101,7 @@ public class PipelinePreparer extends Thread {
             currentStage.setPipelineId(pipelineId);
             currentStage.setEnvironmentVariables(stageDefinition.getEnvironmentVariables());
             currentStage.setJobs(this.preparePipelineJobs(stageDefinition.getJobDefinitions(), pipelineId, currentStage.getId()));
-            currentStage.setStatus(Status.IN_PROGRESS);
+            currentStage.setStatus(StageStatus.IN_PROGRESS);
 
             stages.add(currentStage);
         }
@@ -121,7 +121,6 @@ public class PipelinePreparer extends Thread {
             currentJob.setStageId(stageId);
             currentJob.setPipelineId(pipelineId);
             currentJob.setEnvironmentVariables(jobDefinition.getEnvironmentVariables());
-            currentJob.setResources(jobDefinitions.get(0).getResources());
             currentJob.setTasks(this.prepareTasks(jobDefinition.getTaskDefinitions(), currentJob.getId(), stageId, pipelineId));
             currentJob.setStatus(JobStatus.AWAITING);
 

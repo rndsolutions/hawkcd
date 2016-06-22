@@ -5,24 +5,28 @@ import net.hawkengine.model.enums.JobStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class Job extends DbEntry{
+public class Job extends DbEntry {
     private String jobDefinitionId;
     private String stageId;
     private String pipelineId;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
-    private List<String> resources;
+    private Set<String> resources;
     private List<Task> tasks;
     private JobStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
+    private String assignedAgentId;
 
     public Job() {
         this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
+        this.setResources(new HashSet<>());
         this.setTasks(new ArrayList<>());
     }
 
@@ -66,11 +70,11 @@ public class Job extends DbEntry{
         this.environmentVariables = environmentVariables;
     }
 
-    public List<String> getResources() {
-        return this.resources;
+    public Set<String> getResources() {
+        return resources;
     }
 
-    public void setResources(List<String> resources) {
+    public void setResources(Set<String> resources) {
         this.resources = resources;
     }
 
@@ -112,5 +116,13 @@ public class Job extends DbEntry{
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public String getAssignedAgentId() {
+        return assignedAgentId;
+    }
+
+    public void setAssignedAgentId(String assignedAgentId) {
+        this.assignedAgentId = assignedAgentId;
     }
 }

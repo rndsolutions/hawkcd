@@ -1,10 +1,10 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
-import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -15,41 +15,24 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-public class StatusUpdater extends Thread {
-    private final Logger logger = Logger.getLogger(this.getClass());
+public class StatusUpdaterService extends Thread {
     private IPipelineService pipelineService;
+    private static final Logger logger = Logger.getLogger(StatusUpdaterService.class.getName());
 
-    public StatusUpdater() {
+    public StatusUpdaterService() {
         this.pipelineService = new PipelineService();
     }
 
-    public StatusUpdater(IPipelineService pipelineService) {
+    public StatusUpdaterService(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
     }
 
-    @Override
-    public synchronized void start() {
-        super.start();
-        this.logger.info(String.format(LoggerMessages.WORKER_STARTED, "Status Updater"));
-        this.run();
-    }
-
-    @Override
-    public void run() {
-        try {
-            while (true) {
-                List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
-                for (Pipeline pipeline : pipelinesInProgress) {
-                    this.updateAllStatuses(pipeline);
-                    this.pipelineService.update(pipeline);
-                }
-
-                Thread.sleep(4 * 1000);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void updateStatuses() {
+        List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
+        for (Pipeline pipeline : pipelinesInProgress) {
+            this.updateAllStatuses(pipeline);
+            this.pipelineService.update(pipeline);
         }
-        super.run();
     }
 
     public List<Pipeline> getAllPipelinesInProgress() {
@@ -65,7 +48,7 @@ public class StatusUpdater extends Thread {
         return pipelinesInProgress;
     }
 
-    public void updateAllStatuses(Object pipeline) {
+    public boolean updateAllStatuses(Object pipeline) {
         Stack stack = new Stack();
         stack.push(pipeline);
 
@@ -74,7 +57,7 @@ public class StatusUpdater extends Thread {
             if (node.getClass() == Job.class) {
                 Pipeline pipelineToUpdate = (Pipeline) pipeline;
                 this.updatePipelineStatus(pipelineToUpdate);
-                return;
+                return true;
             }
 
             if (node.getClass() == Pipeline.class) {
@@ -87,6 +70,7 @@ public class StatusUpdater extends Thread {
             }
         }
 
+        return false;
     }
 
     public void updateStageStatus(Stage stage) {
@@ -99,9 +83,9 @@ public class StatusUpdater extends Thread {
         }
 
         if (jobStatuses.contains(JobStatus.FAILED)) {
-            stage.setStatus(Status.FAILED);
+            stage.setStatus(StageStatus.FAILED);
         } else if (this.areAllPassed(jobStatuses)) {
-            stage.setStatus(Status.PASSED);
+            stage.setStatus(StageStatus.PASSED);
         }
     }
 
@@ -110,8 +94,8 @@ public class StatusUpdater extends Thread {
         List<Status> stageStatuses = new ArrayList<>();
 
         for (Stage stage : stages) {
-            Status stageStatus = stage.getStatus();
-            stageStatuses.add(stageStatus);
+            StageStatus stageStatus = stage.getStatus();
+            //stageStatuses.add(stageStatus);
         }
 
         if (stageStatuses.contains(Status.FAILED)) {

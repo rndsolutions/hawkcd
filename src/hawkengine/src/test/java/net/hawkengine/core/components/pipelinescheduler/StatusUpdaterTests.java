@@ -21,21 +21,21 @@ import java.util.List;
 
 public class StatusUpdaterTests {
     private IPipelineService mockedPipelineService;
-    private StatusUpdater mockedStatusUpdater;
+    private StatusUpdaterService mockedStatusUpdaterService;
 
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testStatusUpdater");
         IDbRepository mockedPipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
         this.mockedPipelineService = new PipelineService(mockedPipelineRepo);
-        this.mockedStatusUpdater = new StatusUpdater(this.mockedPipelineService);
+        this.mockedStatusUpdaterService = new StatusUpdaterService(this.mockedPipelineService);
     }
 
     @Test
     public void statusUpdater_failedJob_failedPipeline() {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         for (Pipeline expectedPipelineObject : expectedPipelines) {
-            this.mockedStatusUpdater.updateAllStatuses(expectedPipelineObject);
+            this.mockedStatusUpdaterService.updateAllStatuses(expectedPipelineObject);
             List<Stage> stages = expectedPipelineObject.getStages();
             for (Stage stage : stages) {
                 List<Job> jobs = stage.getJobs();
@@ -53,7 +53,7 @@ public class StatusUpdaterTests {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         int passedJobsIterator = 0;
         for (Pipeline expectedPipelineObject : expectedPipelines) {
-            this.mockedStatusUpdater.updateAllStatuses(expectedPipelineObject);
+            this.mockedStatusUpdaterService.updateAllStatuses(expectedPipelineObject);
             List<Stage> stages = expectedPipelineObject.getStages();
             for (Stage stage : stages) {
                 List<Job> jobs = stage.getJobs();
@@ -78,7 +78,7 @@ public class StatusUpdaterTests {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         int failedJobsIterator = 0;
         for (Pipeline expectedPipelineObject : expectedPipelines) {
-            this.mockedStatusUpdater.updateAllStatuses(expectedPipelineObject);
+            this.mockedStatusUpdaterService.updateAllStatuses(expectedPipelineObject);
             List<Stage> stages = expectedPipelineObject.getStages();
             for (Stage stage : stages) {
                 List<Job> jobs = stage.getJobs();
@@ -104,7 +104,7 @@ public class StatusUpdaterTests {
         firstExpectedPipeline.setStatus(Status.PASSED);
         this.mockedPipelineService.update(firstExpectedPipeline);
 
-        List<Pipeline> actualPipelines = this.mockedStatusUpdater.getAllPipelinesInProgress();
+        List<Pipeline> actualPipelines = this.mockedStatusUpdaterService.getAllPipelinesInProgress();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualPipelines.size());
     }
@@ -114,7 +114,7 @@ public class StatusUpdaterTests {
         InterruptedException interrupt = new InterruptedException();
         try {
             Thread.currentThread().interrupt();
-            this.mockedStatusUpdater.start();
+            this.mockedStatusUpdaterService.start();
         } catch (IllegalStateException e) {
             Assert.assertEquals(interrupt, e.getCause());
         }

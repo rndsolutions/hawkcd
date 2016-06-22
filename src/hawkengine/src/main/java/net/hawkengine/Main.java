@@ -8,10 +8,8 @@ public class Main {
     public static void main(String[] args) {
         HawkServer hawkServer = new HawkServer();
         try {
-            RedisManager.connect();
             hawkServer.configureJetty();
             hawkServer.start();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
