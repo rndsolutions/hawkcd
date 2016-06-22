@@ -1,7 +1,5 @@
 package net.hawkengine.services;
 
-import com.sun.istack.internal.Nullable;
-
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
@@ -26,101 +24,107 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
         this.stageDefinitionService = new StageDefinitionService();
     }
 
-    @Override
-    public ServiceResult getById(String id) {
-        List<PipelineDefinition> pipelines = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
-        JobDefinition resultJbDefinition = new JobDefinition();
+    public JobDefinitionService(IPipelineDefinitionService pipelineDefinitionService, IStageDefinitionService stageDefinitionService) {
+        this.pipelineDefinitionService = pipelineDefinitionService;
+        this.stageDefinitionService = stageDefinitionService;
+    }
 
-        for (PipelineDefinition pipelineDefinition : pipelines) {
+    @Override
+    public ServiceResult getById(String jobDefinitionId) {
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        JobDefinition result = new JobDefinition();
+
+        for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
             for (StageDefinition stageDefinition : stageDefinitions) {
                 List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
                 for (JobDefinition jobDefinition : jobDefinitions) {
-                    if (jobDefinition.getId().equals(id)) {
-                        resultJbDefinition = jobDefinition;
-                        return super.createServiceResult(resultJbDefinition,false,this.successMessage);
+                    if (jobDefinition.getId().equals(jobDefinitionId)) {
+                        result = jobDefinition;
+                        return super.createServiceResult(result, false, this.successMessage);
                     }
                 }
             }
         }
 
-        return super.createServiceResult(resultJbDefinition,true,this.failureMessage);
+        return super.createServiceResult(result, true, this.failureMessage);
     }
 
     @Override
     public ServiceResult getAll() {
-        ArrayList<PipelineDefinition> allPipelines = (ArrayList<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
-        ArrayList<JobDefinition> jobDefinitions = new ArrayList<>();
-        for (PipelineDefinition definition : allPipelines) {
-            this.extractJobDefinitions(definition, jobDefinitions);
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<JobDefinition> jobDefinitions = new ArrayList<>();
+
+        for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
+            this.extractJobDefinitionsFromPipelineDefinition(pipelineDefinition, jobDefinitions);
         }
 
-        return super.createServiceResultArray(jobDefinitions,false,this.successMessage);
+        return super.createServiceResultArray(jobDefinitions, false, this.successMessage);
     }
 
     @Override
     public ServiceResult add(JobDefinition jobDefinition) {
-        StageDefinition currentStage = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
-        List<JobDefinition> jobDefinitions = currentStage.getJobDefinitions();
+        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
+        List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(jobDefinitions, jobDefinition);
         if (hasNameCollision) {
             return super.createServiceResult(jobDefinition, true, "with the same name exists");
         }
 
         jobDefinitions.add(jobDefinition);
-        currentStage.setJobDefinitions(jobDefinitions);
-        StageDefinition updatedStageDefinitions = (StageDefinition) this.stageDefinitionService.update(currentStage).getObject();
-        JobDefinition result = updatedStageDefinitions
-                .getJobDefinitions()
-                .stream()
-                .filter(jd -> jd.getId().equals(jobDefinition.getId()))
-                .findFirst()
-                .orElse(null);
+        stageDefinition.setJobDefinitions(jobDefinitions);
+        StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
 
-        return super.createServiceResult(result,false,"added successfully");
+        JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinition.getId());
+        if (result == null) {
+            return super.createServiceResult(result, true, "not added successfully");
+        }
+
+        return super.createServiceResult(result, false, "added successfully");
     }
 
     @Override
     public ServiceResult update(JobDefinition jobDefinition) {
-        boolean isUpdated = false;
+        JobDefinition result = new JobDefinition();
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
-        int lengthOfDefinitions = jobDefinitions.size();
         boolean hasNameCollision = this.checkForNameCollision(jobDefinitions, jobDefinition);
         if (hasNameCollision) {
             return super.createServiceResult(jobDefinition, true, "with the same name exists");
         }
 
-        for (int i = 0; i < lengthOfDefinitions; i++) {
+        int lengthOfJobDefinitions = jobDefinitions.size();
+        boolean isUpdated = false;
+        for (int i = 0; i < lengthOfJobDefinitions; i++) {
             JobDefinition definition = jobDefinitions.get(i);
             if (definition.getId().equals(jobDefinition.getId())) {
                 jobDefinitions.set(i, jobDefinition);
                 stageDefinition.setJobDefinitions(jobDefinitions);
-                this.stageDefinitionService.update(stageDefinition);
-                isUpdated = true;
+                StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
+                result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinition.getId());
+                break;
             }
         }
 
-        if (!isUpdated) {
-            return super.createServiceResult(jobDefinition, true, "not updated successfully");
+        if (result == null) {
+            return super.createServiceResult(result, true, "not updated successfully");
         }
 
-        return super.createServiceResult(jobDefinition, false, "updated successfully");
+        return super.createServiceResult(result, false, "updated successfully");
     }
 
     @Override
     public ServiceResult delete(String jobDefinitionId) {
         boolean isRemoved = false;
-        ServiceResult result;
         JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinitionId).getObject();
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService
                 .getById(jobDefinitionToDelete.getStageDefinitionId())
                 .getObject();
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
-        int lengthOfDefinitions = jobDefinitions.size();
 
-        if (jobDefinitions.size() > 1) {
-            for (int i = 0; i < lengthOfDefinitions; i++) {
+        int lengthOfJobDefinitions = jobDefinitions.size();
+        if (lengthOfJobDefinitions > 1) {
+            for (int i = 0; i < lengthOfJobDefinitions; i++) {
                 JobDefinition definition = jobDefinitions.get(i);
                 if (definition.getId().equals(jobDefinitionToDelete.getId())) {
                     jobDefinitions.remove(definition);
@@ -128,43 +132,44 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
                     break;
                 }
             }
-
         } else {
             return super.createServiceResult(jobDefinitionToDelete, true, "cannot delete the last job definition");
         }
 
         if (!isRemoved) {
-            result = super.createServiceResult(jobDefinitionToDelete, true, "not deleted");
-            return result;
-
+            return super.createServiceResult(jobDefinitionToDelete, true, "not deleted");
         }
 
         stageDefinition.setJobDefinitions(jobDefinitions);
-        this.stageDefinitionService.update(stageDefinition);
-        result = super.createServiceResult(jobDefinitionToDelete, false, "deleted successfully");
-        return result;
+        StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
+        JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinitionId);
+        if (result != null) {
+            return super.createServiceResult(result, true, "not deleted successfully");
+        }
+
+        return super.createServiceResult(result, false, "deleted successfully");
     }
 
     @Override
     public ServiceResult getAllInStage(String stageDefinitionId) {
         StageDefinition currentStage = (StageDefinition) this.stageDefinitionService.getById(stageDefinitionId).getObject();
         List<JobDefinition> allJobDefinitionsInStage = currentStage.getJobDefinitions();
-        return super.createServiceResultArray(allJobDefinitionsInStage,false,this.successMessage);
+        return super.createServiceResultArray(allJobDefinitionsInStage, false, this.successMessage);
     }
 
     @Override
     public ServiceResult getAllInPipeline(String pipelineDefinitionId) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         List<JobDefinition> allJobsInPipeline = new ArrayList<>();
-        this.extractJobDefinitions(pipelineDefinition, allJobsInPipeline);
-        return super.createServiceResultArray(allJobsInPipeline,false,this.successMessage);
+        this.extractJobDefinitionsFromPipelineDefinition(pipelineDefinition, allJobsInPipeline);
+        return super.createServiceResultArray(allJobsInPipeline, false, this.successMessage);
     }
 
     /**
      * Method void for extracting JobDefinitions from PipelineDefinition provided. Fills in a
      * provided List.
      */
-    private void extractJobDefinitions(PipelineDefinition pipelineDefinition, List<JobDefinition> jobDefinitions) {
+    private void extractJobDefinitionsFromPipelineDefinition(PipelineDefinition pipelineDefinition, List<JobDefinition> jobDefinitions) {
         List<StageDefinition> stages = pipelineDefinition.getStageDefinitions();
         for (StageDefinition stage : stages) {
             List<JobDefinition> currentStageJobs = stage.getJobDefinitions();
@@ -176,14 +181,26 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
      * Method boolean accepts a list of JobDefinitions, performs name check and decides wheather it
      * has name collision or not.
      */
-    private boolean checkForNameCollision(List<JobDefinition> jobDefinitions, JobDefinition definitionToAdd) {
-        boolean hasCollision = false;
-        for (JobDefinition definition : jobDefinitions) {
-            if (definition.getName().equals(definitionToAdd.getName())) {
-                hasCollision = true;
-                return hasCollision;
+    private boolean checkForNameCollision(List<JobDefinition> jobDefinitions, JobDefinition jobDefinitionToAdd) {
+        for (JobDefinition jobDefinition : jobDefinitions) {
+            if (jobDefinition.getName().equals(jobDefinitionToAdd.getName())) {
+                return true;
             }
         }
-        return hasCollision;
+
+        return false;
+    }
+
+    // TODO: document this method
+    private JobDefinition extractJobDefinitionsFromStageDefinition(StageDefinition stageDefinition, String jobDefinitionId) {
+        StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
+        JobDefinition result = updatedStageDefinition
+                .getJobDefinitions()
+                .stream()
+                .filter(jd -> jd.getId().equals(jobDefinitionId))
+                .findFirst()
+                .orElse(null);
+
+        return result;
     }
 }
