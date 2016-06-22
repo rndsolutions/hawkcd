@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-
 @SuppressWarnings({"unchecked", "PackageVisibleField", "InstanceMethodNamingConvention"})
 public class PipelinePreparerTests {
     private IPipelineService mockedPipelineService;
@@ -268,12 +266,12 @@ public class PipelinePreparerTests {
 
     @Test
     public void runPipelinePreparer_interruptedThred_throwInterruptedException() {
-        final InterruptedException interrupt = new InterruptedException();
+        InterruptedException interrupt = new InterruptedException();
         try {
             Thread.currentThread().interrupt();
             this.mockedPipelinePreparer.start();
         } catch (IllegalStateException e) {
-            assertEquals(interrupt, e.getCause());
+            Assert.assertEquals(interrupt, e.getCause());
         }
     }
 
