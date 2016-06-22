@@ -10,6 +10,31 @@
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'net.hawkengine.Main',
+        )
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest.from jar.manifest
+    classifier = 'all'
+    from {
+        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    with jar
+}
+
+artifacts {
+    archives fatJar
+}
+
 apply plugin: 'eclipse'
 
 // In this section you declare where to find the dependencies of your project
