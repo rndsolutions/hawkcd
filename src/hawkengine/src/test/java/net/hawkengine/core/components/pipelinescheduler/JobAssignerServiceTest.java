@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class JobAssignerServiceTest {
-    private JobAssignerService jobAssignerService = new JobAssignerService();
+public class JobAssignerServiceTest {private JobAssignerService jobAssignerService = new JobAssignerService();
 
     @Test
     public void getEligibleAgentsForJob_matchingResources_oneObject() {

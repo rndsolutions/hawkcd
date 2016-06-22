@@ -4,6 +4,7 @@ import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -82,9 +83,9 @@ public class StatusUpdaterService extends Thread {
         }
 
         if (jobStatuses.contains(JobStatus.FAILED)) {
-            stage.setStatus(Status.FAILED);
+            stage.setStatus(StageStatus.FAILED);
         } else if (this.areAllPassed(jobStatuses)) {
-            stage.setStatus(Status.PASSED);
+            stage.setStatus(StageStatus.PASSED);
         }
     }
 
@@ -93,8 +94,8 @@ public class StatusUpdaterService extends Thread {
         List<Status> stageStatuses = new ArrayList<>();
 
         for (Stage stage : stages) {
-            Status stageStatus = stage.getStatus();
-            stageStatuses.add(stageStatus);
+            StageStatus stageStatus = stage.getStatus();
+            //stageStatuses.add(stageStatus);
         }
 
         if (stageStatuses.contains(Status.FAILED)) {

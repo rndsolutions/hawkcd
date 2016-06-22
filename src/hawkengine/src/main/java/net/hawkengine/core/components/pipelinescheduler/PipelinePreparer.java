@@ -3,6 +3,7 @@ package net.hawkengine.core.components.pipelinescheduler;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -100,7 +101,7 @@ public class PipelinePreparer extends Thread {
             currentStage.setPipelineId(pipelineId);
             currentStage.setEnvironmentVariables(stageDefinition.getEnvironmentVariables());
             currentStage.setJobs(this.preparePipelineJobs(stageDefinition.getJobDefinitions(), pipelineId, currentStage.getId()));
-            currentStage.setStatus(Status.IN_PROGRESS);
+            currentStage.setStatus(StageStatus.IN_PROGRESS);
 
             stages.add(currentStage);
         }

@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 public class JobAssigner implements Runnable {
     private JobAssignerService jobAssignerService;
     private StatusUpdaterService statusUpdaterService;
-    private static final Logger logger = Logger.getLogger(PipelinePreparer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PipelinePreparer.class.getName());
 
     public JobAssigner() {
         this.jobAssignerService = new JobAssignerService();
@@ -15,7 +15,7 @@ public class JobAssigner implements Runnable {
 
     @Override
     public void run() {
-        logger.info(String.format(LoggerMessages.WORKER_STARTED, "Job Assigner"));
+        LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, "Job Assigner"));
         try {
             while (true) {
                 this.jobAssignerService.assignJobs();
