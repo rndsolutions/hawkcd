@@ -72,78 +72,68 @@ public class PipelinePreparer extends Thread {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
 
         List<StageDefinition> stages = pipelineDefinition.getStageDefinitions();
-        List<JobDefinition> executionJobs = new ArrayList<>();
         List<Environment> pipelineDefinitionEnvironments = pipelineDefinition.getEnvironments();
         List<EnvironmentVariable> pipelineDefinitionEnvironmentVariables = pipelineDefinition.getEnvironmentVariables();
 
         for (StageDefinition stage : stages) {
             List<JobDefinition> stageJobs = stage.getJobDefinitions();
-            executionJobs.addAll(stageJobs);
         }
         pipelineToPrepare.setPipelineDefinitionId(pipelineDefinitionId);
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
         pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
-        pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare.getId()));
-        pipelineToPrepare.setJobsForExecution(executionJobs);
+        pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare));
         pipelineToPrepare.setPrepared(true);
 
         return pipelineToPrepare;
     }
 
-    public List<Stage> preparePipelineStages(List<StageDefinition> stageDefinitions, String pipelineId) {
-        List<Stage> stages = new ArrayList<>();
+    public List<Stage> preparePipelineStages(List<StageDefinition> stageDefinitions, Pipeline pipeline) {
+        List<Stage> stages = pipeline.getStages();
 
         int stageDefinitionCollectionSize = stageDefinitions.size();
 
-        for (StageDefinition stageDefinition : stageDefinitions) {
-            Stage currentStage = new Stage();
-            currentStage.setStageDefinitionId(stageDefinition.getId());
-            currentStage.setPipelineId(pipelineId);
-            currentStage.setEnvironmentVariables(stageDefinition.getEnvironmentVariables());
-            currentStage.setJobs(this.preparePipelineJobs(stageDefinition.getJobDefinitions(), pipelineId, currentStage.getId()));
+        for (int i = 0; i < stageDefinitionCollectionSize; i++) {
+            Stage currentStage = stages.get(i);
+            currentStage.setStageDefinitionId(stageDefinitions.get(i).getId());
+            currentStage.setEnvironmentVariables(stageDefinitions.get(i).getEnvironmentVariables());
+            currentStage.setJobs(this.preparePipelineJobs(stageDefinitions.get(i).getJobDefinitions(), currentStage));
             currentStage.setStatus(Status.IN_PROGRESS);
 
-            stages.add(currentStage);
+            stages.set(i, currentStage);
         }
 
         return stages;
     }
 
-    public List<Job> preparePipelineJobs(List<JobDefinition> jobDefinitions, String pipelineId, String stageId) {
-        List<Job> jobs = new ArrayList<>();
+    public List<Job> preparePipelineJobs(List<JobDefinition> jobDefinitions, Stage stage) {
+        List<Job> jobs = stage.getJobs();
 
         int jobDefinitionCollectionSize = jobDefinitions.size();
 
-        for (JobDefinition jobDefinition : jobDefinitions) {
-            Job currentJob = new Job();
-            currentJob.setJobDefinitionId(jobDefinition.getId());
-            currentJob.setPipelineId(pipelineId);
-            currentJob.setStageId(stageId);
-            currentJob.setPipelineId(pipelineId);
-            currentJob.setEnvironmentVariables(jobDefinition.getEnvironmentVariables());
-            currentJob.setResources(jobDefinitions.get(0).getResources());
-            currentJob.setTasks(this.prepareTasks(jobDefinition.getTaskDefinitions(), currentJob.getId(), stageId, pipelineId));
+        for (int i = 0; i < jobDefinitionCollectionSize; i++) {
+            Job currentJob = jobs.get(i);
+            currentJob.setJobDefinitionId(jobDefinitions.get(i).getId());
+            currentJob.setEnvironmentVariables(jobDefinitions.get(i).getEnvironmentVariables());
+            currentJob.setResources(jobDefinitions.get(i).getResources());
+            currentJob.setTasks(this.prepareTasks(jobDefinitions.get(i).getTaskDefinitions(), currentJob));
             currentJob.setStatus(JobStatus.AWAITING);
 
-            jobs.add(currentJob);
+            jobs.set(i, currentJob);
         }
 
         return jobs;
     }
 
-    public List<Task> prepareTasks(List<TaskDefinition> taskDefinitions, String jobId, String stageId, String pipelineId) {
-        List<Task> tasks = new ArrayList<>();
+    public List<Task> prepareTasks(List<TaskDefinition> taskDefinitions, Job job) {
+        List<Task> tasks = job.getTasks();
 
         int taskDefinitionCollectionSize = taskDefinitions.size();
 
-        for (TaskDefinition taskDefinition : taskDefinitions) {
-            Task currentTask = new Task();
-            currentTask.setTaskDefinition(taskDefinition);
-            currentTask.setJobId(jobId);
-            currentTask.setStageId(stageId);
-            currentTask.setPipelineId(pipelineId);
+        for (int i = 0; i < taskDefinitionCollectionSize; i++) {
+            Task currentTask = tasks.get(i);
+            currentTask.setTaskDefinition(taskDefinitions.get(i));
 
-            tasks.add(currentTask);
+            tasks.set(i, currentTask);
         }
 
         return tasks;
