@@ -63,6 +63,7 @@ public class StatusUpdaterService extends Thread {
             if (node.getClass() == Pipeline.class) {
                 Pipeline pipelineNode = (Pipeline) node;
                 stack.addAll(pipelineNode.getStages());
+                this.updateStageStatusesInSequence(pipelineNode.getStages());
             } else {
                 Stage stageNode = (Stage) node;
                 stack.addAll(stageNode.getJobs());
@@ -71,6 +72,20 @@ public class StatusUpdaterService extends Thread {
         }
 
         return false;
+    }
+
+    public void updateStageStatusesInSequence(List<Stage> stages){
+        int stagesCollectionSize = stages.size();
+        for (Stage currentStage : stages) {
+            if (currentStage.getStatus() == StageStatus.NOT_RUN) {
+                currentStage.setStatus(StageStatus.IN_PROGRESS);
+                continue;
+            } else if (currentStage.getStatus() == StageStatus.PASSED) {
+                continue;
+            } else {
+                break;
+            }
+        }
     }
 
     public void updateStageStatus(Stage stage) {
