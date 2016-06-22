@@ -80,9 +80,9 @@ public class MongoDbImplementationTest {
         this.mockedRepository.add(this.agent);
 
         //Act
-        boolean actualResult = this.mockedRepository.delete(this.agent.getId());
+        Agent actualResult = this.mockedRepository.delete(this.agent.getId());
 
         //Assert
-        Assert.assertTrue(actualResult);
+        Assert.assertNotNull(actualResult);
     }
 }

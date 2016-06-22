@@ -114,15 +114,16 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public boolean delete(String id) {
+    public T delete(String id) {
+        T result = null;
         try {
             BasicDBObject searchQuery = new BasicDBObject().append("id", id);
-            this.collection.findAndRemove(searchQuery);
+            result = (T)this.collection.findAndRemove(searchQuery);
 
-            return true;
+            return result;
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return false;
+            return result;
         }
     }
 }
