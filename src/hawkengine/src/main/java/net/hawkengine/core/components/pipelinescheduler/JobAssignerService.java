@@ -45,23 +45,27 @@ public class JobAssignerService {
                         if (agentForJob != null) {
                             agentForJob.setAssigned(true);
                             this.agentService.update(agentForJob);
+
                             job.setAssignedAgentId(agentForJob.getId());
+                            job.setStatus(JobStatus.SCHEDULED);
                             this.pipelineService.update(pipeline);
-
-
                             // TODO: this.jobService.update(job);
                         }
                     } else if (job.getStatus() == JobStatus.SCHEDULED) {
                         Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
                         boolean isEligible = this.isAgentEligibleForJob(job, agent);
                         if (!isEligible) {
+                            job.setStatus(JobStatus.AWAITING);
+
+                            // TODO: move logic up
                             List<Agent> eligibleAgents = this.getEligibleAgentsForJob(job, agents);
                             Agent agentForJob = this.pickMostSuitableAgent(eligibleAgents);
                             if (agentForJob != null) {
                                 agentForJob.setAssigned(true);
                                 this.agentService.update(agentForJob);
-                                job.setAssignedAgentId(agentForJob.getId());
 
+                                job.setAssignedAgentId(agentForJob.getId());
+                                job.setStatus(JobStatus.SCHEDULED);
                                 this.pipelineService.update(pipeline);
                                 // TODO: this.jobService.update(job);
                             }
@@ -70,10 +74,6 @@ public class JobAssignerService {
                 }
             }
         }
-    }
-
-    public void tempMethod(String pipeId, String stageId, Job job) {
-//        this.pipelineService
     }
 
     public List<Agent> getEligibleAgentsForJob(Job job, List<Agent> agents) {
