@@ -10,6 +10,14 @@ import java.util.List;
 public abstract class CrudService<T extends DbEntry> extends Service<T> implements ICrudService<T> {
     private IDbRepository<T> repository;
 
+    public IDbRepository<T> getRepository() {
+        return this.repository;
+    }
+
+    public void setRepository(IDbRepository<T> repository) {
+        this.repository = repository;
+    }
+
     @Override
     public ServiceResult getById(String id) {
         T dbObject = this.getRepository().getById(id);
@@ -72,14 +80,8 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
             result = super.createServiceResult((T) result.getObject(), true, "not found" );
         }
 
+        result.setObject(isDeleted);
+
         return result;
-    }
-
-    public IDbRepository<T> getRepository() {
-        return this.repository;
-    }
-
-    public void setRepository(IDbRepository<T> repository) {
-        this.repository = repository;
     }
 }

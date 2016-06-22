@@ -30,7 +30,7 @@ public class ConversionObjectDeserializerTest {
 
         ConversionObject expectedResult = new ConversionObject();
         expectedResult.setPackageName("testPackage");
-        expectedResult.setObject("testObject");
+        expectedResult.setObject("\"testObject\"");
 
         //Act
         ConversionObject actualResult = this.deserializer.deserialize(jsonElement, null, null);

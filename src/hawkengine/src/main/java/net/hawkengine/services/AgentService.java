@@ -45,49 +45,64 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         return super.delete(agentId);
     }
 
-    /**
-     * Gets all agents from the database whom status is set to 'ENABLED'.
-     *
-     * @return A list of enabled agents.
-     * @see Agent
-     */
-
     @Override
-    public ServiceResult getAllEnabledAgents() {
+    public ServiceResult getAllAssignableAgents() {
         List<Agent> agents = (List<Agent>) super.getAll().getObject();
-        agents = agents
+        List<Agent> assignableAgents = agents
                 .stream()
-                .filter(Agent::isEnabled)
+                .filter(a -> a.isConnected() && a.isEnabled() && !a.isRunning() && !a.isAssigned())
                 .collect(Collectors.toList());
 
-        ServiceResult result = new ServiceResult();
-        result.setError(false);
-        result.setMessage("All enabled " + super.getObjectType() + "s retrieved successfully.");
-        result.setObject(agents);
+        ServiceResult result =
+                super.createServiceResultArray(assignableAgents, false, "retrieved successfully");
 
         return result;
     }
 
-    /**
-     * Gets all agents from the database who are idle and waiting for a job.
-     *
-     * @return A list of idle agents.
-     * @see Agent
-     */
 
-    @Override
-    public ServiceResult getAllEnabledIdleAgents() {
-        List<Agent> agents = (List<Agent>) super.getAll().getObject();
-        agents = agents
-                .stream()
-                .filter(a -> a.isEnabled() && !a.isRunning())
-                .collect(Collectors.toList());
-
-        ServiceResult result = new ServiceResult();
-        result.setError(false);
-        result.setMessage("All enabled idle " + super.getObjectType() + "s retrieved successfully.");
-        result.setObject(agents);
-
-        return result;
-    }
+//    /**
+//     * Gets all agents from the database whom status is set to 'ENABLED'.
+//     *
+//     * @return A list of enabled agents.
+//     * @see Agent
+//     */
+//
+//    @Override
+//    public ServiceResult getAllEnabledAgents() {
+//        List<Agent> agents = (List<Agent>) super.getAll().getObject();
+//        agents = agents
+//                .stream()
+//                .filter(Agent::isEnabled)
+//                .collect(Collectors.toList());
+//
+//        ServiceResult result = new ServiceResult();
+//        result.setError(false);
+//        result.setMessage("All enabled " + super.getObjectType() + "s retrieved successfully.");
+//        result.setObject(agents);
+//
+//        return result;
+//    }
+//
+//    /**
+//     * Gets all agents from the database who are idle and waiting for a job.
+//     *
+//     * @return A list of idle agents.
+//     * @see Agent
+//     */
+//
+//    @Override
+//    public ServiceResult getAllEnabledIdleAgents() {
+//        List<Agent> agents = (List<Agent>) super.getAll().getObject();
+//        agents = agents
+//                .stream()
+//                .filter(a -> a.isEnabled() && !a.isRunning())
+//                .collect(Collectors.toList());
+//
+//        ServiceResult result = new ServiceResult();
+//        result.setError(false);
+//        result.setMessage("All enabled idle " + super.getObjectType() + "s retrieved successfully.");
+//        result.setObject(agents);
+//
+//        return result;
+//    }
 }
