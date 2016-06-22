@@ -345,7 +345,6 @@ public class PipelinePreparerTests {
         //TODO: Add when json deserializer is ready
         ExecTask taskDefinition = new ExecTask();
         taskDefinition.setCommand("echo");
-        taskDefinition.setArguments(new String[]{"fdfdfd"});
         taskDefinition.setJobDefinitionId(jobDefinitionToAdd.getId());
         taskDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
         taskDefinition.setName("taskDefinitionToAdd");

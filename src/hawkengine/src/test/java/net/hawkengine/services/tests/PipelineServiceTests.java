@@ -156,7 +156,6 @@ public class PipelineServiceTests {
         expectedTaskDefinition.setName("someName");
         expectedTaskDefinition.setRunIfCondition(RunIf.ANY);
         expectedTaskDefinition.setCommand("someCommand");
-        expectedTaskDefinition.setArguments(new String[]{"someArgument"});
         expectedTaskDefinitions.add(expectedTaskDefinition);
         expectedJobDefinition.setTaskDefinitions(expectedTaskDefinitions);
 
