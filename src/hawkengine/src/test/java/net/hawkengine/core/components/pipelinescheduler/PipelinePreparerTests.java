@@ -250,46 +250,39 @@ public class PipelinePreparerTests {
     }
 
     //TODO: Add when json deserializer for Task is ready
-//    @Test
-//    public void preparePipelineJobsTasks_withValidObjects_listWithOneObject(){
-//        //Act
-//        PipelineDefinition actualPipelineDefinition = this.preparePipelineDefinition();
-//        Pipeline pipeline = new Pipeline();
-//        pipeline.setPipelineDefinitionId(actualPipelineDefinition.getId());
-//
-//        List<Stage> pipelineStages = new ArrayList<>();
-//        Stage pipelineStage = new Stage();
-//        pipelineStages.add(pipelineStage);
-//
-//        List<Job> pipelineJobs = new ArrayList<>();
-//        Job pipelineJob = new Job();
-//        pipelineJobs.add(pipelineJob);
-//
-//        pipeline.setStages(pipelineStages);
-//        pipeline.getStages().get(0).setJobs(pipelineJobs);
-//
-//        this.mockedPipelineService.add(pipeline);
-//
-//        Pipeline actualPipeline = (Pipeline) this.mockedPipelineService.getById(pipeline.getId()).getObject();
-//
-//        for (StageDefinition stageDefinition: actualPipelineDefinition.getStageDefinitions()) {
-//            for (JobDefinition jobDefinition: stageDefinition.getJobDefinitions()) {
-//                List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
-//
-//                List<Task> preparedTasks = this.mockedPipelinePreparer.prepareTasks(taskDefinitions, pipelineJob);
-//
-//                //Assert
-//                Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, preparedTasks.size());
-//                Assert.assertNotNull(preparedTasks.get(0).getPipelineId());
-//                Assert.assertEquals(actualPipeline.getId(),preparedTasks.get(0).getPipelineId());
-//                Assert.assertNotNull(preparedTasks.get(0).getJobId());
-//                Assert.assertEquals(pipelineJob.getId(), preparedTasks.get(0).getJobId());
-//                Assert.assertNotNull(preparedTasks.get(0).getStageId());
-//                Assert.assertEquals(pipelineStage.getId(), preparedTasks.get(0).getStageId());
-//
-//            }
-//        }
-//    }
+    @Test
+    public void preparePipelineJobsTasks_withValidObjects_listWithOneObject(){
+        //Act
+        PipelineDefinition actualPipelineDefinition = this.preparePipelineDefinition();
+        Pipeline pipeline = new Pipeline();
+        pipeline.setPipelineDefinitionId(actualPipelineDefinition.getId());
+
+        List<Stage> pipelineStages = new ArrayList<>();
+        Stage pipelineStage = new Stage();
+        pipelineStages.add(pipelineStage);
+
+        List<Job> pipelineJobs = new ArrayList<>();
+        Job pipelineJob = new Job();
+        pipelineJobs.add(pipelineJob);
+
+        pipeline.setStages(pipelineStages);
+        pipeline.getStages().get(0).setJobs(pipelineJobs);
+
+        this.mockedPipelineService.add(pipeline);
+
+        Pipeline actualPipeline = (Pipeline) this.mockedPipelineService.getById(pipeline.getId()).getObject();
+
+        for (StageDefinition stageDefinition: actualPipelineDefinition.getStageDefinitions()) {
+            for (JobDefinition jobDefinition: stageDefinition.getJobDefinitions()) {
+                List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+
+                List<Task> preparedTasks = this.mockedPipelinePreparer.prepareTasks(taskDefinitions, pipelineJob);
+
+                //Assert
+                Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, preparedTasks.size());
+            }
+        }
+    }
 
     @Test
     public void runPipelinePreparer_interruptedThread_throwInterruptedException() {
@@ -350,18 +343,18 @@ public class PipelinePreparerTests {
         jobDefinitionToAdd.setEnvironmentVariables(jobDefinitionEnvironmentVariables);
 
         //TODO: Add when json deserializer is ready
-//        ExecTask taskDefinition = new ExecTask();
-//        taskDefinition.setCommand("echo");
-//        taskDefinition.setArguments(new String[]{"fdfdfd"});
-//        taskDefinition.setJobDefinitionId(jobDefinitionToAdd.getId());
-//        taskDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
-//        taskDefinition.setName("taskDefinitionToAdd");
-//        taskDefinition.setStageDefinitionId(stageDefinitionToAdd.getId());
+        ExecTask taskDefinition = new ExecTask();
+        taskDefinition.setCommand("echo");
+        taskDefinition.setArguments(new String[]{"fdfdfd"});
+        taskDefinition.setJobDefinitionId(jobDefinitionToAdd.getId());
+        taskDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
+        taskDefinition.setName("taskDefinitionToAdd");
+        taskDefinition.setStageDefinitionId(stageDefinitionToAdd.getId());
 
         stages.add(stageDefinitionToAdd);
         jobDefinitions.add(jobDefinitionToAdd);
         //TODO: Add when json deserializer is ready
-        //taskDefinitions.add(taskDefinition);
+        taskDefinitions.add(taskDefinition);
 
         jobDefinitions.get(0).setTaskDefinitions(taskDefinitions);
         stages.get(0).setJobDefinitions(jobDefinitions);

@@ -125,11 +125,13 @@ public class PipelinePreparer extends Thread {
     }
 
     public List<Task> prepareTasks(List<TaskDefinition> taskDefinitions, Job job) {
-        List<Task> tasks = job.getTasks();
+        List<Task> tasks = new ArrayList<>();
+
 
         int taskDefinitionCollectionSize = taskDefinitions.size();
 
         for (int i = 0; i < taskDefinitionCollectionSize; i++) {
+            tasks.add(new Task());
             Task currentTask = tasks.get(i);
             currentTask.setTaskDefinition(taskDefinitions.get(i));
 

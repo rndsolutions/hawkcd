@@ -6,6 +6,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.Status;
@@ -25,14 +26,18 @@ public class StatusUpdaterTests {
     private IPipelineService mockedPipelineService;
     private StatusUpdater mockedStatusUpdater;
     private IPipelineDefinitionService mockedPipelineDefinitionService;
+    private PipelineDefinition expectedPipelineDefinition;
 
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testStatusUpdater");
         IDbRepository mockedPipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
-        this.mockedPipelineDefinitionService = new PipelineDefinitionService();
+        IDbRepository mockedPipelineDefintionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.mockedPipelineDefinitionService = new PipelineDefinitionService(mockedPipelineDefintionRepo);
         this.mockedPipelineService = new PipelineService(mockedPipelineRepo,this.mockedPipelineDefinitionService);
         this.mockedStatusUpdater = new StatusUpdater(this.mockedPipelineService);
+        this.expectedPipelineDefinition = new PipelineDefinition();
+        this.mockedPipelineDefinitionService.add(this.expectedPipelineDefinition);
     }
 
     @Test
@@ -130,6 +135,7 @@ public class StatusUpdaterTests {
         List<Stage> stagesToAdd = new ArrayList<>();
 
         Pipeline firstPipeline = new Pipeline();
+        firstPipeline.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
 
         Stage stage = new Stage();
 
@@ -149,6 +155,7 @@ public class StatusUpdaterTests {
         this.mockedPipelineService.add(firstPipeline);
 
         Pipeline secondPipeline = new Pipeline();
+        secondPipeline.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         jobsToAdd = new ArrayList<>();
         stagesToAdd = new ArrayList<>();
 
@@ -166,6 +173,7 @@ public class StatusUpdaterTests {
         this.mockedPipelineService.add(secondPipeline);
 
         Pipeline thirdPipeline = new Pipeline();
+        thirdPipeline.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
 
         firstJob.setStatus(JobStatus.PASSED);
 
