@@ -6,10 +6,18 @@ import net.hawkengine.http.Config;
 import net.hawkengine.http.Exec;
 import net.hawkengine.http.Stats;
 import net.hawkengine.ws.WsServlet;
+
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.Jetty;
+import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
@@ -36,6 +44,11 @@ public class HawkServer {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
 
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setDirectoriesListed(true);
+        resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
+        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
+
         // REST
         ServletHolder restServlet = context.addServlet(ServletContainer.class, "/*");
         restServlet.setInitOrder(0);
@@ -53,7 +66,10 @@ public class HawkServer {
         // WebSockets
         context.addServlet(WsServlet.class, "/ws/v1");
 
-        this.server.setHandler(context);
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] { resourceHandler, context, new DefaultHandler() });
+
+        this.server.setHandler(handlers);
     }
 
     public void start() throws Exception {
