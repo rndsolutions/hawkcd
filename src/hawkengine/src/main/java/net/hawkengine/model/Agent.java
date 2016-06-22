@@ -22,10 +22,6 @@ public class Agent extends DbEntry {
         this.setResources(new HashSet<>());
     }
 
-    public Agent() {
-        this.setResources(new HashSet<>());
-    }
-
     public String getName() {
         return this.name;
     }
