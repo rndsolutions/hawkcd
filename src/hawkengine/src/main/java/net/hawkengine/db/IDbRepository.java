@@ -13,5 +13,5 @@ public interface IDbRepository<T extends DbEntry> {
 
     T update(T entry);
 
-    boolean delete(String id);
+    T delete(String id);
 }
