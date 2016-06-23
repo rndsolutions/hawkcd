@@ -52,6 +52,34 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         return super.delete(pipelineId);
     }
 
+    @Override
+    public ServiceResult getAllUpdatedPipelines() {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        if (pipelines.isEmpty()){
+            return result;
+        }
+        pipelines.stream().filter(Pipeline::areMaterialsUpdated);
+
+        result.setObject(pipelines);
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult getAllPreparedPipelines() {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        if (pipelines.isEmpty()){
+            return result;
+        }
+        pipelines.stream().filter(Pipeline::isPrepared);
+
+        result.setObject(pipelines);
+
+        return result;
+    }
+
     private void addStagesToPipeline(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
@@ -61,6 +89,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         for (int i = 0; i < stagesCollectionSize; i++){
             Stage stage = new Stage();
             stage.setPipelineId(pipeline.getId());
+            stage.setStageDefinitionId(stageDefinitions.get(i).getId());
             stages.add(stage);
             this.addJobsToPipeline(pipeline, stageDefinitions, stage);
         }
@@ -75,6 +104,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             for (int i = 0; i < jobsCollectionSize; i++){
                 Job job = new Job();
                 job.setPipelineId(pipeline.getId());
+                job.setJobDefinitionId(jobDefinitions.get(i).getId());
                 job.setStageId(stage.getId());
                 jobs.add(job);
                 this.addTasksToPipeline(pipeline.getId(), stage.getId(), job, jobDefinitions);
@@ -92,6 +122,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 Task task = new Task();
                 task.setJobId(job.getId());
                 task.setStageId(stageId);
+                task.setTaskDefinition(taskDefinitions.get(i));
                 task.setPipelineId(pipelineId);
                 tasks.add(task);
             }
