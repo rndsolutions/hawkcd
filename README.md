@@ -1,6 +1,6 @@
 # hawkengine
 
-The Hawkengine System intends to be a one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
+The Hawkengine Server intends to be a one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
 
 **Getting started:**
 * [Setup Hawk Server on Windows Environment](https://github.com/rndsolutions/hawk/wiki/Setup-Hawk-Server-on-Windows-Environment)
