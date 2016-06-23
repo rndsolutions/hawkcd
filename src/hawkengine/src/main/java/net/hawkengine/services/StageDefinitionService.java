@@ -9,7 +9,7 @@ import net.hawkengine.services.interfaces.IStageDefinitionService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StageDefinitionService extends Service<StageDefinition> implements IStageDefinitionService {
+public class StageDefinitionService extends CrudService<StageDefinition> implements IStageDefinitionService {
     private IPipelineDefinitionService pipelineDefinitionService;
 
     public StageDefinitionService() {
