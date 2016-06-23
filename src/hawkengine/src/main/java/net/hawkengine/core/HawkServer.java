@@ -1,6 +1,7 @@
 package net.hawkengine.core;
 
 import net.hawkengine.core.components.pipelinescheduler.JobAssigner;
+import net.hawkengine.core.components.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.Account;
 import net.hawkengine.http.Config;
@@ -26,11 +27,13 @@ public class HawkServer {
 
     private Server server;
     private Thread jobAssigner;
+    private Thread pipelinePreparer;
 
     public HawkServer() {
         RedisManager.connect();
         this.server = new Server();
         this.jobAssigner = new Thread(new JobAssigner());
+        this.pipelinePreparer = new Thread(new PipelinePreparer());
     }
 
     public void configureJetty() {
@@ -70,7 +73,8 @@ public class HawkServer {
     }
 
     public void start() throws Exception {
-        jobAssigner.start();
+        this.jobAssigner.start();
+        this.pipelinePreparer.start();
         this.server.start();
         this.server.join();
     }
