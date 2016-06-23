@@ -4,6 +4,7 @@ import com.fiftyonred.mock_jedis.MockJedisPool;
 
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
+import net.hawkengine.model.EnvironmentVariable;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
@@ -206,6 +207,29 @@ public class JobDefinitionServiceTests {
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertTrue(actualResult.hasError());
         Assert.assertEquals(expectedObject, actualResultObject);
+        Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void update_withOtherChangesThanName_correctUpdate() {
+        //Arrange
+        JobDefinition expectedObject = this.getJobDefinitionAtIndex(this.randomStageIndex, this.randomJobIndex);
+        List<EnvironmentVariable> environmentVariables = new ArrayList<>();
+        EnvironmentVariable environmentVariable = new EnvironmentVariable();
+        EnvironmentVariable environmentVariable1 = new EnvironmentVariable();
+        environmentVariables.add(environmentVariable);
+        environmentVariables.add(environmentVariable1);
+        expectedObject.setEnvironmentVariables(environmentVariables);
+
+        //Act
+        ServiceResult actualResult = jobDefinitionService.update(expectedObject);
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+
+        //Assert
+        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(expectedObject, actualResultObject);
+        Assert.assertEquals(actualResultObject.getEnvironmentVariables(),environmentVariables);
         Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
     }
 

@@ -179,6 +179,9 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
      */
     private boolean checkForNameCollision(List<JobDefinition> jobDefinitions, JobDefinition jobDefinitionToAdd) {
         for (JobDefinition jobDefinition : jobDefinitions) {
+            if(jobDefinition.getId().equals(jobDefinitionToAdd.getId())){
+                continue;
+            }
             if (jobDefinition.getName().equals(jobDefinitionToAdd.getName())) {
                 return true;
             }
