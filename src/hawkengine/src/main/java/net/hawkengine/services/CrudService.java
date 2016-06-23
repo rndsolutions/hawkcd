@@ -71,16 +71,16 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
 
     @Override
     public ServiceResult delete(String id) {
-        T isDeleted = this.getRepository().delete(id);
+        T dbObject = this.getRepository().delete(id);
 
         ServiceResult result = new ServiceResult();
-//        if (isDeleted) {
-//            result = super.createServiceResult((T) result.getObject(), false, "deleted successfully");
-//        } else {
-//            result = super.createServiceResult((T) result.getObject(), true, "not found" );
-//        }
+        if (dbObject == null) {
+            result = super.createServiceResult((T) result.getObject(), true, "not found" );
+        } else {
+            result = super.createServiceResult((T) result.getObject(), false, "deleted successfully");
+        }
 
-        result.setObject(isDeleted);
+        result.setObject(dbObject);
 
         return result;
     }
