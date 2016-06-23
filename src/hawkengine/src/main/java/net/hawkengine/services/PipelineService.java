@@ -11,11 +11,13 @@ import net.hawkengine.model.Stage;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.Task;
 import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private IPipelineDefinitionService pipelineDefinitionService;
@@ -57,6 +59,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     public ServiceResult delete(String pipelineId) {
         return super.delete(pipelineId);
+    }
+
+    @Override
+    public ServiceResult getAllPipelinesInProgress() {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<Pipeline> pipelinesInProgress = pipelines
+                .stream()
+                .filter(p -> p.getStatus() == Status.IN_PROGRESS)
+                .collect(Collectors.toList());
+
+        result.setObject(pipelinesInProgress);
+
+        return result;
     }
 
     @Override

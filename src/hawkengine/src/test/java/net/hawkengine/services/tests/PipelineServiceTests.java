@@ -226,7 +226,6 @@ public class PipelineServiceTests {
         ServiceResult actualResult = this.mockedPipelineService.delete(pipelineToAdd.getId());
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertNull(actualResult.getObject());
     }
 
     @Test
@@ -234,6 +233,5 @@ public class PipelineServiceTests {
         ServiceResult actualResult = this.mockedPipelineService.delete("someInvalidId");
 
         Assert.assertTrue(actualResult.hasError());
-        Assert.assertNull(actualResult.getObject());
     }
 }
