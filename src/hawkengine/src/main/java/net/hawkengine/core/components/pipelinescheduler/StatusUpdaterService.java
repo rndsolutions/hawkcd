@@ -48,27 +48,21 @@ public class StatusUpdaterService extends Thread {
 
     public boolean updateAllStatuses(Object pipeline) {
         Pipeline pipelineToUpdate = null;
-        Stack stack = new Stack();
         Queue<Object> queue = new LinkedList<>();
-        stack.push(pipeline);
         queue.add(pipeline);
 
-        while (!stack.isEmpty()) {
-            Object node = stack.pop();
+        while (!queue.isEmpty()) {
             Object queueNode = queue.poll();
             if (queueNode.getClass() == Job.class) {
                 pipelineToUpdate = (Pipeline) pipeline;
                 this.updatePipelineStatus(pipelineToUpdate);
                 return true;
             }
-
             if (queueNode.getClass() == Pipeline.class) {
                 pipelineToUpdate = (Pipeline) queueNode;
-                stack.addAll(pipelineToUpdate.getStages());
                 queue.addAll(pipelineToUpdate.getStages());
             } else {
                 Stage stageNode = (Stage) queueNode;
-                stack.addAll(stageNode.getJobs());
                 queue.addAll(stageNode.getJobs());
                 this.updateStageStatusesInSequence(pipelineToUpdate.getStages());
             }
