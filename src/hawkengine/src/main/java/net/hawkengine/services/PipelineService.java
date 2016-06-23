@@ -2,12 +2,19 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.*;
+import net.hawkengine.model.Job;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.Stage;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.Task;
+import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
@@ -56,7 +63,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     public ServiceResult getAllUpdatedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()){
+        if (pipelines.isEmpty()) {
             return result;
         }
         pipelines.stream().filter(Pipeline::areMaterialsUpdated);
@@ -70,7 +77,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     public ServiceResult getAllPreparedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()){
+        if (pipelines.isEmpty()) {
             return result;
         }
         pipelines.stream().filter(Pipeline::isPrepared);
@@ -83,50 +90,48 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     private void addStagesToPipeline(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
-        int stagesCollectionSize = stageDefinitions.size();
 
         List<Stage> stages = new ArrayList<>();
-        for (int i = 0; i < stagesCollectionSize; i++){
+        for (StageDefinition stageDefinition : stageDefinitions) {
             Stage stage = new Stage();
             stage.setPipelineId(pipeline.getId());
-            stage.setStageDefinitionId(stageDefinitions.get(i).getId());
+            stage.setStageDefinitionId(stageDefinition.getId());
             stages.add(stage);
-            this.addJobsToPipeline(pipeline, stageDefinitions, stage);
+            this.addJobsToStage(stageDefinition, stage);
         }
+
         pipeline.setStages(stages);
     }
 
-    private void addJobsToPipeline(Pipeline pipeline, List<StageDefinition> stageDefinitions, Stage stage) {
-        for (StageDefinition stageDefinition : stageDefinitions) {
-            List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
-            int jobsCollectionSize = jobDefinitions.size();
-            List<Job> jobs = new ArrayList<>();
-            for (int i = 0; i < jobsCollectionSize; i++){
-                Job job = new Job();
-                job.setPipelineId(pipeline.getId());
-                job.setJobDefinitionId(jobDefinitions.get(i).getId());
-                job.setStageId(stage.getId());
-                jobs.add(job);
-                this.addTasksToPipeline(pipeline.getId(), stage.getId(), job, jobDefinitions);
-            }
-            stage.setJobs(jobs);
+    private void addJobsToStage(StageDefinition stageDefinition, Stage stage) {
+        List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
+
+        List<Job> jobs = new ArrayList<>();
+        for (JobDefinition jobDefinition : jobDefinitions) {
+            Job job = new Job();
+            job.setPipelineId(stage.getPipelineId());
+            job.setJobDefinitionId(jobDefinition.getId());
+            job.setStageId(stage.getId());
+            jobs.add(job);
+            this.addTasksToJob(jobDefinition, job);
         }
+
+        stage.setJobs(jobs);
     }
 
-    private void addTasksToPipeline(String pipelineId, String stageId, Job job, List<JobDefinition> jobDefinitions){
-        for (JobDefinition jobDefinition : jobDefinitions) {
-            List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
-            int taskCollectionSize = taskDefinitions.size();
-            List<Task> tasks = new ArrayList<>();
-            for (int i = 0; i < taskCollectionSize; i++){
-                Task task = new Task();
-                task.setJobId(job.getId());
-                task.setStageId(stageId);
-                task.setTaskDefinition(taskDefinitions.get(i));
-                task.setPipelineId(pipelineId);
-                tasks.add(task);
-            }
-            job.setTasks(tasks);
+    private void addTasksToJob(JobDefinition jobDefinition, Job job) {
+        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+
+        List<Task> tasks = new ArrayList<>();
+        for (TaskDefinition taskDefinition : taskDefinitions) {
+            Task task = new Task();
+            task.setJobId(job.getId());
+            task.setStageId(job.getStageId());
+            task.setPipelineId(job.getPipelineId());
+            task.setTaskDefinition(taskDefinition);
+            tasks.add(task);
         }
+
+        job.setTasks(tasks);
     }
 }
