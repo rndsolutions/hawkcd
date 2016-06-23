@@ -10,14 +10,12 @@ import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StatusUpdaterService extends Thread {
-    private IPipelineService pipelineService;
     private static final Logger logger = Logger.getLogger(StatusUpdaterService.class.getName());
+    private IPipelineService pipelineService;
 
     public StatusUpdaterService() {
         this.pipelineService = new PipelineService();
@@ -49,37 +47,43 @@ public class StatusUpdaterService extends Thread {
     }
 
     public boolean updateAllStatuses(Object pipeline) {
+        Pipeline pipelineToUpdate = null;
         Stack stack = new Stack();
+        Queue<Object> queue = new LinkedList<>();
         stack.push(pipeline);
+        queue.add(pipeline);
 
         while (!stack.isEmpty()) {
             Object node = stack.pop();
-            if (node.getClass() == Job.class) {
-                Pipeline pipelineToUpdate = (Pipeline) pipeline;
+            Object queueNode = queue.poll();
+            if (queueNode.getClass() == Job.class) {
+                pipelineToUpdate = (Pipeline) pipeline;
                 this.updatePipelineStatus(pipelineToUpdate);
                 return true;
             }
 
-            if (node.getClass() == Pipeline.class) {
-                Pipeline pipelineNode = (Pipeline) node;
-                stack.addAll(pipelineNode.getStages());
-                this.updateStageStatusesInSequence(pipelineNode.getStages());
+            if (queueNode.getClass() == Pipeline.class) {
+                pipelineToUpdate = (Pipeline) queueNode;
+                stack.addAll(pipelineToUpdate.getStages());
+                queue.addAll(pipelineToUpdate.getStages());
             } else {
-                Stage stageNode = (Stage) node;
+                Stage stageNode = (Stage) queueNode;
                 stack.addAll(stageNode.getJobs());
-                this.updateStageStatus(stageNode);
+                queue.addAll(stageNode.getJobs());
+                this.updateStageStatusesInSequence(pipelineToUpdate.getStages());
             }
         }
 
         return false;
     }
 
-    public void updateStageStatusesInSequence(List<Stage> stages){
+    public void updateStageStatusesInSequence(List<Stage> stages) {
         int stagesCollectionSize = stages.size();
         for (Stage currentStage : stages) {
+            this.updateStageStatus(currentStage);
             if (currentStage.getStatus() == StageStatus.NOT_RUN) {
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
-                continue;
+                break;
             } else if (currentStage.getStatus() == StageStatus.PASSED) {
                 continue;
             } else {
@@ -106,14 +110,14 @@ public class StatusUpdaterService extends Thread {
 
     public void updatePipelineStatus(Pipeline pipeline) {
         List<Stage> stages = pipeline.getStages();
-        List<Status> stageStatuses = new ArrayList<>();
+        List<StageStatus> stageStatuses = new ArrayList<>();
 
         for (Stage stage : stages) {
             StageStatus stageStatus = stage.getStatus();
-            //stageStatuses.add(stageStatus);
+            stageStatuses.add(stageStatus);
         }
 
-        if (stageStatuses.contains(Status.FAILED)) {
+        if (stageStatuses.contains(StageStatus.FAILED)) {
             pipeline.setStatus(Status.FAILED);
         } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
