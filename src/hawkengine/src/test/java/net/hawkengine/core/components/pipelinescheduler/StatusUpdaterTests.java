@@ -24,7 +24,7 @@ import java.util.List;
 
 public class StatusUpdaterTests {
     private IPipelineService mockedPipelineService;
-    private StatusUpdater mockedStatusUpdater;
+    private StatusUpdaterService mockedStatusUpdaterService;
     private IPipelineDefinitionService mockedPipelineDefinitionService;
     private PipelineDefinition expectedPipelineDefinition;
 
@@ -35,7 +35,7 @@ public class StatusUpdaterTests {
         IDbRepository mockedPipelineDefintionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipelineDefinitionService = new PipelineDefinitionService(mockedPipelineDefintionRepo);
         this.mockedPipelineService = new PipelineService(mockedPipelineRepo,this.mockedPipelineDefinitionService);
-        this.mockedStatusUpdater = new StatusUpdater(this.mockedPipelineService);
+        this.mockedStatusUpdaterService = new StatusUpdaterService(this.mockedPipelineService);
         this.expectedPipelineDefinition = new PipelineDefinition();
         this.mockedPipelineDefinitionService.add(this.expectedPipelineDefinition);
     }

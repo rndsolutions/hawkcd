@@ -2,8 +2,6 @@ package net.hawkengine.core.components.pipelinescheduler;
 
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.*;
-import net.hawkengine.model.enums.JobStatus;
-import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -33,12 +31,12 @@ public class PipelinePreparer extends Thread {
     @Override
     public synchronized void start() {
         super.start();
-        this.logger.info(String.format(LoggerMessages.WORKER_STARTED, "Pipeline Preparer"));
         this.run();
     }
 
     @Override
     public void run() {
+        this.logger.info(String.format(LoggerMessages.WORKER_STARTED, "Pipeline Preparer"));
         try {
             while (true) {
                 List<Pipeline> filteredPipelines = this.getAllUpdatedPipelines();
