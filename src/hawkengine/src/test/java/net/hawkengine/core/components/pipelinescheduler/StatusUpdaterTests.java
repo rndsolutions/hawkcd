@@ -107,18 +107,6 @@ public class StatusUpdaterTests {
     }
 
     @Test
-    public void getAllPipelinesInProgress_onePipelinePassed_twoObjects() {
-        List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
-        Pipeline firstExpectedPipeline = expectedPipelines.get(0);
-        firstExpectedPipeline.setStatus(Status.PASSED);
-        this.pipelineService.update(firstExpectedPipeline);
-
-        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllPipelinesInProgress().getObject();
-
-        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualPipelines.size());
-    }
-
-    @Test
     public void runStatusUpdater_interruptedThread_throwInterruptedException() {
         InterruptedException interrupt = new InterruptedException();
         try {
