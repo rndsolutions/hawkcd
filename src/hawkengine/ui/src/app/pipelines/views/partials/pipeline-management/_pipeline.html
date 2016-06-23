@@ -20,24 +20,24 @@
         </div>
         <div class="stages">
 
-            <span ng-repeat="stage in pipe.stages">
+            <span ng-repeat="stage in pipe.stageDefinitions">
           <span ng-if="stage.status=='Passed' && $index<9">
-<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.Name, executionID: pipe.ExecutionID, groupName: pipe.GroupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.ExecutionID, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
              </span>
             <span ng-if="stage.status=='Failed' && $index<9">
-              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.Name, executionID: pipe.ExecutionID, groupName: pipe.GroupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.ExecutionID, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.state == 'None' && $index<9">
-                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.Name, executionID: pipe.ExecutionID, groupName: pipe.GroupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.ExecutionID, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'Running' && $index<9">
-                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.Name, executionID: pipe.ExecutionID, groupName: pipe.GroupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.ExecutionID, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.State == 'Scheduled' && $index<9">
-                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.Name, executionID: pipe.ExecutionID, groupName: pipe.GroupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.ExecutionID, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             </span>
-            <span ng-if="pipe.stages.length > 10"> . . .</span>
+            <span ng-if="pipe.stageDefinitions.length > 10"> . . .</span>
 
         </div>
         <div class="controls">
@@ -52,7 +52,7 @@
                 <span class="glyphicon glyphicon-pause control"></span>
             </button>
 
-            <button class="btn btn-default" ng-click="pipes.stop(pipe.ID)">
+            <button class="btn btn-default" ng-click="pipes.stop(pipe.id)">
                 <span class="glyphicon glyphicon-stop control"></span>
             </button>
         </div>

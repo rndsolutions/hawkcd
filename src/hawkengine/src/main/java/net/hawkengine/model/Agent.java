@@ -1,21 +1,25 @@
 package net.hawkengine.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Agent extends DbEntry {
     private String name;
     private String hostName;
     private String ipAddress;
     private String rootPath;
-    private Object operatingSystem;
-    private List<String> resources;
+    private String operatingSystem;
+    private Set<String> resources;
     private Environment environment;
     private boolean isRunning;
     private boolean isEnabled;
     private boolean isConnected;
     private LocalDateTime lastReported;
+
+    public Agent() {
+        this.setResources(new HashSet<>());
+    }
 
     public String getName() {
         return this.name;
@@ -49,19 +53,19 @@ public class Agent extends DbEntry {
         this.rootPath = rootPath;
     }
 
-    public Object getOperatingSystem() {
+    public String getOperatingSystem() {
         return this.operatingSystem;
     }
 
-    public void setOperatingSystem(Object operatingSystem) {
+    public void setOperatingSystem(String operatingSystem) {
         this.operatingSystem = operatingSystem;
     }
 
-    public List<String> getResources() {
+    public Set<String> getResources() {
         return this.resources;
     }
 
-    public void setResources(List<String> resources) {
+    public void setResources(Set<String> resources) {
         this.resources = resources;
     }
 

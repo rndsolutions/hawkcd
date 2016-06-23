@@ -5,7 +5,7 @@
       <tr>
         <th> # </th>
         <th> Stage </th>
-        <th> Trigger Type </th>
+        <th> Triggered Manually </th>
         <th> Jobs </th>
         <th> Controls </th>
       </tr>
@@ -13,14 +13,14 @@
       <tbody>
 
       <!--ng-repeat-->
-      <tr ng-repeat="stage in pipeConfig.allStages">
+      <tr ng-repeat="stage in pipeConfig.pipeline.stageDefinitions">
         <td> {{$index+1}} </td>
-        <td> {{stage.Name}} </td>
-        <td> {{stage.StageType}} </td>
-        <td> {{stage.Jobs.length}} </td>
+        <td> {{stage.name}} </td>
+        <td> {{stage.isTriggeredManually}} </td>
+        <td> {{stage.jobDefinitions.length}} </td>
         <td>
           <button class="btn red" data-target="#removeStage" data-toggle="modal" 
-                  ng-click="pipeConfig.stageDeleteButton = true;pipeConfig.getStage(stage.Name)" ng-if="pipeConfig.allStages.length > 1" ng-class="{'disabled': pipeConfig.stageDeleteButton}">Delete</button>
+                  ng-click="pipeConfig.stageDeleteButton = true;pipeConfig.getStage(stage.name)" ng-if="pipeConfig.pipeline.stageDefinitions.length > 1" ng-class="{'disabled': pipeConfig.stageDeleteButton}">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->

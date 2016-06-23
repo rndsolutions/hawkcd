@@ -41,7 +41,8 @@ angular
                 },
                 PipelineGroupService: {
                     getAll: function (pipelineGroups) {
-                        viewModelUpdater.getAllPipelineGroups(pipelineGroups);
+                        //viewModelUpdater.getAllPipelineGroups(pipelineGroups);
+                        //viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
                     },
                     getAllPipelineGroupDTOs: function (pipelineGroups) {
                         viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
@@ -82,7 +83,7 @@ angular
                 },
                 StageDefinitionService: {
                     getAll:function (stages) {
-
+                        viewModelUpdater.getAllStageDefinitions(stages);
                     },
                     getById: function (stage) {
 

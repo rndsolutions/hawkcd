@@ -42,13 +42,13 @@ angular
         };
 
         viewModelUpdater.getAllPipelineDefinitions = function (pipelineDefinitions){
-            viewModel.allPipelineDefinitions = pipelineDefinitions;
+            viewModel.allPipelines = pipelineDefinitions;
             toaster.pop('success', "Notification", "Pipelines updated!");
         };
 
         viewModelUpdater.updatePipelineGroupDTOs = function (pipelineGroupDTOs) {
             //viewModel.allPipelineDefinitions = pipelineGroupDTOs;
-            viewModel.allPipelines = pipelineGroupDTOs;
+            viewModel.allPipelineGroups = pipelineGroupDTOs;
             toaster.pop('success', "Notification", "Pipelines updated!");
         };
 

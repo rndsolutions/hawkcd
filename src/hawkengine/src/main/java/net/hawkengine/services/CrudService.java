@@ -7,25 +7,8 @@ import net.hawkengine.services.interfaces.ICrudService;
 
 import java.util.List;
 
-public abstract class CrudService<T extends DbEntry> implements ICrudService<T> {
+public abstract class CrudService<T extends DbEntry> extends Service<T> implements ICrudService<T> {
     private IDbRepository<T> repository;
-    private String objectType;
-
-    public IDbRepository<T> getRepository() {
-        return this.repository;
-    }
-
-    public void setRepository(IDbRepository<T> repository) {
-        this.repository = repository;
-    }
-
-    public String getObjectType() {
-        return this.objectType;
-    }
-
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
-    }
 
     @Override
     public ServiceResult getById(String id) {
@@ -33,14 +16,10 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
 
         ServiceResult result = new ServiceResult();
         if (dbObject != null) {
-            result.setError(false);
-            result.setMessage(this.getObjectType() + " " + id + " retrieved successfully.");
+            result = super.createServiceResult(dbObject, false, "retrieved successfully");
         } else {
-            result.setError(true);
-            result.setMessage(this.getObjectType() + " " + id + " not found.");
+            result = super.createServiceResult(dbObject, true, "not found");
         }
-
-        result.setObject(dbObject);
 
         return result;
     }
@@ -49,10 +28,7 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
     public ServiceResult getAll() {
         List<T> dbObjects = this.getRepository().getAll();
 
-        ServiceResult result = new ServiceResult();
-        result.setError(false);
-        result.setMessage(this.getObjectType() + "s retrieved successfully.");
-        result.setObject(dbObjects);
+        ServiceResult result = super.createServiceResultArray(dbObjects, false, "retrieved successfully");
 
         return result;
     }
@@ -63,14 +39,10 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
 
         ServiceResult result = new ServiceResult();
         if (dbObject != null) {
-            result.setError(false);
-            result.setMessage(this.getObjectType() + " " + object.getId() + " created successfully.");
+            result = super.createServiceResult(dbObject, false, "created successfully");
         } else {
-            result.setError(true);
-            result.setMessage(this.getObjectType() + " " + object.getId() + " already exists.");
+            result = super.createServiceResult(dbObject, true, "already exists");
         }
-
-        result.setObject(dbObject);
 
         return result;
     }
@@ -81,14 +53,10 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
 
         ServiceResult result = new ServiceResult();
         if (dbObject != null) {
-            result.setError(false);
-            result.setMessage(this.getObjectType() + " " + object.getId() + " updated successfully.");
+            result = super.createServiceResult(dbObject, false, "updated successfully");
         } else {
-            result.setError(true);
-            result.setMessage(this.getObjectType() + " " + object.getId() + " not found.");
+            result = super.createServiceResult(dbObject, true, "not found");
         }
-
-        result.setObject(dbObject);
 
         return result;
     }
@@ -99,11 +67,9 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
 
         ServiceResult result = new ServiceResult();
         if (isDeleted) {
-            result.setError(false);
-            result.setMessage(this.getObjectType() + " deleted successfully.");
+            result = super.createServiceResult((T) result.getObject(), false, "deleted successfully");
         } else {
-            result.setError(true);
-            result.setMessage(this.getObjectType() + " not found.");
+            result = super.createServiceResult((T) result.getObject(), true, "not found" );
         }
 
         result.setObject(isDeleted);
@@ -111,4 +77,11 @@ public abstract class CrudService<T extends DbEntry> implements ICrudService<T> 
         return result;
     }
 
+    public IDbRepository<T> getRepository() {
+        return this.repository;
+    }
+
+    public void setRepository(IDbRepository<T> repository) {
+        this.repository = repository;
+    }
 }

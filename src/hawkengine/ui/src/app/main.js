@@ -152,6 +152,8 @@ angular
                 }
 
                 //pipeStatsService.getAgentById();
+                pipeConfigService.getAllStageDefinitions();
+                pipeConfigService.getAllPipelineDefinitions();
                 pipeConfigService.getAllPipelineGroupDTOs();
                 agentService.getAllAgents();
                 adminGroupService.getAllPipelineGroups();

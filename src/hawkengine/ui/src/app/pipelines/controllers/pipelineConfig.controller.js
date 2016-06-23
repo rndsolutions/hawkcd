@@ -26,15 +26,20 @@ angular
 
         vm.allJobs = [];
         vm.allTasks = [];
-        vm.allStages = viewModel.allPipelines.stages;
+        vm.allStages = viewModel.allStages;
         vm.allMaterials = {};
         vm.allPipelineVars = {};
         vm.allStageVars = {};
         vm.allJobVars = {};
 
-        $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
-            vm.allMaterials = viewModel.allPipelines.materials;
-            console.log(vm.allPipelines.materials);
+        // $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
+        //     vm.allMaterials = viewModel.allPipelines.materials;
+        //     console.log(vm.allPipelines.materials);
+        // });
+
+        $scope.$watch(function() { return viewModel.allStages }, function(newVal, oldVal) {
+            vm.allStages = viewModel.allStages;
+            console.log(vm.allStages);
         });
 
         vm.stageDeleteButton = false;
@@ -100,7 +105,12 @@ angular
         };
 
         vm.getPipelineForConfig = function(pipeName) {
-            vm.pipeline = res;
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.name == pipeName) {
+                    vm.pipeline = array[index];
+                }
+            });
+            //vm.pipeline = pipeName;
 
             vm.newStage = {};
             vm.newMaterials = {};
@@ -110,6 +120,24 @@ angular
             vm.updatedPipeline.autoScheduling = vm.pipeline.autoScheduling;
 
             vm.currentPipeline = pipeName;
+        };
+
+        vm.getStage = function(stage) {
+            viewModel.allStages.forEach(function (currentStage, index, array) {
+                if (currentStage.name == stage.name) {
+                    vm.stage = array[index];
+                }
+            });
+            vm.stageDeleteButton = false;
+            //vm.stage = res;
+
+            vm.newJob = {};
+            vm.newStageVariable = {};
+
+            vm.updatedStage.name = vm.stage.name;
+            vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
+
+            vm.currentStage = stage.name;
         };
 
         vm.createPipelineDefinition = function(pipeline) {

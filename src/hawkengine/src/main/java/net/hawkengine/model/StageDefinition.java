@@ -9,6 +9,7 @@ public class StageDefinition extends DbEntry {
     private List<EnvironmentVariable> environmentVariables;
     private List<JobDefinition> jobDefinitions;
     private boolean isTriggeredManually;
+    private String status;
 
     public StageDefinition() {
         this.setEnvironmentVariables(new ArrayList<>());
@@ -53,5 +54,13 @@ public class StageDefinition extends DbEntry {
 
     public void setTriggeredManually(boolean triggeredManually) {
         this.isTriggeredManually = triggeredManually;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

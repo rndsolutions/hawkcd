@@ -15,6 +15,8 @@ angular
 
         vm.allDefinitionsAndRuns = [];
 
+        vm.allPipelineGroups = [];
+
         // vm.allDefinitionsAndRuns = viewModel.allPipelineDefinitions;
 
         // $scope.$watch(function() { return viewModel.allPipelineDefinitions }, function(newVal, oldVal) {
@@ -27,6 +29,11 @@ angular
         $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
             console.log(vm.allPipelines);
+        });
+
+        $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
+            vm.allPipelineGroups = viewModel.allPipelineGroups;
+            console.log(vm.allPipelineGroups);
         });
 
         vm.all = [];
@@ -107,7 +114,7 @@ angular
         //endregion
 
         vm.getGroupName = function (input) {
-            vm.groupName = input.groupName;
+            vm.groupName = input.name;
             vm.groupId = input.id;
         };
         vm.getPipeName = function (input) {

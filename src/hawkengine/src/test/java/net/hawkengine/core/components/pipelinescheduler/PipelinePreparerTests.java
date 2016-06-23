@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unchecked", "PackageVisibleField", "InstanceMethodNamingConvention"})
-public class PipelinePreparerTest {
+public class PipelinePreparerTests {
     private IPipelineService mockedPipelineService;
     private IPipelineDefinitionService mockedPipelineDefinitionService;
     @SuppressWarnings("InstanceVariableOfConcreteClass")
@@ -29,7 +29,7 @@ public class PipelinePreparerTest {
 
     @Before
     public void setUp() {
-        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineService");
+        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelinePreparer");
         IDbRepository mockedPipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
         IDbRepository mockedPipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipelineService = new PipelineService(mockedPipelineRepo);
@@ -264,6 +264,17 @@ public class PipelinePreparerTest {
 //            }
 //        }
 //    }
+
+    @Test
+    public void runPipelinePreparer_interruptedThred_throwInterruptedException() {
+        InterruptedException interrupt = new InterruptedException();
+        try {
+            Thread.currentThread().interrupt();
+            this.mockedPipelinePreparer.start();
+        } catch (IllegalStateException e) {
+            Assert.assertEquals(interrupt, e.getCause());
+        }
+    }
 
     private List<Pipeline> injectDataForTestingPreparePipeline(PipelineDefinition pipelineDefinition) {
         //Assert
