@@ -8,4 +8,4 @@ The Hawkengine Server intends to be a one stop solution for managing Continuous 
 
 ## License
 
-GoCD is an open source project, sponsored by <a href="http://rnd-solutions.net/">R&D Solutions Ltd.</a> under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
+Hawkengine is an open source project, sponsored by <a href="http://rnd-solutions.net/">R&D Solutions Ltd.</a> under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
