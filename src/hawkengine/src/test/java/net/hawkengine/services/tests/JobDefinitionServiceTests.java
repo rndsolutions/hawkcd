@@ -17,13 +17,18 @@ import net.hawkengine.services.interfaces.IStageDefinitionService;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import redis.clients.jedis.JedisPoolConfig;
+
+import static org.mockito.Mockito.when;
 
 public class JobDefinitionServiceTests {
 
@@ -40,6 +45,8 @@ public class JobDefinitionServiceTests {
     private String notFoundMessage = "JobDefinition not found.";
     private String existingNameErrorMessage = "JobDefinition with the same name exists.";
     private String retrievalSuccessMessage = "JobDefinitions retrieved successfully.";
+    private String deletionSuccessMessage = "JobDefinition deleted successfully.";
+    private String notDeletedFailureMessage = "not deleted successfully";
     private ServiceResult count;
 
     @Before
@@ -80,15 +87,18 @@ public class JobDefinitionServiceTests {
         pipelineDefinitionService.add(pipelineDefinition);
     }
 
+
     @Test
     public void getById_validId_correctObject() {
         //Arrange
         StageDefinition expectedStageDefinition = this.getStageDefinitionAtIndex(this.randomStageIndex);
         JobDefinition expectedJobDefinition = this.getJobDefinitionAtIndex(this.randomStageIndex, this.randomJobIndex);
         String successMessage = "JobDefinition " + expectedJobDefinition.getId() + " retrieved successfully.";
+
         //Act
         ServiceResult actualResult = jobDefinitionService.getById(expectedJobDefinition.getId());
         JobDefinition actualJobDefinition = (JobDefinition) actualResult.getObject();
+
         //Assert
         Assert.assertNotNull(actualResult);
         Assert.assertEquals(expectedJobDefinition.getId(), actualJobDefinition.getId());
@@ -208,12 +218,52 @@ public class JobDefinitionServiceTests {
         //Act
         ServiceResult actualResult = jobDefinitionService.delete(expectedObject.getId());
         JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
-        String successMessage = "JobDefinition deleted successfully.";
 
         //Assert
         Assert.assertNull(actualResultObject);
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(successMessage, actualResult.getMessage());
+        Assert.assertEquals(this.deletionSuccessMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void delete_invalidObject_returnsTheObject(){
+        //Arrange
+        JobDefinitionService mockedJobDefinitionService = Mockito.mock(JobDefinitionService.class);
+        JobDefinition jobDefinitionFromDB = this.getJobDefinitionAtIndex(this.randomStageIndex,this.randomJobIndex);
+        JobDefinition jobDefinitionToReturn = new JobDefinition();
+        jobDefinitionToReturn.setStageDefinitionId(jobDefinitionFromDB.getStageDefinitionId());
+        jobDefinitionToReturn.setPipelineDefinitionId(jobDefinitionFromDB.getPipelineDefinitionId());
+        jobDefinitionToReturn.setName(jobDefinitionFromDB.getName());
+        ServiceResult mockedResult = new ServiceResult();
+        mockedResult.setError(true);
+        mockedResult.setMessage(this.notDeletedFailureMessage);
+        mockedResult.setObject(jobDefinitionToReturn);
+        when(mockedJobDefinitionService.delete("id")).thenReturn(mockedResult);
+
+        //Act
+        ServiceResult actualResult = mockedJobDefinitionService.delete("id");
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(jobDefinitionToReturn.getId(),actualResultObject.getId());
+        Assert.assertEquals(jobDefinitionToReturn.getStageDefinitionId(),actualResultObject.getStageDefinitionId());
+        Assert.assertEquals(jobDefinitionToReturn.getPipelineDefinitionId(),actualResultObject.getPipelineDefinitionId());
+        Assert.assertEquals(this.notDeletedFailureMessage,actualResult.getMessage());
+    }
+
+    @Test
+    public void delete_invalidId_returnsNullObjectAndProperErrorMessage(){
+        //Arrange
+        String invalidId = "invalidID";
+
+        //Act
+        ServiceResult actualResult = this.jobDefinitionService.delete(invalidId);
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+        Assert.assertEquals("JobDefinition does not exists.",actualResult.getMessage());
     }
 
     @Test
@@ -257,5 +307,4 @@ public class JobDefinitionServiceTests {
     private StageDefinition getStageDefinitionAtIndex(int stageIndex) {
         return pipelineDefinition.getStageDefinitions().get(stageIndex);
     }
-
 }

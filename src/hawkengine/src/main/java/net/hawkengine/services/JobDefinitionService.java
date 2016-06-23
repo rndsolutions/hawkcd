@@ -1,7 +1,6 @@
 package net.hawkengine.services;
 
 import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
@@ -111,6 +110,10 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     public ServiceResult delete(String jobDefinitionId) {
         boolean isRemoved = false;
         JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinitionId).getObject();
+        if (jobDefinitionToDelete == null) {
+            return super.createServiceResult(jobDefinitionToDelete, true, "does not exists");
+        }
+
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService
                 .getById(jobDefinitionToDelete.getStageDefinitionId())
                 .getObject();
@@ -164,7 +167,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
      * provided List.
      */
     private void extractJobDefinitionsFromStageDefinitions(List<StageDefinition> stageDefinitions, List<JobDefinition> jobDefinitions) {
-        for(StageDefinition stageDefinition : stageDefinitions) {
+        for (StageDefinition stageDefinition : stageDefinitions) {
             List<JobDefinition> jobDefinitionsList = stageDefinition.getJobDefinitions();
             jobDefinitions.addAll(jobDefinitionsList);
         }
@@ -185,9 +188,10 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     /**
-     * Method return JobDefinition, accepts StageDefinition and JobDefinition Id, filters all JobDefinitions
-     * in the provided stage. Returns null if no JobDefinition with provided id is found.
-     * */
+     * Method return JobDefinition, accepts StageDefinition and JobDefinition Id, filters all
+     * JobDefinitions in the provided stage. Returns null if no JobDefinition with provided id is
+     * found.
+     */
     private JobDefinition extractJobDefinitionsFromStageDefinition(StageDefinition stageDefinition, String jobDefinitionId) {
         JobDefinition result = stageDefinition
                 .getJobDefinitions()
