@@ -2,7 +2,11 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.*;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
 import java.util.List;
@@ -31,17 +35,15 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
-        for (StageDefinition stageDefinition: stageDefinitions) {
+        for (StageDefinition stageDefinition : stageDefinitions) {
             stageDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
 
             List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
-
-            for (JobDefinition jobDefinition: jobDefinitions) {
+            for (JobDefinition jobDefinition : jobDefinitions) {
                 jobDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
                 jobDefinition.setStageDefinitionId(stageDefinition.getId());
 
                 List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
-
                 for (TaskDefinition taskDefinition : taskDefinitions) {
                     taskDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
                     taskDefinition.setStageDefinitionId(stageDefinition.getId());
@@ -49,6 +51,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
                 }
             }
         }
+
         return super.add(pipelineDefinition);
     }
 
