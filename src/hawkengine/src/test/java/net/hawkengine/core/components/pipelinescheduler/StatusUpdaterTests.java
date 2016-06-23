@@ -23,34 +23,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatusUpdaterTests {
-    private IPipelineService mockedPipelineService;
-    private StatusUpdaterService mockedStatusUpdaterService;
-    private IPipelineDefinitionService mockedPipelineDefinitionService;
+    private IPipelineService pipelineService;
+    private StatusUpdaterService statusUpdaterService;
+    private IPipelineDefinitionService pipelineDefinitionService;
     private PipelineDefinition expectedPipelineDefinition;
 
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testStatusUpdater");
-        IDbRepository mockedPipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
-        IDbRepository mockedPipelineDefintionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.mockedPipelineDefinitionService = new PipelineDefinitionService(mockedPipelineDefintionRepo);
-        this.mockedPipelineService = new PipelineService(mockedPipelineRepo,this.mockedPipelineDefinitionService);
-        this.mockedStatusUpdaterService = new StatusUpdaterService(this.mockedPipelineService);
+        IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
+        IDbRepository pipelineDefintionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefintionRepo);
+        this.pipelineService = new PipelineService(pipelineRepo,this.pipelineDefinitionService);
+        this.statusUpdaterService = new StatusUpdaterService(this.pipelineService);
         this.expectedPipelineDefinition = new PipelineDefinition();
-        this.mockedPipelineDefinitionService.add(this.expectedPipelineDefinition);
+        this.pipelineDefinitionService.add(this.expectedPipelineDefinition);
     }
 
     @Test
     public void statusUpdater_failedJob_failedPipeline() {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         for (Pipeline expectedPipelineObject : expectedPipelines) {
-            this.mockedStatusUpdaterService.updateAllStatuses(expectedPipelineObject);
+            this.statusUpdaterService.updateAllStatuses(expectedPipelineObject);
             List<Stage> stages = expectedPipelineObject.getStages();
             for (Stage stage : stages) {
                 List<Job> jobs = stage.getJobs();
                 jobs.stream().filter(job -> job.getStatus() == JobStatus.FAILED).forEach(job -> {
                     String pipelineId = expectedPipelineObject.getId();
-                    Pipeline actualPipeline = (Pipeline) this.mockedPipelineService.getById(pipelineId).getObject();
+                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
                     Assert.assertNotEquals(Status.FAILED, actualPipeline.getStatus());
                 });
             }
@@ -62,7 +62,7 @@ public class StatusUpdaterTests {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         int passedJobsIterator = 0;
         for (Pipeline expectedPipelineObject : expectedPipelines) {
-            this.mockedStatusUpdaterService.updateAllStatuses(expectedPipelineObject);
+            this.statusUpdaterService.updateAllStatuses(expectedPipelineObject);
             List<Stage> stages = expectedPipelineObject.getStages();
             for (Stage stage : stages) {
                 List<Job> jobs = stage.getJobs();
@@ -73,9 +73,9 @@ public class StatusUpdaterTests {
                     }
                 }
                 if (passedJobsIterator == jobs.size()) {
-                    this.mockedPipelineService.update(expectedPipelineObject);
+                    this.pipelineService.update(expectedPipelineObject);
                     String pipelineId = expectedPipelineObject.getId();
-                    Pipeline actualPipeline = (Pipeline) this.mockedPipelineService.getById(pipelineId).getObject();
+                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
                     Assert.assertEquals(Status.PASSED, actualPipeline.getStatus());
                 }
             }
@@ -87,7 +87,7 @@ public class StatusUpdaterTests {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         int failedJobsIterator = 0;
         for (Pipeline expectedPipelineObject : expectedPipelines) {
-            this.mockedStatusUpdaterService.updateAllStatuses(expectedPipelineObject);
+            this.statusUpdaterService.updateAllStatuses(expectedPipelineObject);
             List<Stage> stages = expectedPipelineObject.getStages();
             for (Stage stage : stages) {
                 List<Job> jobs = stage.getJobs();
@@ -99,7 +99,7 @@ public class StatusUpdaterTests {
                 }
                 if (failedJobsIterator == 0) {
                     String pipelineId = expectedPipelineObject.getId();
-                    Pipeline actualPipeline = (Pipeline) this.mockedPipelineService.getById(pipelineId).getObject();
+                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
                     Assert.assertEquals(expectedPipelineObject.getStatus(), actualPipeline.getStatus());
                 }
             }
@@ -111,9 +111,9 @@ public class StatusUpdaterTests {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         Pipeline firstExpectedPipeline = expectedPipelines.get(0);
         firstExpectedPipeline.setStatus(Status.PASSED);
-        this.mockedPipelineService.update(firstExpectedPipeline);
+        this.pipelineService.update(firstExpectedPipeline);
 
-        List<Pipeline> actualPipelines = this.mockedStatusUpdaterService.getAllPipelinesInProgress();
+        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllPipelinesInProgress().getObject();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualPipelines.size());
     }
@@ -123,7 +123,7 @@ public class StatusUpdaterTests {
         InterruptedException interrupt = new InterruptedException();
         try {
             Thread.currentThread().interrupt();
-            this.mockedStatusUpdaterService.start();
+            this.statusUpdaterService.start();
         } catch (IllegalStateException e) {
             Assert.assertEquals(interrupt, e.getCause());
         }
@@ -152,7 +152,7 @@ public class StatusUpdaterTests {
         stage.setJobs(jobsToAdd);
         firstPipeline.setStages(stagesToAdd);
         pipelines.add(firstPipeline);
-        this.mockedPipelineService.add(firstPipeline);
+        this.pipelineService.add(firstPipeline);
 
         Pipeline secondPipeline = new Pipeline();
         secondPipeline.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
@@ -170,7 +170,7 @@ public class StatusUpdaterTests {
         stage.setJobs(jobsToAdd);
         secondPipeline.setStages(stagesToAdd);
         pipelines.add(secondPipeline);
-        this.mockedPipelineService.add(secondPipeline);
+        this.pipelineService.add(secondPipeline);
 
         Pipeline thirdPipeline = new Pipeline();
         thirdPipeline.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
@@ -188,7 +188,7 @@ public class StatusUpdaterTests {
         stage.setJobs(jobsToAdd);
         thirdPipeline.setStages(stagesToAdd);
         pipelines.add(thirdPipeline);
-        this.mockedPipelineService.add(thirdPipeline);
+        this.pipelineService.add(thirdPipeline);
 
         return pipelines;
     }

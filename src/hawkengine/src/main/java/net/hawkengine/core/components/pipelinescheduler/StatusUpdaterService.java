@@ -26,27 +26,14 @@ public class StatusUpdaterService extends Thread {
     }
 
     public void updateStatuses() {
-        List<Pipeline> pipelinesInProgress = this.getAllPipelinesInProgress();
+        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelinesInProgress) {
             this.updateAllStatuses(pipeline);
             this.pipelineService.update(pipeline);
         }
     }
 
-    public List<Pipeline> getAllPipelinesInProgress() {
-        List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService
-                .getAll()
-                .getObject();
-
-        List<Pipeline> pipelinesInProgress = allPipelines
-                .stream()
-                .filter(p -> p.getStatus() == Status.IN_PROGRESS)
-                .collect(Collectors.toList());
-
-        return pipelinesInProgress;
-    }
-
-    public boolean updateAllStatuses(Object pipeline) {
+    public boolean updateAllStatuses(Pipeline pipeline) {
         Pipeline pipelineToUpdate = null;
         Queue<Object> queue = new LinkedList<>();
         queue.add(pipeline);
@@ -54,10 +41,11 @@ public class StatusUpdaterService extends Thread {
         while (!queue.isEmpty()) {
             Object queueNode = queue.poll();
             if (queueNode.getClass() == Job.class) {
-                pipelineToUpdate = (Pipeline) pipeline;
+                pipelineToUpdate = pipeline;
                 this.updatePipelineStatus(pipelineToUpdate);
                 return true;
             }
+
             if (queueNode.getClass() == Pipeline.class) {
                 pipelineToUpdate = (Pipeline) queueNode;
                 queue.addAll(pipelineToUpdate.getStages());
@@ -72,7 +60,6 @@ public class StatusUpdaterService extends Thread {
     }
 
     public void updateStageStatusesInSequence(List<Stage> stages) {
-        int stagesCollectionSize = stages.size();
         for (Stage currentStage : stages) {
             this.updateStageStatus(currentStage);
             if (currentStage.getStatus() == StageStatus.NOT_RUN) {
