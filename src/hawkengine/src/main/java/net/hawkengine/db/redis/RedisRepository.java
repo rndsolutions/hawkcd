@@ -101,15 +101,14 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public boolean delete(String id) {
-        boolean result = false;
+    public T delete(String id) {
+        T result = null;
         try (Jedis jedis = this.jedisPool.getResource()) {
-            T existingObject = this.getById(id);
-            if (existingObject != null) {
+            result= this.getById(id);
+            if (result != null) {
                 String entryKey = String.format("%s:%s", this.entryNamespace, id);
                 jedis.del(entryKey);
                 jedis.srem(this.idNamespace, id);
-                result = true;
             }
         }
 
