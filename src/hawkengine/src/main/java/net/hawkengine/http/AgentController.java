@@ -1,16 +1,20 @@
 package net.hawkengine.http;
-
+import com.google.gson.Gson;
+import net.hawkengine.core.utilities.SchemaValidator;
+import net.hawkengine.model.Agent;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.AgentService;
-
+import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 
 @Path("/agents")
 @Consumes("application/json")
@@ -18,25 +22,81 @@ import javax.ws.rs.core.Response;
 public class AgentController {
     private AgentService agentService;
     private ServiceResult serviceResult;
+    private SchemaValidator schemaValidator;
+    private Gson jsonBuilder;
 
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String sayPlainTextHello() {
-        return "Hello, Friend!";
+    public AgentController(){
+        agentService = new AgentService();
+        serviceResult = new ServiceResult();
+        schemaValidator = new SchemaValidator();
+        jsonBuilder = new Gson();
     }
 
-
-    /*
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/agents/{agentId}")
-    public Response getById(@PathParam("agentId") String id) {
-        serviceResult = agentService.getById(id);
-        if (serviceResult.hasError()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(serviceResult.getObject(), serviceResult.getMessage()).build();
+    public Response getAllAgents(){
+        this.serviceResult = this.agentService.getAll();
+        List<String> agentList =  (List<String>)this.serviceResult.getObject();
+        Object result = jsonBuilder.toJson(agentList);
+        return Response.ok().entity(result).build();
     }
-    */
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{agentId}")
+    public Response getById(@PathParam("agentId") String id) {
+        this.serviceResult = this.agentService.getById(id);
+        boolean hasError = this.serviceResult.hasError();
+        if (hasError) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(this.serviceResult.getMessage())
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+        return Response.ok().entity(this.serviceResult.getObject()).build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addAgent(Agent agent){
+        String result = schemaValidator.validate(agent);
+        if (result.equals("OK")){
+            this.serviceResult = this.agentService.add(agent);
+            return Response.ok().entity(agent).build();
+        }else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(result)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateAgent(Agent agent){
+        String result = schemaValidator.validate(agent);
+        if (result.equals("OK")){
+            serviceResult = agentService.update(agent);
+            return Response.ok().entity(agent).build();
+        }else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(result)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteAgent(@PathParam("agentId") String agentId){
+        this.serviceResult = agentService.delete(agentId);
+        boolean hasError = this.serviceResult.hasError();
+        if (hasError) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(this.serviceResult.getMessage())
+                    .build();
+        } else {
+            return Response.ok().build();
+        }
+    }
 }

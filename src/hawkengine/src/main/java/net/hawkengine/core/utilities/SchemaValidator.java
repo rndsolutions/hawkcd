@@ -331,7 +331,7 @@ public class SchemaValidator {
                 return this.message = "ERROR: AGENT NAME IS NULL.";
             }
 
-            if (!this.isValidRegEx(agentName, NAME_PATTERN) == false) {
+            if (!this.isValidRegEx(agentName, NAME_PATTERN)) {
                 return this.message = "ERROR: AGENT NAME IS INVALID.";
             }
 
