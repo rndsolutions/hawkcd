@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelineConfigController', function($state, $interval, $scope, authDataService, viewModel) {
+    .controller('PipelineConfigController', function($state, $interval, $scope, authDataService, viewModel, pipeConfigService) {
         var vm = this;
         vm.toggleLogo = 1;
         vm.materialType = "git";
@@ -24,7 +24,8 @@ angular
         vm.materials = {};
         vm.newMaterial = {};
 
-        vm.allJobs = [];
+        vm.allPipelines = [];
+        vm.allJobs = viewModel.allJobs;
         vm.allTasks = [];
         vm.allStages = viewModel.allStages;
         vm.allMaterials = {};
@@ -32,14 +33,39 @@ angular
         vm.allStageVars = {};
         vm.allJobVars = {};
 
+        vm.pipelineIndex = {};
+        vm.stageIndex = {};
+        vm.jobIndex = {};
+
         // $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
         //     vm.allMaterials = viewModel.allPipelines.materials;
         //     console.log(vm.allPipelines.materials);
         // });
 
-        $scope.$watch(function() { return viewModel.allStages }, function(newVal, oldVal) {
+        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+            vm.allPipelines = viewModel.allPipelines;
+            console.log(vm.allPipelines);
+        });
+
+        $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
             vm.allStages = viewModel.allStages;
+            viewModel.allStages.forEach(function (currentStage, index, array) {
+                if (currentStage.name == vm.stage.name) {
+                    vm.stage = array[index];
+                }
+            });
             console.log(vm.allStages);
+        });
+
+        $scope.$watch(function () {return viewModel.allJobs}, function (newVal, oldVal) {
+            viewModel.allJobs.forEach(function (currentJob, index, array) {
+                if (currentJob.name == vm.job.name) {
+                    vm.job = array[index];
+                }
+            });
+            vm.allJobs = viewModel.allJobs;
+            
+            console.log(vm.allJobs);
         });
 
         vm.stageDeleteButton = false;
@@ -64,34 +90,34 @@ angular
         vm.newPipelineVar = {};
 
         //region select manipulation
-        vm.isExpanded = function(stageName) {
+        vm.isExpanded = function (stageName) {
             return stageName == vm.currentStage;
         };
 
-        vm.isPipelineSelected = function() {
+        vm.isPipelineSelected = function () {
             return $state.params.stageName == undefined && $state.params.jobName == undefined;
         };
 
-        vm.isStageSelected = function(stageName) {
+        vm.isStageSelected = function (stageName) {
             return $state.params.stageName == stageName && $state.params.jobName == undefined;
         };
 
-        vm.isJobSelected = function(jobName) {
+        vm.isJobSelected = function (jobName) {
             return $state.params.jobName == jobName && $state.params.stageName != undefined;
         };
         //endregion
 
-        vm.setSpecific = function() {
+        vm.setSpecific = function () {
             vm.specificVersion = true;
             vm.latestVersion = false;
         }
 
-        vm.setLatest = function() {
+        vm.setLatest = function () {
             vm.latestVersion = true;
             vm.specificVersion = false;
         }
 
-        vm.close = function() {
+        vm.close = function () {
             vm.newMaterial = {};
             vm.newTask = {};
             vm.newStage = {};
@@ -104,10 +130,11 @@ angular
             vm.newJobVar = {};
         };
 
-        vm.getPipelineForConfig = function(pipeName) {
+        vm.getPipelineForConfig = function (pipeName) {
             viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
                 if (currentPipeline.name == pipeName) {
                     vm.pipeline = array[index];
+                    vm.pipelineIndex = index;
                 }
             });
             //vm.pipeline = pipeName;
@@ -122,10 +149,11 @@ angular
             vm.currentPipeline = pipeName;
         };
 
-        vm.getStage = function(stage) {
-            viewModel.allStages.forEach(function (currentStage, index, array) {
+        vm.getStage = function (stage) {
+            viewModel.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function (currentStage, index, array) {
                 if (currentStage.name == stage.name) {
                     vm.stage = array[index];
+                    vm.stageIndex = index;
                 }
             });
             vm.stageDeleteButton = false;
@@ -138,6 +166,162 @@ angular
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
             vm.currentStage = stage.name;
+        };
+
+        vm.addStage = function (newStage) {
+            if (newStage.jobDefinitions.taskDefinitions.type == 'EXEC') {
+                var stage = {
+                    name: newStage.name,
+                    pipelineDefinitionId: vm.pipeline.id,
+                    jobDefinitions: [{
+                        name: newStage.jobDefinitions.name,
+                        taskDefinitions: [{
+                            type: newStage.jobDefinitions.taskDefinitions.type,
+                            command: newStage.jobDefinitions.taskDefinitions.command,
+                            arguments: newStage.jobDefinitions.taskDefinitions.arguments ? newStage.jobDefinitions.taskDefinitions.arguments.split('\n') : [],
+                            workingDirectory: newStage.jobDefinitions.taskDefinitions.workingDirectory,
+                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition,
+                            ignoreErrors: newStage.jobDefinitions.taskDefinitions.ignoreErrors || false
+                        }]
+                    }]
+                };
+            }
+        if (newStage.jobDefinitions.taskDefinitions.type == 'FETCH_ARTIFACT') {
+            var stage = {
+                name: newStage.name,
+                jobDefinitions: [{
+                    name: newStage.jobDefinitions.name,
+                    taskDefinitions: [{
+                        type: newStage.jobDefinitions.taskDefinitions.type,
+                        pipelineDefinition: newStage.jobDefinitions.taskDefinitions.pipeline,
+                        stageDefinition: newStage.jobDefinitions.taskDefinitions.stage,
+                        jobDefinition: newStage.jobDefinition.taskDefinitions.jobDefinition,
+                        source: newStage.jobDefinition.taskDefinitions.source,
+                        destination: newStage.jobDefinition.taskDefinitions.destination,
+                        runIfCondition: newStage.jobDefinition.taskDefinitions.runIfCondition
+                    }]
+                }]
+            };
+        }
+        if (newStage.jobDefinitions.taskDefinitions.type == 'FETCH_MATERIAL') {
+            var stage = {
+                name: newStage.name,
+                jobDefinitions: [{
+                    name: newStage.jobDefinitions.name,
+                    taskDefinitions: [{
+                        type: newStage.jobDefinitions.taskDefinitions.type,
+                        materialName: newStage.jobDefinitions.taskDefinitions.materialName,
+                        runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
+                    }]
+                }]
+            };
+        }
+        if (newStage.jobDefinitions.taskDefinitions.type == 'UPLOAD_ARTIFACT') {
+            var stage = {
+                name: newStage.name,
+                jobDefinitions: [{
+                    name: newStage.jobDefinitions.name,
+                    taskDefinitions: [{
+                        type: newStage.jobDefinitions.taskDefinitions.type,
+                        source: newStage.jobDefinitions.taskDefinitions.source,
+                        destination: newStage.jobDefinitions.taskDefinitions.destination
+                    }]
+                }]
+            };
+        }
+        pipeConfigService.addStageDefinition(stage);
+    };
+
+        vm.getJob = function(job) {
+            if (vm.job != null) {
+                viewModel.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function (currentJob, index, array) {
+                    if (currentJob.name == job.name) {
+                        vm.job = array[index];
+                        vm.jobIndex = index;
+                    }
+                });
+
+                vm.jobDeleteButton = false;
+                //vm.job = res;
+
+                vm.newTask = {};
+                vm.newArtifact = {};
+                vm.newJobVariable = {};
+                vm.newCustomTab = {};
+
+                vm.updatedJob.Name = vm.job.name;
+
+                vm.currentJob = job.name;
+
+            }
+        };
+
+        vm.addJob = function(newJob) {
+            if (newJob.taskDefinitions.type == 'EXEC') {
+                var job = {
+                    name: newJob.name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    taskDefinitions: [{
+                        type: newJob.taskDefinitions.type,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        command: newJob.taskDefinitions.command,
+                        arguments: newJob.taskDefinitions.arguments ? newJob.taskDefinitions.arguments.split('\n') : [],
+                        workingDirectory: newJob.taskDefinitions.workingDirectory,
+                        runIfCondition: newJob.taskDefinitions.runIfCondition,
+                        ignoreErrors: newJob.taskDefinitions.ignoreErrors || false
+                    }]
+                };
+
+                if (newJob.taskDefinitions.type == 'FETCH_ARTIFACT') {
+                    var job = {
+                        name: newJob.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        taskDefinitions: [{
+                            type: newJob.taskDefinitions.type,
+                            pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                            stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                            pipelineDefinition: newJob.taskDefinitions.pipelineDefinition,
+                            stageDefinition: newJob.taskDefinitions.stageDefinition,
+                            jobDefinition: newJob.taskDefinitions.jobDefinition,
+                            source: newJob.taskDefinitions.source,
+                            destination: newJob.taskDefinitions.destination,
+                            runIfCondition: newJob.taskDefinitions.runIfCondition
+                        }]
+                    };
+                }
+                if (newJob.taskDefinitions.type == 'FETCH_MATERIALS') {
+                    var job = {
+                        name: newJob.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        taskDefinitions: [{
+                            type: newJob.taskDefinitions.type,
+                            pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                            stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                            materialName: newJob.taskDefinitions.materialName
+                        }]
+                    };
+                }
+                if (newJob.taskDefinitions.type == 'UPLOAD_ARTIFACT') {
+                    var job = {
+                        name: newJob.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        taskDefinitions: [{
+                            type: newJob.taskDefinitions.type,
+                            pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                            stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                            source: newJob.taskDefinitions.source,
+                            destination: newJob.taskDefinitions.destination,
+                            runIfCondition: newJob.taskDefinitions.runIfCondition
+                        }]
+                    };
+                }
+            }
+            pipeConfigService.addJobDefinition(job);
         };
 
         vm.createPipelineDefinition = function(pipeline) {

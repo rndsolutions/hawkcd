@@ -89,9 +89,28 @@ angular
 
                     },
                     add: function (stage) {
-
+                        viewModelUpdater.addStageDefinition(stage);
                     },
                     update: function (stage) {
+
+                    },
+                    delete: function (isDeleted) {
+                        if(isDeleted) {
+
+                        }
+                    }
+                },
+                JobDefinitionService: {
+                    getAll:function (jobs) {
+                        viewModelUpdater.getAllJobDefinitions(jobs);
+                    },
+                    getById: function (job) {
+
+                    },
+                    add: function (job) {
+                        viewModelUpdater.addJobDefinition(job);
+                    },
+                    update: function (job) {
 
                     },
                     delete: function (isDeleted) {

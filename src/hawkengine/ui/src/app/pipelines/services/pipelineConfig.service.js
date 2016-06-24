@@ -148,20 +148,60 @@ angular
         //endregion
 
         //region /jobs
-        pipeConfigService.getAllJobs = function (pipeName, stageName, token) {
-
+        pipeConfigService.getAllJobDefinitions = function () {
+            var methodName = "getAll";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.createJob = function (pipeName, stageName, job, token) {
-
+        pipeConfigService.getJobDefinitionById = function (id) {
+            var methodName = "getById";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.deleteJob = function (pipeName, stageName, jobName, token) {
-
+        pipeConfigService.addJobDefinition = function (jobDefinition) {
+            var methodName = "add";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.JobDefinition\", \"object\": " + JSON.stringify(jobDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.getJob = function (pipeName, stageName, jobName, token) {
-
+        pipeConfigService.updateJobDefinition = function (jobDefinition) {
+            var methodName = "update";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.StageDefinition\", \"object\": " + JSON.stringify(jobDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.updateJob = function (pipeName, stageName, jobName, job, token) {
-
+        pipeConfigService.deleteJobDefinition = function (id) {
+            var methodName = "delete";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
         //endregion
 

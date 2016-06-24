@@ -80,12 +80,53 @@ angular
         };
 
         viewModelUpdater.addStageDefinition = function (stageDefinition) {
-            viewModel.allStages.push(stageDefinition);
+            //viewModel.allStages.push(stageDefinition);
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.id == stageDefinition.pipelineDefinitionId) {
+                    viewModel.allPipelines[index].stageDefinitions.push(stageDefinition);
+                }
+            });
             toaster.pop('success', "Notification", "Stage " + stageDefinition.name + " added!")
         };
 
         viewModelUpdater.updateStageDefinition = function (stageDefinition) {
 
+        };
+        
+        viewModelUpdater.deleteStageDefinition = function (stageDefinition) {
+            
+        };
+        
+        viewModelUpdater.getAllJobDefinitions = function (jobDefinitions) {
+            viewModel.allJobs = jobDefinitions;
+            toaster.pop('success', "Notification", "Jobs updated!")
+        };
+        
+        viewModelUpdater.getJobDefinitionById = function (jobDefinition) {
+            
+        };
+        
+        viewModelUpdater.addJobDefinition = function (jobDefinition) {
+            //viewModel.allJobs.push(jobDefinition);
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.id == jobDefinition.pipelineDefinitionId) {
+                    viewModel.allPipelines[index].stageDefinitions.forEach(function (currentStage, stageIndex, stageArray) {
+                        if(currentStage.id == jobDefinition.stageDefinitionId){
+                            viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions.push(jobDefinition);
+                            toaster.pop('success', "Notification", "Job " + jobDefinition.name + " added!")
+                        }
+                    });
+                }
+            });
+
+        };
+        
+        viewModelUpdater.updateJobDefinition = function (jobDefinition) {
+            
+        };
+        
+        viewModelUpdater.deleteJobDefinition = function (jobDefinition) {
+            
         };
 
         return viewModelUpdater;

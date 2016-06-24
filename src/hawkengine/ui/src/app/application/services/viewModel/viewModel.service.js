@@ -19,5 +19,7 @@ angular
         
         viewModel.allStages = [];
 
+        viewModel.allJobs = [];
+
         return viewModel;
     }]);

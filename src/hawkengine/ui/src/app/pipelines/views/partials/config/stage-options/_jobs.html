@@ -13,14 +13,14 @@
       <tbody>
 
       <!--ng-repeat-->
-      <tr ng-repeat="job in pipeConfig.stage.jobDefinitions">
+      <tr ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions">
         <td> {{job.name}} </td>
         <td> to do </td>
         <td> {{job.runType}} </td>
         <td> to do </td>
         <td>
           <button class="btn red" data-target="#removeJob" data-toggle="modal" 
-                  ng-click="pipeConfig.jobDeleteButton = true;pipeConfig.getJob(job.name)" ng-if="pipeConfig.allJobs.length > 1" ng-class="{'disabled': pipeConfig.jobDeleteButton}">Delete</button>
+                  ng-click="pipeConfig.jobDeleteButton = true;pipeConfig.getJob(job.name)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions.length > 1" ng-class="{'disabled': pipeConfig.jobDeleteButton}">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->
