@@ -61,21 +61,25 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         return super.createServiceResultArray(taskDefinitions, false, this.successMessage);
     }
 
+    @Override
     public ServiceResult add(ExecTask taskDefintion){
         ServiceResult result = addTask(taskDefintion);
         return result;
     }
 
+    @Override
     public ServiceResult add(FetchMaterialTask taskDefintion){
         ServiceResult result = addTask(taskDefintion);
         return result;
     }
 
+    @Override
     public ServiceResult add(FetchArtifactTask taskDefinition){
         ServiceResult result = addTask(taskDefinition);
         return result;
     }
 
+    @Override
     public ServiceResult add(UploadArtifactTask taskDefinition){
         ServiceResult result = addTask(taskDefinition);
         return  result;
@@ -101,34 +105,33 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         return super.createServiceResult(result, false, "added successfully");
     }
 
+    @Override
     public ServiceResult update(ExecTask taskDefintion){
         ServiceResult result = updateTask(taskDefintion);
         return result;
     }
 
+    @Override
     public ServiceResult update(FetchMaterialTask taskDefintion){
         ServiceResult result = updateTask(taskDefintion);
         return result;
     }
 
+    @Override
     public ServiceResult update(FetchArtifactTask taskDefinition){
         ServiceResult result = updateTask(taskDefinition);
         return result;
     }
 
+    @Override
     public ServiceResult update(UploadArtifactTask taskDefinition) {
         ServiceResult result = updateTask(taskDefinition);
         return result;
     }
 
     public ServiceResult updateTask(TaskDefinition taskDefinition) {
-        Class resultTaskClass = this.GetTaskDefinitionType(taskDefinition);
         TaskDefinition result = null;
-        try {
-            result = (TaskDefinition) resultTaskClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+
 
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
@@ -141,6 +144,12 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         for (int i = 0; i < lengthOfTaskDefinitions; i++) {
             TaskDefinition definition = taskDefinitions.get(i);
             if (definition.getId().equals(taskDefinition.getId())) {
+                Class resultTaskClass = this.GetTaskDefinitionType(taskDefinition);
+                try {
+                    result = (TaskDefinition) resultTaskClass.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
                 taskDefinitions.set(i, taskDefinition);
                 jobDefinition.setTaskDefinitions(taskDefinitions);
                 JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
