@@ -4,8 +4,7 @@ import com.fiftyonred.mock_jedis.MockJedisPool;
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.*;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import org.junit.Assert;
@@ -13,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -101,6 +101,23 @@ public class PipelineDefinitionServiceTests {
     @Test
     public void add_validObject_oneObject() {
         PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
+        StageDefinition expectedStageDefinition = new StageDefinition();
+        JobDefinition expectedJobDefinition = new JobDefinition();
+        ExecTask expectedExecutionTask = new ExecTask();
+
+        List<TaskDefinition> expectedTaskDefinitions = new ArrayList<>();
+        expectedTaskDefinitions.add(expectedExecutionTask);
+        expectedJobDefinition.setTaskDefinitions(expectedTaskDefinitions);
+
+        List<JobDefinition> expectedJobDefinitions = new ArrayList<>();
+        expectedJobDefinitions.add(expectedJobDefinition);
+        expectedStageDefinition.setJobDefinitions(expectedJobDefinitions);
+
+        List<StageDefinition> expectedStageDefinitions = new ArrayList<>();
+        expectedStageDefinitions.add(expectedStageDefinition);
+
+        expectedPipelineDefinition.setStageDefinitions(expectedStageDefinitions);
+
         String expectedMessage = expectedPipelineDefinition.getClass().getSimpleName() + " " + expectedPipelineDefinition.getId() + " created successfully.";
 
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.add(expectedPipelineDefinition);
@@ -111,6 +128,9 @@ public class PipelineDefinitionServiceTests {
         Assert.assertNotNull(actualPipelineDefinition);
         Assert.assertFalse(actualResult.hasError());
         Assert.assertEquals(expectedPipelineDefinition.getId(), actualPipelineDefinition.getId());
+        Assert.assertEquals(expectedStageDefinition.getId(), actualPipelineDefinition.getStageDefinitions().get(0).getId());
+        Assert.assertEquals(expectedJobDefinition.getId(), actualPipelineDefinition.getStageDefinitions().get(0).getJobDefinitions().get(0).getId());
+        Assert.assertEquals(expectedExecutionTask.getId(), actualPipelineDefinition.getStageDefinitions().get(0).getJobDefinitions().get(0).getTaskDefinitions().get(0).getId());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
