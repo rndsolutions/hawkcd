@@ -75,9 +75,9 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
 
         ServiceResult result = new ServiceResult();
         if (dbObject == null) {
-            result = super.createServiceResult((T) result.getObject(), false, "deleted successfully");
-        } else {
             result = super.createServiceResult((T) result.getObject(), true, "not found" );
+        } else {
+            result = super.createServiceResult((T) result.getObject(), false, "deleted successfully");
         }
 
         result.setObject(dbObject);
