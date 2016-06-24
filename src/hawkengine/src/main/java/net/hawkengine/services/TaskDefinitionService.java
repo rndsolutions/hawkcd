@@ -19,7 +19,6 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     private String successMessage = "retrieved successfully";
     private String failureMessage = "not found";
 
-
     public TaskDefinitionService() {
         super.setObjectType("TaskDefinition");
         this.jobDefinitionService = new JobDefinitionService();
@@ -62,27 +61,27 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
-    public ServiceResult add(ExecTask taskDefintion){
-        ServiceResult result = addTask(taskDefintion);
+    public ServiceResult add(ExecTask taskDefintion) {
+        ServiceResult result = this.addTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult add(FetchMaterialTask taskDefintion){
-        ServiceResult result = addTask(taskDefintion);
+    public ServiceResult add(FetchMaterialTask taskDefintion) {
+        ServiceResult result = this.addTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult add(FetchArtifactTask taskDefinition){
-        ServiceResult result = addTask(taskDefinition);
+    public ServiceResult add(FetchArtifactTask taskDefinition) {
+        ServiceResult result = this.addTask(taskDefinition);
         return result;
     }
 
     @Override
-    public ServiceResult add(UploadArtifactTask taskDefinition){
-        ServiceResult result = addTask(taskDefinition);
-        return  result;
+    public ServiceResult add(UploadArtifactTask taskDefinition) {
+        ServiceResult result = this.addTask(taskDefinition);
+        return result;
     }
 
     public ServiceResult addTask(TaskDefinition taskDefinition) {
@@ -106,32 +105,31 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
-    public ServiceResult update(ExecTask taskDefintion){
-        ServiceResult result = updateTask(taskDefintion);
+    public ServiceResult update(ExecTask taskDefintion) {
+        ServiceResult result = this.updateTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult update(FetchMaterialTask taskDefintion){
-        ServiceResult result = updateTask(taskDefintion);
+    public ServiceResult update(FetchMaterialTask taskDefintion) {
+        ServiceResult result = this.updateTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult update(FetchArtifactTask taskDefinition){
-        ServiceResult result = updateTask(taskDefinition);
+    public ServiceResult update(FetchArtifactTask taskDefinition) {
+        ServiceResult result = this.updateTask(taskDefinition);
         return result;
     }
 
     @Override
     public ServiceResult update(UploadArtifactTask taskDefinition) {
-        ServiceResult result = updateTask(taskDefinition);
+        ServiceResult result = this.updateTask(taskDefinition);
         return result;
     }
 
     public ServiceResult updateTask(TaskDefinition taskDefinition) {
         TaskDefinition result = null;
-
 
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
@@ -144,12 +142,13 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         for (int i = 0; i < lengthOfTaskDefinitions; i++) {
             TaskDefinition definition = taskDefinitions.get(i);
             if (definition.getId().equals(taskDefinition.getId())) {
-                Class resultTaskClass = this.GetTaskDefinitionType(taskDefinition);
+                Class resultTaskClass = this.getTaskDefinitionType(taskDefinition);
                 try {
                     result = (TaskDefinition) resultTaskClass.newInstance();
                 } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
+
                 taskDefinitions.set(i, taskDefinition);
                 jobDefinition.setTaskDefinitions(taskDefinitions);
                 JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
@@ -250,7 +249,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         return result;
     }
 
-    private Class<?> GetTaskDefinitionType(TaskDefinition taskDefinition) {
+    private Class<?> getTaskDefinitionType(TaskDefinition taskDefinition) {
         TaskType taskDefinitionType = taskDefinition.getType();
         Class result = null;
         switch (taskDefinitionType) {

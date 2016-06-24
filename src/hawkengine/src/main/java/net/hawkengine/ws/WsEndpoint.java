@@ -3,11 +3,10 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
-import net.hawkengine.core.utilities.deserializers.TaskDefinitionDeserializer;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
@@ -33,7 +32,7 @@ public class WsEndpoint extends WebSocketAdapter {
         this.id = UUID.randomUUID();
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
-                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionDeserializer())
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .create();
     }
 
@@ -86,6 +85,7 @@ public class WsEndpoint extends WebSocketAdapter {
             contract.setResult(result.getObject());
             contract.setError(result.hasError());
             contract.setErrorMessage(result.getMessage());
+
             String jsonResult = serializer.toJson(contract);
             remoteEndpoint.sendString(jsonResult);
         } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
@@ -109,13 +109,10 @@ public class WsEndpoint extends WebSocketAdapter {
         cause.printStackTrace(System.err);
     }
 
-    @SuppressWarnings("TryWithIdenticalCatches")
     public WsContractDto resolve(String message) {
         WsContractDto contract = null;
         try {
             contract = this.jsonConverter.fromJson(message, WsContractDto.class);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
         } catch (JsonParseException e) {
             e.printStackTrace();
         }
