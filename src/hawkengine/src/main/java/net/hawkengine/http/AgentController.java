@@ -37,7 +37,7 @@ public class AgentController {
     public Response getAllAgents(){
         this.serviceResult = this.agentService.getAll();
         List<String> agentList =  (List<String>)this.serviceResult.getObject();
-        Object result = jsonBuilder.toJson(agentList);
+        Object result = this.jsonBuilder.toJson(agentList);
         return Response.ok().entity(result).build();
     }
 
@@ -56,6 +56,18 @@ public class AgentController {
         return Response.ok().entity(this.serviceResult.getObject()).build();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{agentId}/work")
+    public Response getWork(@PathParam("agentId") String id){
+
+        //TODO: Service operation to be implemented.
+
+        return  Response.noContent().build();
+    }
+
+
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAgent(Agent agent){
@@ -71,13 +83,28 @@ public class AgentController {
         }
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{agentId}/work")
+    public Response addWork(@PathParam("agentId") String id){
+
+        //TODO: Service operation to be implemented.
+
+        return  Response.noContent().build();
+    }
+
+    /*
+     * Deserialization to be fixed on PUT.
+     * replace jersey's  default MOXy deserializer
+     * with Gson if necessary
+     */
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateAgent(Agent agent){
         String result = schemaValidator.validate(agent);
         if (result.equals("OK")){
-            serviceResult = agentService.update(agent);
-            return Response.ok().entity(agent).build();
+            this.serviceResult = this.agentService.update(agent);
+            return Response.ok().entity(this.serviceResult.getObject()).build();
         }else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(result)

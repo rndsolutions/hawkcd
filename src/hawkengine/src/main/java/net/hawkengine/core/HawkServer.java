@@ -39,7 +39,7 @@ public class HawkServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-      //  resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
+        //  resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
 
