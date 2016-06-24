@@ -14,9 +14,13 @@ public abstract class Service<T extends DbEntry> implements IService<T> {
         ServiceResult result = new ServiceResult();
         result.setError(hasErrors);
         result.setObject(object);
-        if (object != null) {
-            result.setMessage(this.getObjectType() + " " + object.getId() + " " + messsage + ".");
-        }else {
+        if (!hasErrors) {
+            if (object == null) {
+                result.setMessage(this.getObjectType() + " " + messsage + ".");
+            } else {
+                result.setMessage(this.getObjectType() + " " + object.getId() + " " + messsage + ".");
+            }
+        } else {
             result.setMessage(this.getObjectType() + " " + messsage + ".");
         }
         return result;

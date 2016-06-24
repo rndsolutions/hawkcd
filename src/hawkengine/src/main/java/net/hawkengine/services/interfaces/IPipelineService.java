@@ -22,4 +22,6 @@ public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getAllUpdatedPipelines();
 
     ServiceResult getAllPreparedPipelines();
+
+    ServiceResult getAllPipelinesInProgress();
 }
