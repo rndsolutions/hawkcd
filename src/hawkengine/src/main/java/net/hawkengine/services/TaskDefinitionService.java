@@ -61,8 +61,27 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         return super.createServiceResultArray(taskDefinitions, false, this.successMessage);
     }
 
-    @Override
-    public ServiceResult add(TaskDefinition taskDefinition) {
+    public ServiceResult add(ExecTask taskDefintion){
+        ServiceResult result = addTask(taskDefintion);
+        return result;
+    }
+
+    public ServiceResult add(FetchMaterialTask taskDefintion){
+        ServiceResult result = addTask(taskDefintion);
+        return result;
+    }
+
+    public ServiceResult add(FetchArtifactTask taskDefinition){
+        ServiceResult result = addTask(taskDefinition);
+        return result;
+    }
+
+    public ServiceResult add(UploadArtifactTask taskDefinition){
+        ServiceResult result = addTask(taskDefinition);
+        return  result;
+    }
+
+    public ServiceResult addTask(TaskDefinition taskDefinition) {
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(taskDefinitions, taskDefinition);
