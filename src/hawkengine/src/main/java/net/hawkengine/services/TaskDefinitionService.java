@@ -101,8 +101,27 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         return super.createServiceResult(result, false, "added successfully");
     }
 
-    @Override
-    public ServiceResult update(TaskDefinition taskDefinition) {
+    public ServiceResult update(ExecTask taskDefintion){
+        ServiceResult result = updateTask(taskDefintion);
+        return result;
+    }
+
+    public ServiceResult update(FetchMaterialTask taskDefintion){
+        ServiceResult result = updateTask(taskDefintion);
+        return result;
+    }
+
+    public ServiceResult update(FetchArtifactTask taskDefinition){
+        ServiceResult result = updateTask(taskDefinition);
+        return result;
+    }
+
+    public ServiceResult update(UploadArtifactTask taskDefinition) {
+        ServiceResult result = updateTask(taskDefinition);
+        return result;
+    }
+
+    public ServiceResult updateTask(TaskDefinition taskDefinition) {
         Class resultTaskClass = this.GetTaskDefinitionType(taskDefinition);
         TaskDefinition result = null;
         try {
@@ -111,7 +130,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
             e.printStackTrace();
         }
 
-        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getStageDefinitionId()).getObject();
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(taskDefinitions, taskDefinition);
         if (hasNameCollision) {
@@ -121,7 +140,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         int lengthOfTaskDefinitions = taskDefinitions.size();
         for (int i = 0; i < lengthOfTaskDefinitions; i++) {
             TaskDefinition definition = taskDefinitions.get(i);
-            if (definition.getId().equals(jobDefinition.getId())) {
+            if (definition.getId().equals(taskDefinition.getId())) {
                 taskDefinitions.set(i, taskDefinition);
                 jobDefinition.setTaskDefinitions(taskDefinitions);
                 JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
@@ -131,7 +150,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         }
 
         if (result == null) {
-            return super.createServiceResult(result, true, "not updated successfully");
+            return super.createServiceResult(result, true, "not found");
         }
 
         return super.createServiceResult(result, false, "updated successfully");
@@ -146,7 +165,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         }
 
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
-                .getById(taskDefinitionToDelete.getStageDefinitionId())
+                .getById(taskDefinitionToDelete.getJobDefinitionId())
                 .getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
 
