@@ -49,10 +49,10 @@ public class StatusUpdaterService extends Thread {
             if (queueNode.getClass() == Pipeline.class) {
                 pipelineToUpdate = (Pipeline) queueNode;
                 queue.addAll(pipelineToUpdate.getStages());
+                this.updateStageStatusesInSequence(pipelineToUpdate.getStages());
             } else {
                 Stage stageNode = (Stage) queueNode;
                 queue.addAll(stageNode.getJobs());
-                this.updateStageStatusesInSequence(pipelineToUpdate.getStages());
             }
         }
 
