@@ -15,12 +15,12 @@ public abstract class Service<T extends DbEntry> implements IService<T> {
         result.setError(hasErrors);
         result.setObject(object);
         if (!hasErrors) {
-            if(object == null){
+            if (object == null) {
                 result.setMessage(this.getObjectType() + " " + messsage + ".");
             } else {
                 result.setMessage(this.getObjectType() + " " + object.getId() + " " + messsage + ".");
             }
-        }else {
+        } else {
             result.setMessage(this.getObjectType() + " " + messsage + ".");
         }
         return result;
