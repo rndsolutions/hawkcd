@@ -165,7 +165,7 @@ public class PipelineDefinitionServiceTests {
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
 
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
