@@ -4,15 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.hawkengine.core.utilities.SchemaValidator;
+
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionDeserializer;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
-import net.hawkengine.model.Server;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -67,32 +66,26 @@ public class WsEndpoint extends WebSocketAdapter {
                 return;
             }
 
-            SchemaValidator schemaValidator = new SchemaValidator();
-            for (ConversionObject conversionObject : contract.getArgs()) {
-                Class objectClass = Class.forName(conversionObject.getPackageName());
-                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
-                String result = schemaValidator.validate(object);
-
-                if (!result.equals("OK")) {
-                    contract.setError(true);
-                    contract.setErrorMessage(result);
-                    remoteEndpoint.sendString(serializer.toJson(contract));
-                    return;
-                }
-            }
+//            SchemaValidator schemaValidator = new SchemaValidator();
+//            for (ConversionObject conversionObject : contract.getArgs()) {
+//                Class objectClass = Class.forName(conversionObject.getPackageName());
+//                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
+//                String result = schemaValidator.validate(object);
+//
+//                if (!result.equals("OK")) {
+//                    contract.setError(true);
+//                    contract.setErrorMessage(result);
+//                    remoteEndpoint.sendString(serializer.toJson(contract));
+//                    return;
+//                }
+//            }
 
             ServiceResult result = (ServiceResult) this.call(contract);
-            if ((result.getObject().getClass() != String.class) || !result.getObject().toString().isEmpty()) {
-                contract.setResult(result.getObject());
-            } else {
-                contract.setError(result.hasError());
-                contract.setErrorMessage(result.getMessage());
-            }
-
+            contract.setResult(result.getObject());
+            contract.setError(result.hasError());
+            contract.setErrorMessage(result.getMessage());
             String jsonResult = serializer.toJson(contract);
-
             remoteEndpoint.sendString(jsonResult);
-
         } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
