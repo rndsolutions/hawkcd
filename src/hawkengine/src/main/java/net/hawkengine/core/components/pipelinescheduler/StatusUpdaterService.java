@@ -109,6 +109,10 @@ public class StatusUpdaterService extends Thread {
         String[] statusesAsString = new String[statuses.size()];
         int index = 0;
 
+        if (statuses.isEmpty()){
+            return false;
+        }
+
         for (Object status : statuses) {
             statusesAsString[index] = status.toString();
             index++;

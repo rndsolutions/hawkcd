@@ -1,7 +1,6 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Job;
@@ -9,6 +8,7 @@ import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -27,6 +27,7 @@ public class StatusUpdaterTests {
     private StatusUpdaterService statusUpdaterService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private PipelineDefinition expectedPipelineDefinition;
+    private PipelinePreparer pipelinePreparer;
 
     @Before
     public void setUp() {
@@ -34,10 +35,24 @@ public class StatusUpdaterTests {
         IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
         IDbRepository pipelineDefintionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefintionRepo);
-        this.pipelineService = new PipelineService(pipelineRepo,this.pipelineDefinitionService);
+        this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService);
+        this.pipelinePreparer = new PipelinePreparer(this.pipelineService, this.pipelineDefinitionService);
         this.statusUpdaterService = new StatusUpdaterService(this.pipelineService);
         this.expectedPipelineDefinition = new PipelineDefinition();
         this.pipelineDefinitionService.add(this.expectedPipelineDefinition);
+    }
+
+    @Test
+    public void statusUpdater_updateStatusesWithNoStages_inProgressStatuses(){
+        List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
+
+        this.statusUpdaterService.updateStatuses();
+
+        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+
+        for (Pipeline actualPipeline: actualPipelines) {
+            Assert.assertEquals(Status.IN_PROGRESS, actualPipeline.getStatus());
+        }
     }
 
     @Test
@@ -117,6 +132,168 @@ public class StatusUpdaterTests {
         }
     }
 
+    @Test
+    public void statusUpdater_updateStageStatusesInSequenceWithFirstPassedStage_updatedStatuses(){
+        Stage firstExpectedStage= new Stage();
+        firstExpectedStage.setStatus(StageStatus.PASSED);
+
+        Stage secondExpectedStage = new Stage();
+
+        Stage thirdExpectedStage = new Stage();
+
+        List<Stage> expectedStages = new ArrayList<>();
+        expectedStages.add(firstExpectedStage);
+        expectedStages.add(secondExpectedStage);
+        expectedStages.add(thirdExpectedStage);
+
+        this.statusUpdaterService.updateStageStatusesInSequence(expectedStages);
+
+        Assert.assertEquals(StageStatus.IN_PROGRESS, secondExpectedStage.getStatus());
+        Assert.assertEquals(StageStatus.NOT_RUN, thirdExpectedStage.getStatus());
+    }
+
+    @Test
+    public void statusUpdater_updateStageStatusesInSequenceWithSecondPassedStage_updatedStatuses(){
+        Stage firstExpectedStage= new Stage();
+        firstExpectedStage.setStatus(StageStatus.PASSED);
+
+        Stage secondExpectedStage = new Stage();
+        secondExpectedStage.setStatus(StageStatus.FAILED);
+
+        Stage thirdExpectedStage = new Stage();
+
+        List<Stage> expectedStages = new ArrayList<>();
+        expectedStages.add(firstExpectedStage);
+        expectedStages.add(secondExpectedStage);
+        expectedStages.add(thirdExpectedStage);
+
+        this.statusUpdaterService.updateStageStatusesInSequence(expectedStages);
+
+        Assert.assertEquals(StageStatus.NOT_RUN, thirdExpectedStage.getStatus());
+    }
+
+    @Test
+    public void statusUpdater_updateStageStatusesInSequenceWithNotRunStages_updatedFirstStageStatus(){
+        Stage firstExpectedStage= new Stage();
+
+        Stage secondExpectedStage = new Stage();
+
+        Stage thirdExpectedStage = new Stage();
+
+        List<Stage> expectedStages = new ArrayList<>();
+        expectedStages.add(firstExpectedStage);
+        expectedStages.add(secondExpectedStage);
+        expectedStages.add(thirdExpectedStage);
+
+        this.statusUpdaterService.updateStageStatusesInSequence(expectedStages);
+
+        Assert.assertEquals(StageStatus.IN_PROGRESS, firstExpectedStage.getStatus());
+        Assert.assertEquals(StageStatus.NOT_RUN, secondExpectedStage.getStatus());
+        Assert.assertEquals(StageStatus.NOT_RUN, thirdExpectedStage.getStatus());
+    }
+
+    @Test
+    public void statusUpdater_updateStageStatusWithPassedJobs_passed() {
+        Job firstExpectedJob = new Job();
+        firstExpectedJob.setStatus(JobStatus.PASSED);
+
+        Job secondExpectedJob = new Job();
+        secondExpectedJob.setStatus(JobStatus.PASSED);
+
+        List<Job> expextedJobs = new ArrayList<>();
+        expextedJobs.add(firstExpectedJob);
+        expextedJobs.add(secondExpectedJob);
+
+        Stage expectedStage = new Stage();
+        expectedStage.setJobs(expextedJobs);
+
+        this.statusUpdaterService.updateStageStatus(expectedStage);
+
+        Assert.assertEquals(StageStatus.PASSED, expectedStage.getStatus());
+    }
+
+    @Test
+    public void statusUpdater_updateStageStatusWithFailedJob_failed() {
+        Job firstExpectedJob = new Job();
+        firstExpectedJob.setStatus(JobStatus.PASSED);
+
+        Job secondExpectedJob = new Job();
+        secondExpectedJob.setStatus(JobStatus.FAILED);
+
+        List<Job> expextedJobs = new ArrayList<>();
+        expextedJobs.add(firstExpectedJob);
+        expextedJobs.add(secondExpectedJob);
+
+        Stage expectedStage = new Stage();
+        expectedStage.setJobs(expextedJobs);
+
+        this.statusUpdaterService.updateStageStatus(expectedStage);
+
+        Assert.assertEquals(StageStatus.FAILED, expectedStage.getStatus());
+    }
+
+    @Test
+    public void statusUpdater_updatePipelineStatusWithPassedStages_passed() {
+        Stage firstExpectedStage = new Stage();
+        firstExpectedStage.setStatus(StageStatus.PASSED);
+
+        Stage secondExpectedStaage = new Stage();
+        secondExpectedStaage.setStatus(StageStatus.PASSED);
+
+        List<Stage> expextedStages = new ArrayList<>();
+        expextedStages.add(firstExpectedStage);
+        expextedStages.add(secondExpectedStaage);
+
+        Pipeline expectedPipeline = new Pipeline();
+        expectedPipeline.setStages(expextedStages);
+
+        this.statusUpdaterService.updatePipelineStatus(expectedPipeline);
+
+        Assert.assertEquals(Status.PASSED, expectedPipeline.getStatus());
+    }
+
+    @Test
+    public void statusUpdater_updatePipelineStatusWithFailedStage_failed() {
+        Stage firstExpectedStage = new Stage();
+        firstExpectedStage.setStatus(StageStatus.PASSED);
+
+        Stage secondExpectedStaage = new Stage();
+        secondExpectedStaage.setStatus(StageStatus.FAILED);
+
+        List<Stage> expextedStages = new ArrayList<>();
+        expextedStages.add(firstExpectedStage);
+        expextedStages.add(secondExpectedStaage);
+
+        Pipeline expectedPipeline = new Pipeline();
+        expectedPipeline.setStages(expextedStages);
+
+        this.statusUpdaterService.updatePipelineStatus(expectedPipeline);
+
+        Assert.assertEquals(Status.FAILED, expectedPipeline.getStatus());
+    }
+
+    @Test
+    public void statusUpdater_areAllPassedWithListOfPassed_true() {
+        List<JobStatus> expectedJobStatuses = new ArrayList<>();
+        expectedJobStatuses.add(JobStatus.PASSED);
+        expectedJobStatuses.add(JobStatus.PASSED);
+
+        boolean actualResult = this.statusUpdaterService.areAllPassed(expectedJobStatuses);
+
+        Assert.assertTrue(actualResult);
+    }
+
+    @Test
+    public void statusUpdater_areAllPassedWithListWithFailed_false() {
+        List<JobStatus> expectedJobStatuses = new ArrayList<>();
+        expectedJobStatuses.add(JobStatus.PASSED);
+        expectedJobStatuses.add(JobStatus.FAILED);
+
+        boolean actualResult = this.statusUpdaterService.areAllPassed(expectedJobStatuses);
+
+        Assert.assertFalse(actualResult);
+    }
+
     private List<Pipeline> injectDataForTestingStatusUpdater() {
         List<Pipeline> pipelines = new ArrayList<>();
         List<Job> jobsToAdd = new ArrayList<>();
@@ -128,16 +305,17 @@ public class StatusUpdaterTests {
         Stage stage = new Stage();
 
         Job firstJob = new Job();
-        firstJob.setStatus(JobStatus.AWAITING);
+        firstJob.setStatus(JobStatus.PASSED);
 
         Job secondJob = new Job();
         secondJob.setStatus(JobStatus.PASSED);
 
         jobsToAdd.add(firstJob);
         jobsToAdd.add(secondJob);
-        stagesToAdd.add(stage);
 
         stage.setJobs(jobsToAdd);
+        stagesToAdd.add(stage);
+
         firstPipeline.setStages(stagesToAdd);
         pipelines.add(firstPipeline);
         this.pipelineService.add(firstPipeline);
@@ -147,15 +325,16 @@ public class StatusUpdaterTests {
         jobsToAdd = new ArrayList<>();
         stagesToAdd = new ArrayList<>();
 
-        firstJob.setStatus(JobStatus.FAILED);
+        firstJob.setStatus(JobStatus.PASSED);
 
-        secondJob.setStatus(JobStatus.RUNNING);
+        secondJob.setStatus(JobStatus.PASSED);
 
         jobsToAdd.add(firstJob);
         jobsToAdd.add(secondJob);
-        stagesToAdd.add(stage);
 
         stage.setJobs(jobsToAdd);
+        stagesToAdd.add(stage);
+
         secondPipeline.setStages(stagesToAdd);
         pipelines.add(secondPipeline);
         this.pipelineService.add(secondPipeline);
@@ -171,9 +350,10 @@ public class StatusUpdaterTests {
         stagesToAdd = new ArrayList<>();
         jobsToAdd.add(firstJob);
         jobsToAdd.add(secondJob);
-        stagesToAdd.add(stage);
 
         stage.setJobs(jobsToAdd);
+        stagesToAdd.add(stage);
+
         thirdPipeline.setStages(stagesToAdd);
         pipelines.add(thirdPipeline);
         this.pipelineService.add(thirdPipeline);
