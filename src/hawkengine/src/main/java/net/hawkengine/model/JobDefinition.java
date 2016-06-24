@@ -1,7 +1,9 @@
 package net.hawkengine.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class JobDefinition extends DbEntry {
     private String name;
@@ -9,12 +11,12 @@ public class JobDefinition extends DbEntry {
     private String pipelineDefinitionId;
     private List<EnvironmentVariable> environmentVariables;
     private List<TaskDefinition> taskDefinitions;
-    private List<String> resources;
+    private Set<String> resources;
 
     public JobDefinition() {
         this.setEnvironmentVariables(new ArrayList<>());
         this.setTaskDefinitions(new ArrayList<>());
-        this.setResources(new ArrayList<>());
+        this.setResources(new HashSet<>());
     }
 
     public String getName() {
@@ -57,11 +59,11 @@ public class JobDefinition extends DbEntry {
         this.taskDefinitions = taskDefinitions;
     }
 
-    public List<String> getResources() {
+    public Set<String> getResources() {
         return this.resources;
     }
 
-    public void setResources(List<String> resources) {
+    public void setResources(Set<String> resources) {
         this.resources = resources;
     }
 }
