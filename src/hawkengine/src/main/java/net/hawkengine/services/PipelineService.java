@@ -83,9 +83,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         if (pipelines.isEmpty()) {
             return result;
         }
-        pipelines.stream().filter(Pipeline::areMaterialsUpdated);
+        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::areMaterialsUpdated).collect(Collectors.toList());
 
-        result.setObject(pipelines);
+        result.setObject(updatedPipelines);
 
         return result;
     }
@@ -97,9 +97,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         if (pipelines.isEmpty()) {
             return result;
         }
-        pipelines.stream().filter(Pipeline::isPrepared);
+        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::isPrepared).collect(Collectors.toList());
 
-        result.setObject(pipelines);
+        result.setObject(updatedPipelines);
 
         return result;
     }

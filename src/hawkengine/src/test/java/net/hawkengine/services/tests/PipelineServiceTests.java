@@ -249,6 +249,24 @@ public class PipelineServiceTests {
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualPipelines.size());
     }
 
+    @Test
+    public void getAllUpdatedPipelines_onePipelineUpdated_oneObject() {
+        List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
+
+        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedPipelines().getObject();
+
+        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelines.size());
+    }
+
+    @Test
+    public void getAllPreparedPipelines() {
+        List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
+
+        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelines().getObject();
+
+        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelines.size());
+    }
+
     private List<Pipeline> injectDataForTestingStatusUpdater() {
         List<Pipeline> pipelines = new ArrayList<>();
         List<Job> jobsToAdd = new ArrayList<>();
@@ -271,6 +289,8 @@ public class PipelineServiceTests {
 
         stage.setJobs(jobsToAdd);
         firstPipeline.setStages(stagesToAdd);
+        firstPipeline.setAreMaterialsUpdated(true);
+        firstPipeline.setPrepared(true);
         pipelines.add(firstPipeline);
         this.pipelineService.add(firstPipeline);
 
