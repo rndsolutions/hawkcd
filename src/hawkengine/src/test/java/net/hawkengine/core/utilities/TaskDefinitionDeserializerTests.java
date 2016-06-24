@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import net.hawkengine.core.utilities.deserializers.TaskDefinitionDeserializer;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.FetchArtifactTask;
 import net.hawkengine.model.FetchMaterialTask;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class TaskDefinitionDeserializerTests {
 
-    private static TaskDefinitionDeserializer mockedDeserializer;
+    private static TaskDefinitionAdapter mockedDeserializer;
     private static Gson jsonConverter;
 
     @Rule
@@ -32,7 +32,7 @@ public class TaskDefinitionDeserializerTests {
     @BeforeClass
     public static void setUp() {
         jsonConverter = new Gson();
-        mockedDeserializer = new TaskDefinitionDeserializer();
+        mockedDeserializer = new TaskDefinitionAdapter();
     }
 
     @Test

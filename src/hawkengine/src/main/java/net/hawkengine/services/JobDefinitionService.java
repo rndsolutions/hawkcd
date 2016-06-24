@@ -14,7 +14,6 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     private String successMessage = "retrieved successfully";
     private String failureMessage = "not found";
 
-
     public JobDefinitionService() {
         super.setObjectType("JobDefinition");
         this.stageDefinitionService = new StageDefinitionService();
@@ -179,7 +178,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
      */
     private boolean checkForNameCollision(List<JobDefinition> jobDefinitions, JobDefinition jobDefinitionToAdd) {
         for (JobDefinition jobDefinition : jobDefinitions) {
-            if(jobDefinition.getId().equals(jobDefinitionToAdd.getId())){
+            if (jobDefinition.getId().equals(jobDefinitionToAdd.getId())) {
                 continue;
             }
             if (jobDefinition.getName().equals(jobDefinitionToAdd.getName())) {
