@@ -34,11 +34,22 @@ public class JobAssignerService {
         List<Agent> agents = (List<Agent>) this.agentService.getAllAssignableAgents().getObject();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelines().getObject();
 
-        // TODO: Replace iterations with call to JobService
         for (Pipeline pipeline : pipelines) {
             for (Stage stage : pipeline.getStages()) {
                 if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                     for (Job job : stage.getJobs()) {
+                        if (job.getStatus() == JobStatus.SCHEDULED) {
+                            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
+                            boolean isEligible = this.isAgentEligibleForJob(job, agent);
+                            if (!isEligible) {
+                                agent.setAssigned(false);
+                                this.agentService.update(agent);
+
+                                job.setStatus(JobStatus.AWAITING);
+                                this.pipelineService.update(pipeline);
+                            }
+                        }
+
                         if (job.getStatus() == JobStatus.AWAITING) {
                             List<Agent> eligibleAgents = this.getEligibleAgentsForJob(job, agents);
                             Agent agentForJob = this.pickMostSuitableAgent(eligibleAgents);
@@ -49,26 +60,6 @@ public class JobAssignerService {
                                 job.setAssignedAgentId(agentForJob.getId());
                                 job.setStatus(JobStatus.SCHEDULED);
                                 this.pipelineService.update(pipeline);
-                                // TODO: this.jobService.update(job);
-                            }
-                        } else if (job.getStatus() == JobStatus.SCHEDULED) {
-                            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
-                            boolean isEligible = this.isAgentEligibleForJob(job, agent);
-                            if (!isEligible) {
-                                job.setStatus(JobStatus.AWAITING);
-
-                                // TODO: move logic up
-                                List<Agent> eligibleAgents = this.getEligibleAgentsForJob(job, agents);
-                                Agent agentForJob = this.pickMostSuitableAgent(eligibleAgents);
-                                if (agentForJob != null) {
-                                    agentForJob.setAssigned(true);
-                                    this.agentService.update(agentForJob);
-
-                                    job.setAssignedAgentId(agentForJob.getId());
-                                    job.setStatus(JobStatus.SCHEDULED);
-                                    this.pipelineService.update(pipeline);
-                                    // TODO: this.jobService.update(job);
-                                }
                             }
                         }
                     }
