@@ -6,6 +6,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.FetchArtifactTask;
@@ -18,11 +20,11 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TaskDefinitionDeserializer implements JsonDeserializer<TaskDefinition> {
+public class TaskDefinitionAdapter implements JsonDeserializer<TaskDefinition>, JsonSerializer<TaskDefinition> {
     private Map<String, Type> taskTypeMap;
     private Gson jsonConverter;
 
-    public TaskDefinitionDeserializer() {
+    public TaskDefinitionAdapter() {
         this.taskTypeMap = new HashMap() {{
             this.put(TaskType.EXEC.toString(), ExecTask.class);
             this.put(TaskType.FETCH_ARTIFACT.toString(), FetchArtifactTask.class);
@@ -48,5 +50,12 @@ public class TaskDefinitionDeserializer implements JsonDeserializer<TaskDefiniti
 
         TaskDefinition result = this.jsonConverter.fromJson(json, taskClass);
         return result;
+    }
+
+    @Override
+    public JsonElement serialize(TaskDefinition src, Type typeOfSrc, JsonSerializationContext context) {
+        Type taskType = this.taskTypeMap.get(src.getType().toString());
+        JsonObject element = (JsonObject) this.jsonConverter.toJsonTree(src,taskType);
+        return element;
     }
 }
