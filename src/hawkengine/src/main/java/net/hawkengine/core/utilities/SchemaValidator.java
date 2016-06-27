@@ -363,8 +363,8 @@ public class SchemaValidator {
         return this.message;
     }
 
-    private boolean isValidRegEx(String input, String string) {
-        Pattern pattern = Pattern.compile(string      );
+    private boolean isValidRegEx(String input, String regex) {
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         boolean isMatch = matcher.matches();
         return isMatch;

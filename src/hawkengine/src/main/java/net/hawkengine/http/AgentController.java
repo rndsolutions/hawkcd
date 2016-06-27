@@ -74,7 +74,7 @@ public class AgentController {
         String result = schemaValidator.validate(agent);
         if (result.equals("OK")){
             this.serviceResult = this.agentService.add(agent);
-            return Response.ok().entity(agent).build();
+            return Response.ok().entity(this.serviceResult.getObject()).build();
         }else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(result)
@@ -115,6 +115,7 @@ public class AgentController {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{agentId}")
     public Response deleteAgent(@PathParam("agentId") String agentId){
         this.serviceResult = agentService.delete(agentId);
         boolean hasError = this.serviceResult.hasError();
@@ -123,7 +124,7 @@ public class AgentController {
                     .entity(this.serviceResult.getMessage())
                     .build();
         } else {
-            return Response.ok().build();
+            return Response.ok().entity(this.serviceResult.getMessage()).build();
         }
     }
 }
