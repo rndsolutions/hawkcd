@@ -69,6 +69,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> pipelinesInProgress = pipelines
                 .stream()
                 .filter(p -> p.getStatus() == Status.IN_PROGRESS)
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
         result.setObject(pipelinesInProgress);
@@ -80,10 +81,12 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     public ServiceResult getAllUpdatedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()) {
-            return result;
-        }
-        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::areMaterialsUpdated).collect(Collectors.toList());
+
+        List<Pipeline> updatedPipelines = pipelines
+                .stream()
+                .filter(Pipeline::areMaterialsUpdated)
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
 
         result.setObject(updatedPipelines);
 
@@ -91,13 +94,15 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public ServiceResult getAllPreparedPipelines() {
+    public ServiceResult getAllPreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()) {
-            return result;
-        }
-        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::isPrepared).collect(Collectors.toList());
+
+        List<Pipeline> updatedPipelines = pipelines
+                .stream()
+                .filter(p -> p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
 
         result.setObject(updatedPipelines);
 

@@ -32,7 +32,7 @@ public class JobAssignerService {
 
     public void assignJobs() {
         List<Agent> agents = (List<Agent>) this.agentService.getAllAssignableAgents().getObject();
-        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelines().getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
 
         for (Pipeline pipeline : pipelines) {
             for (Stage stage : pipeline.getStages()) {
