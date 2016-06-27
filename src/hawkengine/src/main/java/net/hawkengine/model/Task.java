@@ -7,7 +7,7 @@ import net.hawkengine.model.enums.TaskType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class Task {
+public class Task extends DbEntry{
     private TaskDefinition taskDefinition;
     private String jobId;
     private String stageId;
