@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController', function ($state, $scope, $stateParams, $interval, pipeStats,authDataService) {
+    .controller('PipelinesHistoryController', function ($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel) {
         var vm = this;
 
         vm.labels = {
@@ -23,11 +23,25 @@ angular
             }
         };
 
+        vm.currentPipelineRuns = [];
+
         //Get the current group and pipeline name
         vm.groupName = $stateParams.groupName;
         vm.pipelineName = $stateParams.pipelineName;
 
-        vm.currentPipeline = {};
+        vm.allPipelineRuns = viewModel.allPipelineRuns;
+
+        $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+            vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+                if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
+                    vm.currentPipelineRuns.push(currentPipelineRun);
+                }
+            });
+            console.log(vm.allPipelineRuns);
+            console.log(vm.currentPipelineRuns);
+        });
+
 
         //Gets all executions of a pipeline by given name
         // vm.getAll = function () {

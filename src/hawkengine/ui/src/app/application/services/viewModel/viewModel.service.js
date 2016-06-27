@@ -20,6 +20,8 @@ angular
         viewModel.allStages = [];
 
         viewModel.allJobs = [];
+            
+        viewModel.allPipelineRuns = [];
 
         return viewModel;
     }]);

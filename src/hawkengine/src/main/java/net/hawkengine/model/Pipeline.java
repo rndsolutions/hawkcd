@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Pipeline extends DbEntry {
     private String pipelineDefinitionId;
+    private String pipelineDefinitionName;
     private int executionId;
     private List<Material> materials;
     private List<EnvironmentVariable> environmentVariables;
@@ -133,5 +134,13 @@ public class Pipeline extends DbEntry {
 
     public void setPrepared(boolean prepared) {
         this.isPrepared = prepared;
+    }
+
+    public String getPipelineDefinitionName() {
+        return pipelineDefinitionName;
+    }
+
+    public void setPipelineDefinitionName(String pipelineDefinitionName) {
+        this.pipelineDefinitionName = pipelineDefinitionName;
     }
 }

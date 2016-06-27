@@ -24,6 +24,7 @@ angular
         vm.materials = {};
         vm.newMaterial = {};
 
+        vm.allPipelineRuns = [];
         vm.allPipelines = [];
         vm.allJobs = viewModel.allJobs;
         vm.allTasks = [];
@@ -36,6 +37,8 @@ angular
         vm.pipelineIndex = {};
         vm.stageIndex = {};
         vm.jobIndex = {};
+
+        vm.currentStageRuns = [];
 
         // $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
         //     vm.allMaterials = viewModel.allPipelines.materials;
@@ -66,6 +69,11 @@ angular
             vm.allJobs = viewModel.allJobs;
             
             console.log(vm.allJobs);
+        });
+
+        $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
+            vm.allPipelineRuns = viewModel.allPipelineRuns;
+            console.log(vm.allPipelineRuns)
         });
 
         vm.stageDeleteButton = false;
@@ -326,6 +334,19 @@ angular
 
         vm.createPipelineDefinition = function(pipeline) {
             pipeConfigService.addPipelineDefinition(pipeline);
+        };
+
+        vm.getStageRunsFromPipeline = function (pipeline) {
+            vm.allPipelineRuns.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.pipelineDefinitionId == pipeline.id) {
+                    vm.currentStageRuns = [];
+                    currentPipeline[index].stages.forEach(function (currentStage, index, array) {
+                        vm.currentStageRuns.push(currentStage);
+                    });
+                }
+            });
+            console.log(vm.currentStageRuns);
+            return vm.currentStageRuns;
         };
 
         // function getAllPipelines () {

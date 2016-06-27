@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function ($scope, $log, $interval, pipeStats, pipeConfig, pipeExec, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService) {
+    .controller('PipelinesController', function ($scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService) {
         var vm = this;
         vm.toggleLogo = 1;
 
@@ -13,9 +13,13 @@ angular
         vm.formData = {};
         vm.allPipelines = [];
 
+        vm.allPipelineRuns = viewModel.allPipelineRuns;
+
         vm.allDefinitionsAndRuns = [];
 
         vm.allPipelineGroups = [];
+
+        vm.currentStageRuns = [];
 
         // vm.allDefinitionsAndRuns = viewModel.allPipelineDefinitions;
 
@@ -31,10 +35,28 @@ angular
             console.log(vm.allPipelines);
         });
 
+        $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+            vm.allPipelineRuns = viewModel.allPipelineRuns;
+            console.log(vm.allPipelineRuns);
+        });
+
         $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
             vm.allPipelineGroups = viewModel.allPipelineGroups;
             console.log(vm.allPipelineGroups);
         });
+
+        vm.getStageRunsFromPipeline = function (pipeline) {
+            vm.currentStageRuns = [];
+            vm.allPipelineRuns.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.pipelineDefinitionId == pipeline.id) {
+                    currentPipeline.stages.forEach(function (currentStage, index, array) {
+                        vm.currentStageRuns.push(currentStage);
+                    });
+                }
+            });
+            console.log(vm.currentStageRuns);
+            return vm.currentStageRuns;
+        };
 
         vm.all = [];
 
@@ -43,8 +65,6 @@ angular
         vm.pipeId = {};
 
         vm.all = vm.allPipelines;
-
-        vm.disabledBtn = false;
 
         vm.materialType = "git";
 
@@ -70,36 +90,12 @@ angular
         //endregion
 
         //region pipeline controls
-        vm.play = function (pipeName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeExec.scheduleLatestPipeline(pipeName, token)
-                    .then(function (res) {
-                        vm.disabledBtn = false;
-                        console.log(res);
-                    }, function (err) {
-                        vm.disabledBtn = false;
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function (res) {
-                        var token = res.access_token;
-                        pipeExec.scheduleLatestPipeline(pipeName, token)
-                            .then(function (res) {
-                                vm.disabledBtn = false;
-                                console.log(res);
-                            }, function (err) {
-                                vm.disabledBtn = false;
-                                console.log(err);
-                            })
-                    }, function (err) {
-                        vm.disabledBtn = false;
-                        console.log(err);
-                    })
-            }
+        vm.play = function (pipelineDefinition) {
+            var pipeline = {
+                "pipelineDefinitionId": pipelineDefinition.id,
+                "pipelineDefinitionName": pipelineDefinition.name
+            };
+            pipeExecService.startPipeline(pipeline);
         };
 
         //TODO Not implemented on the back-end yet

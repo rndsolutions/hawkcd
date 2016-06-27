@@ -19,103 +19,140 @@ angular
             var invoker = function (obj, dispatcher) {
                 var className = obj['className'];
                 var methodName = obj['methodName'];
-                dispatcher[className][methodName](obj.result);
+                dispatcher[className][methodName](obj);
             };
 
             var dispatcher = {
                 AgentService: {
-                    getAll: function (agents) {
-                        viewModelUpdater.updateAgents(agents);
+                    getAll: function (object) {
+                        viewModelUpdater.updateAgents(object.result);
                     },
-                    getById: function (agent) {
-                        viewModelUpdater.updateAgent(agent);
+                    getById: function (object) {
+                        viewModelUpdater.updateAgent(object.result);
                     },
-                    update: function (agent) {
-                        viewModelUpdater.updateAgent(agent);
+                    update: function (object) {
+                        viewModelUpdater.updateAgent(object.result);
                     },
-                    delete: function (isDeleted) {
-                        if (isDeleted) {
+                    delete: function (object) {
+                        if (object.error == false) {
                             agentService.getAllAgents();
+                        }
+                        else{
+
                         }
                     }
                 },
                 PipelineGroupService: {
-                    getAll: function (pipelineGroups) {
+                    getAll: function (object) {
                         //viewModelUpdater.getAllPipelineGroups(pipelineGroups);
                         //viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
                     },
-                    getAllPipelineGroupDTOs: function (pipelineGroups) {
-                        viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
+                    getAllPipelineGroupDTOs: function (object) {
+                        viewModelUpdater.updatePipelineGroupDTOs(object.result);
                     },
-                    getById: function (pipelineGroup) {
+                    getById: function (object) {
 
                     },
-                    add: function (pipelineGroup) {
-                        viewModelUpdater.updatePipelineGroup(pipelineGroup);
+                    add: function (object) {
+                        viewModelUpdater.addPipelineGroup(object.result);
                     },
-                    update: function (pipelineGroup) {
+                    update: function (object) {
 
                     },
-                    delete: function (isDeleted) {
-                        if (isDeleted) {
+                    delete: function (object) {
+                        if (object.error == false) {
                             adminGroupService.getAllPipelineGroups();
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 },
                 PipelineDefinitionService: {
-                    getAll: function (pipelines) {
-                        viewModelUpdater.getAllPipelineDefinitions(pipelines);
+                    getAll: function (object) {
+                        viewModelUpdater.getAllPipelineDefinitions(object.result);
                     },
-                    getById: function (pipeline) {
+                    getById: function (object) {
 
                     },
-                    add: function (pipeline) {
-                        viewModelUpdater.addPipelineDefinition(pipeline);
+                    add: function (object) {
+                        viewModelUpdater.addPipelineDefinition(object.result);
                     },
-                    update: function (pipeline) {
+                    update: function (object) {
 
                     },
-                    delete: function (isDeleted) {
-                        if (isDeleted) {
+                    delete: function (object) {
+                        if (object.error == false) {
                             pipeConfigService.getAllPipelineGroupDTOs();
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
+                    }
+                },
+                PipelineService: {
+                    getAll: function (object) {
+                        viewModelUpdater.getAllPipelines(object.result);
+                    },
+                    getById: function (object) {
+
+                    },
+                    add: function (object) {
+                        viewModelUpdater.addPipeline(object.result);
+                    },
+                    update: function (object) {
+
+                    },
+                    delete: function (object) {
+                        if (object.error == false) {
+
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 },
                 StageDefinitionService: {
-                    getAll:function (stages) {
-                        viewModelUpdater.getAllStageDefinitions(stages);
+                    getAll:function (object) {
+                        viewModelUpdater.getAllStageDefinitions(object.result);
                     },
-                    getById: function (stage) {
+                    getById: function (object) {
 
                     },
-                    add: function (stage) {
-                        viewModelUpdater.addStageDefinition(stage);
+                    add: function (object) {
+                        viewModelUpdater.addStageDefinition(object.result);
                     },
-                    update: function (stage) {
+                    update: function (object) {
 
                     },
-                    delete: function (isDeleted) {
-                        if(isDeleted) {
+                    delete: function (object) {
+                        if(object.error == false) {
 
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 },
                 JobDefinitionService: {
-                    getAll:function (jobs) {
-                        viewModelUpdater.getAllJobDefinitions(jobs);
+                    getAll:function (object) {
+                        viewModelUpdater.getAllJobDefinitions(object.result);
                     },
-                    getById: function (job) {
+                    getById: function (object) {
 
                     },
-                    add: function (job) {
-                        viewModelUpdater.addJobDefinition(job);
+                    add: function (object) {
+                        viewModelUpdater.addJobDefinition(object.result);
                     },
-                    update: function (job) {
+                    update: function (object) {
 
                     },
-                    delete: function (isDeleted) {
-                        if(isDeleted) {
+                    delete: function (object) {
+                        if(object.error == false) {
 
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 }

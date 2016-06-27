@@ -25,6 +25,7 @@ angular
 
         viewModelUpdater.addPipelineGroup = function (pipelineGroup) {
             viewModel.allPipelineGroups.push(pipelineGroup);
+            toaster.pop('success', "Notifiction", "Pipeline Group" + pipelineGroup.name + " added!")
         };
 
         viewModelUpdater.updatePipelineGroup = function (pipelineGroup) {
@@ -34,6 +35,15 @@ angular
                     toaster.pop('success', "Notification", "Pipeline Group " + pipelineGroup.name + " updated!");
                 }
             })
+        };
+        
+        viewModelUpdater.deletePipelineGroup = function (pipelineGroup) {
+            if(pipelineGroup == null){
+                
+            }
+            else{
+
+            }
         };
 
         viewModelUpdater.getAllPipelineGroups = function (pipelineGroups) {
@@ -53,9 +63,10 @@ angular
         };
 
         viewModelUpdater.addPipelineDefinition = function (pipelineDefinition) {
-            viewModel.allPipelines.forEach(function (currentPipelineGroupDTO, index, array) {
+            viewModel.allPipelineGroups.forEach(function (currentPipelineGroupDTO, index, array) {
                 if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId){
                     array[index].pipelines.push(pipelineDefinition);
+                    viewModel.allPipelines.push(pipelineDefinition);
                     toaster.pop('success', "Notification", "Pipeline Definition " + pipelineDefinition.name + " added!")
                 }
             });
@@ -86,7 +97,7 @@ angular
                     viewModel.allPipelines[index].stageDefinitions.push(stageDefinition);
                 }
             });
-            toaster.pop('success', "Notification", "Stage " + stageDefinition.name + " added!")
+            toaster.pop('success', "Notification", "Stage " + stageDefinition.name + " added!");
         };
 
         viewModelUpdater.updateStageDefinition = function (stageDefinition) {
@@ -127,6 +138,16 @@ angular
         
         viewModelUpdater.deleteJobDefinition = function (jobDefinition) {
             
+        };
+
+        viewModelUpdater.getAllPipelines = function (pipelines) {
+            viewModel.allPipelineRuns = pipelines;
+            toaster.pop('success', "Notification", "Pipeline Runs updated!");
+        };
+
+        viewModelUpdater.addPipeline = function (pipeline) {
+            viewModel.allPipelineRuns.push(pipeline);
+            toaster.pop('success', "Notification", "Pipeline run started successfully!")
         };
 
         return viewModelUpdater;
