@@ -67,19 +67,19 @@ public class WsEndpoint extends WebSocketAdapter {
                 return;
             }
 
-            SchemaValidator schemaValidator = new SchemaValidator();
-            for (ConversionObject conversionObject : contract.getArgs()) {
-                Class objectClass = Class.forName(conversionObject.getPackageName());
-                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
-                String result = schemaValidator.validate(object);
-
-                if (!result.equals("OK")) {
-                    contract.setError(true);
-                    contract.setErrorMessage(result);
-                    remoteEndpoint.sendString(serializer.toJson(contract));
-                    return;
-                }
-            }
+//            SchemaValidator schemaValidator = new SchemaValidator();
+//            for (ConversionObject conversionObject : contract.getArgs()) {
+//                Class objectClass = Class.forName(conversionObject.getPackageName());
+//                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
+//                String result = schemaValidator.validate(object);
+//
+//                if (!result.equals("OK")) {
+//                    contract.setError(true);
+//                    contract.setErrorMessage(result);
+//                    remoteEndpoint.sendString(serializer.toJson(contract));
+//                    return;
+//                }
+//            }
 
             ServiceResult result = (ServiceResult) this.call(contract);
             contract.setResult(result.getObject());

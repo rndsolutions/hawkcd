@@ -31,29 +31,29 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="run in pipesHistory.currentPipeline"
-            ui-sref="index.pipelineRunManagement({pipelineName:run.Name, executionID: run.ExecutionID, groupName: run.GroupName})">
-          <td>{{run.ExecutionID}}</td>
-          <td>{{run.Start | date:'dd.MM.yyyy \'at\' HH:MM'}}</td>
-          <td>{{run.TriggerReason}}</td>
-          <td>{{run.ExecutionMaterials.commit-id}}</td>
-          <td>{{run.State}}</td>
+        <tr ng-repeat="run in pipesHistory.currentPipelineRuns"
+            ui-sref="index.pipelineRunManagement({pipelineName:run.name, executionID: run.executionID, groupName: run.groupName})">
+          <td>{{run.executionId}}</td>
+          <td>{{run.start | date:'dd.MM.yyyy \'at\' HH:MM'}}</td>
+          <td>{{run.triggerReason}}</td>
+          <td>{{run.executionMaterials.commit-id}}</td>
+          <td>{{run.status}}</td>
           <td>TEMP</td>
           <td>
-                            <span ng-repeat="stage in run.Stages">
-              <span ng-if="stage[stage.length-1].State == 'Completed' && stage[stage.length-1].Status=='Passed'">
+                            <span ng-repeat="stage in run.stages">
+              <span ng-if="stage.status == 'Completed' && stage.status=='Passed'">
   <button type="button" class="btn btn-success s"></button>
                </span>
-                            <span ng-if="stage[stage.length-1].State == 'Completed'  && stage[stage.length-1].Status=='Failed'">
+                            <span ng-if="stage.status == 'Completed'  && stage.status=='Failed'">
                 <button type="button" class="btn btn-danger s"></button>
                 </span>
-                            <span ng-if="stage[stage.length-1].State == 'None'">
+                            <span ng-if="stage.status == 'NOT_RUN'">
                    <button type="button" class="btn default s"></button>
                 </span>
-                           <span ng-if="stage[stage.length-1].State == 'Running'">
+                           <span ng-if="stage.status == 'IN_PROGRESS'">
                    <button type="button" class="btn yellow s"></button>
                 </span>
-                            <span ng-if="stage[stage.length-1].State == 'Scheduled'">
+                            <span ng-if="stage.status == 'SCHEDULED'">
                     <button type="button" class="btn yellow-mint s"></button>
                 </span>
                             </span>
