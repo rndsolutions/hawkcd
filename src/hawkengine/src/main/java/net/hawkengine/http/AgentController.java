@@ -3,13 +3,11 @@ package net.hawkengine.http;
 import com.google.gson.Gson;
 
 import net.hawkengine.core.utilities.SchemaValidator;
-import net.hawkengine.model.Agent;
-import net.hawkengine.model.ExecTask;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Task;
+import net.hawkengine.model.*;
 import net.hawkengine.model.payload.WorkInfo;
 import net.hawkengine.services.AgentService;
+import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IPipelineService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +31,14 @@ public class AgentController {
     private ServiceResult serviceResult;
     private SchemaValidator schemaValidator;
     private Gson jsonBuilder;
+    private IPipelineService pipelineService;
 
     public AgentController() {
-        agentService = new AgentService();
-        serviceResult = new ServiceResult();
-        schemaValidator = new SchemaValidator();
-        jsonBuilder = new Gson();
+        this.agentService = new AgentService();
+        this.serviceResult = new ServiceResult();
+        this.schemaValidator = new SchemaValidator();
+        this.jsonBuilder = new Gson();
+        this.pipelineService = new PipelineService();
     }
 
     @GET
@@ -69,38 +69,32 @@ public class AgentController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
-        boolean isSent = false;
-        if (!isSent) {
-            isSent = true;
-
-            WorkInfo work = new WorkInfo();
-            work.setPipelineDefinitionName("Vlad");
-            ExecTask execTask = new ExecTask();
-            execTask.setCommand("/bin/bash");
-            List<String> args = new ArrayList<>();
-            args.add("echo \"Vlado\" >> vlad.txt");
-            execTask.setArguments(args);
-            Task task = new Task();
-            task.setTaskDefinition(execTask);
-            Job job = new Job();
-            List<Task> tasks = new ArrayList<>();
-            tasks.add(task);
-            job.setTasks(tasks);
-            work.setJob(job);
-            return Response.ok().entity(work).build();
-        }
-
-        return Response.noContent().build();
-
-//        this.serviceResult = this.agentService.getWorkInfo(agentId);
-//        if (this.serviceResult.getObject().equals(false)){
-//            return Response.ok()
-//                    .entity(this.serviceResult.getMessage())
-//                    .type(MediaType.TEXT_HTML)
-//                    .build();
-//        } else {
-//            return Response.ok().entity(this.serviceResult.getObject()).build();
+//        boolean isSent = false;
+//        if (!isSent) {
+//            isSent = true;
+//
+//            WorkInfo work = new WorkInfo();
+//            work.setPipelineDefinitionName("Vlad");
+//            ExecTask execTask = new ExecTask();
+//            execTask.setCommand("cmd");
+//            List<String> args = new ArrayList<>();
+//            args.add("echo \"Vlado\" >> vlad.txt");
+//            execTask.setArguments(args);
+//            Task task = new Task();
+//            task.setTaskDefinition(execTask);
+//            Job job = new Job();
+//            List<Task> tasks = new ArrayList<>();
+//            tasks.add(task);
+//            job.setTasks(tasks);
+//            work.setJob(job);
+//            return Response.ok().entity(work).build();
 //        }
+//
+//        return Response.noContent().build();
+
+        this.serviceResult = this.agentService.getWorkInfo(agentId);
+
+        return Response.ok().entity(this.serviceResult.getObject()).build();
     }
 
 
@@ -125,8 +119,37 @@ public class AgentController {
     @Path("/work")
     public Response addWork(Job job) {
 
-        int five = 5;
-        //TODO: Service operation to be implemented.
+        if (job == null) {
+            return Response.ok().build();
+        }
+
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();
+
+        Stage stage = pipeline.getStages().stream().filter(s -> s.getId().equals(job.getStageId())).findFirst().orElse(null);
+
+        List<Job> jobs = stage.getJobs();
+        int lengthOfJobs = jobs.size();
+        for (int i = 0; i < lengthOfJobs; i++) {
+            Job currentJobn = jobs.get(i);
+            if (currentJobn.getId().equals(job.getId())) {
+                jobs.set(i, job);
+                stage.setJobs(jobs);
+                break;
+            }
+        }
+
+        List<Stage> stages = pipeline.getStages();
+        int lengthOfStages = stages.size();
+        for (int i = 0; i < lengthOfStages; i++) {
+            Stage currentStage = stages.get(i);
+            if (currentStage.getId().equals(stage.getId())) {
+                stages.set(i, stage);
+                pipeline.setStages(stages);
+                break;
+            }
+        }
+
+        this.pipelineService.update(pipeline);
 
         return Response.ok().build();
     }

@@ -74,7 +74,11 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     public ServiceResult getWorkInfo(String agentId) {
         ServiceResult result = new ServiceResult();
         Agent agent = (Agent) this.getById(agentId).getObject();
-        if (agent.isAssigned()) {
+        if (agent == null) {
+            result.setObject(null);
+            result.setError(true);
+            result.setMessage("This agent has no job assigned.");
+        } else if (agent.isAssigned()) {
             List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
             for (Pipeline pipeline : pipelines) {
                 WorkInfo workInfo = new WorkInfo();
@@ -89,6 +93,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                                     workInfo.setPipelineExecutionID(pipeline.getExecutionId());
                                     workInfo.setStageExecutionID(stage.getExecutionId());
                                     workInfo.setJob(job);
+                                    workInfo.setPipelineDefinitionName("alabala");
 
                                     result.setObject(workInfo);
                                     result.setError(false);

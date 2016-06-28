@@ -56,7 +56,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
-        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
+        //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
 
         return result;
     }

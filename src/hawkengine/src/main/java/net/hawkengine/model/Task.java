@@ -2,6 +2,7 @@ package net.hawkengine.model;
 
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.TaskStatus;
 import net.hawkengine.model.enums.TaskType;
 
 import java.time.Duration;
@@ -14,15 +15,11 @@ public class Task extends DbEntry {
     private String pipelineId;
     private RunIf runIfCondition;
     private TaskType type;
-    private Status status;
+    private TaskStatus status;
     private String output;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
-
-    public Task() {
-        this.startTime = LocalDateTime.now();
-    }
 
     public TaskDefinition getTaskDefinition() {
         return this.taskDefinition;
@@ -72,11 +69,11 @@ public class Task extends DbEntry {
         this.type = type;
     }
 
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return this.status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
