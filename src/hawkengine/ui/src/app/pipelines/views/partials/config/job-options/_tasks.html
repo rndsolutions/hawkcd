@@ -23,7 +23,7 @@
         <td>
           <button class="btn yellow" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTask($index)">Edit</button>
           <button class="btn red" data-toggle="modal" data-target="#removeTask"
-                  ng-click="pipeConfig.taskDeleteButton = true;pipeConfig.getTask($index)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions.length > 1" ng-class="{'disabled': pipeConfig.taskDeleteButton}">Delete</button>
+                  ng-click="pipeConfig.getTask($index)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions.length > 1">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->

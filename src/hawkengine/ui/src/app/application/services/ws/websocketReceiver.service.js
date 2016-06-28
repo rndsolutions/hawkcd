@@ -61,7 +61,7 @@ angular
                     },
                     delete: function (object) {
                         if (object.error == false) {
-                            adminGroupService.getAllPipelineGroups();
+                            pipeConfigService.getAllPipelineGroupDTOs();
                         }
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);
@@ -83,6 +83,7 @@ angular
                     },
                     delete: function (object) {
                         if (object.error == false) {
+                            pipeConfigService.getAllPipelineDefinitions();
                             pipeConfigService.getAllPipelineGroupDTOs();
                         }
                         else{
@@ -127,7 +128,8 @@ angular
                     },
                     delete: function (object) {
                         if(object.error == false) {
-
+                            pipeConfigService.getAllPipelineDefinitions();
+                            pipeConfigService.getAllPipelineGroupDTOs();
                         }
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);
@@ -135,7 +137,7 @@ angular
                     }
                 },
                 JobDefinitionService: {
-                    getAll:function (object) {
+                    getAll: function (object) {
                         viewModelUpdater.getAllJobDefinitions(object.result);
                     },
                     getById: function (object) {
@@ -149,7 +151,31 @@ angular
                     },
                     delete: function (object) {
                         if(object.error == false) {
+                            pipeConfigService.getAllPipelineDefinitions();
+                            pipeConfigService.getAllPipelineGroupDTOs();
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
+                    }
+                },
+                TaskDefinitionService: {
+                    getAll: function (object) {
 
+                    },
+                    getById: function (object) {
+
+                    },
+                    add: function (object) {
+
+                    },
+                    update: function (object) {
+
+                    },
+                    delete: function (object) {
+                        if(object.error == false) {
+                            pipeConfigService.getAllPipelineDefinitions();
+                            pipeConfigService.getAllPipelineGroupDTOs();
                         }
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);

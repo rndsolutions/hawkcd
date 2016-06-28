@@ -37,6 +37,7 @@ angular
         vm.pipelineIndex = {};
         vm.stageIndex = {};
         vm.jobIndex = {};
+        vm.materialIndex = {};
 
         vm.currentStageRuns = [];
 
@@ -173,7 +174,7 @@ angular
             vm.updatedStage.name = vm.stage.name;
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
-            vm.currentStage = stage.name;
+            vm.currentStage = stage;
         };
 
         vm.addStage = function (newStage) {
@@ -239,6 +240,10 @@ angular
         }
         pipeConfigService.addStageDefinition(stage);
     };
+        
+        vm.deleteStage = function(stage){
+            pipeConfigService.deleteStageDefinition(stage.id);
+        };
 
         vm.getJob = function(job) {
             if (vm.job != null) {
@@ -257,9 +262,9 @@ angular
                 vm.newJobVariable = {};
                 vm.newCustomTab = {};
 
-                vm.updatedJob.Name = vm.job.name;
+                vm.updatedJob.name = vm.job.name;
 
-                vm.currentJob = job.name;
+                vm.currentJob = job;
 
             }
         };
@@ -330,6 +335,64 @@ angular
                 }
             }
             pipeConfigService.addJobDefinition(job);
+        };
+
+        vm.deleteJob = function (job){
+            pipeConfigService.deleteJobDefinition(job.id);
+        };
+
+        vm.getMaterial = function (material) {
+            if (vm.material != null) {
+                viewModel.allPipelines[vm.pipelineIndex].materials.forEach(function (currentMaterial, index, array) {
+                    if (currentMaterial.name == material.name) {
+                        vm.material = array[index];
+                        vm.materialIndex = index;
+                    }
+                });
+            }
+
+            vm.materialDeleteButton = false;
+            //vm.material = res;
+
+            if (vm.material.materialSpecificDetails.username &&
+                vm.material.materialSpecificDetails.password) {
+                vm.hasCredentials = true;
+            } else {
+                vm.hasCredentials = false;
+            }
+
+            vm.currentMaterial = material;
+        };
+
+        vm.addTask = function (newTask) {
+            if (newTask.type == 'EXEC') {
+                var execTask = {
+                    type: newTask.type,
+                    command: newTask.command,
+                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    workingDirectory: newTask.workingDirectory,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
+                };
+            }
+            if (newTask.type == 'FETCH_MATERIAL') {
+                var fetchMaterial = {
+                    type: newTask.type,
+                    materialName: newTask.materialName,
+                    runIfCondition: newTask.runIfCondition
+                };
+            }
+            if (newTask.type == 'FETCH_ARTIFACT') {
+                var fetchArtifact = {
+                    type: newTask.type,
+                    pipeline: newTask.pipeline,
+                    stage: newTask.stage,
+                    job: newTask.job,
+                    source: newTask.source,
+                    destination: newTask.destination,
+                    runIfCondition: newTask.runIfCondition
+                };
+            }
         };
 
         vm.createPipelineDefinition = function(pipeline) {

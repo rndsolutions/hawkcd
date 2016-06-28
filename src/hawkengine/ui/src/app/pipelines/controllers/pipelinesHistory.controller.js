@@ -92,9 +92,9 @@ angular
         //     vm.getAll();
         // }, 3000);
 
-        $scope.$on('$destroy', function () {
-            $interval.cancel(intervalHistory);
-            intervalHistory = undefined;
-        });
+        // $scope.$on('$destroy', function () {
+        //     $interval.cancel(intervalHistory);
+        //     intervalHistory = undefined;
+        // });
 
     });

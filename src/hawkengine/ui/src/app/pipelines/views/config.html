@@ -28,7 +28,7 @@
   </ul>
 </div>
 
-<div class="mt-element-list col-md-3" style="padding-left: 0!important;">
+<div class="mt-element-list col-md-3" style="padding-left: 0!important;" ng-init="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName)">
 
   <div class="mt-list-head list-simple ext-1 font-white p-config-head"
        ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name})"

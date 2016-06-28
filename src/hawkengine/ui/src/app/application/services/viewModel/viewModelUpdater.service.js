@@ -2,7 +2,7 @@
 
 angular
     .module('hawk')
-    .factory('viewModelUpdater', ['viewModel', 'toaster', function (viewModel, toaster) {
+    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', function (viewModel, toaster, adminGroupService) {
         var viewModelUpdater = this;
 
         viewModelUpdater.updateAgents = function (agents) {
@@ -37,18 +37,14 @@ angular
             })
         };
         
-        viewModelUpdater.deletePipelineGroup = function (pipelineGroup) {
-            if(pipelineGroup == null){
-                
-            }
-            else{
-
-            }
+        viewModelUpdater.deletePipelineGroup = function () {
+            adminGroupService.getAllPipelineGroups();
+            toaster.pop('success', "Notification", "Pipeline Groups updated!")
         };
 
         viewModelUpdater.getAllPipelineGroups = function (pipelineGroups) {
             viewModel.allPipelineGroups = pipelineGroups;
-            toaster.pop('success', 'Notification', 'Pipeline Groups updated!');
+            toaster.pop('success', "Notification", "Pipeline Groups updated!");
         };
 
         viewModelUpdater.getAllPipelineDefinitions = function (pipelineDefinitions){

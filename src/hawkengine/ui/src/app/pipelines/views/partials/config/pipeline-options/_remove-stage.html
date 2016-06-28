@@ -7,10 +7,10 @@
       </div>
       <div class="modal-body">
         <div>
-          Are you sure you want to delete Stage: <strong class="uppercase">{{pipeConfig.currentStage}}</strong>
+          Are you sure you want to delete Stage: <strong class="uppercase">{{pipeConfig.currentStage.name}}</strong>
           <br>
           <hr>
-          <button class="btn btn-danger" ng-click="pipeConfig.stageDeleteButton = true;pipeConfig.deleteStage(pipeConfig.currentStage)" data-dismiss="modal">DELETE</button>
+          <button class="btn btn-danger" ng-click="pipeConfig.deleteStage(pipeConfig.currentStage)" data-dismiss="modal">DELETE</button>
           <button class="btn" data-dismiss="modal">CANCEL</button>
         </div>
       </div>

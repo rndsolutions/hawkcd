@@ -20,7 +20,7 @@
         <td> {{stage.jobDefinitions.length}} </td>
         <td>
           <button class="btn red" data-target="#removeStage" data-toggle="modal" 
-                  ng-click="pipeConfig.stageDeleteButton = true;pipeConfig.getStage(stage.name)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1" ng-class="{'disabled': pipeConfig.stageDeleteButton}">Delete</button>
+                  ng-click="pipeConfig.getStage(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->
