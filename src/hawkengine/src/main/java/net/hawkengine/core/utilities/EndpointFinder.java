@@ -2,16 +2,14 @@ package net.hawkengine.core.utilities;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EndpointFinder {
     private static final char PKG_SEPARATOR = '.';
     private static final char DIR_SEPARATOR = '/';
     private static final String CLASS_FILE_SUFFIX = ".class";
     private String endpoints ="";
+    
     public String getClasses(String packageName){
-        List <String> nameList = new ArrayList<String>();
         String scannedPath = packageName.replace(PKG_SEPARATOR, DIR_SEPARATOR);
         URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
         File scannedDir = new File(scannedUrl.getFile());
@@ -21,7 +19,6 @@ public class EndpointFinder {
                 String className = file.getName().substring(0, endIndex);
                 String finished = packageName+"."+className+", ";
                 this.endpoints += finished;
-                nameList.add(finished);
             }
         }
         return endpoints;

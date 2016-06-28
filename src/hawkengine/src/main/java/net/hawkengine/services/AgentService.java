@@ -47,7 +47,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     @Override
     public ServiceResult update(Agent agent) {
         ServiceResult result = super.update(agent);
-        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
+        //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
 
         return result;
     }
@@ -98,7 +98,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                                     workInfo.setStageTriggerReason(null); //to be added to stage
                                     workInfo.setShouldFetchMaterials(false); // to be added to stage
                                     workInfo.setJob(job);
-                                    workInfo.setMaterials(pipeline.getMaterials()); // NOT SURE ABOUT THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                    workInfo.setMaterials(pipeline.getMaterials());
                                     workInfo.setEnvironmentVariables(pipeline.getEnvironmentVariables());
                                     result.setObject(workInfo);
                                 }
