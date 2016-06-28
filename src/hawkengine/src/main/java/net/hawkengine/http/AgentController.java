@@ -1,10 +1,19 @@
 package net.hawkengine.http;
+
 import com.google.gson.Gson;
+
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.Agent;
+import net.hawkengine.model.ExecTask;
+import net.hawkengine.model.Job;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.Task;
+import net.hawkengine.model.payload.WorkInfo;
 import net.hawkengine.services.AgentService;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,7 +34,7 @@ public class AgentController {
     private SchemaValidator schemaValidator;
     private Gson jsonBuilder;
 
-    public AgentController(){
+    public AgentController() {
         agentService = new AgentService();
         serviceResult = new ServiceResult();
         schemaValidator = new SchemaValidator();
@@ -34,9 +43,9 @@ public class AgentController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAgents(){
+    public Response getAllAgents() {
         this.serviceResult = this.agentService.getAll();
-        List<String> agentList =  (List<String>)this.serviceResult.getObject();
+        List<String> agentList = (List<String>) this.serviceResult.getObject();
         Object result = this.jsonBuilder.toJson(agentList);
         return Response.ok().entity(result).build();
     }
@@ -59,28 +68,50 @@ public class AgentController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}/work")
-    public Response getWork(@PathParam("agentId") String agentId){
-        this.serviceResult = this.agentService.getWorkInfo(agentId);
-        if (this.serviceResult.getObject().equals(false)){
-            return Response.ok()
-                    .entity(this.serviceResult.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        } else {
-            return Response.ok().entity(this.serviceResult.getObject()).build();
-        }
-    }
+    public Response getWork(@PathParam("agentId") String agentId) {
+        boolean isSent = false;
+        if (!isSent) {
+            isSent = true;
 
+            WorkInfo work = new WorkInfo();
+            work.setPipelineDefinitionName("Vlad");
+            ExecTask execTask = new ExecTask();
+            execTask.setCommand("/bin/bash");
+            List<String> args = new ArrayList<>();
+            args.add("echo \"Vlado\" >> vlad.txt");
+            execTask.setArguments(args);
+            Task task = new Task();
+            task.setTaskDefinition(execTask);
+            Job job = new Job();
+            List<Task> tasks = new ArrayList<>();
+            tasks.add(task);
+            job.setTasks(tasks);
+            work.setJob(job);
+            return Response.ok().entity(work).build();
+        }
+
+        return Response.noContent().build();
+
+//        this.serviceResult = this.agentService.getWorkInfo(agentId);
+//        if (this.serviceResult.getObject().equals(false)){
+//            return Response.ok()
+//                    .entity(this.serviceResult.getMessage())
+//                    .type(MediaType.TEXT_HTML)
+//                    .build();
+//        } else {
+//            return Response.ok().entity(this.serviceResult.getObject()).build();
+//        }
+    }
 
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAgent(Agent agent){
+    public Response addAgent(Agent agent) {
         String result = schemaValidator.validate(agent);
-        if (result.equals("OK")){
+        if (result.equals("OK")) {
             this.serviceResult = this.agentService.add(agent);
             return Response.ok().entity(this.serviceResult.getObject()).build();
-        }else {
+        } else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(result)
                     .type(MediaType.TEXT_HTML)
@@ -88,29 +119,26 @@ public class AgentController {
         }
     }
 
-    @POST
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{agentId}/work")
-    public Response addWork(@PathParam("agentId") String id){
+    @Path("/work")
+    public Response addWork(Job job) {
 
+        int five = 5;
         //TODO: Service operation to be implemented.
 
-        return  Response.noContent().build();
+        return Response.ok().build();
     }
 
-    /*
-     * Deserialization to be fixed on PUT.
-     * replace jersey's  default MOXy deserializer
-     * with Gson if necessary
-     */
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateAgent(Agent agent){
+    public Response updateAgent(Agent agent) {
         String result = schemaValidator.validate(agent);
-        if (result.equals("OK")){
+        if (result.equals("OK")) {
             this.serviceResult = this.agentService.update(agent);
             return Response.ok().entity(this.serviceResult.getObject()).build();
-        }else {
+        } else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(result)
                     .type(MediaType.TEXT_HTML)
@@ -121,7 +149,7 @@ public class AgentController {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}")
-    public Response deleteAgent(@PathParam("agentId") String agentId){
+    public Response deleteAgent(@PathParam("agentId") String agentId) {
         this.serviceResult = agentService.delete(agentId);
         boolean hasError = this.serviceResult.hasError();
         if (hasError) {
