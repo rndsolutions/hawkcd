@@ -2,6 +2,7 @@ package net.hawkengine.core;
 
 import net.hawkengine.core.components.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.components.pipelinescheduler.PipelinePreparer;
+import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.AgentController;
 import net.hawkengine.ws.WsServlet;
@@ -22,12 +23,14 @@ public class HawkServer {
     private Server server;
     private Thread jobAssigner;
     private Thread pipelinePreparer;
+    private EndpointFinder endpointFinder;
 
     public HawkServer() {
         RedisManager.connect();
         this.server = new Server();
         this.jobAssigner = new Thread(new JobAssigner());
         this.pipelinePreparer = new Thread(new PipelinePreparer());
+        this.endpointFinder = new EndpointFinder();
     }
 
     public void configureJetty() {
@@ -50,7 +53,7 @@ public class HawkServer {
         restServlet.setInitOrder(0);
 
         // Tells the Jersey Servlet which REST service/class to load.
-        String classes = AgentController.class.getCanonicalName();
+        String classes = this.endpointFinder.getClasses("net.hawkengine.http");
         restServlet.setInitParameter("jersey.config.server.provider.classnames", classes);
 
         // localhost:8080/ws/v1

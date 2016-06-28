@@ -1,12 +1,21 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
+import net.hawkengine.model.Job;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.StageStatus;
+import net.hawkengine.model.payload.WorkInfo;
 import net.hawkengine.services.interfaces.IAgentService;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AgentService extends CrudService<Agent> implements IAgentService {
@@ -37,7 +46,10 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
     @Override
     public ServiceResult update(Agent agent) {
-        return super.update(agent);
+        ServiceResult result = super.update(agent);
+        //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
+
+        return result;
     }
 
     @Override
@@ -59,50 +71,47 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         return result;
     }
 
-
-//    /**
-//     * Gets all agents from the database whom status is set to 'ENABLED'.
-//     *
-//     * @return A list of enabled agents.
-//     * @see Agent
-//     */
-//
-//    @Override
-//    public ServiceResult getAllEnabledAgents() {
-//        List<Agent> agents = (List<Agent>) super.getAll().getObject();
-//        agents = agents
-//                .stream()
-//                .filter(Agent::isEnabled)
-//                .collect(Collectors.toList());
-//
-//        ServiceResult result = new ServiceResult();
-//        result.setError(false);
-//        result.setMessage("All enabled " + super.getObjectType() + "s retrieved successfully.");
-//        result.setObject(agents);
-//
-//        return result;
-//    }
-//
-//    /**
-//     * Gets all agents from the database who are idle and waiting for a job.
-//     *
-//     * @return A list of idle agents.
-//     * @see Agent
-//     */
-//
-//    @Override
-//    public ServiceResult getAllEnabledIdleAgents() {
-//        List<Agent> agents = (List<Agent>) super.getAll().getObject();
-//        agents = agents
-//                .stream()
-//                .filter(a -> a.isEnabled() && !a.isRunning())
-//                .collect(Collectors.toList());
-//
-//        ServiceResult result = new ServiceResult();
-//        result.setError(false);
-//        result.setMessage("All enabled idle " + super.getObjectType() + "s retrieved successfully.");
-//        result.setObject(agents);
-//
-//        return result;
-//    }
+    public ServiceResult getWorkInfo(String agentId){
+        boolean isAssigned = false;
+        ServiceResult result = new ServiceResult();
+        Agent agent = (Agent)this.getById(agentId).getObject();
+        if (agent.isAssigned()){
+            PipelineService pipelineService =  new PipelineService();
+            List<Pipeline> pipelines = (List <Pipeline>) pipelineService.getAllPreparedPipelinesInProgress().getObject();
+            for (Pipeline pipeline : pipelines){
+                for (Stage stage : pipeline.getStages()){
+                    if (stage.getStatus() == StageStatus.IN_PROGRESS){
+                        for (Job job : stage.getJobs()){
+                            if (job.getStatus() == JobStatus.SCHEDULED){
+                                if (job.getAssignedAgentId().equals(agentId)){
+                                    isAssigned = true;
+                                    WorkInfo workInfo = new WorkInfo();
+                                    workInfo.setPipelineId(UUID.fromString(agent.getId()));
+                                    workInfo.setPipelineExecutionID(pipeline.getExecutionId());
+                                    workInfo.setPipelineName(null); //to be added to pipeline
+                                    workInfo.setPipelineEnvironmentName(null); // to be added pipeline
+                                    workInfo.setPipelineTriggerReason(pipeline.getTriggerReason());
+                                    workInfo.setLabelTemplate(null); // to be added to pipeline
+                                    workInfo.setStageId(UUID.fromString(stage.getId()));
+                                    workInfo.setStageExecutionID(stage.getExecutionId());
+                                    workInfo.setStageName(null); // to be added to stage;
+                                    workInfo.setStageTriggerReason(null); //to be added to stage
+                                    workInfo.setShouldFetchMaterials(false); // to be added to stage
+                                    workInfo.setJob(job);
+                                    workInfo.setMaterials(pipeline.getMaterials());
+                                    workInfo.setEnvironmentVariables(pipeline.getEnvironmentVariables());
+                                    result.setObject(workInfo);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else {
+            result.setObject(isAssigned);
+            result.setMessage("This agent has no job assigned.");
+            return result;
+        }
+        return result;
+    }
 }

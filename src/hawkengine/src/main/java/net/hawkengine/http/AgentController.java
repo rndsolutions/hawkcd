@@ -57,15 +57,21 @@ public class AgentController {
     }
 
     @GET
-    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}/work")
-    public Response getWorkInfo(@PathParam("agentId") String agentId){
-
-        //TODO: Service operation to be implemented.
-
-        return  Response.noContent().build();
+    public Response getWork(@PathParam("agentId") String agentId){
+        this.serviceResult = this.agentService.getWorkInfo(agentId);
+        if (this.serviceResult.getObject().equals(false)){
+            return Response.ok()
+                    .entity(this.serviceResult.getMessage())
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        } else {
+            return Response.ok().entity(this.serviceResult.getObject()).build();
+        }
     }
+
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -85,7 +91,7 @@ public class AgentController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}/work")
-    public Response addWork(@PathParam("agentId") String agentId){
+    public Response addWork(@PathParam("agentId") String id){
 
         //TODO: Service operation to be implemented.
 
