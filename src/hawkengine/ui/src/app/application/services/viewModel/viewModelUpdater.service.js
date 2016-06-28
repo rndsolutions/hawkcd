@@ -25,7 +25,7 @@ angular
 
         viewModelUpdater.addPipelineGroup = function (pipelineGroup) {
             viewModel.allPipelineGroups.push(pipelineGroup);
-            toaster.pop('success', "Notifiction", "Pipeline Group" + pipelineGroup.name + " added!")
+            toaster.pop('success', "Notification", "Pipeline Group" + pipelineGroup.name + " added!")
         };
 
         viewModelUpdater.updatePipelineGroup = function (pipelineGroup) {
