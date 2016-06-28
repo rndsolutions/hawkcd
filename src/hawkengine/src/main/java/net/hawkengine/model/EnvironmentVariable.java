@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class EnvironmentVariable {
     private String name;
     private String value;
@@ -25,6 +27,7 @@ public class EnvironmentVariable {
         return this.isSecured;
     }
 
+    @JsonProperty("isSecured")
     public void setSecured(boolean value) {
         this.isSecured = value;
     }

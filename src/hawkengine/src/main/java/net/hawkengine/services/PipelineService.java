@@ -11,6 +11,7 @@ import net.hawkengine.model.Stage;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.Task;
 import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -146,6 +147,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             task.setStageId(job.getStageId());
             task.setPipelineId(job.getPipelineId());
             task.setTaskDefinition(taskDefinition);
+            task.setRunIfCondition(taskDefinition.getRunIfCondition());
             tasks.add(task);
         }
 
