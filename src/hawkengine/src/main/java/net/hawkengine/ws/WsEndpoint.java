@@ -4,13 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
-import net.hawkengine.core.utilities.SchemaValidator;
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
 
 import org.apache.log4j.Logger;
@@ -48,6 +47,7 @@ public class WsEndpoint extends WebSocketAdapter {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
         System.out.println("Socket Connected: " + session);
+        EndpointConnector.setWsEndpoint(this);
     }
 
     @Override
@@ -67,19 +67,19 @@ public class WsEndpoint extends WebSocketAdapter {
                 return;
             }
 
-            SchemaValidator schemaValidator = new SchemaValidator();
-            for (ConversionObject conversionObject : contract.getArgs()) {
-                Class objectClass = Class.forName(conversionObject.getPackageName());
-                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
-                String result = schemaValidator.validate(object);
-
-                if (!result.equals("OK")) {
-                    contract.setError(true);
-                    contract.setErrorMessage(result);
-                    remoteEndpoint.sendString(serializer.toJson(contract));
-                    return;
-                }
-            }
+//            SchemaValidator schemaValidator = new SchemaValidator();
+//            for (ConversionObject conversionObject : contract.getArgs()) {
+//                Class objectClass = Class.forName(conversionObject.getPackageName());
+//                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
+//                String result = schemaValidator.validate(object);
+//
+//                if (!result.equals("OK")) {
+//                    contract.setError(true);
+//                    contract.setErrorMessage(result);
+//                    remoteEndpoint.sendString(serializer.toJson(contract));
+//                    return;
+//                }
+//            }
 
             ServiceResult result = (ServiceResult) this.call(contract);
             contract.setResult(result.getObject());
@@ -118,6 +118,17 @@ public class WsEndpoint extends WebSocketAdapter {
         }
 
         return contract;
+    }
+
+    public void send(WsContractDto contract) {
+        RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
+
+        String jsonResult = this.jsonConverter.toJson(contract);
+        try {
+            remoteEndpoint.sendString(jsonResult);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Object call(WsContractDto contract) throws ClassNotFoundException, InstantiationException, IllegalAccessException {

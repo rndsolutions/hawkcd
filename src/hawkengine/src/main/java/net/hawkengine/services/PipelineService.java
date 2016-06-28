@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Job;
@@ -54,7 +55,10 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     @Override
     public ServiceResult update(Pipeline pipeline) {
-        return super.update(pipeline);
+        ServiceResult result = super.update(pipeline);
+        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
+
+        return result;
     }
 
     @Override
@@ -70,6 +74,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> pipelinesInProgress = pipelines
                 .stream()
                 .filter(p -> p.getStatus() == Status.IN_PROGRESS)
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
         result.setObject(pipelinesInProgress);
@@ -81,10 +86,12 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     public ServiceResult getAllUpdatedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()) {
-            return result;
-        }
-        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::areMaterialsUpdated).collect(Collectors.toList());
+
+        List<Pipeline> updatedPipelines = pipelines
+                .stream()
+                .filter(Pipeline::areMaterialsUpdated)
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
 
         result.setObject(updatedPipelines);
 
@@ -92,13 +99,15 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public ServiceResult getAllPreparedPipelines() {
+    public ServiceResult getAllPreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()) {
-            return result;
-        }
-        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::isPrepared).collect(Collectors.toList());
+
+        List<Pipeline> updatedPipelines = pipelines
+                .stream()
+                .filter(p -> p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
 
         result.setObject(updatedPipelines);
 
