@@ -12,7 +12,6 @@ import net.hawkengine.model.Stage;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.Task;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -56,7 +55,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
-        //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
+        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
 
         return result;
     }

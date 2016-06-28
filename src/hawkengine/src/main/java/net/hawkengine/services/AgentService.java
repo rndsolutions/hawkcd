@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
@@ -47,7 +48,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     @Override
     public ServiceResult update(Agent agent) {
         ServiceResult result = super.update(agent);
-        //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
+        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
 
         return result;
     }
