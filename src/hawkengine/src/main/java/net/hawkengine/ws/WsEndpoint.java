@@ -121,13 +121,15 @@ public class WsEndpoint extends WebSocketAdapter {
     }
 
     public void send(WsContractDto contract) {
-        RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
+        if (this.getSession().isOpen()) {
+            RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
 
-        String jsonResult = this.jsonConverter.toJson(contract);
-        try {
-            remoteEndpoint.sendString(jsonResult);
-        } catch (IOException e) {
-            e.printStackTrace();
+            String jsonResult = this.jsonConverter.toJson(contract);
+            try {
+                remoteEndpoint.sendString(jsonResult);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
