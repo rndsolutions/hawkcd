@@ -8,6 +8,7 @@ import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -104,6 +105,13 @@ public class AgentController {
         // TODO: Move logic into JobService
         if (job == null) {
             return Response.ok().build();
+        }
+
+        if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
+            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
+            agent.setRunning(false);
+            agent.setAssigned(false);
+            this.agentService.update(agent);
         }
 
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();

@@ -48,7 +48,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     @Override
     public ServiceResult update(Agent agent) {
         ServiceResult result = super.update(agent);
-        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), "update", result);
+        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
 
         return result;
     }
@@ -94,7 +94,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                                     workInfo.setPipelineExecutionID(pipeline.getExecutionId());
                                     workInfo.setStageExecutionID(stage.getExecutionId());
                                     workInfo.setJob(job);
-                                    workInfo.setPipelineDefinitionName("alabala");
+                                    workInfo.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
 
                                     result.setObject(workInfo);
                                     result.setError(false);
