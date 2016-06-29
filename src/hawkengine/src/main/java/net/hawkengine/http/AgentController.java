@@ -3,13 +3,15 @@ package net.hawkengine.http;
 import com.google.gson.Gson;
 
 import net.hawkengine.core.utilities.SchemaValidator;
-import net.hawkengine.model.*;
-import net.hawkengine.model.payload.WorkInfo;
+import net.hawkengine.model.Agent;
+import net.hawkengine.model.Job;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.Stage;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -42,6 +44,7 @@ public class AgentController {
     }
 
     @GET
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAgents() {
         this.serviceResult = this.agentService.getAll();
@@ -51,6 +54,7 @@ public class AgentController {
     }
 
     @GET
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}")
     public Response getById(@PathParam("agentId") String id) {
@@ -66,39 +70,17 @@ public class AgentController {
     }
 
     @GET
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
-//        boolean isSent = false;
-//        if (!isSent) {
-//            isSent = true;
-//
-//            WorkInfo work = new WorkInfo();
-//            work.setPipelineDefinitionName("Vlad");
-//            ExecTask execTask = new ExecTask();
-//            execTask.setCommand("cmd");
-//            List<String> args = new ArrayList<>();
-//            args.add("echo \"Vlado\" >> vlad.txt");
-//            execTask.setArguments(args);
-//            Task task = new Task();
-//            task.setTaskDefinition(execTask);
-//            Job job = new Job();
-//            List<Task> tasks = new ArrayList<>();
-//            tasks.add(task);
-//            job.setTasks(tasks);
-//            work.setJob(job);
-//            return Response.ok().entity(work).build();
-//        }
-//
-//        return Response.noContent().build();
-
         this.serviceResult = this.agentService.getWorkInfo(agentId);
 
         return Response.ok().entity(this.serviceResult.getObject()).build();
     }
 
-
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAgent(Agent agent) {
         String result = schemaValidator.validate(agent);
@@ -119,6 +101,7 @@ public class AgentController {
     @Path("/work")
     public Response addWork(Job job) {
 
+        // TODO: Move logic into JobService
         if (job == null) {
             return Response.ok().build();
         }
@@ -155,6 +138,7 @@ public class AgentController {
     }
 
     @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateAgent(Agent agent) {
         String result = schemaValidator.validate(agent);
@@ -170,6 +154,7 @@ public class AgentController {
     }
 
     @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}")
     public Response deleteAgent(@PathParam("agentId") String agentId) {
