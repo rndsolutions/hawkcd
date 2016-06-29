@@ -60,6 +60,7 @@ public class JobAssignerService {
                                 job.setAssignedAgentId(agentForJob.getId());
                                 job.setStatus(JobStatus.SCHEDULED);
                                 this.pipelineService.update(pipeline);
+                                LOGGER.info(String.format("Job %s assigned to Agent %s", job.getJobDefinitionId(), agentForJob.getName()));
                             }
                         }
                     }
@@ -72,6 +73,10 @@ public class JobAssignerService {
         List<Agent> eligibleAgents = new ArrayList<>();
         for (Agent agent : agents) {
             boolean isEligible = true;
+            if (agent.isAssigned()) {
+                isEligible = false;
+            }
+
             for (String resource : job.getResources()) {
                 if (!(agent.getResources().contains(resource))) {
                     isEligible = false;
