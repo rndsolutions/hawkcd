@@ -79,7 +79,7 @@ angular
                         viewModelUpdater.addPipelineDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updatePipelineDefinition(object.result);
                     },
                     delete: function (object) {
                         if (object.error == false) {
@@ -124,7 +124,7 @@ angular
                         viewModelUpdater.addStageDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updateStageDefinition(object.result);
                     },
                     delete: function (object) {
                         if(object.error == false) {
@@ -147,7 +147,7 @@ angular
                         viewModelUpdater.addJobDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updateJobDefinition(object.result);
                     },
                     delete: function (object) {
                         if(object.error == false) {

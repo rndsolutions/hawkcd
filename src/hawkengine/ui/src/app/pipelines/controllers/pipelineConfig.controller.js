@@ -158,6 +158,12 @@ angular
             vm.currentPipeline = pipeName;
         };
 
+        vm.editPipeline = function (pipeline) {
+            var newPipeline = angular.copy(vm.allPipelines[vm.pipelineIndex]);
+            newPipeline.name = pipeline.name;
+            pipeConfigService.updatePipelineDefinition(newPipeline);
+        };
+
         vm.getStage = function (stage) {
             viewModel.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function (currentStage, index, array) {
                 if (currentStage.name == stage.name) {
@@ -240,6 +246,12 @@ angular
         }
         pipeConfigService.addStageDefinition(stage);
     };
+        
+        vm.editStage = function(stage) {
+            var newStage = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex]);
+            newStage.name = stage.name;
+            pipeConfigService.updateStageDefinition(newStage);
+        };
         
         vm.deleteStage = function(stage){
             pipeConfigService.deleteStageDefinition(stage.id);
@@ -335,6 +347,12 @@ angular
                 }
             }
             pipeConfigService.addJobDefinition(job);
+        };
+
+        vm.editJob = function (job) {
+            var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            newJob.name = job.name;
+            pipeConfigService.updateJobDefinition(newJob);
         };
 
         vm.deleteJob = function (job){
