@@ -40,7 +40,7 @@ angular
             resource: "Edit Resources"
         };
 
-        vm.currentAgents = {};
+        vm.currentAgents = [];
 
         vm.currentAgents = viewModel.allAgents;
 
