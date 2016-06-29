@@ -150,8 +150,6 @@ angular
             viewModel.allPipelineRuns.forEach(function (currentPipeline, index, array) {
                 if(currentPipeline.id == pipeline.id) {
                     viewModel.allPipelineRuns[index] = pipeline;
-                    toaster.pop('success', "Notification", "Pipeline Run updated!");
-                    $rootScope.$apply();
                 }
             });
         };

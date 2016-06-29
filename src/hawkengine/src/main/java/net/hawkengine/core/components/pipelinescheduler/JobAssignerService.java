@@ -1,8 +1,10 @@
 package net.hawkengine.core.components.pipelinescheduler;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.StageStatus;
@@ -43,7 +45,8 @@ public class JobAssignerService {
                             boolean isEligible = this.isAgentEligibleForJob(job, agent);
                             if (!isEligible) {
                                 agent.setAssigned(false);
-                                this.agentService.update(agent);
+                                ServiceResult result = this.agentService.update(agent);
+                                EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
 
                                 job.setStatus(JobStatus.AWAITING);
                                 this.pipelineService.update(pipeline);
@@ -55,7 +58,8 @@ public class JobAssignerService {
                             Agent agentForJob = this.pickMostSuitableAgent(eligibleAgents);
                             if (agentForJob != null) {
                                 agentForJob.setAssigned(true);
-                                this.agentService.update(agentForJob);
+                                ServiceResult result = this.agentService.update(agentForJob);
+                                EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
 
                                 job.setAssignedAgentId(agentForJob.getId());
                                 job.setStatus(JobStatus.SCHEDULED);
