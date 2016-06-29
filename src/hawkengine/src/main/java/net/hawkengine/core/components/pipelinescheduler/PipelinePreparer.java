@@ -52,7 +52,7 @@ public class PipelinePreparer extends Thread {
                 for (Pipeline pipeline : filteredPipelines) {
                     Pipeline preparedPipeline = this.preparePipeline(pipeline);
                     this.pipelineService.update(preparedPipeline);
-                    LOGGER.info(preparedPipeline.getPipelineDefinitionName() + "prepared.");
+                    LOGGER.info(preparedPipeline.getPipelineDefinitionName() + " prepared.");
                 }
 
                 Thread.sleep(4 * 1000);
