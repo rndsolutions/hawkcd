@@ -8,13 +8,12 @@
       </div>
       <div class="modal-body">
         <div>
-          <button class="btn green" ng-click="agents.addInputResource()">Add</button>
+          <button class="btn green" ng-click="agents.addResourceInput()">Add Resource</button>
           <button class="btn default" ng-click="agents.removeLastResource()">Remove Last</button>
-          <input ng-model="agents.currentAgentResources[$index]" class="form-control custom-add-resource" ng-repeat="resource in agents.resourcesToAdd"
-                 placeholder="{{'Resource' + ' ' + ($index + 1)}}">
+          <input ng-model="agents.currentAgentResources[$index]" class="form-control custom-add-resource" ng-repeat="resource in agents.currentAgentResources">
           <br>
           <br>
-          <button class="btn green" ng-click="agents.updateAgent()" data-dismiss="modal">{{agents.defaultText.add}}</button>
+          <button class="btn green" ng-click="agents.addInputResource()" data-dismiss="modal">{{agents.defaultText.submit}}</button>
           <button class="btn" data-dismiss="modal">{{agents.defaultText.cancel}}</button>
         </div>
       </div>
