@@ -4,13 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
-import net.hawkengine.core.utilities.SchemaValidator;
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
 
 import org.apache.log4j.Logger;
@@ -48,6 +47,7 @@ public class WsEndpoint extends WebSocketAdapter {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
         System.out.println("Socket Connected: " + session);
+        EndpointConnector.setWsEndpoint(this);
     }
 
     @Override
@@ -121,12 +121,11 @@ public class WsEndpoint extends WebSocketAdapter {
     }
 
     public void send(WsContractDto contract) {
-        if(this.getSession() == null){
+        if ((this.getSession() == null) || !this.getSession().isOpen()) {
             return;
         }
 
         RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
-
         String jsonResult = this.jsonConverter.toJson(contract);
         try {
             remoteEndpoint.sendString(jsonResult);

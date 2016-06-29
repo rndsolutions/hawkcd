@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -82,6 +84,7 @@ public class Agent extends DbEntry {
         return this.isRunning;
     }
 
+    @JsonProperty("isRunning")
     public void setRunning(boolean running) {
         this.isRunning = running;
     }
@@ -90,6 +93,7 @@ public class Agent extends DbEntry {
         return this.isEnabled;
     }
 
+    @JsonProperty("isEnabled")
     public void setEnabled(boolean enabled) {
         this.isEnabled = enabled;
     }
@@ -98,6 +102,7 @@ public class Agent extends DbEntry {
         return this.isConnected;
     }
 
+    @JsonProperty("isConnected")
     public void setConnected(boolean connected) {
         this.isConnected = connected;
     }
@@ -106,6 +111,7 @@ public class Agent extends DbEntry {
         return isAssigned;
     }
 
+    @JsonProperty("isAssigned")
     public void setAssigned(boolean assigned) {
         isAssigned = assigned;
     }

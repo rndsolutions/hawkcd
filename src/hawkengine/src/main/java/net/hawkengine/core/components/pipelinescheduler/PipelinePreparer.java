@@ -95,6 +95,7 @@ public class PipelinePreparer extends Thread {
             Stage currentStage = stages.get(i);
             currentStage.setStageDefinitionId(stageDefinitions.get(i).getId());
             currentStage.setEnvironmentVariables(stageDefinitions.get(i).getEnvironmentVariables());
+            currentStage.setPipelineId(pipeline.getId());
             currentStage.setJobs(this.preparePipelineJobs(stageDefinitions.get(i).getJobDefinitions(), currentStage));
 
             stages.set(i, currentStage);
@@ -113,6 +114,8 @@ public class PipelinePreparer extends Thread {
             currentJob.setJobDefinitionId(jobDefinitions.get(i).getId());
             currentJob.setEnvironmentVariables(jobDefinitions.get(i).getEnvironmentVariables());
             currentJob.setResources(jobDefinitions.get(i).getResources());
+            currentJob.setStageId(stage.getId());
+            currentJob.setPipelineId(stage.getPipelineId());
             currentJob.setTasks(this.prepareTasks(jobDefinitions.get(i).getTaskDefinitions(), currentJob));
 
             jobs.set(i, currentJob);
@@ -131,7 +134,11 @@ public class PipelinePreparer extends Thread {
             tasks.add(new Task());
             Task currentTask = tasks.get(i);
             currentTask.setTaskDefinition(taskDefinitions.get(i));
-
+            currentTask.setJobId(job.getId());
+            currentTask.setStageId(job.getStageId());
+            currentTask.setPipelineId(job.getPipelineId());
+            currentTask.setType(taskDefinitions.get(i).getType());
+            currentTask.setRunIfCondition(taskDefinitions.get(i).getRunIfCondition());
             tasks.set(i, currentTask);
         }
 

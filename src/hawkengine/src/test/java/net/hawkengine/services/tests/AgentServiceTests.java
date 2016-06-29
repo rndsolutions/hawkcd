@@ -20,7 +20,7 @@ public class AgentServiceTests {
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testAgentService");
         IDbRepository<Agent> mockedRepository = new RedisRepository(Agent.class, mockedPool);
-        this.mockedAgentService = new AgentService(mockedRepository);
+        this.mockedAgentService = new AgentService();
     }
 
 //    @Test

@@ -11,7 +11,6 @@ import net.hawkengine.services.interfaces.IPipelineService;
 import org.apache.log4j.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StatusUpdaterService extends Thread {
     private static final Logger logger = Logger.getLogger(StatusUpdaterService.class.getName());

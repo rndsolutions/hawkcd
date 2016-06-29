@@ -74,8 +74,8 @@ dependencies {
     compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.22.2'
     
     compile 'org.eclipse.jetty:jetty-http:9.3.8.v20160314'
-    
-    compile 'org.glassfish.jersey.media:jersey-media-moxy:2.22.2'
+
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.22.2'
             
     // Jedis
 
