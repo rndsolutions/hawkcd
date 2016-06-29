@@ -11,7 +11,6 @@ import net.hawkengine.services.interfaces.IPipelineService;
 import org.apache.log4j.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StatusUpdaterService extends Thread {
     private static final Logger logger = Logger.getLogger(StatusUpdaterService.class.getName());
@@ -26,7 +25,7 @@ public class StatusUpdaterService extends Thread {
     }
 
     public void updateStatuses() {
-        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPipelinesInProgress().getObject();
+        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelinesInProgress) {
             this.updateAllStatuses(pipeline);
             this.pipelineService.update(pipeline);
