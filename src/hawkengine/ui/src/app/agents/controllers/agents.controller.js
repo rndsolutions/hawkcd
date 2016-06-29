@@ -69,7 +69,7 @@ angular
         };
         
         vm.delete = function (id) {
-            agentService.delete(id);
+            agentService.deleteAgent(id);
         };
 
         vm.changeAgentStatus = function (agent) {

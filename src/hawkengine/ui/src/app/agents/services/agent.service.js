@@ -45,7 +45,7 @@ angular
             console.log(json);
         };
 
-        agentService.delete = function (id) {
+        agentService.deleteAgent = function (id) {
             var methodName = "delete";
             var className = "AgentService";
             var packageName = "net.hawkengine.services";

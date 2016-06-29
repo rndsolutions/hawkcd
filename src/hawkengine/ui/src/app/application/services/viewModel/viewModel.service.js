@@ -7,55 +7,21 @@ angular
 
         viewModel.isAgentFirstRun = true;
 
-        viewModel.allAgents = {};
+        viewModel.allAgents = [];
 
-        viewModel.allPipelines = {};
+        viewModel.allPipelines = [];
 
-        viewModel.allMaterials = {};
+        viewModel.allMaterials = [];
 
-        viewModel.allPipelineGroups = {};
+        viewModel.allPipelineDefinitions = [];
 
-        viewModel.init = function() {
-            viewModel.getAllAgents();
-            viewModel.getAllPipelines();
-            viewModel.getAllMaterials();
-            agentService.getAllAgents();
-        };
+        viewModel.allPipelineGroups = [];
+        
+        viewModel.allStages = [];
 
-        //region Getters
-
-        viewModel.getAllAgents = function() {
-
-        };
-
-        viewModel.getAllPipelines = function() {
-
-        };
-
-        viewModel.getAllMaterials = function() {
-
-        };
-
-        //endregion
-
-        //region Updaters
-
-        viewModel.updateAgents = function(object) {
-            viewModel.allAgents = object;
-            toaster.pop('success', "Notification", "Agents updated!");
-        };
-
-        viewModel.updatePipelineGroups = function(object) {
-            viewModel.allPipelineGroups = object.result;
-        };
-
-        // $rootScope.$on('updateAgents', function(event, args) {
-        //     var object = args.object;
-        //     viewModel.currentAgents = object;
-        //     console.log(object);
-        // });
-
-        //endregion
+        viewModel.allJobs = [];
+            
+        viewModel.allPipelineRuns = [];
 
         return viewModel;
     }]);

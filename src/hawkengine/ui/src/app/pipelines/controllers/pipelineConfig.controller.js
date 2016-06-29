@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelineConfigController', function($state, $interval, $scope, authDataService) {
+    .controller('PipelineConfigController', function($state, $interval, $scope, authDataService, viewModel, pipeConfigService) {
         var vm = this;
         vm.toggleLogo = 1;
         vm.materialType = "git";
@@ -24,13 +24,58 @@ angular
         vm.materials = {};
         vm.newMaterial = {};
 
-        vm.allJobs = [];
+        vm.allPipelineRuns = [];
+        vm.allPipelines = [];
+        vm.allJobs = viewModel.allJobs;
         vm.allTasks = [];
-        vm.allStages = [];
+        vm.allStages = viewModel.allStages;
         vm.allMaterials = {};
         vm.allPipelineVars = {};
         vm.allStageVars = {};
         vm.allJobVars = {};
+
+        vm.pipelineIndex = {};
+        vm.stageIndex = {};
+        vm.jobIndex = {};
+        vm.materialIndex = {};
+
+        vm.currentStageRuns = [];
+
+        // $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
+        //     vm.allMaterials = viewModel.allPipelines.materials;
+        //     console.log(vm.allPipelines.materials);
+        // });
+
+        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+            vm.allPipelines = viewModel.allPipelines;
+            console.log(vm.allPipelines);
+        });
+
+        $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
+            vm.allStages = viewModel.allStages;
+            viewModel.allStages.forEach(function (currentStage, index, array) {
+                if (currentStage.name == vm.stage.name) {
+                    vm.stage = array[index];
+                }
+            });
+            console.log(vm.allStages);
+        });
+
+        $scope.$watch(function () {return viewModel.allJobs}, function (newVal, oldVal) {
+            viewModel.allJobs.forEach(function (currentJob, index, array) {
+                if (currentJob.name == vm.job.name) {
+                    vm.job = array[index];
+                }
+            });
+            vm.allJobs = viewModel.allJobs;
+            
+            console.log(vm.allJobs);
+        });
+
+        $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
+            vm.allPipelineRuns = viewModel.allPipelineRuns;
+            console.log(vm.allPipelineRuns)
+        });
 
         vm.stageDeleteButton = false;
         vm.jobDeleteButton = false;
@@ -54,34 +99,34 @@ angular
         vm.newPipelineVar = {};
 
         //region select manipulation
-        vm.isExpanded = function(stageName) {
+        vm.isExpanded = function (stageName) {
             return stageName == vm.currentStage;
         };
 
-        vm.isPipelineSelected = function() {
+        vm.isPipelineSelected = function () {
             return $state.params.stageName == undefined && $state.params.jobName == undefined;
         };
 
-        vm.isStageSelected = function(stageName) {
+        vm.isStageSelected = function (stageName) {
             return $state.params.stageName == stageName && $state.params.jobName == undefined;
         };
 
-        vm.isJobSelected = function(jobName) {
+        vm.isJobSelected = function (jobName) {
             return $state.params.jobName == jobName && $state.params.stageName != undefined;
         };
         //endregion
 
-        vm.setSpecific = function() {
+        vm.setSpecific = function () {
             vm.specificVersion = true;
             vm.latestVersion = false;
         }
 
-        vm.setLatest = function() {
+        vm.setLatest = function () {
             vm.latestVersion = true;
             vm.specificVersion = false;
         }
 
-        vm.close = function() {
+        vm.close = function () {
             vm.newMaterial = {};
             vm.newTask = {};
             vm.newStage = {};
@@ -92,1978 +137,2251 @@ angular
             vm.newPipelineVar = {};
             vm.newStageVar = {};
             vm.newJobVar = {};
-        }
-
-        function getAllPipelines () {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                oldpipeConfig.getAllPipelineDefs(token)
-                    .then(function (res) {
-                        vm.allPipelines = res;
-                        console.log(res);
-                    }, function (err) {
-                        console.log(err);
-                    });
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllPipelineDefs(token)
-                            .then(function (res) {
-                                vm.allPipelines = res;
-                                console.log(res);
-                            }, function (err) {
-                                console.log(err);
-                            });
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-        //getAllPipelines();
-
-        vm.getPipelineForTask = function (pipeName) {
-            vm.newTask.Stage = '';
-            vm.selectedPipelineStages = {};
-            vm.selectedStageJobs = {};
-            for (var i = 0; i < vm.allPipelines.length; i++) {
-                if (vm.allPipelines[i].Name == pipeName) {
-                    vm.selectedPipelineStages = vm.allPipelines[i].Stages;
-                    break;
-                }
-            }
-            console.log(vm.selectedPipelineStages);
-        }
-
-        vm.getStageForTask = function (stageName) {
-            vm.newTask.Job = '';
-            vm.selectedStageJobs = {};
-            for (var i = 0; i < vm.selectedPipelineStages.length; i++) {
-                if (vm.selectedPipelineStages[i].Name == stageName) {
-                    vm.selectedStageJobs = vm.selectedPipelineStages[i].Jobs;
-                    break;
-                }
-            }
-            console.log(vm.selectedStageJobs);
-        }
-
-        //region Pipeline functions
-        vm.getPipelineForConfig = function(pipeName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                oldpipeConfig.getPipelineDef(pipeName, token)
-                    .then(function(res) {
-                        vm.pipeline = res;
-
-                        vm.newStage = {};
-                        vm.newMaterials = {};
-
-                        vm.updatedPipeline.Name = vm.pipeline.Name;
-                        vm.updatedPipeline.LabelTemplate = vm.pipeline.LabelTemplate;
-                        vm.updatedPipeline.AutoScheduling = vm.pipeline.AutoScheduling;
-
-                        vm.currentPipeline = res.Name;
-                        getAllStages();
-                        getAllMaterials();
-                        getAllPipelineVars();
-                    }, function(err) {
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getPipelineDef(pipeName, token)
-                        .then(function(res) {
-                            vm.pipeline = res;
-
-                            vm.newStage = {};
-                            vm.newMaterials = {};
-
-                            vm.updatedPipeline.Name = vm.pipeline.Name;
-                            vm.updatedPipeline.LabelTemplate = vm.pipeline.LabelTemplate;
-                            vm.updatedPipeline.AutoScheduling = vm.pipeline.AutoScheduling;
-
-                            vm.currentPipeline = res.Name;
-                            getAllStages();
-                            getAllMaterials();
-                            getAllPipelineVars();
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
         };
 
-        vm.editPipeline = function(newPipe) {
-            if (vm.pipeline != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                    var token = window.localStorage.getItem("accessToken");
-                    vm.pipeline.Name = newPipe.Name;
-                    vm.pipeline.LabelTemplate = newPipe.LabelTemplate;
-                    vm.pipeline.AutoScheduling = newPipe.AutoScheduling;
-                    oldpipeConfig.updatePipeline(vm.currentPipeline, vm.pipeline, token)
-                        .then(function(res) {
-                            vm.pipeline = {};
-                            vm.currentPipeline = newPipe.Name;
-                            vm.getPipelineForConfig(vm.currentPipeline);
-
-                            var params = {
-                                groupName: vm.currentGroup,
-                                pipelineName: newPipe.Name
-                            };
-                            $state.go($state.current, params, {
-                                reload: false
-                            });
-
-                            console.log(res);
-                        }, function(err) {
-                            alert(err.Message);
-                            console.log(err);
-                        })
-                } else {
-                    var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updatePipeline(vm.currentPipeline, vm.pipeline, token)
-                            .then(function(res) {
-                                vm.pipeline = {};
-                                vm.currentPipeline = newPipe.Name;
-                                vm.getPipelineForConfig(vm.currentPipeline);
-
-                                var params = {
-                                    groupName: vm.currentGroup,
-                                    pipelineName: newPipe.Name
-                                };
-                                $state.go($state.current, params, {
-                                    reload: false
-                                });
-
-                                console.log(res);
-                            }, function(err) {
-                                alert(err.Message);
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           alert(err.Message);
-                           console.log(err);
-                       })
+        vm.getPipelineForConfig = function (pipeName) {
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.name == pipeName) {
+                    vm.pipeline = array[index];
+                    vm.pipelineIndex = index;
                 }
-            } else {
-                console.log('Not found');
-            }
+            });
+            //vm.pipeline = pipeName;
+
+            vm.newStage = {};
+            vm.newMaterials = {};
+
+            vm.updatedPipeline.name = vm.pipeline.name;
+            vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
+            vm.updatedPipeline.autoScheduling = vm.pipeline.autoScheduling;
+
+            vm.currentPipeline = pipeName;
         };
 
-        vm.getMaterial = function(materialName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                oldpipeConfig.getMaterial(vm.currentPipeline, materialName, token)
-                .then(function(res) {
-                    vm.materialDeleteButton = false;
-                    vm.material = res;
+        vm.getStage = function (stage) {
+            viewModel.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function (currentStage, index, array) {
+                if (currentStage.name == stage.name) {
+                    vm.stage = array[index];
+                    vm.stageIndex = index;
+                }
+            });
+            vm.stageDeleteButton = false;
+            //vm.stage = res;
 
-                    if (vm.material.MaterialSpecificDetails.username &&
-                        vm.material.MaterialSpecificDetails.password) {
-                        vm.hasCredentials = true;
-                    } else {
-                        vm.hasCredentials = false;
-                    }
+            vm.newJob = {};
+            vm.newStageVariable = {};
 
-                    vm.currentMaterial = res.Name;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getMaterial(vm.currentPipeline, materialName, token)
-                        .then(function(res) {
-                            vm.material = res;
+            vm.updatedStage.name = vm.stage.name;
+            vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
-                            if (vm.material.MaterialSpecificDetails.username &&
-                                vm.material.MaterialSpecificDetails.password) {
-                                vm.hasCredentials = true;
-                            } else {
-                                vm.hasCredentials = false;
-                            }
-
-                            vm.currentMaterial = res.Name;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
+            vm.currentStage = stage;
         };
 
-        vm.addMaterial = function(newMaterial) {
-            var material = {};
-
-            if (vm.materialType == 'git') {
-                material = {
-                    "PipelineName": vm.currentPipeline,
-                    "Name": newMaterial.git.name,
-                    "Type": 'GIT',
-                    "Url": newMaterial.git.url,
-                    "AutoTriggerOnChange": newMaterial.git.poll,
-                    "Destination": newMaterial.git.name,
-                    "MaterialSpecificDetails": {
-                        "branch": newMaterial.git.branch || 'master'
-                    }
+        vm.addStage = function (newStage) {
+            if (newStage.jobDefinitions.taskDefinitions.type == 'EXEC') {
+                var stage = {
+                    name: newStage.name,
+                    pipelineDefinitionId: vm.pipeline.id,
+                    jobDefinitions: [{
+                        name: newStage.jobDefinitions.name,
+                        taskDefinitions: [{
+                            type: newStage.jobDefinitions.taskDefinitions.type,
+                            command: newStage.jobDefinitions.taskDefinitions.command,
+                            arguments: newStage.jobDefinitions.taskDefinitions.arguments ? newStage.jobDefinitions.taskDefinitions.arguments.split('\n') : [],
+                            workingDirectory: newStage.jobDefinitions.taskDefinitions.workingDirectory,
+                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition,
+                            ignoreErrors: newStage.jobDefinitions.taskDefinitions.ignoreErrors || false
+                        }]
+                    }]
                 };
-                if (newMaterial.git.credentials) {
-                    material.MaterialSpecificDetails.username = newMaterial.git.username;
-                    material.MaterialSpecificDetails.password = newMaterial.git.password;
-                }
             }
-            //TODO
-            // if (tfsMaterial) {
-            //   var tfs = {
-            //     "PipelineName": vm.currentPipeline,
-            //     "Name": tfsMaterial.name,
-            //     "Type": 'TFS',
-            //     "AutoTriggerOnChange": tfsMaterial.poll,
-            //     "Destination": tfsMaterial.name,
-            //     "MaterialSpecificDetails": {
-            //       "domain": tfsMaterial.domain,
-            //       "projectPath": tfsMaterial.projectPath,
-            //       "username": tfsMaterial.username,
-            //       "password": tfsMaterial.password
-            //     }
-            //   };
-            // }
-            //
-            if (vm.materialType == 'nuget') {
-                material = {
-                    "PipelineName": vm.currentPipeline,
-                    "Name": newMaterial.nuget.name,
-                    "Url": newMaterial.nuget.url,
-                    "Type": 'NUGET',
-                    "AutoTriggerOnChange": newMaterial.nuget.poll,
-                    "Destination": newMaterial.nuget.name,
-                    "MaterialSpecificDetails": {
-                        "packageId": newMaterial.nuget.packageId,
-                        "includePrerelease": newMaterial.nuget.includePrerelease
+        if (newStage.jobDefinitions.taskDefinitions.type == 'FETCH_ARTIFACT') {
+            var stage = {
+                name: newStage.name,
+                jobDefinitions: [{
+                    name: newStage.jobDefinitions.name,
+                    taskDefinitions: [{
+                        type: newStage.jobDefinitions.taskDefinitions.type,
+                        pipelineDefinition: newStage.jobDefinitions.taskDefinitions.pipeline,
+                        stageDefinition: newStage.jobDefinitions.taskDefinitions.stage,
+                        jobDefinition: newStage.jobDefinition.taskDefinitions.jobDefinition,
+                        source: newStage.jobDefinition.taskDefinitions.source,
+                        destination: newStage.jobDefinition.taskDefinitions.destination,
+                        runIfCondition: newStage.jobDefinition.taskDefinitions.runIfCondition
+                    }]
+                }]
+            };
+        }
+        if (newStage.jobDefinitions.taskDefinitions.type == 'FETCH_MATERIAL') {
+            var stage = {
+                name: newStage.name,
+                jobDefinitions: [{
+                    name: newStage.jobDefinitions.name,
+                    taskDefinitions: [{
+                        type: newStage.jobDefinitions.taskDefinitions.type,
+                        materialName: newStage.jobDefinitions.taskDefinitions.materialName,
+                        runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
+                    }]
+                }]
+            };
+        }
+        if (newStage.jobDefinitions.taskDefinitions.type == 'UPLOAD_ARTIFACT') {
+            var stage = {
+                name: newStage.name,
+                jobDefinitions: [{
+                    name: newStage.jobDefinitions.name,
+                    taskDefinitions: [{
+                        type: newStage.jobDefinitions.taskDefinitions.type,
+                        source: newStage.jobDefinitions.taskDefinitions.source,
+                        destination: newStage.jobDefinitions.taskDefinitions.destination
+                    }]
+                }]
+            };
+        }
+        pipeConfigService.addStageDefinition(stage);
+    };
+        
+        vm.deleteStage = function(stage){
+            pipeConfigService.deleteStageDefinition(stage.id);
+        };
+
+        vm.getJob = function(job) {
+            if (vm.job != null) {
+                viewModel.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function (currentJob, index, array) {
+                    if (currentJob.name == job.name) {
+                        vm.job = array[index];
+                        vm.jobIndex = index;
                     }
-                };
-                //TODO
-                // if (nugetMaterial.credentials) {
-                //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
-                //   nuget.MaterialSpecificDetails.password = nugetMaterial.password;
-                // }
-            }
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.createMaterial(vm.currentPipeline, material, token)
-                .then(function(res) {
-                    vm.newMaterial = {};
-                    getAllMaterials();
-                    console.log(res);
-                }, function(err) {
-                    vm.material = {};
-                    alert(err.Message);
-                    console.log(err);
                 });
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.createMaterial(vm.currentPipeline, material, token)
-                        .then(function(res) {
-                            vm.newMaterial = {};
-                            getAllMaterials();
-                            console.log(res);
-                        }, function(err) {
-                            vm.material = {};
-                            alert(err.Message);
-                            console.log(err);
-                        });
-                   }, function (err) {
-                       console.log(err);
-                   })
-               }
-        };
 
-        vm.editMaterial = function(newMaterial) {
-            if (vm.material != null) {
-                if (vm.material.Type == 'Git') {
-                    vm.material.Name = newMaterial.Name;
-                    vm.material.Destination = newMaterial.Name;
-                    vm.material.Url = newMaterial.Url;
-                    vm.material.AutoTriggerOnChange = newMaterial.AutoTriggerOnChange;
-                    vm.material.MaterialSpecificDetails.branch = newMaterial.MaterialSpecificDetails.branch;
-                    if (vm.hasCredentials) {
-                        vm.material.MaterialSpecificDetails.username = newMaterial.MaterialSpecificDetails.username;
-                        vm.material.MaterialSpecificDetails.password = newMaterial.MaterialSpecificDetails.password;
-                    } else {
-                        delete vm.material.MaterialSpecificDetails.username;
-                        delete vm.material.MaterialSpecificDetails.password;
-                    }
-                }
-                if (vm.material.Type == 'Tfs') {
-                    vm.material.Name = newMaterial.Name;
-                    vm.material.Destination = newMaterial.Name;
-                    vm.material.AutoTriggerOnChange = newMaterial.AutoTriggerOnChange;
-                    vm.material.MaterialSpecificDetails.projectPath = newMaterial.MaterialSpecificDetails.projectPath;
-                    vm.material.MaterialSpecificDetails.domain = newMaterial.MaterialSpecificDetails.domain;
-                    vm.material.MaterialSpecificDetails.username = newMaterial.MaterialSpecificDetails.username;
-                    vm.material.MaterialSpecificDetails.password = newMaterial.MaterialSpecificDetails.password;
-                }
-                if (vm.material.Type == 'Nuget') {
-                    vm.material.Name = newMaterial.Name;
-                    vm.material.Destination = newMaterial.Name;
-                    vm.material.Url = newMaterial.Url;
-                    vm.material.AutoTriggerOnChange = newMaterial.AutoTriggerOnChange;
-                    vm.material.MaterialSpecificDetails.packageId = newMaterial.MaterialSpecificDetails.packageId;
-                    vm.material.MaterialSpecificDetails.includePrerelease = newMaterial.MaterialSpecificDetails.includePrerelease;
-                    // if (newMaterial.credentials) {
-                    //     vm.material.MaterialSpecificDetails.username = newMaterial.MaterialSpecificDetails.username;
-                    //     vm.material.MaterialSpecificDetails.password = newMaterial.MaterialSpecificDetails.password;
-                    // };
-                }
+                vm.jobDeleteButton = false;
+                //vm.job = res;
 
-                var tokenIsValid = authDataService.checkTokenExpiration();
-               if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.updateMaterial(vm.currentPipeline, vm.currentMaterial, vm.material, token)
-                    .then(function(res) {
-                        vm.material = {};
+                vm.newTask = {};
+                vm.newArtifact = {};
+                vm.newJobVariable = {};
+                vm.newCustomTab = {};
 
-                        getAllMaterials();
-                        console.log(res);
-                    }, function(err) {
-                        alert(err.Message);
-                        console.log(err);
-                    })
-               } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updateMaterial(vm.currentPipeline, vm.currentMaterial, vm.material, token)
-                            .then(function(res) {
-                                vm.material = {};
+                vm.updatedJob.name = vm.job.name;
 
-                                getAllMaterials();
-                                console.log(res);
-                            }, function(err) {
-                                alert(err.Message);
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-               }
-            } else {
-                console.log('Not found');
-            }
-        };
-        vm.deleteMaterial = function(materialName) {
-            if (vm.material != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-               if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                    oldpipeConfig.deleteMaterial(vm.currentPipeline, materialName, token)
-                        .then(function(res) {
-                            getAllMaterials();
-                            console.log(res);
-                        }, function(err) {
-                            alert(err.Message);
-                            console.log(err);
-                        })
-               } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.deleteMaterial(vm.currentPipeline, materialName, token)
-                            .then(function(res) {
-                                getAllMaterials();
-                                console.log(res);
-                            }, function(err) {
-                                alert(err.Message);
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           alert(err.Message);
-                           console.log(err);
-                       })
-               }
-            } else {
-                console.log('Not Found');
-            }
-        };
+                vm.currentJob = job;
 
-        vm.addStage = function(newStage) {
-            if (newStage.Jobs.Tasks.Type == 'Exec') {
-                var stage = {
-                    Name: newStage.Name,
-                    Jobs: [{
-                        Name: newStage.Jobs.Name,
-                        Tasks: [{
-                            Type: newStage.Jobs.Tasks.Type,
-                            Command: newStage.Jobs.Tasks.Command,
-                            Arguments: newStage.Jobs.Tasks.Arguments ? newStage.Jobs.Tasks.Arguments.split('\n') : [],
-                            WorkingDirectory: newStage.Jobs.Tasks.WorkingDirectory,
-                            RunIfCondition: newStage.Jobs.Tasks.RunIfCondition,
-                            IgnoreErrors: newStage.Jobs.Tasks.IgnoreErrors || false
-                        }]
-                    }]
-                };
-            }
-            if (newStage.Jobs.Tasks.Type == 'FetchArtifact') {
-                var stage = {
-                    Name: newStage.Name,
-                    Jobs: [{
-                        Name: newStage.Jobs.Name,
-                        Tasks: [{
-                            Type: newStage.Jobs.Tasks.Type,
-                            Pipeline: newStage.Jobs.Tasks.Pipeline,
-                            Stage: newStage.Jobs.Tasks.Stage,
-                            Job: newStage.Jobs.Tasks.Job,
-                            Source: newStage.Jobs.Tasks.Source,
-                            Destination: newStage.Jobs.Tasks.Destination,
-                            RunIfCondition: newStage.Jobs.Tasks.RunIfCondition
-                        }]
-                    }]
-                };
-            }
-            if (newStage.Jobs.Tasks.Type == 'FetchMaterial') {
-                var stage = {
-                    Name: newStage.Name,
-                    Jobs: [{
-                        Name: newStage.Jobs.Name,
-                        Tasks: [{
-                            Type: newStage.Jobs.Tasks.Type,
-                            MaterialName: newStage.Jobs.Tasks.MaterialName,
-                            RunIfCondition: newStage.Jobs.Tasks.RunIfCondition
-                        }]
-                    }]
-                };
-            }
-            if (newStage.Jobs.Tasks.Type == 'UploadArtifact') {
-                var stage = {
-                    Name: newStage.Name,
-                    Jobs: [{
-                        Name: newStage.Jobs.Name,
-                        Tasks: [{
-                            Type: newStage.Jobs.Tasks.Type,
-                            Source: newStage.Jobs.Tasks.Source,
-                            Destination: newStage.Jobs.Tasks.Destination,
-                            RunIfCondition: newStage.Jobs.Tasks.RunIfCondition
-                        }]
-                    }]
-                };
-            }
-
-            var tokenIsValid = authDataService.checkTokenExpiration();
-           if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.createStage(vm.currentPipeline, stage, token)
-                    .then(function(res) {
-                        vm.newStage = {};
-                        getAllStages();
-                        console.log(res);
-                    }, function(err) {
-                        vm.newStage = {};
-                        alert(err.Message);
-                        console.log(err);
-                    })
-           } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.createStage(vm.currentPipeline, stage, token)
-                        .then(function(res) {
-                            vm.newStage = {};
-                            getAllStages();
-                            console.log(res);
-                        }, function(err) {
-                            vm.newStage = {};
-                            alert(err.Message);
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-           }
-        };
-
-        vm.deleteStage = function(stageName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.deleteStage(vm.currentPipeline, stageName, token)
-                .then(function(res) {
-                    vm.getPipelineForConfig(vm.currentPipeline);
-                    vm.stageDeleteButton = false;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.deleteStage(vm.currentPipeline, stageName, token)
-                        .then(function(res) {
-                            vm.getPipelineForConfig(vm.currentPipeline);
-                            vm.stageDeleteButton = false;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        };
-        //endregion
-
-        //region Stage functions
-        vm.getStage = function(stageName) {
-            if (vm.stage != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.getStage(vm.currentPipeline, stageName, token)
-                    .then(function(res) {
-                        vm.stageDeleteButton = false;
-                        vm.stage = res;
-
-                        vm.newJob = {};
-                        vm.newStageVariable = {};
-
-                        vm.updatedStage.Name = vm.stage.Name;
-                        vm.updatedStage.StageType = vm.stage.StageType;
-
-                        vm.currentStage = res.Name;
-                        getAllJobs();
-                        getAllStageVars();
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.getStage(vm.currentPipeline, stageName, token)
-                            .then(function(res) {
-                                vm.stage = res;
-
-                                vm.newJob = {};
-                                vm.newStageVariable = {};
-
-                                vm.updatedStage.Name = vm.stage.Name;
-                                vm.updatedStage.StageType = vm.stage.StageType;
-
-                                vm.currentStage = res.Name;
-                                getAllJobs();
-                                getAllStageVars();
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('No changes');
-            }
-        };
-        vm.editStage = function(newStage) {
-            if (vm.stage != null) {
-                vm.stage.Name = newStage.Name;
-                vm.stage.StageType = newStage.StageType;
-
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.updateStage(vm.currentPipeline, vm.currentStage, vm.stage, token)
-                    .then(function(res) {
-                        vm.currentStage = newStage.Name;
-                        vm.updatedStage = {};
-
-                        var params = {
-                            groupName: vm.currentGroup,
-                            pipelineName: vm.currentPipeline,
-                            stageName: newStage.Name
-                        };
-                        $state.go($state.current, params, {
-                            reload: false
-                        });
-
-                        console.log(res);
-
-                        getAllStages();
-                        vm.getStage(vm.currentStage);
-                    }, function(err) {
-                        alert(err.Message);
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updateStage(vm.currentPipeline, vm.currentStage, vm.stage, token)
-                            .then(function(res) {
-                                vm.currentStage = newStage.Name;
-                                vm.updatedStage = {};
-
-                                var params = {
-                                    groupName: vm.currentGroup,
-                                    pipelineName: vm.currentPipeline,
-                                    stageName: newStage.Name
-                                };
-                                $state.go($state.current, params, {
-                                    reload: false
-                                });
-
-                                console.log(res);
-
-                                getAllStages();
-                                vm.getStage(vm.currentStage);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           alert(err.Message);
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('Not Found');
             }
         };
 
         vm.addJob = function(newJob) {
-            if (newJob.Tasks.Type == 'Exec') {
+            if (newJob.taskDefinitions.type == 'EXEC') {
                 var job = {
-                    Name: newJob.Name,
-                    Tasks: [{
-                        Type: newJob.Tasks.Type,
-                        Command: newJob.Tasks.Command,
-                        Arguments: newJob.Tasks.Arguments ? newJob.Tasks.Arguments.split('\n') : [],
-                        WorkingDirectory: newJob.Tasks.WorkingDirectory,
-                        RunIfCondition: newJob.Tasks.RunIfCondition,
-                        IgnoreErrors: newJob.Tasks.IgnoreErrors || false
+                    name: newJob.name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    taskDefinitions: [{
+                        type: newJob.taskDefinitions.type,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        command: newJob.taskDefinitions.command,
+                        arguments: newJob.taskDefinitions.arguments ? newJob.taskDefinitions.arguments.split('\n') : [],
+                        workingDirectory: newJob.taskDefinitions.workingDirectory,
+                        runIfCondition: newJob.taskDefinitions.runIfCondition,
+                        ignoreErrors: newJob.taskDefinitions.ignoreErrors || false
                     }]
                 };
-            }
-            if (newJob.Tasks.Type == 'FetchArtifact') {
-                var job = {
-                    Name: newJob.Name,
-                    Tasks: [{
-                        Type: newJob.Tasks.Type,
-                        Pipeline: newJob.Tasks.Pipeline,
-                        Stage: newJob.Tasks.Stage,
-                        Job: newJob.Tasks.Job,
-                        Source: newJob.Tasks.Source,
-                        Destination: newJob.Tasks.Destination,
-                        RunIfCondition: newJob.Tasks.RunIfCondition
-                    }]
-                };
-            }
-            if (newJob.Tasks.Type == 'FetchMaterial') {
-                var job = {
-                    Name: newJob.Name,
-                    Tasks: [{
-                        Type: newJob.Tasks.Type,
-                        MaterialName: newJob.Tasks.MaterialName
-                    }]
-                };
-            }
-            if (newJob.Tasks.Type == 'UploadArtifact') {
-                var job = {
-                    Name: newJob.Name,
-                    Tasks: [{
-                        Type: newJob.Tasks.Type,
-                        Source: newJob.Tasks.Source,
-                        Destination: newJob.Tasks.Destination,
-                        RunIfCondition: newJob.Tasks.RunIfCondition
-                    }]
-                };
-            }
 
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.createJob(vm.currentPipeline, vm.currentStage, job, token)
-                .then(function(res) {
-                    vm.newJob = {};
-                    getAllStages();
-                    getAllJobs();
-                    console.log(res);
-                }, function(err) {
-                    vm.newJob = {};
-                    alert(err.Message);
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.createJob(vm.currentPipeline, vm.currentStage, job, token)
-                        .then(function(res) {
-                            vm.newJob = {};
-                            getAllStages();
-                            getAllJobs();
-                            console.log(res);
-                        }, function(err) {
-                            vm.newJob = {};
-                            alert(err.Message);
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        };
-        vm.deleteJob = function(jobName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.deleteJob(vm.currentPipeline, vm.currentStage, jobName, token)
-                .then(function(res) {
-                    vm.getPipelineForConfig(vm.currentPipeline);
-                    vm.getStage(vm.currentStage);
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.deleteJob(vm.currentPipeline, vm.currentStage, jobName, token)
-                        .then(function(res) {
-                            vm.getPipelineForConfig(vm.currentPipeline);
-                            vm.getStage(vm.currentStage);
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        };
-        //endregion
-
-        //region Job functions
-        vm.getJob = function(jobName) {
-            if (vm.job != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.getJob(vm.currentPipeline, vm.currentStage, jobName, token)
-                    .then(function(res) {
-                        vm.jobDeleteButton = false;
-                        vm.job = res;
-
-                        vm.newTask = {};
-                        vm.newArtifact = {};
-                        vm.newJobVariable = {};
-                        vm.newCustomTab = {};
-
-                        vm.updatedJob.Name = vm.job.Name;
-
-                        vm.currentJob = res.Name;
-                        getAllTasks();
-                        getAllJobVars();
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.getJob(vm.currentPipeline, vm.currentStage, jobName, token)
-                            .then(function(res) {
-                                vm.job = res;
-
-                                vm.newTask = {};
-                                vm.newArtifact = {};
-                                vm.newJobVariable = {};
-                                vm.newCustomTab = {};
-
-                                vm.updatedJob.Name = vm.job.Name;
-
-                                vm.currentJob = res.Name;
-                                getAllTasks();
-                                getAllJobVars();
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
+                if (newJob.taskDefinitions.type == 'FETCH_ARTIFACT') {
+                    var job = {
+                        name: newJob.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        taskDefinitions: [{
+                            type: newJob.taskDefinitions.type,
+                            pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                            stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                            pipelineDefinition: newJob.taskDefinitions.pipelineDefinition,
+                            stageDefinition: newJob.taskDefinitions.stageDefinition,
+                            jobDefinition: newJob.taskDefinitions.jobDefinition,
+                            source: newJob.taskDefinitions.source,
+                            destination: newJob.taskDefinitions.destination,
+                            runIfCondition: newJob.taskDefinitions.runIfCondition
+                        }]
+                    };
                 }
-            } else {
-                console.log('Not Found');
-            }
-        };
-
-        vm.sortableOptions = {
-            cursor: "move",
-            update: function(e, ui) {
-                vm.job.Tasks = vm.allTasks;
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                    var token = window.localStorage.getItem("accessToken");
-                    oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-                        .then(function(res) {
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                } else {
-                    var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                    authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-                            .then(function(res) {
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                        }, function (err){
-                            console.log(err);
-                        })
+                if (newJob.taskDefinitions.type == 'FETCH_MATERIALS') {
+                    var job = {
+                        name: newJob.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        taskDefinitions: [{
+                            type: newJob.taskDefinitions.type,
+                            pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                            stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                            materialName: newJob.taskDefinitions.materialName
+                        }]
+                    };
                 }
-            },
-        };
-
-        vm.editJob = function(newJob) {
-            if (vm.job != null) {
-                vm.job.Name = newJob.Name;
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-                    .then(function(res) {
-                        vm.currentJob = newJob.Name;
-
-                        var params = {
-                            groupName: vm.currentGroup,
-                            pipelineName: vm.currentPipeline,
-                            stageName: vm.currentJob,
-                            jobName: newJob.Name
-                        };
-                        $state.go($state.current, params, {
-                            reload: false
-                        });
-
-                        console.log(res);
-
-                        vm.getJob(vm.currentJob);
-                        getAllJobs();
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-                            .then(function(res) {
-                                vm.currentJob = newJob.Name;
-
-                                var params = {
-                                    groupName: vm.currentGroup,
-                                    pipelineName: vm.currentPipeline,
-                                    stageName: vm.currentJob,
-                                    jobName: newJob.Name
-                                };
-                                $state.go($state.current, params, {
-                                    reload: false
-                                });
-
-                                console.log(res);
-
-                                vm.getJob(vm.currentJob);
-                                getAllJobs();
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           alert(err.Message);
-                           console.log(err);
-                       })
+                if (newJob.taskDefinitions.type == 'UPLOAD_ARTIFACT') {
+                    var job = {
+                        name: newJob.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        taskDefinitions: [{
+                            type: newJob.taskDefinitions.type,
+                            pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                            stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                            source: newJob.taskDefinitions.source,
+                            destination: newJob.taskDefinitions.destination,
+                            runIfCondition: newJob.taskDefinitions.runIfCondition
+                        }]
+                    };
                 }
-            } else {
-                console.log('Not Found');
             }
+            pipeConfigService.addJobDefinition(job);
         };
 
-        vm.getTask = function(taskIndex) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
-                .then(function(res) {
-                    vm.taskDeleteButton = false;
-                    vm.task = res;
+        vm.deleteJob = function (job){
+            pipeConfigService.deleteJobDefinition(job.id);
+        };
 
-                    if (res.Arguments != null) {
-                        vm.task.Arguments = res.Arguments.join('\n');
+        vm.getMaterial = function (material) {
+            if (vm.material != null) {
+                viewModel.allPipelines[vm.pipelineIndex].materials.forEach(function (currentMaterial, index, array) {
+                    if (currentMaterial.name == material.name) {
+                        vm.material = array[index];
+                        vm.materialIndex = index;
                     }
-
-                    vm.updatedTask = vm.task;
-
-                    vm.taskIndex = taskIndex;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                        oldpipeConfig.getTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
-                        .then(function(res) {
-                            vm.task = res;
-
-                            if (res.Arguments != null) {
-                                vm.task.Arguments = res.Arguments.join('\n');
-                            }
-
-                            vm.updatedTask = vm.task;
-
-                            vm.taskIndex = taskIndex;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
+                });
             }
+
+            vm.materialDeleteButton = false;
+            //vm.material = res;
+
+            if (vm.material.materialSpecificDetails.username &&
+                vm.material.materialSpecificDetails.password) {
+                vm.hasCredentials = true;
+            } else {
+                vm.hasCredentials = false;
+            }
+
+            vm.currentMaterial = material;
         };
-        vm.addTask = function(newTask) {
-            if (newTask.Type == 'Exec') {
+
+        vm.addTask = function (newTask) {
+            if (newTask.type == 'EXEC') {
                 var execTask = {
-                    Type: newTask.Type,
-                    Command: newTask.Command,
-                    Arguments: newTask.Arguments ? newTask.Arguments.split('\n') : [],
-                    WorkingDirectory: newTask.WorkingDirectory,
-                    RunIfCondition: newTask.RunIfCondition,
-                    IgnoreErrors: newTask.IgnoreErrors
+                    type: newTask.type,
+                    command: newTask.command,
+                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    workingDirectory: newTask.workingDirectory,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
                 };
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.createExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, execTask, token)
-                    .then(function(res) {
-                        vm.newTask = {};
-                        getAllTasks();
-                        console.log(res);
-                    }, function(err) {
-                        vm.newTask = {};
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.createExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, execTask, token)
-                            .then(function(res) {
-                                vm.newTask = {};
-                                getAllTasks();
-                                console.log(res);
-                            }, function(err) {
-                                vm.newTask = {};
-                                alert(err.Message);
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
             }
-            if (newTask.Type == 'FetchMaterial') {
+            if (newTask.type == 'FETCH_MATERIAL') {
                 var fetchMaterial = {
-                    Type: newTask.Type,
-                    MaterialName: newTask.MaterialName,
-                    RunIfCondition: newTask.RunIfCondition
+                    type: newTask.type,
+                    materialName: newTask.materialName,
+                    runIfCondition: newTask.runIfCondition
                 };
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.createFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchMaterial, token)
-                    .then(function(res) {
-                        vm.newTask = {};
-                        getAllTasks();
-                        console.log(res);
-                    }, function(err) {
-                        vm.newTask = {};
-                        alert(err.Message);
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.createFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchMaterial, token)
-                            .then(function(res) {
-                                vm.newTask = {};
-                                getAllTasks();
-                                console.log(res);
-                            }, function(err) {
-                                vm.newTask = {};
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           alert(err.Message);
-                           console.log(err);
-                       })
-                }
             }
-            if (newTask.Type == 'FetchArtifact') {
+            if (newTask.type == 'FETCH_ARTIFACT') {
                 var fetchArtifact = {
-                    Type: newTask.Type,
-                    Pipeline: newTask.Pipeline,
-                    Stage: newTask.Stage,
-                    Job: newTask.Job,
-                    Source: newTask.Source,
-                    Destination: newTask.Destination,
-                    RunIfCondition: newTask.RunIfCondition
+                    type: newTask.type,
+                    pipeline: newTask.pipeline,
+                    stage: newTask.stage,
+                    job: newTask.job,
+                    source: newTask.source,
+                    destination: newTask.destination,
+                    runIfCondition: newTask.runIfCondition
                 };
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.createFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchArtifact, token)
-                    .then(function(res) {
-                        vm.newTask = {};
-                        getAllTasks();
-                        console.log(res);
-                    }, function(err) {
-                        vm.newTask = {};
-                        alert(err.Message);
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.createFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchArtifact, token)
-                            .then(function(res) {
-                                vm.newTask = {};
-                                getAllTasks();
-                                console.log(res);
-                            }, function(err) {
-                                vm.newTask = {};
-                                alert(err.Message);
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            }
-            if (newTask.Type == 'UploadArtifact') {
-                var uploadArtifact = {
-                    Type: newTask.Type,
-                    Source: newTask.Source,
-                    Destination: newTask.Destination,
-                    RunIfCondition: newTask.RunIfCondition
-                };
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.createUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, uploadArtifact, token)
-                    .then(function(res) {
-                        vm.newTask = {};
-                        getAllTasks();
-                        console.log(res);
-                    }, function(err) {
-                        vm.newTask = {};
-                        alert(err.Message);
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.createUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, uploadArtifact, token)
-                            .then(function(res) {
-                                vm.newTask = {};
-                                getAllTasks();
-                                console.log(res);
-                            }, function(err) {
-                                vm.newTask = {};
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           alert(err.Message);
-                           console.log(err);
-                       })
-                }
             }
         };
 
-        vm.editTask = function(newTask) {
-            if (vm.task != null) {
-                if (vm.task.Type == "Exec") {
-                    vm.task.Command = newTask.Command;
-                    vm.task.IgnoreErrors = newTask.IgnoreErrors;
-                    vm.task.RunIfCondition = newTask.RunIfCondition;
-                    vm.task.WorkingDirectory = newTask.WorkingDirectory;
-                    vm.task.Arguments = newTask.Arguments.split('\n');
-                    var tokenIsValid = authDataService.checkTokenExpiration();
-                    if (tokenIsValid) {
-                       var token = window.localStorage.getItem("accessToken");
-                       oldpipeConfig.updateExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, vm.task, token)
-                        .then(function(res) {
-                            getAllTasks();
-                            getAllPipelines();
-                            console.log(res);
-                        }, function(err) {
-                            alert(err.Message);
-                            console.log(err);
-                        })
-                    } else {
-                       var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                       authDataService.getNewToken(currentRefreshToken)
-                           .then(function (res) {
-                               var token = res.access_token;
-                               oldpipeConfig.updateExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, vm.task, token)
-                                .then(function(res) {
-                                    getAllTasks();
-                                    getAllPipelines();
-                                    console.log(res);
-                                }, function(err) {
-                                    console.log(err);
-                                })
-                           }, function (err) {
-                               alert(err.Message);
-                               console.log(err);
-                           })
-                    }
-                }
-                if (vm.task.Type == "FetchArtifact") {
-                    vm.task.Pipeline = newTask.Pipeline;
-                    vm.task.Stage = newTask.Stage;
-                    vm.task.Job = newTask.Job;
-                    vm.task.Source = newTask.Source;
-                    vm.task.Destination = newTask.Destination;
-                    vm.task.RunIfCondition = newTask.RunIfCondition;
-                    var tokenIsValid = authDataService.checkTokenExpiration();
-                    if (tokenIsValid) {
-                       var token = window.localStorage.getItem("accessToken");
-                       oldpipeConfig.updateFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
-                        .then(function(res) {
-                            vm.newTask = {};
-                            getAllTasks();
-                            getAllPipelines();
-                            console.log(res);
-                        }, function(err) {
-                            alert(err.Message);
-                            console.log(err);
-                        })
-                    } else {
-                       var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                       authDataService.getNewToken(currentRefreshToken)
-                           .then(function (res) {
-                               var token = res.access_token;
-                               oldpipeConfig.updateFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
-                                .then(function(res) {
-                                    vm.newTask = {};
-                                    getAllTasks();
-                                    getAllPipelines();
-                                    console.log(res);
-                                }, function(err) {
-                                    alert(err.Message);
-                                    console.log(err);
-                                })
-                           }, function (err) {
-                               alert(err.Message);
-                               console.log(err);
-                           })
-                    }
-                }
-                if (vm.task.Type == "FetchMaterial") {
-                    vm.task.MaterialName = newTask.MaterialName;
-                    vm.task.RunIfCondition = newTask.RunIfCondition;
-                    var tokenIsValid = authDataService.checkTokenExpiration();
-                    if (tokenIsValid) {
-                       var token = window.localStorage.getItem("accessToken");
-                       oldpipeConfig.updateFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
-                        .then(function(res) {
-                            vm.newTask = {};
-                            getAllTasks();
-                            getAllPipelines();
-                            console.log(res);
-                        }, function(err) {
-                            alert(err.Message);
-                            console.log(err);
-                        })
-                    } else {
-                       var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                       authDataService.getNewToken(currentRefreshToken)
-                           .then(function (res) {
-                               var token = res.access_token;
-                               oldpipeConfig.updateFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
-                                .then(function(res) {
-                                    vm.newTask = {};
-                                    getAllTasks();
-                                    getAllPipelines();
-                                    console.log(res);
-                                }, function(err) {
-                                    console.log(err);
-                                })
-                           }, function (err) {
-                               console.log(err);
-                           })
-                    }
-                }
-                if (vm.task.Type == "UploadArtifact") {
-                    vm.task.Source = newTask.Source;
-                    vm.task.Destination = newTask.Destination;
-                    vm.task.RunIfCondition = newTask.RunIfCondition;
-                    var tokenIsValid = authDataService.checkTokenExpiration();
-                    if (tokenIsValid) {
-                       var token = window.localStorage.getItem("accessToken");
-                       oldpipeConfig.updateUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
-                        .then(function(res) {
-                            vm.newTask = {};
-                            getAllTasks();
-                            getAllPipelines();
-                            console.log(res);
-                        }, function(err) {
-                            alert(err.Message);
-                            console.log(err);
-                        })
-                    } else {
-                       var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                       authDataService.getNewToken(currentRefreshToken)
-                           .then(function (res) {
-                               var token = res.access_token;
-                               oldpipeConfig.updateUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
-                                .then(function(res) {
-                                    vm.newTask = {};
-                                    getAllTasks();
-                                    getAllPipelines();
-                                    console.log(res);
-                                }, function(err) {
-                                    console.log(err);
-                                })
-                           }, function (err) {
-                               alert(err.Message);
-                               console.log(err);
-                           })
-                    }
-                }
-            } else {
-                console.log('Not Found');
-            }
+        vm.createPipelineDefinition = function(pipeline) {
+            pipeConfigService.addPipelineDefinition(pipeline);
         };
-        vm.deleteTask = function(taskIndex) {
-            if (vm.task != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.deleteTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
-                    .then(function(res) {
-                        getAllTasks();
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.deleteTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
-                            .then(function(res) {
-                                getAllTasks();
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
+
+        vm.getStageRunsFromPipeline = function (pipeline) {
+            vm.allPipelineRuns.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.pipelineDefinitionId == pipeline.id) {
+                    vm.currentStageRuns = [];
+                    currentPipeline[index].stages.forEach(function (currentStage, index, array) {
+                        vm.currentStageRuns.push(currentStage);
+                    });
                 }
-            } else {
-                console.log('Not Found');
-            }
+            });
+            console.log(vm.currentStageRuns);
+            return vm.currentStageRuns;
         };
-        //endregion
 
-        function getAllPipelineVars() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllPipelineVars(vm.currentPipeline, token)
-                .then(function(res) {
-                    vm.allPipelineVars = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err)
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllPipelineVars(vm.currentPipeline, token)
-                        .then(function(res) {
-                            vm.allPipelineVars = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err)
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        function getAllStageVars() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllStageVars(vm.currentPipeline, vm.currentStage, token)
-                .then(function(res) {
-                    vm.allStageVars = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err)
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllStageVars(vm.currentPipeline, vm.currentStage, token)
-                        .then(function(res) {
-                            vm.allStageVars = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err)
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        function getAllJobVars() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllJobVars(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
-                .then(function(res) {
-                    vm.allJobVars = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err)
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllJobVars(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
-                        .then(function(res) {
-                            vm.allJobVars = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err)
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        vm.getPipelineVar = function(variableName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getPipelineVar(vm.currentPipeline, variableName, token)
-                .then(function(res) {
-                    vm.variableDeleteButton = false;
-                    vm.pipelineVar = res;
-                    vm.updatedPipelineVar = vm.pipelineVar;
-                    vm.currentPipelineVar = vm.pipelineVar.Name;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err)
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getPipelineVar(vm.currentPipeline, variableName, token)
-                        .then(function(res) {
-                            vm.pipelineVar = res;
-                            vm.updatedPipelineVar = vm.pipelineVar;
-                            vm.currentPipelineVar = vm.pipelineVar.Name;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err)
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        vm.getStageVar = function(variableName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
-                .then(function(res) {
-                    vm.variableDeleteButton = false;
-                    vm.stageVar = res;
-                    vm.updatedStageVar = vm.stageVar;
-                    vm.currentStageVar = vm.stageVar.Name;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err)
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
-                        .then(function(res) {
-                            vm.stageVar = res;
-                            vm.updatedStageVar = vm.stageVar;
-                            vm.currentStageVar = vm.stageVar.Name;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err)
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-        vm.getJobVar = function(variableName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
-                .then(function(res) {
-                    vm.variableDeleteButton = false;
-                    vm.jobVar = res;
-                    vm.updatedJobVar = vm.jobVar;
-                    vm.currentJobVar = vm.jobVar.Name;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err)
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
-                        .then(function(res) {
-                            vm.jobVar = res;
-                            vm.updatedJobVar = vm.jobVar;
-                            vm.currentJobVar = vm.jobVar.Name;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err)
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        vm.addPipelineVar = function(variable) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.createPipelineVar(vm.currentPipeline, variable, token)
-                .then(function(res) {
-                    vm.newPipelineVar = {};
-                    getAllPipelineVars();
-                    console.log(res);
-                }, function(err) {
-                    vm.newPipelineVar = {};
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.createPipelineVar(vm.currentPipeline, variable, token)
-                        .then(function(res) {
-                            vm.newPipelineVar = {};
-                            getAllPipelineVars();
-                            console.log(res);
-                        }, function(err) {
-                            vm.newPipelineVar = {};
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-        vm.addStageVar = function(variable) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.createStageVar(vm.currentPipeline, vm.currentStage, variable, token)
-                .then(function(res) {
-                    vm.newStageVar = {};
-                    getAllStageVars();
-                    console.log(res);
-                }, function(err) {
-                    vm.newStageVar = {};
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.createStageVar(vm.currentPipeline, vm.currentStage, variable, token)
-                        .then(function(res) {
-                            vm.newStageVar = {};
-                            getAllStageVars();
-                            console.log(res);
-                        }, function(err) {
-                            vm.newStageVar = {};
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-        vm.addJobVar = function(variable) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.createJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variable, token)
-                .then(function(res) {
-                    vm.newJobVar = {};
-                    getAllJobVars();
-                    console.log(res);
-                }, function(err) {
-                    vm.newJobVar = {};
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.createJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variable, token)
-                        .then(function(res) {
-                            vm.newJobVar = {};
-                            getAllJobVars();
-                            console.log(res);
-                        }, function(err) {
-                            vm.newJobVar = {};
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        vm.deletePipelineVar = function(variableName) {
-            if (vm.pipelineVar != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.deletePipelineVar(vm.currentPipeline, variableName, token)
-                    .then(function(res) {
-                        getAllPipelineVars();
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.deletePipelineVar(vm.currentPipeline, variableName, token)
-                            .then(function(res) {
-                                getAllPipelineVars();
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('Not found');
-            }
-        }
-
-        vm.deleteStageVar = function(variableName) {
-            if (vm.stageVar != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.deleteStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
-                    .then(function(res) {
-                        getAllStageVars();
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.deleteStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
-                            .then(function(res) {
-                                getAllStageVars();
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('Not found');
-            }
-        }
-        vm.deleteJobVar = function(variableName) {
-            if (vm.jobVar != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.deleteJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
-                    .then(function(res) {
-                        getAllJobVars();
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.deleteJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
-                            .then(function(res) {
-                                getAllJobVars();
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('Not found');
-            }
-        }
-
-        vm.updatePipelineVar = function(variable) {
-            if (vm.pipelineVar != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.updatePipelineVar(vm.currentPipeline, vm.currentPipelineVar, variable, token)
-                    .then(function(res) {
-                        getAllPipelineVars();
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updatePipelineVar(vm.currentPipeline, vm.currentPipelineVar, variable, token)
-                            .then(function(res) {
-                                getAllPipelineVars();
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('Not found');
-            }
-        }
-
-        vm.updateStageVar = function(variable) {
-            if (vm.stageVar != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.updateStageVar(vm.currentPipeline, vm.currentStage, vm.currentStageVar, variable, token)
-                    .then(function(res) {
-                        getAllStageVars();
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updateStageVar(vm.currentPipeline, vm.currentStage, vm.currentStageVar, variable, token)
-                            .then(function(res) {
-                                getAllStageVars();
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('Not found');
-            }
-        }
-        vm.updateJobVar = function(variable) {
-            if (vm.jobVar != null) {
-                var tokenIsValid = authDataService.checkTokenExpiration();
-                if (tokenIsValid) {
-                   var token = window.localStorage.getItem("accessToken");
-                   oldpipeConfig.updateJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.currentJobVar, variable, token)
-                    .then(function(res) {
-                        getAllJobVars();
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-                } else {
-                   var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                   authDataService.getNewToken(currentRefreshToken)
-                       .then(function (res) {
-                           var token = res.access_token;
-                           oldpipeConfig.updateJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.currentJobVar, variable, token)
-                            .then(function(res) {
-                                getAllJobVars();
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                       }, function (err) {
-                           console.log(err);
-                       })
-                }
-            } else {
-                console.log('Not found');
-            }
-        }
-
-        //region helpers
-        function getAllStages() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllStages(vm.currentPipeline, token)
-                .then(function(res) {
-                    vm.allStages = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllStages(vm.currentPipeline, token)
-                        .then(function(res) {
-                            vm.allStages = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        function getAllJobs() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllJobs(vm.currentPipeline, vm.currentStage, token)
-                .then(function(res) {
-                    vm.allJobs = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllJobs(vm.currentPipeline, vm.currentStage, token)
-                        .then(function(res) {
-                            vm.allJobs = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        function getAllTasks() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllTasks(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
-                .then(function(res) {
-                    vm.allTasks = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllTasks(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
-                        .then(function(res) {
-                            vm.allTasks = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        function getAllMaterials() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllMaterials(vm.currentPipeline, token)
-                .then(function(res) {
-                    vm.allMaterials = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllMaterials(vm.currentPipeline, token)
-                        .then(function(res) {
-                            vm.allMaterials = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-
-        function getAllArtifacts() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-               var token = window.localStorage.getItem("accessToken");
-               oldpipeConfig.getAllArtifacts(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
-                .then(function(res) {
-                    vm.allArtifacts = res;
-                    console.log(res);
-                }, function(err) {
-                    console.log(err);
-                })
-            } else {
-               var currentRefreshToken = window.localStorage.getItem("refreshToken");
-               authDataService.getNewToken(currentRefreshToken)
-                   .then(function (res) {
-                       var token = res.access_token;
-                       oldpipeConfig.getAllArtifacts(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
-                        .then(function(res) {
-                            vm.allArtifacts = res;
-                            console.log(res);
-                        }, function(err) {
-                            console.log(err);
-                        })
-                   }, function (err) {
-                       console.log(err);
-                   })
-            }
-        }
-        //endregion
-
-        vm.gitInputChange = function(gitName) {
-            if (gitName == undefined || gitName.length == 0) {
-                $('#logoGit').removeClass('l-active2');
-            } else {
-                $('#logoGit').addClass('l-active2');
-            }
-        };
-        vm.tfsInputChange = function(tfsName) {
-            if (tfsName == undefined || tfsName.length == 0) {
-                $('#logoTfs').removeClass('l-active2');
-            } else {
-                $('#logoTfs').addClass('l-active2');
-            }
-        };
+        // function getAllPipelines () {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //         var token = window.localStorage.getItem("accessToken");
+        //         oldpipeConfig.getAllPipelineDefs(token)
+        //             .then(function (res) {
+        //                 vm.allPipelines = res;
+        //                 console.log(res);
+        //             }, function (err) {
+        //                 console.log(err);
+        //             });
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //         authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllPipelineDefs(token)
+        //                     .then(function (res) {
+        //                         vm.allPipelines = res;
+        //                         console.log(res);
+        //                     }, function (err) {
+        //                         console.log(err);
+        //                     });
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        // //getAllPipelines();
+        //
+        // vm.getPipelineForTask = function (pipeName) {
+        //     vm.newTask.Stage = '';
+        //     vm.selectedPipelineStages = {};
+        //     vm.selectedStageJobs = {};
+        //     for (var i = 0; i < vm.allPipelines.length; i++) {
+        //         if (vm.allPipelines[i].Name == pipeName) {
+        //             vm.selectedPipelineStages = vm.allPipelines[i].Stages;
+        //             break;
+        //         }
+        //     }
+        //     console.log(vm.selectedPipelineStages);
+        // }
+        //
+        // vm.getStageForTask = function (stageName) {
+        //     vm.newTask.Job = '';
+        //     vm.selectedStageJobs = {};
+        //     for (var i = 0; i < vm.selectedPipelineStages.length; i++) {
+        //         if (vm.selectedPipelineStages[i].Name == stageName) {
+        //             vm.selectedStageJobs = vm.selectedPipelineStages[i].Jobs;
+        //             break;
+        //         }
+        //     }
+        //     console.log(vm.selectedStageJobs);
+        // }
+        //
+        // //region Pipeline functions
+        // vm.getPipelineForConfig = function(pipeName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //         var token = window.localStorage.getItem("accessToken");
+        //         oldpipeConfig.getPipelineDef(pipeName, token)
+        //             .then(function(res) {
+        //                 vm.pipeline = res;
+        //
+        //                 vm.newStage = {};
+        //                 vm.newMaterials = {};
+        //
+        //                 vm.updatedPipeline.Name = vm.pipeline.Name;
+        //                 vm.updatedPipeline.LabelTemplate = vm.pipeline.LabelTemplate;
+        //                 vm.updatedPipeline.AutoScheduling = vm.pipeline.AutoScheduling;
+        //
+        //                 vm.currentPipeline = res.Name;
+        //                 getAllStages();
+        //                 getAllMaterials();
+        //                 getAllPipelineVars();
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getPipelineDef(pipeName, token)
+        //                 .then(function(res) {
+        //                     vm.pipeline = res;
+        //
+        //                     vm.newStage = {};
+        //                     vm.newMaterials = {};
+        //
+        //                     vm.updatedPipeline.Name = vm.pipeline.Name;
+        //                     vm.updatedPipeline.LabelTemplate = vm.pipeline.LabelTemplate;
+        //                     vm.updatedPipeline.AutoScheduling = vm.pipeline.AutoScheduling;
+        //
+        //                     vm.currentPipeline = res.Name;
+        //                     getAllStages();
+        //                     getAllMaterials();
+        //                     getAllPipelineVars();
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // };
+        //
+        // vm.editPipeline = function(newPipe) {
+        //     if (vm.pipeline != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //             var token = window.localStorage.getItem("accessToken");
+        //             vm.pipeline.Name = newPipe.Name;
+        //             vm.pipeline.LabelTemplate = newPipe.LabelTemplate;
+        //             vm.pipeline.AutoScheduling = newPipe.AutoScheduling;
+        //             oldpipeConfig.updatePipeline(vm.currentPipeline, vm.pipeline, token)
+        //                 .then(function(res) {
+        //                     vm.pipeline = {};
+        //                     vm.currentPipeline = newPipe.Name;
+        //                     vm.getPipelineForConfig(vm.currentPipeline);
+        //
+        //                     var params = {
+        //                         groupName: vm.currentGroup,
+        //                         pipelineName: newPipe.Name
+        //                     };
+        //                     $state.go($state.current, params, {
+        //                         reload: false
+        //                     });
+        //
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //         } else {
+        //             var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updatePipeline(vm.currentPipeline, vm.pipeline, token)
+        //                     .then(function(res) {
+        //                         vm.pipeline = {};
+        //                         vm.currentPipeline = newPipe.Name;
+        //                         vm.getPipelineForConfig(vm.currentPipeline);
+        //
+        //                         var params = {
+        //                             groupName: vm.currentGroup,
+        //                             pipelineName: newPipe.Name
+        //                         };
+        //                         $state.go($state.current, params, {
+        //                             reload: false
+        //                         });
+        //
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         alert(err.Message);
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    alert(err.Message);
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // };
+        //
+        // vm.getMaterial = function(materialName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //         var token = window.localStorage.getItem("accessToken");
+        //         oldpipeConfig.getMaterial(vm.currentPipeline, materialName, token)
+        //         .then(function(res) {
+        //             vm.materialDeleteButton = false;
+        //             vm.material = res;
+        //
+        //             if (vm.material.MaterialSpecificDetails.username &&
+        //                 vm.material.MaterialSpecificDetails.password) {
+        //                 vm.hasCredentials = true;
+        //             } else {
+        //                 vm.hasCredentials = false;
+        //             }
+        //
+        //             vm.currentMaterial = res.Name;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getMaterial(vm.currentPipeline, materialName, token)
+        //                 .then(function(res) {
+        //                     vm.material = res;
+        //
+        //                     if (vm.material.MaterialSpecificDetails.username &&
+        //                         vm.material.MaterialSpecificDetails.password) {
+        //                         vm.hasCredentials = true;
+        //                     } else {
+        //                         vm.hasCredentials = false;
+        //                     }
+        //
+        //                     vm.currentMaterial = res.Name;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // };
+        //
+        // vm.addMaterial = function(newMaterial) {
+        //     var material = {};
+        //
+        //     if (vm.materialType == 'git') {
+        //         material = {
+        //             "PipelineName": vm.currentPipeline,
+        //             "Name": newMaterial.git.name,
+        //             "Type": 'GIT',
+        //             "Url": newMaterial.git.url,
+        //             "AutoTriggerOnChange": newMaterial.git.poll,
+        //             "Destination": newMaterial.git.name,
+        //             "MaterialSpecificDetails": {
+        //                 "branch": newMaterial.git.branch || 'master'
+        //             }
+        //         };
+        //         if (newMaterial.git.credentials) {
+        //             material.MaterialSpecificDetails.username = newMaterial.git.username;
+        //             material.MaterialSpecificDetails.password = newMaterial.git.password;
+        //         }
+        //     }
+        //     //TODO
+        //     // if (tfsMaterial) {
+        //     //   var tfs = {
+        //     //     "PipelineName": vm.currentPipeline,
+        //     //     "Name": tfsMaterial.name,
+        //     //     "Type": 'TFS',
+        //     //     "AutoTriggerOnChange": tfsMaterial.poll,
+        //     //     "Destination": tfsMaterial.name,
+        //     //     "MaterialSpecificDetails": {
+        //     //       "domain": tfsMaterial.domain,
+        //     //       "projectPath": tfsMaterial.projectPath,
+        //     //       "username": tfsMaterial.username,
+        //     //       "password": tfsMaterial.password
+        //     //     }
+        //     //   };
+        //     // }
+        //     //
+        //     if (vm.materialType == 'nuget') {
+        //         material = {
+        //             "PipelineName": vm.currentPipeline,
+        //             "Name": newMaterial.nuget.name,
+        //             "Url": newMaterial.nuget.url,
+        //             "Type": 'NUGET',
+        //             "AutoTriggerOnChange": newMaterial.nuget.poll,
+        //             "Destination": newMaterial.nuget.name,
+        //             "MaterialSpecificDetails": {
+        //                 "packageId": newMaterial.nuget.packageId,
+        //                 "includePrerelease": newMaterial.nuget.includePrerelease
+        //             }
+        //         };
+        //         //TODO
+        //         // if (nugetMaterial.credentials) {
+        //         //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
+        //         //   nuget.MaterialSpecificDetails.password = nugetMaterial.password;
+        //         // }
+        //     }
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.createMaterial(vm.currentPipeline, material, token)
+        //         .then(function(res) {
+        //             vm.newMaterial = {};
+        //             getAllMaterials();
+        //             console.log(res);
+        //         }, function(err) {
+        //             vm.material = {};
+        //             alert(err.Message);
+        //             console.log(err);
+        //         });
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.createMaterial(vm.currentPipeline, material, token)
+        //                 .then(function(res) {
+        //                     vm.newMaterial = {};
+        //                     getAllMaterials();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     vm.material = {};
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 });
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //        }
+        // };
+        //
+        // vm.editMaterial = function(newMaterial) {
+        //     if (vm.material != null) {
+        //         if (vm.material.Type == 'Git') {
+        //             vm.material.Name = newMaterial.Name;
+        //             vm.material.Destination = newMaterial.Name;
+        //             vm.material.Url = newMaterial.Url;
+        //             vm.material.AutoTriggerOnChange = newMaterial.AutoTriggerOnChange;
+        //             vm.material.MaterialSpecificDetails.branch = newMaterial.MaterialSpecificDetails.branch;
+        //             if (vm.hasCredentials) {
+        //                 vm.material.MaterialSpecificDetails.username = newMaterial.MaterialSpecificDetails.username;
+        //                 vm.material.MaterialSpecificDetails.password = newMaterial.MaterialSpecificDetails.password;
+        //             } else {
+        //                 delete vm.material.MaterialSpecificDetails.username;
+        //                 delete vm.material.MaterialSpecificDetails.password;
+        //             }
+        //         }
+        //         if (vm.material.Type == 'Tfs') {
+        //             vm.material.Name = newMaterial.Name;
+        //             vm.material.Destination = newMaterial.Name;
+        //             vm.material.AutoTriggerOnChange = newMaterial.AutoTriggerOnChange;
+        //             vm.material.MaterialSpecificDetails.projectPath = newMaterial.MaterialSpecificDetails.projectPath;
+        //             vm.material.MaterialSpecificDetails.domain = newMaterial.MaterialSpecificDetails.domain;
+        //             vm.material.MaterialSpecificDetails.username = newMaterial.MaterialSpecificDetails.username;
+        //             vm.material.MaterialSpecificDetails.password = newMaterial.MaterialSpecificDetails.password;
+        //         }
+        //         if (vm.material.Type == 'Nuget') {
+        //             vm.material.Name = newMaterial.Name;
+        //             vm.material.Destination = newMaterial.Name;
+        //             vm.material.Url = newMaterial.Url;
+        //             vm.material.AutoTriggerOnChange = newMaterial.AutoTriggerOnChange;
+        //             vm.material.MaterialSpecificDetails.packageId = newMaterial.MaterialSpecificDetails.packageId;
+        //             vm.material.MaterialSpecificDetails.includePrerelease = newMaterial.MaterialSpecificDetails.includePrerelease;
+        //             // if (newMaterial.credentials) {
+        //             //     vm.material.MaterialSpecificDetails.username = newMaterial.MaterialSpecificDetails.username;
+        //             //     vm.material.MaterialSpecificDetails.password = newMaterial.MaterialSpecificDetails.password;
+        //             // };
+        //         }
+        //
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //        if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.updateMaterial(vm.currentPipeline, vm.currentMaterial, vm.material, token)
+        //             .then(function(res) {
+        //                 vm.material = {};
+        //
+        //                 getAllMaterials();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 alert(err.Message);
+        //                 console.log(err);
+        //             })
+        //        } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updateMaterial(vm.currentPipeline, vm.currentMaterial, vm.material, token)
+        //                     .then(function(res) {
+        //                         vm.material = {};
+        //
+        //                         getAllMaterials();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         alert(err.Message);
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //        }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // };
+        // vm.deleteMaterial = function(materialName) {
+        //     if (vm.material != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //        if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //             oldpipeConfig.deleteMaterial(vm.currentPipeline, materialName, token)
+        //                 .then(function(res) {
+        //                     getAllMaterials();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //        } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.deleteMaterial(vm.currentPipeline, materialName, token)
+        //                     .then(function(res) {
+        //                         getAllMaterials();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         alert(err.Message);
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    alert(err.Message);
+        //                    console.log(err);
+        //                })
+        //        }
+        //     } else {
+        //         console.log('Not Found');
+        //     }
+        // };
+        //
+        // vm.addStage = function(newStage) {
+        //     if (newStage.Jobs.Tasks.Type == 'Exec') {
+        //         var stage = {
+        //             Name: newStage.Name,
+        //             Jobs: [{
+        //                 Name: newStage.Jobs.Name,
+        //                 Tasks: [{
+        //                     Type: newStage.Jobs.Tasks.Type,
+        //                     Command: newStage.Jobs.Tasks.Command,
+        //                     Arguments: newStage.Jobs.Tasks.Arguments ? newStage.Jobs.Tasks.Arguments.split('\n') : [],
+        //                     WorkingDirectory: newStage.Jobs.Tasks.WorkingDirectory,
+        //                     RunIfCondition: newStage.Jobs.Tasks.RunIfCondition,
+        //                     IgnoreErrors: newStage.Jobs.Tasks.IgnoreErrors || false
+        //                 }]
+        //             }]
+        //         };
+        //     }
+        //     if (newStage.Jobs.Tasks.Type == 'FetchArtifact') {
+        //         var stage = {
+        //             Name: newStage.Name,
+        //             Jobs: [{
+        //                 Name: newStage.Jobs.Name,
+        //                 Tasks: [{
+        //                     Type: newStage.Jobs.Tasks.Type,
+        //                     Pipeline: newStage.Jobs.Tasks.Pipeline,
+        //                     Stage: newStage.Jobs.Tasks.Stage,
+        //                     Job: newStage.Jobs.Tasks.Job,
+        //                     Source: newStage.Jobs.Tasks.Source,
+        //                     Destination: newStage.Jobs.Tasks.Destination,
+        //                     RunIfCondition: newStage.Jobs.Tasks.RunIfCondition
+        //                 }]
+        //             }]
+        //         };
+        //     }
+        //     if (newStage.Jobs.Tasks.Type == 'FetchMaterial') {
+        //         var stage = {
+        //             Name: newStage.Name,
+        //             Jobs: [{
+        //                 Name: newStage.Jobs.Name,
+        //                 Tasks: [{
+        //                     Type: newStage.Jobs.Tasks.Type,
+        //                     MaterialName: newStage.Jobs.Tasks.MaterialName,
+        //                     RunIfCondition: newStage.Jobs.Tasks.RunIfCondition
+        //                 }]
+        //             }]
+        //         };
+        //     }
+        //     if (newStage.Jobs.Tasks.Type == 'UploadArtifact') {
+        //         var stage = {
+        //             Name: newStage.Name,
+        //             Jobs: [{
+        //                 Name: newStage.Jobs.Name,
+        //                 Tasks: [{
+        //                     Type: newStage.Jobs.Tasks.Type,
+        //                     Source: newStage.Jobs.Tasks.Source,
+        //                     Destination: newStage.Jobs.Tasks.Destination,
+        //                     RunIfCondition: newStage.Jobs.Tasks.RunIfCondition
+        //                 }]
+        //             }]
+        //         };
+        //     }
+        //
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //    if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.createStage(vm.currentPipeline, stage, token)
+        //             .then(function(res) {
+        //                 vm.newStage = {};
+        //                 getAllStages();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 vm.newStage = {};
+        //                 alert(err.Message);
+        //                 console.log(err);
+        //             })
+        //    } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.createStage(vm.currentPipeline, stage, token)
+        //                 .then(function(res) {
+        //                     vm.newStage = {};
+        //                     getAllStages();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     vm.newStage = {};
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //    }
+        // };
+        //
+        // vm.deleteStage = function(stageName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.deleteStage(vm.currentPipeline, stageName, token)
+        //         .then(function(res) {
+        //             vm.getPipelineForConfig(vm.currentPipeline);
+        //             vm.stageDeleteButton = false;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.deleteStage(vm.currentPipeline, stageName, token)
+        //                 .then(function(res) {
+        //                     vm.getPipelineForConfig(vm.currentPipeline);
+        //                     vm.stageDeleteButton = false;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // };
+        // //endregion
+        //
+        // //region Stage functions
+        // vm.getStage = function(stageName) {
+        //     if (vm.stage != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.getStage(vm.currentPipeline, stageName, token)
+        //             .then(function(res) {
+        //                 vm.stageDeleteButton = false;
+        //                 vm.stage = res;
+        //
+        //                 vm.newJob = {};
+        //                 vm.newStageVariable = {};
+        //
+        //                 vm.updatedStage.Name = vm.stage.Name;
+        //                 vm.updatedStage.StageType = vm.stage.StageType;
+        //
+        //                 vm.currentStage = res.Name;
+        //                 getAllJobs();
+        //                 getAllStageVars();
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.getStage(vm.currentPipeline, stageName, token)
+        //                     .then(function(res) {
+        //                         vm.stage = res;
+        //
+        //                         vm.newJob = {};
+        //                         vm.newStageVariable = {};
+        //
+        //                         vm.updatedStage.Name = vm.stage.Name;
+        //                         vm.updatedStage.StageType = vm.stage.StageType;
+        //
+        //                         vm.currentStage = res.Name;
+        //                         getAllJobs();
+        //                         getAllStageVars();
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('No changes');
+        //     }
+        // };
+        // vm.editStage = function(newStage) {
+        //     if (vm.stage != null) {
+        //         vm.stage.Name = newStage.Name;
+        //         vm.stage.StageType = newStage.StageType;
+        //
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.updateStage(vm.currentPipeline, vm.currentStage, vm.stage, token)
+        //             .then(function(res) {
+        //                 vm.currentStage = newStage.Name;
+        //                 vm.updatedStage = {};
+        //
+        //                 var params = {
+        //                     groupName: vm.currentGroup,
+        //                     pipelineName: vm.currentPipeline,
+        //                     stageName: newStage.Name
+        //                 };
+        //                 $state.go($state.current, params, {
+        //                     reload: false
+        //                 });
+        //
+        //                 console.log(res);
+        //
+        //                 getAllStages();
+        //                 vm.getStage(vm.currentStage);
+        //             }, function(err) {
+        //                 alert(err.Message);
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updateStage(vm.currentPipeline, vm.currentStage, vm.stage, token)
+        //                     .then(function(res) {
+        //                         vm.currentStage = newStage.Name;
+        //                         vm.updatedStage = {};
+        //
+        //                         var params = {
+        //                             groupName: vm.currentGroup,
+        //                             pipelineName: vm.currentPipeline,
+        //                             stageName: newStage.Name
+        //                         };
+        //                         $state.go($state.current, params, {
+        //                             reload: false
+        //                         });
+        //
+        //                         console.log(res);
+        //
+        //                         getAllStages();
+        //                         vm.getStage(vm.currentStage);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    alert(err.Message);
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not Found');
+        //     }
+        // };
+        //
+        // vm.addJob = function(newJob) {
+        //     if (newJob.Tasks.Type == 'Exec') {
+        //         var job = {
+        //             Name: newJob.Name,
+        //             Tasks: [{
+        //                 Type: newJob.Tasks.Type,
+        //                 Command: newJob.Tasks.Command,
+        //                 Arguments: newJob.Tasks.Arguments ? newJob.Tasks.Arguments.split('\n') : [],
+        //                 WorkingDirectory: newJob.Tasks.WorkingDirectory,
+        //                 RunIfCondition: newJob.Tasks.RunIfCondition,
+        //                 IgnoreErrors: newJob.Tasks.IgnoreErrors || false
+        //             }]
+        //         };
+        //     }
+        //     if (newJob.Tasks.Type == 'FetchArtifact') {
+        //         var job = {
+        //             Name: newJob.Name,
+        //             Tasks: [{
+        //                 Type: newJob.Tasks.Type,
+        //                 Pipeline: newJob.Tasks.Pipeline,
+        //                 Stage: newJob.Tasks.Stage,
+        //                 Job: newJob.Tasks.Job,
+        //                 Source: newJob.Tasks.Source,
+        //                 Destination: newJob.Tasks.Destination,
+        //                 RunIfCondition: newJob.Tasks.RunIfCondition
+        //             }]
+        //         };
+        //     }
+        //     if (newJob.Tasks.Type == 'FetchMaterial') {
+        //         var job = {
+        //             Name: newJob.Name,
+        //             Tasks: [{
+        //                 Type: newJob.Tasks.Type,
+        //                 MaterialName: newJob.Tasks.MaterialName
+        //             }]
+        //         };
+        //     }
+        //     if (newJob.Tasks.Type == 'UploadArtifact') {
+        //         var job = {
+        //             Name: newJob.Name,
+        //             Tasks: [{
+        //                 Type: newJob.Tasks.Type,
+        //                 Source: newJob.Tasks.Source,
+        //                 Destination: newJob.Tasks.Destination,
+        //                 RunIfCondition: newJob.Tasks.RunIfCondition
+        //             }]
+        //         };
+        //     }
+        //
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.createJob(vm.currentPipeline, vm.currentStage, job, token)
+        //         .then(function(res) {
+        //             vm.newJob = {};
+        //             getAllStages();
+        //             getAllJobs();
+        //             console.log(res);
+        //         }, function(err) {
+        //             vm.newJob = {};
+        //             alert(err.Message);
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.createJob(vm.currentPipeline, vm.currentStage, job, token)
+        //                 .then(function(res) {
+        //                     vm.newJob = {};
+        //                     getAllStages();
+        //                     getAllJobs();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     vm.newJob = {};
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // };
+        // vm.deleteJob = function(jobName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.deleteJob(vm.currentPipeline, vm.currentStage, jobName, token)
+        //         .then(function(res) {
+        //             vm.getPipelineForConfig(vm.currentPipeline);
+        //             vm.getStage(vm.currentStage);
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.deleteJob(vm.currentPipeline, vm.currentStage, jobName, token)
+        //                 .then(function(res) {
+        //                     vm.getPipelineForConfig(vm.currentPipeline);
+        //                     vm.getStage(vm.currentStage);
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // };
+        // //endregion
+        //
+        // //region Job functions
+        // vm.getJob = function(jobName) {
+        //     if (vm.job != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.getJob(vm.currentPipeline, vm.currentStage, jobName, token)
+        //             .then(function(res) {
+        //                 vm.jobDeleteButton = false;
+        //                 vm.job = res;
+        //
+        //                 vm.newTask = {};
+        //                 vm.newArtifact = {};
+        //                 vm.newJobVariable = {};
+        //                 vm.newCustomTab = {};
+        //
+        //                 vm.updatedJob.Name = vm.job.Name;
+        //
+        //                 vm.currentJob = res.Name;
+        //                 getAllTasks();
+        //                 getAllJobVars();
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.getJob(vm.currentPipeline, vm.currentStage, jobName, token)
+        //                     .then(function(res) {
+        //                         vm.job = res;
+        //
+        //                         vm.newTask = {};
+        //                         vm.newArtifact = {};
+        //                         vm.newJobVariable = {};
+        //                         vm.newCustomTab = {};
+        //
+        //                         vm.updatedJob.Name = vm.job.Name;
+        //
+        //                         vm.currentJob = res.Name;
+        //                         getAllTasks();
+        //                         getAllJobVars();
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not Found');
+        //     }
+        // };
+        //
+        // vm.sortableOptions = {
+        //     cursor: "move",
+        //     update: function(e, ui) {
+        //         vm.job.Tasks = vm.allTasks;
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //             var token = window.localStorage.getItem("accessToken");
+        //             oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
+        //                 .then(function(res) {
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //         } else {
+        //             var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //             authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
+        //                     .then(function(res) {
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                 }, function (err){
+        //                     console.log(err);
+        //                 })
+        //         }
+        //     },
+        // };
+        //
+        // vm.editJob = function(newJob) {
+        //     if (vm.job != null) {
+        //         vm.job.Name = newJob.Name;
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
+        //             .then(function(res) {
+        //                 vm.currentJob = newJob.Name;
+        //
+        //                 var params = {
+        //                     groupName: vm.currentGroup,
+        //                     pipelineName: vm.currentPipeline,
+        //                     stageName: vm.currentJob,
+        //                     jobName: newJob.Name
+        //                 };
+        //                 $state.go($state.current, params, {
+        //                     reload: false
+        //                 });
+        //
+        //                 console.log(res);
+        //
+        //                 vm.getJob(vm.currentJob);
+        //                 getAllJobs();
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
+        //                     .then(function(res) {
+        //                         vm.currentJob = newJob.Name;
+        //
+        //                         var params = {
+        //                             groupName: vm.currentGroup,
+        //                             pipelineName: vm.currentPipeline,
+        //                             stageName: vm.currentJob,
+        //                             jobName: newJob.Name
+        //                         };
+        //                         $state.go($state.current, params, {
+        //                             reload: false
+        //                         });
+        //
+        //                         console.log(res);
+        //
+        //                         vm.getJob(vm.currentJob);
+        //                         getAllJobs();
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    alert(err.Message);
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not Found');
+        //     }
+        // };
+        //
+        // vm.getTask = function(taskIndex) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
+        //         .then(function(res) {
+        //             vm.taskDeleteButton = false;
+        //             vm.task = res;
+        //
+        //             if (res.Arguments != null) {
+        //                 vm.task.Arguments = res.Arguments.join('\n');
+        //             }
+        //
+        //             vm.updatedTask = vm.task;
+        //
+        //             vm.taskIndex = taskIndex;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                 oldpipeConfig.getTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
+        //                 .then(function(res) {
+        //                     vm.task = res;
+        //
+        //                     if (res.Arguments != null) {
+        //                         vm.task.Arguments = res.Arguments.join('\n');
+        //                     }
+        //
+        //                     vm.updatedTask = vm.task;
+        //
+        //                     vm.taskIndex = taskIndex;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // };
+        // vm.addTask = function(newTask) {
+        //     if (newTask.Type == 'Exec') {
+        //         var execTask = {
+        //             Type: newTask.Type,
+        //             Command: newTask.Command,
+        //             Arguments: newTask.Arguments ? newTask.Arguments.split('\n') : [],
+        //             WorkingDirectory: newTask.WorkingDirectory,
+        //             RunIfCondition: newTask.RunIfCondition,
+        //             IgnoreErrors: newTask.IgnoreErrors
+        //         };
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.createExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, execTask, token)
+        //             .then(function(res) {
+        //                 vm.newTask = {};
+        //                 getAllTasks();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 vm.newTask = {};
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.createExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, execTask, token)
+        //                     .then(function(res) {
+        //                         vm.newTask = {};
+        //                         getAllTasks();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         vm.newTask = {};
+        //                         alert(err.Message);
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     }
+        //     if (newTask.Type == 'FetchMaterial') {
+        //         var fetchMaterial = {
+        //             Type: newTask.Type,
+        //             MaterialName: newTask.MaterialName,
+        //             RunIfCondition: newTask.RunIfCondition
+        //         };
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.createFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchMaterial, token)
+        //             .then(function(res) {
+        //                 vm.newTask = {};
+        //                 getAllTasks();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 vm.newTask = {};
+        //                 alert(err.Message);
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.createFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchMaterial, token)
+        //                     .then(function(res) {
+        //                         vm.newTask = {};
+        //                         getAllTasks();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         vm.newTask = {};
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    alert(err.Message);
+        //                    console.log(err);
+        //                })
+        //         }
+        //     }
+        //     if (newTask.Type == 'FetchArtifact') {
+        //         var fetchArtifact = {
+        //             Type: newTask.Type,
+        //             Pipeline: newTask.Pipeline,
+        //             Stage: newTask.Stage,
+        //             Job: newTask.Job,
+        //             Source: newTask.Source,
+        //             Destination: newTask.Destination,
+        //             RunIfCondition: newTask.RunIfCondition
+        //         };
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.createFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchArtifact, token)
+        //             .then(function(res) {
+        //                 vm.newTask = {};
+        //                 getAllTasks();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 vm.newTask = {};
+        //                 alert(err.Message);
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.createFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, fetchArtifact, token)
+        //                     .then(function(res) {
+        //                         vm.newTask = {};
+        //                         getAllTasks();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         vm.newTask = {};
+        //                         alert(err.Message);
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     }
+        //     if (newTask.Type == 'UploadArtifact') {
+        //         var uploadArtifact = {
+        //             Type: newTask.Type,
+        //             Source: newTask.Source,
+        //             Destination: newTask.Destination,
+        //             RunIfCondition: newTask.RunIfCondition
+        //         };
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.createUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, uploadArtifact, token)
+        //             .then(function(res) {
+        //                 vm.newTask = {};
+        //                 getAllTasks();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 vm.newTask = {};
+        //                 alert(err.Message);
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.createUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, uploadArtifact, token)
+        //                     .then(function(res) {
+        //                         vm.newTask = {};
+        //                         getAllTasks();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         vm.newTask = {};
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    alert(err.Message);
+        //                    console.log(err);
+        //                })
+        //         }
+        //     }
+        // };
+        //
+        // vm.editTask = function(newTask) {
+        //     if (vm.task != null) {
+        //         if (vm.task.Type == "Exec") {
+        //             vm.task.Command = newTask.Command;
+        //             vm.task.IgnoreErrors = newTask.IgnoreErrors;
+        //             vm.task.RunIfCondition = newTask.RunIfCondition;
+        //             vm.task.WorkingDirectory = newTask.WorkingDirectory;
+        //             vm.task.Arguments = newTask.Arguments.split('\n');
+        //             var tokenIsValid = authDataService.checkTokenExpiration();
+        //             if (tokenIsValid) {
+        //                var token = window.localStorage.getItem("accessToken");
+        //                oldpipeConfig.updateExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, vm.task, token)
+        //                 .then(function(res) {
+        //                     getAllTasks();
+        //                     getAllPipelines();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //             } else {
+        //                var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //                authDataService.getNewToken(currentRefreshToken)
+        //                    .then(function (res) {
+        //                        var token = res.access_token;
+        //                        oldpipeConfig.updateExecTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, vm.task, token)
+        //                         .then(function(res) {
+        //                             getAllTasks();
+        //                             getAllPipelines();
+        //                             console.log(res);
+        //                         }, function(err) {
+        //                             console.log(err);
+        //                         })
+        //                    }, function (err) {
+        //                        alert(err.Message);
+        //                        console.log(err);
+        //                    })
+        //             }
+        //         }
+        //         if (vm.task.Type == "FetchArtifact") {
+        //             vm.task.Pipeline = newTask.Pipeline;
+        //             vm.task.Stage = newTask.Stage;
+        //             vm.task.Job = newTask.Job;
+        //             vm.task.Source = newTask.Source;
+        //             vm.task.Destination = newTask.Destination;
+        //             vm.task.RunIfCondition = newTask.RunIfCondition;
+        //             var tokenIsValid = authDataService.checkTokenExpiration();
+        //             if (tokenIsValid) {
+        //                var token = window.localStorage.getItem("accessToken");
+        //                oldpipeConfig.updateFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
+        //                 .then(function(res) {
+        //                     vm.newTask = {};
+        //                     getAllTasks();
+        //                     getAllPipelines();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //             } else {
+        //                var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //                authDataService.getNewToken(currentRefreshToken)
+        //                    .then(function (res) {
+        //                        var token = res.access_token;
+        //                        oldpipeConfig.updateFetchArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
+        //                         .then(function(res) {
+        //                             vm.newTask = {};
+        //                             getAllTasks();
+        //                             getAllPipelines();
+        //                             console.log(res);
+        //                         }, function(err) {
+        //                             alert(err.Message);
+        //                             console.log(err);
+        //                         })
+        //                    }, function (err) {
+        //                        alert(err.Message);
+        //                        console.log(err);
+        //                    })
+        //             }
+        //         }
+        //         if (vm.task.Type == "FetchMaterial") {
+        //             vm.task.MaterialName = newTask.MaterialName;
+        //             vm.task.RunIfCondition = newTask.RunIfCondition;
+        //             var tokenIsValid = authDataService.checkTokenExpiration();
+        //             if (tokenIsValid) {
+        //                var token = window.localStorage.getItem("accessToken");
+        //                oldpipeConfig.updateFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
+        //                 .then(function(res) {
+        //                     vm.newTask = {};
+        //                     getAllTasks();
+        //                     getAllPipelines();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //             } else {
+        //                var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //                authDataService.getNewToken(currentRefreshToken)
+        //                    .then(function (res) {
+        //                        var token = res.access_token;
+        //                        oldpipeConfig.updateFetchMaterialTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
+        //                         .then(function(res) {
+        //                             vm.newTask = {};
+        //                             getAllTasks();
+        //                             getAllPipelines();
+        //                             console.log(res);
+        //                         }, function(err) {
+        //                             console.log(err);
+        //                         })
+        //                    }, function (err) {
+        //                        console.log(err);
+        //                    })
+        //             }
+        //         }
+        //         if (vm.task.Type == "UploadArtifact") {
+        //             vm.task.Source = newTask.Source;
+        //             vm.task.Destination = newTask.Destination;
+        //             vm.task.RunIfCondition = newTask.RunIfCondition;
+        //             var tokenIsValid = authDataService.checkTokenExpiration();
+        //             if (tokenIsValid) {
+        //                var token = window.localStorage.getItem("accessToken");
+        //                oldpipeConfig.updateUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
+        //                 .then(function(res) {
+        //                     vm.newTask = {};
+        //                     getAllTasks();
+        //                     getAllPipelines();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     alert(err.Message);
+        //                     console.log(err);
+        //                 })
+        //             } else {
+        //                var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //                authDataService.getNewToken(currentRefreshToken)
+        //                    .then(function (res) {
+        //                        var token = res.access_token;
+        //                        oldpipeConfig.updateUploadArtifactTask(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.taskIndex, newTask, token)
+        //                         .then(function(res) {
+        //                             vm.newTask = {};
+        //                             getAllTasks();
+        //                             getAllPipelines();
+        //                             console.log(res);
+        //                         }, function(err) {
+        //                             console.log(err);
+        //                         })
+        //                    }, function (err) {
+        //                        alert(err.Message);
+        //                        console.log(err);
+        //                    })
+        //             }
+        //         }
+        //     } else {
+        //         console.log('Not Found');
+        //     }
+        // };
+        // vm.deleteTask = function(taskIndex) {
+        //     if (vm.task != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.deleteTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
+        //             .then(function(res) {
+        //                 getAllTasks();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.deleteTask(vm.currentPipeline, vm.currentStage, vm.currentJob, taskIndex, token)
+        //                     .then(function(res) {
+        //                         getAllTasks();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not Found');
+        //     }
+        // };
+        // //endregion
+        //
+        // function getAllPipelineVars() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllPipelineVars(vm.currentPipeline, token)
+        //         .then(function(res) {
+        //             vm.allPipelineVars = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err)
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllPipelineVars(vm.currentPipeline, token)
+        //                 .then(function(res) {
+        //                     vm.allPipelineVars = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err)
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // function getAllStageVars() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllStageVars(vm.currentPipeline, vm.currentStage, token)
+        //         .then(function(res) {
+        //             vm.allStageVars = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err)
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllStageVars(vm.currentPipeline, vm.currentStage, token)
+        //                 .then(function(res) {
+        //                     vm.allStageVars = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err)
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // function getAllJobVars() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllJobVars(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
+        //         .then(function(res) {
+        //             vm.allJobVars = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err)
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllJobVars(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
+        //                 .then(function(res) {
+        //                     vm.allJobVars = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err)
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // vm.getPipelineVar = function(variableName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getPipelineVar(vm.currentPipeline, variableName, token)
+        //         .then(function(res) {
+        //             vm.variableDeleteButton = false;
+        //             vm.pipelineVar = res;
+        //             vm.updatedPipelineVar = vm.pipelineVar;
+        //             vm.currentPipelineVar = vm.pipelineVar.Name;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err)
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getPipelineVar(vm.currentPipeline, variableName, token)
+        //                 .then(function(res) {
+        //                     vm.pipelineVar = res;
+        //                     vm.updatedPipelineVar = vm.pipelineVar;
+        //                     vm.currentPipelineVar = vm.pipelineVar.Name;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err)
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // vm.getStageVar = function(variableName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
+        //         .then(function(res) {
+        //             vm.variableDeleteButton = false;
+        //             vm.stageVar = res;
+        //             vm.updatedStageVar = vm.stageVar;
+        //             vm.currentStageVar = vm.stageVar.Name;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err)
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
+        //                 .then(function(res) {
+        //                     vm.stageVar = res;
+        //                     vm.updatedStageVar = vm.stageVar;
+        //                     vm.currentStageVar = vm.stageVar.Name;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err)
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        // vm.getJobVar = function(variableName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
+        //         .then(function(res) {
+        //             vm.variableDeleteButton = false;
+        //             vm.jobVar = res;
+        //             vm.updatedJobVar = vm.jobVar;
+        //             vm.currentJobVar = vm.jobVar.Name;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err)
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
+        //                 .then(function(res) {
+        //                     vm.jobVar = res;
+        //                     vm.updatedJobVar = vm.jobVar;
+        //                     vm.currentJobVar = vm.jobVar.Name;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err)
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // vm.addPipelineVar = function(variable) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.createPipelineVar(vm.currentPipeline, variable, token)
+        //         .then(function(res) {
+        //             vm.newPipelineVar = {};
+        //             getAllPipelineVars();
+        //             console.log(res);
+        //         }, function(err) {
+        //             vm.newPipelineVar = {};
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.createPipelineVar(vm.currentPipeline, variable, token)
+        //                 .then(function(res) {
+        //                     vm.newPipelineVar = {};
+        //                     getAllPipelineVars();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     vm.newPipelineVar = {};
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        // vm.addStageVar = function(variable) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.createStageVar(vm.currentPipeline, vm.currentStage, variable, token)
+        //         .then(function(res) {
+        //             vm.newStageVar = {};
+        //             getAllStageVars();
+        //             console.log(res);
+        //         }, function(err) {
+        //             vm.newStageVar = {};
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.createStageVar(vm.currentPipeline, vm.currentStage, variable, token)
+        //                 .then(function(res) {
+        //                     vm.newStageVar = {};
+        //                     getAllStageVars();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     vm.newStageVar = {};
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        // vm.addJobVar = function(variable) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.createJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variable, token)
+        //         .then(function(res) {
+        //             vm.newJobVar = {};
+        //             getAllJobVars();
+        //             console.log(res);
+        //         }, function(err) {
+        //             vm.newJobVar = {};
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.createJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variable, token)
+        //                 .then(function(res) {
+        //                     vm.newJobVar = {};
+        //                     getAllJobVars();
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     vm.newJobVar = {};
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // vm.deletePipelineVar = function(variableName) {
+        //     if (vm.pipelineVar != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.deletePipelineVar(vm.currentPipeline, variableName, token)
+        //             .then(function(res) {
+        //                 getAllPipelineVars();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.deletePipelineVar(vm.currentPipeline, variableName, token)
+        //                     .then(function(res) {
+        //                         getAllPipelineVars();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // }
+        //
+        // vm.deleteStageVar = function(variableName) {
+        //     if (vm.stageVar != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.deleteStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
+        //             .then(function(res) {
+        //                 getAllStageVars();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.deleteStageVar(vm.currentPipeline, vm.currentStage, variableName, token)
+        //                     .then(function(res) {
+        //                         getAllStageVars();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // }
+        // vm.deleteJobVar = function(variableName) {
+        //     if (vm.jobVar != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.deleteJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
+        //             .then(function(res) {
+        //                 getAllJobVars();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.deleteJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, variableName, token)
+        //                     .then(function(res) {
+        //                         getAllJobVars();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // }
+        //
+        // vm.updatePipelineVar = function(variable) {
+        //     if (vm.pipelineVar != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.updatePipelineVar(vm.currentPipeline, vm.currentPipelineVar, variable, token)
+        //             .then(function(res) {
+        //                 getAllPipelineVars();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updatePipelineVar(vm.currentPipeline, vm.currentPipelineVar, variable, token)
+        //                     .then(function(res) {
+        //                         getAllPipelineVars();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // }
+        //
+        // vm.updateStageVar = function(variable) {
+        //     if (vm.stageVar != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.updateStageVar(vm.currentPipeline, vm.currentStage, vm.currentStageVar, variable, token)
+        //             .then(function(res) {
+        //                 getAllStageVars();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updateStageVar(vm.currentPipeline, vm.currentStage, vm.currentStageVar, variable, token)
+        //                     .then(function(res) {
+        //                         getAllStageVars();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // }
+        // vm.updateJobVar = function(variable) {
+        //     if (vm.jobVar != null) {
+        //         var tokenIsValid = authDataService.checkTokenExpiration();
+        //         if (tokenIsValid) {
+        //            var token = window.localStorage.getItem("accessToken");
+        //            oldpipeConfig.updateJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.currentJobVar, variable, token)
+        //             .then(function(res) {
+        //                 getAllJobVars();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //         } else {
+        //            var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //            authDataService.getNewToken(currentRefreshToken)
+        //                .then(function (res) {
+        //                    var token = res.access_token;
+        //                    oldpipeConfig.updateJobVar(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.currentJobVar, variable, token)
+        //                     .then(function(res) {
+        //                         getAllJobVars();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //                }, function (err) {
+        //                    console.log(err);
+        //                })
+        //         }
+        //     } else {
+        //         console.log('Not found');
+        //     }
+        // }
+        //
+        // //region helpers
+        // function getAllStages() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllStages(vm.currentPipeline, token)
+        //         .then(function(res) {
+        //             vm.allStages = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllStages(vm.currentPipeline, token)
+        //                 .then(function(res) {
+        //                     vm.allStages = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // function getAllJobs() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllJobs(vm.currentPipeline, vm.currentStage, token)
+        //         .then(function(res) {
+        //             vm.allJobs = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllJobs(vm.currentPipeline, vm.currentStage, token)
+        //                 .then(function(res) {
+        //                     vm.allJobs = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // function getAllTasks() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllTasks(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
+        //         .then(function(res) {
+        //             vm.allTasks = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllTasks(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
+        //                 .then(function(res) {
+        //                     vm.allTasks = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // function getAllMaterials() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllMaterials(vm.currentPipeline, token)
+        //         .then(function(res) {
+        //             vm.allMaterials = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllMaterials(vm.currentPipeline, token)
+        //                 .then(function(res) {
+        //                     vm.allMaterials = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        //
+        // function getAllArtifacts() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //        var token = window.localStorage.getItem("accessToken");
+        //        oldpipeConfig.getAllArtifacts(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
+        //         .then(function(res) {
+        //             vm.allArtifacts = res;
+        //             console.log(res);
+        //         }, function(err) {
+        //             console.log(err);
+        //         })
+        //     } else {
+        //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //        authDataService.getNewToken(currentRefreshToken)
+        //            .then(function (res) {
+        //                var token = res.access_token;
+        //                oldpipeConfig.getAllArtifacts(vm.currentPipeline, vm.currentStage, vm.currentJob, token)
+        //                 .then(function(res) {
+        //                     vm.allArtifacts = res;
+        //                     console.log(res);
+        //                 }, function(err) {
+        //                     console.log(err);
+        //                 })
+        //            }, function (err) {
+        //                console.log(err);
+        //            })
+        //     }
+        // }
+        // //endregion
+        //
+        // vm.gitInputChange = function(gitName) {
+        //     if (gitName == undefined || gitName.length == 0) {
+        //         $('#logoGit').removeClass('l-active2');
+        //     } else {
+        //         $('#logoGit').addClass('l-active2');
+        //     }
+        // };
+        // vm.tfsInputChange = function(tfsName) {
+        //     if (tfsName == undefined || tfsName.length == 0) {
+        //         $('#logoTfs').removeClass('l-active2');
+        //     } else {
+        //         $('#logoTfs').addClass('l-active2');
+        //     }
+        // };
         vm.wizardInfo = {
             labels: {
                 autoSchedule: 'Auto Scheduling',
@@ -2092,13 +2410,13 @@ angular
             }
         };
 
-        vm.getPipelineForConfig(vm.currentPipeline);
-        if (vm.currentStage != undefined) {
-            vm.getStage(vm.currentStage);
-            if (vm.currentJob != undefined) {
-                vm.getJob(vm.currentJob);
-            }
-        }
+        // vm.getPipelineForConfig(vm.currentPipeline);
+        // if (vm.currentStage != undefined) {
+        //     vm.getStage(vm.currentStage);
+        //     if (vm.currentJob != undefined) {
+        //         vm.getJob(vm.currentJob);
+        //     }
+        // }
 
         //var refresh = $interval(function () {
         //  vm.getPipelineForConfig(vm.currentPipeline);

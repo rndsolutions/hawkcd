@@ -12,15 +12,15 @@
       <tbody>
 
       <!--ng-repeat-->
-      <tr ng-repeat="material in pipeConfig.allMaterials">
-        <td> {{material.Name}} </td>
-        <td> {{material.Type}} </td>
-        <td> {{material.Url}} </td>
+      <tr ng-repeat="material in pipeConfig.allPipelines[pipeConfig.pipelineIndex].materials">
+        <td> {{material.name}} </td>
+        <td> {{material.type}} </td>
+        <td> {{material.url}} </td>
         <td>
           <button class="btn yellow" data-target="#editMaterial" data-toggle="modal"
-                  ng-click="pipeConfig.getMaterial(material.Name)">Edit</button>
+                  ng-click="pipeConfig.getMaterial(material.name)">Edit</button>
           <button class="btn red" data-target="#removeMaterial" data-toggle="modal" 
-                  ng-if="pipeConfig.allMaterials.length > 1" ng-click="pipeConfig.materialDeleteButton = true;pipeConfig.getMaterial(material.Name)" ng-class="{'disabled': pipeConfig.materialDeleteButton}">Delete</button>
+                  ng-if="pipeConfig.allMaterials.length > 1" ng-click="pipeConfig.getMaterial(material)">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->

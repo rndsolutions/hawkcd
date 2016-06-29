@@ -102,267 +102,267 @@ angular
             resLength = 0;
         vm.selectedStageIndexInMainDB = 0;
 
-        vm.getAll = function () {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeStats.getAllStages(vm.pipelineName, vm.pipelineExecutionID, token)
-                    .then(function (res) {
-                        var currentStateIsRunning = false;
-                        if (vm.groupStages != undefined && vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] != undefined && vm.groupStages[vm.selectedStageIndexInMainDB] != undefined) {
-                            var runsLength = vm.groupStages[vm.selectedStageIndexInMainDB].Runs.length;
-                            vm.resultIsTheSame = runManagementService.checkForChanges(lastResult, res);
+        // vm.getAll = function () {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //         var token = window.localStorage.getItem("accessToken");
+        //         pipeStats.getAllStages(vm.pipelineName, vm.pipelineExecutionID, token)
+        //             .then(function (res) {
+        //                 var currentStateIsRunning = false;
+        //                 if (vm.groupStages != undefined && vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] != undefined && vm.groupStages[vm.selectedStageIndexInMainDB] != undefined) {
+        //                     var runsLength = vm.groupStages[vm.selectedStageIndexInMainDB].Runs.length;
+        //                     vm.resultIsTheSame = runManagementService.checkForChanges(lastResult, res);
+        //
+        //                     currentStateIsRunning = vm.groupStages[vm.selectedStageIndexInMainDB].Runs[runsLength - 1].State == 'Running';
+        //                     if (currentStateIsRunning) {
+        //                         vm.selectedRunID += 1;
+        //                     }
+        //                 }
+        //
+        //                 //This means that this is the first call to the server and the controller should proceed
+        //                 if (vm.groupStages == undefined || vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] == undefined || vm.groupStages[vm.selectedStageIndexInMainDB] == undefined) {
+        //                     firstLoadOfController = true;
+        //                 }
+        //
+        //                 // Checking if in state where the stage has been just scheduled but still not executed.
+        //                 if (vm.groupStages != undefined && nameOfStage != '' && vm.resultIsTheSame) {
+        //                     if (res[res.length - 1].ExecutionID == 0 && res[res.length - 1].Name == nameOfStage) {
+        //                         return;
+        //                     }
+        //                 }
+        //
+        //                 if (!vm.resultIsTheSame && res[res.length - 1].ExecutionID == 0 && !firstLoadOfController) {
+        //                     return;
+        //                 }
+        //
+        //                 //The result is the same as last request and stage is not running
+        //                 if (res.length == resLength && vm.resultIsTheSame && !firstLoadOfController) {
+        //                     return;
+        //                 }
+        //
+        //                 // success
+        //                 vm.currentPipeline = res;
+        //                 firstLoadOfController = false;
+        //
+        //                 //Sorts the stages by name and by Execution ID
+        //                 vm.sortedData = runManagementService.groupStages(vm.currentPipeline);
+        //
+        //                 //Adds a new array LastRun in the sortedData, to present it in the view
+        //                 vm.groupStages = runManagementService.addLastExecution(vm.sortedData);
+        //
+        //                 //Default LastRunSelected - the last ExecutionID in the array
+        //                 for (var i = 0; i < vm.groupStages.length; i += 1) {
+        //                     var runsLength = vm.groupStages[i].Runs.length;
+        //                     vm.groupStages[i].LastRunSelected = vm.groupStages[i].Runs[runsLength - 1].ExecutionID;
+        //                 }
+        //
+        //
+        //
+        //                 //Save the last result, used form comparing and checking for changes
+        //                 lastResult = res;
+        //                 resLength = res.length;
+        //
+        //                 //Initialize the Selected Stage, if this is the first call to the controller. Otherwise the selected stage is defined by the user!
+        //                 if (isInitial) {
+        //                     vm.selectedStage = vm.groupStages[0];
+        //
+        //
+        //                     var runsLength = vm.selectedStage.Runs.length - 1;
+        //                     var jobsLength = vm.selectedStage.Runs[0].Jobs.length - 1;
+        //                     vm.selectedJob = vm.selectedStage.Runs[runsLength].Jobs[jobsLength];
+        //                     nameOfStage = vm.selectedStage.Runs[0].Name;
+        //
+        //                     //Initially displays the last run on each stage
+        //                     vm.selectedRunIndex = vm.selectedStage.Runs.length - 1;
+        //                     vm.selectedRunID = vm.selectedRunIndex;
+        //
+        //                     vm.selectedStageRunsShow = vm.groupStages[0];
+        //                 }
+        //                 if (!isInitial) {
+        //                     //Gets the numbers in the menu left from the console
+        //                     vm.getJobResults();
+        //
+        //                     //This if statements prevents clearing of Run selection
+        //                     if (vm.selectedRunID != undefined) {
+        //                         vm.groupStages[vm.selectedStageIndexInMainDB].LastRunSelected = vm.selectedRunID;
+        //                     }
+        //
+        //                     vm.selectedStage = vm.groupStages[vm.selectedStageIndexInMainDB];
+        //                     nameOfStage = vm.selectedStage.Runs[0].Name;
+        //                     if (vm.selectedStage.Runs[vm.selectedRunIndex] != undefined) {
+        //                         vm.selectedJob = vm.selectedStage.Runs[vm.selectedRunIndex].Jobs[vm.jobIndex];
+        //                     }
+        //
+        //                     for (var i = 0; i < vm.groupStages.length; i++) {
+        //                         if (vm.groupStages[i].Runs[0].ExecutionID == 0 && vm.groupStages[i].Runs[0].length > 0) {
+        //                             vm.groupStages[i].Runs.shift();
+        //                         }
+        //                     }
+        //
+        //                 }
+        //                 isInitial = false;
+        //
+        //             }, function (err) {
+        //                 console.log(err);
+        //             })
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //         authDataService.getNewToken(currentRefreshToken)
+        //             .then(function (res) {
+        //                 var token = res.access_token;
+        //                 pipeStats.getAllStages(vm.pipelineName, vm.pipelineExecutionID, token)
+        //                     .then(function (res) {
+        //                         var currentStateIsRunning = false;
+        //                         if (vm.groupStages != undefined && vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] != undefined && vm.groupStages[vm.selectedStageIndexInMainDB] != undefined) {
+        //                             var runsLength = vm.groupStages[vm.selectedStageIndexInMainDB].Runs.length;
+        //                             vm.resultIsTheSame = runManagementService.checkForChanges(lastResult, res);
+        //
+        //                             currentStateIsRunning = vm.groupStages[vm.selectedStageIndexInMainDB].Runs[runsLength - 1].State == 'Running';
+        //                             if (currentStateIsRunning) {
+        //                                 vm.selectedRunID += 1;
+        //                             }
+        //                         }
+        //
+        //                         //This means that this is the first call to the server and the controller should proceed
+        //                         if (vm.groupStages == undefined || vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] == undefined || vm.groupStages[vm.selectedStageIndexInMainDB] == undefined) {
+        //                             firstLoadOfController = true;
+        //                         }
+        //
+        //                         // Checking if in state where the stage has been just scheduled but still not executed.
+        //                         if (vm.groupStages != undefined && nameOfStage != '' && vm.resultIsTheSame) {
+        //                             if (res[res.length - 1].ExecutionID == 0 && res[res.length - 1].Name == nameOfStage) {
+        //                                 return;
+        //                             }
+        //                         }
+        //
+        //                         if (!vm.resultIsTheSame && res[res.length - 1].ExecutionID == 0 && !firstLoadOfController) {
+        //                             return;
+        //                         }
+        //
+        //                         //The result is the same as last request and stage is not running
+        //                         if (res.length == resLength && vm.resultIsTheSame && !firstLoadOfController) {
+        //                             return;
+        //                         }
+        //
+        //                         // success
+        //                         vm.currentPipeline = res;
+        //                         firstLoadOfController = false;
+        //
+        //                         //Sorts the stages by name and by Execution ID
+        //                         vm.sortedData = runManagementService.groupStages(vm.currentPipeline);
+        //
+        //                         //Adds a new array LastRun in the sortedData, to present it in the view
+        //                         vm.groupStages = runManagementService.addLastExecution(vm.sortedData);
+        //
+        //                         //Default LastRunSelected - the last ExecutionID in the array
+        //                         for (var i = 0; i < vm.groupStages.length; i += 1) {
+        //                             var runsLength = vm.groupStages[i].Runs.length;
+        //                             vm.groupStages[i].LastRunSelected = vm.groupStages[i].Runs[runsLength - 1].ExecutionID;
+        //                         }
+        //
+        //
+        //
+        //                         //Save the last result, used form comparing and checking for changes
+        //                         lastResult = res;
+        //                         resLength = res.length;
+        //
+        //                         //Initialize the Selected Stage, if this is the first call to the controller. Otherwise the selected stage is defined by the user!
+        //                         if (isInitial) {
+        //                             vm.selectedStage = vm.groupStages[0];
+        //
+        //
+        //                             var runsLength = vm.selectedStage.Runs.length - 1;
+        //                             var jobsLength = vm.selectedStage.Runs[0].Jobs.length - 1;
+        //                             vm.selectedJob = vm.selectedStage.Runs[runsLength].Jobs[jobsLength];
+        //                             nameOfStage = vm.selectedStage.Runs[0].Name;
+        //
+        //                             //Initially displays the last run on each stage
+        //                             vm.selectedRunIndex = vm.selectedStage.Runs.length - 1;
+        //                             vm.selectedRunID = vm.selectedRunIndex;
+        //
+        //                             vm.selectedStageRunsShow = vm.groupStages[0];
+        //                         }
+        //                         if (!isInitial) {
+        //                             //Gets the numbers in the menu left from the console
+        //                             vm.getJobResults();
+        //
+        //                             //This if statements prevents clearing of Run selection
+        //                             if (vm.selectedRunID != undefined) {
+        //                                 vm.groupStages[vm.selectedStageIndexInMainDB].LastRunSelected = vm.selectedRunID;
+        //                             }
+        //
+        //                             vm.selectedStage = vm.groupStages[vm.selectedStageIndexInMainDB];
+        //                             nameOfStage = vm.selectedStage.Runs[0].Name;
+        //                             if (vm.selectedStage.Runs[vm.selectedRunIndex] != undefined) {
+        //                                 vm.selectedJob = vm.selectedStage.Runs[vm.selectedRunIndex].Jobs[vm.jobIndex];
+        //                             }
+        //
+        //                             for (var i = 0; i < vm.groupStages.length; i++) {
+        //                                 if (vm.groupStages[i].Runs[0].ExecutionID == 0 && vm.groupStages[i].Runs[0].length > 0) {
+        //                                     vm.groupStages[i].Runs.shift();
+        //                                 }
+        //                             }
+        //
+        //                         }
+        //                         isInitial = false;
+        //
+        //                     }, function (err) {
+        //                         console.log(err);
+        //                     })
+        //             }, function (err) {
+        //                 console.log(err);
+        //             })
+        //     }
+        //
+        //
+        // };
 
-                            currentStateIsRunning = vm.groupStages[vm.selectedStageIndexInMainDB].Runs[runsLength - 1].State == 'Running';
-                            if (currentStateIsRunning) {
-                                vm.selectedRunID += 1;
-                            }
-                        }
-
-                        //This means that this is the first call to the server and the controller should proceed
-                        if (vm.groupStages == undefined || vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] == undefined || vm.groupStages[vm.selectedStageIndexInMainDB] == undefined) {
-                            firstLoadOfController = true;
-                        }
-
-                        // Checking if in state where the stage has been just scheduled but still not executed.
-                        if (vm.groupStages != undefined && nameOfStage != '' && vm.resultIsTheSame) {
-                            if (res[res.length - 1].ExecutionID == 0 && res[res.length - 1].Name == nameOfStage) {
-                                return;
-                            }
-                        }
-
-                        if (!vm.resultIsTheSame && res[res.length - 1].ExecutionID == 0 && !firstLoadOfController) {
-                            return;
-                        }
-
-                        //The result is the same as last request and stage is not running
-                        if (res.length == resLength && vm.resultIsTheSame && !firstLoadOfController) {
-                            return;
-                        }
-
-                        // success
-                        vm.currentPipeline = res;
-                        firstLoadOfController = false;
-
-                        //Sorts the stages by name and by Execution ID
-                        vm.sortedData = runManagementService.groupStages(vm.currentPipeline);
-
-                        //Adds a new array LastRun in the sortedData, to present it in the view
-                        vm.groupStages = runManagementService.addLastExecution(vm.sortedData);
-
-                        //Default LastRunSelected - the last ExecutionID in the array
-                        for (var i = 0; i < vm.groupStages.length; i += 1) {
-                            var runsLength = vm.groupStages[i].Runs.length;
-                            vm.groupStages[i].LastRunSelected = vm.groupStages[i].Runs[runsLength - 1].ExecutionID;
-                        }
-
-
-
-                        //Save the last result, used form comparing and checking for changes
-                        lastResult = res;
-                        resLength = res.length;
-
-                        //Initialize the Selected Stage, if this is the first call to the controller. Otherwise the selected stage is defined by the user!
-                        if (isInitial) {
-                            vm.selectedStage = vm.groupStages[0];
-
-
-                            var runsLength = vm.selectedStage.Runs.length - 1;
-                            var jobsLength = vm.selectedStage.Runs[0].Jobs.length - 1;
-                            vm.selectedJob = vm.selectedStage.Runs[runsLength].Jobs[jobsLength];
-                            nameOfStage = vm.selectedStage.Runs[0].Name;
-
-                            //Initially displays the last run on each stage
-                            vm.selectedRunIndex = vm.selectedStage.Runs.length - 1;
-                            vm.selectedRunID = vm.selectedRunIndex;
-
-                            vm.selectedStageRunsShow = vm.groupStages[0];
-                        }
-                        if (!isInitial) {
-                            //Gets the numbers in the menu left from the console
-                            vm.getJobResults();
-
-                            //This if statements prevents clearing of Run selection
-                            if (vm.selectedRunID != undefined) {
-                                vm.groupStages[vm.selectedStageIndexInMainDB].LastRunSelected = vm.selectedRunID;
-                            }
-
-                            vm.selectedStage = vm.groupStages[vm.selectedStageIndexInMainDB];
-                            nameOfStage = vm.selectedStage.Runs[0].Name;
-                            if (vm.selectedStage.Runs[vm.selectedRunIndex] != undefined) {
-                                vm.selectedJob = vm.selectedStage.Runs[vm.selectedRunIndex].Jobs[vm.jobIndex];
-                            }
-
-                            for (var i = 0; i < vm.groupStages.length; i++) {
-                                if (vm.groupStages[i].Runs[0].ExecutionID == 0 && vm.groupStages[i].Runs[0].length > 0) {
-                                    vm.groupStages[i].Runs.shift();
-                                }
-                            }
-
-                        }
-                        isInitial = false;
-
-                    }, function (err) {
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function (res) {
-                        var token = res.access_token;
-                        pipeStats.getAllStages(vm.pipelineName, vm.pipelineExecutionID, token)
-                            .then(function (res) {
-                                var currentStateIsRunning = false;
-                                if (vm.groupStages != undefined && vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] != undefined && vm.groupStages[vm.selectedStageIndexInMainDB] != undefined) {
-                                    var runsLength = vm.groupStages[vm.selectedStageIndexInMainDB].Runs.length;
-                                    vm.resultIsTheSame = runManagementService.checkForChanges(lastResult, res);
-
-                                    currentStateIsRunning = vm.groupStages[vm.selectedStageIndexInMainDB].Runs[runsLength - 1].State == 'Running';
-                                    if (currentStateIsRunning) {
-                                        vm.selectedRunID += 1;
-                                    }
-                                }
-
-                                //This means that this is the first call to the server and the controller should proceed
-                                if (vm.groupStages == undefined || vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID] == undefined || vm.groupStages[vm.selectedStageIndexInMainDB] == undefined) {
-                                    firstLoadOfController = true;
-                                }
-
-                                // Checking if in state where the stage has been just scheduled but still not executed.
-                                if (vm.groupStages != undefined && nameOfStage != '' && vm.resultIsTheSame) {
-                                    if (res[res.length - 1].ExecutionID == 0 && res[res.length - 1].Name == nameOfStage) {
-                                        return;
-                                    }
-                                }
-
-                                if (!vm.resultIsTheSame && res[res.length - 1].ExecutionID == 0 && !firstLoadOfController) {
-                                    return;
-                                }
-
-                                //The result is the same as last request and stage is not running
-                                if (res.length == resLength && vm.resultIsTheSame && !firstLoadOfController) {
-                                    return;
-                                }
-
-                                // success
-                                vm.currentPipeline = res;
-                                firstLoadOfController = false;
-
-                                //Sorts the stages by name and by Execution ID
-                                vm.sortedData = runManagementService.groupStages(vm.currentPipeline);
-
-                                //Adds a new array LastRun in the sortedData, to present it in the view
-                                vm.groupStages = runManagementService.addLastExecution(vm.sortedData);
-
-                                //Default LastRunSelected - the last ExecutionID in the array
-                                for (var i = 0; i < vm.groupStages.length; i += 1) {
-                                    var runsLength = vm.groupStages[i].Runs.length;
-                                    vm.groupStages[i].LastRunSelected = vm.groupStages[i].Runs[runsLength - 1].ExecutionID;
-                                }
-
-
-
-                                //Save the last result, used form comparing and checking for changes
-                                lastResult = res;
-                                resLength = res.length;
-
-                                //Initialize the Selected Stage, if this is the first call to the controller. Otherwise the selected stage is defined by the user!
-                                if (isInitial) {
-                                    vm.selectedStage = vm.groupStages[0];
-
-
-                                    var runsLength = vm.selectedStage.Runs.length - 1;
-                                    var jobsLength = vm.selectedStage.Runs[0].Jobs.length - 1;
-                                    vm.selectedJob = vm.selectedStage.Runs[runsLength].Jobs[jobsLength];
-                                    nameOfStage = vm.selectedStage.Runs[0].Name;
-
-                                    //Initially displays the last run on each stage
-                                    vm.selectedRunIndex = vm.selectedStage.Runs.length - 1;
-                                    vm.selectedRunID = vm.selectedRunIndex;
-
-                                    vm.selectedStageRunsShow = vm.groupStages[0];
-                                }
-                                if (!isInitial) {
-                                    //Gets the numbers in the menu left from the console
-                                    vm.getJobResults();
-
-                                    //This if statements prevents clearing of Run selection
-                                    if (vm.selectedRunID != undefined) {
-                                        vm.groupStages[vm.selectedStageIndexInMainDB].LastRunSelected = vm.selectedRunID;
-                                    }
-
-                                    vm.selectedStage = vm.groupStages[vm.selectedStageIndexInMainDB];
-                                    nameOfStage = vm.selectedStage.Runs[0].Name;
-                                    if (vm.selectedStage.Runs[vm.selectedRunIndex] != undefined) {
-                                        vm.selectedJob = vm.selectedStage.Runs[vm.selectedRunIndex].Jobs[vm.jobIndex];
-                                    }
-
-                                    for (var i = 0; i < vm.groupStages.length; i++) {
-                                        if (vm.groupStages[i].Runs[0].ExecutionID == 0 && vm.groupStages[i].Runs[0].length > 0) {
-                                            vm.groupStages[i].Runs.shift();
-                                        }
-                                    }
-
-                                }
-                                isInitial = false;
-
-                            }, function (err) {
-                                console.log(err);
-                            })
-                    }, function (err) {
-                        console.log(err);
-                    })
-            }
-
-
-        };
-
-        vm.getAllMaterials = function () {
-            pipeConfig.getAllMaterials(vm.pipelineName)
-                .then(function (res) {
-                    vm.allMaterials = res;
-                }, function (err) {
-
-                })
-        };
-
-        vm.reRunStageJobs = function (stage) {
-
-            vm.selectedStage = stage;
-            vm.deSelectAll();
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeExec.scheduleStageWithJobs(vm.pipelineName, vm.pipelineExecutionID, vm.selectedStage.Runs[0].Name, vm.selectedJobsForReRun, token)
-                    .then(function (res) {
-                            vm.disabledBtn = false;
-                            console.log(res);
-                        },
-                        function (err) {
-                            vm.disabledBtn = false;
-                            console.log(err);
-                        });
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function (res) {
-                        var token = res.access_token;
-                        pipeExec.scheduleStageWithJobs(vm.pipelineName, vm.pipelineExecutionID, vm.selectedStage.Runs[0].Name, vm.selectedJobsForReRun, token)
-                            .then(function (res) {
-                                    vm.disabledBtn = false;
-                                    console.log(res);
-                                },
-                                function (err) {
-                                    vm.disabledBtn = false;
-                                    console.log(err);
-                                });
-                    }, function (err) {
-                        vm.disabledBtn = false;
-                        console.log(err);
-                    })
-            }
-            vm.selectedJobsForReRun = [];
-        };
+        // vm.getAllMaterials = function () {
+        //     pipeConfig.getAllMaterials(vm.pipelineName)
+        //         .then(function (res) {
+        //             vm.allMaterials = res;
+        //         }, function (err) {
+        //
+        //         })
+        // };
+        //
+        // vm.reRunStageJobs = function (stage) {
+        //
+        //     vm.selectedStage = stage;
+        //     vm.deSelectAll();
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //         var token = window.localStorage.getItem("accessToken");
+        //         pipeExec.scheduleStageWithJobs(vm.pipelineName, vm.pipelineExecutionID, vm.selectedStage.Runs[0].Name, vm.selectedJobsForReRun, token)
+        //             .then(function (res) {
+        //                     vm.disabledBtn = false;
+        //                     console.log(res);
+        //                 },
+        //                 function (err) {
+        //                     vm.disabledBtn = false;
+        //                     console.log(err);
+        //                 });
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //         authDataService.getNewToken(currentRefreshToken)
+        //             .then(function (res) {
+        //                 var token = res.access_token;
+        //                 pipeExec.scheduleStageWithJobs(vm.pipelineName, vm.pipelineExecutionID, vm.selectedStage.Runs[0].Name, vm.selectedJobsForReRun, token)
+        //                     .then(function (res) {
+        //                             vm.disabledBtn = false;
+        //                             console.log(res);
+        //                         },
+        //                         function (err) {
+        //                             vm.disabledBtn = false;
+        //                             console.log(err);
+        //                         });
+        //             }, function (err) {
+        //                 vm.disabledBtn = false;
+        //                 console.log(err);
+        //             })
+        //     }
+        //     vm.selectedJobsForReRun = [];
+        // };
 
 
         //Change the class of selected stage - needed for the initialization
@@ -516,16 +516,16 @@ angular
         }
 
         //Initialize the controller
-        vm.getAll(true);
-        vm.getAllMaterials();
+        // vm.getAll(true);
+        // vm.getAllMaterials();
 
         //Reloads the data at a given interval. Parameter is false, because it is not the initial loading
-        var intervalRunManagement = $interval(function () {
-            vm.getAll(false);
-        }, 4000);
-
-        $scope.$on('$destroy', function () {
-            $interval.cancel(intervalRunManagement);
-            intervalRunManagement = undefined;
-        });
+        // var intervalRunManagement = $interval(function () {
+        //     vm.getAll(false);
+        // }, 4000);
+        //
+        // $scope.$on('$destroy', function () {
+        //     $interval.cancel(intervalRunManagement);
+        //     intervalRunManagement = undefined;
+        // });
     });

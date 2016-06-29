@@ -11,19 +11,19 @@
         <th width="15%"> Controls </th>
       </tr>
       </thead>
-      <tbody ui-sortable="pipeConfig.sortableOptions" class="sortable" ng-model="pipeConfig.allTasks">
+      <tbody ui-sortable="pipeConfig.sortableOptions" class="sortable" ng-model="pipeConfig.job.taskDefinitions">
 
       <!--ng-repeat-->
-      <tr ng-repeat="task in pipeConfig.allTasks">
+      <tr ng-repeat="task in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions">
         <td> {{$index+1}} </td>
-        <td> {{task.Type}} </td>
-        <td> {{task.RunIfCondition}} </td>
-        <td> {{task.Command + ' ' + task.Arguments}} </td>
+        <td> {{task.type}} </td>
+        <td> {{task.runIfCondition}} </td>
+        <td> {{task.command + ' ' + task.arguments}} </td>
         <td> to do </td>
         <td>
           <button class="btn yellow" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTask($index)">Edit</button>
           <button class="btn red" data-toggle="modal" data-target="#removeTask"
-                  ng-click="pipeConfig.taskDeleteButton = true;pipeConfig.getTask($index)" ng-if="pipeConfig.allTasks.length > 1" ng-class="{'disabled': pipeConfig.taskDeleteButton}">Delete</button>
+                  ng-click="pipeConfig.getTask($index)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions.length > 1">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->

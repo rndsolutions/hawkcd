@@ -4,7 +4,7 @@
     <div style="width: 300px">
 
       <div class="form-group form-md-line-input">
-        <input type="text" class="form-control" ng-model="pipeConfig.updatedStage.Name" ng-pattern="/^([\w-]+)$/" required>
+        <input type="text" class="form-control" ng-model="pipeConfig.updatedStage.name" ng-pattern="/^([\w-]+)$/" required>
         <label>Stage Name</label>
       </div>
       <div class="form-group form-md-radios">
@@ -12,7 +12,7 @@
         <div class="md-radio-list">
           <div class="md-radio">
             <input type="radio" id="sManual" name="trigger"
-                   value="Manual" class="md-radiobtn" ng-model="pipeConfig.updatedStage.StageType">
+                   value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
             <label for="sManual">
               <span></span>
               <span class="check"></span>
@@ -20,7 +20,7 @@
           </div>
           <div class="md-radio">
             <input type="radio" id="sOnSuccess" name="trigger"
-                   value="OnSuccess" class="md-radiobtn" ng-model="pipeConfig.updatedStage.StageType">
+                   value="false" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
             <label for="sOnSuccess">
               <span></span>
               <span class="check"></span>

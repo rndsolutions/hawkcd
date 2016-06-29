@@ -8,6 +8,7 @@ import java.util.List;
 public class PipelineDefinition extends DbEntry {
     private String name;
     private String pipelineGroupId;
+    private String groupName;
     private String labelTemplate;
     private List<MaterialDefinition> materials;
     private List<EnvironmentVariable> environmentVariables;
@@ -96,6 +97,14 @@ public class PipelineDefinition extends DbEntry {
     @JsonProperty("isLocked")
     public void setLocked(boolean locked) {
         this.isLocked = locked;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }
 

@@ -253,23 +253,9 @@ angular
 
             return defer.promise;
         };
-        pipeConfig.getStage = function (pipeName, stageName, token) {
-            var defer = $q.defer();
-
-            $http.get(stagesEndPoint + pipeName + '/' + stageName, {
-                    headers: {
-                        'Authorization': 'bearer ' + token
-                    }
-                })
-                .success(function (res) {
-                    defer.resolve(res);
-                })
-                .error(function (err, status) {
-                    defer.reject(err);
-                });
-
-            return defer.promise;
-        };
+        // pipeConfig.getStage = function (stage) {
+        //     pipeConfigService.getStageDefinitionById(stage.id);
+        // };
         pipeConfig.updateStage = function (pipeName, stageName, stage, token) {
             var defer = $q.defer();
 
@@ -341,23 +327,23 @@ angular
 
             return defer.promise;
         };
-        pipeConfig.getJob = function (pipeName, stageName, jobName, token) {
-            var defer = $q.defer();
-
-            $http.get(jobsEndPoint + pipeName + '/' + stageName + '/' + jobName, {
-                    headers: {
-                        'Authorization': 'bearer ' + token
-                    }
-                })
-                .success(function (res) {
-                    defer.resolve(res);
-                })
-                .error(function (err, status) {
-                    defer.reject(err);
-                });
-
-            return defer.promise;
-        };
+        // pipeConfig.getJob = function (pipeName, stageName, jobName, token) {
+        //     var defer = $q.defer();
+        //
+        //     $http.get(jobsEndPoint + pipeName + '/' + stageName + '/' + jobName, {
+        //             headers: {
+        //                 'Authorization': 'bearer ' + token
+        //             }
+        //         })
+        //         .success(function (res) {
+        //             defer.resolve(res);
+        //         })
+        //         .error(function (err, status) {
+        //             defer.reject(err);
+        //         });
+        //
+        //     return defer.promise;
+        // };
         pipeConfig.updateJob = function (pipeName, stageName, jobName, job, token) {
             var defer = $q.defer();
 
