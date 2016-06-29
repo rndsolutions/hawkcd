@@ -22,7 +22,7 @@ angular
                 resources: "Resources",
                 environment: "Environments"
             },
-            submit:"Submit",
+            submit: "Submit",
             breadCrumb: "Agents",
             deleteModalHeader: "Delete Agent",
             deleteModalConfirm: "Are you sure you want to delete Agent: ",
@@ -44,7 +44,7 @@ angular
 
         vm.currentAgents = viewModel.allAgents;
 
-        $scope.$watch(function() { return viewModel.allAgents }, function(newVal, oldVal) {
+        $scope.$watch(function () { return viewModel.allAgents }, function (newVal, oldVal) {
             vm.currentAgents = viewModel.allAgents;
             console.log(vm.currentAgents);
         }, true);
@@ -54,6 +54,7 @@ angular
         };
 
         vm.setAgentToAddResource = function (agent) {
+            vm.currentAgentResources = [];
             agent.resources.forEach(function (currentResource, index, array) {
                 vm.currentAgentResources.push(currentResource);
             });
@@ -69,13 +70,17 @@ angular
         vm.removeLastResource = function () {
             vm.currentAgentResources.pop();
         };
-        
+
         vm.delete = function (id) {
             agentService.deleteAgent(id);
         };
 
-        vm.addResourceInput = function(){
+        vm.addResourceInput = function () {
             vm.currentAgentResources.push("Resource " + (vm.currentAgentResources.length + 1));
+        };
+
+        vm.discardResources = function () {
+            vm.currentAgentResources = vm.agentToAddResource.resources;
         };
 
         vm.changeAgentStatus = function (agent) {
@@ -84,7 +89,7 @@ angular
                 newAgent = JSON.parse(JSON.stringify(agent));
                 newAgent.isEnabled = true;
                 agentService.update(newAgent);
-            }else {
+            } else {
                 newAgent = JSON.parse(JSON.stringify(agent));
                 newAgent.isEnabled = false;
                 agentService.update(newAgent);
