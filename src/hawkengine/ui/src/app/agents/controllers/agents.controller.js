@@ -7,6 +7,8 @@ angular
         var vm = this;
         vm.agentToDelete = {};
 
+        vm.currentAgentResources = [];
+
         vm.defaultText = {
             agents: "Agents",
             tableHeaders: {
@@ -20,6 +22,7 @@ angular
                 resources: "Resources",
                 environment: "Environments"
             },
+            submit:"Submit",
             breadCrumb: "Agents",
             deleteModalHeader: "Delete Agent",
             deleteModalConfirm: "Are you sure you want to delete Agent: ",
@@ -44,32 +47,35 @@ angular
         $scope.$watch(function() { return viewModel.allAgents }, function(newVal, oldVal) {
             vm.currentAgents = viewModel.allAgents;
             console.log(vm.currentAgents);
-        });
+        }, true);
 
         vm.setAgentToDelete = function (agent) {
             vm.agentToDelete = agent;
         };
 
         vm.setAgentToAddResource = function (agent) {
-            vm.resourcesToAdd = ['Resource 1'];
-            vm.currentAgentResources = ['Resource 1'];
+            agent.resources.forEach(function (currentResource, index, array) {
+                vm.currentAgentResources.push(currentResource);
+            });
 
             vm.agentToAddResource = angular.copy(agent);
         };
 
         vm.addInputResource = function () {
-            vm.resourcesToAdd.push('Resource' + vm.resourcesToAdd.length);
-            vm.currentAgentResources.push('Resource' + vm.resourcesToAdd.length);
+            vm.agentToAddResource.resources = vm.currentAgentResources;
+            agentService.update(vm.agentToAddResource)
         };
 
         vm.removeLastResource = function () {
-            vm.resourcesToAdd.pop();
             vm.currentAgentResources.pop();
-
         };
         
         vm.delete = function (id) {
             agentService.deleteAgent(id);
+        };
+
+        vm.addResourceInput = function(){
+            vm.currentAgentResources.push("Resource " + (vm.currentAgentResources.length + 1));
         };
 
         vm.changeAgentStatus = function (agent) {
