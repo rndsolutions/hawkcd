@@ -40,9 +40,9 @@
             </div>
             <div class="form-group form-md-radios">
               <label>Run If Conditions</label>
-              <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='Passed'">
+              <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='PASSED'">
                 <div class="md-radio">
-                  <input type="radio" id="runIfPass" name="runIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
+                  <input type="radio" id="runIfPass" name="runIf" value="PASSED" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
                   <label for="runIfPass">
                     <span></span>
                     <span class="check"></span>
@@ -50,7 +50,7 @@
                   </label>
                 </div>
                 <div class="md-radio">
-                  <input type="radio" id="runIfFail" name="runIf" value="Failed" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
+                  <input type="radio" id="runIfFail" name="runIf" value="FAILED" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
                   <label for="runIfFail">
                     <span></span>
                     <span class="check"></span>
@@ -58,7 +58,7 @@
                   </label>
                 </div>
                 <div class="md-radio">
-                  <input type="radio" id="runIfAny" name="runIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
+                  <input type="radio" id="runIfAny" name="runIf" value="ANY" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
                   <label for="runIfAny">
                     <span></span>
                     <span class="check"></span>

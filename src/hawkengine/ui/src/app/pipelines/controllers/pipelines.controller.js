@@ -318,7 +318,7 @@ angular
                         "tasks": [{
                             "command": "cmd",
                             "arguments": ["/c"],
-                            "runIfCondition": 'Passed',
+                            "runIfCondition": 'PASSED',
                             "type": 'EXEC'
                         }],
                         "environmentVariables": []
