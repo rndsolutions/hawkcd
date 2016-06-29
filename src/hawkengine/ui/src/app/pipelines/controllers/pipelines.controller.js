@@ -33,17 +33,17 @@ angular
         $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
             console.log(vm.allPipelines);
-        });
+        }, true);
 
         $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             console.log(vm.allPipelineRuns);
-        });
+        }, true);
 
         $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
             vm.allPipelineGroups = viewModel.allPipelineGroups;
             console.log(vm.allPipelineGroups);
-        });
+        }, true);
 
         vm.getStageRunsFromPipeline = function (pipeline) {
             vm.currentStageRuns = [];
@@ -93,7 +93,8 @@ angular
         vm.play = function (pipelineDefinition) {
             var pipeline = {
                 "pipelineDefinitionId": pipelineDefinition.id,
-                "pipelineDefinitionName": pipelineDefinition.name
+                "pipelineDefinitionName": pipelineDefinition.name,
+                "areMaterialsUpdated": true
             };
             pipeExecService.startPipeline(pipeline);
         };

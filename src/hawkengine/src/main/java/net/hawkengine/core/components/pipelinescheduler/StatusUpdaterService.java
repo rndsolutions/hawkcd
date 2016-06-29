@@ -26,7 +26,7 @@ public class StatusUpdaterService extends Thread {
     }
 
     public void updateStatuses() {
-        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPipelinesInProgress().getObject();
+        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelinesInProgress) {
             this.updateAllStatuses(pipeline);
             this.pipelineService.update(pipeline);

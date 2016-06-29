@@ -381,40 +381,40 @@ angular
 
             return defer.promise;
         };
-        pipeConfig.deleteTask = function (pipeName, stageName, jobName, taskIndex, token) {
-            var defer = $q.defer();
-
-            $http.delete(tasksEndPoint + pipeName + '/' + stageName + '/' + jobName + '/' + taskIndex, {
-                    headers: {
-                        'Authorization': 'bearer ' + token
-                    }
-                })
-                .success(function (res) {
-                    defer.resolve(res);
-                })
-                .error(function (err, status) {
-                    defer.reject(err);
-                });
-
-            return defer.promise;
-        };
-        pipeConfig.getTask = function (pipeName, stageName, jobName, taskIndex, token) {
-            var defer = $q.defer();
-
-            $http.get(tasksEndPoint + pipeName + '/' + stageName + '/' + jobName + '/' + taskIndex, {
-                    headers: {
-                        'Authorization': 'bearer ' + token
-                    }
-                })
-                .success(function (res) {
-                    defer.resolve(res);
-                })
-                .error(function (err, status) {
-                    defer.reject(err);
-                });
-
-            return defer.promise;
-        };
+        // pipeConfig.deleteTask = function (pipeName, stageName, jobName, taskIndex, token) {
+        //     var defer = $q.defer();
+        //
+        //     $http.delete(tasksEndPoint + pipeName + '/' + stageName + '/' + jobName + '/' + taskIndex, {
+        //             headers: {
+        //                 'Authorization': 'bearer ' + token
+        //             }
+        //         })
+        //         .success(function (res) {
+        //             defer.resolve(res);
+        //         })
+        //         .error(function (err, status) {
+        //             defer.reject(err);
+        //         });
+        //
+        //     return defer.promise;
+        // };
+        // pipeConfig.getTask = function (pipeName, stageName, jobName, taskIndex, token) {
+        //     var defer = $q.defer();
+        //
+        //     $http.get(tasksEndPoint + pipeName + '/' + stageName + '/' + jobName + '/' + taskIndex, {
+        //             headers: {
+        //                 'Authorization': 'bearer ' + token
+        //             }
+        //         })
+        //         .success(function (res) {
+        //             defer.resolve(res);
+        //         })
+        //         .error(function (err, status) {
+        //             defer.reject(err);
+        //         });
+        //
+        //     return defer.promise;
+        // };
 
         pipeConfig.createExecTask = function (pipeName, stageName, jobName, task, token) {
             var defer = $q.defer();

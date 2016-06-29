@@ -41,10 +41,10 @@
           <td>TEMP</td>
           <td>
                             <span ng-repeat="stage in run.stages">
-              <span ng-if="stage.status == 'Completed' && stage.status=='Passed'">
+              <span ng-if="stage.status == 'PASSED'">
   <button type="button" class="btn btn-success s"></button>
                </span>
-                            <span ng-if="stage.status == 'Completed'  && stage.status=='Failed'">
+                            <span ng-if="stage.status=='FAILED'">
                 <button type="button" class="btn btn-danger s"></button>
                 </span>
                             <span ng-if="stage.status == 'NOT_RUN'">

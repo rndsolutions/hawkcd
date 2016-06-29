@@ -2,7 +2,7 @@
 
 angular
     .module('hawk')
-    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', function (viewModel, toaster, adminGroupService) {
+    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', '$rootScope', function (viewModel, toaster, adminGroupService, $rootScope) {
         var viewModelUpdater = this;
 
         viewModelUpdater.updateAgents = function (agents) {
@@ -144,6 +144,33 @@ angular
         viewModelUpdater.addPipeline = function (pipeline) {
             viewModel.allPipelineRuns.push(pipeline);
             toaster.pop('success', "Notification", "Pipeline run started successfully!")
+        };
+
+        viewModelUpdater.updatePipeline = function (pipeline) {
+            viewModel.allPipelineRuns.forEach(function (currentPipeline, index, array) {
+                if(currentPipeline.id == pipeline.id) {
+                    viewModel.allPipelineRuns[index] = pipeline;
+                    toaster.pop('success', "Notification", "Pipeline Run updated!");
+                    $rootScope.$apply();
+                }
+            });
+        };
+
+        viewModelUpdater.addTaskDefinition = function (taskDefinition) {
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                if (currentPipeline.id == taskDefinition.pipelineDefinitionId) {
+                    viewModel.allPipelines[index].stageDefinitions.forEach(function (currentStage, stageIndex, stageArray) {
+                        if(currentStage.id == taskDefinition.stageDefinitionId){
+                            viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions.forEach(function (currentJob, jobIndex, array) {
+                                if(currentJob.id == taskDefinition.jobDefinitionId){
+                                    viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions[jobIndex].taskDefinitions.push(taskDefinition);
+                                    toaster.pop('success', "Notification", "Task " + taskDefinition.name + " added!");
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         };
 
         return viewModelUpdater;

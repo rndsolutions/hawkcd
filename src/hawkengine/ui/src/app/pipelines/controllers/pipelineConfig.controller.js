@@ -49,7 +49,7 @@ angular
         $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
             console.log(vm.allPipelines);
-        });
+        }, true);
 
         $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
             vm.allStages = viewModel.allStages;
@@ -59,7 +59,7 @@ angular
                 }
             });
             console.log(vm.allStages);
-        });
+        }, true);
 
         $scope.$watch(function () {return viewModel.allJobs}, function (newVal, oldVal) {
             viewModel.allJobs.forEach(function (currentJob, index, array) {
@@ -70,12 +70,12 @@ angular
             vm.allJobs = viewModel.allJobs;
             
             console.log(vm.allJobs);
-        });
+        }, true);
 
         $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             console.log(vm.allPipelineRuns)
-        });
+        }, true);
 
         vm.stageDeleteButton = false;
         vm.jobDeleteButton = false;
@@ -364,9 +364,29 @@ angular
             vm.currentMaterial = material;
         };
 
+        vm.getTask = function (task) {
+            if(vm.task != null) {
+                viewModel.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].taskDefinitions.forEach(function (currentTask, index, array) {
+                    if(currentTask.id == task.id) {
+                        vm.task = array[index];
+                        vm.taskIndex = index;
+                    }
+                });
+            }
+
+            //vm.task = res;
+
+            vm.updatedTask = vm.task;
+
+            //vm.taskIndex = taskIndex;
+        };
+
         vm.addTask = function (newTask) {
             if (newTask.type == 'EXEC') {
                 var execTask = {
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     command: newTask.command,
                     arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
@@ -374,6 +394,7 @@ angular
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
+                pipeConfigService.addTaskDefinition(execTask);
             }
             if (newTask.type == 'FETCH_MATERIAL') {
                 var fetchMaterial = {
@@ -394,6 +415,10 @@ angular
                 };
             }
         };
+        
+        vm.deleteTask = function (task) {
+            pipeConfigService.deleteTaskDefinition(task.id);
+        };
 
         vm.createPipelineDefinition = function(pipeline) {
             pipeConfigService.addPipelineDefinition(pipeline);
@@ -411,6 +436,8 @@ angular
             console.log(vm.currentStageRuns);
             return vm.currentStageRuns;
         };
+
+
 
         // function getAllPipelines () {
         //     var tokenIsValid = authDataService.checkTokenExpiration();

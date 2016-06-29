@@ -87,7 +87,7 @@ public class WsEndpoint extends WebSocketAdapter {
             contract.setErrorMessage(result.getMessage());
 
             String jsonResult = serializer.toJson(contract);
-            remoteEndpoint.sendString(jsonResult);
+            remoteEndpoint.sendStringByFuture(jsonResult);
         } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
@@ -118,6 +118,21 @@ public class WsEndpoint extends WebSocketAdapter {
         }
 
         return contract;
+    }
+
+    public void send(WsContractDto contract) {
+        if(this.getSession() == null){
+            return;
+        }
+
+        RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
+
+        String jsonResult = this.jsonConverter.toJson(contract);
+        try {
+            remoteEndpoint.sendString(jsonResult);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Object call(WsContractDto contract) throws ClassNotFoundException, InstantiationException, IllegalAccessException {

@@ -8,33 +8,33 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group form-md-line-input">
-                        <select class="form-control" name="taskType" id="taskType" ng-model="pipeConfig.newTask.Type" required>
-                            <option value="Exec">Exec</option>
+                        <select class="form-control" name="taskType" id="taskType" ng-model="pipeConfig.newTask.type" required>
+                            <option value="EXEC">Exec</option>
                             <option value="FetchArtifact">Fetch Artifact</option>
                             <option value="FetchMaterial">Fetch Material</option>
                             <option value="UploadArtifact">Upload Artifact</option>
                         </select>
                         <label for="taskType">Task Type</label>
                     </div>
-                    <div ng-if="pipeConfig.newTask.Type == 'Exec'">
+                    <div ng-if="pipeConfig.newTask.type == 'EXEC'">
                         <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.newTask.Command" required>
+                            <input type="text" class="form-control" ng-model="pipeConfig.newTask.command" required>
                             <label>Task Command</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <textarea class="form-control" name="arguments" id="arguments" cols="30" rows="5" ng-model="pipeConfig.newTask.Arguments">
+                            <textarea class="form-control" name="arguments" id="arguments" cols="30" rows="5" ng-model="pipeConfig.newTask.arguments">
                             </textarea>
                             <label for="arguments">Arguments</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <input type="text" onmouseenter="$(this).tooltip('show')" title="/&#60AgentRootDir&#62/Pipelines/{{pipeConfig.currentPipeline}}/" class="form-control" ng-model="pipeConfig.newTask.WorkingDirectory">
+                            <input type="text" onmouseenter="$(this).tooltip('show')" title="/&#60AgentRootDir&#62/Pipelines/{{pipeConfig.currentPipeline}}/" class="form-control" ng-model="pipeConfig.newTask.workingDirectory">
                             <label>Working Directory</label>
                         </div>
                         <div class="form-group form-md-radios">
                             <label>Run If Conditions</label>
-                            <div class="md-radio-list" ng-init="pipeConfig.newTask.RunIfCondition='Passed'">
+                            <div class="md-radio-list" ng-init="pipeConfig.newTask.runIfCondition='Passed'">
                                 <div class="md-radio">
-                                    <input type="radio" id="execPass" name="execRunIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.newTask.RunIfCondition">
+                                    <input type="radio" id="execPass" name="execRunIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.newTask.runIfCondition">
                                     <label for="execPass">
                                         <span></span>
                                         <span class="check"></span>
@@ -42,7 +42,7 @@
                                     </label>
                                 </div>
                                 <div class="md-radio">
-                                    <input type="radio" id="execFail" name="execRunIf" value="Failed" class="md-radiobtn" ng-model="pipeConfig.newTask.RunIfCondition">
+                                    <input type="radio" id="execFail" name="execRunIf" value="Failed" class="md-radiobtn" ng-model="pipeConfig.newTask.runIfCondition">
                                     <label for="execFail">
                                         <span></span>
                                         <span class="check"></span>
@@ -50,7 +50,7 @@
                                     </label>
                                 </div>
                                 <div class="md-radio">
-                                    <input type="radio" id="execAny" name="execRunIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.newTask.RunIfCondition">
+                                    <input type="radio" id="execAny" name="execRunIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.newTask.runIfCondition">
                                     <label for="execAny">
                                         <span></span>
                                         <span class="check"></span>
@@ -62,7 +62,7 @@
                         <div class="form-group form-md-checkboxes">
                             <div class="md-checkbox-list">
                                 <div class="md-checkbox">
-                                    <input type="checkbox" class="md-check" id="addTaskIgnoreErr" ng-model="pipeConfig.newTask.IgnoreErrors">
+                                    <input type="checkbox" class="md-check" id="addTaskIgnoreErr" ng-model="pipeConfig.newTask.ignoreErrors">
                                     <label for="addTaskIgnoreErr">
                                         <span></span>
                                         <span class="check"></span>
@@ -71,11 +71,11 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-if="pipeConfig.newTask.Type == 'FetchArtifact'">
+                    <div ng-if="pipeConfig.newTask.type == 'FetchArtifact'">
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="pipelineSelect" id="pipelineSelect"
-                                    ng-model="pipeConfig.newTask.Pipeline" ng-change="pipeConfig.getPipelineForTask(pipeConfig.newTask.Pipeline)" required>
-                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.Name}}" >{{pipeline.Name}}</option>
+                                    ng-model="pipeConfig.newTask.pipeline" ng-change="pipeConfig.getPipelineForTask(pipeConfig.newTask.nipeline)" required>
+                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.name}}" >{{pipeline.name}}</option>
                             </select>
                             <label for="pipelineSelect">Pipeline</label>
                         </div>

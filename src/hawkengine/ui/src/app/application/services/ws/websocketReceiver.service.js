@@ -102,7 +102,7 @@ angular
                         viewModelUpdater.addPipeline(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updatePipeline(object.result);
                     },
                     delete: function (object) {
                         if (object.error == false) {
@@ -161,13 +161,13 @@ angular
                 },
                 TaskDefinitionService: {
                     getAll: function (object) {
-
+                        //viewModelUpdater.getAllTaskDefinitions(object.result);
                     },
                     getById: function (object) {
 
                     },
                     add: function (object) {
-
+                        viewModelUpdater.addTaskDefinition(object.result);
                     },
                     update: function (object) {
 
