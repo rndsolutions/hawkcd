@@ -11,10 +11,9 @@ public class EndpointConnector {
         EndpointConnector.wsEndpoint = wsEndpoint;
     }
 
-    public static void passResultToEndpoint(String className, String packageName, String methodName, ServiceResult serviceResult) {
+    public static void passResultToEndpoint(String className, String methodName, ServiceResult serviceResult) {
         WsContractDto contract = new WsContractDto();
         contract.setClassName(className);
-        contract.setPackageName(packageName);
         contract.setMethodName(methodName);
         contract.setResult(serviceResult.getObject());
         contract.setError(serviceResult.hasError());
