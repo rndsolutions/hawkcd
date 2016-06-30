@@ -359,6 +359,66 @@ angular
             pipeConfigService.deleteJobDefinition(job.id);
         };
 
+        vm.addMaterial = function (newMaterial) {
+            var material = {};
+
+            if (vm.materialType == 'git') {
+                material = {
+                    "pipelineDefinitionId": viewModel.allPipelines[vm.pipelineIndex].id,
+                    "name": newMaterial.git.name,
+                    "type": 'GIT',
+                    "url": newMaterial.git.url,
+                    "autoTriggerOnChange": newMaterial.git.poll,
+                    "destination": newMaterial.git.name,
+                    "materialSpecificDetails": {
+                        "branch": newMaterial.git.branch || 'master'
+                    }
+                };
+                if (newMaterial.git.credentials) {
+                    material.materialSpecificDetails.username = newMaterial.git.username;
+                    material.materialSpecificDetails.password = newMaterial.git.password;
+                }
+            }
+
+            if (vm.materialType == 'nuget') {
+                material = {
+                    "pipelineName": vm.currentPipeline,
+                    "name": newMaterial.nuget.name,
+                    "url": newMaterial.nuget.url,
+                    "type": 'NUGET',
+                    "autoTriggerOnChange": newMaterial.nuget.poll,
+                    "destination": newMaterial.nuget.name,
+                    "materialSpecificDetails": {
+                        "packageId": newMaterial.nuget.packageId,
+                        "includePrerelease": newMaterial.nuget.includePrerelease
+                    }
+                };
+                //TODO
+                // if (nugetMaterial.credentials) {
+                //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
+                //   nuget.MaterialSpecificDetails.password = nugetMaterial.password;
+                // }
+            }
+
+            //TODO
+            // if (tfsMaterial) {
+            //   var tfs = {
+            //     "PipelineName": vm.currentPipeline,
+            //     "Name": tfsMaterial.name,
+            //     "Type": 'TFS',
+            //     "AutoTriggerOnChange": tfsMaterial.poll,
+            //     "Destination": tfsMaterial.name,
+            //     "MaterialSpecificDetails": {
+            //       "domain": tfsMaterial.domain,
+            //       "projectPath": tfsMaterial.projectPath,
+            //       "username": tfsMaterial.username,
+            //       "password": tfsMaterial.password
+            //     }
+            //   };
+            // }
+            //
+        };
+
         vm.getMaterial = function (material) {
             if (vm.material != null) {
                 viewModel.allPipelines[vm.pipelineIndex].materials.forEach(function (currentMaterial, index, array) {
@@ -380,6 +440,14 @@ angular
             }
 
             vm.currentMaterial = material;
+        };
+
+        vm.editMaterial = function (material) {
+
+        };
+
+        vm.deleteMaterial = function (material) {
+
         };
 
         vm.getTask = function (task) {
@@ -432,6 +500,54 @@ angular
                     runIfCondition: newTask.runIfCondition
                 };
             }
+        };
+
+        vm.editTask = function (newTask) {
+            var task = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].taskDefinitions[vm.taskIndex]);
+            if (newTask.type == 'EXEC') {
+                var execTask = {
+                    id: task.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    command: newTask.command,
+                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    workingDirectory: newTask.workingDirectory,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
+                };
+                pipeConfigService.updateTaskDefinition(execTask);
+            }
+            if (newTask.type == 'FETCH_MATERIAL') {
+                var fetchMaterial = {
+                    id: task.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    materialName: newTask.materialName,
+                    runIfCondition: newTask.runIfCondition
+                };
+                pipeConfigService.updateTaskDefinition(fetchMaterial);
+            }
+            if (newTask.type == 'FETCH_ARTIFACT') {
+                var fetchArtifact = {
+                    id: task.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    pipeline: newTask.pipeline,
+                    stage: newTask.stage,
+                    job: newTask.job,
+                    source: newTask.source,
+                    destination: newTask.destination,
+                    runIfCondition: newTask.runIfCondition
+                };
+                pipeConfigService.updateTaskDefinition(fetchArtifact);
+            }
+            //pipeConfigService.updateJobDefinition(newTask);
         };
         
         vm.deleteTask = function (task) {

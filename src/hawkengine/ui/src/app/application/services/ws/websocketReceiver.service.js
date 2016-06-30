@@ -170,7 +170,7 @@ angular
                         viewModelUpdater.addTaskDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updateTaskDefinition(object.result);
                     },
                     delete: function (object) {
                         if(object.error == false) {

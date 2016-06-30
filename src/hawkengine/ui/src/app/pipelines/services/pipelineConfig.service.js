@@ -231,6 +231,18 @@ angular
             console.log(json);
         };
 
+        pipeConfigService.updateTaskDefinition = function (taskDefinition) {
+            var methodName = "update";
+            var className = "TaskDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.ExecTask\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeConfigService.deleteTaskDefinition = function (id) {
             var methodName = "delete";
             var className = "TaskDefinitionService";
