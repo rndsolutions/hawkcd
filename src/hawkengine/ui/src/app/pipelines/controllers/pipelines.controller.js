@@ -315,7 +315,7 @@ angular
                     "name": vm.formData.stage.name,
                     "jobDefinitions": [{
                         "name": "defaultJob",
-                        "tasks": [{
+                        "taskDefinitions": [{
                             "command": "cmd",
                             "arguments": ["/c"],
                             "runIfCondition": 'PASSED',
