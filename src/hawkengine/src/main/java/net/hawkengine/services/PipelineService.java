@@ -65,31 +65,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public ServiceResult getAllUnpreparedPipelinesInProgress() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-
-        List<Pipeline> pipelinesInProgress = pipelines
-                .stream()
-                .filter(p -> !p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-                .collect(Collectors.toList());
-
-        result.setObject(pipelinesInProgress);
-
-        return result;
-    }
-
-    @Override
     public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.getStatus() == Status.IN_PROGRESS)
-                .filter(Pipeline::areMaterialsUpdated)
-                .filter(p -> !(p.isPrepared()))
+                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
