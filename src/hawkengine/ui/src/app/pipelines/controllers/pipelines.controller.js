@@ -13,7 +13,7 @@ angular
         vm.formData = {};
         vm.allPipelines = [];
 
-        vm.allPipelineRuns = viewModel.allPipelineRuns;
+        vm.allPipelineRuns = [];
 
         vm.allDefinitionsAndRuns = [];
 
@@ -37,6 +37,22 @@ angular
 
         $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+                viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                    if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                        viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                    }
+                });
+            });
+            viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
+                viewModel.allPipelineGroups[index].pipelines.forEach(function (currentPipelineFromGroup, pipelineFromGroupIndex, array) {
+                    viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                        if(currentPipelineFromGroup.id == currentPipeline.id) {
+                            viewModel.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = viewModel.allPipelines[pipelineIndex];
+                        }
+                    });
+                });
+            });
             console.log(vm.allPipelineRuns);
         }, true);
 

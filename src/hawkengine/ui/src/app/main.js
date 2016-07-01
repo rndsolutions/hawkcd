@@ -151,15 +151,16 @@ angular
                     window.timerID=0;
                 }
 
+                // pipeConfigService.getAllJobDefinitions();
+                // pipeConfigService.getAllStageDefinitions();
                 //pipeStatsService.getAgentById();
-                pipeExecService.getAllPipelines();
-                pipeConfigService.getAllJobDefinitions();
-                pipeConfigService.getAllStageDefinitions();
-                pipeConfigService.getAllPipelineDefinitions();
-                pipeConfigService.getAllPipelineGroupDTOs();
-                agentService.getAllAgents();
+
                 adminGroupService.getAllPipelineGroups();
-                //pipeStatsService.getAllPipelineGroups();
+                pipeConfigService.getAllPipelineGroupDTOs();
+                pipeConfigService.getAllPipelineDefinitions();
+                agentService.getAllAgents();
+                pipeExecService.getAllPipelines();
+
             };
 
             $rootScope.socket.onclose = function (event) {

@@ -41,6 +41,34 @@ angular
 
         vm.currentStageRuns = [];
 
+        vm.wizardInfo = {
+            labels: {
+                autoSchedule: 'Auto Scheduling',
+                name: 'Name',
+                pipelineName: 'Pipeline Name',
+                gitUrl: 'Git URL',
+                branch: 'Branch',
+                username: 'Username',
+                password: 'Password',
+                tfsDomain: 'Domain',
+                projectPath: 'Path',
+                stageName: 'Stage Name',
+                trigger: 'Trigger option'
+            },
+            placeholders: {
+                pipelineName: 'Enter your pipeline name',
+                gitUrl: 'Enter your git url',
+                username: 'Enter TFS username',
+                password: 'Enter TFS password',
+                tfsDomain: 'Enter TFS domain',
+                projectPath: 'Enter TFS project path',
+                stageName: 'Enter stage name',
+                materialName: 'Enter material name',
+                gitUsername: 'Enter GIT username',
+                gitPassword: 'Enter GIT password'
+            }
+        };
+
         // $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
         //     vm.allMaterials = viewModel.allPipelines.materials;
         //     console.log(vm.allPipelines.materials);
@@ -79,10 +107,30 @@ angular
             console.log(vm.allJobs);
         }, true);
 
-        $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
-            vm.allPipelineRuns = viewModel.allPipelineRuns;
-            console.log(vm.allPipelineRuns)
+        $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
+            //viewModel.allPipelineGroups.forEach
         }, true);
+
+        // $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
+        //     vm.allPipelineRuns = viewModel.allPipelineRuns;
+        //     vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+        //         vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+        //             if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+        //                 vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+        //             }
+        //         });
+        //     });
+        //     viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
+        //         viewModel.allPipelineGroups.pipelines.forEach(function (currentPipelineFromGroup, pipelineFromGroupIndex, array) {
+        //             vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+        //                 if(currentPipelineFromGroup.id == currentPipeline.id) {
+        //                     viewModel.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
+        //                 }
+        //             });
+        //         });
+        //     });
+        //     console.log(vm.allPipelineRuns);
+        // }, true);
 
         vm.stageDeleteButton = false;
         vm.jobDeleteButton = false;
@@ -126,12 +174,12 @@ angular
         vm.setSpecific = function () {
             vm.specificVersion = true;
             vm.latestVersion = false;
-        }
+        };
 
         vm.setLatest = function () {
             vm.latestVersion = true;
             vm.specificVersion = false;
-        }
+        };
 
         vm.close = function () {
             vm.newMaterial = {};
@@ -2553,33 +2601,6 @@ angular
         //         $('#logoTfs').addClass('l-active2');
         //     }
         // };
-        vm.wizardInfo = {
-            labels: {
-                autoSchedule: 'Auto Scheduling',
-                name: 'Name',
-                pipelineName: 'Pipeline Name',
-                gitUrl: 'Git URL',
-                branch: 'Branch',
-                username: 'Username',
-                password: 'Password',
-                tfsDomain: 'Domain',
-                projectPath: 'Path',
-                stageName: 'Stage Name',
-                trigger: 'Trigger option'
-            },
-            placeholders: {
-                pipelineName: 'Enter your pipeline name',
-                gitUrl: 'Enter your git url',
-                username: 'Enter TFS username',
-                password: 'Enter TFS password',
-                tfsDomain: 'Enter TFS domain',
-                projectPath: 'Enter TFS project path',
-                stageName: 'Enter stage name',
-                materialName: 'Enter material name',
-                gitUsername: 'Enter GIT username',
-                gitPassword: 'Enter GIT password'
-            }
-        };
 
         // vm.getPipelineForConfig(vm.currentPipeline);
         // if (vm.currentStage != undefined) {
