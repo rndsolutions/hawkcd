@@ -11,6 +11,7 @@ import net.hawkengine.model.Stage;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.Task;
 import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -20,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelinePreparer extends Thread {
     private static final Logger LOGGER = Logger.getLogger(PipelinePreparer.class);
@@ -63,17 +65,18 @@ public class PipelinePreparer extends Thread {
         super.run();
     }
 
-//    public List<Pipeline> getAllUpdatedPipelines() {
-//        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
-//
-//        List<Pipeline> filteredPipelines = pipelines
-//                .stream()
-//                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == Status.IN_PROGRESS) && !(p.isPrepared()))
-//                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-//                .collect(Collectors.toList());
-//
-//        return filteredPipelines;
-//    }
+    // TODO: Replace with method form PipelineService
+    public List<Pipeline> getAllUpdatedPipelines() {
+        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == Status.IN_PROGRESS) && !(p.isPrepared()))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
+
+        return filteredPipelines;
+    }
 
     public Pipeline preparePipeline(Pipeline pipelineToPrepare) {
         String pipelineDefinitionId = pipelineToPrepare.getPipelineDefinitionId();
