@@ -57,7 +57,7 @@ angular
                         viewModelUpdater.addPipelineGroup(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updatePipelineGroup(object.result);
                     },
                     delete: function (object) {
                         if (object.error == false) {

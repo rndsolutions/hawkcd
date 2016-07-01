@@ -47,6 +47,19 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     @Override
     public ServiceResult add(Pipeline pipeline) {
+        List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getObject();
+        Pipeline lastPipeline = pipelines
+                .stream()
+                .filter(p -> p.getPipelineDefinitionId().equals(pipeline.getPipelineDefinitionId()))
+                .sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId()))
+                .findFirst()
+                .orElse(null);
+        if(lastPipeline == null){
+            pipeline.setExecutionId(1);
+        }
+        else{
+            pipeline.setExecutionId(lastPipeline.getExecutionId() + 1);
+        }
         this.addStagesToPipeline(pipeline);
         return super.add(pipeline);
     }

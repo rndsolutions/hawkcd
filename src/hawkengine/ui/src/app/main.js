@@ -160,7 +160,6 @@ angular
                 pipeConfigService.getAllPipelineDefinitions();
                 agentService.getAllAgents();
                 pipeExecService.getAllPipelines();
-
             };
 
             $rootScope.socket.onclose = function (event) {
@@ -181,24 +180,3 @@ angular
 window.onhashchange = function () {
     $('.modal-backdrop').remove();
 };
-
-/* Check for dev mode */
-window.onpopstate = function () {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-
-    if (vars.dev == "true") {
-        console.log("Dev Mode enabled.");
-    }
-};
-
-//var socket = new WebSocket("ws://hawkserver:8080/ws/v1");
-
-// socket.onopen = function (event){
-//    
-// };
