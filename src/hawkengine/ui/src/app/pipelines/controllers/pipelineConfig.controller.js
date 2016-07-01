@@ -48,6 +48,13 @@ angular
 
         $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
+            vm.allPipelines.forEach(function (currentPipeline, index, array) {
+                if(currentPipeline.id == vm.pipeline.id) {
+                    vm.getPipelineForConfig(currentPipeline.name);
+                    //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
+
+                }
+            });
             console.log(vm.allPipelines);
         }, true);
 
@@ -161,6 +168,7 @@ angular
         vm.editPipeline = function (pipeline) {
             var newPipeline = angular.copy(vm.allPipelines[vm.pipelineIndex]);
             newPipeline.name = pipeline.name;
+            $state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:pipeline.name});
             pipeConfigService.updatePipelineDefinition(newPipeline);
         };
 
@@ -250,6 +258,7 @@ angular
         vm.editStage = function(stage) {
             var newStage = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex]);
             newStage.name = stage.name;
+            $state.go('index.pipelineConfig.stage.settings', {groupName:vm.pipeline.groupName, pipelineName:vm.pipeline.name, stageName:stage.name});
             pipeConfigService.updateStageDefinition(newStage);
         };
         
@@ -352,6 +361,7 @@ angular
         vm.editJob = function (job) {
             var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
             newJob.name = job.name;
+            $state.go('index.pipelineConfig.job.settings', {groupName:vm.pipeline.groupName, pipelineName:vm.pipeline.name, stageName:vm.stage.name, jobName:job.name});
             pipeConfigService.updateJobDefinition(newJob);
         };
 

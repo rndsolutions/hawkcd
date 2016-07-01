@@ -75,6 +75,16 @@ angular
                     toaster.pop('success', "Notification", "Pipeline Definition " + pipelineDefinition.name + " updated!")
                 }
             });
+
+            viewModel.allPipelineGroups.forEach(function (currentPipelineGroupDTO, index, array) {
+                if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId) {
+                    viewModel.allPipelineGroups[index].pipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                        if(currentPipeline.id == pipelineDefinition.id) {
+                            viewModel.allPipelineGroups[index].pipelines[pipelineIndex] = pipelineDefinition;
+                        }
+                    });
+                }
+            });
         };
 
         viewModelUpdater.getAllStageDefinitions = function (stageDefinitions) {
