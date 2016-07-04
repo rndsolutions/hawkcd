@@ -18,13 +18,13 @@
             <div style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap; "><strong>Reason:</strong> {{pipe.TriggerReason}}</div>
 
         </div>
-        <div class="stages" ng-init="t = pipes.getStageRunsFromPipeline(pipe)">
+        <div class="stages">
 
-            <span ng-repeat="stage in t">
-          <span ng-if="stage.status=='Passed' && $index<9">
+            <span ng-repeat="stage in pipe.stages">
+          <span ng-if="stage.status=='PASSED' && $index<9">
 <button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
              </span>
-            <span ng-if="stage.status=='Failed' && $index<9">
+            <span ng-if="stage.status=='FAILED' && $index<9">
               <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'NOT_RUN' && $index<9">

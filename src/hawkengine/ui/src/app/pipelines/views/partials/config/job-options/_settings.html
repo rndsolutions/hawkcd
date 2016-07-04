@@ -8,5 +8,5 @@
     </form>
   </div>
   <!--<button class="btn green-sharp btn-large">Update</button>-->
-  <button class="btn green-sharp" ng-click="pipeConfig.editJob(pipeConfig.updatedJob)" ng-disabled="editJobForm.$invalid || pipeConfig.updatedJob.Name == pipeConfig.job.name">Update</button>
+  <button class="btn green-sharp" ng-click="pipeConfig.editJob(pipeConfig.updatedJob)" ng-disabled="pipeConfig.updatedJob.name == pipeConfig.job.name">Update</button>
 </div>

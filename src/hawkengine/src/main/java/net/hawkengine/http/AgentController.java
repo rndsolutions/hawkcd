@@ -2,6 +2,7 @@ package net.hawkengine.http;
 
 import com.google.gson.Gson;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;
@@ -11,6 +12,7 @@ import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.Service;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import java.util.List;
@@ -111,7 +113,8 @@ public class AgentController {
             Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
             agent.setRunning(false);
             agent.setAssigned(false);
-            this.agentService.update(agent);
+            ServiceResult result = this.agentService.update(agent);
+            EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
         }
 
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import java.util.*;
 
 public class StatusUpdaterService extends Thread {
-    private static final Logger logger = Logger.getLogger(StatusUpdaterService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(StatusUpdaterService.class.getName());
     private IPipelineService pipelineService;
 
     public StatusUpdaterService() {
@@ -83,8 +83,10 @@ public class StatusUpdaterService extends Thread {
 
         if (jobStatuses.contains(JobStatus.FAILED)) {
             stage.setStatus(StageStatus.FAILED);
+            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionId(), JobStatus.FAILED));
         } else if (this.areAllPassed(jobStatuses)) {
             stage.setStatus(StageStatus.PASSED);
+            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionId(), JobStatus.PASSED));
         }
     }
 
@@ -99,8 +101,10 @@ public class StatusUpdaterService extends Thread {
 
         if (stageStatuses.contains(StageStatus.FAILED)) {
             pipeline.setStatus(Status.FAILED);
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.FAILED));
         } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.PASSED));
         }
     }
 

@@ -41,6 +41,34 @@ angular
 
         vm.currentStageRuns = [];
 
+        vm.wizardInfo = {
+            labels: {
+                autoSchedule: 'Auto Scheduling',
+                name: 'Name',
+                pipelineName: 'Pipeline Name',
+                gitUrl: 'Git URL',
+                branch: 'Branch',
+                username: 'Username',
+                password: 'Password',
+                tfsDomain: 'Domain',
+                projectPath: 'Path',
+                stageName: 'Stage Name',
+                trigger: 'Trigger option'
+            },
+            placeholders: {
+                pipelineName: 'Enter your pipeline name',
+                gitUrl: 'Enter your git url',
+                username: 'Enter TFS username',
+                password: 'Enter TFS password',
+                tfsDomain: 'Enter TFS domain',
+                projectPath: 'Enter TFS project path',
+                stageName: 'Enter stage name',
+                materialName: 'Enter material name',
+                gitUsername: 'Enter GIT username',
+                gitPassword: 'Enter GIT password'
+            }
+        };
+
         // $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
         //     vm.allMaterials = viewModel.allPipelines.materials;
         //     console.log(vm.allPipelines.materials);
@@ -48,8 +76,15 @@ angular
 
         $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
+            vm.allPipelines.forEach(function (currentPipeline, index, array) {
+                if(currentPipeline.id == vm.pipeline.id) {
+                    vm.getPipelineForConfig(currentPipeline.name);
+                    //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
+
+                }
+            });
             console.log(vm.allPipelines);
-        });
+        }, true);
 
         $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
             vm.allStages = viewModel.allStages;
@@ -59,7 +94,7 @@ angular
                 }
             });
             console.log(vm.allStages);
-        });
+        }, true);
 
         $scope.$watch(function () {return viewModel.allJobs}, function (newVal, oldVal) {
             viewModel.allJobs.forEach(function (currentJob, index, array) {
@@ -70,12 +105,32 @@ angular
             vm.allJobs = viewModel.allJobs;
             
             console.log(vm.allJobs);
-        });
+        }, true);
 
-        $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
-            vm.allPipelineRuns = viewModel.allPipelineRuns;
-            console.log(vm.allPipelineRuns)
-        });
+        $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
+            //viewModel.allPipelineGroups.forEach
+        }, true);
+
+        // $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
+        //     vm.allPipelineRuns = viewModel.allPipelineRuns;
+        //     vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+        //         vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+        //             if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+        //                 vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+        //             }
+        //         });
+        //     });
+        //     viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
+        //         viewModel.allPipelineGroups.pipelines.forEach(function (currentPipelineFromGroup, pipelineFromGroupIndex, array) {
+        //             vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+        //                 if(currentPipelineFromGroup.id == currentPipeline.id) {
+        //                     viewModel.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
+        //                 }
+        //             });
+        //         });
+        //     });
+        //     console.log(vm.allPipelineRuns);
+        // }, true);
 
         vm.stageDeleteButton = false;
         vm.jobDeleteButton = false;
@@ -119,12 +174,12 @@ angular
         vm.setSpecific = function () {
             vm.specificVersion = true;
             vm.latestVersion = false;
-        }
+        };
 
         vm.setLatest = function () {
             vm.latestVersion = true;
             vm.specificVersion = false;
-        }
+        };
 
         vm.close = function () {
             vm.newMaterial = {};
@@ -156,6 +211,13 @@ angular
             vm.updatedPipeline.autoScheduling = vm.pipeline.autoScheduling;
 
             vm.currentPipeline = pipeName;
+        };
+
+        vm.editPipeline = function (pipeline) {
+            var newPipeline = angular.copy(vm.allPipelines[vm.pipelineIndex]);
+            newPipeline.name = pipeline.name;
+            $state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:pipeline.name});
+            pipeConfigService.updatePipelineDefinition(newPipeline);
         };
 
         vm.getStage = function (stage) {
@@ -240,6 +302,13 @@ angular
         }
         pipeConfigService.addStageDefinition(stage);
     };
+        
+        vm.editStage = function(stage) {
+            var newStage = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex]);
+            newStage.name = stage.name;
+            $state.go('index.pipelineConfig.stage.settings', {groupName:vm.pipeline.groupName, pipelineName:vm.pipeline.name, stageName:stage.name});
+            pipeConfigService.updateStageDefinition(newStage);
+        };
         
         vm.deleteStage = function(stage){
             pipeConfigService.deleteStageDefinition(stage.id);
@@ -337,8 +406,75 @@ angular
             pipeConfigService.addJobDefinition(job);
         };
 
+        vm.editJob = function (job) {
+            var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            newJob.name = job.name;
+            $state.go('index.pipelineConfig.job.settings', {groupName:vm.pipeline.groupName, pipelineName:vm.pipeline.name, stageName:vm.stage.name, jobName:job.name});
+            pipeConfigService.updateJobDefinition(newJob);
+        };
+
         vm.deleteJob = function (job){
             pipeConfigService.deleteJobDefinition(job.id);
+        };
+
+        vm.addMaterial = function (newMaterial) {
+            var material = {};
+
+            if (vm.materialType == 'git') {
+                material = {
+                    "pipelineDefinitionId": viewModel.allPipelines[vm.pipelineIndex].id,
+                    "name": newMaterial.git.name,
+                    "type": 'GIT',
+                    "url": newMaterial.git.url,
+                    "autoTriggerOnChange": newMaterial.git.poll,
+                    "destination": newMaterial.git.name,
+                    "materialSpecificDetails": {
+                        "branch": newMaterial.git.branch || 'master'
+                    }
+                };
+                if (newMaterial.git.credentials) {
+                    material.materialSpecificDetails.username = newMaterial.git.username;
+                    material.materialSpecificDetails.password = newMaterial.git.password;
+                }
+            }
+
+            if (vm.materialType == 'nuget') {
+                material = {
+                    "pipelineName": vm.currentPipeline,
+                    "name": newMaterial.nuget.name,
+                    "url": newMaterial.nuget.url,
+                    "type": 'NUGET',
+                    "autoTriggerOnChange": newMaterial.nuget.poll,
+                    "destination": newMaterial.nuget.name,
+                    "materialSpecificDetails": {
+                        "packageId": newMaterial.nuget.packageId,
+                        "includePrerelease": newMaterial.nuget.includePrerelease
+                    }
+                };
+                //TODO
+                // if (nugetMaterial.credentials) {
+                //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
+                //   nuget.MaterialSpecificDetails.password = nugetMaterial.password;
+                // }
+            }
+
+            //TODO
+            // if (tfsMaterial) {
+            //   var tfs = {
+            //     "PipelineName": vm.currentPipeline,
+            //     "Name": tfsMaterial.name,
+            //     "Type": 'TFS',
+            //     "AutoTriggerOnChange": tfsMaterial.poll,
+            //     "Destination": tfsMaterial.name,
+            //     "MaterialSpecificDetails": {
+            //       "domain": tfsMaterial.domain,
+            //       "projectPath": tfsMaterial.projectPath,
+            //       "username": tfsMaterial.username,
+            //       "password": tfsMaterial.password
+            //     }
+            //   };
+            // }
+            //
         };
 
         vm.getMaterial = function (material) {
@@ -364,9 +500,37 @@ angular
             vm.currentMaterial = material;
         };
 
+        vm.editMaterial = function (material) {
+
+        };
+
+        vm.deleteMaterial = function (material) {
+
+        };
+
+        vm.getTask = function (task) {
+            if(vm.task != null) {
+                viewModel.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].taskDefinitions.forEach(function (currentTask, index, array) {
+                    if(currentTask.id == task.id) {
+                        vm.task = array[index];
+                        vm.taskIndex = index;
+                    }
+                });
+            }
+
+            //vm.task = res;
+
+            vm.updatedTask = vm.task;
+
+            //vm.taskIndex = taskIndex;
+        };
+
         vm.addTask = function (newTask) {
             if (newTask.type == 'EXEC') {
                 var execTask = {
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     command: newTask.command,
                     arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
@@ -374,6 +538,7 @@ angular
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
+                pipeConfigService.addTaskDefinition(execTask);
             }
             if (newTask.type == 'FETCH_MATERIAL') {
                 var fetchMaterial = {
@@ -395,6 +560,58 @@ angular
             }
         };
 
+        vm.editTask = function (newTask) {
+            var task = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].taskDefinitions[vm.taskIndex]);
+            if (newTask.type == 'EXEC') {
+                var execTask = {
+                    id: task.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    command: newTask.command,
+                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    workingDirectory: newTask.workingDirectory,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
+                };
+                pipeConfigService.updateTaskDefinition(execTask);
+            }
+            if (newTask.type == 'FETCH_MATERIAL') {
+                var fetchMaterial = {
+                    id: task.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    materialName: newTask.materialName,
+                    runIfCondition: newTask.runIfCondition
+                };
+                pipeConfigService.updateTaskDefinition(fetchMaterial);
+            }
+            if (newTask.type == 'FETCH_ARTIFACT') {
+                var fetchArtifact = {
+                    id: task.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    pipeline: newTask.pipeline,
+                    stage: newTask.stage,
+                    job: newTask.job,
+                    source: newTask.source,
+                    destination: newTask.destination,
+                    runIfCondition: newTask.runIfCondition
+                };
+                pipeConfigService.updateTaskDefinition(fetchArtifact);
+            }
+            //pipeConfigService.updateJobDefinition(newTask);
+        };
+        
+        vm.deleteTask = function (task) {
+            pipeConfigService.deleteTaskDefinition(task.id);
+        };
+
         vm.createPipelineDefinition = function(pipeline) {
             pipeConfigService.addPipelineDefinition(pipeline);
         };
@@ -411,6 +628,8 @@ angular
             console.log(vm.currentStageRuns);
             return vm.currentStageRuns;
         };
+
+
 
         // function getAllPipelines () {
         //     var tokenIsValid = authDataService.checkTokenExpiration();
@@ -2382,33 +2601,6 @@ angular
         //         $('#logoTfs').addClass('l-active2');
         //     }
         // };
-        vm.wizardInfo = {
-            labels: {
-                autoSchedule: 'Auto Scheduling',
-                name: 'Name',
-                pipelineName: 'Pipeline Name',
-                gitUrl: 'Git URL',
-                branch: 'Branch',
-                username: 'Username',
-                password: 'Password',
-                tfsDomain: 'Domain',
-                projectPath: 'Path',
-                stageName: 'Stage Name',
-                trigger: 'Trigger option'
-            },
-            placeholders: {
-                pipelineName: 'Enter your pipeline name',
-                gitUrl: 'Enter your git url',
-                username: 'Enter TFS username',
-                password: 'Enter TFS password',
-                tfsDomain: 'Enter TFS domain',
-                projectPath: 'Enter TFS project path',
-                stageName: 'Enter stage name',
-                materialName: 'Enter material name',
-                gitUsername: 'Enter GIT username',
-                gitPassword: 'Enter GIT password'
-            }
-        };
 
         // vm.getPipelineForConfig(vm.currentPipeline);
         // if (vm.currentStage != undefined) {

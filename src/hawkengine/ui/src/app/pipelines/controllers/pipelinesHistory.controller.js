@@ -33,6 +33,7 @@ angular
 
         $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
                     vm.currentPipelineRuns.push(currentPipelineRun);
@@ -40,7 +41,7 @@ angular
             });
             console.log(vm.allPipelineRuns);
             console.log(vm.currentPipelineRuns);
-        });
+        }, true);
 
 
         //Gets all executions of a pipeline by given name
