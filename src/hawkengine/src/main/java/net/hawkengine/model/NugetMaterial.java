@@ -3,21 +3,21 @@ package net.hawkengine.model;
 import net.hawkengine.model.enums.MaterialType;
 
 public class NugetMaterial extends MaterialDefinition{
-    private String url;
+    private String repositoryUrl;
     private String packageId;
-    private boolean isPrereleaseIncluded;
-    private String latestPackegeVersion;
+    private boolean isPrerelease;
+    private String packageVersion;
 
     public NugetMaterial() {
-        this.setType(MaterialType.NUGET);
+        super.setType(MaterialType.NUGET);
     }
 
-    public String getUrl() {
-        return this.url;
+    public String getRepositoryUrl() {
+        return this.repositoryUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setRepositoryUrl(String repositoryUrl) {
+        this.repositoryUrl = repositoryUrl;
     }
 
     public String getPackageId() {
@@ -28,19 +28,19 @@ public class NugetMaterial extends MaterialDefinition{
         this.packageId = packageId;
     }
 
-    public boolean isPrereleaseIncluded() {
-        return this.isPrereleaseIncluded;
+    public boolean isPrerelease() {
+        return this.isPrerelease;
     }
 
-    public void setPrereleaseIncluded(boolean prereleaseIncluded) {
-        this.isPrereleaseIncluded = prereleaseIncluded;
+    public void setPrerelease(boolean prerelease) {
+        this.isPrerelease = prerelease;
     }
 
-    public String getLatestPackegeVersion() {
-        return this.latestPackegeVersion;
+    public String getPackageVersion() {
+        return this.packageVersion;
     }
 
-    public void setLatestPackegeVersion(String latestPackegeVersion) {
-        this.latestPackegeVersion = latestPackegeVersion;
+    public void setPackageVersion(String packageVersion) {
+        this.packageVersion = packageVersion;
     }
 }

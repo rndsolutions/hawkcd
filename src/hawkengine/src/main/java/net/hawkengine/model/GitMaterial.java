@@ -3,25 +3,33 @@ package net.hawkengine.model;
 import net.hawkengine.model.enums.MaterialType;
 
 public class GitMaterial extends MaterialDefinition {
+    private String repositoryUrl;
+    private String branch;
     private String username;
     private String password;
-    private String url;
     private String commitId;
     private String authorName;
-    private String authorMail;
+    private String authorEmail;
     private String comments;
-    private String branch;
 
     public GitMaterial() {
-        this.setType(MaterialType.GIT);
+        super.setType(MaterialType.GIT);
     }
 
-    public String getPassword() {
-        return this.password;
+    public String getRepositoryUrl() {
+        return this.repositoryUrl;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRepositoryUrl(String repositoryUrl) {
+        this.repositoryUrl = repositoryUrl;
+    }
+
+    public String getBranch() {
+        return this.branch;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 
     public String getUsername() {
@@ -32,12 +40,12 @@ public class GitMaterial extends MaterialDefinition {
         this.username = username;
     }
 
-    public String getUrl() {
-        return this.url;
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCommitId() {
@@ -56,12 +64,12 @@ public class GitMaterial extends MaterialDefinition {
         this.authorName = authorName;
     }
 
-    public String getAuthorMail() {
-        return this.authorMail;
+    public String getAuthorEmail() {
+        return this.authorEmail;
     }
 
-    public void setAuthorMail(String authorMail) {
-        this.authorMail = authorMail;
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 
     public String getComments() {
@@ -70,13 +78,5 @@ public class GitMaterial extends MaterialDefinition {
 
     public void setComments(String comments) {
         this.comments = comments;
-    }
-
-    public String getBranch() {
-        return this.branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
     }
 }
