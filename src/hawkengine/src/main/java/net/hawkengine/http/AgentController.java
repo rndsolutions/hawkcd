@@ -176,7 +176,7 @@ public class AgentController {
                     .entity(this.serviceResult.getMessage())
                     .build();
         } else {
-            return Response.ok().entity(this.serviceResult.getMessage()).build();
+            return Response.status(204).entity(this.serviceResult.getMessage()).build();
         }
     }
 }
