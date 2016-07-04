@@ -2,18 +2,12 @@ package net.hawkengine.model;
 
 import net.hawkengine.model.enums.MaterialType;
 
-import java.util.HashMap;
-
-public class MaterialDefinition {
+public abstract class MaterialDefinition extends DbEntry{
     private String pipelineDefinitionId;
+    private String pipelineDefinitionName;
     private String name;
     private MaterialType type;
-    private String url;
-    private boolean isAutoTriggeredOnChange;
-    private HashMap<String, Object> materialSpecificDetails;
-
-    public MaterialDefinition() {
-    }
+    private boolean isPollingForChanges;
 
     public String getPipelineDefinitionId() {
         return this.pipelineDefinitionId;
@@ -21,6 +15,14 @@ public class MaterialDefinition {
 
     public void setPipelineDefinitionId(String value) {
         this.pipelineDefinitionId = value;
+    }
+
+    public String getPipelineDefinitionName() {
+        return this.pipelineDefinitionName;
+    }
+
+    public void setPipelineDefinitionName(String pipelineDefinitionName) {
+        this.pipelineDefinitionName = pipelineDefinitionName;
     }
 
     public String getName() {
@@ -39,27 +41,11 @@ public class MaterialDefinition {
         this.type = value;
     }
 
-    public String getUrl() {
-        return this.url;
+    public boolean isPollingForChanges() {
+        return this.isPollingForChanges;
     }
 
-    public void setUrl(String value) {
-        this.url = value;
-    }
-
-    public boolean isAutoTriggeredOnChange() {
-        return this.isAutoTriggeredOnChange;
-    }
-
-    public void setAutoTriggeredOnChange(boolean autoTriggeredOnChange) {
-        this.isAutoTriggeredOnChange = autoTriggeredOnChange;
-    }
-
-    public HashMap<String, Object> getMaterialSpecificDetails() {
-        return this.materialSpecificDetails;
-    }
-
-    public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-        this.materialSpecificDetails = value;
+    public void setPollingForChanges(boolean pollingForChanges) {
+        this.isPollingForChanges = pollingForChanges;
     }
 }
