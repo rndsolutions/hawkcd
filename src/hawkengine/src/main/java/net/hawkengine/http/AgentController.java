@@ -27,6 +27,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.transform.Result;
 
 @Path("/agents")
 @Consumes("application/json")
@@ -35,14 +36,12 @@ public class AgentController {
     private AgentService agentService;
     private ServiceResult serviceResult;
     private SchemaValidator schemaValidator;
-    private Gson jsonBuilder;
     private IPipelineService pipelineService;
 
     public AgentController() {
         this.agentService = new AgentService();
         this.serviceResult = new ServiceResult();
         this.schemaValidator = new SchemaValidator();
-        this.jsonBuilder = new Gson();
         this.pipelineService = new PipelineService();
     }
 
@@ -50,26 +49,28 @@ public class AgentController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAgents() {
-        this.serviceResult = this.agentService.getAll();
-        List<String> agentList = (List<String>) this.serviceResult.getObject();
-        Object result = this.jsonBuilder.toJson(agentList);
-        return Response.ok().entity(result).build();
+        ServiceResult result = this.agentService.getAll();
+        return Response.ok()
+                .entity(result.getObject())
+                .build();
     }
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}")
-    public Response getById(@PathParam("agentId") String id) {
-        this.serviceResult = this.agentService.getById(id);
-        boolean hasError = this.serviceResult.hasError();
+    public Response getById(@PathParam("agentId") String agentId) {
+        ServiceResult result = this.agentService.getById(agentId);
+        boolean hasError = result.hasError();
         if (hasError) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(result)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
-        return Response.ok().entity(this.serviceResult.getObject()).build();
+        return Response.ok()
+                .entity(result.getObject())
+                .build();
     }
 
     @GET
@@ -77,27 +78,36 @@ public class AgentController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
-        this.serviceResult = this.agentService.getWorkInfo(agentId);
-
-        return Response.ok().entity(this.serviceResult.getObject()).build();
+        ServiceResult result = this.agentService.getWorkInfo(agentId);
+        return Response.ok()
+                .entity(result.getObject())
+                .build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAgent(Agent agent) {
-        String result = schemaValidator.validate(agent);
-        if (result.equals("OK")) {
-            this.serviceResult = this.agentService.add(agent);
-            return Response.ok().entity(this.serviceResult.getObject()).build();
+        String isValid = schemaValidator.validate(agent);
+        if (isValid.equals("OK")){
+            ServiceResult result = this.agentService.add(agent);
+            if (result.hasError()){
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+            } else {
+                return Response.ok()
+                        .entity(result.getObject())
+                        .build();
+            }
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(result)
+                    .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
-
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -152,13 +162,22 @@ public class AgentController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateAgent(Agent agent) {
-        String result = schemaValidator.validate(agent);
-        if (result.equals("OK")) {
-            this.serviceResult = this.agentService.update(agent);
-            return Response.ok().entity(this.serviceResult.getObject()).build();
+        String isValid = schemaValidator.validate(agent);
+        if (isValid.equals("OK")) {
+            ServiceResult result = this.agentService.update(agent);
+            if (result.hasError()) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+            }else {
+                return Response.ok()
+                        .entity(result.getObject())
+                        .build();
+            }
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(result)
+                    .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
@@ -169,14 +188,17 @@ public class AgentController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{agentId}")
     public Response deleteAgent(@PathParam("agentId") String agentId) {
-        this.serviceResult = agentService.delete(agentId);
-        boolean hasError = this.serviceResult.hasError();
+        ServiceResult result = this.agentService.delete(agentId);
+        boolean hasError = result.hasError();
         if (hasError) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(result.getMessage())
+                    .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-            return Response.status(204).entity(this.serviceResult.getMessage()).build();
+            return Response.status(204)
+                    .entity(result.getMessage())
+                    .build();
         }
     }
 }
