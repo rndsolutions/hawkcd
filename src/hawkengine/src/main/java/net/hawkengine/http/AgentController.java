@@ -89,6 +89,9 @@ public class AgentController {
         String result = schemaValidator.validate(agent);
         if (result.equals("OK")) {
             this.serviceResult = this.agentService.add(agent);
+            if (serviceResult.hasError()){
+                this.serviceResult = this.agentService.update(agent);
+            }
             return Response.ok().entity(this.serviceResult.getObject()).build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
