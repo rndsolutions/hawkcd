@@ -1,4 +1,4 @@
-package net.hawkengine.core.components.pipelinescheduler;
+package net.hawkengine.core.pipelinescheduler;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
 import net.hawkengine.db.IDbRepository;

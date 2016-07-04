@@ -1,4 +1,4 @@
-package net.hawkengine.core.components.pipelinescheduler;
+package net.hawkengine.core.pipelinescheduler;
 
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.model.Agent;

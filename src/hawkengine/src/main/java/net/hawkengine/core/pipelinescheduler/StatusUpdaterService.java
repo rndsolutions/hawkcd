@@ -1,4 +1,4 @@
-package net.hawkengine.core.components.pipelinescheduler;
+package net.hawkengine.core.pipelinescheduler;
 
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
