@@ -2,10 +2,8 @@
 
 angular
     .module('hawk')
-    .factory('viewModel', ['$rootScope', 'agentService', 'toaster', function ($rootScope, agentService, toaster) {
+    .factory('viewModel', [function () {
         var viewModel = this;
-
-        viewModel.isAgentFirstRun = true;
 
         viewModel.allAgents = [];
 
@@ -13,13 +11,7 @@ angular
 
         viewModel.allMaterials = [];
 
-        viewModel.allPipelineDefinitions = [];
-
         viewModel.allPipelineGroups = [];
-        
-        viewModel.allStages = [];
-
-        viewModel.allJobs = [];
             
         viewModel.allPipelineRuns = [];
 

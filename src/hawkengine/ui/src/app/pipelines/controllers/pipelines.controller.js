@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function ($scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService) {
+    .controller('PipelinesController', function ($rootScope, $scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService) {
         var vm = this;
         vm.toggleLogo = 1;
 
@@ -13,7 +13,7 @@ angular
         vm.formData = {};
         vm.allPipelines = [];
 
-        vm.allPipelineRuns = viewModel.allPipelineRuns;
+        vm.allPipelineRuns = [];
 
         vm.allDefinitionsAndRuns = [];
 
@@ -33,17 +33,33 @@ angular
         $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
             console.log(vm.allPipelines);
-        });
+        }, true);
 
         $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+                viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                    if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                        viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                    }
+                });
+            });
+            viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
+                viewModel.allPipelineGroups[index].pipelines.forEach(function (currentPipelineFromGroup, pipelineFromGroupIndex, array) {
+                    viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                        if(currentPipelineFromGroup.id == currentPipeline.id) {
+                            viewModel.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = viewModel.allPipelines[pipelineIndex];
+                        }
+                    });
+                });
+            });
             console.log(vm.allPipelineRuns);
-        });
+        }, true);
 
         $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
             vm.allPipelineGroups = viewModel.allPipelineGroups;
             console.log(vm.allPipelineGroups);
-        });
+        }, true);
 
         vm.getStageRunsFromPipeline = function (pipeline) {
             vm.currentStageRuns = [];
@@ -93,7 +109,8 @@ angular
         vm.play = function (pipelineDefinition) {
             var pipeline = {
                 "pipelineDefinitionId": pipelineDefinition.id,
-                "pipelineDefinitionName": pipelineDefinition.name
+                "pipelineDefinitionName": pipelineDefinition.name,
+                "areMaterialsUpdated": true
             };
             pipeExecService.startPipeline(pipeline);
         };
@@ -314,10 +331,10 @@ angular
                     "name": vm.formData.stage.name,
                     "jobDefinitions": [{
                         "name": "defaultJob",
-                        "tasks": [{
+                        "taskDefinitions": [{
                             "command": "cmd",
                             "arguments": ["/c"],
-                            "runIfCondition": 'Passed',
+                            "runIfCondition": 'PASSED',
                             "type": 'EXEC'
                         }],
                         "environmentVariables": []

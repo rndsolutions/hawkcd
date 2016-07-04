@@ -57,7 +57,7 @@ angular
                         viewModelUpdater.addPipelineGroup(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updatePipelineGroup(object.result);
                     },
                     delete: function (object) {
                         if (object.error == false) {
@@ -79,7 +79,7 @@ angular
                         viewModelUpdater.addPipelineDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updatePipelineDefinition(object.result);
                     },
                     delete: function (object) {
                         if (object.error == false) {
@@ -102,7 +102,7 @@ angular
                         viewModelUpdater.addPipeline(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updatePipeline(object.result);
                     },
                     delete: function (object) {
                         if (object.error == false) {
@@ -124,7 +124,7 @@ angular
                         viewModelUpdater.addStageDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updateStageDefinition(object.result);
                     },
                     delete: function (object) {
                         if(object.error == false) {
@@ -147,7 +147,7 @@ angular
                         viewModelUpdater.addJobDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updateJobDefinition(object.result);
                     },
                     delete: function (object) {
                         if(object.error == false) {
@@ -161,16 +161,16 @@ angular
                 },
                 TaskDefinitionService: {
                     getAll: function (object) {
-
+                        //viewModelUpdater.getAllTaskDefinitions(object.result);
                     },
                     getById: function (object) {
 
                     },
                     add: function (object) {
-
+                        viewModelUpdater.addTaskDefinition(object.result);
                     },
                     update: function (object) {
-
+                        viewModelUpdater.updateTaskDefinition(object.result);
                     },
                     delete: function (object) {
                         if(object.error == false) {

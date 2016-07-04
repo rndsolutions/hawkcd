@@ -253,7 +253,7 @@ public class PipelineServiceTests {
     public void getAllUpdatedPipelines_onePipelineUpdated_oneObject() {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
 
-        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelines().getObject();
+        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelines.size());
     }

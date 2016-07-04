@@ -6,7 +6,7 @@ import net.hawkengine.model.ServiceResult;
 public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getAllUnpreparedPipelinesInProgress();
 
-    ServiceResult getAllUpdatedUnpreparedPipelines();
+    ServiceResult getAllUpdatedUnpreparedPipelinesInProgress();
 
     ServiceResult getAllPreparedPipelinesInProgress();
 }

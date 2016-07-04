@@ -45,6 +45,18 @@ angular
             console.log(json);
         };
 
+        pipeConfigService.updatePipelineDefinition = function (pipelineDefinition) {
+            var methodName = "update";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeConfigService.deletePipelineDefinition = function (id) {
             var methodName = "delete";
             var className = "PipelineDefinitionService";
@@ -186,7 +198,7 @@ angular
             var className = "JobDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.StageDefinition\", \"object\": " + JSON.stringify(jobDefinition) + "}"];
+            var args = ["{\"packageName\": \"net.hawkengine.model.JobDefinition\", \"object\": " + JSON.stringify(jobDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -206,6 +218,43 @@ angular
         //endregion
 
         //region /tasks
+
+        pipeConfigService.addTaskDefinition = function (taskDefinition){
+            var methodName = "add";
+            var className = "TaskDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.ExecTask\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.updateTaskDefinition = function (taskDefinition) {
+            var methodName = "update";
+            var className = "TaskDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.ExecTask\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.deleteTaskDefinition = function (id) {
+            var methodName = "delete";
+            var className = "TaskDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeConfigService.getAllTasks = function (pipeName, stageName, jobName, token) {
 
         };
