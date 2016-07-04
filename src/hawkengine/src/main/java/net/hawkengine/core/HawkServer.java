@@ -1,10 +1,9 @@
 package net.hawkengine.core;
 
-import net.hawkengine.core.components.pipelinescheduler.JobAssigner;
-import net.hawkengine.core.components.pipelinescheduler.PipelinePreparer;
+import net.hawkengine.core.pipelinescheduler.JobAssigner;
+import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
-import net.hawkengine.http.AgentController;
 import net.hawkengine.ws.WsServlet;
 
 import org.eclipse.jetty.server.Handler;

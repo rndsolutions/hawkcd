@@ -288,41 +288,43 @@ public class SchemaValidator {
         return this.message;
     }
 
-    public String validate(MaterialDefinition materialDefinition) {
-        if (materialDefinition != null) {
-            String materialName = materialDefinition.getName();
-            if (materialName == null) {
-                return this.message = "ERROR: MATERIAL DEFINITION NAME IS NULL.";
-            }
 
-            if (!this.isValidRegEx(materialName, NAME_PATTERN)) {
-                return this.message = "ERROR: MATERIAL DEFINITION NAME IS INVALID.";
-            }
-
-            String materialURL = materialDefinition.getUrl();
-            if (materialURL != null) {
-
-                if (materialDefinition.getType() == MaterialType.GIT) {
-                    if (!this.isValidRegEx(materialURL, GIT_PATTERN)) {
-                        return this.message = "ERROR: INVALID GIT URL.";
-                    }
-                } else if (materialDefinition.getType() == MaterialType.NUGET) {
-                    if (!this.isValidRegEx(materialURL, NUGET_PATTERN)) {
-                        return this.message = "ERROR: INVALID NUGET URL.";
-                    }
-                } else {
-                    return this.message = "ERROR: MATERIAL URL IS INVALID.";
-                }
-            } else {
-                return this.message = "ERROR: Material URL is NULL.";
-            }
-
-        } else {
-            return this.message = "ERROR: Material Definition is NULL";
-        }
-
-        return this.message;
-    }
+    // TODO: refactor MaterialDefinition validation
+//    public String validate(MaterialDefinition materialDefinition) {
+//        if (materialDefinition != null) {
+//            String materialName = materialDefinition.getName();
+//            if (materialName == null) {
+//                return this.message = "ERROR: MATERIAL DEFINITION NAME IS NULL.";
+//            }
+//
+//            if (!this.isValidRegEx(materialName, NAME_PATTERN)) {
+//                return this.message = "ERROR: MATERIAL DEFINITION NAME IS INVALID.";
+//            }
+//
+//            String materialURL = materialDefinition.getUrl();
+//            if (materialURL != null) {
+//
+//                if (materialDefinition.getType() == MaterialType.GIT) {
+//                    if (!this.isValidRegEx(materialURL, GIT_PATTERN)) {
+//                        return this.message = "ERROR: INVALID GIT URL.";
+//                    }
+//                } else if (materialDefinition.getType() == MaterialType.NUGET) {
+//                    if (!this.isValidRegEx(materialURL, NUGET_PATTERN)) {
+//                        return this.message = "ERROR: INVALID NUGET URL.";
+//                    }
+//                } else {
+//                    return this.message = "ERROR: MATERIAL URL IS INVALID.";
+//                }
+//            } else {
+//                return this.message = "ERROR: Material URL is NULL.";
+//            }
+//
+//        } else {
+//            return this.message = "ERROR: Material Definition is NULL";
+//        }
+//
+//        return this.message;
+//    }
 
     public String validate(Agent agent) {
         if (agent != null) {
