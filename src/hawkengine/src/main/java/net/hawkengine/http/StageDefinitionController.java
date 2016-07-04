@@ -2,6 +2,7 @@ package net.hawkengine.http;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
+import net.hawkengine.services.Service;
 import net.hawkengine.services.StageDefinitionService;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -33,10 +34,9 @@ public class StageDefinitionController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStageDefinitions() {
-        this.serviceResult = this.stageDefinitionService.getAll();
-        List<String> stagesList = (List<String>) this.serviceResult.getObject();
-        return Response.ok().entity(stagesList)
-                .entity(this.serviceResult.getMessage())
+        ServiceResult result = this.stageDefinitionService.getAll();
+        return Response.ok()
+                .entity(result.getObject())
                 .build();
     }
 
@@ -44,17 +44,17 @@ public class StageDefinitionController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{stageDefinitionId}")
     public Response getStageDefinitionById(@PathParam("stageDefinitionId")
-                                                      String stageDefinitionId) {
-        boolean hasError = this.serviceResult.hasError();
+                                                   String stageDefinitionId) {
+        ServiceResult result = this.stageDefinitionService.getById(stageDefinitionId);
+        boolean hasError = result.hasError();
         if (hasError) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-            this.serviceResult = this.stageDefinitionService.getById(stageDefinitionId);
-            return Response.ok().entity(this.serviceResult.getObject())
-                    .entity(this.serviceResult.getMessage())
+            return Response.ok()
+                    .entity(result.getObject())
                     .build();
         }
     }
@@ -62,15 +62,24 @@ public class StageDefinitionController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewStage(StageDefinition stageDefinition) {
-        if (this.schemaValidator.validate(stageDefinition).equals("OK")) {
-            this.serviceResult = this.stageDefinitionService.add(stageDefinition);
-            return Response.status(201)
-                    .entity(this.serviceResult.getObject())
-                    .entity(this.serviceResult.getMessage())
-                    .build();
+        String isValid = this.schemaValidator.validate(stageDefinition);
+        if (isValid.equals("OK")) {
+            ServiceResult result = this.stageDefinitionService.add(stageDefinition);
+            boolean hasError = result.hasError();
+            if (hasError) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+            } else {
+                return Response.status(201)
+                        .entity(result.getObject())
+                        .build();
+            }
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(isValid)
+                    .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
@@ -78,15 +87,24 @@ public class StageDefinitionController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateStage(StageDefinition stageDefinition) {
-        if (this.schemaValidator.validate(stageDefinition).equals("OK")) {
-            this.serviceResult = this.stageDefinitionService.update(stageDefinition);
-            return Response.ok()
-                    .entity(this.serviceResult.getObject())
-                    .entity(this.serviceResult.getMessage())
-                    .build();
+        String isValid = this.schemaValidator.validate(stageDefinition);
+        if (isValid.equals("OK")) {
+            ServiceResult result = this.stageDefinitionService.update(stageDefinition);
+            boolean hasError = result.hasError();
+            if (hasError) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+            } else {
+                return Response.status(200)
+                        .entity(result.getObject())
+                        .build();
+            }
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(isValid)
+                    .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
@@ -95,14 +113,18 @@ public class StageDefinitionController {
     @Consumes
     @Path("/{stageDefinitionId}")
     public Response deletePipeline(@PathParam("stageDefinitionId") String stageDefinitionId) {
-        this.serviceResult = this.stageDefinitionService.delete(stageDefinitionId);
-        boolean hasError = this.serviceResult.hasError();
+        ServiceResult result = this.stageDefinitionService.delete(stageDefinitionId);
+        boolean hasError = result.hasError();
         if (hasError) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(this.serviceResult.getMessage())
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(result.getMessage())
+                    .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-            return Response.status(204).entity(this.serviceResult.getMessage()).build();
+            return Response.status(204)
+                    .entity(result.getMessage())
+                    .type(MediaType.TEXT_HTML)
+                    .build();
         }
     }
 }
