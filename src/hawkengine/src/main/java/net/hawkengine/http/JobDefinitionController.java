@@ -4,6 +4,8 @@ import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.JobDefinitionService;
+import net.hawkengine.services.Service;
+
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -34,10 +36,9 @@ public class JobDefinitionController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getJobDefinitions() {
-        this.serviceResult = this.jobDefinitionService.getAll();
-        List<String> stagesList = (List<String>) this.serviceResult.getObject();
-        return Response.ok().entity(stagesList)
-                .entity(this.serviceResult.getMessage())
+        ServiceResult result = this.jobDefinitionService.getAll();
+        return Response.ok()
+                .entity(result.getObject())
                 .build();
     }
 
@@ -46,32 +47,42 @@ public class JobDefinitionController {
     @Path("/{jobDefinitionId}")
     public Response getJobDefinitionById(@PathParam("jobDefinitionId")
                                                    String jobDefinitionId) {
-        boolean hasError = this.serviceResult.hasError();
+        ServiceResult result = this.jobDefinitionService.getById(jobDefinitionId);
+        boolean hasError = result.hasError();
         if (hasError) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-            this.serviceResult = this.jobDefinitionService.getById(jobDefinitionId);
-            return Response.ok().entity(this.serviceResult.getObject())
-                    .entity(this.serviceResult.getMessage())
+            return Response.ok()
+                    .entity(result.getObject())
                     .build();
         }
     }
 
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewJob(JobDefinition jobDefinition) {
-        if (this.schemaValidator.validate(jobDefinition).equals("OK")) {
-            this.serviceResult = this.jobDefinitionService.add(jobDefinition);
-            return Response.status(201)
-                    .entity(this.serviceResult.getObject())
-                    .entity(this.serviceResult.getMessage())
-                    .build();
+        String isValid = this.schemaValidator.validate(jobDefinition);
+        if (isValid.equals("OK")) {
+            ServiceResult result = this.jobDefinitionService.add(jobDefinition);
+            boolean hasError = result.hasError();
+            if (hasError) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+            } else {
+                return Response.status(201)
+                        .entity(result.getObject())
+                        .build();
+            }
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(isValid)
+                    .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
@@ -79,15 +90,24 @@ public class JobDefinitionController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateJob(JobDefinition jobDefinition) {
-        if (this.schemaValidator.validate(jobDefinition).equals("OK")) {
-            this.serviceResult = this.jobDefinitionService.update(jobDefinition);
-            return Response.ok()
-                    .entity(this.serviceResult.getObject())
-                    .entity(this.serviceResult.getMessage())
-                    .build();
+        String isValid = this.schemaValidator.validate(jobDefinition);
+        if (isValid.equals("OK")) {
+            ServiceResult result = this.jobDefinitionService.update(jobDefinition);
+            boolean hasError = result.hasError();
+            if (hasError) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+            } else {
+                return Response.status(200)
+                        .entity(result.getObject())
+                        .build();
+            }
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(isValid)
+                    .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
@@ -96,14 +116,19 @@ public class JobDefinitionController {
     @Consumes
     @Path("/{jobDefinitionId}")
     public Response deleteJob(@PathParam("jobDefinitionId") String jobDefinitionId) {
-        this.serviceResult = this.jobDefinitionService.delete(jobDefinitionId);
-        boolean hasError = this.serviceResult.hasError();
+
+        ServiceResult result = this.jobDefinitionService.delete(jobDefinitionId);
+        boolean hasError = result.hasError();
         if (hasError) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(this.serviceResult.getMessage())
+                    .entity(result.getMessage())
+                    .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-            return Response.status(204).entity(this.serviceResult.getMessage()).build();
+            return Response.status(204)
+                    .entity(result.getMessage())
+                    .type(MediaType.TEXT_HTML)
+                    .build();
         }
     }
 }

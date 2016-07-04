@@ -97,7 +97,7 @@ public class AgentController {
                         .type(MediaType.TEXT_HTML)
                         .build();
             } else {
-                return Response.ok()
+                return Response.status(201)
                         .entity(result.getObject())
                         .build();
             }
@@ -198,6 +198,7 @@ public class AgentController {
         } else {
             return Response.status(204)
                     .entity(result.getMessage())
+                    .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
