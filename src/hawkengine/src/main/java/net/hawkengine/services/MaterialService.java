@@ -7,38 +7,38 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.interfaces.IMaterialService;
 
 public class MaterialService extends CrudService<Material> implements IMaterialService {
-    public MaterialService(){
+    public MaterialService() {
         super.setRepository(new RedisRepository(Material.class));
         super.setObjectType("Material");
     }
 
-    public MaterialService(IDbRepository repository){
+    public MaterialService(IDbRepository repository) {
         super.setRepository(repository);
         super.setObjectType("Material");
     }
 
     @Override
-    public ServiceResult getById(String materialId){
+    public ServiceResult getById(String materialId) {
         return super.getById(materialId);
     }
 
     @Override
-    public ServiceResult getAll(){
+    public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    public ServiceResult add(Material material){
+    public ServiceResult add(Material material) {
         return super.add(material);
     }
 
     @Override
-    public ServiceResult update(Material material){
+    public ServiceResult update(Material material) {
         return super.update(material);
     }
 
     @Override
-    public ServiceResult delete(String materialId){
+    public ServiceResult delete(String materialId) {
         return super.delete(materialId);
     }
 }

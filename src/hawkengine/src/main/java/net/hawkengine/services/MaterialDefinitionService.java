@@ -2,11 +2,7 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.GitMaterial;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.NugetMaterial;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -32,13 +28,12 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
-    public ServiceResult getById(String materialDefinitionId){
+    public ServiceResult getById(String materialDefinitionId) {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         MaterialDefinition result = null;
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-            List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
-            for (MaterialDefinition materialDefinition : materialDefinitions) {
+            for (MaterialDefinition materialDefinition : pipelineDefinition.getMaterials()) {
                 if (materialDefinition.getId().equals(materialDefinitionId)) {
                     result = materialDefinition;
                     return super.createServiceResult(result, false, this.successMessage);
@@ -50,31 +45,28 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
-    public ServiceResult getAll(){
+    public ServiceResult getAll() {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
-        List<MaterialDefinition> jobDefinitions = new ArrayList<>();
+        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-            List<MaterialDefinition> currentMaterialDefinitions = pipelineDefinition.getMaterials();
-            jobDefinitions.addAll(currentMaterialDefinitions);
+            materialDefinitions.addAll(pipelineDefinition.getMaterials());
         }
 
-        return super.createServiceResultArray(jobDefinitions, false, this.successMessage);
+        return super.createServiceResultArray(materialDefinitions, false, this.successMessage);
     }
 
     @Override
-    public ServiceResult add(GitMaterial materialDefinition){
-        ServiceResult result = this.addMaterialDefinition(materialDefinition);
-        return result;
+    public ServiceResult add(GitMaterial materialDefinition) {
+        return this.addMaterialDefinition(materialDefinition);
     }
 
     @Override
-    public ServiceResult add(NugetMaterial materialDefinition){
-        ServiceResult result = this.addMaterialDefinition(materialDefinition);
-        return result;
+    public ServiceResult add(NugetMaterial materialDefinition) {
+        return this.addMaterialDefinition(materialDefinition);
     }
 
-    public ServiceResult addMaterialDefinition(MaterialDefinition materialDefinition){
+    public ServiceResult addMaterialDefinition(MaterialDefinition materialDefinition) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(materialDefinition.getPipelineDefinitionId()).getObject();
         List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
         boolean hasNameCollision = this.checkForNameCollision(materialDefinitions, materialDefinition);
@@ -95,18 +87,16 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
-    public ServiceResult update(GitMaterial materialDefinition){
-        ServiceResult result = this.updateMaterialDefinition(materialDefinition);
-        return result;
+    public ServiceResult update(GitMaterial materialDefinition) {
+        return this.updateMaterialDefinition(materialDefinition);
     }
 
     @Override
-    public ServiceResult update(NugetMaterial materialDefinition){
-        ServiceResult result = this.updateMaterialDefinition(materialDefinition);
-        return result;
+    public ServiceResult update(NugetMaterial materialDefinition) {
+        return this.updateMaterialDefinition(materialDefinition);
     }
 
-    public ServiceResult updateMaterialDefinition(MaterialDefinition materialDefinition){
+    public ServiceResult updateMaterialDefinition(MaterialDefinition materialDefinition) {
         MaterialDefinition result = null;
 
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(materialDefinition.getPipelineDefinitionId()).getObject();
@@ -120,9 +110,9 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         for (int i = 0; i < lengthOfMaterialDefinitions; i++) {
             MaterialDefinition definition = materialDefinitions.get(i);
             if (definition.getId().equals(materialDefinition.getId())) {
-                Class resultTaskClass = this.getMaterialDefinitionType(materialDefinition);
+                Class resultMaterialClass = this.getMaterialDefinitionType(materialDefinition);
                 try {
-                    result = (MaterialDefinition) resultTaskClass.newInstance();
+                    result = (MaterialDefinition) resultMaterialClass.newInstance();
                 } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -142,11 +132,11 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         return super.createServiceResult(result, false, "updated successfully");
     }
 
-    public ServiceResult delete(String materialDefinitionId){
+    public ServiceResult delete(String materialDefinitionId) {
         boolean isRemoved = false;
         MaterialDefinition materialDefinitionToDelete = (MaterialDefinition) this.getById(materialDefinitionId).getObject();
         if (materialDefinitionToDelete == null) {
-            return super.createServiceResult(materialDefinitionToDelete, true, "does not exists");
+            return super.createServiceResult(materialDefinitionToDelete, true, "does not exist");
         }
 
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService
@@ -187,6 +177,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
             if (materialDefinition.getId().equals(materialDefinitionToAdd.getId())) {
                 continue;
             }
+
             if (materialDefinition.getName().equals(materialDefinitionToAdd.getName())) {
                 return true;
             }
