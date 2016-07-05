@@ -42,18 +42,6 @@ public class MaterialTracker implements Runnable{
                     }
                 }
 
-                List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getObject();
-                for (Pipeline pipeline : pipelines) {
-                    Pipeline updatedPipeline = this.materialUpdaterService.updatePipelineMaterials(pipeline);
-                    if (updatedPipeline.areMaterialsUpdated()) {
-                        ServiceResult result = this.pipelineService.update(updatedPipeline);
-                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
-                    } else {
-                        ServiceResult result = this.pipelineService.delete(updatedPipeline.getId());
-                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "delete", result);
-                    }
-                }
-
                 Thread.sleep(4 * 1000);
             }
         } catch (InterruptedException e) {
