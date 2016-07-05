@@ -3,8 +3,10 @@ package net.hawkengine.core.materialupdater;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 
-public interface IMaterialUpdaterService {
-    public boolean pollMaterialsForChanges(PipelineDefinition pipelineDefinition);
+import java.util.List;
 
-    public Pipeline updatePipelineMaterials(Pipeline pipeline);
+public interface IMaterialUpdaterService {
+    String checkPipelineForTriggerMaterials(PipelineDefinition pipelineDefinition);
+
+    Pipeline updatePipelineMaterials(Pipeline pipeline);
 }
