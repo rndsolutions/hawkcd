@@ -1,8 +1,10 @@
 package net.hawkengine.core.materialupdater;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -30,13 +32,27 @@ public class MaterialUpdater implements Runnable{
             while (true) {
                 List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
                 for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                    boolean result = this.materialUpdaterService.pollMaterialsForChanges(pipelineDefinition);
-                    if (result) {
-                        Pipeline newPipeline = new Pipeline();
-                        newPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
+                    String triggerMaterials = this.materialUpdaterService.checkPipelineForTriggerMaterials(pipelineDefinition);
+                    if (!triggerMaterials.isEmpty()) {
+                        Pipeline pipeline = new Pipeline();
+                        pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
+                        pipeline.setTriggerReason(triggerMaterials);
+                        ServiceResult result = this.pipelineService.add(pipeline);
+                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "add", result);
                     }
                 }
 
+                List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getObject();
+                for (Pipeline pipeline : pipelines) {
+                    Pipeline updatedPipeline = this.materialUpdaterService.updatePipelineMaterials(pipeline);
+                    if (updatedPipeline.areMaterialsUpdated()) {
+                        ServiceResult result = this.pipelineService.update(updatedPipeline);
+                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+                    } else {
+                        ServiceResult result = this.pipelineService.delete(updatedPipeline.getId());
+                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "delete", result);
+                    }
+                }
 
                 Thread.sleep(4 * 1000);
             }
