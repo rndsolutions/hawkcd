@@ -5,7 +5,7 @@ import net.hawkengine.model.PipelineDefinition;
 
 import java.util.List;
 
-public interface IMaterialUpdaterService {
+public interface IMaterialTrackerService {
     String checkPipelineForTriggerMaterials(PipelineDefinition pipelineDefinition);
 
     Pipeline updatePipelineMaterials(Pipeline pipeline);

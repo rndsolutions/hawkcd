@@ -1,63 +1,14 @@
 package net.hawkengine.core.materialupdater;
 
-import net.hawkengine.core.utilities.EndpointConnector;
-import net.hawkengine.core.utilities.constants.LoggerMessages;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.interfaces.IPipelineDefinitionService;
-import net.hawkengine.services.interfaces.IPipelineService;
-import org.apache.log4j.Logger;
+import net.hawkengine.model.GitMaterial;
+import net.hawkengine.model.MaterialDefinition;
 
-import java.util.List;
-
-public class MaterialUpdater implements Runnable{
-    private IPipelineDefinitionService pipelineDefinitionService;
-    private IPipelineService pipelineService;
-    private IMaterialUpdaterService materialUpdaterService;
-    private static final Logger LOGGER = Logger.getLogger(MaterialUpdater.class);
-
-    public MaterialUpdater() {
-        this.pipelineService = new PipelineService();
-        this.pipelineDefinitionService = new PipelineDefinitionService();
-        this.materialUpdaterService = new MaterialUpdaterService();
-    }
+public class MaterialUpdater implements IMaterialUpdater {
 
     @Override
-    public void run() {
-        LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, this.getClass().getSimpleName()));
-        try {
-            while (true) {
-                List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
-                for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                    String triggerMaterials = this.materialUpdaterService.checkPipelineForTriggerMaterials(pipelineDefinition);
-                    if (!triggerMaterials.isEmpty()) {
-                        Pipeline pipeline = new Pipeline();
-                        pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-                        pipeline.setTriggerReason(triggerMaterials);
-                        ServiceResult result = this.pipelineService.add(pipeline);
-                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "add", result);
-                    }
-                }
+    public MaterialDefinition getLatestMaterialVersion(MaterialDefinition materialDefinition) {
+        GitMaterial material = (GitMaterial)materialDefinition;
 
-                List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getObject();
-                for (Pipeline pipeline : pipelines) {
-                    Pipeline updatedPipeline = this.materialUpdaterService.updatePipelineMaterials(pipeline);
-                    if (updatedPipeline.areMaterialsUpdated()) {
-                        ServiceResult result = this.pipelineService.update(updatedPipeline);
-                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
-                    } else {
-                        ServiceResult result = this.pipelineService.delete(updatedPipeline.getId());
-                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "delete", result);
-                    }
-                }
-
-                Thread.sleep(4 * 1000);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        return material;
     }
 }
