@@ -11,6 +11,7 @@ import net.hawkengine.services.interfaces.IPipelineService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.util.List;
 
 @Path("/agents")
@@ -34,7 +35,7 @@ public class AgentController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAgents() {
         ServiceResult result = this.agentService.getAll();
-        return Response.status(Response.Status.OK)
+        return Response.status(Status.OK)
                 .entity(result.getObject())
                 .build();
     }
@@ -46,12 +47,12 @@ public class AgentController {
     public Response getById(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getById(agentId);
         if (result.hasError()) {
-            return Response.status(Response.Status.NOT_FOUND)
+            return Response.status(Status.NOT_FOUND)
                     .entity(result)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
-        return Response.status(Response.Status.OK)
+        return Response.status(Status.OK)
                 .entity(result.getObject())
                 .build();
     }
@@ -62,7 +63,7 @@ public class AgentController {
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getWorkInfo(agentId);
-        return Response.status(Response.Status.OK)
+        return Response.status(Status.OK)
                 .entity(result.getObject())
                 .build();
     }
@@ -79,16 +80,18 @@ public class AgentController {
                 this.serviceResult = this.agentService.add(agent);
 
                 if (this.serviceResult.hasError()) {
-                    return Response.status(Response.Status.BAD_REQUEST)
+                    return Response.status(Status.BAD_REQUEST)
                             .entity(this.serviceResult.getMessage())
                             .type(MediaType.TEXT_HTML)
                             .build();
                 }
             }
 
-            return Response.ok().entity(this.serviceResult.getObject()).build();
+            return Response.status(Status.OK)
+                    .entity(this.serviceResult.getObject())
+                    .build();
         } else {
-            return Response.status(Response.Status.BAD_REQUEST)
+            return Response.status(Status.BAD_REQUEST)
                     .entity(result)
                     .type(MediaType.TEXT_HTML)
                     .build();
@@ -103,7 +106,7 @@ public class AgentController {
 
         // TODO: Move logic into JobService
         if (job == null) {
-            return Response.status(Response.Status.OK).build();
+            return Response.status(Status.OK).build();
         }
 
         if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
@@ -142,28 +145,29 @@ public class AgentController {
 
         this.pipelineService.update(pipeline);
 
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Status.OK).build();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{agentId}")
     public Response updateAgent(Agent agent) {
         String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.update(agent);
             if (result.hasError()) {
-                return Response.status(Response.Status.BAD_REQUEST)
+                return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
             } else {
-                return Response.status(Response.Status.OK)
+                return Response.status(Status.OK)
                         .entity(result.getObject())
                         .build();
             }
         } else {
-            return Response.status(Response.Status.BAD_REQUEST)
+            return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
@@ -177,12 +181,12 @@ public class AgentController {
     public Response deleteAgent(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.delete(agentId);
         if (result.hasError()) {
-            return Response.status(Response.Status.NOT_FOUND)
+            return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-            return Response.status(Response.Status.NO_CONTENT)
+            return Response.status(Status.NO_CONTENT)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
