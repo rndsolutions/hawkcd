@@ -36,12 +36,12 @@ public class JobAssigner implements Runnable {
         LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, this.getClass().getSimpleName()));
         try {
             while (true) {
+                this.statusUpdaterService.updateStatuses();
                 List<Agent> agents = (List<Agent>) this.agentService.getAllAssignableAgents().getObject();
                 List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
 
                 for (Pipeline pipeline : pipelines) {
                     for (Stage stage : pipeline.getStages()) {
-                        this.statusUpdaterService.updateStatuses();
                         if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                             for (Job job : stage.getJobs()) {
                                 Agent agent = this.jobAssignerService.assignAgentToJob(job, agents);
