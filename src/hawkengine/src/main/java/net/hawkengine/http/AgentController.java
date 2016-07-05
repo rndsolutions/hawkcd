@@ -21,13 +21,11 @@ public class AgentController {
     private AgentService agentService;
     private SchemaValidator schemaValidator;
     private IPipelineService pipelineService;
-    private ServiceResult serviceResult;
 
     public AgentController() {
         this.agentService = new AgentService();
         this.schemaValidator = new SchemaValidator();
         this.pipelineService = new PipelineService();
-        this.serviceResult = new ServiceResult();
     }
 
     @GET
@@ -72,27 +70,22 @@ public class AgentController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAgent(Agent agent) {
-        String result = this.schemaValidator.validate(agent);
-        if (result.equals("OK")) {
-            this.serviceResult = this.agentService.update(agent);
-
-            if (this.serviceResult.hasError()) {
-                this.serviceResult = this.agentService.add(agent);
-
-                if (this.serviceResult.hasError()) {
-                    return Response.status(Status.BAD_REQUEST)
-                            .entity(this.serviceResult.getMessage())
-                            .type(MediaType.TEXT_HTML)
-                            .build();
-                }
+        String isValid = this.schemaValidator.validate(agent);
+        if (isValid.equals("OK")) {
+            ServiceResult result = this.agentService.add(agent);
+            if (result.hasError()) {
+                return Response.status(Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
             }
 
             return Response.status(Status.OK)
-                    .entity(this.serviceResult.getObject())
+                    .entity(result.getObject())
                     .build();
         } else {
             return Response.status(Status.BAD_REQUEST)
-                    .entity(result)
+                    .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
@@ -156,6 +149,10 @@ public class AgentController {
         String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.update(agent);
+            if (result.hasError()) {
+                result = this.agentService.add(agent);
+            }
+
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
