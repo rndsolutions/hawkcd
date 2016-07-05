@@ -1,32 +1,18 @@
 package net.hawkengine.http;
 
 import com.google.gson.Gson;
-
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.SchemaValidator;
-import net.hawkengine.model.Agent;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.Service;
 import net.hawkengine.services.interfaces.IPipelineService;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/agents")
 @Consumes("application/json")
@@ -86,12 +72,14 @@ public class AgentController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAgent(Agent agent) {
-        String result = schemaValidator.validate(agent);
+        String result = this.schemaValidator.validate(agent);
         if (result.equals("OK")) {
-            this.serviceResult = this.agentService.add(agent);
-            if (serviceResult.hasError()){
-                this.serviceResult = this.agentService.update(agent);
+            this.serviceResult = this.agentService.update(agent);
+
+            if (this.serviceResult.hasError()) {
+                this.serviceResult = this.agentService.add(agent);
             }
+
             return Response.ok().entity(this.serviceResult.getObject()).build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
