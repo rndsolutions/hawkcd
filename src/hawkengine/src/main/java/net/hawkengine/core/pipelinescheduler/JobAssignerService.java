@@ -16,6 +16,7 @@ public class JobAssignerService {
         Agent result = null;
         if (job.getStatus() == JobStatus.SCHEDULED) {
             Agent assignedAgent = agents.stream().filter(a -> a.getId().equals(job.getAssignedAgentId())).findFirst().orElse(null);
+            result = assignedAgent;
             boolean isEligible = this.isAgentEligibleForJob(job, assignedAgent);
             if (!isEligible) {
                 job.setStatus(JobStatus.AWAITING);
