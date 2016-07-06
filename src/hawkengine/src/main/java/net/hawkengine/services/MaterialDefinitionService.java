@@ -21,8 +21,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         super.setObjectType("MaterialDefinition");
     }
 
-    public MaterialDefinitionService(IDbRepository repository, IPipelineDefinitionService pipelineDefinitionService) {
-        super.setRepository(repository);
+    public MaterialDefinitionService(IPipelineDefinitionService pipelineDefinitionService) {
         this.pipelineDefinitionService = pipelineDefinitionService;
         super.setObjectType("MaterialDefinition");
     }
