@@ -13,7 +13,7 @@ import java.util.List;
 public class MaterialPreparer implements Runnable {
     private IPipelineService pipelineService;
     private IMaterialPreparerService materialPreparerService;
-    private static final Logger LOGGER = Logger.getLogger(MaterialTracker.class);
+    private static final Logger LOGGER = Logger.getLogger(MaterialPreparer.class);
 
     public MaterialPreparer() {
         this.pipelineService = new PipelineService();
