@@ -2,9 +2,12 @@ package net.hawkengine.db.redis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.DbEntry;
+import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
 
 import redis.clients.jedis.Jedis;
@@ -28,6 +31,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
         this.idNamespace = String.format("%s:%s", "Ids", type.getSimpleName());
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
         this.jedisPool = RedisManager.getJedisPool();
 
