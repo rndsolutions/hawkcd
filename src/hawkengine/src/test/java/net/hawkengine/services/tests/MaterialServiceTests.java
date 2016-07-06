@@ -1,7 +1,6 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
@@ -9,17 +8,15 @@ import net.hawkengine.model.Material;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.MaterialService;
 import net.hawkengine.services.interfaces.IMaterialService;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import redis.clients.jedis.JedisPoolConfig;
 
 public class MaterialServiceTests {
     private IDbRepository<Material> repository;
@@ -33,7 +30,7 @@ public class MaterialServiceTests {
     }
 
     @Test
-    public void getById_nonExistingObject_correctObject() {
+    public void getById_existingObject_correctObject() {
         //Arrange
         Material expectedMaterial = new Material();
         String expectedMessage = Material.class.getSimpleName() + " " + expectedMaterial.getId() + " retrieved successfully.";
@@ -51,7 +48,7 @@ public class MaterialServiceTests {
     }
 
     @Test
-    public void getById_existingObject_correctErrorMessage() {
+    public void getById_nonExistingObject_correctErrorMessage() {
         //Arrange
         UUID invalidId = UUID.randomUUID();
         String expectedMessage = Material.class.getSimpleName() + " not found.";
@@ -70,11 +67,11 @@ public class MaterialServiceTests {
         //Arrange
         Material firstExpectedMaterial = new Material();
         Material secondExpectedMaterial = new Material();
+        this.materialService.add(firstExpectedMaterial);
+        this.materialService.add(secondExpectedMaterial);
         String expectedMessage = Material.class.getSimpleName() + "s retrieved successfully.";
 
         //Act
-        this.materialService.add(firstExpectedMaterial);
-        this.materialService.add(secondExpectedMaterial);
         ServiceResult actualResult = this.materialService.getAll();
         List<Material> actualResultObject = (List<Material>) actualResult.getObject();
         Material firstActualMaterial = actualResultObject
@@ -125,6 +122,7 @@ public class MaterialServiceTests {
         //Assert
         Assert.assertFalse(actualResult.hasError());
         Assert.assertNotNull(actualResultObject);
+        Assert.assertEquals(expectedMaterial.getId(), actualResultObject.getId());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
