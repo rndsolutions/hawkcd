@@ -1,11 +1,6 @@
 package net.hawkengine.services.interfaces;
 
-import net.hawkengine.model.ExecTask;
-import net.hawkengine.model.FetchArtifactTask;
-import net.hawkengine.model.FetchMaterialTask;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.UploadArtifactTask;
+import net.hawkengine.model.*;
 
 public interface ITaskDefinitionService extends ICrudService<TaskDefinition> {
     ServiceResult add(ExecTask taskDefinition);
