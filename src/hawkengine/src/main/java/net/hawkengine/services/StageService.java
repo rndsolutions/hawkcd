@@ -3,6 +3,7 @@ package net.hawkengine.services;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
+import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ import java.util.List;
 
 
 public class StageService extends CrudService<Stage> implements IStageService {
-    //TODO: Should be IPipelineService
-    private PipelineService pipelineService;
+
+    private IPipelineService pipelineService;
     private String failureMessage = "not found.";
     private String successMessage = "retrieved successfully.";
 
@@ -61,18 +62,11 @@ public class StageService extends CrudService<Stage> implements IStageService {
         if (!serviceResult.hasError()) {
             result = stage;
         }
-//        Pipeline updatedPipeline = (Pipeline) this.pipelineService.update(pipeline).getObject();
-//        List<Stage> updatedStages = updatedPipeline.getStages();
-//        for (Stage currentStage : updatedStages){
-//            if (currentStage.getStageDefinitionId().equals(stage.getId())){
-//                result = currentStage;
-//            }
-//        }
-        //TODO: Fix messages to follow conventions
+
         if (result == null) {
-            return super.createServiceResult(result, true, "not added successfully.");
+            return super.createServiceResult(result, true, "not created");
         }
-        return super.createServiceResult(result, false, this.successMessage);
+        return super.createServiceResult(result, false, "created successfully");
     }
 
     @Override
