@@ -70,7 +70,7 @@ public class AgentController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAgent(Agent agent) {
-        String isValid = schemaValidator.validate(agent);
+        String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.add(agent);
             if (result.hasError()) {
@@ -78,11 +78,11 @@ public class AgentController {
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
-            } else {
-                return Response.status(Status.CREATED)
-                        .entity(result.getObject())
-                        .build();
             }
+
+            return Response.status(Status.OK)
+                    .entity(result.getObject())
+                    .build();
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
@@ -144,10 +144,15 @@ public class AgentController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{agentId}")
     public Response updateAgent(Agent agent) {
-        String isValid = schemaValidator.validate(agent);
+        String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.update(agent);
+            if (result.hasError()) {
+                result = this.agentService.add(agent);
+            }
+
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
