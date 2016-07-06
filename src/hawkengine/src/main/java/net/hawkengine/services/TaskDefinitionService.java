@@ -188,7 +188,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
                 }
             }
         } else {
-            return super.createServiceResult(taskDefinitionToDelete, true, "cannot delete the last job definition");
+            return super.createServiceResult(taskDefinitionToDelete, true, "cannot delete the last task definition");
         }
 
         if (!isRemoved) {
