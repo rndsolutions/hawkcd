@@ -1,22 +1,11 @@
 package net.hawkengine.core.materialupdater;
 
-import net.hawkengine.model.GitMaterial;
-import net.hawkengine.model.Material;
 import net.hawkengine.model.MaterialDefinition;
 
-public class MaterialUpdater implements IMaterialUpdater {
+public abstract class MaterialUpdater implements IMaterialUpdater {
+    @Override
+    public abstract MaterialDefinition getLatestMaterialVersion(MaterialDefinition materialDefinition);
 
     @Override
-    public MaterialDefinition getLatestMaterialVersion(MaterialDefinition materialDefinition) {
-        GitMaterial material = (GitMaterial)materialDefinition;
-
-        return material;
-    }
-
-    @Override
-    public boolean areMaterialsSameVersion(Material latestMaterial, Material dbMaterial) {
-
-
-        return true;
-    }
+    public abstract boolean areMaterialsSameVersion(MaterialDefinition latestMaterial, MaterialDefinition dbMaterial);
 }
