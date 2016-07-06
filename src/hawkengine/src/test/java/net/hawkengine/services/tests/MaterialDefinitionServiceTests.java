@@ -112,7 +112,6 @@ public class MaterialDefinitionServiceTests {
         String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + expectedMaterialDefinition.getId() + " added successfully.";
         expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
         this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(expectedMaterialDefinition);
 
         //Act
         ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
@@ -149,6 +148,25 @@ public class MaterialDefinitionServiceTests {
     public void add_existingObject_correctErrorMessage() {
         //Arrange
         PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
+        GitMaterial expectedMaterialDefinition = new GitMaterial();
+        String expectedMessage = MaterialDefinition.class.getSimpleName() + " already exists.";
+        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
+        this.pipelineDefinitionService.add(expectedPipelineDefinition);
+        this.materialDefinitionService.add(expectedMaterialDefinition);
+
+        //Act
+        ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+        Assert.assertNull(actualResult.getObject());
+    }
+
+    @Test
+    public void add_nonExistingObjectWithSameName_correctErrorMessage() {
+        //Arrange
+        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
         GitMaterial firstMaterialDefinition = new GitMaterial();
         GitMaterial secondMaterialDefinition = new GitMaterial();
         String expectedMessage = MaterialDefinition.class.getSimpleName() + " with the same name exists.";
@@ -170,7 +188,7 @@ public class MaterialDefinitionServiceTests {
     }
 
     @Test
-    public void update_existingObject_updatedObject() {
+    public void update_existingGitObject_updatedObject() {
         //Arrange
         PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
         GitMaterial expectedMaterialDefinition = new GitMaterial();
@@ -190,6 +208,55 @@ public class MaterialDefinitionServiceTests {
         Assert.assertFalse(actualResult.hasError());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
         Assert.assertEquals(expectedName, actualResultObject.getName());
+    }
+
+    @Test
+    public void update_existingNugetObject_updatedObject() {
+        //Arrange
+        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
+        NugetMaterial expectedMaterialDefinition = new NugetMaterial();
+        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + expectedMaterialDefinition.getId() + " updated successfully.";
+        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
+        expectedMaterialDefinition.setName("nameBeforeUpdate");
+        this.pipelineDefinitionService.add(expectedPipelineDefinition);
+        this.materialDefinitionService.add(expectedMaterialDefinition);
+
+        //Act
+        String expectedName = "nameAfterUpdate";
+        expectedMaterialDefinition.setName(expectedName);
+        ServiceResult actualResult = this.materialDefinitionService.update(expectedMaterialDefinition);
+        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
+
+        //Assert
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+        Assert.assertEquals(expectedName, actualResultObject.getName());
+    }
+
+    @Test
+    public void update_existingObjectWithSameName_updatedObject(){
+        //Arrange
+        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
+        GitMaterial firstMaterialDefinition = new GitMaterial();
+        GitMaterial secondMaterialDefinition = new GitMaterial();
+        String expectedMessage = MaterialDefinition.class.getSimpleName() + " with the same name exists.";
+        firstMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
+        secondMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
+        firstMaterialDefinition.setName("firstMaterial");
+        secondMaterialDefinition.setName("secondMaterial");
+        this.pipelineDefinitionService.add(expectedPipelineDefinition);
+        this.materialDefinitionService.add(firstMaterialDefinition);
+        this.materialDefinitionService.add(secondMaterialDefinition);
+
+        //Act
+        secondMaterialDefinition.setName("firstMaterial");
+        ServiceResult actualResult = this.materialDefinitionService.update(secondMaterialDefinition);
+        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+        Assert.assertEquals(secondMaterialDefinition.getId(), actualResultObject.getId());
     }
 
     @Test

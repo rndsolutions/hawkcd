@@ -68,6 +68,12 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     public ServiceResult addMaterialDefinition(MaterialDefinition materialDefinition) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(materialDefinition.getPipelineDefinitionId()).getObject();
         List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
+        List<MaterialDefinition> allMaterialDefinitions = (List<MaterialDefinition>) this.getAll().getObject();
+        for(MaterialDefinition materialDefinitionToCheck : allMaterialDefinitions){
+            if(materialDefinitionToCheck.getId().equals(materialDefinition.getId())){
+                return super.createServiceResult(null, true, "already exists");
+            }
+        }
         boolean hasNameCollision = this.checkForNameCollision(materialDefinitions, materialDefinition);
         if (hasNameCollision) {
             return super.createServiceResult(materialDefinition, true, "with the same name exists");
