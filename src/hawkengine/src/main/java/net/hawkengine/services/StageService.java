@@ -4,17 +4,18 @@ import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.services.interfaces.IStageService;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class StageService  extends CrudService<Stage> implements IStageService {
+public class StageService extends CrudService<Stage> implements IStageService {
+    //TODO: Should be IPipelineService
     private PipelineService pipelineService;
     private String failureMessage = "not found.";
     private String successMessage = "retrieved successfully.";
 
-
-    public StageService(){
+    public StageService() {
         super.setObjectType("Stage");
         this.pipelineService = new PipelineService();
     }
@@ -23,16 +24,18 @@ public class StageService  extends CrudService<Stage> implements IStageService {
     public ServiceResult getById(String stageId) {
         List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
         Stage result = null;
-        for (Pipeline pipeline : allPipelines){
+        for (Pipeline pipeline : allPipelines) {
             List<Stage> stages = pipeline.getStages();
-            for (Stage stage : stages){
-                if (stage.getStageDefinitionId().equals(stageId)){
+            for (Stage stage : stages) {
+                if (stage.getId().equals(stageId)) {
                     result = stage;
-                    return super.createServiceResult(result,false,this.successMessage);
+
+                    return super.createServiceResult(result, false, this.successMessage);
                 }
             }
         }
-        return super.createServiceResult(result,true,this.failureMessage);
+
+        return super.createServiceResult(result, true, this.failureMessage);
     }
 
     @Override
@@ -40,11 +43,11 @@ public class StageService  extends CrudService<Stage> implements IStageService {
         List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
         List<Stage> allStages = new ArrayList<>();
 
-        for (Pipeline pipeline : allPipelines){
+        for (Pipeline pipeline : allPipelines) {
             List<Stage> stages = pipeline.getStages();
             allStages.addAll(stages);
         }
-        return super.createServiceResultArray(allStages,false,this.successMessage);
+        return super.createServiceResultArray(allStages, false, this.successMessage);
     }
 
     @Override
@@ -54,90 +57,92 @@ public class StageService  extends CrudService<Stage> implements IStageService {
         List<Stage> stages = pipeline.getStages();
         stages.add(stage);
         pipeline.setStages(stages);
-        Pipeline updatedPipeline = (Pipeline) this.pipelineService.update(pipeline).getObject();
-        List<Stage> updatedStages = updatedPipeline.getStages();
-        for (Stage currentStage : updatedStages){
-            if (currentStage.getStageDefinitionId().equals(stage.getId())){
-                result = currentStage;
-            }
+        ServiceResult serviceResult = this.pipelineService.update(pipeline);
+        if (!serviceResult.hasError()) {
+            result = stage;
         }
-        if (result == null){
-            return super.createServiceResult(result,true, "not added successfully.");
+//        Pipeline updatedPipeline = (Pipeline) this.pipelineService.update(pipeline).getObject();
+//        List<Stage> updatedStages = updatedPipeline.getStages();
+//        for (Stage currentStage : updatedStages){
+//            if (currentStage.getStageDefinitionId().equals(stage.getId())){
+//                result = currentStage;
+//            }
+//        }
+        //TODO: Fix messages to follow conventions
+        if (result == null) {
+            return super.createServiceResult(result, true, "not added successfully.");
         }
-        return super.createServiceResult(result,false,this.successMessage);
+        return super.createServiceResult(result, false, this.successMessage);
     }
 
     @Override
     public ServiceResult update(Stage stage) {
-        Stage result = null;
-        Pipeline pipeline = (Pipeline)this.pipelineService.getById(stage.getPipelineId()).getObject();
-        List <Stage> stageList = pipeline.getStages();
-        int stageListSize = stageList.size();
-        for (int i = 0; i < stageListSize; i++){
-            result = stageList.get(i);
-            if (result.getStageDefinitionId().equals(stage.getPipelineId())){
-                stageList.set(i,stage);
-                pipeline.setStages(stageList);
-                Pipeline updatedPipeline = (Pipeline)this.pipelineService.update(pipeline).getObject();
-                List<Stage> updatedStages = updatedPipeline.getStages();
-                for (Stage currentStage : updatedStages){
-                    if (currentStage.getStageDefinitionId().equals(stage.getId()))
-                        result = currentStage;
-                        break;
-                }
+        ServiceResult serviceResult = new ServiceResult();
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
+        List<Stage> stages = pipeline.getStages();
+        int stageCollectionSize = stages.size();
+        boolean isPresent = false;
+        for (int i = 0; i < stageCollectionSize; i++) {
+            if (stages.get(i).getId().equals(stage.getId())) {
+                isPresent = true;
+                stages.set(i, stage);
             }
         }
 
-        if (result == null){
-            return super.createServiceResult(result, true, "not updated successfully.");
+        if (!isPresent) {
+            return super.createServiceResult((Stage) serviceResult.getObject(), true, "not found");
         }
-        return super.createServiceResult(result,false, "updated successfully");
+
+        pipeline.setStages(stages);
+        ServiceResult pipelineServiceResult = this.pipelineService.update(pipeline);
+
+        if (pipelineServiceResult.hasError()) {
+            serviceResult = super.createServiceResult((Stage) serviceResult.getObject(), true, "not updated");
+        } else {
+            serviceResult = super.createServiceResult(stage, false, "updated successfully");
+        }
+
+        return serviceResult;
     }
 
-
-    //Sorry for this fucked up shit, iztrii me sled kato si me prochel.
     @Override
     public ServiceResult delete(String stageId) {
-        boolean isRemoved = false;
-        Pipeline  pipelineToBeDeletedFrom = null;
-        Stage stageToDelete = null;
+        Pipeline pipelineToUpdate = new Pipeline();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
-        for (Pipeline pipeline : pipelines){
-            List<Stage> currentStage = pipeline.getStages();
-            for (Stage stage : currentStage){
-                if (stage.getStageDefinitionId().equals(stageId)){
-                    stageToDelete = stage;
-                    pipelineToBeDeletedFrom = (Pipeline)
-                            this.pipelineService.getById(stage.getPipelineId()).getObject();
 
+        for (Pipeline pipeline : pipelines) {
+            List<Stage> stages = pipeline.getStages();
+
+            for (Stage stage : stages) {
+                if (stage.getId().equals(stageId)) {
+                    pipelineToUpdate = pipeline;
                 }
             }
         }
 
-        if (stageToDelete == null) {
-            return super.createServiceResult(stageToDelete,true,"does not exist.");
+        boolean isRemoved = false;
+        ServiceResult serviceResult;
+        List<Stage> stages = pipelineToUpdate.getStages();
+        Stage stage = stages
+                .stream()
+                .filter(st -> st.getId().equals(stageId))
+                .findFirst()
+                .orElse(null);
+
+        if (stages.size() > 1) {
+            isRemoved = stages.remove(stage);
+        } else {
+            return super.createServiceResult(stage, true, "is the last Stage and cannot be deleted");
         }
 
-        List <Stage> pipelineStageList = pipelineToBeDeletedFrom.getStages();
-        int stageSize = pipelineStageList.size();
-        if (stageSize > 1){
-            for (int i = 0; i < stageSize; i++){
-                stageToDelete = pipelineStageList.get(i);
-                if (stageToDelete.getStageDefinitionId().equals(stageId)){
-                    pipelineStageList.remove(stageToDelete);
-                    isRemoved = true;
-                    break;
-                }
-            }
+        if (isRemoved) {
+            pipelineToUpdate.setStages(stages);
+            this.pipelineService.update(pipelineToUpdate);
+            serviceResult = super.createServiceResult(stage, false, "deleted successfully");
+        } else {
+            serviceResult = super.createServiceResult(stage, true, "not found");
         }
 
-        pipelineToBeDeletedFrom.setStages(pipelineStageList);
-        this.pipelineService.update(pipelineToBeDeletedFrom).getObject();
-
-        if (!isRemoved){
-            return super.createServiceResult(null,true,"not deleted.");
-        }
-
-        return super.createServiceResult(stageToDelete,false,this.successMessage);
+        return serviceResult;
     }
 }
