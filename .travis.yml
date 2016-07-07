@@ -6,6 +6,10 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+script:
+  cd src/hawkengine \
+  && ./gradlw check \
+  && ./gradlw build
 
 jdk:
   - oraclejdk8
