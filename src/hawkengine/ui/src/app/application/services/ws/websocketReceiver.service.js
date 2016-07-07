@@ -113,8 +113,31 @@ angular
                         }
                     }
                 },
+                MaterialDefinitionService: {
+                    getAll: function (object) {
+                        viewModelUpdater.getAllMaterialDefinitions(object.result);
+                    },
+                    getById: function (object) {
+
+                    },
+                    add: function (object) {
+                        viewModelUpdater.addMaterialDefinition(object.result);
+                    },
+                    update: function (object) {
+                        viewModelUpdater.updateMaterialDefinition(object.result);
+                    },
+                    delete: function (object) {
+                        if(object.error == false) {
+                            pipeConfigService.getAllPipelineDefinitions();
+                            pipeConfigService.getAllPipelineGroupDTOs();
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
+                    }
+                },
                 StageDefinitionService: {
-                    getAll:function (object) {
+                    getAll: function (object) {
                         viewModelUpdater.getAllStageDefinitions(object.result);
                     },
                     getById: function (object) {
