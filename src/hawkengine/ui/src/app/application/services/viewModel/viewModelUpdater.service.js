@@ -87,9 +87,50 @@ angular
             });
         };
 
+        viewModelUpdater.getAllMaterialDefinitions = function (materialDefinitions) {
+            //viewModel.allMaterials = materialDefinitions;
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                materialDefinitions.forEach(function (currentMaterial, materialIndex, materialArray) {
+                    if(currentPipeline.id == currentMaterial.pipelineDefinitionId){
+                        viewModel.allPipelines[index].materials = materialDefinitions;
+                    }
+                });
+            });
+            toaster.pop('success', "Notification", "Materials updated!");
+        };
+
+        viewModelUpdater.getMaterialDefinitionById = function (materialDefinition) {
+            return materialDefinition;
+        };
+
+        viewModelUpdater.addMaterialDefinition = function (materialDefinition) {
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                if(currentPipeline.id == materialDefinition.pipelineDefinitionId) {
+                    viewModel.allPipelines[index].materials.push(materialDefinition);
+                }
+            });
+        };
+
+        viewModelUpdater.updateMaterialDefinition = function (materialDefinition) {
+            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
+                if(currentPipeline.id == materialDefinition.pipelineDefinitionId) {
+                    viewModel.allPipelines[index].materials.forEach(function (currentMaterial, materialIndex, array) {
+                        if(currentMaterial.id == materialDefinition.id){
+                            viewModel.allPipelines[index].materials[materialIndex] = materialDefinition;
+                            toaster.pop('success', "Notification", "Material " + materialDefinition.name + " updated!");
+                        }
+                    });
+                }
+            });
+        };
+
+        viewModelUpdater.deleteMaterialDefinition = function (materialDefinition) {
+
+        };
+
         viewModelUpdater.getAllStageDefinitions = function (stageDefinitions) {
             viewModel.allStages = stageDefinitions;
-            toaster.pop('success', "Notification", "Stages updated!")
+            toaster.pop('success', "Notification", "Stages updated!");
         };
 
         viewModelUpdater.getStageDefinitionById = function (stageDefinition) {

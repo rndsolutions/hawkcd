@@ -6,8 +6,10 @@ import com.google.gson.JsonParseException;
 
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
+import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
+import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.dto.WsContractDto;
@@ -32,6 +34,7 @@ public class WsEndpoint extends WebSocketAdapter {
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
     }
 
