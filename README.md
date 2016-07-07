@@ -1,5 +1,5 @@
 # hawkengine
-![alt text](https://travis-ci.org/rndsolutions/hawk.svg?branch=master "travis-ci")
+[![Build Status](https://travis-ci.org/rndsolutions/hawk.svg?branch=master)](https://travis-ci.org/rndsolutions/hawk)
 
 
 The Hawkengine Server intends to be a one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
