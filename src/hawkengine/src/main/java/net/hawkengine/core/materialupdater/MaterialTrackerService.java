@@ -10,9 +10,15 @@ import java.util.List;
 
 public class MaterialTrackerService implements IMaterialTrackerService {
     private IMaterialService materialService;
+    private IMaterialUpdater materialUpdater;
 
     public MaterialTrackerService() {
         this.materialService = new MaterialService();
+    }
+
+    public MaterialTrackerService(IMaterialService materialService, IMaterialUpdater materialUpdater) {
+        this.materialService = materialService;
+        this.materialUpdater = materialUpdater;
     }
 
     @Override
@@ -21,14 +27,14 @@ public class MaterialTrackerService implements IMaterialTrackerService {
         List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
             if (materialDefinition.isPollingForChanges()) {
-                MaterialUpdater materialUpdater = MaterialUpdaterFactory.create(materialDefinition.getType());
-                MaterialDefinition latestVersion = materialUpdater.getLatestMaterialVersion(materialDefinition);
+                this.materialUpdater = MaterialUpdaterFactory.create(materialDefinition.getType());
+                MaterialDefinition latestVersion = this.materialUpdater.getLatestMaterialVersion(materialDefinition);
                 if (latestVersion == null) {
                     continue;
                 }
 
                 Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId()).getObject();
-                boolean areTheSame = materialUpdater.areMaterialsSameVersion(latestVersion, dbLatestVersion.getMaterialDefinition());
+                boolean areTheSame = this.materialUpdater.areMaterialsSameVersion(latestVersion, dbLatestVersion.getMaterialDefinition());
                 if (!areTheSame) {
                     triggerMaterials.append(materialDefinition.getName()).append(" ");
                 }

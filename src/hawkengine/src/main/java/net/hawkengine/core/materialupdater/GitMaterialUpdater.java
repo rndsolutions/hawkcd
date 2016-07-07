@@ -1,6 +1,5 @@
 package net.hawkengine.core.materialupdater;
 
-import net.hawkengine.model.Material;
 import net.hawkengine.model.MaterialDefinition;
 
 public class GitMaterialUpdater extends MaterialUpdater{
@@ -20,7 +19,7 @@ public class GitMaterialUpdater extends MaterialUpdater{
     }
 
     @Override
-    public boolean areMaterialsSameVersion(Material latestMaterial, Material dbMaterial) {
+    public boolean areMaterialsSameVersion(MaterialDefinition latestMaterial, MaterialDefinition dbMaterial) {
         return false;
     }
 }
