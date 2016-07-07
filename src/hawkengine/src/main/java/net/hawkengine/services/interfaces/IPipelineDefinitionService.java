@@ -5,21 +5,6 @@
 package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
 
 public interface IPipelineDefinitionService extends ICrudService<PipelineDefinition> {
-    @Override
-    ServiceResult getById(String pipelineDefinitionId);
-
-    @Override
-    ServiceResult getAll();
-
-    @Override
-    ServiceResult add(PipelineDefinition pipelineDefinition);
-
-    @Override
-    ServiceResult update(PipelineDefinition pipelineDefinition);
-
-    @Override
-    ServiceResult delete(String pipelineDefinitionId);
 }
