@@ -13,13 +13,20 @@ import java.util.List;
 public class StageService extends CrudService<Stage> implements IStageService {
 
     private IPipelineService pipelineService;
-    private String failureMessage = "not found.";
-    private String successMessage = "retrieved successfully.";
+    private String failureMessage = "not found";
+    private String successMessage = "retrieved successfully";
 
-    public StageService() {
-        super.setObjectType("Stage");
+    public StageService(){
+
         this.pipelineService = new PipelineService();
+            super.setObjectType("Stage");
     }
+
+    public StageService(IPipelineService pipelineService){
+        this.pipelineService = pipelineService;
+        super.setObjectType("Stage");
+    }
+
 
     @Override
     public ServiceResult getById(String stageId) {
@@ -56,7 +63,11 @@ public class StageService extends CrudService<Stage> implements IStageService {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         Stage result = null;
         List<Stage> stages = pipeline.getStages();
-        stages.add(stage);
+        boolean alreadyExist = stages.stream().filter(st -> st.getId().equals(stage.getId())).equals(true);
+        if (!alreadyExist){
+            stages.add(stage);
+        }
+
         pipeline.setStages(stages);
         ServiceResult serviceResult = this.pipelineService.update(pipeline);
         if (!serviceResult.hasError()) {

@@ -1,5 +1,8 @@
 package net.hawkengine.services;
 
+import com.fiftyonred.mock_jedis.MockJedis;
+import com.fiftyonred.mock_jedis.MockJedisPool;
+
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
@@ -20,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import redis.clients.jedis.JedisPoolConfig;
+
+
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private IPipelineDefinitionService pipelineDefinitionService;
 
@@ -28,12 +34,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         this.pipelineDefinitionService = new PipelineDefinitionService();
         super.setObjectType("Pipeline");
     }
-
+/*
+    public PipelineService(IDbRepository mockedRepo) {
+        super.setRepository(mockedRepo);
+        this.pipelineDefinitionService = new PipelineDefinitionService();
+        super.setObjectType("Pipeline");
+    }
+*/
     public PipelineService(IDbRepository repository, IPipelineDefinitionService pipelineDefinitionService) {
         super.setRepository(repository);
         this.pipelineDefinitionService = pipelineDefinitionService;
         super.setObjectType("Pipeline");
     }
+
+
+
 
     @Override
     public ServiceResult getById(String pipelineId) {

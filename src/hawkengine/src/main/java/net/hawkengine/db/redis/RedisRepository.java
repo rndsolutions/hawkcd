@@ -2,6 +2,9 @@ package net.hawkengine.db.redis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import com.fiftyonred.mock_jedis.MockJedisPool;
+
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.DbEntry;
@@ -36,6 +39,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     public RedisRepository(Class<T> entry, JedisPool pool) {
         this(entry);
         this.jedisPool = pool;
+
     }
 
     @Override
