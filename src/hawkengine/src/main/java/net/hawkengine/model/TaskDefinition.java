@@ -1,8 +1,19 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.TaskType;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ExecTask.class, name = "EXEC"),
+        @JsonSubTypes.Type(value = FetchArtifactTask.class, name = "FETCH_ARTIFACT"),
+        @JsonSubTypes.Type(value = FetchMaterialTask.class, name = "FETCH_MATERIAL"),
+        @JsonSubTypes.Type(value = UploadArtifactTask.class, name = "UPLOAD_ARTIFACT")})
 public abstract class TaskDefinition extends DbEntry {
     private String name;
     private String jobDefinitionId;

@@ -2,10 +2,35 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('pipeExecService', [function () {
+    .factory('pipeExecService', ['jsonHandlerService', 'websocketSenderService', function (jsonHandlerService, websocketSenderService) {
         var pipeExecService = this;
 
         //region /pipelines
+
+        pipeExecService.startPipeline = function (pipeline) {
+            var methodName = "add";
+            var className = "PipelineService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.Pipeline\", \"object\": " + JSON.stringify(pipeline) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeExecService.getAllPipelines = function () {
+            var methodName = "getAll";
+            var className = "PipelineService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeExecService.scheduleLatestPipeline = function (pipeName, token) {
 
         };

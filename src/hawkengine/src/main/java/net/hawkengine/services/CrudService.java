@@ -57,6 +57,9 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
 
     @Override
     public ServiceResult update(T object) {
+        if (object == null){
+            return super.createServiceResult(object, true, "not found");
+        }
         T dbObject = this.getRepository().update(object);
 
         ServiceResult result = new ServiceResult();

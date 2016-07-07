@@ -2,16 +2,73 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('pipeConfigService', [function () {
+    .factory('pipeConfigService', ['jsonHandlerService', 'websocketSenderService', function (jsonHandlerService, websocketSenderService) {
         var pipeConfigService = this;
         
         //region Senders
         
         //region /pipeline
         
-        pipeConfigService.getAllPipelineDefs = function (token) {
-
+        pipeConfigService.getAllPipelineDefinitions = function () {
+            var methodName = "getAll";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
+
+        pipeConfigService.getAllPipelineGroupDTOs = function () {
+            var methodName = "getAllPipelineGroupDTOs";
+            var className = "PipelineGroupService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.addPipelineDefinition = function (pipelineDefinition) {
+            var methodName = "add";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.updatePipelineDefinition = function (pipelineDefinition) {
+            var methodName = "update";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.deletePipelineDefinition = function (id) {
+            var methodName = "delete";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeConfigService.createPipeline = function (pipeline, token) {
 
         };
@@ -45,53 +102,243 @@ angular
         //endregion
 
         //region /stages
-        pipeConfigService.getAllStages = function (pipeName, token) {
-
+        pipeConfigService.getAllStageDefinitions = function () {
+            var methodName = "getAll";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.createStage = function (pipeName, stage, token) {
-            if(token == isValid){
-                if(error == "") {
-                    var methodName = "AddStage";
-                    var className = "PipelineDefinitionService";
-                    var packageName = "hawkengine.net.services.PipelineDefinitionService";
-                    var result = "";
-                    var args = ["Pipelinebro", "Stagebro"];
-                    var error = "";
-                    var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
-                    websocketSenderService.call(json);
-                }
-            }
+        pipeConfigService.getStageDefinitionById = function (id) {
+            var methodName = "getById";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.deleteStage = function (pipeName, stageName, token) {
-
+        pipeConfigService.addStageDefinition = function (stageDefinition) {
+            var methodName = "add";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.StageDefinition\", \"object\": " + JSON.stringify(stageDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.getStage = function (pipeName, stageName, token) {
-
+        pipeConfigService.updateStageDefinition = function (stageDefinition) {
+            var methodName = "update";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.StageDefinition\", \"object\": " + JSON.stringify(stageDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.updateStage = function (pipeName, stageName, stage, token) {
-
+        pipeConfigService.deleteStageDefinition = function (id) {
+            var methodName = "delete";
+            var className = "StageDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
         //endregion
 
         //region /jobs
-        pipeConfigService.getAllJobs = function (pipeName, stageName, token) {
-
+        pipeConfigService.getAllJobDefinitions = function () {
+            var methodName = "getAll";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.createJob = function (pipeName, stageName, job, token) {
-
+        pipeConfigService.getJobDefinitionById = function (id) {
+            var methodName = "getById";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.deleteJob = function (pipeName, stageName, jobName, token) {
-
+        pipeConfigService.addJobDefinition = function (jobDefinition) {
+            var methodName = "add";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.JobDefinition\", \"object\": " + JSON.stringify(jobDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.getJob = function (pipeName, stageName, jobName, token) {
-
+        pipeConfigService.updateJobDefinition = function (jobDefinition) {
+            var methodName = "update";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.JobDefinition\", \"object\": " + JSON.stringify(jobDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
-        pipeConfigService.updateJob = function (pipeName, stageName, jobName, job, token) {
-
+        pipeConfigService.deleteJobDefinition = function (id) {
+            var methodName = "delete";
+            var className = "JobDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
         };
         //endregion
 
         //region /tasks
+
+        pipeConfigService.addTaskDefinition = function (taskDefinition){
+            var methodName = "add";
+            var className = "TaskDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.ExecTask\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.updateTaskDefinition = function (taskDefinition) {
+            var methodName = "update";
+            var className = "TaskDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.ExecTask\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.deleteTaskDefinition = function (id) {
+            var methodName = "delete";
+            var className = "TaskDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.getAllMaterialDefinitions = function () {
+            var methodName = "getAll";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.getMaterialDefinitionById = function (id) {
+            var methodName = "getById";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.addGitMaterialDefinition = function (materialDefinition) {
+            var methodName = "add";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.GitMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.addNugetMaterialDefinition = function (materialDefinition) {
+            var methodName = "add";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.NugetMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.updateGitMaterialDefinition = function (materialDefinition) {
+            var methodName = "update";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.GitMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.updateNugetMaterialDefinition = function (materialDefinition) {
+            var methodName = "update";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.NugetMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.deleteMaterialDefinition = function (id) {
+            var methodName = "delete";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeConfigService.getAllTasks = function (pipeName, stageName, jobName, token) {
 
         };

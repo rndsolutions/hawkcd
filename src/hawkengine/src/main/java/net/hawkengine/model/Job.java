@@ -24,7 +24,6 @@ public class Job extends DbEntry {
     private String assignedAgentId;
 
     public Job() {
-        this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setResources(new HashSet<>());
         this.setTasks(new ArrayList<>());

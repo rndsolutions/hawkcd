@@ -1,10 +1,11 @@
 package net.hawkengine.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PipelineGroup extends DbEntry {
     private String name;
-    private ArrayList<Pipeline> pipelines;
+    private List<PipelineDefinition> pipelines;
 
     public String getName() {
         return this.name;
@@ -14,11 +15,11 @@ public class PipelineGroup extends DbEntry {
         this.name = value;
     }
 
-    public ArrayList<Pipeline> getPipelines() {
+    public List<PipelineDefinition> getPipelines() {
         return this.pipelines;
     }
 
-    public void setPipelines(ArrayList<Pipeline> value) {
+    public void setPipelines(List<PipelineDefinition> value) {
         this.pipelines = value;
     }
 }

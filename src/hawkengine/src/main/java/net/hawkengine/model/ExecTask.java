@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.enums.TaskType;
 
 import java.util.List;
@@ -51,6 +52,7 @@ public class ExecTask extends TaskDefinition {
         return this.isIgnoringErrors;
     }
 
+    @JsonProperty("isIgnoringErrors")
     public void setIgnoringErrors(boolean ignoringErrors) {
         this.isIgnoringErrors = ignoringErrors;
     }

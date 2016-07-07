@@ -87,10 +87,10 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     public ServiceResult addTask(TaskDefinition taskDefinition) {
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
-        boolean hasNameCollision = this.checkForNameCollision(taskDefinitions, taskDefinition);
-        if (hasNameCollision) {
-            return super.createServiceResult(taskDefinition, true, "with the same name exists");
-        }
+//        boolean hasNameCollision = this.checkForNameCollision(taskDefinitions, taskDefinition);
+//        if (hasNameCollision) {
+//            return super.createServiceResult(taskDefinition, true, "with the same name exists");
+//        }
 
         taskDefinitions.add(taskDefinition);
         jobDefinition.setTaskDefinitions(taskDefinitions);
@@ -133,10 +133,10 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
 
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
-        boolean hasNameCollision = this.checkForNameCollision(taskDefinitions, taskDefinition);
-        if (hasNameCollision) {
-            return super.createServiceResult(taskDefinition, true, "with the same name exists");
-        }
+//        boolean hasNameCollision = this.checkForNameCollision(taskDefinitions, taskDefinition);
+//        if (hasNameCollision) {
+//            return super.createServiceResult(taskDefinition, true, "with the same name exists");
+//        }
 
         int lengthOfTaskDefinitions = taskDefinitions.size();
         for (int i = 0; i < lengthOfTaskDefinitions; i++) {
@@ -188,7 +188,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
                 }
             }
         } else {
-            return super.createServiceResult(taskDefinitionToDelete, true, "cannot delete the last job definition");
+            return super.createServiceResult(taskDefinitionToDelete, true, "cannot delete the last task definition");
         }
 
         if (!isRemoved) {
@@ -220,18 +220,18 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
      * Method boolean accepts a list of TaskDefinitions, performs name check and decides wheather it
      * has name collision or not.
      */
-    private boolean checkForNameCollision(List<TaskDefinition> taskDefinitions, TaskDefinition taskDefinitionToAdd) {
-        for (TaskDefinition taskDefinition : taskDefinitions) {
-            if (taskDefinition.getId().equals(taskDefinitionToAdd.getId())) {
-                continue;
-            }
-            if (taskDefinition.getName().equals(taskDefinitionToAdd.getName())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+//    private boolean checkForNameCollision(List<TaskDefinition> taskDefinitions, TaskDefinition taskDefinitionToAdd) {
+//        for (TaskDefinition taskDefinition : taskDefinitions) {
+//            if (taskDefinition.getId().equals(taskDefinitionToAdd.getId())) {
+//                continue;
+//            }
+//            if (taskDefinition.getName().equals(taskDefinitionToAdd.getName())) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
     /**
      * Method return TaskDefinition, accepts JobDefinition and TaskDefinition Id, filters all

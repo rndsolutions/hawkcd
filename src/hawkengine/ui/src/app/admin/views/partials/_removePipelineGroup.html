@@ -7,10 +7,10 @@
       </div>
       <div class="modal-body">
         <div>
-          {{admin.defaultText.deleteGroupModal.confirm}}<strong>{{admin.groupForDeleteName}} </strong>
+          {{admin.defaultText.deleteGroupModal.confirm}}<strong>{{admin.pipelineGroupToDelete.name}} </strong>
           <br>
           <hr>
-          <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.deleteGroup()">{{admin.defaultText.deletePipelineModal.delete}}</button>
+          <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.deletePipelineGroup()">{{admin.defaultText.deletePipelineModal.delete}}</button>
           <button class="btn" data-dismiss="modal">{{admin.defaultText.deletePipelineModal.cancel}}</button>
         </div>
       </div>

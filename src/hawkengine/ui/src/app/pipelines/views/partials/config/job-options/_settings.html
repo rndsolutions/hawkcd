@@ -2,11 +2,11 @@
   <div style="width: 300px">
     <form name="editJobForm">
       <div class="form-group form-md-line-input">
-        <input type="text" class="form-control" ng-model="pipeConfig.updatedJob.Name" ng-pattern="/^([\w-]+)$/" required>
+        <input type="text" class="form-control" ng-model="pipeConfig.updatedJob.name" ng-pattern="/^([\w-]+)$/" required>
         <label>Job Name</label>
       </div>
     </form>
   </div>
   <!--<button class="btn green-sharp btn-large">Update</button>-->
-  <button class="btn green-sharp" ng-click="pipeConfig.editJob(pipeConfig.updatedJob)" ng-disabled="editJobForm.$invalid || pipeConfig.updatedJob.Name == pipeConfig.job.Name">Update</button>
+  <button class="btn green-sharp" ng-click="pipeConfig.editJob(pipeConfig.updatedJob)" ng-disabled="pipeConfig.updatedJob.name == pipeConfig.job.name">Update</button>
 </div>

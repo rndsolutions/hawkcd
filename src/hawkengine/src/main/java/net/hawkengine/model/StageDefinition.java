@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class StageDefinition extends DbEntry {
     private List<EnvironmentVariable> environmentVariables;
     private List<JobDefinition> jobDefinitions;
     private boolean isTriggeredManually;
+    private String status;
 
     public StageDefinition() {
         this.setEnvironmentVariables(new ArrayList<>());
@@ -51,7 +54,16 @@ public class StageDefinition extends DbEntry {
         return this.isTriggeredManually;
     }
 
+    @JsonProperty("isTriggeredManually")
     public void setTriggeredManually(boolean triggeredManually) {
         this.isTriggeredManually = triggeredManually;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

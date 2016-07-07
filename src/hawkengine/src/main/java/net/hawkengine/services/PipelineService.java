@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Job;
@@ -44,16 +45,33 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         return super.getAll();
     }
 
-
     @Override
     public ServiceResult add(Pipeline pipeline) {
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
+        List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getObject();
+        Pipeline lastPipeline = pipelines
+                .stream()
+                .filter(p -> p.getPipelineDefinitionId().equals(pipeline.getPipelineDefinitionId()))
+                .sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId()))
+                .findFirst()
+                .orElse(null);
+        if(lastPipeline == null){
+            pipeline.setExecutionId(1);
+        }
+        else{
+            pipeline.setExecutionId(lastPipeline.getExecutionId() + 1);
+        }
         this.addStagesToPipeline(pipeline);
         return super.add(pipeline);
     }
 
     @Override
     public ServiceResult update(Pipeline pipeline) {
-        return super.update(pipeline);
+        ServiceResult result = super.update(pipeline);
+        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+
+        return result;
     }
 
     @Override
@@ -62,28 +80,15 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public ServiceResult getAllPipelinesInProgress() {
+    public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
 
-        List<Pipeline> pipelinesInProgress = pipelines
+        List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.getStatus() == Status.IN_PROGRESS)
+                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
-
-        result.setObject(pipelinesInProgress);
-
-        return result;
-    }
-
-    @Override
-    public ServiceResult getAllUpdatedPipelines() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()) {
-            return result;
-        }
-        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::areMaterialsUpdated).collect(Collectors.toList());
 
         result.setObject(updatedPipelines);
 
@@ -91,13 +96,15 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public ServiceResult getAllPreparedPipelines() {
+    public ServiceResult getAllPreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
-        if (pipelines.isEmpty()) {
-            return result;
-        }
-        List<Pipeline> updatedPipelines = pipelines.stream().filter(Pipeline::isPrepared).collect(Collectors.toList());
+
+        List<Pipeline> updatedPipelines = pipelines
+                .stream()
+                .filter(p -> p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
 
         result.setObject(updatedPipelines);
 
@@ -146,6 +153,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             task.setStageId(job.getStageId());
             task.setPipelineId(job.getPipelineId());
             task.setTaskDefinition(taskDefinition);
+            task.setRunIfCondition(taskDefinition.getRunIfCondition());
             tasks.add(task);
         }
 

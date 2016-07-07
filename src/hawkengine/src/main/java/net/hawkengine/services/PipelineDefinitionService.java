@@ -3,6 +3,7 @@ package net.hawkengine.services;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
@@ -34,6 +35,10 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
+        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
+        for(MaterialDefinition materialDefinition : materialDefinitions){
+            materialDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
+        }
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
         for (StageDefinition stageDefinition : stageDefinitions) {
             stageDefinition.setPipelineDefinitionId(pipelineDefinition.getId());

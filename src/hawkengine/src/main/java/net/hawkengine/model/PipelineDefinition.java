@@ -1,11 +1,14 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PipelineDefinition extends DbEntry {
     private String name;
     private String pipelineGroupId;
+    private String groupName;
     private String labelTemplate;
     private List<MaterialDefinition> materials;
     private List<EnvironmentVariable> environmentVariables;
@@ -82,6 +85,7 @@ public class PipelineDefinition extends DbEntry {
         return this.isAutoSchedulingEnabled;
     }
 
+    @JsonProperty("isAutoSchedulingEnabled")
     public void setAutoSchedulingEnabled(boolean autoSchedulingEnabled) {
         this.isAutoSchedulingEnabled = autoSchedulingEnabled;
     }
@@ -90,8 +94,17 @@ public class PipelineDefinition extends DbEntry {
         return this.isLocked;
     }
 
+    @JsonProperty("isLocked")
     public void setLocked(boolean locked) {
         this.isLocked = locked;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }
 
