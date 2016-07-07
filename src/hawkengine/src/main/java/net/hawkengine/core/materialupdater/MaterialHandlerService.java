@@ -2,21 +2,23 @@ package net.hawkengine.core.materialupdater;
 
 import net.hawkengine.model.Material;
 import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.services.MaterialService;
 import net.hawkengine.services.interfaces.IMaterialService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class MaterialTrackerService implements IMaterialTrackerService {
+public class MaterialHandlerService implements IMaterialHandlerService {
     private IMaterialService materialService;
     private IMaterialUpdater materialUpdater;
 
-    public MaterialTrackerService() {
+    public MaterialHandlerService() {
         this.materialService = new MaterialService();
     }
 
-    public MaterialTrackerService(IMaterialService materialService, IMaterialUpdater materialUpdater) {
+    public MaterialHandlerService(IMaterialService materialService, IMaterialUpdater materialUpdater) {
         this.materialService = materialService;
         this.materialUpdater = materialUpdater;
     }
@@ -42,5 +44,28 @@ public class MaterialTrackerService implements IMaterialTrackerService {
         }
 
         return triggerMaterials.toString();
+    }
+
+    @Override
+    public Pipeline updatePipelineMaterials(Pipeline pipeline) {
+        pipeline.setMaterialsUpdated(true);
+        List<Material> materials = pipeline.getMaterials();
+        for (Material material : materials) {
+            this.materialUpdater = MaterialUpdaterFactory.create(material.getMaterialDefinition().getType());
+            MaterialDefinition latestVersion = this.materialUpdater.getLatestMaterialVersion(material.getMaterialDefinition());
+            if (latestVersion == null) {
+                pipeline.setMaterialsUpdated(false);
+                break;
+            }
+
+            Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId()).getObject();
+            boolean areTheSame = this.materialUpdater.areMaterialsSameVersion(latestVersion, dbLatestVersion.getMaterialDefinition());
+            if (areTheSame) {
+                material.setMaterialDefinition(latestVersion);
+                material.setChangeDate(LocalDateTime.now());
+            }
+        }
+
+        return pipeline;
     }
 }

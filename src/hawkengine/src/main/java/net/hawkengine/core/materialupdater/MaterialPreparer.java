@@ -12,12 +12,12 @@ import java.util.List;
 
 public class MaterialPreparer implements Runnable {
     private IPipelineService pipelineService;
-    private IMaterialPreparerService materialPreparerService;
+    private IMaterialHandlerService materialHandlerService;
     private static final Logger LOGGER = Logger.getLogger(MaterialPreparer.class);
 
     public MaterialPreparer() {
         this.pipelineService = new PipelineService();
-        this.materialPreparerService = new MaterialPreparerService();
+        this.materialHandlerService = new MaterialHandlerService();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class MaterialPreparer implements Runnable {
             while (true) {
                 List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getObject();
                 for (Pipeline pipeline : pipelines) {
-                    Pipeline updatedPipeline = this.materialPreparerService.updatePipelineMaterials(pipeline);
+                    Pipeline updatedPipeline = this.materialHandlerService.updatePipelineMaterials(pipeline);
                     if (updatedPipeline.areMaterialsUpdated()) {
                         ServiceResult result = this.pipelineService.update(updatedPipeline);
                         EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);

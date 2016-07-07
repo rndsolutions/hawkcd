@@ -13,16 +13,16 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-public class MaterialTracker implements Runnable{
+public class MaterialTracker implements Runnable {
     private IPipelineDefinitionService pipelineDefinitionService;
     private IPipelineService pipelineService;
-    private IMaterialTrackerService materialUpdaterService;
+    private IMaterialHandlerService materialHandlerService;
     private static final Logger LOGGER = Logger.getLogger(MaterialTracker.class);
 
     public MaterialTracker() {
         this.pipelineService = new PipelineService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
-        this.materialUpdaterService = new MaterialTrackerService();
+        this.materialHandlerService = new MaterialHandlerService();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class MaterialTracker implements Runnable{
             while (true) {
                 List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
                 for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                    String triggerMaterials = this.materialUpdaterService.checkPipelineForTriggerMaterials(pipelineDefinition);
+                    String triggerMaterials = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
                     if (!triggerMaterials.isEmpty()) {
                         Pipeline pipeline = new Pipeline();
                         pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
