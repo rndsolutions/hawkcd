@@ -11,7 +11,7 @@ public class FetchMaterialTask extends TaskDefinition {
     private MaterialType materialType = MaterialType.GIT;
     private String source;
     private String destination;
-    private HashMap<String, Object> materialSpecificDetails;
+    private MaterialDefinition materialDefinition;
 
     public FetchMaterialTask() {
         this.setType(TaskType.FETCH_MATERIAL);
@@ -57,11 +57,11 @@ public class FetchMaterialTask extends TaskDefinition {
         this.destination = value;
     }
 
-    public HashMap<String, Object> getMaterialSpecificDetails() {
-        return this.materialSpecificDetails;
+    public MaterialDefinition getMaterialDefinition() {
+        return this.materialDefinition;
     }
 
-    public void setMaterialSpecificDetails(HashMap<String, Object> value) {
-        this.materialSpecificDetails = value;
+    public void setMaterialDefinition(MaterialDefinition materialDefinition) {
+        this.materialDefinition = materialDefinition;
     }
 }
