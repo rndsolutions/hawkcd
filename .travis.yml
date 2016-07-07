@@ -8,8 +8,8 @@ cache:
     - $HOME/.gradle/wrapper/
 script:
   cd src/hawkengine \
-  && ./gradlw check \
-  && ./gradlw build
+  && ./gradlew check \
+  && ./gradlew build
 
 jdk:
   - oraclejdk8
