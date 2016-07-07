@@ -1,7 +1,6 @@
 package net.hawkengine.services;
 
-import com.fiftyonred.mock_jedis.MockJedis;
-import com.fiftyonred.mock_jedis.MockJedisPool;
+
 
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;

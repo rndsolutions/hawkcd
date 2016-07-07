@@ -16,13 +16,13 @@ public class StageService extends CrudService<Stage> implements IStageService {
     private String failureMessage = "not found";
     private String successMessage = "retrieved successfully";
 
-    public StageService(){
+    public StageService() {
 
         this.pipelineService = new PipelineService();
-            super.setObjectType("Stage");
+        super.setObjectType("Stage");
     }
 
-    public StageService(IPipelineService pipelineService){
+    public StageService(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
         super.setObjectType("Stage");
     }
@@ -64,7 +64,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         Stage result = null;
         List<Stage> stages = pipeline.getStages();
         boolean alreadyExist = stages.stream().filter(st -> st.getId().equals(stage.getId())).equals(true);
-        if (!alreadyExist){
+        if (!alreadyExist) {
             stages.add(stage);
         }
 

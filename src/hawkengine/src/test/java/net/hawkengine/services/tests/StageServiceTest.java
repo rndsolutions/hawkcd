@@ -27,7 +27,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-
 public class StageServiceTest  {
     private IPipelineService pipelineService;
     private IStageService stageService;
@@ -35,7 +34,6 @@ public class StageServiceTest  {
     private Pipeline pipeline;
     private PipelineDefinition pipelineDefinition;
     private Stage stage;
-
 
     @Before
     public void setUp(){
@@ -47,8 +45,10 @@ public class StageServiceTest  {
         this.stageService = new StageService(this.pipelineService);
     }
 
+    //TODO: naming conventions
     @Test
     public void getAll(){
+        //TODO: add simple stage, and check whether getAll() returns list with one object inside
         //Arrange
         final String expectedMessage = "Stages retrieved successfully.";
         List<Stage> stageList = new ArrayList<>();
@@ -61,51 +61,50 @@ public class StageServiceTest  {
         assertNotNull(actualResult.getObject());
         assertEquals(actualResult.getMessage(), expectedMessage);
         assertEquals(actualResult.getObject(), stageList);
-
     }
 
     @Test
     public void getById(){
         //Arrange
         this.pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(pipelineDefinition);
+        this.pipelineDefinition.setName("pipelinedefinition");
+        this.pipelineDefinitionService.add(this.pipelineDefinition);
         this.pipeline = new Pipeline();
-        pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-        this.pipelineService.add(pipeline);
+        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
+        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
+        this.pipelineService.add(this.pipeline);
         this.stage = new Stage();
-        stage.setPipelineId(pipeline.getId());
-        this.stageService.add(stage);
+        this.stage.setPipelineId(this.pipeline.getId());
+        this.stageService.add(this.stage);
 
         //Act
-        ServiceResult actualResult = this.stageService.getById(stage.getId());
-        Stage actualStatus = (Stage)actualResult.getObject();
-        final String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
-                " "  + actualStatus.getId() + " retrieved successfully.";
-
+        ServiceResult actualResult = this.stageService.getById(this.stage.getId());
+        Stage actualStage = (Stage)actualResult.getObject();
+        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
+                " "  + actualStage.getId() + " retrieved successfully.";
 
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage,actualResult.getMessage());
-        assertEquals(stage.getId(),((Stage) actualResult.getObject()).getId());
+        assertEquals(this.stage.getId(),((Stage) actualResult.getObject()).getId());
     }
 
     @Test
     public void getById_wrongId(){
         //Arrange
+        //TODO: Extract in method add stage() there is repetition
         this.pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(pipelineDefinition);
+        this.pipelineDefinition.setName("pipelinedefinition");
+        this.pipelineDefinitionService.add(this.pipelineDefinition);
         this.pipeline = new Pipeline();
-        pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-        this.pipelineService.add(pipeline);
+        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
+        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
+        this.pipelineService.add(this.pipeline);
         this.stage = new Stage();
-        stage.setPipelineId(pipeline.getId());
-        this.stageService.add(stage);
-        final String expectedMessage = "Stage not found.";
+        this.stage.setPipelineId(this.pipeline.getId());
+        this.stageService.add(this.stage);
+        String expectedMessage = "Stage not found.";
 
         //Act
         ServiceResult actualResult = this.stageService.getById("unexistingId");
@@ -115,97 +114,92 @@ public class StageServiceTest  {
         assertNull(actualResult.getObject());
         assertEquals(expectedMessage,actualResult.getMessage());
     }
+
     @Test
+    //TODO: more tests; check add with same name
     public void add(){
         //Arrange
         this.pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(pipelineDefinition);
+        this.pipelineDefinition.setName("pipelinedefinition");
+        this.pipelineDefinitionService.add(this.pipelineDefinition);
         this.pipeline = new Pipeline();
-        pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-        this.pipelineService.add(pipeline);
+        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
+        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
+        this.pipelineService.add(this.pipeline);
         this.stage = new Stage();
-        stage.setPipelineId(pipeline.getId());
+        this.stage.setPipelineId(this.pipeline.getId());
 
         //Act
-        ServiceResult actualResult = this.stageService.add(stage);
+        ServiceResult actualResult = this.stageService.add(this.stage);
         Stage actualStatus = (Stage)actualResult.getObject();
-        final String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
+        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
                 " "  + actualStatus.getId() + " created successfully.";
 
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage,actualResult.getMessage());
-        assertEquals(stage.getId(),((Stage) actualResult.getObject()).getId());
+        assertEquals(this.stage.getId(),((Stage) actualResult.getObject()).getId());
 
     }
 
-
+    //TODO: more tests; check add with same name
     @Test
     public void update(){
         //Arrange
         this.pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(pipelineDefinition);
+        this.pipelineDefinition.setName("pipelinedefinition");
+        this.pipelineDefinitionService.add(this.pipelineDefinition);
         this.pipeline = new Pipeline();
-        pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-        this.pipelineService.add(pipeline);
+        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
+        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
+        this.pipelineService.add(this.pipeline);
         this.stage = new Stage();
-        stage.setPipelineId(pipeline.getId());
-        stage.setStatus(StageStatus.FAILED);
-        this.stageService.add(stage);
-
+        this.stage.setPipelineId(this.pipeline.getId());
+        this.stage.setStatus(StageStatus.FAILED);
+        this.stageService.add(this.stage);
 
         //Act
-        stage.setStatus(StageStatus.PASSED);
-        ServiceResult actualResult = this.stageService.update(stage);
+        this.stage.setStatus(StageStatus.PASSED);
+        ServiceResult actualResult = this.stageService.update(this.stage);
         Stage actualStatus = (Stage)actualResult.getObject();
-        final String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
+        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
                 " " + actualStatus.getId() + " updated successfully.";
-
-
-
 
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage,actualResult.getMessage());
         assertEquals(StageStatus.PASSED,actualStatus.getStatus());
-
-
     }
 
+    //TODO: add test for delete of invalid object
     @Test
     public void delete(){
         //Arrange
         this.pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(pipelineDefinition);
+        this.pipelineDefinition.setName("pipelinedefinition");
+        this.pipelineDefinitionService.add(this.pipelineDefinition);
         this.pipeline = new Pipeline();
-        pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-        this.pipelineService.add(pipeline);
+        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
+        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
+        this.pipelineService.add(this.pipeline);
         this.stage = new Stage();
-        stage.setPipelineId(pipeline.getId());
-        Stage stage2 = stage;
-        this.stageService.add(stage);
+        this.stage.setPipelineId(this.pipeline.getId());
+        //TODO: naming?
+        Stage stage2 = this.stage;
+        this.stageService.add(this.stage);
         this.stageService.add(stage2);
 
         //Act
-        ServiceResult actualResult = this.stageService.delete(stage.getId());
+        ServiceResult actualResult = this.stageService.delete(this.stage.getId());
         Stage actualStatus = (Stage)actualResult.getObject();
-        final String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
+        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
                 " "  + actualStatus.getId() + " deleted successfully.";
 
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage,actualResult.getMessage());
-
-
     }
-
 }
