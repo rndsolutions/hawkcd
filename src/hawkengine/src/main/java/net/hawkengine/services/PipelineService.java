@@ -1,5 +1,7 @@
 package net.hawkengine.services;
 
+
+
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
@@ -19,6 +21,9 @@ import net.hawkengine.services.interfaces.IPipelineService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import redis.clients.jedis.JedisPoolConfig;
+
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private IPipelineDefinitionService pipelineDefinitionService;

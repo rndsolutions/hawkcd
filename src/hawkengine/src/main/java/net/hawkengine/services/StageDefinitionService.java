@@ -180,7 +180,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         if (stageDefinitions.size() > 1) {
             isRemoved = stageDefinitions.remove(stageDefinition);
         } else {
-            return super.createServiceResult(stageDefinition, true, "is the last Stage and cannot be deleted");
+            return super.createServiceResult(stageDefinition, true, "is the last Stage Definition and cannot be deleted");
         }
 
         if (isRemoved) {
