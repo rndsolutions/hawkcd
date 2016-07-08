@@ -20,7 +20,6 @@ import java.util.List;
 @PrepareForTest(MaterialUpdaterFactory.class)
 public class MaterialHandlerServiceTest {
     private static final String MATERIAL_ONE = "MaterialOne";
-    private static final String MATERIAL_TWO = "MaterialTwo";
 
     private IMaterialHandlerService materialHandlerService;
     private IMaterialService mockedMaterialService;
@@ -105,12 +104,10 @@ public class MaterialHandlerServiceTest {
     }
 
     @Test
-    public void updatePipelineMaterials() {
+    public void updatePipelineMaterials_newVersion_materialUpdated() {
         // Arrange
         Material material = new Material();
         GitMaterial gitMaterial = new GitMaterial();
-        gitMaterial.setName(MATERIAL_ONE);
-        gitMaterial.setPollingForChanges(false);
         material.setMaterialDefinition(gitMaterial);
 
         // Act
@@ -118,6 +115,41 @@ public class MaterialHandlerServiceTest {
 
         // Assert
         Assert.assertNotNull(actualResult.getChangeDate());
+        Assert.assertTrue(actualResult.isUpdated());
+    }
+
+    @Test
+    public void updatePipelineMaterials_noNewVersion_materialNotUpdated() {
+        // Arrange
+        Material material = new Material();
+        GitMaterial gitMaterial = new GitMaterial();
+        material.setMaterialDefinition(gitMaterial);
+
+        Mockito.when(this.mockedMaterialUpdater.areMaterialsSameVersion(Mockito.any(MaterialDefinition.class), Mockito.any(MaterialDefinition.class)))
+                .thenReturn(true);
+
+        // Act
+        Material actualResult = this.materialHandlerService.updateMaterial(material);
+
+        // Assert
+        Assert.assertFalse(actualResult.isUpdated());
+    }
+
+    @Test
+    public void updatePipelineMaterials_couldNotUpdate_null() {
+        // Arrange
+        Material material = new Material();
+        GitMaterial gitMaterial = new GitMaterial();
+        material.setMaterialDefinition(gitMaterial);
+
+        Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class)))
+                .thenReturn(null);
+
+        // Act
+        Material actualResult = this.materialHandlerService.updateMaterial(material);
+
+        // Assert
+        Assert.assertNull(actualResult);
     }
 }
 
