@@ -1,11 +1,21 @@
 site_name: HawkCD
 pages:
-- Home: 'index.md'
+- Get Started:
+    - 'Requirements': 'get-started/requirements.md'
 - User Guide:
-    - 'Writing your docs': 'user-guide/getting-started.md'
-- Developers Guide:
-    - 'Getting Started': 'developer-guide/getting-started.md'
-    - 'Technology Stack': 'developer-guide/getting-started.md'
-    - 'Architecture': 'developer-guide/getting-started.md'
-- Requirements : srs.md
+    - 'Concepts': 'user-guide/concepts.md'
+    - 'Installation':
+      - 'Windows': 'user-guide/installation/windows.md'
+      - 'Linux': 'user-guide/installation/linux.md'
+    - 'Walkthrough': 'user-guide/walkthrough.md'
+- Contribute:
+    - 'Contribution Agreement': 'contribute/contribution-agreement.md'
+    - 'Technical Documentation':
+      - 'Software Requirements Specification': 'contribute/technical-documentation/srs.md'
+      - 'Software Design Document': 'contribute/technical-documentation/sdd.md'
+      - 'Hawk API': 'contribute/technical-documentation/rest-api.md'
+    - 'Development Process' : 'contribute/development-process.md'
+    - 'Discussions': 'contribute/discussions.md'
+- Roadmap: 'roadmap.md'
+- Download: 'download.md'
 theme: united

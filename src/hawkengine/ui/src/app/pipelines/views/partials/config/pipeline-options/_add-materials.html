@@ -10,7 +10,7 @@
                     <div class="form-group form-md-radios" style="float: none;margin: 0 auto;text-align: center;">
                         <div class="md-radio-inline">
                             <div class="md-radio">
-                                <input type="radio" id="configGitType" name="material-type" class="md-radiobtn" checked ng-model="pipeConfig.materialType" value="git">
+                                <input type="radio" id="configGitType" name="material-type" class="md-radiobtn" checked ng-model="pipeConfig.materialType" value="GIT">
                                 <label for="configGitType">
                                     <span class="inc"></span>
                                     <span class="check"></span>
@@ -24,7 +24,7 @@
                                     <span class="box"></span> TFS </label>
                             </div>
                             <div class="md-radio">
-                                <input type="radio" id="configNugetType" name="material-type" class="md-radiobtn" ng-model="pipeConfig.materialType" value="nuget">
+                                <input type="radio" id="configNugetType" name="material-type" class="md-radiobtn" ng-model="pipeConfig.materialType" value="NUGET">
                                 <label for="configNugetType">
                                     <span></span>
                                     <span class="check"></span>
@@ -33,14 +33,14 @@
                         </div>
                     </div>
                     <div class="clearfix"> </div>
-                    <div ng-show="pipeConfig.materialType == 'git'">
+                    <div ng-show="pipeConfig.materialType == 'GIT'">
                         <form role="form" name="addGitMaterialForm">
                             <div class="form-group form-md-line-input text-right">
                                 <label class="contorl-label col-md-4">Material Name
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="pipeConfig.newMaterial.git.name" type="text" class="form-control" placeholder="Enter material name" ng-pattern="/^([\w-]+)$/" required/>
+                                    <input ng-model="pipeConfig.newMaterial.name" type="text" class="form-control" placeholder="Enter material name" ng-pattern="/^([\w-]+)$/" required/>
                                     <div class="form-control-focus custom-focus"></div>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="pipeConfig.newMaterial.git.url" type="text" class="form-control" placeholder="Enter GIT url"
+                                    <input ng-model="pipeConfig.newMaterial.repositoryUrl" type="text" class="form-control" placeholder="Enter GIT url"
                                             ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
                                     <div class="form-control-focus custom-focus"></div>
                                 </div>
@@ -66,7 +66,7 @@
                             <div class="form-group form-md-checkboxes trigger-container2">
                                 <div class="md-checkbox-list">
                                     <div class="md-checkbox">
-                                        <input type="checkbox" id="gitPoll" class="md-check" ng-model="pipeConfig.newMaterial.git.poll">
+                                        <input type="checkbox" id="gitPoll" class="md-check" ng-model="pipeConfig.newMaterial.isPollingForChanges">
                                         <label for="gitPoll">
                                             <span></span>
                                             <span class="check"></span>
@@ -77,7 +77,7 @@
                             <div class="form-group form-md-checkboxes trigger-container2">
                                 <div class="md-checkbox-list">
                                     <div class="md-checkbox">
-                                        <input type="checkbox" id="gitCredentials" class="md-check" ng-model="pipeConfig.newMaterial.git.credentials">
+                                        <input type="checkbox" id="gitCredentials" class="md-check" ng-model="pipeConfig.newMaterial.credentials">
                                         <label for="gitCredentials">
                                             <span></span>
                                             <span class="check"></span>
@@ -85,13 +85,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="pipeConfig.newMaterial.git.credentials">
+                            <div ng-if="pipeConfig.newMaterial.credentials">
                                 <div class="form-group form-md-line-input text-right">
                                     <label class="control-label col-md-4">Username
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-md-6">
-                                        <input ng-model="pipeConfig.newMaterial.git.username" type="text" class="form-control" placeholder="Enter GIT username" />
+                                        <input ng-model="pipeConfig.newMaterial.username" type="text" class="form-control" placeholder="Enter GIT username" />
                                         <div class="form-control-focus custom-focus"></div>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-md-6">
-                                        <input ng-model="pipeConfig.newMaterial.git.password" type="password" class="form-control" placeholder="Enter GIT password" />
+                                        <input ng-model="pipeConfig.newMaterial.password" type="password" class="form-control" placeholder="Enter GIT password" />
                                         <div class="form-control-focus custom-focus"></div>
                                     </div>
                                 </div>
@@ -108,19 +108,19 @@
                             <br>
                             <hr>
                             <button class="btn green" type="submit" data-dismiss="modal" ng-disabled="addGitMaterialForm.$invalid"
-                                    ng-click="pipeConfig.addMaterial(pipeConfig.newMaterial)" ng-hide="pipeConfig.materialType == 'nuget'">Add Material</button>
+                                    ng-click="pipeConfig.addMaterial(pipeConfig.newMaterial)" ng-hide="pipeConfig.materialType == 'NUGET'">Add Material</button>
                             <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
                         </form>
                     </div>
                     <!-- TODO tfs panel -->
-                    <div ng-show="pipeConfig.materialType == 'nuget'">
+                    <div ng-show="pipeConfig.materialType == 'NUGET'">
                         <form role="form" name="addNugetMaterialForm">
                             <div class="form-group form-md-line-input text-right">
                                 <label class="control-label col-md-4">Material Name
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="pipeConfig.newMaterial.nuget.name" type="text" class="form-control" placeholder="Enter material name" ng-pattern="/^([\w-]+)$/" required/>
+                                    <input ng-model="pipeConfig.newMaterial.name" type="text" class="form-control" placeholder="Enter material name" ng-pattern="/^([\w-]+)$/" required/>
                                     <div class="form-control-focus custom-focus"></div>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="pipeConfig.newMaterial.nuget.url" type="url" class="form-control" placeholder="Enter NuGet url" required/>
+                                    <input ng-model="pipeConfig.newMaterial.repositoryUrl" type="url" class="form-control" placeholder="Enter NuGet url" required/>
                                     <div class="form-control-focus custom-focus"></div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="pipeConfig.newMaterial.nuget.packageId" type="text" class="form-control" placeholder="Enter NuGet Package" required />
+                                    <input ng-model="pipeConfig.newMaterial.packageId" type="text" class="form-control" placeholder="Enter NuGet Package" required />
                                     <div class="form-control-focus custom-focus"></div>
                                 </div>
                             </div>
@@ -146,7 +146,7 @@
                             <div class="form-group form-md-checkboxes trigger-container2">
                                 <div class="md-checkbox-list">
                                     <div class="md-checkbox">
-                                        <input type="checkbox" id="nugetPoll" class="md-check" ng-model="pipeConfig.newMaterial.nuget.poll">
+                                        <input type="checkbox" id="nugetPoll" class="md-check" ng-model="pipeConfig.newMaterial.isPollingForChanges">
                                         <label for="nugetPoll">
                                             <span></span>
                                             <span class="check"></span>
@@ -157,7 +157,7 @@
                             <div class="form-group form-md-checkboxes trigger-container2">
                                 <div class="md-checkbox-list">
                                     <div class="md-checkbox">
-                                        <input type="checkbox" id="nugetPrerelease" class="md-check" ng-model="pipeConfig.newMaterial.nuget.includePrerelease">
+                                        <input type="checkbox" id="nugetPrerelease" class="md-check" ng-model="pipeConfig.newMaterial.includePrerelease">
                                         <label for="nugetPrerelease">
                                             <span></span>
                                             <span class="check"></span>
