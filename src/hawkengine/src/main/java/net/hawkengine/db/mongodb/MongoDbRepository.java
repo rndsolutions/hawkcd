@@ -118,8 +118,9 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
         T result = null;
         try {
             BasicDBObject searchQuery = new BasicDBObject().append("id", id);
-            result = (T)this.collection.findAndRemove(searchQuery);
-
+            DBObject dbObject = this.collection.findAndRemove(searchQuery);
+            String document = JSON.serialize(dbObject);
+            result = this.jsonConverter.fromJson(document, this.entryType);
             return result;
         } catch (RuntimeException e) {
             e.printStackTrace();

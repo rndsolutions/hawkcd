@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.hawkengine.model.enums.MaterialType;
@@ -50,6 +51,7 @@ public abstract class MaterialDefinition extends DbEntry {
         this.type = value;
     }
 
+    @JsonProperty("isPollingForChanges")
     public boolean isPollingForChanges() {
         return this.isPollingForChanges;
     }

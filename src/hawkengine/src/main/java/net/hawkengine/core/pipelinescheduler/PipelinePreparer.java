@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PipelinePreparer extends Thread {
+public class PipelinePreparer implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(PipelinePreparer.class);
     private IPipelineDefinitionService pipelineDefinitionService;
     private IPipelineService pipelineService;
@@ -36,12 +36,6 @@ public class PipelinePreparer extends Thread {
     public PipelinePreparer(IPipelineService pipelineService, IPipelineDefinitionService pipelineDefinitionService) {
         this.pipelineDefinitionService = pipelineDefinitionService;
         this.pipelineService = pipelineService;
-    }
-
-    @Override
-    public synchronized void start() {
-        super.start();
-        this.run();
     }
 
     @Override
@@ -62,7 +56,6 @@ public class PipelinePreparer extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        super.run();
     }
 
     // TODO: Replace with method form PipelineService

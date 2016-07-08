@@ -1,6 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
@@ -69,8 +68,8 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(materialDefinition.getPipelineDefinitionId()).getObject();
         List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
         List<MaterialDefinition> allMaterialDefinitions = (List<MaterialDefinition>) this.getAll().getObject();
-        for(MaterialDefinition materialDefinitionToCheck : allMaterialDefinitions){
-            if(materialDefinitionToCheck.getId().equals(materialDefinition.getId())){
+        for (MaterialDefinition materialDefinitionToCheck : allMaterialDefinitions) {
+            if (materialDefinitionToCheck.getId().equals(materialDefinition.getId())) {
                 return super.createServiceResult(null, true, "already exists");
             }
         }

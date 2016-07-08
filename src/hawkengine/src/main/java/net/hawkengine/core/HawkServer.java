@@ -57,7 +57,6 @@ public class HawkServer {
 
         // localhost:8080/ws/v1
 
-
         // WebSockets
 
         context.addServlet(WsServlet.class, "/ws/v1");
