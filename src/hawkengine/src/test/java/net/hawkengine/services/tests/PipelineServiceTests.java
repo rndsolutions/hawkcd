@@ -254,8 +254,8 @@ public class PipelineServiceTests {
         Pipeline firstExpectedPipeline = expectedPipelines.get(1);
         Pipeline secondExpectedPipeline = expectedPipelines.get(2);
         firstExpectedPipeline.setStatus(Status.IN_PROGRESS);
-        firstExpectedPipeline.setAreMaterialsUpdated(true);
-        secondExpectedPipeline.setAreMaterialsUpdated(true);
+        firstExpectedPipeline.setMaterialsUpdated(true);
+        secondExpectedPipeline.setMaterialsUpdated(true);
         this.pipelineService.update(firstExpectedPipeline);
         this.pipelineService.update(secondExpectedPipeline);
 
@@ -268,7 +268,7 @@ public class PipelineServiceTests {
     public void getAllUpdatedPipelines_onePipelineUpdated_oneObject() {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         Pipeline pipelineToChange = expectedPipelines.get(1);
-        pipelineToChange.setAreMaterialsUpdated(true);
+        pipelineToChange.setMaterialsUpdated(true);
         this.pipelineService.update(pipelineToChange);
 
         List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
