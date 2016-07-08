@@ -86,26 +86,26 @@ angular
             console.log(vm.allPipelines);
         }, true);
 
-        $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
-            vm.allStages = viewModel.allStages;
-            viewModel.allStages.forEach(function (currentStage, index, array) {
-                if (currentStage.name == vm.stage.name) {
-                    vm.stage = array[index];
-                }
-            });
-            console.log(vm.allStages);
-        }, true);
-
-        $scope.$watch(function () {return viewModel.allJobs}, function (newVal, oldVal) {
-            viewModel.allJobs.forEach(function (currentJob, index, array) {
-                if (currentJob.name == vm.job.name) {
-                    vm.job = array[index];
-                }
-            });
-            vm.allJobs = viewModel.allJobs;
-            
-            console.log(vm.allJobs);
-        }, true);
+        // $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
+        //     vm.allStages = viewModel.allStages;
+        //     viewModel.allStages.forEach(function (currentStage, index, array) {
+        //         if (currentStage.name == vm.stage.name) {
+        //             vm.stage = array[index];
+        //         }
+        //     });
+        //     console.log(vm.allStages);
+        // }, true);
+        //
+        // $scope.$watch(function () {return viewModel.allJobs}, function (newVal, oldVal) {
+        //     viewModel.allJobs.forEach(function (currentJob, index, array) {
+        //         if (currentJob.name == vm.job.name) {
+        //             vm.job = array[index];
+        //         }
+        //     });
+        //     vm.allJobs = viewModel.allJobs;
+        //
+        //     console.log(vm.allJobs);
+        // }, true);
 
         $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
             //viewModel.allPipelineGroups.forEach
@@ -420,37 +420,35 @@ angular
         vm.addMaterial = function (newMaterial) {
             var material = {};
 
-            if (vm.materialType == 'git') {
+            if (vm.materialType == 'GIT') {
                 material = {
                     "pipelineDefinitionId": viewModel.allPipelines[vm.pipelineIndex].id,
-                    "name": newMaterial.git.name,
+                    "name": newMaterial.name,
                     "type": 'GIT',
-                    "url": newMaterial.git.url,
-                    "autoTriggerOnChange": newMaterial.git.poll,
-                    "destination": newMaterial.git.name,
-                    "materialSpecificDetails": {
-                        "branch": newMaterial.git.branch || 'master'
-                    }
+                    "repositoryUrl": newMaterial.repositoryUrl,
+                    "isPollingForChanges": newMaterial.isPollingForChanges,
+                    "destination": newMaterial.name,
+                    "branch": newMaterial.branch || 'master'
                 };
-                if (newMaterial.git.credentials) {
-                    material.materialSpecificDetails.username = newMaterial.git.username;
-                    material.materialSpecificDetails.password = newMaterial.git.password;
+                if (newMaterial.credentials) {
+                    material.username = newMaterial.username;
+                    material.password = newMaterial.password;
                 }
+                pipeConfigService.addGitMaterialDefinition(material);
             }
 
-            if (vm.materialType == 'nuget') {
+            if (vm.materialType == 'NUGET') {
                 material = {
                     "pipelineName": vm.currentPipeline,
-                    "name": newMaterial.nuget.name,
-                    "url": newMaterial.nuget.url,
+                    "name": newMaterial.name,
+                    "repositoryUrl": newMaterial.repositoryUrl,
                     "type": 'NUGET',
-                    "autoTriggerOnChange": newMaterial.nuget.poll,
-                    "destination": newMaterial.nuget.name,
-                    "materialSpecificDetails": {
-                        "packageId": newMaterial.nuget.packageId,
-                        "includePrerelease": newMaterial.nuget.includePrerelease
-                    }
+                    "isPollingForChanges": newMaterial.isPollingForChanges,
+                    "destination": newMaterial.name,
+                    "packageId": newMaterial.packageId,
+                    "includePrerelease": newMaterial.includePrerelease
                 };
+                pipeConfigService.addNugetMaterialDefinition(material);
                 //TODO
                 // if (nugetMaterial.credentials) {
                 //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
@@ -477,6 +475,7 @@ angular
             //
         };
 
+
         vm.getMaterial = function (material) {
             if (vm.material != null) {
                 viewModel.allPipelines[vm.pipelineIndex].materials.forEach(function (currentMaterial, index, array) {
@@ -487,11 +486,12 @@ angular
                 });
             }
 
-            vm.materialDeleteButton = false;
+            //vm.materialDeleteButton = false;
             //vm.material = res;
 
-            if (vm.material.materialSpecificDetails.username &&
-                vm.material.materialSpecificDetails.password) {
+            console.log(vm.material);
+            if (typeof(vm.material.username) !== 'undefined' &&
+                typeof(vm.material.password) !== 'undefined') {
                 vm.hasCredentials = true;
             } else {
                 vm.hasCredentials = false;
@@ -500,12 +500,48 @@ angular
             vm.currentMaterial = material;
         };
 
-        vm.editMaterial = function (material) {
+        vm.editMaterial = function (newMaterial) {
+            var material = angular.copy(vm.allPipelines[vm.pipelineIndex].materials[vm.materialIndex]);
+            if (newMaterial.type == 'GIT') {
+                material = {
+                    id: material.id,
+                    pipelineDefinitionId: viewModel.allPipelines[vm.pipelineIndex].id,
+                    name: newMaterial.name,
+                    type: 'GIT',
+                    repositoryUrl: newMaterial.repositoryUrl,
+                    isPollingForChanges: newMaterial.isPollingForChanges,
+                    destination: newMaterial.name,
+                    branch: newMaterial.branch || 'master'
+                };
+                if (vm.hasCredentials) {
+                    material.username = newMaterial.username;
+                    material.password = newMaterial.password;
+                }
+                pipeConfigService.updateGitMaterialDefinition(material);
+            }
 
+            if (newMaterial.type == 'NUGET') {
+                material = {
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    name: newMaterial.name,
+                    repositoryUrl: newMaterial.repositoryUrl,
+                    type: 'NUGET',
+                    isPollingForChanges: newMaterial.isPollingForChanges,
+                    destination: newMaterial.name,
+                    packageId: newMaterial.packageId,
+                    includePrerelease: newMaterial.includePrerelease
+                };
+                pipeConfigService.updateNugetMaterialDefinition(material);
+                //TODO
+                // if (nugetMaterial.credentials) {
+                //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
+                //   nuget.MaterialSpecificDetails.password = nugetMaterial.password;
+                // }
+            }
         };
 
         vm.deleteMaterial = function (material) {
-
+            pipeConfigService.deleteMaterialDefinition(material.id);
         };
 
         vm.getTask = function (task) {
