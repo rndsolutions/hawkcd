@@ -58,6 +58,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         Stage result = null;
         List<Stage> stages = pipeline.getStages();
+        stages.add(stage);
         pipeline.setStages(stages);
         ServiceResult serviceResult = this.pipelineService.update(pipeline);
         if (!serviceResult.hasError()) {
