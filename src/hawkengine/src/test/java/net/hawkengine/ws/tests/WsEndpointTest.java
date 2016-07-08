@@ -1,18 +1,33 @@
 package net.hawkengine.ws.tests;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+
+import net.hawkengine.core.utilities.deserializers.ConversionObjectDeserializer;
+import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
+import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.ws.WsEndpoint;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("RedundantArrayCreation")
 public class WsEndpointTest {
+
+    private Gson jsonConverter;
+    private ConversionObjectDeserializer deserializer;
 
     //need to do add path to Classpath with reflection since the URLClassLoader.addURL(URL url) method is protected:
     public static void addPath(String s) throws Exception {
@@ -25,13 +40,31 @@ public class WsEndpointTest {
         method.invoke(urlClassLoader, new Object[]{u.toURL()});
     }
 
+    @Before
+    public void setup() {
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
+                .create();
+        this.deserializer = new ConversionObjectDeserializer();
+    }
+
     @Test
     public final void resolve_valid_json() {
 
         //arrange
         WsEndpoint wsep = new WsEndpoint();
-        String message = "{ \"methodName\": \"getPipelineGroup\", \"className\":\"ConfigService\", \"packageName\": \"hawkengine.net.services\"}";
-
+        String message = "{\n" +
+                "\"className\": \"testClass\",\n" +
+                "\"packageName\": \"testPackage\",\n" +
+                "\"methodName\": \"testMethod\",\n" +
+                "\"result\": \"testResult\",\n" +
+                "\"error\": \"testError\",\n" +
+                "\"errorMessage\": \"testErrorMessage\",\n" +
+                "\"args\": [{\n" +
+                "\"packageName\": \"testPackage\",\n" +
+                "\"object\": {\"testObject\" : \"someValue\"\n}" +
+                "}]\n" +
+                "}";
         //act
         WsContractDto contract = wsep.resolve(message);
 
@@ -42,27 +75,30 @@ public class WsEndpointTest {
     @Test
     public void call_existing_service() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
-        //arrange
-        WsEndpoint ep = new WsEndpoint();
-
-        WsContractDto contract = new WsContractDto();
-        contract.setClassName("ConfigService");
-        contract.setPackageName("hawkengine.net.services");
-        contract.setMethodName("getPipelineGroup");
-//		contract.args = new String [] {"param1"};
-
-        try {
-            addPath("/home/rado/gh/hawkengine/src/hawkengine/build/classes");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        //act
-        Object result = ep.call(contract);
-
-        //assert
-        Assert.assertNotNull(result);
+//        //arrange
+//        WsEndpoint ep = new WsEndpoint();
+//
+//        WsContractDto contract = new WsContractDto();
+//        contract.setClassName("PipelineService");
+//        contract.setPackageName("net.hawkengine.services");
+//        contract.setMethodName("add");
+//        contract.setResult("");
+//        contract.setError(false);
+//        contract.setResult("");
+//        ConversionObject conversionObject = new ConversionObject();
+//
+//        try {
+//            addPath("/");
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//
+//        //act
+//        Object result = ep.call(contract);
+//
+//        //assert
+//        //Assert.assertNotNull(result);
 
     }
 
