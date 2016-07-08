@@ -270,19 +270,17 @@ angular
             var material = {};
             if (vm.materialType == 'git') {
                 material = {
-                    "pipelineName": vm.formData.pipeline.name,
+                    "pipelineDefinitionName": vm.formData.pipeline.name,
                     "name": vm.formData.material.git.name,
                     "type": 'GIT',
-                    "url": vm.formData.material.git.url,
-                    "autoTriggerOnChange": vm.formData.material.git.poll,
+                    "repositoryUrl": vm.formData.material.git.url,
+                    "isPollingForChanges": vm.formData.material.git.poll,
                     "destination": vm.formData.material.git.name,
-                    "materialSpecificDetails": {
-                        "branch": vm.formData.material.git.branch || 'master'
-                    }
+                    "branch": vm.formData.material.git.branch || 'master'
                 };
                 if (formData.material.git.credentials) {
-                    material.materialSpecificDetails.username = formData.material.git.username;
-                    material.materialSpecificDetails.password = formData.material.git.password;
+                    material.username = formData.material.git.username;
+                    material.password = formData.material.git.password;
                 }
             }
             //TODO
@@ -309,13 +307,11 @@ angular
                     "pipelineName": vm.formData.pipeline.name,
                     "name": vm.formData.material.nuget.name,
                     "type": 'NUGET',
-                    "url": vm.formData.material.nuget.url,
-                    "autoTriggerOnChange": vm.formData.material.nuget.poll,
+                    "repositoryUrl": vm.formData.material.nuget.url,
+                    "isPollingForChanges": vm.formData.material.nuget.poll,
                     "destination": vm.formData.material.nuget.name,
-                    "materialSpecificDetails": {
-                        "packageId": vm.formData.material.nuget.packageId,
-                        "includePrerelease": vm.formData.material.nuget.includePrerelease
-                    }
+                    "packageId": vm.formData.material.nuget.packageId,
+                    "includePrerelease": vm.formData.material.nuget.includePrerelease
                 };
             }
 
@@ -323,7 +319,7 @@ angular
                 "name": vm.formData.pipeline.name,
                 "groupName": vm.groupName,
                 "pipelineGroupId": vm.groupId,
-                "materialDefinitions": [material],
+                "materials": [material],
                 "environmentVariables": [],
                 "parameters": [],
                 "environment": {},
