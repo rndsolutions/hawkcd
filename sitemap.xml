@@ -2,35 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     
-        
     <url>
-     <loc>None/get-started/requirements/</loc>
+     <loc>None/welcome/</loc>
      <lastmod>2016-07-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     
 
     
-        
     <url>
-     <loc>None/user-guide/concepts/</loc>
+     <loc>None/user-guide/</loc>
      <lastmod>2016-07-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    <url>
-     <loc>None</loc>
-     <lastmod></lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/user-guide/walkthrough/</loc>
-     <lastmod>2016-07-08</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
     
 
     
