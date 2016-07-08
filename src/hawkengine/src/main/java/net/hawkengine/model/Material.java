@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class Material extends DbEntry {
     private LocalDateTime changeDate;
     private MaterialDefinition materialDefinition;
+    private boolean isUpdated;
 
     public LocalDateTime getChangeDate() {
         return this.changeDate;
@@ -20,5 +21,13 @@ public class Material extends DbEntry {
 
     public void setMaterialDefinition(MaterialDefinition materialDefinition) {
         this.materialDefinition = materialDefinition;
+    }
+
+    public boolean isUpdated() {
+        return isUpdated;
+    }
+
+    public void setUpdated(boolean updated) {
+        isUpdated = updated;
     }
 }
