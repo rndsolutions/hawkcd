@@ -10,6 +10,7 @@ import java.util.List;
 public class Stage extends DbEntry{
     private String stageDefinitionId;
     private String pipelineId;
+    private String stageDefinitionName;
     private int executionId;
     private List<EnvironmentVariable> environmentVariables;
     private List<Job> jobs;
@@ -31,6 +32,14 @@ public class Stage extends DbEntry{
 
     public void setStageDefinitionId(String stageDefinitionId) {
         this.stageDefinitionId = stageDefinitionId;
+    }
+
+    public String getStageDefinitionName() {
+        return this.stageDefinitionName;
+    }
+
+    public void setStageDefinitionName(String stageDefinitionName) {
+        this.stageDefinitionName = stageDefinitionName;
     }
 
     public int getExecutionId() {

@@ -40,6 +40,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     public RedisRepository(Class<T> entry, JedisPool pool) {
         this(entry);
         this.jedisPool = pool;
+
     }
 
     @Override

@@ -8,7 +8,7 @@ cache:
     - $HOME/.gradle/wrapper/
 script:
   cd src/hawkengine \
-  && gradle build
+  && gradle build cobertura coveralls
 
 jdk:
   - oraclejdk8

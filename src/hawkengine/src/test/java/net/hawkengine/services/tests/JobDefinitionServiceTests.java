@@ -301,7 +301,7 @@ public class JobDefinitionServiceTests {
         Assert.assertEquals(notDeletedJobDefinition.getStageDefinitionId(), actualResultObject.getStageDefinitionId());
         Assert.assertEquals(notDeletedJobDefinition.getName(), actualResultObject.getName());
         Assert.assertEquals(notDeletedJobDefinition.getPipelineDefinitionId(), actualResultObject.getPipelineDefinitionId());
-        Assert.assertEquals("JobDefinition not deleted.", actualResult.getMessage());
+        Assert.assertEquals("JobDefinition cannot delete the last job definition.", actualResult.getMessage());
     }
 
     @Test

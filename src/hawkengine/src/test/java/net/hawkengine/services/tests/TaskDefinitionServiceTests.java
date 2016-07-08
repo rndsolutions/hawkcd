@@ -428,7 +428,7 @@ public class TaskDefinitionServiceTests {
         //Assert
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertEquals("TaskDefinition cannot delete the last job definition.", actualResult.getMessage());
+        Assert.assertEquals("TaskDefinition cannot delete the last task definition.", actualResult.getMessage());
     }
 
     @Test

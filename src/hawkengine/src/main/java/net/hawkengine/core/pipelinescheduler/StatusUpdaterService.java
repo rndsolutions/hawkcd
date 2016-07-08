@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import java.util.*;
 
-public class StatusUpdaterService extends Thread {
+public class StatusUpdaterService {
     private static final Logger LOGGER = Logger.getLogger(StatusUpdaterService.class.getName());
     private IPipelineService pipelineService;
 

@@ -28,13 +28,14 @@ public class WsContractDeserializerTests {
                 "\"packageName\": \"testPackage\",\n" +
                 "\"methodName\": \"testMethod\",\n" +
                 "\"result\": \"testResult\",\n" +
-                "\"error\": false,\n" +
+                "\"error\": \"testError\",\n" +
                 "\"errorMessage\": \"testErrorMessage\",\n" +
                 "\"args\": [{\n" +
                 "\"packageName\": \"testPackage\",\n" +
-                "\"object\": \"testObject\"\n" +
+                "\"object\": {\"testObject\" : \"someValue\"\n}" +
                 "}]\n" +
                 "}";
+
         JsonElement jsonElement = this.jsonConverter.fromJson(jsonAsString, JsonElement.class);
 
         WsContractDto expectedResult = new WsContractDto();
@@ -46,7 +47,7 @@ public class WsContractDeserializerTests {
         expectedResult.setErrorMessage("testErrorMessage");
         ConversionObject[] args = {new ConversionObject()};
         args[0].setPackageName("testPackage");
-        args[0].setObject("testObject");
+        args[0].setObject("{\"testObject\":\"someValue\"}");
         expectedResult.setArgs(args);
 
         //Act
@@ -60,7 +61,7 @@ public class WsContractDeserializerTests {
     public void deserialize_JsonWithMissingField() {
         //Arrange
         String jsonAsString = "{\n" +
-                "\"packageName\": \"testPackage\",\n" +
+                "\"packageNameError\": \"testPackage\",\n" +
                 "\"methodName\": \"testMethod\",\n" +
                 "\"result\": \"testResult\",\n" +
                 "\"error\": \"testError\",\n" +

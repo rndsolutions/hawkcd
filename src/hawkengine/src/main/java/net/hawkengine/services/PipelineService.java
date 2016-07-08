@@ -1,5 +1,7 @@
 package net.hawkengine.services;
 
+
+
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
@@ -19,6 +21,9 @@ import net.hawkengine.services.interfaces.IPipelineService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import redis.clients.jedis.JedisPoolConfig;
+
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private IPipelineDefinitionService pipelineDefinitionService;
@@ -77,6 +82,22 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     public ServiceResult delete(String pipelineId) {
         return super.delete(pipelineId);
+    }
+
+    @Override
+    public ServiceResult getAllNonupdatedPipelines() {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<Pipeline> updatedPipelines = pipelines
+                .stream()
+                .filter(p -> !p.areMaterialsUpdated())
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
+
+        result.setObject(updatedPipelines);
+
+        return result;
     }
 
     @Override

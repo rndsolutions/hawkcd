@@ -40,6 +40,14 @@ public class Pipeline extends DbEntry {
         this.pipelineDefinitionId = pipelineDefinitionId;
     }
 
+    public String getPipelineDefinitionName() {
+        return pipelineDefinitionName;
+    }
+
+    public void setPipelineDefinitionName(String pipelineDefinitionName) {
+        this.pipelineDefinitionName = pipelineDefinitionName;
+    }
+
     public int getExecutionId() {
         return this.executionId;
     }
@@ -124,7 +132,7 @@ public class Pipeline extends DbEntry {
         return this.areMaterialsUpdated;
     }
 
-    public void setAreMaterialsUpdated(boolean areMaterialsUpdated) {
+    public void setMaterialsUpdated(boolean areMaterialsUpdated) {
         this.areMaterialsUpdated = areMaterialsUpdated;
     }
 
@@ -134,13 +142,5 @@ public class Pipeline extends DbEntry {
 
     public void setPrepared(boolean prepared) {
         this.isPrepared = prepared;
-    }
-
-    public String getPipelineDefinitionName() {
-        return pipelineDefinitionName;
-    }
-
-    public void setPipelineDefinitionName(String pipelineDefinitionName) {
-        this.pipelineDefinitionName = pipelineDefinitionName;
     }
 }

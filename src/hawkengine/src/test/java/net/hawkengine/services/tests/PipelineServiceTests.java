@@ -209,7 +209,7 @@ public class PipelineServiceTests {
 
         Pipeline expectedPipeline = (Pipeline) this.pipelineService.getById(pipelineToAdd.getId()).getObject();
 
-        expectedPipeline.setAreMaterialsUpdated(true);
+        expectedPipeline.setMaterialsUpdated(true);
 
         ServiceResult actualResult = this.pipelineService.update(expectedPipeline);
         Pipeline actualPipeline = (Pipeline) actualResult.getObject();
@@ -251,9 +251,13 @@ public class PipelineServiceTests {
     @Test
     public void getAllPipelinesInProgress_onePipelinePassed_twoObjects() {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
-        Pipeline firstExpectedPipeline = expectedPipelines.get(0);
-        firstExpectedPipeline.setStatus(Status.PASSED);
+        Pipeline firstExpectedPipeline = expectedPipelines.get(1);
+        Pipeline secondExpectedPipeline = expectedPipelines.get(2);
+        firstExpectedPipeline.setStatus(Status.IN_PROGRESS);
+        firstExpectedPipeline.setMaterialsUpdated(true);
+        secondExpectedPipeline.setMaterialsUpdated(true);
         this.pipelineService.update(firstExpectedPipeline);
+        this.pipelineService.update(secondExpectedPipeline);
 
         List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
 
@@ -263,6 +267,9 @@ public class PipelineServiceTests {
     @Test
     public void getAllUpdatedPipelines_onePipelineUpdated_oneObject() {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
+        Pipeline pipelineToChange = expectedPipelines.get(1);
+        pipelineToChange.setMaterialsUpdated(true);
+        this.pipelineService.update(pipelineToChange);
 
         List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
 
@@ -300,7 +307,7 @@ public class PipelineServiceTests {
 
         stage.setJobs(jobsToAdd);
         firstPipeline.setStages(stagesToAdd);
-        firstPipeline.setAreMaterialsUpdated(true);
+        firstPipeline.setMaterialsUpdated(true);
         firstPipeline.setPrepared(true);
         pipelines.add(firstPipeline);
         this.pipelineService.add(firstPipeline);
