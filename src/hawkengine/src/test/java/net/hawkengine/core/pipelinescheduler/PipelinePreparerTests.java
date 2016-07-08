@@ -45,22 +45,22 @@ public class PipelinePreparerTests {
         //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        firstExpectedResult.setAreMaterialsUpdated(true);
+        firstExpectedResult.setMaterialsUpdated(true);
         firstExpectedResult.setStatus(Status.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        secondExpectedResult.setAreMaterialsUpdated(true);
+        secondExpectedResult.setMaterialsUpdated(true);
         secondExpectedResult.setStatus(Status.IN_PROGRESS);
 
         Pipeline thirdExpectedResult = new Pipeline();
         thirdExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        thirdExpectedResult.setAreMaterialsUpdated(true);
+        thirdExpectedResult.setMaterialsUpdated(true);
         thirdExpectedResult.setStatus(Status.FAILED);
 
         Pipeline fourthExpectedResult = new Pipeline();
         fourthExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        fourthExpectedResult.setAreMaterialsUpdated(true);
+        fourthExpectedResult.setMaterialsUpdated(true);
         fourthExpectedResult.setStatus(Status.IN_PROGRESS);
 
         this.pipelineService.add(firstExpectedResult);
@@ -108,12 +108,12 @@ public class PipelinePreparerTests {
         //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        firstExpectedResult.setAreMaterialsUpdated(true);
+        firstExpectedResult.setMaterialsUpdated(true);
         firstExpectedResult.setStatus(Status.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        secondExpectedResult.setAreMaterialsUpdated(false);
+        secondExpectedResult.setMaterialsUpdated(false);
         secondExpectedResult.setStatus(Status.IN_PROGRESS);
 
         this.pipelineService.add(firstExpectedResult);
@@ -134,12 +134,12 @@ public class PipelinePreparerTests {
         //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        firstExpectedResult.setAreMaterialsUpdated(true);
+        firstExpectedResult.setMaterialsUpdated(true);
         firstExpectedResult.setStatus(Status.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        secondExpectedResult.setAreMaterialsUpdated(true);
+        secondExpectedResult.setMaterialsUpdated(true);
         secondExpectedResult.setPrepared(true);
         secondExpectedResult.setStatus(Status.IN_PROGRESS);
 
@@ -161,17 +161,17 @@ public class PipelinePreparerTests {
         //Arrange
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        firstExpectedResult.setAreMaterialsUpdated(true);
+        firstExpectedResult.setMaterialsUpdated(true);
         firstExpectedResult.setStatus(Status.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        secondExpectedResult.setAreMaterialsUpdated(false);
+        secondExpectedResult.setMaterialsUpdated(false);
         secondExpectedResult.setStatus(Status.IN_PROGRESS);
 
         Pipeline thirdExpectedResult = new Pipeline();
         thirdExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
-        thirdExpectedResult.setAreMaterialsUpdated(true);
+        thirdExpectedResult.setMaterialsUpdated(true);
         thirdExpectedResult.setStatus(Status.FAILED);
 
         this.pipelineService.add(firstExpectedResult);
@@ -289,7 +289,7 @@ public class PipelinePreparerTests {
         InterruptedException interrupt = new InterruptedException();
         try {
             Thread.currentThread().interrupt();
-            this.pipelinePreparer.start();
+            this.pipelinePreparer.run();
         } catch (IllegalStateException e) {
             Assert.assertEquals(interrupt, e.getCause());
         }
@@ -299,12 +299,12 @@ public class PipelinePreparerTests {
         //Assert
         Pipeline firstPipeline = new Pipeline();
         firstPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-        firstPipeline.setAreMaterialsUpdated(true);
+        firstPipeline.setMaterialsUpdated(true);
         firstPipeline.setStatus(Status.IN_PROGRESS);
 
         Pipeline secondPipeline = new Pipeline();
         secondPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
-        secondPipeline.setAreMaterialsUpdated(true);
+        secondPipeline.setMaterialsUpdated(true);
         secondPipeline.setStatus(Status.IN_PROGRESS);
 
         this.pipelineService.add(firstPipeline);
