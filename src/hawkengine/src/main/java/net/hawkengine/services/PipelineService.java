@@ -33,21 +33,12 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         this.pipelineDefinitionService = new PipelineDefinitionService();
         super.setObjectType("Pipeline");
     }
-/*
-    public PipelineService(IDbRepository mockedRepo) {
-        super.setRepository(mockedRepo);
-        this.pipelineDefinitionService = new PipelineDefinitionService();
-        super.setObjectType("Pipeline");
-    }
-*/
+
     public PipelineService(IDbRepository repository, IPipelineDefinitionService pipelineDefinitionService) {
         super.setRepository(repository);
         this.pipelineDefinitionService = pipelineDefinitionService;
         super.setObjectType("Pipeline");
     }
-
-
-
 
     @Override
     public ServiceResult getById(String pipelineId) {

@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -45,16 +46,15 @@ public class StageServiceTest  {
         this.stageService = new StageService(this.pipelineService);
     }
 
-    //TODO: naming conventions
     @Test
-    public void getAll(){
-        //TODO: add simple stage, and check whether getAll() returns list with one object inside
+    public void getAll_receiveEmptyList(){
         //Arrange
         final String expectedMessage = "Stages retrieved successfully.";
         List<Stage> stageList = new ArrayList<>();
 
         //Act
         ServiceResult actualResult = this.stageService.getAll();
+        System.out.println(actualResult.getObject());
 
         //Assert
         assertFalse(actualResult.hasError());
@@ -64,17 +64,33 @@ public class StageServiceTest  {
     }
 
     @Test
+    public void getAll_setOneObject_getOneObject(){
+        //Arrange
+        final String expectedMessage = "Stages retrieved successfully.";
+        List<Stage> stageList = new ArrayList<>();
+        this.stage = this.getNewStage();
+        this.stageService.add(this.stage);
+        stageList.add(this.stage);
+
+        //Act
+        ServiceResult actualResult = this.stageService.getAll();
+        List<Stage> resultList = (List<Stage>)actualResult.getObject();
+        Stage actualObject = resultList.stream().findFirst().get();
+
+        //Assert
+        assertFalse(actualResult.hasError());
+        assertNotNull(actualResult.getObject());
+        assertEquals(actualResult.getMessage(), expectedMessage);
+        assertEquals(1, resultList.size());
+        assertEquals(this.stage.getId(),actualObject.getId());
+
+    }
+
+
+    @Test
     public void getById(){
         //Arrange
-        this.pipelineDefinition = new PipelineDefinition();
-        this.pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(this.pipelineDefinition);
-        this.pipeline = new Pipeline();
-        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
-        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        this.pipelineService.add(this.pipeline);
-        this.stage = new Stage();
-        this.stage.setPipelineId(this.pipeline.getId());
+        this.stage = this.getNewStage();
         this.stageService.add(this.stage);
 
         //Act
@@ -93,21 +109,11 @@ public class StageServiceTest  {
     @Test
     public void getById_wrongId(){
         //Arrange
-        //TODO: Extract in method add stage() there is repetition
-        this.pipelineDefinition = new PipelineDefinition();
-        this.pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(this.pipelineDefinition);
-        this.pipeline = new Pipeline();
-        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
-        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        this.pipelineService.add(this.pipeline);
-        this.stage = new Stage();
-        this.stage.setPipelineId(this.pipeline.getId());
-        this.stageService.add(this.stage);
+        UUID randomId = UUID.randomUUID();
         String expectedMessage = "Stage not found.";
 
         //Act
-        ServiceResult actualResult = this.stageService.getById("unexistingId");
+        ServiceResult actualResult = this.stageService.getById(randomId.toString());
 
         //Assert
         assertFalse(!actualResult.hasError());
@@ -116,20 +122,14 @@ public class StageServiceTest  {
     }
 
     @Test
-    //TODO: more tests; check add with same name
+
     public void add(){
         //Arrange
-        this.pipelineDefinition = new PipelineDefinition();
-        this.pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(this.pipelineDefinition);
-        this.pipeline = new Pipeline();
-        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
-        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        this.pipelineService.add(this.pipeline);
-        this.stage = new Stage();
-        this.stage.setPipelineId(this.pipeline.getId());
+        this.stage = this.getNewStage();
+
 
         //Act
+
         ServiceResult actualResult = this.stageService.add(this.stage);
         Stage actualStatus = (Stage)actualResult.getObject();
         String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
@@ -143,21 +143,11 @@ public class StageServiceTest  {
 
     }
 
-    //TODO: more tests; check add with same name
+
     @Test
     public void update(){
         //Arrange
-        this.pipelineDefinition = new PipelineDefinition();
-        this.pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(this.pipelineDefinition);
-        this.pipeline = new Pipeline();
-        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
-        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        this.pipelineService.add(this.pipeline);
-        this.stage = new Stage();
-        this.stage.setPipelineId(this.pipeline.getId());
-        this.stage.setStatus(StageStatus.FAILED);
-        this.stageService.add(this.stage);
+        this.stage = this.getNewStage();
 
         //Act
         this.stage.setStatus(StageStatus.PASSED);
@@ -173,23 +163,13 @@ public class StageServiceTest  {
         assertEquals(StageStatus.PASSED,actualStatus.getStatus());
     }
 
-    //TODO: add test for delete of invalid object
     @Test
-    public void delete(){
+    public void delete_oneStage_nullObject(){
         //Arrange
-        this.pipelineDefinition = new PipelineDefinition();
-        this.pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(this.pipelineDefinition);
-        this.pipeline = new Pipeline();
-        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
-        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        this.pipelineService.add(this.pipeline);
-        this.stage = new Stage();
-        this.stage.setPipelineId(this.pipeline.getId());
-        //TODO: naming?
-        Stage stage2 = this.stage;
+        this.stage = this.getNewStage();
+        Stage secondStage= this.stage;
         this.stageService.add(this.stage);
-        this.stageService.add(stage2);
+        this.stageService.add(secondStage);
 
         //Act
         ServiceResult actualResult = this.stageService.delete(this.stage.getId());
@@ -201,5 +181,19 @@ public class StageServiceTest  {
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage,actualResult.getMessage());
+    }
+
+
+    private Stage getNewStage(){
+        this.pipelineDefinition = new PipelineDefinition();
+        this.pipelineDefinition.setName("pipelinedefinition");
+        this.pipelineDefinitionService.add(this.pipelineDefinition);
+        this.pipeline = new Pipeline();
+        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
+        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
+        this.pipelineService.add(this.pipeline);
+        this.stage = new Stage();
+        this.stage.setPipelineId(this.pipeline.getId());
+        return stage;
     }
 }
