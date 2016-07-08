@@ -1,13 +1,7 @@
 site_name: HawkCD
 pages:
-- Get Started:
-    - 'Requirements': 'get-started/requirements.md'
-- User Guide:
-    - 'Concepts': 'user-guide/concepts.md'
-    - 'Installation':
-      - 'Windows': 'user-guide/installation/windows.md'
-      - 'Linux': 'user-guide/installation/linux.md'
-    - 'Walkthrough': 'user-guide/walkthrough.md'
+- Resources: "resources.md"
+- User Guide: "user-guide.md"
 - Contribute:
     - 'Contribution Agreement': 'contribute/contribution-agreement.md'
     - 'Technical Documentation':
