@@ -5,19 +5,16 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class StageService extends CrudService<Stage> implements IStageService {
-
     private IPipelineService pipelineService;
     private String failureMessage = "not found";
     private String successMessage = "retrieved successfully";
 
     public StageService() {
-
         this.pipelineService = new PipelineService();
         super.setObjectType("Stage");
     }
@@ -26,7 +23,6 @@ public class StageService extends CrudService<Stage> implements IStageService {
         this.pipelineService = pipelineService;
         super.setObjectType("Stage");
     }
-
 
     @Override
     public ServiceResult getById(String stageId) {
@@ -42,7 +38,6 @@ public class StageService extends CrudService<Stage> implements IStageService {
                 }
             }
         }
-
         return super.createServiceResult(result, true, this.failureMessage);
     }
 
@@ -106,7 +101,6 @@ public class StageService extends CrudService<Stage> implements IStageService {
         } else {
             serviceResult = super.createServiceResult(stage, false, "updated successfully");
         }
-
         return serviceResult;
     }
 
@@ -147,7 +141,6 @@ public class StageService extends CrudService<Stage> implements IStageService {
         } else {
             serviceResult = super.createServiceResult(stage, true, "not found");
         }
-
         return serviceResult;
     }
 }

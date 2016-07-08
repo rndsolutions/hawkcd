@@ -10,7 +10,6 @@ import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.Service;
 import net.hawkengine.services.StageService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -20,7 +19,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import redis.clients.jedis.JedisPoolConfig;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +26,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class StageServiceTest  {
+public class StageServiceTests {
     private IPipelineService pipelineService;
     private IStageService stageService;
     private IPipelineDefinitionService pipelineDefinitionService;
@@ -54,7 +52,6 @@ public class StageServiceTest  {
 
         //Act
         ServiceResult actualResult = this.stageService.getAll();
-        System.out.println(actualResult.getObject());
 
         //Assert
         assertFalse(actualResult.hasError());
@@ -68,8 +65,7 @@ public class StageServiceTest  {
         //Arrange
         final String expectedMessage = "Stages retrieved successfully.";
         List<Stage> stageList = new ArrayList<>();
-        this.stage = this.getNewStage();
-        this.stageService.add(this.stage);
+        this.insertIntoDb();
         stageList.add(this.stage);
 
         //Act
@@ -83,15 +79,13 @@ public class StageServiceTest  {
         assertEquals(actualResult.getMessage(), expectedMessage);
         assertEquals(1, resultList.size());
         assertEquals(this.stage.getId(),actualObject.getId());
-
     }
 
-
     @Test
-    public void getById(){
+    public void getById_returnsOneObject(){
+
         //Arrange
-        this.stage = this.getNewStage();
-        this.stageService.add(this.stage);
+        this.insertIntoDb();
 
         //Act
         ServiceResult actualResult = this.stageService.getById(this.stage.getId());
@@ -107,7 +101,7 @@ public class StageServiceTest  {
     }
 
     @Test
-    public void getById_wrongId(){
+    public void getById_wrongId_returnsError(){
         //Arrange
         UUID randomId = UUID.randomUUID();
         String expectedMessage = "Stage not found.";
@@ -122,14 +116,11 @@ public class StageServiceTest  {
     }
 
     @Test
-
-    public void add(){
+    public void addOneObject_returnsSuccessResult(){
         //Arrange
-        this.stage = this.getNewStage();
-
+        this.insertIntoDb();
 
         //Act
-
         ServiceResult actualResult = this.stageService.add(this.stage);
         Stage actualStatus = (Stage)actualResult.getObject();
         String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
@@ -143,11 +134,11 @@ public class StageServiceTest  {
 
     }
 
-
     @Test
-    public void update(){
+    public void updateSingleObject_returnsSuccessResult(){
         //Arrange
-        this.stage = this.getNewStage();
+        this.insertIntoDb();
+        this.stageService.add(this.stage);
 
         //Act
         this.stage.setStatus(StageStatus.PASSED);
@@ -166,9 +157,8 @@ public class StageServiceTest  {
     @Test
     public void delete_oneStage_nullObject(){
         //Arrange
-        this.stage = this.getNewStage();
+        this.insertIntoDb();
         Stage secondStage= this.stage;
-        this.stageService.add(this.stage);
         this.stageService.add(secondStage);
 
         //Act
@@ -183,8 +173,7 @@ public class StageServiceTest  {
         assertEquals(expectedMessage,actualResult.getMessage());
     }
 
-
-    private Stage getNewStage(){
+    private void  insertIntoDb(){
         this.pipelineDefinition = new PipelineDefinition();
         this.pipelineDefinition.setName("pipelinedefinition");
         this.pipelineDefinitionService.add(this.pipelineDefinition);
@@ -194,6 +183,6 @@ public class StageServiceTest  {
         this.pipelineService.add(this.pipeline);
         this.stage = new Stage();
         this.stage.setPipelineId(this.pipeline.getId());
-        return stage;
+        this.stageService.add(this.stage);
     }
 }
