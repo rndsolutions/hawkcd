@@ -2,18 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     
-    <url>
-     <loc>None/</loc>
-     <lastmod>2016-07-05</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
         
     <url>
-     <loc>None/user-guide/getting-started/</loc>
-     <lastmod>2016-07-05</lastmod>
+     <loc>None/get-started/requirements/</loc>
+     <lastmod>2016-07-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -22,20 +14,48 @@
     
         
     <url>
-     <loc>None/developer-guide/getting-started/</loc>
-     <lastmod>2016-07-05</lastmod>
+     <loc>None/user-guide/concepts/</loc>
+     <lastmod>2016-07-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/developer-guide/getting-started/</loc>
-     <lastmod>2016-07-05</lastmod>
+     <loc>None</loc>
+     <lastmod></lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/developer-guide/getting-started/</loc>
-     <lastmod>2016-07-05</lastmod>
+     <loc>None/user-guide/walkthrough/</loc>
+     <lastmod>2016-07-08</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>None/contribute/contribution-agreement/</loc>
+     <lastmod>2016-07-08</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None</loc>
+     <lastmod></lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/contribute/development-process/</loc>
+     <lastmod>2016-07-08</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/contribute/discussions/</loc>
+     <lastmod>2016-07-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -43,8 +63,16 @@
 
     
     <url>
-     <loc>None/srs/</loc>
-     <lastmod>2016-07-05</lastmod>
+     <loc>None/roadmap/</loc>
+     <lastmod>2016-07-08</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>None/download/</loc>
+     <lastmod>2016-07-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     

@@ -1,0 +1,3138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+
+	<title>Software Requirements Specification - HawkCD</title>
+
+        <link href="../../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../../css/highlight.css">
+        <link href="../../../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="../../../get-started/requirements/">HawkCD</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Get Started <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        
+<li >
+    <a href="../../../get-started/requirements/">Requirements</a>
+</li>
+
+                    
+                    </ul>
+                </li>
+            
+            
+            
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        
+<li >
+    <a href="../../../user-guide/concepts/">Concepts</a>
+</li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Installation</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../../user-guide/installation/windows/">Windows</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../../user-guide/installation/linux/">Linux</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+<li >
+    <a href="../../../user-guide/walkthrough/">Walkthrough</a>
+</li>
+
+                    
+                    </ul>
+                </li>
+            
+            
+            
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contribute <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        
+<li >
+    <a href="../../contribution-agreement/">Contribution Agreement</a>
+</li>
+
+                    
+                        
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Technical Documentation</a>
+    <ul class="dropdown-menu">
+        
+            
+<li class="active">
+    <a href="./">Software Requirements Specification</a>
+</li>
+
+        
+            
+<li >
+    <a href="../sdd/">Software Design Document</a>
+</li>
+
+        
+            
+<li >
+    <a href="../rest-api/">Hawk API</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                    
+                        
+<li >
+    <a href="../../development-process/">Development Process</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../../discussions/">Discussions</a>
+</li>
+
+                    
+                    </ul>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../../../roadmap/">Roadmap</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../../../download/">Download</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                <li >
+                    <a rel="next" href="../../contribution-agreement/">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../sdd/">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#hawkcd-srs">HawkCD - SRS</a></li>
+        
+            <li><a href="#table-of-contents">Table of Contents</a></li>
+        
+            <li><a href="#introduction">Introduction</a></li>
+        
+            <li><a href="#brief-description">Brief Description</a></li>
+        
+            <li><a href="#actors">Actors</a></li>
+        
+            <li><a href="#flow-of-events">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-pipeline-35002">Manage Pipeline (#002)</a></li>
+        
+            <li><a href="#overview">Overview</a></li>
+        
+            <li><a href="#brief-description_1">Brief Description</a></li>
+        
+            <li><a href="#actors_1">Actors</a></li>
+        
+            <li><a href="#flow-of-events_1">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-stage-35003">Manage Stage (#003)</a></li>
+        
+            <li><a href="#overview_1">Overview</a></li>
+        
+            <li><a href="#brief-description_2">Brief Description</a></li>
+        
+            <li><a href="#actors_2">Actors</a></li>
+        
+            <li><a href="#flow-of-events_2">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-job-35004">Manage Job (#004)</a></li>
+        
+            <li><a href="#overview_2">Overview</a></li>
+        
+            <li><a href="#brief-description_3">Brief Description</a></li>
+        
+            <li><a href="#actors_3">Actors</a></li>
+        
+            <li><a href="#flow-of-events_3">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-task-35005">Manage Task (#005)</a></li>
+        
+            <li><a href="#overview_3">Overview</a></li>
+        
+            <li><a href="#brief-description_4">Brief Description</a></li>
+        
+            <li><a href="#actors_4">Actors</a></li>
+        
+            <li><a href="#flow-of-events_4">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-material-35006">Manage Material (#006)</a></li>
+        
+            <li><a href="#overview_4">Overview</a></li>
+        
+            <li><a href="#brief-description_5">Brief Description</a></li>
+        
+            <li><a href="#actors_5">Actors</a></li>
+        
+            <li><a href="#flow-of-events_5">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-agent-35007">Manage Agent (#007)</a></li>
+        
+            <li><a href="#overview_5">Overview</a></li>
+        
+            <li><a href="#brief-description_6">Brief Description</a></li>
+        
+            <li><a href="#actors_6">Actors</a></li>
+        
+            <li><a href="#flow-of-events_6">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-environment-variable-35008">Manage Environment Variable (#008)</a></li>
+        
+            <li><a href="#overview_6">Overview</a></li>
+        
+            <li><a href="#brief-description_7">Brief Description</a></li>
+        
+            <li><a href="#actors_7">Actors</a></li>
+        
+            <li><a href="#flow-of-events_7">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-environment-35009">Manage Environment (#009)</a></li>
+        
+            <li><a href="#overview_7">Overview</a></li>
+        
+            <li><a href="#brief-description_8">Brief Description</a></li>
+        
+            <li><a href="#actors_8">Actors</a></li>
+        
+            <li><a href="#flow-of-events_8">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#manage-authentication-and-authorization-35010">Manage Authentication and Authorization (#010)</a></li>
+        
+            <li><a href="#overview_8">Overview</a></li>
+        
+            <li><a href="#brief-description_9">Brief Description</a></li>
+        
+            <li><a href="#actors_9">Actors</a></li>
+        
+            <li><a href="#flow-of-events_9">Flow of Events</a></li>
+        
+    
+        <li class="main "><a href="#functional-requirements">Functional Requirements</a></li>
+        
+            <li><a href="#add-pipeline-group">Add Pipeline Group</a></li>
+        
+            <li><a href="#update-pipeline-group">Update Pipeline Group</a></li>
+        
+            <li><a href="#delete-pipeline-group_1">Delete Pipeline Group</a></li>
+        
+            <li><a href="#add-pipeline">Add Pipeline</a></li>
+        
+            <li><a href="#update-pipeline">Update Pipeline</a></li>
+        
+            <li><a href="#delete-pipeline">Delete Pipeline</a></li>
+        
+            <li><a href="#run-pipeline">Run Pipeline</a></li>
+        
+            <li><a href="#add-stage">Add Stage</a></li>
+        
+            <li><a href="#update-stage">Update Stage</a></li>
+        
+            <li><a href="#delete-stage">Delete Stage</a></li>
+        
+            <li><a href="#run-stage">Run Stage</a></li>
+        
+            <li><a href="#add-job">Add Job</a></li>
+        
+            <li><a href="#update-job">Update Job</a></li>
+        
+            <li><a href="#delete-job">Delete Job</a></li>
+        
+            <li><a href="#add-task">Add Task</a></li>
+        
+            <li><a href="#update-task">Update Task</a></li>
+        
+            <li><a href="#delete-task">Delete Task</a></li>
+        
+            <li><a href="#add-material">Add Material</a></li>
+        
+            <li><a href="#update-material">Update Material</a></li>
+        
+            <li><a href="#delete-material">Delete Material</a></li>
+        
+            <li><a href="#enable-agent">Enable Agent</a></li>
+        
+            <li><a href="#delete-agent">Delete Agent</a></li>
+        
+            <li><a href="#add-resource">Add Resource</a></li>
+        
+            <li><a href="#delete-resource">Delete Resource</a></li>
+        
+            <li><a href="#update-environment-variable">Update Environment Variable</a></li>
+        
+            <li><a href="#delete-environment-variable">Delete Environment Variable</a></li>
+        
+            <li><a href="#add-environment">Add Environment</a></li>
+        
+            <li><a href="#update-environment">Update Environment</a></li>
+        
+            <li><a href="#delete-environment">Delete Environment</a></li>
+        
+    
+        <li class="main "><a href="#other-requirements">Other Requirements</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<h1 id="hawkcd-srs">HawkCD - SRS</h1>
+<p>Requirements Specification</p>
+<hr />
+<p>Prepared by:</p>
+<hr />
+<p><strong>Margarita Ivancheva</strong></p>
+<p><strong>Vladislav Nikolov</strong></p>
+<p><strong>Simeon Petrov</strong></p>
+<p><strong>Mariyan Stefanov</strong></p>
+<p><strong>Radoslav Minchev</strong></p>
+<hr />
+<p><strong>Version 1.0 approved</strong></p>
+<p><strong>April 15, 2016</strong></p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<blockquote>
+<p><a href="#introduction"><em>Introduction</em></a></p>
+<p><a href="#manage-pipeline-group-001"><strong>Use Cases</strong></a></p>
+<blockquote>
+<p><a href="#manage-pipeline-group-001"><em>Manage Pipeline Group (#001)</em></a></p>
+<p><a href="#manage-pipeline-002"><em>Manage Pipeline (#002)</em></a></p>
+<p><a href="#manage-stage-003"><em>Manage Stage (#003)</em></a></p>
+<p><a href="#manage-job-004"><em>Manage Job (#004)</em></a></p>
+<p><a href="#manage-task-005"><em>Manage Task (#005)</em></a></p>
+<p><a href="#manage-material-006"><em>Manage Material (#006)</em></a></p>
+<p><a href="#manage-agent-007"><em>Manage Agent (#007)</em></a></p>
+<p><a href="#manage-environment-variable-008"><em>Manage Environment Variable (#008)</em></a></p>
+<p><a href="#manage-environment-009"><em>Manage Environment (#009)</em></a></p>
+<p><a href="#manage-authentication-and-authorization-010"><em>Manage Authentication and Authorization (#010)</em></a></p>
+<p><a href="#h.l65b7x4o2d22"><em>Use Case #001 - Manage Pipeline Group</em></a></p>
+</blockquote>
+<p><a href="#h.l65b7x4o2d22"><strong>Functional requirements</strong></a></p>
+</blockquote>
+<h2 id="introduction">Introduction</h2>
+<h3 id="purpose">Purpose</h3>
+<p>The current SRS document tries to define the MVP (Minimum Viable Product) scope for the Hawkengine System targeted to be released as version 1 and elaborate in details the product requirements.</p>
+<h3 id="intended-audience-and-reading-suggestions">Intended Audience and Reading Suggestions</h3>
+<p>The intended audience of this document is all members directly or indirectly involved in the project: Developers, Quality Assurance Engineers, Product and Project Managers and Marketing staff. The document should be read from top to bottom to understand the overall concept the Hawkengine System implements. Each use case is self-contained. It details one or many features of the system related to a logical area of the Application, e.g. “Pipeline Management” and “Authentication &amp; Authorization”.</p>
+<h3 id="product-perspective">Product Perspective</h3>
+<p>The Hawkengine System intends to be a one stop solution for managing Continuous Delivery processes for the Enterprise. It will enable and encourage collaboration between delivery team members including but not limited to Developers, QA, Ops and Release Managers.</p>
+<h3 id="user-classes-and-characteristics">User Classes and Characteristics</h3>
+<ul>
+<li>
+<p>Developer</p>
+</li>
+<li>
+<p>Quality Assurance Engineer</p>
+</li>
+<li>
+<p>DevOps Engineer</p>
+</li>
+<li>
+<p>Operations Engineer</p>
+</li>
+<li>
+<p>Release Manager</p>
+</li>
+</ul>
+<h3 id="operating-environment">Operating Environment</h3>
+<p>The System runs on all Operating Systems that support the JVM.</p>
+<p>The main testing will be performed under the following Operating Systems:</p>
+<ul>
+<li>
+<p>Windows Server 2012 and above</p>
+</li>
+<li>
+<p>Ubuntu 14.04 LTS</p>
+</li>
+</ul>
+<h2 id="_1"></h2>
+<hr />
+<h3 id="brief-description">Brief Description</h3>
+<p>This use case allows an Administrator to create a new Pipeline Group. He/she can also modify or delete a certain Pipeline Group, depending on the intention.</p>
+<h3 id="actors">Actors</h3>
+<p><em>Primary Actor - Administrator</em></p>
+<h3 id="flow-of-events">Flow of Events</h3>
+<h4 id="basic-flow">Basic Flow</h4>
+<hr />
+<h5 id="log-on"><strong>Log On</strong></h5>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system authenticates them.</p>
+</blockquote>
+<h5 id="create-pipeline-group"><strong>Create Pipeline Group</strong></h5>
+<blockquote>
+<p>The system provides the operations available to the Administrator. These operations are: Create, Modify and Delete Pipeline Group. The Administrator chooses “Create Pipeline Group” option.</p>
+</blockquote>
+<h5 id="submit-the-pipeline-group"><strong>Submit the Pipeline Group</strong></h5>
+<blockquote>
+<p>The system provides an option for the Administrator to enter a name for the new Pipeline Group. The Administrator can modify the name as desired until choosing to submit the Pipeline Group. At this point the system validates the entered value and saves the Pipeline Group. The use case ends.</p>
+</blockquote>
+<h4 id="alternative-flows">Alternative Flows</h4>
+<hr />
+<h5 id="modify-pipeline-group"><strong>Modify Pipeline Group</strong></h5>
+<blockquote>
+<p>At basic flow step <a href="#create-pipeline-group"><strong><em>Create Pipeline Group</em></strong></a>, the Administrator already has a Pipeline Group that has been created. The system retrieves and displays the Pipeline Group on focus and allows him/her to use it as a starting point. The use case resumes at basic flow step <a href="#submit-the-pipeline-group"><strong><em>Submit the Pipeline Group</em></strong></a>.</p>
+</blockquote>
+<h5 id="delete-pipeline-group"><strong>Delete Pipeline Group</strong></h5>
+<blockquote>
+<p>At basic flow step <a href="#create-pipeline-group"><strong><em>Create Pipeline Group</em></strong></a>, the Administrator already has a Pipeline Group created and chooses to delete it. This option is available to the Administrator only when the Pipeline Group does not contain any Pipelines. The system deletes the Pipeline Group. The use case ends.</p>
+</blockquote>
+<h5 id="unauthorized-user"><strong>Unauthorized User</strong></h5>
+<blockquote>
+<p>At basic flow step <a href="#log-on"><strong><em>Log On</em></strong></a>, the system establishes whether the User is authorized for such operations. There are three basic cases when the user is denied access:</p>
+</blockquote>
+<h5 id="operator"><strong>Operator</strong></h5>
+<blockquote>
+<p>In cases, when the user is with Operator permission status, he/she is not able to create, modify or delete Pipeline Groups. He/she has the same accessibility level as Viewer.</p>
+</blockquote>
+<h5 id="viewer"><strong>Viewer</strong></h5>
+<blockquote>
+<p>In cases, when the user is with Viewer permission status, he/she is not able to create, modify or delete Pipeline Groups. He/she can only observe the specific Pipeline Group, if he/she is within one of the following groups:</p>
+</blockquote>
+<h5 id="server-viewer"><strong>Server Viewer</strong></h5>
+<blockquote>
+<p>The user has global view access.</p>
+</blockquote>
+<h5 id="pipeline-group-viewer"><strong>Pipeline Group Viewer</strong></h5>
+<blockquote>
+<p>The user can observe the specific Pipeline Group and its successors.</p>
+</blockquote>
+<h5 id="unauthenticated-user"><strong>Unauthenticated User</strong></h5>
+<blockquote>
+<p>In cases, when the user’s credentials are not valid, a proper error message displays and the use case ends.</p>
+<p>For further explanation regarding authentication and authorization, please refer to <a href="#manage-authentication-and-authorization-010"><strong><em>Authentication and Authorization Section</em></strong></a>.*</p>
+</blockquote>
+<h5 id="quit"><strong>Quit</strong></h5>
+<blockquote>
+<p>The system allows the Administrator to quit at any time during the use case. The Administrator chooses not to save any of the entered information or decides to switch to another view, without submitting the changes, all the entered information will be discarded. The use case ends.</p>
+</blockquote>
+<h2 id="manage-pipeline-35002">Manage Pipeline (#002)</h2>
+<hr />
+<h3 id="overview">Overview</h3>
+<p>A Pipeline consists of multiple Stages, each of which will be run in order. If a Stage fails, then the Pipeline is considered failed and the rest of the stages will not be started.</p>
+<p>*Pipeline status: *</p>
+<ul>
+<li>
+<p>Passed</p>
+</li>
+<li>
+<p>Failed</p>
+</li>
+<li>
+<p>In progress</p>
+</li>
+<li>
+<p>Paused</p>
+</li>
+</ul>
+<h3 id="brief-description_1">Brief Description</h3>
+<p>This use case allows an Administrator to create a new Pipeline. He/she can also modify or delete a certain Pipeline, depending on the intention. Last, but not least, the Administrator is able to run the Pipeline with latest Materials or with specific Materials. After that he/she can pause or stop the Pipeline.</p>
+<h3 id="actors_1">Actors</h3>
+<p><em>Primary Actor - Administrator</em></p>
+<h3 id="flow-of-events_1">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_1">Basic Flow</h4>
+<ol>
+<li><span id="id.z8katc9sp0ac" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system authenticates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.yx4inewmvuj" class="anchor"></span><strong>Create Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator. These operations are: Create, Modify or Delete Pipeline. The Administrator chooses “Create Pipeline” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.9ppjrs3j6tg7" class="anchor"></span><strong>Fill the Pipeline Options</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the Administrator with a set of fields to fill. The Administrator can add and modify the name of the Pipeline, as well as the Stage and Materials.</p>
+</blockquote>
+<ol>
+<li><span id="id.egihmj11mfkr" class="anchor"></span><strong>Submit the Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on creating a new Pipeline is completed. The system validates all of the entered values and saves the Pipeline. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flows_1">Alternative Flows</h4>
+<ol>
+<li><strong>Modify Pipeline</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.yx4inewmvuj"><strong><em>Create Pipeline</em></strong></a>, the Administrator already has a Pipeline that has been created. The system retrieves and displays the Pipeline on focus. The Administrator has a set of options to choose from:</p>
+</blockquote>
+<ol>
+<li><strong>General Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the general options of the selected pipeline.</p>
+</blockquote>
+<ol>
+<li><strong>Material Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add, modify or delete an existing Material.</p>
+</blockquote>
+<ol>
+<li><strong>Stage Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add, modify or delete an existing Stage.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variable Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add, modify or delete an existing Environment Variable.</p>
+</blockquote>
+<ol>
+<li><strong>Lock Option</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator has the option to lock a specific Pipeline. He/she might consider this оption if he/she wants to make sure that a single instance of a pipeline can run at a time, especially when the Stages of the Pipeline are related to one another. The system registers the changes and initializes the process of locking the Pipeline. The use case resumes at <strong><a href="#id.egihmj11mfkr"><em>Submit the Pipeline</em></a></strong> basic flow.</p>
+<p>The Administrator can modify all of the options as desired until choosing to submit the changes. At this point the system saves the updated Pipeline and the use case ends. The use case resumes at basic flow step <a href="#id.egihmj11mfkr"><strong><em>Submit the Pipeline</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Delete Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.yx4inewmvuj"><strong><em>Create Pipeline</em></strong></a>, the Administrator already has a Pipeline created and chooses to delete it. The system warns the user that he/she is about to delete a Pipeline. The Administrator confirms the deletion. The system deletes the Pipeline, as well as the Pipeline’s runs. However, the Pipeline’s artifacts are not removed, since there can be interrelation with other pipelines. The use case ends.</p>
+</blockquote>
+<ol>
+<li><span id="id.yql120sdkl07" class="anchor"></span><strong>Run Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.yx4inewmvuj"><strong><em>Create Pipeline</em></strong></a>, the Administrator already has a Pipeline and chooses to run it. The system provides a set of options for the Administrator to choose from for triggering the run of the pipeline:</p>
+</blockquote>
+<ol>
+<li><strong>Automatic Trigger</strong></li>
+</ol>
+<blockquote>
+<p>By default, the server is set to automatically trigger pipelines. Whenever a Material from this Pipeline is updated, the pipeline run is triggered.</p>
+</blockquote>
+<ol>
+<li><strong>Manual Trigger</strong></li>
+</ol>
+<blockquote>
+<p>When the Pipeline is manually triggered, the server obligatorily checks for the latest Materials and schedules the Pipeline. The Administrator is able to:</p>
+</blockquote>
+<ol>
+<li><strong>Run Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator sets the Pipeline to begin build activity.</p>
+</blockquote>
+<ol>
+<li><strong>Run Pipeline-specific</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator decides which specific Materials will be used to run the Pipeline, and triggers it.</p>
+<p>During each of the triggered processes the Administrator can:</p>
+</blockquote>
+<ol>
+<li><strong>Pause Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator pauses the scheduled Pipeline. At this point the system prevents any new pipeline activity, while letting the Pipeline proceed until it completes the job currently “running”.</p>
+</blockquote>
+<ol>
+<li><strong>Stop Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator stops the scheduled Pipeline.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthorized User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.z8katc9sp0ac"><strong><em>Log On</em></strong></a>, the system establishes whether the User is authorized for such operations. There are three basic occasions when the user is denied access:</p>
+</blockquote>
+<ol>
+<li><strong>Operator</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Operator permission status, he/she is not able to create, modify or delete Pipelines. He/she has the same accessibility level as Viewer and can perform alternative flow <strong><a href="#id.yql120sdkl07"><em>Run Pipeline</em></a>.</strong></p>
+</blockquote>
+<ol>
+<li><strong>Viewer</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Viewer permission status, he/she is not able to create, modify, delete or run Pipelines. He/she can only observe the specific Pipeline, if he/she is within one of the following groups:</p>
+</blockquote>
+<ol>
+<li><strong>Server Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user has global view access.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline Group and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors, if the current Pipeline is within the Environment.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user’s credentials are not valid, a proper error message displays and the use case ends.</p>
+<p><em>For further explanation regarding authentication and authorization, please refer to <a href="#manage-authentication-and-authorization-010"><strong><em>Authentication and Authorization Section</em></strong></a>.</em></p>
+</blockquote>
+<ol>
+<li><strong>Quit</strong></li>
+</ol>
+<blockquote>
+<p>The system allows the Administrator to quit at any time during the use case. The Administrator chooses not to save any of the entered information or decides to switch to another view, without submitting the changes, all the entered information will be discarded. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Invalid Name</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.yx4inewmvuj"><strong><em>Create Pipeline</em></strong></a> the system determines that the name of the Pipeline is not valid and displays an error message. The use case ends.</p>
+</blockquote>
+<h2 id="manage-stage-35003">Manage Stage (#003)</h2>
+<h3 id="overview_1">Overview</h3>
+<p>A Stage consists of multiple jobs, each of which can run independently of the others. This means that Hawkengine can and does parallelize the runs of Jobs in a Stage. If a Job fails, then the Stage is considered failed. However, since Jobs are independent of each other, all other Jobs in the Stage will also be run.</p>
+<p><em>Stage Status:</em></p>
+<ul>
+<li>
+<p>Passed</p>
+</li>
+<li>
+<p>Failed</p>
+</li>
+<li>
+<p>In progress</p>
+</li>
+<li>
+<p>Paused</p>
+</li>
+</ul>
+<h3 id="brief-description_2">Brief Description</h3>
+<p>This use case allows an Administrator to create a new Stage. He/she can also modify or delete a certain Stage, depending on the intention. Last, but not least, the Administrator is able to run the Stage with all Jobs or specific Jobs.</p>
+<h3 id="actors_2">Actors</h3>
+<p><em>Primary Actor - Administrator</em></p>
+<h3 id="flow-of-events_2">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_2">Basic Flow</h4>
+<ol>
+<li><span id="id.ru09shgxqwr6" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system validates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.4z8t2f4b0yp0" class="anchor"></span><strong>Choose Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Pipeline to create a Stage.</p>
+</blockquote>
+<ol>
+<li><span id="id.k0eytt69m4ce" class="anchor"></span><strong>Create Stage</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator to create a new Stage within the chosen Pipeline. These operations are: Create, Modify or Delete Stage. The Administrator chooses “Create Stage” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.f883kc1j2tsi" class="anchor"></span><strong>Fill the Stage Options</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the Administrator with a set of fields to fill. The Administrator can add and modify the name of the Stage, the type of the Task, as well as to add Job to the Stage.</p>
+</blockquote>
+<ol>
+<li><span id="id.mqffxqqq50xl" class="anchor"></span><strong>Submit the Stage</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on creating a new Stage is completed. The system validates all of the entered values and saves the Stage. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flows_2">Alternative Flows</h4>
+<ol>
+<li><strong>Modify a Stage</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.k0eytt69m4ce"><em>Create Stage</em></a>,</strong> the Administrator already has a Stage that has been created. The system retrieves and displays the Stage on focus. The Administrator has a set of options to choose from:</p>
+</blockquote>
+<ol>
+<li><strong>Job Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Job name.</p>
+</blockquote>
+<ol>
+<li><strong>Task Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add, modify or delete an existing Task.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variable Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add, modify or delete an existing Environment Variable.</p>
+<p>The Administrator can modify all of the options as desired until choosing to submit the changes. At this point the system saves the updated Stage and the use case ends. The use case resumes at basic flow step <a href="#id.mqffxqqq50xl"><strong><em>Submit the Stage</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Delete a Stage.</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.k0eytt69m4ce"><strong><em>Create Stage</em></strong></a>, the Administrator already has a Stage and chooses to delete it. The system warns the user that he/she is about to delete a Stage. The Administrator confirms the deletion. The system deletes the Stage, without removing the stage runs information, since it might be used as reference to previous runs. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Run</strong><span id="id.otzjesmzknhz" class="anchor"></span> <strong>Stage.</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.k0eytt69m4ce"><strong><em>Create Stage</em></strong></a>, the Administrator already has a Stage and chooses to run it. The system provides a set of options for the Administrator to choose from for running the Stage:</p>
+</blockquote>
+<ol>
+<li><strong>Run Stage</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator sets the Stage to begin running an activity</p>
+</blockquote>
+<ol>
+<li><strong>Run Stage-specific</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator decides which specific Jobs will be used to run the Stage, and triggers it.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthorized User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.ru09shgxqwr6"><strong><em>Log On</em></strong></a>, the system establishes whether the User is authorized for such kind of operations. There are three basic occasions when the user is denied access:</p>
+</blockquote>
+<ol>
+<li><strong>Operator</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Operator permission status, he/she is not able to create, modify or delete Stages. He/she has the same accessibility level as Viewer and can perform alternative flow <strong><a href="#id.otzjesmzknhz"><em>Run Stage</em></a>.</strong></p>
+</blockquote>
+<ol>
+<li><strong>Viewer</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Viewer permission status, he/she is not able to create, modify, delete or run Stages. He/she can only observe the specific Stage, if he/she is within one of the following groups:</p>
+</blockquote>
+<ol>
+<li><strong>Server Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user has global view access.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline Group and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors, if the current Pipeline is within the Environment.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.ru09shgxqwr6"><strong><em>Log On</em></strong></a>, the system establishes whether the Administrator is valid. In case, he/she is not, a proper error message displays and the use case ends.</p>
+<p><em>For further explanation regarding authentication and authorization, please refer to <a href="#manage-authentication-and-authorization-010"><strong><em>Authentication and Authorization Section</em></strong></a>.</em></p>
+</blockquote>
+<ol>
+<li><strong>Quit</strong></li>
+</ol>
+<blockquote>
+<p>The system allows the Administrator to quit at any time during the use case. The Administrator chooses not to save any of the entered information or decides to switch to another view, without submitting the changes, all the entered information will be discarded. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Invalid Name</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.k0eytt69m4ce"><strong><em>Create Stage</em></strong></a> the system determines that the name of the Stage is not valid and displays an error message. The use case ends.</p>
+</blockquote>
+<h2 id="manage-job-35004">Manage Job (#004)</h2>
+<h3 id="overview_2">Overview</h3>
+<p>A job consists of multiple Tasks, each of which will be run in order. If a Task in a Job fails, then the Job is considered failed, and unless specified otherwise, the rest of the Tasks in the Job will not be run.</p>
+<p>Job Status:</p>
+<ul>
+<li>
+<p>Passed</p>
+</li>
+<li>
+<p>Failed</p>
+</li>
+<li>
+<p>Awaiting - awaiting agent assignment</p>
+</li>
+<li>
+<p>Scheduled - job assigned for execution</p>
+</li>
+<li>
+<p>Running - executing</p>
+</li>
+</ul>
+<h3 id="brief-description_3">Brief Description</h3>
+<p>This use case allows an Administrator to create a new Job. He/she can also modify or delete a certain Job, depending on the intention.</p>
+<h3 id="actors_3">Actors</h3>
+<p><em>Primary Actor - Administrator</em></p>
+<h3 id="flow-of-events_3">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_3">Basic Flow</h4>
+<ol>
+<li><span id="id.xbls692jm7el" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system validates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.pf2nzkndqis" class="anchor"></span><strong>Choose Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Pipeline to operate.</p>
+</blockquote>
+<ol>
+<li><span id="id.bjnm51w7fj8i" class="anchor"></span><strong>Choose Stage</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Stage to create a Job.</p>
+</blockquote>
+<ol>
+<li><span id="id.14zi23shcca1" class="anchor"></span><strong>Create Job</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator to create a new Job within the chosen Stage. These operations are: Create, Modify or Delete Job. The Administrator chooses “Create Job” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.zdm1ick1c4j6" class="anchor"></span><strong>Fill the Job Options</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the Administrator with set of fields to fill. The Administrator can add and modify the name of the Job, as well as the type of the Task.</p>
+</blockquote>
+<ol>
+<li><span id="id.6qdfjfz4l806" class="anchor"></span><strong>Submit the Job</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on creating a new Job is completed. The system validates all of the entered values and saves the Job. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flows_3">Alternative Flows</h4>
+<ol>
+<li><strong>Modify Job</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.14zi23shcca1"><em>Create Job</em></a>,</strong> the Administrator already has a Job that has been created. The system retrieves and displays the Job on focus. The Administrator has a set of options to choose from:</p>
+</blockquote>
+<ol>
+<li><strong>Job Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Job name.</p>
+</blockquote>
+<ol>
+<li><strong>Task Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add, modify or delete an existing Task.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variable Options</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add, modify or delete an existing Environment Variable.</p>
+<p>The Administrator can modify all of the options as desired until choosing to submit the changes. At this point the system saves the updated Job and the use case ends. The use case resumes at basic flow step <a href="#id.6qdfjfz4l806"><strong><em>Submit the Job</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Delete Job.</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.14zi23shcca1"><strong><em>Create Job</em></strong></a>, the Administrator already has a Job and chooses to delete it. The system warns the user that he/she is about to delete a Job. The Administrator confirms the deletion. The system deletes the Job. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthorized User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.xbls692jm7el"><strong><em>Log On</em></strong></a>, the system establishes whether the User is authorized for such operations. There are three basic occasions when the user is denied access:</p>
+</blockquote>
+<ol>
+<li><strong>Operator</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Operator permission status, he/she is not able to create, modify or delete Jobs. He/she has the same accessibility level as Viewer.</p>
+</blockquote>
+<ol>
+<li><strong>Viewer</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Viewer permission status, he/she is not able to create, modify or delete Jobs. He/she can only observe the specific Job, if he/she is within one of the following groups:</p>
+</blockquote>
+<ol>
+<li><strong>Server Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user has global view access.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline Group and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors, if the current Pipeline is within the Environment.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.xbls692jm7el"><strong><em>Log On</em></strong></a>, the system establishes whether the Administrator is valid. In case, he/she is not, a proper error message displays and the use case ends.</p>
+<p><em>For further explanation regarding authentication and authorization, please refer to <a href="#manage-authentication-and-authorization-010"><strong><em>Authentication and Authorization Section</em></strong></a>.</em></p>
+</blockquote>
+<ol>
+<li><strong>Quit</strong></li>
+</ol>
+<blockquote>
+<p>The system allows the Administrator to quit at any time during the use case. The Administrator chooses not to save any of the entered information or decides to switch to another view, without submitting the changes, all the entered information will be discarded. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Invalid Name</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step Create Job the system determines that the name of the Job is not valid and displays an error message. The use case ends.</p>
+</blockquote>
+<h2 id="manage-task-35005">Manage Task (#005)</h2>
+<h3 id="overview_3">Overview</h3>
+<p>A task is an action that needs to be performed. Usually, it is a single command.</p>
+<h3 id="brief-description_4">Brief Description</h3>
+<p>This use case allows an Administrator to create a new Task. He/she can also modify or delete a certain Task, depending on the intention.</p>
+<h3 id="actors_4">Actors</h3>
+<p><em>Primary Actor - Administrator</em></p>
+<h3 id="flow-of-events_4">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_4">Basic Flow</h4>
+<ol>
+<li><span id="id.ufvvkpz8pcyg" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system authenticates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.jiczgoa1m8m3" class="anchor"></span><strong>Choose Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Pipeline to operate.</p>
+</blockquote>
+<ol>
+<li><span id="id.9etqitc27as9" class="anchor"></span><strong>Choose Stage</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Stage to operate.</p>
+</blockquote>
+<ol>
+<li><span id="id.pf8oxxyn8f7j" class="anchor"></span><strong>Choose Job</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Job to create a new Task.</p>
+</blockquote>
+<ol>
+<li><span id="id.wi8010v1g3ki" class="anchor"></span><strong>Create Task</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator to create a new Task within the chosen Job. These operations are: Create, Modify or Delete Task. The Administrator chooses “Create Task” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.23p6og4lftt" class="anchor"></span><strong>Fill the Task Options</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the Administrator with a set of fields to fill. The Administrator can modify the type of the Task. The system provides a list with different Task types. The Administrator chooses Exec Task. The system provides a set of fields that should be filled.</p>
+</blockquote>
+<ol>
+<li><span id="id.vgocw45k2y93" class="anchor"></span><strong>Submit the Task</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on creating a new Task is completed. The system validates all of the entered values and saves the Task. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flows_4">Alternative Flows</h4>
+<ol>
+<li><span id="id.krvt6rcxbxn7" class="anchor"></span><strong>Modify a Task</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.wi8010v1g3ki"><em>Create Task</em></a>,</strong> the Administrator already has a Task that has been created. The system retrieves and displays the Task on focus. The Administrator has a set of options to choose from:</p>
+</blockquote>
+<ol>
+<li><strong>Task Command</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Task command.</p>
+</blockquote>
+<ol>
+<li><strong>Arguments</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the arguments.</p>
+</blockquote>
+<ol>
+<li><strong>Working Directory</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the working directory.</p>
+</blockquote>
+<ol>
+<li><strong>Run Condition</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the condition under which the Task will run.</p>
+</blockquote>
+<ol>
+<li><strong>Ignore Errors</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can check the option to ignore errors.</p>
+<p>The Administrator can modify all of the options as desired until choosing to submit the changes. At this point the system saves the updated Task and the use case ends. The use case resumes at basic flow step <a href="#id.vgocw45k2y93"><strong><em>Submit the Task</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Delete a Task</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.wi8010v1g3ki"><strong><em>Create Task</em></strong></a>, the Administrator already has a Task and chooses to delete it. The system warns the user that he/she is about to delete a Task. The Administrator confirms the deletion. The system deletes the Task. The use case ends.</p>
+</blockquote>
+<ol>
+<li><span id="id.aagdha2662bh" class="anchor"></span><strong>Task Type</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.wi8010v1g3ki"><strong><em>Create Task</em></strong></a>, the Administrator has the option to choose the Task type. There are four different options:</p>
+</blockquote>
+<ol>
+<li><strong>Exec Task</strong></li>
+</ol>
+<blockquote>
+<p>Creates an Execution Task with command, arguments, working directory, run condition and ignore errors options.</p>
+</blockquote>
+<ol>
+<li><strong>Fetch Artifact Task</strong></li>
+</ol>
+<blockquote>
+<p>Creates a Fetch Artifact Task with specific Pipeline, Stage, Job, source, destination and run condition.</p>
+</blockquote>
+<ol>
+<li><strong>Fetch Material Task</strong></li>
+</ol>
+<blockquote>
+<p>Creates a Fetch Material Task with specific Material and run condition.</p>
+</blockquote>
+<ol>
+<li><strong>Upload Artifact Task</strong></li>
+</ol>
+<blockquote>
+<p>Creates a Upload Artifact Task with specific source, destination and run condition.</p>
+</blockquote>
+<ol>
+<li><strong>Modify Task Change</strong></li>
+</ol>
+<blockquote>
+<p>At alternative flow step <a href="#id.krvt6rcxbxn7"><strong><em>Modify Task</em></strong></a>, the system provides different options depending on which Task type the Administrator has created. The options are based on alternative flow step <a href="#id.aagdha2662bh"><strong><em>Task Type</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthorized User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.ufvvkpz8pcyg"><strong><em>Log On</em></strong></a>, the system establishes whether the User is authorized for such operations. There are three basic occasions when the user is denied access:</p>
+</blockquote>
+<ol>
+<li><strong>Operator</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Operator permission status, he/she is not able to create, modify or delete Tasks. He/she has the same accessibility level as Viewer<strong>.</strong></p>
+</blockquote>
+<ol>
+<li><strong>Viewer</strong></li>
+</ol>
+<blockquote>
+<p>In cases, when the user is with Viewer permission status, he/she is not able to create, modify or delete Tasks. He/she can only observe the specific Task, if he/she is within one of the following groups:</p>
+</blockquote>
+<ol>
+<li><strong>Server Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user has global view access.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline Group and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The user can observe the specific Pipeline and its successors, if the current Pipeline is within the Environment.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.ufvvkpz8pcyg"><strong><em>Log On</em></strong></a>, the system establishes whether the Administrator is valid. In case, he/she is not, a proper error message displays and the use case ends.</p>
+<p><em>For further explanation regarding authentication and authorization, please refer to <a href="#manage-authentication-and-authorization-010"><strong><em>Authentication and Authorization Section</em></strong></a>.</em></p>
+</blockquote>
+<ol>
+<li><strong>Quit</strong></li>
+</ol>
+<blockquote>
+<p>The system allows the Administrator to quit at any time during the use case. The Administrator chooses not to save any of the entered information or decides to switch to another view, without submitting the changes, all the entered information will be discarded. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Invalid Name</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.wi8010v1g3ki"><strong><em>Create Task</em></strong></a> the system determines that the name of the Task is not valid and displays an error message. The use case ends.</p>
+</blockquote>
+<h2 id="manage-material-35006">Manage Material (#006)</h2>
+<h3 id="overview_4">Overview</h3>
+<p>A Material is a cause for a pipeline to run. Often, it is a source code material repository (Git, TFS, etc). The Hawkengine System continuously polls configured Materials and when a new change or commit is found, the corresponding Pipelines are run or "triggered".</p>
+<p>There are different kinds of Materials. An example can be a Git Material. When a commit is made to the repository configured in the Git Material, the pipeline gets triggered.</p>
+<p>A Pipeline can even be configured with multiple Materials. When either repository has a new commit, the Pipeline is triggered.</p>
+<h3 id="brief-description_5">Brief Description</h3>
+<p>This use case allows an Administrator to create a new Material. He/she can also modify or delete a certain Material, depending on the intention.</p>
+<h3 id="actors_5">Actors</h3>
+<p><em>Primary Actor - Administrator</em></p>
+<h3 id="flow-of-events_5">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_5">Basic Flow</h4>
+<ol>
+<li><span id="id.ilzxouncss6x" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system authenticates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.p1ylkyd97fci" class="anchor"></span><strong>Choose Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Pipeline to create a Material.</p>
+</blockquote>
+<ol>
+<li><span id="id.fk7yhs69rwaz" class="anchor"></span><strong>Create Material</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator to create a new Material within the chosen Pipeline. These operations are: Create, Modify or Delete Material. The Administrator chooses “Create Material” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.lj6vxskswk8m" class="anchor"></span><strong>Fill the Material Options</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the Administrator with a set of fields to fill. The Administrator can modify the type of the Material. The system provides two options. The Administrator chooses Git Material. The system provides a set of fields that should be filled. The Administrator enters name for the Material, Git url and credentials.</p>
+</blockquote>
+<ol>
+<li><span id="id.onve5d8lpwoy" class="anchor"></span><strong>Submit the Material</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on creating a new Material is completed. The system validates all of the entered values and saves the Material. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flows_5">Alternative Flows</h4>
+<ol>
+<li><strong>Create NuGet Material</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.fk7yhs69rwaz"><em>Create Material</em></a>,</strong> the Administrator chooses NuGet Material. The system provides a set of fields that should be filled. The Administrator enters Material name, NuGet url, NuGet package and credentials. He/she is also able to choose whether the Material to include can be a pre-release. The use case resumes at basic flow step <a href="#id.onve5d8lpwoy"><strong><em>Submit the Material</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Modify Material</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.fk7yhs69rwaz"><em>Create Material</em></a>,</strong> the Administrator already has a Material that has been created. The system retrieves and displays the Material on focus. The Administrator has a set of options to modify:</p>
+</blockquote>
+<ol>
+<li><strong>Material Name</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Material name.</p>
+</blockquote>
+<ol>
+<li><strong>Git Url</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Git Url of the Material.</p>
+</blockquote>
+<ol>
+<li><strong>Git Branch</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Git Branch of the Material.</p>
+</blockquote>
+<ol>
+<li><strong>Poll for Changes</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can choose to poll for changes.</p>
+</blockquote>
+<ol>
+<li><strong>Credentials</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator should enter his/her Git credentials, if the Git repository is private.</p>
+</blockquote>
+<ol>
+<li><strong>Delete a Material.</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.fk7yhs69rwaz"><em><strong>Create Material</strong>,</em></a> the Administrator already has a Material and chooses to delete it. The system warns the user that he/she is about to delete a Material. The Administrator confirms the deletion. The system deletes the Material. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.ilzxouncss6x"><em><strong>Log On</strong>,</em></a> the system establishes whether the Administrator is valid. In case, he/she is not, a proper error message displays and the use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Quit</strong></li>
+</ol>
+<blockquote>
+<p>The system allows the Administrator to quit at any time during the use case. The Administrator chooses not to save any of the entered information or decides to switch to another view, without submitting the changes, all the entered information will be discarded. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Invalid Name</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.fk7yhs69rwaz"><strong><em>Create Material</em></strong></a> the system determines that the Material name is not valid and displays an error message. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Invalid Url</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.fk7yhs69rwaz"><strong><em>Create Material</em></strong></a> the system determines that the Material Url is not valid and displays an error message. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Invalid Credentials</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.fk7yhs69rwaz"><strong><em>Create Material</em></strong></a> the system determines that the Material credentials are not valid and displays an error message. The use case ends.</p>
+</blockquote>
+<h2 id="manage-agent-35007">Manage Agent (#007)</h2>
+<h3 id="overview_5">Overview</h3>
+<blockquote>
+<p>Hawkengine Agents are the workers that execute the Jobs/Tasks. All Tasks configured in the system run on Hawkengine Agents. The Hawkengine Server polls for changes in Materials and then, when a change is detected and a Pipeline needs to be triggered, the corresponding Jobs are assigned to the Agents, for them to execute the Tasks.</p>
+<p>Agents pick up Jobs which are assigned to them, execute the Tasks in the Job and report the status of the Job to the Hawkengine Server. Then, the Server collects all the information from the different Jobs and then decides on the status of the Stage.</p>
+<p>Agents and Jobs can be enhanced with "Resources". Resources are free-form tags, that help Hawkengine decides which Agents are capable of picking up specific Jobs. The resources can be thought of as the Agent broadcasting its capabilities. Resources are defined by administrators and can mean anything the administrators want them to mean.</p>
+</blockquote>
+<h3 id="brief-description_6">Brief Description</h3>
+<blockquote>
+<p>This use case allows an Administrator to modify or delete a certain Agent, depending on the intention.</p>
+</blockquote>
+<h3 id="actors_6">Actors</h3>
+<blockquote>
+<p><em>Primary Actor - Administrator</em></p>
+</blockquote>
+<h3 id="flow-of-events_6">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_6">Basic Flow</h4>
+<ol>
+<li><span id="id.6sjkl63j0xs8" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system validates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.x8x5kw29o8ui" class="anchor"></span><strong>Choose Agent</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses with which Agent to operate.</p>
+</blockquote>
+<ol>
+<li><span id="id.m3aneis68u6i" class="anchor"></span><strong>Choose Agent Option</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator to elaborate. The operations are: Enable/Disable Agent, Edit Resources and Delete Agent. The Administrator chooses “Enable/Disable Agent” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.5s3oztfx9u7m" class="anchor"></span><strong>Enable Agent</strong></li>
+</ol>
+<blockquote>
+<p>When an Agent first connects to the Server it is “Disabled”. The Administrator chooses to enable Agent in order to schedule work on it.</p>
+</blockquote>
+<ol>
+<li><span id="id.m66qsyy223j" class="anchor"></span><strong>Submit the Agent</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation regarding the state of the Agent is completed. The system saves the changes. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flow">Alternative Flow</h4>
+<ol>
+<li><strong>Add Resources</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.m3aneis68u6i"><strong><em>Choose Agent Option</em></strong></a>, the Administrator chooses to Edit Resources. The system provides a set of options. The Administrator chooses to Add new Resource. He/she enters the Resource name and submits the result.</p>
+</blockquote>
+<ol>
+<li><strong>Delete Resources</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.m3aneis68u6i"><strong><em>Choose Agent Option</em></strong></a>, the Administrator chooses to Edit Resources. The system provides a set of options. The Administrator chooses to Delete Resource. The system warns the user that he/she is about to delete a Resource. The Administrator confirms the deletion. The system deletes the Resource. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Delete Agent</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.m3aneis68u6i"><strong><em>Choose Agent Option</em></strong></a>, the Administrator chooses to Delete Agent. The system warns the user that he/she is about to delete an Agent. The Administrator confirms the deletion. The system deletes the Agent. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.6sjkl63j0xs8"><strong><em>Log On</em></strong></a>, the system establishes whether the Administrator is valid. In case, he/she is not, a proper error message displays and the use case ends.</p>
+</blockquote>
+<h2 id="manage-environment-variable-35008">Manage Environment Variable (#008)</h2>
+<h3 id="overview_6">Overview</h3>
+<blockquote>
+<p>In Hawkengine Server, Environment Variables are user-defined variables that are defined in the configuration. These environment variables are made available to tasks just like other environment variables available to processes when they run in an operation system.</p>
+<p>Environment Variables can be defined at multiple levels: Within Environments, within Pipelines, within Stages and within Jobs. They follow a cascading system where Environment Variables defined at the Environment level get overridden by Environment Variables defined at the Pipeline level and so on.</p>
+</blockquote>
+<h3 id="brief-description_7">Brief Description</h3>
+<blockquote>
+<p>This use case allows an Administrator to create a new Environment Variable. He/she can also modify or delete a certain Environment Variable, depending on the intention.</p>
+</blockquote>
+<h3 id="actors_7">Actors</h3>
+<blockquote>
+<p><em>Primary Actor - Administrator</em></p>
+</blockquote>
+<h3 id="flow-of-events_7">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_7">Basic Flow</h4>
+<ol>
+<li><span id="id.3s7v1tp4v8s8" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system validates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.nlka2af77kdk" class="anchor"></span><strong>Choose Pipeline</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses in which Pipeline to create an Environment Variable.</p>
+</blockquote>
+<ol>
+<li><span id="id.poplcugmln68" class="anchor"></span><strong>Create Environment Variable</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator to create a new Environment Variable within the chosen Pipeline. These operations are: Create, Modify or Delete an Environment Variable. The Administrator chooses “Create Environment Variable” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.3ypupwxplppr" class="anchor"></span><strong>Fill the Environment Variable Options</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the Administrator with a set of fields to fill. The Administrator can add or modify the name of the Environment Variable, the value of the Environment Variable, as well as to choose whether the Environment Variable will be secured.</p>
+</blockquote>
+<ol>
+<li><span id="id.32odvtk0c3d7" class="anchor"></span><strong>Submit the Environment Variable</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on creating a new Environment Variable is completed. The system validates all of the entered values and saves the Environment Variable. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flow_1">Alternative Flow</h4>
+<ol>
+<li><strong>Modify Environment Variable</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.poplcugmln68"><em>Create Environment Variable</em></a>,</strong> the Administrator already has an Environment Variable that has been created. The system retrieves and displays the Environment Variable on focus. The Administrator has set of options to choose from:</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variable Name</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Environment Variable name.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variable Value</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Environment Variable value.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variable Security</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Environment Variable security.</p>
+<p>The Administrator can modify all of the options as desired until choosing to submit the changes. At this point the system saves the updated Environment Variable and the use case ends. The use case resumes at basic flow step <a href="#id.32odvtk0c3d7"><strong><em>Submit the Environment Variable</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Delete Environment Variable</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.poplcugmln68"><strong><em>Create Environment Variable</em></strong></a>, the Administrator already has an Environment Variable created and chooses to delete it. The system warns the user that he/she is about to delete an Environment Variable. The Administrator confirms the deletion. The system deletes the Environment Variable. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Add Stage Environment Variable</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.poplcugmln68"><strong><em>Create Environment Variable</em></strong></a>, the Administrator is able to choose in which Stage to add the Environment Variable. Once, he/she chooses the desired Stage, the use case resumes at <strong><a href="#id.3ypupwxplppr"><em>Fill the Environment Variable Options</em></a></strong> basic flow step.</p>
+</blockquote>
+<ol>
+<li><strong>Add Job Environment Variable</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.poplcugmln68"><strong><em>Create Environment Variable</em></strong></a>, the Administrator is able to choose in which Job to add the Environment Variable. Once, he/she chooses the desired Job, the use case resumes at <strong><a href="#id.3ypupwxplppr"><em>Fill the Environment Variable Options</em></a></strong> basic flow step.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.3s7v1tp4v8s8"><strong><em>Log On</em></strong></a>, the system establishes whether the Administrator is valid. In case, he/she is not, a proper error message displays and the use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Quit.</strong></li>
+</ol>
+<blockquote>
+<p>The system allows the Administrator to quit at any time during the use case. The Administrator chooses not to save any of the entered information or decides to switch to another view, without submitting the changes, all the entered information will be discarded. The use case ends.</p>
+</blockquote>
+<h2 id="manage-environment-35009">Manage Environment (#009)</h2>
+<h3 id="overview_7">Overview</h3>
+<blockquote>
+<p>An Environment is a group of Agents that allows to distribute Jobs. It is a logical boundary for Job execution. Common examples of environments are <strong>Test</strong>, <strong>Acceptance</strong>, <strong>Staging</strong> or <strong>Production</strong>. An Environment can be assigned to multiple Agents and Pipelines. One Pipeline can belong to more than one Environment, however, one Agent can only belong to one Environment*. *</p>
+<p>Access to an Environment should be controlled by the system RBAC model. There should be a way to limit access to Environments for specific users and groups.</p>
+</blockquote>
+<h3 id="brief-description_8">Brief Description</h3>
+<blockquote>
+<p>This use case allows an Administrator to create, modify or delete Environments</p>
+</blockquote>
+<h3 id="actors_8">Actors</h3>
+<blockquote>
+<p><em>Primary Actor - Administrator</em></p>
+</blockquote>
+<h3 id="flow-of-events_8">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_8">Basic Flow</h4>
+<ol>
+<li><span id="id.xrz3wftjxts1" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system validates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.e06dtta82bor" class="anchor"></span><strong>Create Environment</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the operations available to the Administrator to manage Environments. These operations are: Create, Modify or Delete Environment. The Administrator chooses “Create Environment” option.</p>
+</blockquote>
+<ol>
+<li><span id="id.ddmb0a12p494" class="anchor"></span><strong>Fill the Environment Options</strong></li>
+</ol>
+<blockquote>
+<p>The system provides the Administrator with a set of fields to fill. The Administrator can modify:</p>
+</blockquote>
+<ol>
+<li><strong>Environment Name</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator should provide a name for the Environment.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variables</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator may add one or more Environment Variables that need to be passed.</p>
+</blockquote>
+<ol>
+<li><strong>Pipelines</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator may add one or more Pipelines that need to run on the Environment.</p>
+</blockquote>
+<ol>
+<li><strong>Agents</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator may add one or more Agents associated with the Environment.</p>
+</blockquote>
+<ol>
+<li><span id="id.egnmnc5l5qzp" class="anchor"></span><strong>Submit the Environment</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on creating a new Environment is completed. The system validates all of the entered values and saves the Environment. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flow_2">Alternative Flow</h4>
+<ol>
+<li><strong>Modify Environment</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.e06dtta82bor"><em>Create Environment</em></a>,</strong> the Administrator already has an Environment that has been created. The system retrieves and displays the Environment on focus. The Administrator has a set of options to modify:</p>
+</blockquote>
+<ol>
+<li><strong>Environment Name</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can modify the Environment name.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Variables</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add or remove Environment Variables.</p>
+</blockquote>
+<ol>
+<li><strong>Pipelines</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add Pipelines that need to run on the particular Environment, or remove the ones that are no longer needed.</p>
+</blockquote>
+<ol>
+<li><strong>Agents</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator can add unassigned Agents to the Environment, or remove some, making them free for further association.</p>
+<p>The Administrator can modify all of the options as desired until choosing to submit the changes. At this point the system saves the updated Environment. The use case resumes at basic flow step <a href="#id.egnmnc5l5qzp"><strong><em>Submit the Environment</em></strong></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Delete Environment</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.e06dtta82bor"><strong><em>Create Environment</em></strong></a>, the Administrator already has an Environment created and chooses to delete it. The system warns the user that he/she is about to delete an Environment. The Administrator confirms the deletion. The system deletes the Environment. The use case ends.</p>
+</blockquote>
+<ol>
+<li><strong>Unauthenticated User</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.xrz3wftjxts1"><strong><em>Log On</em></strong></a>, the system establishes whether credentials of the Administrator are valid. In case, he/she is not, a proper error message displays and the use case ends.</p>
+</blockquote>
+<h2 id="manage-authentication-and-authorization-35010">Manage Authentication and Authorization (#010)</h2>
+<h3 id="overview_8">Overview</h3>
+<blockquote>
+<p>The server has the notion for <em>scope</em> and <em>permission types</em>. A scope represents a certain level from the server where specific rights can be applied. On the other hand, <em>permission types</em> define the rights - what a user can do from a specific scope. Combining both concepts (scope &amp; permission types) provides a flexible authorization model.</p>
+<p>*Permission Scopes *</p>
+</blockquote>
+<ul>
+<li>
+<p>Server - global server scope</p>
+</li>
+<li>
+<p>Pipeline group - pipeline group level</p>
+</li>
+<li>
+<p>Pipeline - pipeline level scope</p>
+</li>
+<li>
+<p>Environment - environment scope</p>
+</li>
+</ul>
+<blockquote>
+<p><em>Permission Types</em></p>
+</blockquote>
+<ul>
+<li>
+<p>Viewer - a user can only view a given resource and its child resources</p>
+</li>
+<li>
+<p>Operator - a user can view and operate (run, re-run, pause, stop, etc.) a given resource (e.g. Pipeline &amp; Stage) and its child resources</p>
+</li>
+<li>
+<p>Admin</p>
+</li>
+</ul>
+<p><em>Groups</em></p>
+<blockquote>
+<p>A group is a set of claims (scope + permissions) that are grouped together. A group would ease the authorization management across groups of people. E.g. if we have 3 teams dev, qa &amp; ops, rather than assigning permissions individually to each team member, we would create a group and add scope and permissions to it, then add the members to the group, so that they inherit all of the group’s permissions.</p>
+</blockquote>
+<p><em>Permission Inheritance</em></p>
+<blockquote>
+<p>If a user is assigned a <em>pipeline group</em> scope and an <em>admin</em> permission type that would mean that all resources that are children of the current pipeline group (scope) e.g. one or more pipelines, will obey the permission assigned to their parent - pipeline group.</p>
+</blockquote>
+<p><em>Overriding Permissions</em></p>
+<blockquote>
+<p>This is the case when we want to give a user permissions at a given scope e.g. "pipeline group", however we need to either restrict or broaden the rights to one or more child resources, e.g. Pipelines.</p>
+<p>Given is a Pipeline group named "Dev pipelines" and we want to have one of our teams to have view rights for the group. Combining the <em>Pipeline Group</em> scope and the <em>view</em> permission type would allow anyone of the team to see all pipelines. However, if we want the Development Lead of the team to be able to administer one or more pipelines from the group, but not all of them, we would assign in addition to its view rights inherited from the pipeline group scope, a <em>pipeline</em> scope with <em>admin</em> permission for a concrete pipelines that he needs administration rights for. In fact we'll override the inherited rights he received as part of the <em>Pipeline group</em> scope.</p>
+</blockquote>
+<h3 id="brief-description_9">Brief Description</h3>
+<blockquote>
+<p>This use case allows an Administrator to modify team permissions, as well as individual permissions.</p>
+</blockquote>
+<h3 id="actors_9">Actors</h3>
+<blockquote>
+<p>Primary Actor - Server Administrator</p>
+</blockquote>
+<h3 id="flow-of-events_9">Flow of Events</h3>
+<ol>
+<li>
+<h4 id="basic-flow_9">Basic Flow</h4>
+<ol>
+<li><span id="id.5fqd8t6gqthm" class="anchor"></span><strong>Log On</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>This use case starts when an Administrator accesses the Hawkengine System. The Administrator enters an email and password and the system validates them.</p>
+</blockquote>
+<ol>
+<li><span id="id.lky29z91kqd5" class="anchor"></span><strong>Choose team of people</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses which team to assign to the desired project.</p>
+</blockquote>
+<ol>
+<li><span id="id.z1symqwuu8zo" class="anchor"></span><strong>Set permission for the team</strong></li>
+</ol>
+<blockquote>
+<p>The system provides a set of options for the Administrator to choose from:</p>
+</blockquote>
+<ol>
+<li><strong>Server Admin</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives global Admin rights to the team. The team members will be able to fully operate on a global level.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Admin</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Pipeline Group Admin level rights to the team. The team members will be able to fully operate on a Pipeline Group level.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Admin</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Pipeline Admin level rights to the team. The team members will be able to fully operate on a Pipeline level.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Admin</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Environment Admin level rights to the team. The team members will be able to fully operate on an Environment level.</p>
+</blockquote>
+<ol>
+<li><strong>Server Operator</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Server Operator level rights to the team. The team members will be able to operate (run, re-run, pause, stop, etc.) on a Server level.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Operator</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Pipeline Group Operator level rights to the team. The team members will be able to operate (run, re-run, pause, stop, etc.) on a Pipeline Group level.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Operator</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Pipeline Operator level rights to the team. The team members will be able to operate (run, re-run, pause, stop, etc.) on a Pipeline level.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Operator</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Environment Operator level rights to the team. The team members will be able to operate (run, re-run, pause, stop, etc.) on an Environment level.</p>
+</blockquote>
+<ol>
+<li><strong>Server Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Server Viewer level rights to the team. The team members will be able to observe on a Server level.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Pipeline Group Viewer level rights to the team. The team members will be able to observe on a Pipeline Group level.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Pipeline Viewer level rights to the team. The team members will be able to observe on a Pipeline level.</p>
+</blockquote>
+<ol>
+<li><strong>Environment Viewer</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator gives Environment Viewer level rights to the team. The team members will be able to observe on an Environment level.</p>
+<p>The Administrator chooses the Pipeline Group Viewer as an option for team permissions.</p>
+</blockquote>
+<ol>
+<li><span id="id.u5fqj9x0ed03" class="anchor"></span><strong>Submit Permission Changes</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator indicates that the operation based on the team permissions is completed. The system validates all of the information provided. The use case ends.</p>
+</blockquote>
+<ol>
+<li>
+<h4 id="alternative-flow_3">Alternative Flow</h4>
+<ol>
+<li><strong>Override individual permissions for person.</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <a href="#id.z1symqwuu8zo"><strong><em>Set permission for the team</em></strong></a>, the system provides options for individual permissions. The Administrator can:</p>
+</blockquote>
+<ol>
+<li>
+<p><strong>Restrict team member rights</strong></p>
+<ol>
+<li><strong>Choose team member</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>The Administrator chooses the team member whose permissions he/she will restrict.</p>
+</blockquote>
+<ol>
+<li><strong>Set individual permissions</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses to set Pipeline Viewer level rights to the team member, not the Pipeline Group Viewer level rights as was previously initialized. The team member will no longer be able to observe the Pipeline Group operations, but only the ones associated with the chosen Pipeline.</p>
+</blockquote>
+<ol>
+<li>
+<p><strong>Broaden team member rights</strong></p>
+<ol>
+<li><strong>Choose team member</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>The Administrator chooses the team member whose permissions he/she will broaden.</p>
+</blockquote>
+<ol>
+<li><strong>Set individual permissions</strong></li>
+</ol>
+<blockquote>
+<p>The Administrator chooses to set Pipeline Group Operator level rights to the team member, not the Pipeline Group Viewer level rights as was previously initialized. The team member will be able to operate within the Pipeline Group, not only to observe.</p>
+<p>The Administrator can modify the permissions as desired until choosing to submit the changes. At this point the system saves the updated permissions for the team member. The use case resumes at basic flow step <a href="#id.u5fqj9x0ed03"><strong><em>Submit Permission Changes.</em></strong></a></p>
+</blockquote>
+<ol>
+<li>
+<p><strong>Update team permission to</strong></p>
+<ol>
+<li><strong>Pipeline Group Admin</strong></li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.z1symqwuu8zo"><em>Set permission for the team</em></a>,</strong> the Administrator chooses to set the team permissions to Pipeline Group Admin. In this way, the team members will be eligible to fully operate within the Pipeline Group.</p>
+</blockquote>
+<ol>
+<li><strong>Pipeline Group Operator</strong></li>
+</ol>
+<blockquote>
+<p>At basic flow step <strong><a href="#id.z1symqwuu8zo"><em>Set permission for the team</em></a>,</strong> the Administrator chooses to set the team permissions to Pipeline Group Operator. In this way, the team members will be eligible to operate (run, re-run, pause, stop, etc.) within the Pipeline Group.</p>
+</blockquote>
+<h1 id="functional-requirements">Functional Requirements</h1>
+<blockquote>
+<p>This section includes the requirements that specify all the fundamental actions of the software system.</p>
+</blockquote>
+<ol>
+<li>
+<p><em>Use Case #001 - Manage Pipeline Group</em>
+    ----------------------------------------</p>
+<ol>
+<li>
+<h3 id="add-pipeline-group">Add Pipeline Group</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Pipeline Group</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Pipeline Group to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add a new Pipeline Group.                                                                                                                            |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                         </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Pipeline Group to the database.
+
+                     4.  The system returns the newly created Pipeline Group.                                                                                                                        |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                                                             </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether a Pipeline Group with the same name already exists. If this is the case, an error with an appropriate message is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Pipeline Group has been added to the database.                                                                                                                             |
+| <strong>Exception Paths</strong>   | The User may abandon the operation at any time, without saving the information.                                                                                                |</p>
+<p><span id="h.3fwokq0" class="anchor"></span></p>
+<h3 id="update-pipeline-group">Update Pipeline Group</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Pipeline Group</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update a Pipeline Group in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update Pipeline Group.                                                                                                 |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                           </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system updates the Pipeline Group in the database.
+
+                     4.  The system returns the updated the Pipeline Group.                                                                                            |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                               </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether the Pipeline Group exists. If it does not, an error with an appropriate message is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Pipeline Group has been updated in the database.                                                                                             |
+| <strong>Exception Paths</strong>   | The User may abandon the operation at any time, without saving the information.                                                                  |</p>
+<h3 id="delete-pipeline-group_1">Delete Pipeline Group</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Pipeline Group</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete a Pipeline Group from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Pipeline Group.                                                                                                                                   |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                                                       </p>
+<pre><code>                     2.  The system deletes the Pipeline Group from the database.
+
+                     3.  The system notifies the User that the Pipeline Group has been deleted.                                                                                                              |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Pipeline Group exists or contains any Pipelines. Either way, if it does not, an error with an appropriate message is returned. |
+| <strong>Postcondition</strong>     | The Pipeline Group has been deleted from the database.                                                                                                                                 |
+| <strong>Exception Paths</strong>   | The User may abandon the operation at any time, without saving the information.                                                                                                        |</p>
+<ol>
+<li>
+<p><em>Use Case #002 - Manage Pipeline</em>
+    ----------------------------------</p>
+<ol>
+<li>
+<h3 id="add-pipeline">Add Pipeline</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Pipeline</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Pipeline to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add new Pipeline.                                                                                                                                                                          |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                                                               </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Pipeline to the database.
+
+                     4.  The system returns the newly created Pipeline.                                                                                                                                                                    |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                                                                                                   </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether a Pipeline with the same name within the same Pipeline Group already exists. If it does, an error message “Pipeline {pipelineName} already exists.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Pipeline has been added to the database.                                                                                                                                                                         |</p>
+<p><span id="h.dtfm14lmzp2l" class="anchor"></span></p>
+<h3 id="update-pipeline">Update Pipeline</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Pipeline</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update a Pipeline in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update the Pipeline.                                                                                                                   |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                           </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Pipeline to the database.
+
+                     4.  The system returns the updated Pipeline.                                                                                                                      |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                                               </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether the Pipeline exists. If it does not, an error message “Pipeline {pipelineName} does not exist.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Pipeline has been updated in the database.                                                                                                                   |</p>
+<h3 id="_2"></h3>
+<h3 id="delete-pipeline">Delete Pipeline</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Pipeline</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete a Pipeline from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Pipeline.                                                                                                                   |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                                 </p>
+<pre><code>                     2.  The system deletes the Pipeline from the database.
+
+                     3.  The system notifies the User that the Pipeline has been deleted.                                                                                              |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Pipeline exists. If it does not, an error message “Pipeline {pipelineName} does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Pipeline has been deleted from the database.                                                                                                                 |
+| <strong>Exception Paths</strong>   | The User may abandon the operation at any time, without saving the information.                                                                                  |</p>
+<h3 id="_3"></h3>
+<h3 id="run-pipeline">Run Pipeline</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Pipeline</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to run a Pipeline.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to run a Pipeline with a single Job or it was triggered automatically.
+
+                     3.  An eligible Agent within the current Environment.                                                                                                             |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                                 </p>
+<pre><code>                     2.  The system updates all Materials within the Pipeline.
+
+                     3.  The system sets the status of the Pipeline to “*in progress*”.
+
+                     4.  The system sets the status of the Job to “*awaiting*”.
+
+                     5.  The system assigns the Job to the Agent.
+
+                     6.  The system sets the status of the Job to “*scheduled*”.
+
+                     7.  The Agent processes the assigned Job, meanwhile the system sets the status of the processing Job to “*running*”.
+
+                     8.  The Agent sets the status of the processed Job to “*passed*”, if all its Tasks’ statuses are “*passed*” as well.
+
+                     9.  The system sets the status of the Pipeline to “*passed*”.                                                                                                     |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, the system checks whether the Pipeline exists. If it does not, an error message “Pipeline {pipelineName} does not exist.” is returned.</p>
+<pre><code>                     2.  If Basic Flow step 2 fails, an error message “Material {materialName} could not be updated. {errorReason}” is returned.
+
+                     3.  At Basic Flow step 3, if the Pipeline is locked and there is a Pipeline scheduled beforehand, it will not be scheduled.
+
+                     4.  Basic Flow step 5 can fail under the following circumstances:
+
+                         1.  There is no Agent in the current Environment.
+
+                         2.  There is no eligible Agent in the current Environment:
+
+                             1.  The Agent is disabled.
+
+                             2.  The Agent is disconnected.
+
+                             3.  The Agent does not meet the required resources to process the Job.
+
+                     &gt; If this step fails, the Job status will remain “*awaiting*”.
+
+                     1.  At Basic Flow step 8, if any Task’s status is “*failed*” and the option “Ignore Errors” is not selected, the Agent sets the Job’s status to “*failed*”.
+
+                     2.  At Basic Flow step 9, if the Job’s status is “*failed*”, the system sets the Pipeline’s status to “*failed*”.                                                 |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Pipeline has been scheduled.                                                                                                                                 |</p>
+<ol>
+<li>
+<p><em>Use Case #003 - Manage Stage</em>
+    -------------------------------</p>
+<ol>
+<li>
+<h3 id="add-stage">Add Stage</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Stage</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Stage to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add a new Stage.                                                                                                                                                            |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                                                </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Stage to the database.
+
+                     4.  The system returns the newly created Stage.                                                                                                                                                        |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                                                                                    </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether a Stage with the same name within the same Pipeline already exists. If it does, an error message “Stage {stageName} already exists.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Stage has been added to the database.                                                                                                                                                             |</p>
+<p><span id="h.4c4bqzyeiojz" class="anchor"></span></p>
+<h3 id="update-stage">Update Stage</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Stage</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update a Stage in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update the Stage.                                                                                                                                                               |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                                                    </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Stage to the database.
+
+                     4.  The system returns the updated Stage.                                                                                                                                                                  |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error with an “Invalid data” message is returned.                                                                                            </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether a Stage with the same name within the same Pipeline already exists. If it does not, an error message “Stage {stageName} does not exist.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Stage has been updated in the database.                                                                                                                                                               |</p>
+<h3 id="_4"></h3>
+<h3 id="delete-stage">Delete Stage</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Stage</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete a Stage from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Stage.                                                                                                             |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                        </p>
+<pre><code>                     2.  The system deletes the Stage from the database.
+
+                     3.  The system notifies the User that the Stage has been deleted.                                                                                        |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Stage exists. If it does not, an error message “Stage {stageName} does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Stage has been deleted from the database.                                                                                                           |</p>
+<h3 id="_5"></h3>
+<h3 id="run-stage">Run Stage</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Stage</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to run a Stage.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to run the Stage or it was triggered automatically.                                                                                                |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                                          </p>
+<pre><code>                     2.  The system schedules a new Pipeline, starting from the current Stage.                                                                                                  |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, the system checks whether the Pipeline exists. If it does not, an error with an appropriate message is returned.                                </p>
+<pre><code>                     2.  At Basic Flow step 2, the system checks whether the Stage exists. If it does not, an error with an appropriate message is returned.
+
+                     3.  At Basic Flow step 2, the system schedules a new Pipeline. However, if the Pipeline is locked and there is a Pipeline scheduled beforehand, it will not be scheduled.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Pipeline has been scheduled starting from the current Stage.                                                                                                          |
+| <strong>Exception Paths</strong>   | None.                                                                                                                                                                     |</p>
+<ol>
+<li>
+<p><em>Use Case #004 - Manage Job</em>
+    -----------------------------</p>
+<ol>
+<li>
+<h3 id="add-job">Add Job</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Job</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Job to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add a new Job.                                                                                                                                                     |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                                       </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Job to the database.
+
+                     4.  The system returns the newly created Job.                                                                                                                                                 |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                                                                           </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether a Job with the same name within the same Stage already exists. If it does, an error message “Job {jobName} already exists.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Job has been added to the database.                                                                                                                                                      |</p>
+<h3 id="_6"></h3>
+<h3 id="update-job">Update Job</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Job</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update a Job in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update the Stage.                                                                                                       |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                            </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Job to the database.
+
+                     4.  The system returns the updated Job.                                                                                                            |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned.                                            </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether the Job exists. If it does not, an error message “Job {jobName} does not exist.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Job has been updated in the database.                                                                                                         |</p>
+<h3 id="_7"></h3>
+<h3 id="delete-job">Delete Job</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Job</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete a Job from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Job.                                                                                                         |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                  </p>
+<pre><code>                     2.  The system deletes the Job from the database.
+
+                     3.  The system notifies the User that the Job has been deleted.                                                                                    |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Job exists. If it does not, an error message “Job {jobName} does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Job has been deleted from the database.                                                                                                       |</p>
+<ol>
+<li>
+<p><em>Use Case #005 - Manage Task</em>
+    ------------------------------</p>
+<ol>
+<li>
+<h3 id="add-task">Add Task</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Task</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Task to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add a new Task.                                                              |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                 </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Task to the database.
+
+                     4.  The system returns the newly created Task.                                                          |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned. |
+| <strong>Postcondition</strong>     | The Task has been added to the database.                                                               |</p>
+<h3 id="_8"></h3>
+<h3 id="update-task">Update Task</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Task</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update a Task in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update the Task.                                                                                                        |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                            </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Task to the database.
+
+                     4.  The system returns the updated Task.                                                                                                           |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned.                                            </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether the Task already exists. If it does not, an error message “Task does not exist.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Task has been updated in the database.                                                                                                        |</p>
+<h3 id="_9"></h3>
+<h3 id="delete-task">Delete Task</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Task</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete a Task from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Task.                                                                                                |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                          </p>
+<pre><code>                     2.  The system deletes the Task from the database.
+
+                     3.  The system notifies the User that the Task has been deleted.                                                                           |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Task exists. If it does not, an error message “Task does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Task has been deleted from the database.                                                                                              |</p>
+<ol>
+<li>
+<p><em>Use Case #006 - Manage Materials</em>
+    -----------------------------------</p>
+<ol>
+<li>
+<h3 id="add-material">Add Material</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Material</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add Material.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add new Material.                                                                                                                                                               |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                                                    </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Material to the database.
+
+                     4.  The system returns the newly created Material.                                                                                                                                                         |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                                                                                        </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether a Material with the same name within the database already exists. If it does, an error message “Material {materialName} already exists.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Material has been added to the database.                                                                                                                                                              |</p>
+<h3 id="_10"></h3>
+<h3 id="update-material">Update Material</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Material</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update the Material in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update a Material.                                                                       |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                             </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Material to the database.
+
+                     4.  The system returns the updated Material.                                                                        |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message. |
+| <strong>Postcondition</strong>     | The Material has been updated.                                                                                     |</p>
+<h3 id="_11"></h3>
+<h3 id="delete-material">Delete Material</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Material</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete a Material</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete a Material.                                                                                                                    |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                                </p>
+<pre><code>                     2.  The system deletes the Material from the database.
+
+                     3.  The system notifies the User that a Material has been deleted.                                                                                               |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Material exists. If it does not, an error message “Material{materialName} does not exist.” is returned. |
+| <strong>Postcondition</strong>     | Material has been deleted from the database.                                                                                                                    |</p>
+<h3 id="_12"></h3>
+<ol>
+<li>
+<p><em>Use Case #007 -</em> <em>Manage</em> <a href="#manage-agent-007"><em>Agents</em></a>
+    ---------------------------------------------------------</p>
+<ol>
+<li>
+<h3 id="enable-agent">Enable Agent</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Agent</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to enable an Agent in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to enable the Agent.                                                                                                                     |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                          </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system sets the Agent to “Enabled”.
+
+                     4.  The system saves the Agent to the database.
+
+                     5.  The system returns the Agent.                                                                                                                                |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned.                                                          </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether the Agent already exists. If it does not, an error message “Agent {agentName} does not exist.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Agent has been enabled in the database.                                                                                                                     |</p>
+<h3 id="_13"></h3>
+<h3 id="delete-agent">Delete Agent</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Agent</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete an Agent from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Agent.                                                                                                             |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                        </p>
+<pre><code>                     2.  The system deletes the Agent from the database.
+
+                     3.  The system notifies the User that the Agent has been deleted.                                                                                        |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Agent exists. If it does not, an error message “Agent {agentName} does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Agent has been deleted from the database.                                                                                                           |</p>
+<h3 id="add-resource">Add Resource</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Agent</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Resource to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add a new Resource.                                                                                                                                                               |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                                                      </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Resource to the database.
+
+                     4.  The system returns the newly created Resource.                                                                                                                                                           |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, the system returns an error with an appropriate message.                                                                                          </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether a Resource with the same name within the same Agent already exists. If it does, an error message “Resource {resourceName} already exists.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Resource has been added to the database.                                                                                                                                                                |</p>
+<h3 id="_14"></h3>
+<h3 id="delete-resource">Delete Resource</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Agent</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete a Resource from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has selected a Resource within the Agent.
+
+                     3.  The User has chosen to delete a Resource.                                                                                                                     |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                                 </p>
+<pre><code>                     2.  The system deletes the Resource from the database.
+
+                     3.  The system notifies the User that the Resource has been deleted.                                                                                              |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Resource exists. If it does not, an error message “Resource {resourceName} does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Resource has been deleted from the database.                                                                                                                 |</p>
+<ol>
+<li>
+<p><em>Use Case #008 - Manage Environment Variable</em>
+    ----------------------------------------------</p>
+<ol>
+<li><strong><em>Add Environment Variable</em></strong></li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Environment Variable</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Environment Variable to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add a new Environment Variable.                                              |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                 </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Environment Variable to the database.
+
+                     4.  The system returns the newly created Environment Variable.                                          |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned. |
+| <strong>Postcondition</strong>     | The Environment Variable has been added to the database.                                               |</p>
+<h3 id="_15"></h3>
+<h3 id="update-environment-variable">Update Environment Variable</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Environment Variable</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update an Environment Variable in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update the Environment Variable.                                                                                                                        |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                            </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Environment Variable to the database.
+
+                     4.  The system returns the updated Environment Variable.                                                                                                                           |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned.                                                                            </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether the Environment Variable already exists. If it does not, an error message “Environment Variable does not exist.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Environment Variable has been updated in the database.                                                                                                                        |</p>
+<h3 id="_16"></h3>
+<h3 id="delete-environment-variable">Delete Environment Variable</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Environment Variable</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete an Environment Variable from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Environment Variable.                                                                                                                |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                                          </p>
+<pre><code>                     2.  The system deletes the Environment Variable from the database.
+
+                     3.  The system notifies the User that the Environment Variable has been deleted.                                                                                           |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Environment Variable exists. If it does not, an error message “Environment Variable does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Environment Variable has been deleted from the database.                                                                                                              |</p>
+<ol>
+<li>
+<p><em>Use Case #009 - Manage Environment</em>
+    -------------------------------------</p>
+<ol>
+<li>
+<h3 id="add-environment">Add Environment</h3>
+</li>
+</ol>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Environment</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to add a new Environment to the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to add a new Environment.                                                       |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                 </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Environment to the database.
+
+                     4.  The system returns the newly created Environment.                                                   |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned. |
+| <strong>Postcondition</strong>     | The Environment has been added to the database.                                                        |</p>
+<h3 id="_17"></h3>
+<h3 id="update-environment">Update Environment</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Environment</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to update an Environment in the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to update the Environment.                                                                                                                        |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system validates the data entered by the User.                                                                                                                   </p>
+<pre><code>                     2.  The system accesses the Hawkengine database.
+
+                     3.  The system saves the Environment to the database.
+
+                     4.  The system returns the updated Environment.                                                                                                                           |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 1, if the entered data is invalid, an error message “Invalid data” is returned.                                                                   </p>
+<pre><code>                     2.  At Basic Flow step 3, the system checks whether the Environment Variable already exists. If it does not, an error message “Environment does not exist.” is returned.  |
+</code></pre>
+<p>| <strong>Postcondition</strong>     | The Environment has been updated in the database.                                                                                                                        |</p>
+<h3 id="_18"></h3>
+<h3 id="delete-environment">Delete Environment</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Use Case Name</strong></td>
+<td>Manage Environment</td>
+</tr>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>The User chooses to delete an Environment from the database.</td>
+</tr>
+<tr>
+<td><strong>Precondition</strong></td>
+<td>1.  The User has logged in.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>                     2.  The User has chosen to delete the Environment.                                                                                                       |
+</code></pre>
+<p>| <strong>Basic Flow</strong>        | 1.  The system accesses the Hawkengine database.                                                                                                        </p>
+<pre><code>                     2.  The system deletes the Environment from the database.
+
+                     3.  The system notifies the User that the Environment has been deleted.                                                                                  |
+</code></pre>
+<p>| <strong>Alternative Flows</strong> | 1.  At Basic Flow step 2, the system checks whether the Environment exists. If it does not, an error message “Environment does not exist.” is returned. |
+| <strong>Postcondition</strong>     | The Environment has been deleted from the database.                                                                                                     |</p>
+<h1 id="other-requirements">Other Requirements</h1>
+<p>The server should support 2 types of databases: MongoDB and Redis. Redis is in memory store that can be used for small scale projects that would enable easy setup and run scenarios. Its main limitation is the memory of the machine it runs on. MongoDb is a fully fledged document based database engine that will be used in enterprise deployments.</p>
+<p><span id="h.4f1mdlm" class="anchor"></span><strong>Appendix A: Glossary</strong></p>
+<p><span id="h.19c6y18" class="anchor"></span><strong>Appendix C: To Be Determined List</strong></p>
+<p><em>&lt;Collect a numbered list of the TBD (to be determined) references that remain in the SRS so they can be tracked to closure.&gt;</em></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <center>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</center>
+        </footer>
+
+        <script src="../../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../../js/highlight.pack.js"></script>
+        <script>var base_url = '../../..';</script>
+        <script data-main="../../../mkdocs/js/search.js" src="../../../mkdocs/js/require.js"></script>
+        <script src="../../../js/base.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            From here you can search these documents. Enter
+                            your search terms below.
+                        </p>
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                            </div>
+                        </form>
+                        <div id="mkdocs-search-results"></div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
