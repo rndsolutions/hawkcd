@@ -1,6 +1,7 @@
 package net.hawkengine.core.utilities.deserializers;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -12,6 +13,7 @@ import com.google.gson.JsonSerializer;
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.FetchArtifactTask;
 import net.hawkengine.model.FetchMaterialTask;
+import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.UploadArtifactTask;
 import net.hawkengine.model.enums.TaskType;
@@ -31,7 +33,7 @@ public class TaskDefinitionAdapter implements JsonDeserializer<TaskDefinition>, 
             this.put(TaskType.FETCH_MATERIAL.toString(), FetchMaterialTask.class);
             this.put(TaskType.UPLOAD_ARTIFACT.toString(), UploadArtifactTask.class);
         }};
-        this.jsonConverter = new Gson();
+        this.jsonConverter = new GsonBuilder().registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter()).create();
     }
 
     @Override
