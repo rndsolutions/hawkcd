@@ -289,7 +289,7 @@ public class PipelinePreparerTests {
         InterruptedException interrupt = new InterruptedException();
         try {
             Thread.currentThread().interrupt();
-            this.pipelinePreparer.start();
+            this.pipelinePreparer.run();
         } catch (IllegalStateException e) {
             Assert.assertEquals(interrupt, e.getCause());
         }
