@@ -209,7 +209,7 @@ public class PipelineServiceTests {
 
         Pipeline expectedPipeline = (Pipeline) this.pipelineService.getById(pipelineToAdd.getId()).getObject();
 
-        expectedPipeline.setAreMaterialsUpdated(true);
+        expectedPipeline.setMaterialsUpdated(true);
 
         ServiceResult actualResult = this.pipelineService.update(expectedPipeline);
         Pipeline actualPipeline = (Pipeline) actualResult.getObject();
@@ -307,7 +307,7 @@ public class PipelineServiceTests {
 
         stage.setJobs(jobsToAdd);
         firstPipeline.setStages(stagesToAdd);
-        firstPipeline.setAreMaterialsUpdated(true);
+        firstPipeline.setMaterialsUpdated(true);
         firstPipeline.setPrepared(true);
         pipelines.add(firstPipeline);
         this.pipelineService.add(firstPipeline);
