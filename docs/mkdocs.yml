@@ -13,3 +13,4 @@ pages:
 - Roadmap: 'roadmap.md'
 - Download: 'download.md'
 theme: united
+#site_dir: ../../hawk-docs/hawk
