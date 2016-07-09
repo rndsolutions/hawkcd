@@ -1,19 +1,94 @@
 {
     "docs": [
         {
-            "location": "/welcome/", 
+            "location": "/resources/", 
             "text": "Hello", 
-            "title": "Welcome"
+            "title": "Resources"
         }, 
         {
-            "location": "/welcome/#hello", 
+            "location": "/resources/#hello", 
             "text": "", 
             "title": "Hello"
         }, 
         {
             "location": "/user-guide/", 
-            "text": "", 
+            "text": "Concepts\n\n\nInstalling HawkCD\n\n\nSystem Requirements\n\n\nInstalling HawkCD Server\n\n\nLinux\n\n\nWindows\n\n\nGeneric zip\n\n\nConfiguration\n\n\nSetup a new pipeline\n\n\nManage pipelines\n\n\nUsing Environment variables\n\n\nRunning tests against builds\n\n\n\n\nManage agents\n\n\nPublish Reports and Artifacts\n\n\nAuthorizing users", 
             "title": "User Guide"
+        }, 
+        {
+            "location": "/user-guide/#concepts", 
+            "text": "", 
+            "title": "Concepts"
+        }, 
+        {
+            "location": "/user-guide/#installing-hawkcd", 
+            "text": "", 
+            "title": "Installing HawkCD"
+        }, 
+        {
+            "location": "/user-guide/#system-requirements", 
+            "text": "", 
+            "title": "System Requirements"
+        }, 
+        {
+            "location": "/user-guide/#installing-hawkcd-server", 
+            "text": "", 
+            "title": "Installing HawkCD Server"
+        }, 
+        {
+            "location": "/user-guide/#linux", 
+            "text": "", 
+            "title": "Linux"
+        }, 
+        {
+            "location": "/user-guide/#windows", 
+            "text": "", 
+            "title": "Windows"
+        }, 
+        {
+            "location": "/user-guide/#generic-zip", 
+            "text": "", 
+            "title": "Generic zip"
+        }, 
+        {
+            "location": "/user-guide/#configuration", 
+            "text": "", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/user-guide/#setup-a-new-pipeline", 
+            "text": "", 
+            "title": "Setup a new pipeline"
+        }, 
+        {
+            "location": "/user-guide/#manage-pipelines", 
+            "text": "", 
+            "title": "Manage pipelines"
+        }, 
+        {
+            "location": "/user-guide/#using-environment-variables", 
+            "text": "", 
+            "title": "Using Environment variables"
+        }, 
+        {
+            "location": "/user-guide/#running-tests-against-builds", 
+            "text": "", 
+            "title": "Running tests against builds"
+        }, 
+        {
+            "location": "/user-guide/#manage-agents", 
+            "text": "", 
+            "title": "Manage agents"
+        }, 
+        {
+            "location": "/user-guide/#publish-reports-and-artifacts", 
+            "text": "", 
+            "title": "Publish Reports and Artifacts"
+        }, 
+        {
+            "location": "/user-guide/#authorizing-users", 
+            "text": "", 
+            "title": "Authorizing users"
         }, 
         {
             "location": "/contribute/contribution-agreement/", 
