@@ -21,7 +21,7 @@ deploy:
   bucket: drop-zone
   skip_cleanup: true
   local_dir: build
-  upload-dir: TRAVIS_BUILD_NUMBER
+  upload-dir: $TRAVIS_BUILD_NUMBER
   acl: public_read
   on:
     repo: rndsolutions/hawk
