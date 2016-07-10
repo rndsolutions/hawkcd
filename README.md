@@ -1,4 +1,4 @@
-# hawkengine
+# HawkCD
 [![Build Status](https://travis-ci.org/rndsolutions/hawk.svg?branch=master)](https://travis-ci.org/rndsolutions/hawk)
 [![Coverage Status](https://coveralls.io/repos/github/rndsolutions/hawk/badge.svg?branch=master)](https://coveralls.io/github/rndsolutions/hawk?branch=master) [![Code Climate](https://codeclimate.com/github/rndsolutions/hawk/badges/gpa.svg)](https://codeclimate.com/github/rndsolutions/hawk)
 
