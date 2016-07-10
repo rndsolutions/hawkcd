@@ -1,6 +1,6 @@
 # hawkengine
 [![Build Status](https://travis-ci.org/rndsolutions/hawk.svg?branch=master)](https://travis-ci.org/rndsolutions/hawk)
-[![Coverage Status](https://coveralls.io/repos/github/rndsolutions/hawk/badge.svg?branch=master)](https://coveralls.io/github/rndsolutions/hawk?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/rndsolutions/hawk/badge.svg?branch=master)](https://coveralls.io/github/rndsolutions/hawk?branch=master) [![Code Climate](https://codeclimate.com/github/rndsolutions/hawk/badges/gpa.svg)](https://codeclimate.com/github/rndsolutions/hawk)
 
 
 The Hawkengine Server intends to be a one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
