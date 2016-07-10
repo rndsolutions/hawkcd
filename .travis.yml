@@ -1,21 +1,25 @@
-
 sudo: required
 language: java
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 before_script:
-  - npm install gulp -g
-  - npm install bower -g
-
-script:
-  cd src/hawkengine \
-  && ./build.sh
-
+- npm install gulp -g
+- npm install bower -g
+script: cd src/hawkengine \ && ./build.sh
 jdk:
-  - oraclejdk8
+- oraclejdk8
+deploy:
+  provider: s3
+  access_key_id: AKIAIEBRQC6XJRYKOXHQ
+  secret_access_key:
+    secure: AEwlCQBuqwccLhHCbgof0pElzVHyD1vpKrIaDN57zkWKbe72v5KhjVHNth8pzBxgusdLG128gCx9BMWriS5xOREG0dAUOwt2nRgxrWQv/TDh7IHcxgskJaXLvJpKizJy4x2qMFi3EwQCKZZFylnu0dvDPW1OtMRvbgTe1ZAVzzgvwusa77mB+ne4W1ztXEZQraeVaElsZkSFg359JazPR4Tq3+gaWAl6e2h88A1LDAL8VFMu+cad4QQeEmR0RY1OqbECxTl3mjsAuoBfABsGwjmlkYzSsh+gNRHuPBGNXYxnOHBWiXPeyjK950KA6eWt2aDEVKf7zn5CofmiTvY08/C322viljfCX7YSbvg0QeGdg6TnUbI08syZqVzNslUs5GaJiZi9FL68lo6hWnS4OozKOx/XEK0pXOjIhQSjBV+0lP2HeUTJc6ILbAgZRKnld+qJHHTH7HS9dKEKdD70hN60Y0ts8pAB7/rPns5DLYV43BqEy9C98kN7qzX31SLJIWOX72f8DK1AbQgyWe98DTDQOmltgxHvuOT+YSy4GWBJsstZZ6XFpjE3vjUQgqrWLvPKstxCy54+SKRUtWrRgo7Tseamwkm1U1RO8ZUiVEZ/uouwwJhrJR1Y7/C9I8y8q5dA1PqFkcEax6/5MzDSmuLvx5pSmROfxS4/bDMMk6s=
+  bucket: drop-zone
+  acl: public_read
+  on:
+    repo: rndsolutions/hawk
+    branch: master
