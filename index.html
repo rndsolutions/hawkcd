@@ -23,6 +23,8 @@
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.4.6.min.js"></script>
+
     <!-- Theme CSS -->
     <link href="landing-page/css/agency.css" rel="stylesheet">
     <link href="landing-page/css/custom.css" rel="stylesheet">
@@ -245,6 +247,12 @@
         </div>
     </section>
 
+    <section id="builds">
+      <div class="container">
+        <div id="navigation"></div>
+        <div id="listing"></div>
+      </div>
+
     <!-- Contact Section -->
     <section id="contact">
         <div class="container">
@@ -283,6 +291,17 @@
     <script src="landing-page/js/agency.min.js"></script>
 
     <script src="landing-page/js/typed.js"></script>
+
+    <!-- the JS variables for the listing -->
+    <script type="text/javascript">
+       //var S3BL_IGNORE_PATH = true;
+       //var BUCKET_NAME = 'drop-zone';
+       var BUCKET_URL = 'http://drop-zone.s3.amazonaws.com'; //"http://data.openspending.org.s3-eu-west-1.amazonaws.com"; //'http://drop-zone.s3.amazonaws.com';
+       //var S3B_ROOT_DIR = 'drop-zone;
+    </script>
+
+    <script src="http://rgrp.github.io/s3-bucket-listing/list.js"></script>
+
     <script>
         $(function() {
             $("#head-title").typed({
@@ -292,6 +311,7 @@
                 startDelay: 100
             });
         });
+
     </script>
 
 </body>
