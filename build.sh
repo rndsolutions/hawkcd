@@ -4,13 +4,17 @@ echo "building the agent.."
 cd Agent
 gradle build
 
-echo "list current dir:"
-ls -al
-mkdir $TRAVIS_BUILD_DIR/dist/Agent
-cp -r build/libs/* $TRAVIS_BUILD_DIR/dist/Agent
+echo "$TRAVIS_BUILD_DIR" : $TRAVIS_BUILD_DIR
 
 echo "list current dir:"
-ls $TRAVIS_BUILD_DIR/dist/Agent  -al
+ls -al
+
+cd ../
+mkdir dist
+cd dist
+mkdir Agent
+cd ../Agent/
+cp -r build/libs/* ../dist/Agent
 
 echo "building the client..."
 cd ../Server/ui
@@ -25,15 +29,9 @@ echo "running the build.."
 gulp build
 
 cd ../
-echo "running the gradle build.."
+echo "running the gradle build.."g
 gradle build jacocoTestReport coveralls
 
 echo "list current dir:"
 ls -al
-
-mkdir $TRAVIS_BUILD_DIR/dist/Server
-cp -r build/libs/* $TRAVIS_BUILD_DIR/dist/Server
-
-echo "list current dir:"
-ls $TRAVIS_BUILD_DIR/dist/Server  -al
 
