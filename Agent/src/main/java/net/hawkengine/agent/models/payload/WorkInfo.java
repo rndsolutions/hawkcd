@@ -1,4 +1,5 @@
-package net.hawkengine.agent.models.payload;
+package net.hawkengine.model.payload;
+
 
 import net.hawkengine.agent.models.Job;
 
@@ -7,6 +8,7 @@ public class WorkInfo {
     private int pipelineExecutionID;
     private String stageDefinitionName;
     private int stageExecutionID;
+
     private Job job;
 
     public String getPipelineDefinitionName() {

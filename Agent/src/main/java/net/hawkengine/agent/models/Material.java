@@ -1,71 +1,26 @@
 package net.hawkengine.agent.models;
 
-import net.hawkengine.agent.enums.MaterialType;
+import net.hawkengine.model.MaterialDefinition;
 
-import java.util.Map;
+import java.time.LocalDateTime;
 
 public class Material {
-    private String pipelineName;
-    private String name;
-    private MaterialType type;
-    private String url;
-    private Boolean autoTriggerOnChange;
-    private String destination;
-    private Map<String, Object> materialSpecificDetails;
+    private LocalDateTime changeDate;
+    private MaterialDefinition materialDefinition;
 
-    public String getPipelineName() {
-        return pipelineName;
+    public LocalDateTime getChangeDate() {
+        return this.changeDate;
     }
 
-    public void setPipelineName(String pipelineName) {
-        this.pipelineName = pipelineName;
+    public void setChangeDate(LocalDateTime changeDate) {
+        this.changeDate = changeDate;
     }
 
-    public String getName() {
-        return name;
+    public MaterialDefinition getMaterialDefinition() {
+        return this.materialDefinition;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public MaterialType getType() {
-        return type;
-    }
-
-    public void setType(MaterialType type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Boolean getAutoTriggerOnChange() {
-        return autoTriggerOnChange;
-    }
-
-    public void setAutoTriggerOnChange(Boolean autoTriggerOnChange) {
-        this.autoTriggerOnChange = autoTriggerOnChange;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    public Map<String, Object> getMaterialSpecificDetails() {
-        return materialSpecificDetails;
-    }
-
-    public void setMaterialSpecificDetails(Map<String, Object> materialSpecificDetails) {
-        this.materialSpecificDetails = materialSpecificDetails;
+    public void setMaterialDefinition(MaterialDefinition materialDefinition) {
+        this.materialDefinition = materialDefinition;
     }
 }

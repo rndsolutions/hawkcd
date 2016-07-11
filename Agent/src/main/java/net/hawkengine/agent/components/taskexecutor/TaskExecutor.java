@@ -2,7 +2,7 @@ package net.hawkengine.agent.components.taskexecutor;
 
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.Task;
-import net.hawkengine.agent.models.payload.WorkInfo;
+import net.hawkengine.model.payload.WorkInfo;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

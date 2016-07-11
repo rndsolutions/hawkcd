@@ -6,11 +6,11 @@ import net.hawkengine.agent.constants.LoggerMessages;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.FetchMaterialTask;
 import net.hawkengine.agent.models.Task;
-import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.MaterialService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 import net.hawkengine.agent.services.interfaces.IMaterialService;
+import net.hawkengine.model.payload.WorkInfo;
 
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -27,6 +27,10 @@ public class FetchMaterialExecutor extends TaskExecutor {
 
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
+        if(report == null){
+            report = new StringBuilder();
+        }
+
         FetchMaterialTask taskDefinition = (FetchMaterialTask) task.getTaskDefinition();
 
         this.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
@@ -57,6 +61,8 @@ public class FetchMaterialExecutor extends TaskExecutor {
             LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
             report.append(errorMessage);
         }
+
+        workInfo.getJob().setReport(report);
 
         return task;
     }

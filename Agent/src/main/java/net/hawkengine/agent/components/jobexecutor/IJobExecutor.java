@@ -1,7 +1,7 @@
 package net.hawkengine.agent.components.jobexecutor;
 
 import net.hawkengine.agent.models.Job;
-import net.hawkengine.agent.models.payload.WorkInfo;
+import net.hawkengine.model.payload.WorkInfo;
 
 public interface IJobExecutor {
 
