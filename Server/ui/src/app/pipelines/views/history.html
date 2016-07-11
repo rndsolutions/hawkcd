@@ -32,7 +32,7 @@
         </thead>
         <tbody>
         <tr ng-repeat="run in pipesHistory.currentPipelineRuns"
-            ui-sref="index.pipelineRunManagement({pipelineName:run.name, executionID: run.executionID, groupName: run.groupName})">
+            ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId, groupName: run.groupName})">
           <td>{{run.executionId}}</td>
           <td>{{run.start | date:'dd.MM.yyyy \'at\' HH:MM'}}</td>
           <td>{{run.triggerReason}}</td>
