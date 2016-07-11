@@ -18,6 +18,7 @@ public class Job extends DbEntry {
     private Set<String> resources;
     private List<Task> tasks;
     private JobStatus status;
+    private StringBuilder report;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
@@ -92,6 +93,14 @@ public class Job extends DbEntry {
 
     public void setStatus(JobStatus status) {
         this.status = status;
+    }
+
+    public StringBuilder getReport() {
+        return this.report;
+    }
+
+    public void setReport(StringBuilder report) {
+        this.report = report;
     }
 
     public LocalDateTime getStartTime() {
