@@ -171,6 +171,51 @@ public class AgentController {
         }
     }
 
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{agentId}/report")
+    public Response reportAgent(Agent agent) {
+        String isValid = this.schemaValidator.validate(agent);
+        if (isValid.equals("OK")) {
+            ServiceResult result = this.agentService.getById(agent.getId());
+            Agent agentFromDb = (Agent) result.getObject();
+            if (result.hasError()) {
+                result = this.agentService.add(agent);
+
+                return Response.status(Status.OK)
+                        .entity(result.getObject())
+                        .build();
+            }
+
+            agentFromDb.setHostName(agent.getHostName());
+            agentFromDb.setLastReportedTime(agent.getLastReportedTime());
+            agentFromDb.setOperatingSystem(agent.getOperatingSystem());
+            agentFromDb.setIpAddress(agent.getIpAddress());
+            agentFromDb.setRootPath(agent.getRootPath());
+            agentFromDb.setName(agent.getName());
+
+            result = this.agentService.update(agentFromDb);
+
+            if (result.hasError()) {
+                return Response.status(Status.BAD_REQUEST)
+                        .entity(result.getMessage())
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+            } else {
+
+                return Response.status(Status.OK)
+                        .entity(result.getObject())
+                        .build();
+            }
+        } else {
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(isValid)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+    }
+
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
