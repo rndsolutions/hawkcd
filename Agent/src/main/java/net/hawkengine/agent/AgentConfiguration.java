@@ -77,7 +77,7 @@ public final class AgentConfiguration {
 
         installInfo.setReportJobApiAddress(String.format("%s/%s", installInfo.getServerAddress(), String.format(Constants.SERVER_REPORT_JOB_API_ADDRESS, getAgentInfo().getId())));
 
-        installInfo.setReportAgentApiAddress(String.format("%s/%s/%s", installInfo.getServerAddress(), Constants.SERVER_REPORT_AGENT_API_ADDRESS, getAgentInfo().getId()));
+        installInfo.setReportAgentApiAddress(String.format("%s/%s/%s/%s", installInfo.getServerAddress(), Constants.SERVER_REPORT_AGENT_API_ADDRESS, getAgentInfo().getId(), "report"));
 
         installInfo.setCheckForWorkApiAddress(String.format("%s/%s", installInfo.getServerAddress(), String.format(Constants.SERVER_CHECK_FOR_WORK_API_ADDRESS, getAgentInfo().getId())));
 
