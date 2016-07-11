@@ -53,7 +53,7 @@ artifacts {
     archives fatJar
 }
 
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -110,12 +110,14 @@ dependencies {
     compile 'org.mongodb:mongodb-driver:3.2.2'
 
     compile 'com.github.fakemongo:fongo:2.0.6'
-    
-    
+
+    // https://mvnrepository.com/artifact/com.orange.redis-embedded/embedded-redis
+    compile group: 'com.orange.redis-embedded', name: 'embedded-redis', version: '0.6'
+
+
     //mock-jedis dependency for junit testing.
     testCompile 'com.fiftyonred:mock-jedis:0.4.0'
 
-    
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
