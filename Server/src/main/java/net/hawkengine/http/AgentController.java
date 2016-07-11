@@ -148,10 +148,24 @@ public class AgentController {
     public Response updateAgent(Agent agent) {
         String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
-            ServiceResult result = this.agentService.update(agent);
+            ServiceResult result = this.agentService.getById(agent.getId());
+            Agent agentFromDb = (Agent) result.getObject();
             if (result.hasError()) {
                 result = this.agentService.add(agent);
+
+                return Response.status(Status.OK)
+                        .entity(result.getObject())
+                        .build();
             }
+
+            agentFromDb.setHostName(agent.getHostName());
+            agentFromDb.setLastReportedTime(agent.getLastReportedTime());
+            agentFromDb.setOperatingSystem(agent.getOperatingSystem());
+            agentFromDb.setIpAddress(agent.getIpAddress());
+            agentFromDb.setRootPath(agent.getRootPath());
+            agentFromDb.setName(agent.getName());
+
+            result = this.agentService.update(agentFromDb);
 
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
@@ -159,6 +173,7 @@ public class AgentController {
                         .type(MediaType.TEXT_HTML)
                         .build();
             } else {
+
                 return Response.status(Status.OK)
                         .entity(result.getObject())
                         .build();
