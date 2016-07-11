@@ -24,10 +24,6 @@ public class Job extends DbEntry {
     private Duration duration;
     private String assignedAgentId;
 
-
-
-    private StringBuilder report;
-
     public Job() {
         this.setEnvironmentVariables(new ArrayList<>());
         this.setResources(new HashSet<>());
@@ -98,14 +94,6 @@ public class Job extends DbEntry {
 
     public void setStatus(JobStatus status) {
         this.status = status;
-    }
-
-    public StringBuilder getReport() {
-        return this.report;
-    }
-
-    public void setReport(StringBuilder report) {
-        this.report = report;
     }
 
     public LocalDateTime getStartTime() {
