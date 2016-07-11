@@ -58,7 +58,11 @@ public class StageService extends CrudService<Stage> implements IStageService {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         Stage result = null;
         List<Stage> stages = pipeline.getStages();
-        stages.add(stage);
+        boolean alreadyExist = stages.stream().filter(st -> st.getId().equals(stage.getId())).equals(true);
+        if (!alreadyExist) {
+            stages.add(stage);
+        }
+
         pipeline.setStages(stages);
         ServiceResult serviceResult = this.pipelineService.update(pipeline);
         if (!serviceResult.hasError()) {
@@ -90,9 +94,9 @@ public class StageService extends CrudService<Stage> implements IStageService {
         }
 
         pipeline.setStages(stages);
-        ServiceResult pipelineServiceResult = this.pipelineService.update(pipeline);
+         serviceResult = this.pipelineService.update(pipeline);
 
-        if (pipelineServiceResult.hasError()) {
+        if (serviceResult.hasError()) {
             serviceResult = super.createServiceResult((Stage) serviceResult.getObject(), true, "not updated");
         } else {
             serviceResult = super.createServiceResult(stage, false, "updated successfully");
@@ -132,8 +136,11 @@ public class StageService extends CrudService<Stage> implements IStageService {
 
         if (isRemoved) {
             pipelineToUpdate.setStages(stages);
-            this.pipelineService.update(pipelineToUpdate);
-            serviceResult = super.createServiceResult(stage, false, "deleted successfully");
+            serviceResult = this.pipelineService.update(pipelineToUpdate);
+            if (!serviceResult.hasError()){
+
+                serviceResult = super.createServiceResult(stage, false, "deleted successfully");
+            }
         } else {
             serviceResult = super.createServiceResult(stage, true, "not found");
         }
