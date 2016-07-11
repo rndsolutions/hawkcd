@@ -89,7 +89,7 @@ public class ExecTaskExecutor extends TaskExecutor {
         }
 
 
-        workInfo.getJob().setReport(report);
+//        workInfo.getJob().setReport(report);
 
         return task;
     }

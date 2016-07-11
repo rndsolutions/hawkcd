@@ -29,6 +29,7 @@ public class Job extends DbEntry {
         this.setResources(new HashSet<>());
         this.setTasks(new ArrayList<>());
         this.setStatus(JobStatus.AWAITING);
+        this.setReport(new StringBuilder());
     }
 
     public String getJobDefinitionId() {
