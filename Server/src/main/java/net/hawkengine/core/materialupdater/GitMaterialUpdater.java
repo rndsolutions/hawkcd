@@ -1,8 +1,9 @@
 package net.hawkengine.core.materialupdater;
 
+import net.hawkengine.model.GitMaterial;
 import net.hawkengine.model.MaterialDefinition;
 
-public class GitMaterialUpdater extends MaterialUpdater{
+public class GitMaterialUpdater extends MaterialUpdater {
     private IGitService gitService;
 
     public GitMaterialUpdater() {
@@ -15,6 +16,12 @@ public class GitMaterialUpdater extends MaterialUpdater{
 
     @Override
     public MaterialDefinition getLatestMaterialVersion(MaterialDefinition materialDefinition) {
+        GitMaterial gitMaterial = (GitMaterial) materialDefinition;
+        boolean shouldCloneRepository = this.gitService.shouldCloneRepository(gitMaterial);
+        if (shouldCloneRepository) {
+            this.gitService.cloneRepository(gitMaterial);
+        }
+
         return null;
     }
 
