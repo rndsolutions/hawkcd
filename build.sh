@@ -13,8 +13,12 @@ cd ../
 mkdir dist
 cd dist
 mkdir Agent
+mkdir Server
 cd ../Agent/
 cp -r build/libs/* ../dist/Agent
+
+echo "list current dir:"
+ls -al
 
 echo "building the client..."
 cd ../Server/ui
@@ -31,6 +35,9 @@ gulp build
 cd ../
 echo "running the gradle build.."g
 gradle build jacocoTestReport coveralls
+
+echo "copy files server build outputs to the dist folder"
+cp -r build/libs/* ../dist/Server
 
 echo "list current dir:"
 ls -al
