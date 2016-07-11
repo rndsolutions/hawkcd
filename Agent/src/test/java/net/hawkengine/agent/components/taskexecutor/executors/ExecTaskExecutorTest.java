@@ -1,133 +1,204 @@
-//package net.hawkengine.agent.components.taskexecutor.executors;
-//
-//import net.hawkengine.agent.AgentConfiguration;
-//import net.hawkengine.agent.base.TestBase;
-//import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
-//import net.hawkengine.agent.enums.ExecutionStatus;
-//import net.hawkengine.agent.models.ExecTask;
-//import net.hawkengine.agent.models.payload.JobExecutionInfo;
-//import net.hawkengine.agent.models.payload.TaskExecutionInfo;
-//import org.junit.*;
-//
-//import java.io.File;
-//
-//public class ExecTaskExecutorTest extends TestBase{
-//
-//    private static TaskExecutor execTaskExecutor = new ExecTaskExecutor();
-//
-//    private ExecTask task;
-//    private JobExecutionInfo jobExecutionInfo;
-//    private String testFailMessage;
-//
-//    @Before
-//    public void setUp() throws Exception {
-//        AgentConfiguration.configure();
-//        File pipelinesDir = new File(AgentConfiguration.getInstallInfo().getAgentPipelinesDir());
-//        pipelinesDir.mkdir();
-//
-//        this.task = new ExecTask();
-//        this.jobExecutionInfo = new JobExecutionInfo();
-//        this.testFailMessage = "";
-//    }
-//
-//    @After
-//    public void tearDown() throws Exception {
-//        this.testFailMessage = "";
-//    }
-//
-//    @Test
-//    public void validTask_returnTaskExecutionInfo() throws Exception {
-//
-//        this.task.setCommand("cmd");
-//        this.task.setArguments(new String[]{"/c", "echo", "test argument"});
-//        this.task.setIgnoreErrors(false);
-//        this.jobExecutionInfo.setPipelineName("Hawk");
-//
-//        TaskExecutionInfo result = execTaskExecutor.ExecuteTask(this.task, this.jobExecutionInfo);
-//
-//        Assert.assertNotNull(result);
-//    }
-//
-//    @Test
-//    public void successfullyExecutingTask_statusPassed() throws Exception {
-//
-//        Assume.assumeTrue(System.getProperty("os.name").toLowerCase().startsWith("win"));
-//        //arrange
-//        this.task.setCommand("cmd");
-//        this.task.setArguments(new String[]{"/c", "echo", "test argument"});
-//        this.task.setIgnoreErrors(false);
-//        this.jobExecutionInfo.setPipelineName("");
-//
-//        ExecutionStatus expectedResult = ExecutionStatus.PASSED;
-//        //act
-//        ExecutionStatus actualResult = execTaskExecutor.ExecuteTask(this.task, this.jobExecutionInfo).getStatus();
-//        //assert
-//        this.testFailMessage = String.format("Expected result is %s, but the actual is %s", expectedResult, actualResult);
-//
-//        Assert.assertEquals(testFailMessage, expectedResult, actualResult);
-//    }
-//
-//    @Test
-//    public void failingTaskAndNotIgnoringErrors_statusFailed() throws Exception {
-//
-//        this.task.setCommand("cmd");
-//        this.task.setArguments(new String[]{"/c", "wrong", "command"});
-//        this.task.setIgnoreErrors(false);
-//        this.jobExecutionInfo.setPipelineName("");
-//
-//        ExecutionStatus expectedResult = ExecutionStatus.FAILED;
-//        ExecutionStatus actualResult = execTaskExecutor.ExecuteTask(this.task, this.jobExecutionInfo).getStatus();
-//
-//        this.testFailMessage = String.format("Expected result is %s, but the actual is %s", expectedResult, actualResult);
-//
-//        Assert.assertEquals(testFailMessage, expectedResult, actualResult);
-//    }
-//
-////    @Test
-////    public void failingTaskAndIgnoringErrors_statusPassed() throws Exception {
-////
-////        this.task.setCommand("cmd");
-////        this.task.setArguments(new String[]{"/c", "wrong", "command"});
-////        this.task.setIgnoreErrors(true);
-////        this.jobExecutionInfo.setPipelineDefinitionName("");
-////
-////        ExecutionStatus expectedResult = ExecutionStatus.PASSED;
-////        ExecutionStatus actualResult = execTaskExecutor.executeTask(this.task, this.jobExecutionInfo).getStatus();
-////
-////        this.testFailMessage = String.format("Expected result is %s, but the actual is %s", expectedResult, actualResult);
-////
-////        Assert.assertEquals(testFailMessage, expectedResult, actualResult);
-////    }
-////
-////    @Test
-////    public void customExistingWorkingDirectory_statusPassed() throws Exception {
-////
-////        this.task.setCommand("cmd");
-////        this.task.setArguments(new String[]{"/c", "echo", "test argument"});
-////        this.task.setIgnoreErrors(false);
-////        this.task.setWorkingDirectory("src");
-////
-////        ExecutionStatus expectedResult = ExecutionStatus.PASSED;
-////        ExecutionStatus actualResult = execTaskExecutor.executeTask(this.task, this.jobExecutionInfo).getStatus();
-////
-////        this.testFailMessage = String.format("Expected result is %s, but the actual is %s", expectedResult, actualResult);
-////
-////        Assert.assertEquals(testFailMessage, expectedResult, actualResult);
-////    }
-////
-////    @Test
-////    public void nonexistentWorkingDirectory_statusFailed() throws Exception {
-////
-////        this.task.setCommand("cmd");
-////        this.task.setArguments(new String[]{"/c", "echo", "test argument"});
-////        this.task.setIgnoreErrors(false);
-////        this.task.setWorkingDirectory("NonExistentDirectory");
-////
-////        ExecutionStatus expectedResult = ExecutionStatus.FAILED;
-////        ExecutionStatus actualResult = execTaskExecutor.executeTask(this.task, this.jobExecutionInfo).getStatus();
-////
-////        this.testFailMessage = String.format("Expected result is %s, but the actual is %s", expectedResult, actualResult);
-////
-////        Assert.assertEquals(testFailMessage, expectedResult, actualResult);
-////    }
-//}
+package net.hawkengine.agent.components.taskexecutor.executors;
+
+import net.hawkengine.agent.AgentConfiguration;
+import net.hawkengine.agent.base.TestBase;
+import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
+import net.hawkengine.agent.enums.TaskStatus;
+import net.hawkengine.agent.models.ExecTask;
+import net.hawkengine.agent.models.Job;
+import net.hawkengine.agent.models.Task;
+import net.hawkengine.agent.models.payload.WorkInfo;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExecTaskExecutorTest extends TestBase {
+
+    private TaskExecutor execTaskExecutor;
+    private Task expectedTask;
+    private ExecTask expectedExecTask;
+    private Job job;
+    private WorkInfo expectedWorkInfo;
+    private StringBuilder expectedReport;
+    private String expectedWorkingDir;
+
+    @Before
+    public void setUp() throws Exception {
+        this.execTaskExecutor = new ExecTaskExecutor();
+
+        AgentConfiguration.configure();
+        File pipelinesDir = new File(AgentConfiguration.getInstallInfo().getAgentPipelinesDir());
+        pipelinesDir.mkdir();
+
+        this.job = new Job();
+
+        this.expectedWorkInfo = new WorkInfo();
+        this.expectedWorkInfo.setPipelineDefinitionName("tetttPipeline");
+        this.expectedReport = new StringBuilder();
+
+        this.expectedTask = new Task();
+        this.expectedExecTask = new ExecTask();
+    }
+
+    @After
+    public void after() {
+        if (this.expectedWorkingDir != null) {
+            new File(this.expectedWorkingDir).delete();
+        }
+    }
+
+    @Test
+    public void executeTask_validTask_passedTaskStatus() throws Exception {
+        //Assert
+        List<String> expectedArguments = new ArrayList<>();
+        expectedArguments.add("/c");
+        expectedArguments.add("echo");
+        expectedArguments.add("test");
+
+        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setArguments(expectedArguments);
+        this.expectedExecTask.setIgnoringErrors(false);
+
+        this.expectedTask.setTaskDefinition(this.expectedExecTask);
+
+        List<Task> jobTasks = new ArrayList<>();
+
+        jobTasks.add(this.expectedTask);
+        this.job.setTasks(jobTasks);
+        this.expectedWorkInfo.setJob(this.job);
+
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        new File(this.expectedWorkingDir).mkdirs();
+
+        //Act
+        Task actualTask = execTaskExecutor.executeTask(this.expectedTask, this.expectedReport, this.expectedWorkInfo);
+
+        //Assert
+        Assert.assertNotNull(actualTask);
+        Assert.assertEquals(TaskStatus.PASSED, actualTask.getStatus());
+    }
+
+    @Test
+    public void executeTask_invalidTask_failedTaskStatus() throws Exception {
+        //Assert
+        List<String> expectedArguments = new ArrayList<>();
+        expectedArguments.add("/c");
+        expectedArguments.add("echo");
+        expectedArguments.add("test");
+
+        this.expectedExecTask.setCommand("cmhhd");
+        this.expectedExecTask.setArguments(expectedArguments);
+        this.expectedExecTask.setIgnoringErrors(false);
+
+        this.expectedTask.setTaskDefinition(this.expectedExecTask);
+
+        List<Task> jobTasks = new ArrayList<>();
+
+        jobTasks.add(this.expectedTask);
+        this.job.setTasks(jobTasks);
+        this.expectedWorkInfo.setJob(this.job);
+
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        new File(this.expectedWorkingDir).mkdirs();
+
+        //Act
+        Task actualTask = execTaskExecutor.executeTask(this.expectedTask, this.expectedReport, this.expectedWorkInfo);
+
+        //Assert
+        Assert.assertNotNull(actualTask);
+        Assert.assertEquals(TaskStatus.FAILED, actualTask.getStatus());
+    }
+
+    @Test
+    public void executeTask_failingTaskNotIgnoringErrors_failedTaskStatus() throws Exception {
+        //Assert
+        List<String> expectedArguments = new ArrayList<>();
+        expectedArguments.add("/c");
+        expectedArguments.add("echo");
+        expectedArguments.add("test");
+
+        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setArguments(expectedArguments);
+        this.expectedExecTask.setIgnoringErrors(false);
+
+        this.expectedTask.setTaskDefinition(this.expectedExecTask);
+
+        List<Task> jobTasks = new ArrayList<>();
+
+        jobTasks.add(this.expectedTask);
+        this.job.setTasks(jobTasks);
+        this.expectedWorkInfo.setJob(this.job);
+
+        //Act
+        Task actualTask = execTaskExecutor.executeTask(this.expectedTask, this.expectedReport, this.expectedWorkInfo);
+
+        //Assert
+        Assert.assertNotNull(actualTask);
+        Assert.assertEquals(TaskStatus.FAILED, actualTask.getStatus());
+    }
+
+    @Test
+    public void executeTask_failingTaskIgnoringErrors_passedTaskStatus() throws Exception {
+        //Assert
+        List<String> expectedArguments = new ArrayList<>();
+        expectedArguments.add("/c");
+        expectedArguments.add("echo");
+        expectedArguments.add("test");
+
+        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setArguments(expectedArguments);
+        this.expectedExecTask.setIgnoringErrors(true);
+
+        this.expectedTask.setTaskDefinition(this.expectedExecTask);
+
+        List<Task> jobTasks = new ArrayList<>();
+
+        jobTasks.add(this.expectedTask);
+        this.job.setTasks(jobTasks);
+        this.expectedWorkInfo.setJob(this.job);
+
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        new File(this.expectedWorkingDir).mkdirs();
+
+        //Act
+        Task actualTask = execTaskExecutor.executeTask(this.expectedTask, this.expectedReport, this.expectedWorkInfo);
+
+        //Assert
+        Assert.assertNotNull(actualTask);
+        Assert.assertEquals(TaskStatus.PASSED, actualTask.getStatus());
+    }
+
+    @Test
+    public void executeTask_nonExistingDirectory_failedTaskStatus() throws Exception {
+        //Assert
+        List<String> expectedArguments = new ArrayList<>();
+        expectedArguments.add("/c");
+        expectedArguments.add("echo");
+        expectedArguments.add("test");
+
+        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setArguments(expectedArguments);
+        this.expectedExecTask.setIgnoringErrors(false);
+
+        this.expectedTask.setTaskDefinition(this.expectedExecTask);
+
+        List<Task> jobTasks = new ArrayList<>();
+
+        jobTasks.add(this.expectedTask);
+        this.job.setTasks(jobTasks);
+        this.expectedWorkInfo.setJob(this.job);
+
+        //Act
+        Task actualTask = execTaskExecutor.executeTask(this.expectedTask, this.expectedReport, this.expectedWorkInfo);
+
+        //Assert
+        Assert.assertNotNull(actualTask);
+        Assert.assertEquals(TaskStatus.FAILED, actualTask.getStatus());
+    }
+}

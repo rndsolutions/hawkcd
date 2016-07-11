@@ -50,6 +50,7 @@ public final class AgentConfiguration {
         String agentName = configFileProperties.getProperty("agentName");
         agentInfo.setName((agentName != null && !agentName.isEmpty()) ? agentName : Constants.AGENT_NAME);
         agentInfo.setConnected(true);
+        agentInfo.setEnabled(true);
         agentInfo.setRootPath(Constants.AGENT_SANDBOX);
         agentInfo.setLastReportedTime(null);
         try {
