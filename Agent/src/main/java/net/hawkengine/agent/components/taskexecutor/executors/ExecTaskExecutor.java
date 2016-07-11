@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
@@ -19,11 +21,11 @@ public class ExecTaskExecutor extends TaskExecutor {
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
-        ExecTask execTask = (ExecTask) task.getTaskDefinition();
-
-        if (report == null) {
+        if (report == null){
             report = new StringBuilder();
         }
+
+        ExecTask execTask = (ExecTask) task.getTaskDefinition();
 
         String command = execTask.getCommand();
         String arguments = String.join(" ", execTask.getArguments());
@@ -31,12 +33,11 @@ public class ExecTaskExecutor extends TaskExecutor {
         String commandAndArguments = command + " " + arguments;
         String[] args = commandAndArguments.split(" ");
 
-        report.append(String.format("Command: %s true", command));
-        report.append(String.format("Arguments: %s true", arguments));
+        report.append(String.format("Command: %s true \n", command));
+        report.append(String.format("Arguments: %s true \n", arguments));
 
-        //ProcessBuilder builder = new ProcessBuilder(command, arguments);
+        ProcessBuilder builder = new ProcessBuilder(args);
 
-        ProcessBuilder builder = new ProcessBuilder(command, "-c", arguments);
         builder.redirectErrorStream(true);
 
         if ((execTask.getWorkingDirectory() != null) && !execTask.getWorkingDirectory().isEmpty()) {
@@ -51,33 +52,49 @@ public class ExecTaskExecutor extends TaskExecutor {
 
         Process process = null;
         try {
-            String line;
-            process = builder.start();
-            updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while ((line = reader.readLine()) != null) {
-                LOGGER.info(line);
-                report.append(String.format("%s true", line));
+            Path path = builder.directory().toPath();
+            if (Files.exists(path)) {
+                process = builder.start();
+
+                this.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.isEmpty()) {
+                        break;
+                    }
+                    LOGGER.info(line);
+                    report.append(String.format("%s true", line));
+                }
+                reader.close();
+                try {
+                    process.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                process.destroy();
+
+                if ((process != null) && (process.exitValue() == 0)) {
+                    this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+                } else {
+                    if (!execTask.isIgnoringErrors()) {
+                        this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
+                    } else {
+                        this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+                    }
+                }
+            } else{
+                this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
             }
 
-            reader.close();
-            process.waitFor();
-            process.destroy();
         } catch (IOException e) {
             LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, "22", e.getMessage()));
-            report.append(String.format("%s true", e.getMessage()));
-
-        } catch (InterruptedException e) {
-            LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, "2", e.getMessage()));
-            report.append(String.format("%s true", e.getMessage()));
+            report.append(String.format("%s true \n", e.getMessage()));
+            this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
         }
-        int exitValue = process.exitValue();
 
-        if (process != null && process.exitValue() == 0) {
-            super.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
-        } else {
-            super.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-        }
+
+//        workInfo.getJob().setReport(report);
 
         return task;
     }

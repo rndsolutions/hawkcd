@@ -77,7 +77,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
             result.setObject(null);
             result.setError(true);
             result.setMessage("This agent has no job assigned.");
-        } else if (!agent.isAssigned()) {
+        } else if (agent.isAssigned()) {
             List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
             for (Pipeline pipeline : pipelines) {
                 WorkInfo workInfo = new WorkInfo();
