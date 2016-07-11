@@ -1,6 +1,8 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
+
+import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Job;
@@ -17,16 +19,20 @@ import net.hawkengine.services.interfaces.IJobService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
+
 import org.junit.Before;
 import org.junit.Test;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.UUID;
+
 import redis.clients.jedis.JedisPoolConfig;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class JobServiceTests {
     private IPipelineService pipelineService;
@@ -39,35 +45,38 @@ public class JobServiceTests {
     private Job job;
 
     @Before
-    public void setUp(){
-        MockJedisPool mockJedisPool = new MockJedisPool(new JedisPoolConfig(),"testJobService");
-        IDbRepository pipelineRepo = new RedisRepository(Pipeline.class,mockJedisPool);
-        IDbRepository pipelineDefRepo = new RedisRepository(PipelineDefinition.class, mockJedisPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefRepo);
-        this.pipelineService = new PipelineService(pipelineRepo,pipelineDefinitionService);
+    public void setUp() {
+        MockJedisPool mockJedisPool = new MockJedisPool(new JedisPoolConfig(), "testJobService");
+        IDbRepository pipelineRepository = new RedisRepository(Pipeline.class, mockJedisPool);
+        IDbRepository pipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockJedisPool);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepository);
+        this.pipelineService = new PipelineService(pipelineRepository, pipelineDefinitionService);
         this.stageService = new StageService(pipelineService);
         this.jobService = new JobService(stageService);
     }
 
+    //TODO: Rename tests to fit test naming conventions
+
     @Test
-    public void getAll_emptyList(){
+    public void getAll_emptyList() {
         //Arrange
         String expectedMessage = "Jobs retrieved successfully.";
-        List<Job> expextedObject = new ArrayList<>();
         boolean expectedError = false;
 
         //Act
         ServiceResult actualResult = this.jobService.getAll();
+        List<Job> actualObject = (List<Job>) actualResult.getObject();
 
         //Assert
         assertNotNull(actualResult.getObject());
+        //TODO: booleans are checked with assertTrue and assertFalse in all tests
         assertEquals(expectedError, actualResult.hasError());
-        assertEquals(expextedObject, actualResult.getObject());
+        assertTrue(actualObject.isEmpty());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void getAll_addOneObject_sucessMessage(){
+    public void getAll_addOneObject_successMessage() {
         //Arrange
         this.insertIntoDb();
         String expectedMessage = "Jobs retrieved successfully.";
@@ -75,17 +84,18 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.getAll();
-        List<Job> expextedObject = (List<Job>)actualResult.getObject();
+        //TODO: Rename expectedObject to actualObject in all tests
+        List<Job> expectedObject = (List<Job>) actualResult.getObject();
 
         //Assert
         assertNotNull(actualResult.getObject());
         assertEquals(expectedError, actualResult.hasError());
-        assertEquals(1, expextedObject.size());
+        assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, expectedObject.size());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void getById_successMessage(){
+    public void getById_successMessage() {
         //Arrange
         this.insertIntoDb();
         String expectedMessage = "Job " + this.job.getId() + " retrieved successfully.";
@@ -93,17 +103,17 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.getById(this.job.getId());
-        Job expextedJob = (Job)actualResult.getObject();
+        Job expectedJob = (Job) actualResult.getObject();
 
         //Assert
         assertNotNull(actualResult.getObject());
         assertEquals(expectedError, actualResult.hasError());
-        assertEquals(this.job.getId(), expextedJob.getId());
+        assertEquals(this.job.getId(), expectedJob.getId());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void getById_wrongId_errorMessage(){
+    public void getById_wrongId_errorMessage() {
         //Arrange
         UUID randomId = UUID.randomUUID();
         String expectedMessage = "Job not found.";
@@ -119,8 +129,9 @@ public class JobServiceTests {
 
     }
 
+    //TODO: Fix test and add happy path
     @Test
-    public void add_OneObject_successMessage(){
+    public void add_oneObject_successMessage() {
         //Arrange
         this.insertIntoDb();
         boolean expectedError = false;
@@ -128,7 +139,7 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.add(this.job);
-        Job job = (Job)actualResult.getObject();
+        Job job = (Job) actualResult.getObject();
 
         //Assert
         assertNotNull(actualResult.getObject());
@@ -137,8 +148,9 @@ public class JobServiceTests {
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
+    //TODO: Add delete non existing object method
     @Test
-    public void delete_oneJob_successMessage(){
+    public void delete_oneJob_successMessage() {
         //Arrange
         this.insertIntoDb();
         Job newJob = this.job;
@@ -151,11 +163,11 @@ public class JobServiceTests {
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedMessage,actualResult.getMessage());
+        assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void delete_lastJob_errorMessage(){
+    public void delete_lastJob_errorMessage() {
         //Arrange
         this.insertIntoDb();
         String expectedMessage = "Job is the last Job and cannot be deleted.";
@@ -166,31 +178,31 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedMessage,actualResult.getMessage());
-        assertEquals(expectedError,actualResult.hasError());
+        assertEquals(expectedMessage, actualResult.getMessage());
+        assertEquals(expectedError, actualResult.hasError());
     }
 
     @Test
-    public void update_successMessage(){
+    public void update_successMessage() {
         //Act
         this.insertIntoDb();
         this.job.setStatus(JobStatus.PASSED);
         boolean expectedError = false;
-        String expectedMessage = "Job " + job.getId() + " " +"updated successfully.";
+        String expectedMessage = "Job " + job.getId() + " " + "updated successfully.";
 
         //Act
         ServiceResult actualResult = this.jobService.update(this.job);
-        Job job = (Job)actualResult.getObject();
+        Job job = (Job) actualResult.getObject();
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedError,actualResult.hasError());
+        assertEquals(expectedError, actualResult.hasError());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(this.job.getStatus(), job.getStatus());
     }
 
     @Test
-    public void update_wrongId_errorMessage(){
+    public void update_wrongId_errorMessage() {
         //Arrange
         this.pipelineDefinition = new PipelineDefinition();
         this.pipelineDefinition.setName("pipelinedefinition");
@@ -203,12 +215,12 @@ public class JobServiceTests {
         this.stage.setPipelineId(this.pipeline.getId());
         this.stageService.add(this.stage);
         this.job = new Job();
-        job.setStageId(this.stage.getId());
+        this.job.setStageId(this.stage.getId());
         String expectedMessage = "Job not found.";
         boolean expectedError = true;
 
         //Act
-        ServiceResult actualResult = this.jobService.update(job);
+        ServiceResult actualResult = this.jobService.update(this.job);
 
         //Assert
         assertNull(actualResult.getObject());
@@ -216,7 +228,8 @@ public class JobServiceTests {
         assertEquals(expectedError, actualResult.hasError());
     }
 
-    private void  insertIntoDb(){
+    //TODO: Avoid reliance on this.jobService.add()
+    private void insertIntoDb() {
         this.pipelineDefinition = new PipelineDefinition();
         this.pipelineDefinition.setName("pipelinedefinition");
         this.pipelineDefinitionService.add(this.pipelineDefinition);
@@ -228,7 +241,7 @@ public class JobServiceTests {
         this.stage.setPipelineId(this.pipeline.getId());
         this.stageService.add(this.stage);
         this.job = new Job();
-        this.job.setStageId(stage.getId());
+        this.job.setStageId(this.stage.getId());
         this.jobService.add(this.job);
     }
 }
