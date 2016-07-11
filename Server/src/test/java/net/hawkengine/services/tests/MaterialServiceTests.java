@@ -148,12 +148,12 @@ public class MaterialServiceTests {
         //Arrange
         Material expectedMaterial = new Material();
         String expectedMessage = Material.class.getSimpleName() + " " + expectedMaterial.getId() + " updated successfully.";
-        LocalDateTime initialDate = LocalDateTime.now();
+        LocalDateTime initialDate = LocalDateTime.of(2016, 7, 10, 12, 00);
         expectedMaterial.setChangeDate(initialDate);
         this.materialService.add(expectedMaterial);
 
         //Act
-        LocalDateTime expectedDate = LocalDateTime.now();
+        LocalDateTime expectedDate = LocalDateTime.of(2016, 7, 11, 12, 00);
         expectedMaterial.setChangeDate(expectedDate);
         ServiceResult actualResult = this.materialService.update(expectedMaterial);
         Material actualResultObject = (Material) actualResult.getObject();

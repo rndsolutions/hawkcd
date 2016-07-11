@@ -10,7 +10,7 @@ cache:
 before_script:
 - npm install gulp -g
 - npm install bower -g
-script: cd src/hawkengine \ && ./build.sh
+script: ./build.sh
 jdk:
 - oraclejdk8
 deploy:

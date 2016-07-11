@@ -250,3 +250,4 @@ gradle-app.setting
 .project
 
 site
+/Agent/Log/
