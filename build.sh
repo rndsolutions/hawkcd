@@ -6,8 +6,11 @@ gradle build
 
 echo "list current dir:"
 ls -al
-#mkdir $TRAVIS_BUILD_DIR/Agent
-cp -r build/libs/* $TRAVIS_BUILD_DIR/Agent
+mkdir $TRAVIS_BUILD_DIR/dist/Agent
+cp -r build/libs/* $TRAVIS_BUILD_DIR/dist/Agent
+
+echo "list current dir:"
+ls $TRAVIS_BUILD_DIR/dist/Agent  -al
 
 echo "building the client..."
 cd ../Server/ui
@@ -27,6 +30,10 @@ gradle build jacocoTestReport coveralls
 
 echo "list current dir:"
 ls -al
-#mkdir $TRAVIS_BUILD_DIR/Server
-cp -r build/libs/* $TRAVIS_BUILD_DIR/Server
+
+mkdir $TRAVIS_BUILD_DIR/dist/Server
+cp -r build/libs/* $TRAVIS_BUILD_DIR/dist/Server
+
+echo "list current dir:"
+ls $TRAVIS_BUILD_DIR/dist/Server  -al
 
