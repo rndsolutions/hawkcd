@@ -12,13 +12,15 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExecTaskExecutorTest extends TestBase {
+@RunWith(RunOnlyOnLinux.class)
+public class ExecTaskExecutorTestOnLinux extends TestBase {
 
     private TaskExecutor execTaskExecutor;
     private Task expectedTask;
@@ -57,11 +59,11 @@ public class ExecTaskExecutorTest extends TestBase {
     public void executeTask_validTask_passedTaskStatus() throws Exception {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("/c");
+        expectedArguments.add("-c");
         expectedArguments.add("echo");
         expectedArguments.add("test");
 
-        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);
         this.expectedExecTask.setIgnoringErrors(false);
 
@@ -88,11 +90,11 @@ public class ExecTaskExecutorTest extends TestBase {
     public void executeTask_invalidTask_failedTaskStatus() throws Exception {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("/c");
+        expectedArguments.add("-c");
         expectedArguments.add("echo");
         expectedArguments.add("test");
 
-        this.expectedExecTask.setCommand("cmhhd");
+        this.expectedExecTask.setCommand("/bin/bashh");
         this.expectedExecTask.setArguments(expectedArguments);
         this.expectedExecTask.setIgnoringErrors(false);
 
@@ -119,11 +121,11 @@ public class ExecTaskExecutorTest extends TestBase {
     public void executeTask_failingTaskNotIgnoringErrors_failedTaskStatus() throws Exception {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("/c");
+        expectedArguments.add("-c");
         expectedArguments.add("echo");
         expectedArguments.add("test");
 
-        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);
         this.expectedExecTask.setIgnoringErrors(false);
 
@@ -147,11 +149,11 @@ public class ExecTaskExecutorTest extends TestBase {
     public void executeTask_failingTaskIgnoringErrors_passedTaskStatus() throws Exception {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("/c");
+        expectedArguments.add("-c");
         expectedArguments.add("echo");
         expectedArguments.add("test");
 
-        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);
         this.expectedExecTask.setIgnoringErrors(true);
 
@@ -178,11 +180,11 @@ public class ExecTaskExecutorTest extends TestBase {
     public void executeTask_nonExistingDirectory_failedTaskStatus() throws Exception {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("/c");
+        expectedArguments.add("-c");
         expectedArguments.add("echo");
         expectedArguments.add("test");
 
-        this.expectedExecTask.setCommand("cmd");
+        this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);
         this.expectedExecTask.setIgnoringErrors(false);
 

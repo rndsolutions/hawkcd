@@ -67,6 +67,11 @@ public class ExecTaskExecutor extends TaskExecutor {
                     report.append(String.format("%s true", line));
                 }
                 reader.close();
+                try {
+                    process.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 process.destroy();
 
                 if ((process != null) && (process.exitValue() == 0)) {
