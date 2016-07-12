@@ -87,10 +87,6 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     public ServiceResult addTask(TaskDefinition taskDefinition) {
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
-        boolean hasNameCollision = this.checkForNameCollision(taskDefinitions, taskDefinition);
-        if (hasNameCollision) {
-            return super.createServiceResult(taskDefinition, true, "with the same name exists");
-        }
 
         taskDefinitions.add(taskDefinition);
         jobDefinition.setTaskDefinitions(taskDefinitions);

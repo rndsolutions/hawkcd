@@ -50,9 +50,6 @@ public class FetchArtifactExecutor extends TaskExecutor {
 
         FetchArtifactTask taskDefinition = (FetchArtifactTask) task.getTaskDefinition();
 
-        TaskExecutionInfo taskExecutionInfo = new TaskExecutionInfo();
-        taskExecutionInfo.setTaskId(taskDefinition.getId());
-
         super.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
         report.append(String.format("%s pipeline=%s stage=%s job=%s source=%s destination=%s",
