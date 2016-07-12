@@ -15,6 +15,9 @@ import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -61,12 +64,13 @@ public class FetchArtifactExecutor extends TaskExecutor {
                 taskDefinition.getDestination()));
 
         String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getFetchArtifactApiAddress(),
-                taskDefinition.getPipeline(),
-//                Integer.toString(report.getPipelineExecutionId()),
-                taskDefinition.getStage(),
-//                Integer.toString(report.getStageExecutionId()),
-                taskDefinition.getJob(),
-                taskDefinition.getSource());
+                taskDefinition.getPipelineDefinitionId(),
+                "stage-definitions",
+                taskDefinition.getStageDefinitionId(),
+                "job-definitions",
+                taskDefinition.getJobDefinitionId(),
+                "task-definitions",
+                taskDefinition.getId());
 
         WebResource webResource = this.restClient.resource(requestSource);
         ClientResponse response = webResource.get(ClientResponse.class);
@@ -82,7 +86,14 @@ public class FetchArtifactExecutor extends TaskExecutor {
         String errorMessage;
 
         String filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), UUID.randomUUID() + ".zip").toString();
+        File fetchArtifactDir = new File(filePath);
 
+        fetchArtifactDir.getParentFile().mkdirs();
+        try {
+            fetchArtifactDir.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         errorMessage = this.fileManagementService.streamToFile(response.getEntityInputStream(), filePath);
 
         if (errorMessage != null) {
