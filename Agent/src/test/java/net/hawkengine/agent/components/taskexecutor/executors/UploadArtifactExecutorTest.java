@@ -1,30 +1,30 @@
-//package net.hawkengine.agent.components.taskexecutor.executors;
-//
-//import com.sun.jersey.api.client.Client;
-//import com.sun.jersey.api.client.ClientResponse;
-//import com.sun.jersey.api.client.WebResource;
-//import net.hawkengine.agent.AgentConfiguration;
-//import net.hawkengine.agent.base.TestBase;
-//import net.hawkengine.agent.enums.ExecutionState;
-//import net.hawkengine.agent.enums.ExecutionStatus;
-//import net.hawkengine.agent.models.UploadArtifactTask;
-//import net.hawkengine.agent.models.payload.JobExecutionInfo;
-//import net.hawkengine.agent.models.payload.TaskExecutionInfo;
-//import net.hawkengine.agent.services.interfaces.IFileManagementService;
-//import org.junit.After;
-//import org.junit.Assert;
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.MockitoAnnotations;
-//
-//import java.io.File;
-//import java.util.concurrent.atomic.AtomicBoolean;
-//
-//public class UploadArtifactExecutorTest extends TestBase{
-//
+package net.hawkengine.agent.components.taskexecutor.executors;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import net.hawkengine.agent.AgentConfiguration;
+import net.hawkengine.agent.base.TestBase;
+import net.hawkengine.agent.enums.ExecutionState;
+import net.hawkengine.agent.enums.ExecutionStatus;
+import net.hawkengine.agent.models.UploadArtifactTask;
+import net.hawkengine.agent.models.payload.JobExecutionInfo;
+import net.hawkengine.agent.models.payload.TaskExecutionInfo;
+import net.hawkengine.agent.services.interfaces.IFileManagementService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class UploadArtifactExecutorTest extends TestBase{
+
 //    @InjectMocks
 //    private UploadArtifactExecutor uploadArtifactExecutor;
 //
@@ -185,4 +185,4 @@
 //
 //        Assert.assertEquals(errorMessages.toString(), true, testResult.get());
 //    }
-//}
+}

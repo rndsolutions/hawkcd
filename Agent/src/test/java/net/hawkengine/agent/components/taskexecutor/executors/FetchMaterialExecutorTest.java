@@ -1,26 +1,26 @@
-//package net.hawkengine.agent.components.taskexecutor.executors;
-//
-//import net.hawkengine.agent.AgentConfiguration;
-//import net.hawkengine.agent.base.TestBase;
-//import net.hawkengine.agent.enums.ExecutionState;
-//import net.hawkengine.agent.enums.ExecutionStatus;
-//import net.hawkengine.agent.models.FetchMaterialTask;
-//import net.hawkengine.agent.models.payload.JobExecutionInfo;
-//import net.hawkengine.agent.models.payload.TaskExecutionInfo;
-//import net.hawkengine.agent.services.interfaces.IMaterialService;
-//import org.junit.After;
-//import org.junit.Assert;
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.MockitoAnnotations;
-//
-//import java.util.concurrent.atomic.AtomicBoolean;
-//
-//public class FetchMaterialExecutorTest extends TestBase{
-//
+package net.hawkengine.agent.components.taskexecutor.executors;
+
+import net.hawkengine.agent.AgentConfiguration;
+import net.hawkengine.agent.base.TestBase;
+import net.hawkengine.agent.enums.ExecutionState;
+import net.hawkengine.agent.enums.ExecutionStatus;
+import net.hawkengine.agent.models.FetchMaterialTask;
+import net.hawkengine.agent.models.payload.JobExecutionInfo;
+import net.hawkengine.agent.models.payload.TaskExecutionInfo;
+import net.hawkengine.agent.services.interfaces.IMaterialService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class FetchMaterialExecutorTest extends TestBase{
+
 //    private FetchMaterialTask task;
 //    private JobExecutionInfo jobExecutionInfo;
 //
@@ -99,4 +99,4 @@
 //
 //        Assert.assertEquals(errorMessages.toString(), true, testResult.get());
 //    }
-//}
+}

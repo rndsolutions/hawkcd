@@ -1,28 +1,28 @@
-//package net.hawkengine.agent.components.taskexecutor.executors;
-//
-//import com.sun.jersey.api.client.Client;
-//import com.sun.jersey.api.client.ClientResponse;
-//import com.sun.jersey.api.client.WebResource;
-//import net.hawkengine.agent.AgentConfiguration;
-//import net.hawkengine.agent.base.TestBase;
-//import net.hawkengine.agent.enums.ExecutionState;
-//import net.hawkengine.agent.enums.ExecutionStatus;
-//import net.hawkengine.agent.models.FetchArtifactTask;
-//import net.hawkengine.agent.models.payload.JobExecutionInfo;
-//import net.hawkengine.agent.models.payload.TaskExecutionInfo;
-//import net.hawkengine.agent.services.FileManagementService;
-//import net.hawkengine.agent.services.interfaces.IFileManagementService;
-//import org.junit.After;
-//import org.junit.Assert;
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.mockito.Mockito;
-//import org.omg.CORBA.portable.InputStream;
-//
-//import java.util.concurrent.atomic.AtomicBoolean;
-//
-//public class FetchArtifactExecutorTest extends TestBase{
-//
+package net.hawkengine.agent.components.taskexecutor.executors;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import net.hawkengine.agent.AgentConfiguration;
+import net.hawkengine.agent.base.TestBase;
+import net.hawkengine.agent.enums.ExecutionState;
+import net.hawkengine.agent.enums.ExecutionStatus;
+import net.hawkengine.agent.models.FetchArtifactTask;
+import net.hawkengine.agent.models.payload.JobExecutionInfo;
+import net.hawkengine.agent.models.payload.TaskExecutionInfo;
+import net.hawkengine.agent.services.FileManagementService;
+import net.hawkengine.agent.services.interfaces.IFileManagementService;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.omg.CORBA.portable.InputStream;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class FetchArtifactExecutorTest extends TestBase{
+
 //    private static FetchArtifactExecutor fetchArtifactExecutor = new FetchArtifactExecutor();
 //
 //    private Client mockedClient = Mockito.mock(Client.class);
@@ -176,4 +176,4 @@
 //
 //        Assert.assertEquals(errorMessages.toString(), true, testResult.get());
 //    }
-//}
+}
