@@ -478,11 +478,10 @@ angular
             //if (vm.selectedStage != undefined && vm.selectedStage.LastRunSelected >= 1 && vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1] != undefined) {
             if(vm.lastRunSelected > 0 ) {
                 for (var i = 0; i < vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs.length; i += 1) {
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'SKIPPED') {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'AWAITING') {
                         allJobs.skippedJobs += 1;
                     }
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'SCHEDULED' ||
-                        vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'AWAITING') {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'SCHEDULED') {
                         allJobs.scheduledJobs += 1;
                     }
                     if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'IN_PROGRESS') {

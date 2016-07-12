@@ -44,6 +44,9 @@ angular
                     }
                 });
             });
+            vm.allPipelineRuns.sort(function (a, b) {
+                return a.executionId - b.executionId;
+            });
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
                 viewModel.allPipelineGroups[index].pipelines.forEach(function (currentPipelineFromGroup, pipelineFromGroupIndex, array) {
                     viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
@@ -52,7 +55,11 @@ angular
                         }
                     });
                 });
+                viewModel.allPipelineGroups[index].pipelines.sort(function (a, b) {
+                    return a.executionId - b.executionId;
+                });
             });
+
             console.log(vm.allPipelineRuns);
         }, true);
 
