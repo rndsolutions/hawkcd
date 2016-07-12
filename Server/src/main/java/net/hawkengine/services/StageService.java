@@ -56,20 +56,27 @@ public class StageService extends CrudService<Stage> implements IStageService {
     @Override
     public ServiceResult add(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
-        Stage result = null;
         List<Stage> stages = pipeline.getStages();
-        boolean alreadyExist = stages.stream().filter(st -> st.getId().equals(stage.getId())).equals(true);
-        if (!alreadyExist) {
-            stages.add(stage);
+
+        for (Stage stageFromDb : stages) {
+            if (stageFromDb.getId().equals(stage.getId())) {
+                return super.createServiceResult(stage, true, "already exist");
+            }
         }
 
+        stages.add(stage);
         pipeline.setStages(stages);
         ServiceResult serviceResult = this.pipelineService.update(pipeline);
 
-        //TODO: add extractStageFromPipeline method
+        if (serviceResult.hasError()){
+            return super.createServiceResult(stage, true, "not created");
+        }
+        Stage result =  this.extractStageFromPipeline(pipeline, stage.getId());
+
         if (result == null) {
             return super.createServiceResult(result, true, "not created");
         }
+
         return super.createServiceResult(result, false, "created successfully");
     }
 
@@ -118,7 +125,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         }
 
         boolean isRemoved = false;
-        ServiceResult serviceResult;
+        ServiceResult serviceResult = new ServiceResult();
         List<Stage> stages = pipelineToUpdate.getStages();
         Stage stage = stages
                 .stream()
@@ -126,7 +133,11 @@ public class StageService extends CrudService<Stage> implements IStageService {
                 .findFirst()
                 .orElse(null);
 
-        if (stages.size() > 1) {
+        if (stage == null){
+            serviceResult = super.createServiceResult(stage, true, "not found");
+        }
+
+        if ( stages.size() > 1) {
             isRemoved = stages.remove(stage);
         } else {
             return super.createServiceResult(stage, true, "is the last Stage and cannot be deleted");
@@ -139,9 +150,17 @@ public class StageService extends CrudService<Stage> implements IStageService {
 
                 serviceResult = super.createServiceResult(stage, false, "deleted successfully");
             }
-        } else {
-            serviceResult = super.createServiceResult(stage, true, "not found");
         }
         return serviceResult;
+    }
+
+    private Stage extractStageFromPipeline(Pipeline pipline, String stageId){
+        Stage result = pipline.getStages().stream()
+                .filter(stage -> stage.getId().equals(stageId))
+                .findFirst()
+                .orElse(null);
+
+        return result;
+
     }
 }

@@ -1,10 +1,13 @@
 package net.hawkengine.services;
 
 import net.hawkengine.model.Job;
+import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.services.interfaces.IJobService;
 import net.hawkengine.services.interfaces.IStageService;
+
+import org.glassfish.jersey.process.internal.Stages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,15 +61,26 @@ public class JobService extends CrudService<Job> implements IJobService {
     public ServiceResult add(Job job) {
         Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
         List<Job> jobs = stage.getJobs();
+
+        for (Job jobFromDb : jobs){
+            if (jobFromDb.getId().equals(job.getId())){
+                return super.createServiceResult(job,true,"already exist");
+            }
+        }
+
         jobs.add(job);
         stage.setJobs(jobs);
         ServiceResult serviceResult = this.stageService.update(stage);
 
-        //TODO: add extractJobFromStage method
-        Job result = null;
-        if (!serviceResult.hasError()) {
-            return super.createServiceResult(result, true, "not created");
+        if (serviceResult.hasError()) {
+            return super.createServiceResult(job, true, "not created");
         }
+        Job result = this.extractJobFromStage(stage, job.getId());
+
+        if (result == null) {
+            return super.createServiceResult(job, true, "not created");
+        }
+
         return super.createServiceResult(result, false, "created successfully");
     }
 
@@ -114,29 +128,33 @@ public class JobService extends CrudService<Job> implements IJobService {
         }
 
         boolean isRemoved = false;
-        ServiceResult serviceResult;
+        ServiceResult serviceResult ;
         List<Job> jobs = stageToUpdate.getJobs();
         Job job = jobs.stream()
                 .filter(j -> j.getId().equals(jobId))
                 .findFirst()
                 .orElse(null);
-        if (jobs.size() > 1) {
-            isRemoved = jobs.remove(job);
-        } else {
-            return super.createServiceResult(job, true, "is the last Job and cannot be deleted");
-        }
 
-        if (isRemoved) {
-            stageToUpdate.setJobs(jobs);
-            serviceResult = this.stageService.update(stageToUpdate);
-            if (!serviceResult.hasError()) {
-                return super.createServiceResult(job, false, "deleted successfully");
-            }
-        } else {
+        if (job == null) {
             return super.createServiceResult(job, true, "not found");
         }
+
+        jobs.remove(job);
+        stageToUpdate.setJobs(jobs);
+        serviceResult = this.stageService.update(stageToUpdate);
+
+        if (!serviceResult.hasError()){
+            return super.createServiceResult(job, false, "deleted successfully");
+        }
+
         return serviceResult;
     }
 
-
+    private Job extractJobFromStage(Stage stage, String jobId) {
+        Job result = stage.getJobs().stream()
+                .filter(job1 -> job1.getId().equals(jobId))
+                .findFirst()
+                .orElse(null);
+        return result;
+    }
 }

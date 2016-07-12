@@ -58,10 +58,9 @@ public class JobServiceTests {
     //TODO: Rename tests to fit test naming conventions
 
     @Test
-    public void getAll_emptyList() {
+    public void getAll_emptyList_noErros() {
         //Arrange
         String expectedMessage = "Jobs retrieved successfully.";
-        boolean expectedError = false;
 
         //Act
         ServiceResult actualResult = this.jobService.getAll();
@@ -69,8 +68,7 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualResult.getObject());
-        //TODO: booleans are checked with assertTrue and assertFalse in all tests
-        assertEquals(expectedError, actualResult.hasError());
+        assertFalse( actualResult.hasError());
         assertTrue(actualObject.isEmpty());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -79,36 +77,35 @@ public class JobServiceTests {
     public void getAll_addOneObject_successMessage() {
         //Arrange
         this.insertIntoDb();
+        this.jobService.add(this.job);
         String expectedMessage = "Jobs retrieved successfully.";
-        boolean expectedError = false;
 
         //Act
         ServiceResult actualResult = this.jobService.getAll();
-        //TODO: Rename expectedObject to actualObject in all tests
-        List<Job> expectedObject = (List<Job>) actualResult.getObject();
+        List<Job> actualObject = (List<Job>) actualResult.getObject();
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedError, actualResult.hasError());
-        assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, expectedObject.size());
+        assertFalse(actualResult.hasError());
+        assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualObject.size());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void getById_successMessage() {
+    public void getById_objectId_successMessage() {
         //Arrange
         this.insertIntoDb();
+        this.jobService.add(this.job);
         String expectedMessage = "Job " + this.job.getId() + " retrieved successfully.";
-        boolean expectedError = false;
 
         //Act
         ServiceResult actualResult = this.jobService.getById(this.job.getId());
-        Job expectedJob = (Job) actualResult.getObject();
+        Job actualJob = (Job) actualResult.getObject();
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedError, actualResult.hasError());
-        assertEquals(this.job.getId(), expectedJob.getId());
+        assertFalse(actualResult.hasError());
+        assertEquals(this.job.getId(), actualJob.getId());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -117,38 +114,63 @@ public class JobServiceTests {
         //Arrange
         UUID randomId = UUID.randomUUID();
         String expectedMessage = "Job not found.";
-        boolean expectedError = true;
 
         //Act
         ServiceResult actualResult = this.jobService.getById(randomId.toString());
 
         //Assert
         assertNull(actualResult.getObject());
-        assertEquals(expectedError, actualResult.hasError());
+        assertTrue(actualResult.hasError());
         assertEquals(expectedMessage, actualResult.getMessage());
 
     }
 
-    //TODO: Fix test and add happy path
     @Test
-    public void add_oneObject_successMessage() {
+    public void add_oneObject_errorMessage() {
         //Arrange
         this.insertIntoDb();
-        boolean expectedError = false;
+        this.jobService.add(this.job);
+        String expectedMessage = "Job already exist.";
+
+        //Act
+        ServiceResult actualResult = this.jobService.add(this.job);
+
+
+        //Assert
+        assertTrue(actualResult.hasError());
+        assertEquals(expectedMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void add_oneObject_successMessage(){
+        //Arrange
+        this.insertIntoDb();
         String expectedMessage = "Job " + this.job.getId() + " created successfully.";
 
         //Act
         ServiceResult actualResult = this.jobService.add(this.job);
-        Job job = (Job) actualResult.getObject();
 
         //Assert
-        assertNotNull(actualResult.getObject());
-        assertEquals(expectedError, actualResult.hasError());
-        assertEquals(job, this.job);
-        assertEquals(expectedMessage, actualResult.getMessage());
+        assertFalse(actualResult.hasError());
+        assertEquals(expectedMessage,actualResult.getMessage());
+        assertEquals(this.job,actualResult.getObject());
     }
 
-    //TODO: Add delete non existing object method
+    @Test
+    public void delete_nonExistingJob_errorMessage(){
+        //Arrange
+        this.insertIntoDb();
+
+        //Act
+        ServiceResult result = this.jobService.delete(this.job.getId());
+
+        //Assert
+        assertTrue(result.hasError());
+        assertNull(result.getObject());
+        assertEquals("Job not found.",result.getMessage());
+
+    }
+
     @Test
     public void delete_oneJob_successMessage() {
         //Arrange
@@ -167,27 +189,11 @@ public class JobServiceTests {
     }
 
     @Test
-    public void delete_lastJob_errorMessage() {
-        //Arrange
-        this.insertIntoDb();
-        String expectedMessage = "Job is the last Job and cannot be deleted.";
-        boolean expectedError = true;
-
-        //Act
-        ServiceResult actualResult = this.jobService.delete(this.job.getId());
-
-        //Assert
-        assertNotNull(actualResult.getObject());
-        assertEquals(expectedMessage, actualResult.getMessage());
-        assertEquals(expectedError, actualResult.hasError());
-    }
-
-    @Test
-    public void update_successMessage() {
+    public void update_jobObject_successMessage() {
         //Act
         this.insertIntoDb();
+        this.jobService.add(this.job);
         this.job.setStatus(JobStatus.PASSED);
-        boolean expectedError = false;
         String expectedMessage = "Job " + job.getId() + " " + "updated successfully.";
 
         //Act
@@ -196,7 +202,7 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedError, actualResult.hasError());
+        assertFalse(actualResult.hasError());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(this.job.getStatus(), job.getStatus());
     }
@@ -204,20 +210,8 @@ public class JobServiceTests {
     @Test
     public void update_wrongId_errorMessage() {
         //Arrange
-        this.pipelineDefinition = new PipelineDefinition();
-        this.pipelineDefinition.setName("pipelinedefinition");
-        this.pipelineDefinitionService.add(this.pipelineDefinition);
-        this.pipeline = new Pipeline();
-        this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
-        this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        this.pipelineService.add(this.pipeline);
-        this.stage = new Stage();
-        this.stage.setPipelineId(this.pipeline.getId());
-        this.stageService.add(this.stage);
-        this.job = new Job();
-        this.job.setStageId(this.stage.getId());
+        this.insertIntoDb();
         String expectedMessage = "Job not found.";
-        boolean expectedError = true;
 
         //Act
         ServiceResult actualResult = this.jobService.update(this.job);
@@ -225,10 +219,9 @@ public class JobServiceTests {
         //Assert
         assertNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
-        assertEquals(expectedError, actualResult.hasError());
+        assertTrue(actualResult.hasError());
     }
 
-    //TODO: Avoid reliance on this.jobService.add()
     private void insertIntoDb() {
         this.pipelineDefinition = new PipelineDefinition();
         this.pipelineDefinition.setName("pipelinedefinition");
@@ -242,6 +235,5 @@ public class JobServiceTests {
         this.stageService.add(this.stage);
         this.job = new Job();
         this.job.setStageId(this.stage.getId());
-        this.jobService.add(this.job);
     }
 }
