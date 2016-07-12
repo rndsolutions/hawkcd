@@ -7,6 +7,7 @@ public class WorkInfo {
     private int pipelineExecutionID;
     private String stageDefinitionName;
     private int stageExecutionID;
+    private String jobDefinitionName;
     private Job job;
 
     public String getPipelineDefinitionName() {
@@ -39,6 +40,14 @@ public class WorkInfo {
 
     public void setStageExecutionID(int stageExecutionID) {
         this.stageExecutionID = stageExecutionID;
+    }
+
+    public String getJobDefinitionName() {
+        return this.jobDefinitionName;
+    }
+
+    public void setJobDefinitionName(String jobDefinitionName) {
+        this.jobDefinitionName = jobDefinitionName;
     }
 
     public Job getJob() {
