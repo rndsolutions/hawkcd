@@ -16,7 +16,7 @@ import net.hawkengine.agent.models.TaskDefinition;
 import net.hawkengine.agent.utils.jsonconverter.MaterialDefinitionAdapter;
 import net.hawkengine.agent.utils.jsonconverter.TaskDefinitionAdapter;
 import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.payload.WorkInfo;
+import net.hawkengine.agent.models.payload.WorkInfo;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

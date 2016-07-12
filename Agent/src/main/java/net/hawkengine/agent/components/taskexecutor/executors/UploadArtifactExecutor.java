@@ -12,7 +12,7 @@ import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.UploadArtifactTask;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
-import net.hawkengine.model.payload.WorkInfo;
+import net.hawkengine.agent.models.payload.WorkInfo;
 
 import javax.ws.rs.core.MediaType;
 import java.io.File;

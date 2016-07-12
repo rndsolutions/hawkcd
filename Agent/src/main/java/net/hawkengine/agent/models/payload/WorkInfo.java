@@ -1,5 +1,4 @@
-package net.hawkengine.model.payload;
-
+package net.hawkengine.agent.models.payload;
 
 import net.hawkengine.agent.models.Job;
 

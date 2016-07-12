@@ -13,7 +13,7 @@ import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.TaskExecutionInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
-import net.hawkengine.model.payload.WorkInfo;
+import net.hawkengine.agent.models.payload.WorkInfo;
 
 import java.nio.file.Paths;
 import java.time.LocalDateTime;

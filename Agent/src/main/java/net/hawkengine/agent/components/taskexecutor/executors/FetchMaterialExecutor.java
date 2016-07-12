@@ -10,7 +10,7 @@ import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.MaterialService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 import net.hawkengine.agent.services.interfaces.IMaterialService;
-import net.hawkengine.model.payload.WorkInfo;
+import net.hawkengine.agent.models.payload.WorkInfo;
 
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -20,9 +20,14 @@ public class FetchMaterialExecutor extends TaskExecutor {
     private IMaterialService materialService;
     private IFileManagementService fileManagementService;
 
-    public FetchMaterialExecutor(MaterialService materialService) {
+    public FetchMaterialExecutor(IMaterialService materialService) {
         this.materialService = materialService;
         this.fileManagementService = new FileManagementService();
+    }
+
+    public FetchMaterialExecutor(IMaterialService materialService,IFileManagementService fileManagementService){
+        this.materialService = materialService;
+        this.fileManagementService = fileManagementService;
     }
 
     @Override
@@ -46,6 +51,8 @@ public class FetchMaterialExecutor extends TaskExecutor {
             LOGGER.error(errorMessage);
 
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
+            workInfo.getJob().setReport(report);
+
             return task;
         }
 

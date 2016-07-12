@@ -10,7 +10,7 @@ import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.EnvironmentVariable;
 import net.hawkengine.agent.models.Job;
 import net.hawkengine.agent.models.Task;
-import net.hawkengine.model.payload.WorkInfo;
+import net.hawkengine.agent.models.payload.WorkInfo;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
