@@ -91,6 +91,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                                 .forEach(job -> {
                                     workInfo.setPipelineExecutionID(pipeline.getExecutionId());
                                     workInfo.setStageExecutionID(stage.getExecutionId());
+                                    workInfo.getJob().setStatus(JobStatus.RUNNING);
                                     workInfo.setJob(job);
                                     workInfo.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
                                     workInfo.setStageDefinitionName(stage.getStageDefinitionName());
