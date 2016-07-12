@@ -3,7 +3,9 @@ package net.hawkengine.core.materialupdater;
 import net.hawkengine.model.GitMaterial;
 
 public interface IGitService {
-    boolean shouldCloneRepository(GitMaterial materialDefinition);
+    boolean repositoryExists(GitMaterial gitMaterial);
 
-    boolean cloneRepository(GitMaterial materialDefinition);
+    String cloneRepository(GitMaterial gitMaterial);
+
+    GitMaterial fetchLatestCommit(GitMaterial gitMaterial);
 }

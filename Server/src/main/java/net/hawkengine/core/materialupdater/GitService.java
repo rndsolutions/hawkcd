@@ -3,45 +3,61 @@ package net.hawkengine.core.materialupdater;
 import net.hawkengine.model.GitMaterial;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.RefSpec;
 
 import java.io.File;
 import java.io.IOException;
 
 public class GitService implements IGitService {
     @Override
-    public boolean shouldCloneRepository(GitMaterial materialDefinition) {
-        try {
-            FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
-            File gitDirectory = new File(materialDefinition.getName() + File.separator + ".git");
-            repositoryBuilder.setMustExist(true).setGitDir(gitDirectory);
-            Repository repository = repositoryBuilder.build();
-            Ref head = repository.getRef("HEAD");
-            if (head != null) {
-                return false;
-            }
-        } catch (IOException e) {
-            return true;
-        }
+    public boolean repositoryExists(GitMaterial gitMaterial) {
+        FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
+        File gitDirectory = repositoryBuilder.findGitDir(new File(gitMaterial.getName())).getGitDir();
 
-        return true;
+        return gitDirectory != null ? true : false;
     }
 
     @Override
-    public boolean cloneRepository(GitMaterial materialDefinition) {
+    public String cloneRepository(GitMaterial gitMaterial) {
         try {
             Git.cloneRepository()
-                    .setURI(materialDefinition.getRepositoryUrl())
-                    .setDirectory(new File(materialDefinition.getName()))
+                    .setURI(gitMaterial.getRepositoryUrl())
+                    .setDirectory(new File(gitMaterial.getName()))
+                    .setCloneSubmodules(true)
                     .call();
 
-            return true;
+            return null;
         } catch (GitAPIException e) {
+            return e.getMessage();
+        }
+    }
+
+    @Override
+    public GitMaterial fetchLatestCommit(GitMaterial gitMaterial) {
+        try {
+            Git git = Git.open(new File(gitMaterial.getName() + File.separator + ".git"));
+            git.fetch()
+                    .setCheckFetchedObjects(true)
+                    .setRefSpecs(new RefSpec("refs/heads/" + gitMaterial.getBranch() + ":refs/heads/" + gitMaterial.getBranch()))
+                    .call();
+            ObjectId objectId = git.getRepository().getRef(gitMaterial.getBranch()).getObjectId();
+            RevWalk revWalk = new RevWalk(git.getRepository());
+            RevCommit commit = revWalk.parseCommit(objectId);
+
+            gitMaterial.setCommitId(commit.getId().getName());
+            gitMaterial.setAuthorName(commit.getAuthorIdent().getName());
+            gitMaterial.setAuthorEmail(commit.getAuthorIdent().getEmailAddress());
+            gitMaterial.setComments(commit.getFullMessage());
+
+            return gitMaterial;
+        } catch (IOException | GitAPIException e) {
             e.printStackTrace();
+            return null;
         }
 
-        return false;
     }
 }
