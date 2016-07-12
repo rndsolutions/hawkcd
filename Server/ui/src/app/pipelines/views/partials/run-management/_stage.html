@@ -45,7 +45,7 @@
 
                 <p>
                     <strong>{{pipesRunManagement.stageDefaultText.duration}}</strong>
-                    <span ng-if="stage[pipesRunManagement.lastRunSelected - 1].executionId!=0">{{stage.Runs[stage.LastRunSelected-1].Duration}}</span>
+                    <span ng-if="stage[pipesRunManagement.lastRunSelected - 1].executionId!=0">{{stage[stage.LastRunSelected-1].duration}}</span>
                     <span ng-if="stage[pipesRunManagement.lastRunSelected - 1].executionId==0">Not Executed yet</span>
 
                 </p>

@@ -412,7 +412,7 @@ angular
             vm.selectedStageIndexInMainDB = index;
 
             // //  Get the selected stage - with LastRun + all Runs
-            // vm.selectedStage = vm.groupStages[index];
+            vm.selectedStage = vm.currentPipelineRunStages[index];
             // nameOfStage = vm.selectedStage.Runs[0].Name;
             //
             // //Need this variable, so the runs are displayed in the modal for re run stage
@@ -457,9 +457,9 @@ angular
         //});
 
         vm.selectJob = function (jobIndex) {
-            var selectedRunIndex = vm.selectedStage.LastRunSelected - 1;
+            var selectedRunIndex = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected] - 1;
 
-            vm.selectedJob = vm.selectedStage.Runs[selectedRunIndex].Jobs[jobIndex];
+            vm.selectedJob = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[jobIndex];
             vm.selectedRunIndex = selectedRunIndex;
             vm.jobIndex = jobIndex;
         };

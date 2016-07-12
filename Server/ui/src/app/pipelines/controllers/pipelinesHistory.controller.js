@@ -39,6 +39,9 @@ angular
                     vm.currentPipelineRuns.push(currentPipelineRun);
                 }
             });
+            vm.allPipelineRuns.sort(function (a, b) {
+                return b.executionId-a.executionId;
+            });
             console.log(vm.allPipelineRuns);
             console.log(vm.currentPipelineRuns);
         }, true);
