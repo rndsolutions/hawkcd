@@ -29,7 +29,7 @@ jQuery(function($) {
 function getS3Data(marker, html) {
   var s3_rest_url = createS3QueryUrl(marker);
   // set loading notice
-  $('#listing').html('<img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" />');
+  //$('#listing').html('<img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" />');
   $.get(s3_rest_url)
     .done(function(data) {
       // clear loading notice
@@ -37,14 +37,14 @@ function getS3Data(marker, html) {
       var xml = $(data);
       var info = getInfoFromS3Data(xml);
 
-      buildNavigation(info)
+      buildNavigation(info);
 
-      html = typeof html !== 'undefined' ? html + prepareTable(info) : prepareTable(info);
-      if (info.nextMarker != "null") {
-        getS3Data(info.nextMarker, html);
-      } else {
-        document.getElementById('listing').innerHTML = '<pre>' + html + '</pre>';
-      }
+      html = typeof html !== 'undefined' ? prepareTable(info) : prepareTable(info);
+      // if (info.nextMarker != "null") {
+      //   getS3Data(info.nextMarker, html);
+      // } else {
+      //   document.getElementById('listing').innerHTML = '<pre>' + html + '</pre>';
+      // }
     })
     .fail(function(error) {
       console.error(error);
@@ -146,12 +146,40 @@ function getInfoFromS3Data(xml) {
 //    directories: ..
 //    prefix: ...
 // }
+
 function prepareTable(info) {
   var files = info.files.concat(info.directories)
     , prefix = info.prefix
     ;
   var cols = [ 45, 30, 15 ];
   var content = [];
+  var tableDiv = document.getElementById("customTable");
+  var table = document.createElement('table');
+  var tableHeader = document.createElement('thead');
+  var tableBody = document.createElement('tbody');
+
+  table.setAttribute("class", "table table-striped table-bordered table-hover table-checkable order-column");
+
+  var thr = document.createElement('tr');
+  var tr = document.createElement('tr');
+  var td = document.createElement('td');
+
+  var keyHeader = document.createElement('th');
+  keyHeader.appendChild(document.createTextNode("Key"));
+  var sizeHeader = document.createElement('th');
+  sizeHeader.appendChild(document.createTextNode("Size"));
+  var lastModifiedHeader = document.createElement('th');
+  lastModifiedHeader.appendChild(document.createTextNode("Last Modified"));
+  thr.appendChild(keyHeader);
+  thr.appendChild(sizeHeader);
+  thr.appendChild(lastModifiedHeader);
+  tableHeader.appendChild(thr);
+
+  table.appendChild(tableHeader);
+  table.appendChild(tableBody);
+
+  tableDiv.appendChild(table);
+
   content.push(padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n');
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
 
@@ -182,17 +210,39 @@ function prepareTable(info) {
       item.href = BUCKET_WEBSITE_URL + '/' + encodeURIComponent(item.Key);
       item.href = item.href.replace(/%2F/g, '/');
     }
-    var row = renderRow(item, cols);
-    content.push(row + '\n');
+    var row = document.createElement('tr');
+    var key = document.createElement('td');
+    var keyLink = document.createElement('a');
+    var size = document.createElement('td');
+    var lastModified = document.createElement('td');
+    keyLink.appendChild(document.createTextNode(item.keyText));
+    keyLink.href = item.href;
+    key.appendChild(keyLink);
+    //key.href = item.href;
+    if(item.Size != '0'){
+      
+    }
+    size.appendChild(document.createTextNode(item.Size));
+    lastModified.appendChild(document.createTextNode(item.LastModified));
+    row.appendChild(key);
+    row.appendChild(size);
+    row.appendChild(lastModified);
+    tableBody.appendChild(row);
+    //var row = renderRow(item, cols);
+    //content.push(row + '\n');
   });
 
-  return content.join('');
+  //return content.join('');
 }
 
 function renderRow(item, cols) {
   var row = '';
   row += padRight(item.LastModified, cols[1]) + '  ';
-  row += padRight(item.Size, cols[2]);
+  if(item.Size != '0'){
+    row += padRight(item.Size, cols[2]);
+  }else{
+    row += padRight('', cols[2]);
+  }
   row += '<a href="' + item.href + '">' + item.keyText + '</a>';
   return row;
 }
@@ -210,7 +260,7 @@ function padRight(padString, length) {
 
 function bytesToHumanReadable(sizeInBytes) {
   var i = -1;
-  var units = [' kB', ' MB', ' GB'];
+  var units = [' KB', ' MB', ' GB'];
   do {
     sizeInBytes = sizeInBytes / 1024;
     i++;

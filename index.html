@@ -199,7 +199,7 @@
                                             <li>Quality Assurance Engineer</li>
                                             <li>DevOps Engineer</li>
                                             <li>Operations Engineer</li>
-                                            <li>Release Msnager</li>
+                                            <li>Release Manager</li>
                         </li>
                         </ul>
                         </p>
@@ -251,7 +251,39 @@
       <div class="container">
         <div id="navigation"></div>
         <div id="listing"></div>
-      </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="portlet box green">
+                      <div class="portlet-title right">
+                          <div class="caption">
+                              <i class="fa fa-cogs"></i> Builds
+                          </div>
+                          <div class="tools right">
+                              <a href="javascript:;" class="collapse"> </a>
+                          </div>
+                      </div>
+                      <div class="portlet-body">
+                          <div id="customTable"></div>
+                          <!--<table class="table table-striped table-bordered table-hover table-checkable order-column">-->
+                              <!--<thead>-->
+                              <!--<tr>-->
+                                  <!--<th>lolh</th>-->
+                                  <!--<th>lolh</th>-->
+                              <!--</tr>-->
+                              <!--</thead>-->
+                              <!--<tbody>-->
+                              <!--<tr>-->
+                                  <!--<td>lold</td>-->
+                                  <!--<td>lold</td>-->
+                              <!--</tr>-->
+                              <!--</tbody>-->
+                          <!--</table>-->
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+        </section>
 
     <!-- Contact Section -->
     <section id="contact">
@@ -292,6 +324,8 @@
 
     <script src="landing-page/js/typed.js"></script>
 
+    <script src="landing-page/js/list.js"></script>
+
     <!-- the JS variables for the listing -->
     <script type="text/javascript">
        var S3BL_IGNORE_PATH = true;
@@ -299,8 +333,6 @@
        var BUCKET_URL = 'http://drop-zone.s3.amazonaws.com'; //"http://data.openspending.org.s3-eu-west-1.amazonaws.com"; //'http://drop-zone.s3.amazonaws.com';
        //var S3B_ROOT_DIR = 'drop-zone;
     </script>
-
-    <script src="http://rgrp.github.io/s3-bucket-listing/list.js"></script>
 
     <script>
         $(function() {
