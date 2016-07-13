@@ -19,6 +19,15 @@ public class GitMaterialUpdaterTest {
     }
 
     @Test
+    public void gitMaterialUpdater_instantiated_notNull() {
+        // Act
+        this.gitMaterialUpdater = new GitMaterialUpdater();
+
+        // Assert
+        Assert.assertNotNull(this.gitMaterialUpdater);
+    }
+
+    @Test
     public void getLatestMaterialVersion_successfullyFetchedLatest_allFieldsUpdated() {
         // Arrange
         GitMaterial expectedResult = new GitMaterial();
