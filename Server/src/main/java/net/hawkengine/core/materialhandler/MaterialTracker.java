@@ -1,4 +1,4 @@
-package net.hawkengine.core.materialupdater;
+package net.hawkengine.core.materialhandler;
 
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;

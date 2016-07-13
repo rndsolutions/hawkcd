@@ -1,5 +1,7 @@
-package net.hawkengine.core.materialupdater;
+package net.hawkengine.core.materialhandler;
 
+import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
+import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
 import net.hawkengine.model.Material;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.PipelineDefinition;
@@ -62,7 +64,14 @@ public class MaterialHandlerService implements IMaterialHandlerService {
         }
 
         Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId()).getObject();
-        boolean areTheSame = this.materialUpdater.areMaterialsSameVersion(latestVersion, dbLatestVersion.getMaterialDefinition());
+
+        boolean areTheSame;
+        if (dbLatestVersion == null) {
+            areTheSame = false;
+        } else {
+            areTheSame = this.materialUpdater.areMaterialsSameVersion(latestVersion, dbLatestVersion.getMaterialDefinition());
+        }
+
         if (!areTheSame) {
             material.setChangeDate(LocalDateTime.now());
             material.setMaterialDefinition(latestVersion);

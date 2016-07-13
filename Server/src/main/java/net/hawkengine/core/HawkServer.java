@@ -1,6 +1,6 @@
 package net.hawkengine.core;
 
-import net.hawkengine.core.materialupdater.MaterialTracker;
+import net.hawkengine.core.materialhandler.MaterialTracker;
 import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.EndpointFinder;

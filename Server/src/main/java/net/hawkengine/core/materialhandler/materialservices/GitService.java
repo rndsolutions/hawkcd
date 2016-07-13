@@ -1,4 +1,4 @@
-package net.hawkengine.core.materialupdater;
+package net.hawkengine.core.materialhandler.materialservices;
 
 import net.hawkengine.model.GitMaterial;
 import org.eclipse.jgit.api.Git;

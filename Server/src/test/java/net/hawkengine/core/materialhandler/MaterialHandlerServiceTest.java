@@ -1,5 +1,8 @@
-package net.hawkengine.core.materialupdater;
+package net.hawkengine.core.materialhandler;
 
+import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
+import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdater;
+import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.services.MaterialService;
