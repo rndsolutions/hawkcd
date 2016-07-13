@@ -54,7 +54,7 @@ public class MaterialHandlerServiceTest {
         gitMaterial.setName(MATERIAL_ONE);
         gitMaterial.setPollingForChanges(true);
         materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterials(materialDefinitions);
+        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
         String expectedResult = MATERIAL_ONE;
 
         // Act
@@ -73,7 +73,7 @@ public class MaterialHandlerServiceTest {
         gitMaterial.setName(MATERIAL_ONE);
         gitMaterial.setPollingForChanges(true);
         materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterials(materialDefinitions);
+        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
 
         Mockito.when(this.mockedMaterialUpdater.areMaterialsSameVersion(Mockito.any(MaterialDefinition.class), Mockito.any(MaterialDefinition.class)))
                 .thenReturn(true);
@@ -94,7 +94,7 @@ public class MaterialHandlerServiceTest {
         gitMaterial.setName(MATERIAL_ONE);
         gitMaterial.setPollingForChanges(false);
         materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterials(materialDefinitions);
+        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
 
         // Act
         String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);

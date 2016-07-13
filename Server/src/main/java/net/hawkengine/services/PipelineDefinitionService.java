@@ -36,7 +36,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
+        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
         for(MaterialDefinition materialDefinition : materialDefinitions){
             materialDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
         }

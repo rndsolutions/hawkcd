@@ -26,7 +26,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
     @Override
     public String checkPipelineForTriggerMaterials(PipelineDefinition pipelineDefinition) {
         List<String> triggerMaterials = new ArrayList<>();
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
+        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
             if (materialDefinition.isPollingForChanges()) {
                 this.materialUpdater = MaterialUpdaterFactory.create(materialDefinition.getType());
