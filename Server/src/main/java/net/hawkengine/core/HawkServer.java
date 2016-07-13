@@ -6,6 +6,7 @@ import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.ws.WsServlet;
 
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -16,16 +17,32 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import redis.embedded.RedisServer;
+
+
 public class HawkServer {
+
+    //TODO: pull this from the config
     private static final int PORT = 8080;
 
     private Server server;
     private Thread jobAssigner;
     private Thread pipelinePreparer;
     private EndpointFinder endpointFinder;
+    private RedisServer redisServer;
 
-    public HawkServer() {
-        RedisManager.connect();
+    public HawkServer() throws IOException, URISyntaxException {
+
+        //TODO:  move this to the config file
+        RedisManager.initializeEmbededDb(6379);
+
+        RedisManager.startEmbededDb();
+
+        //TODO:  move this to the config file
+        RedisManager.connect("localhost");
         this.server = new Server();
         this.jobAssigner = new Thread(new JobAssigner());
         this.pipelinePreparer = new Thread(new PipelinePreparer());
@@ -44,7 +61,7 @@ public class HawkServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-        //resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
+        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
 
@@ -74,7 +91,8 @@ public class HawkServer {
         this.server.join();
     }
 
-    public void stop() {
+    public void stop() throws InterruptedException {
         RedisManager.release();
+        RedisManager.stopEmbededDb();
     }
 }
