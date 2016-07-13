@@ -55,44 +55,8 @@ public class JobServiceTests {
         this.jobService = new JobService(stageService);
     }
 
-    //TODO: Rename tests to fit test naming conventions
-
     @Test
-    public void getAll_emptyList_noErros() {
-        //Arrange
-        String expectedMessage = "Jobs retrieved successfully.";
-
-        //Act
-        ServiceResult actualResult = this.jobService.getAll();
-        List<Job> actualObject = (List<Job>) actualResult.getObject();
-
-        //Assert
-        assertNotNull(actualResult.getObject());
-        assertFalse( actualResult.hasError());
-        assertTrue(actualObject.isEmpty());
-        assertEquals(expectedMessage, actualResult.getMessage());
-    }
-
-    @Test
-    public void getAll_addOneObject_successMessage() {
-        //Arrange
-        this.insertIntoDb();
-        this.jobService.add(this.job);
-        String expectedMessage = "Jobs retrieved successfully.";
-
-        //Act
-        ServiceResult actualResult = this.jobService.getAll();
-        List<Job> actualObject = (List<Job>) actualResult.getObject();
-
-        //Assert
-        assertNotNull(actualResult.getObject());
-        assertFalse(actualResult.hasError());
-        assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualObject.size());
-        assertEquals(expectedMessage, actualResult.getMessage());
-    }
-
-    @Test
-    public void getById_objectId_successMessage() {
+    public void getById_validId_successMessage() {
         //Arrange
         this.insertIntoDb();
         this.jobService.add(this.job);
@@ -110,7 +74,7 @@ public class JobServiceTests {
     }
 
     @Test
-    public void getById_wrongId_errorMessage() {
+    public void getById_invalidId_errorMessage() {
         //Arrange
         UUID randomId = UUID.randomUUID();
         String expectedMessage = "Job not found.";
@@ -122,74 +86,76 @@ public class JobServiceTests {
         assertNull(actualResult.getObject());
         assertTrue(actualResult.hasError());
         assertEquals(expectedMessage, actualResult.getMessage());
-
     }
 
     @Test
-    public void add_oneObject_errorMessage() {
+    public void getAll_oneObject_successMessage() {
         //Arrange
         this.insertIntoDb();
         this.jobService.add(this.job);
-        String expectedMessage = "Job already exist.";
+        String expectedMessage = "Jobs retrieved successfully.";
 
         //Act
-        ServiceResult actualResult = this.jobService.add(this.job);
-
+        ServiceResult actualResult = this.jobService.getAll();
+        List<Job> actualObject = (List<Job>) actualResult.getObject();
 
         //Assert
-        assertTrue(actualResult.hasError());
+        assertNotNull(actualResult.getObject());
+        assertFalse(actualResult.hasError());
+        assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualObject.size());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void add_oneObject_successMessage(){
+    public void getAll_emptyList_noErrors() {
+        //Arrange
+        String expectedMessage = "Jobs retrieved successfully.";
+
+        //Act
+        ServiceResult actualResult = this.jobService.getAll();
+        List<Job> actualObject = (List<Job>) actualResult.getObject();
+
+        //Assert
+        assertNotNull(actualResult.getObject());
+        assertFalse(actualResult.hasError());
+        assertTrue(actualObject.isEmpty());
+        assertEquals(expectedMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void add_nonExistingObject_successMessage() {
         //Arrange
         this.insertIntoDb();
         String expectedMessage = "Job " + this.job.getId() + " created successfully.";
 
         //Act
         ServiceResult actualResult = this.jobService.add(this.job);
+        Job actualObject = (Job) actualResult.getObject();
 
         //Assert
+        assertNotNull(actualObject);
         assertFalse(actualResult.hasError());
-        assertEquals(expectedMessage,actualResult.getMessage());
-        assertEquals(this.job,actualResult.getObject());
-    }
-
-    @Test
-    public void delete_nonExistingJob_errorMessage(){
-        //Arrange
-        this.insertIntoDb();
-
-        //Act
-        ServiceResult result = this.jobService.delete(this.job.getId());
-
-        //Assert
-        assertTrue(result.hasError());
-        assertNull(result.getObject());
-        assertEquals("Job not found.",result.getMessage());
-
-    }
-
-    @Test
-    public void delete_oneJob_successMessage() {
-        //Arrange
-        this.insertIntoDb();
-        Job newJob = this.job;
-        this.jobService.add(newJob);
-        String expectedMessage = "Job " + this.job.getId() + " deleted successfully.";
-
-        //Act
-        ServiceResult actualResult = this.jobService.delete(newJob.getId());
-
-        //Assert
-        assertFalse(actualResult.hasError());
-        assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void update_jobObject_successMessage() {
+    public void add_existingObject_errorMessage() {
+        //Arrange
+        this.insertIntoDb();
+        this.jobService.add(this.job);
+        String expectedMessage = "Job already exists.";
+
+        //Act
+        ServiceResult actualResult = this.jobService.add(this.job);
+
+        //Assert
+        assertNull(actualResult.getObject());
+        assertTrue(actualResult.hasError());
+        assertEquals(expectedMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void update_existingObject_successMessage() {
         //Act
         this.insertIntoDb();
         this.jobService.add(this.job);
@@ -208,7 +174,7 @@ public class JobServiceTests {
     }
 
     @Test
-    public void update_wrongId_errorMessage() {
+    public void update_nonExistingObject_errorMessage() {
         //Arrange
         this.insertIntoDb();
         String expectedMessage = "Job not found.";
@@ -220,6 +186,37 @@ public class JobServiceTests {
         assertNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertTrue(actualResult.hasError());
+    }
+
+    @Test
+    public void delete_existingJob_successMessage() {
+        //Arrange
+        this.insertIntoDb();
+        this.jobService.add(this.job);
+        String expectedMessage = "Job " + this.job.getId() + " deleted successfully.";
+
+        //Act
+        ServiceResult actualResult = this.jobService.delete(this.job.getId());
+
+        //Assert
+        assertFalse(actualResult.hasError());
+        assertNotNull(actualResult.getObject());
+        assertEquals(expectedMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void delete_nonExistingJob_errorMessage() {
+        //Arrange
+        this.insertIntoDb();
+        String expectedMessage = "Job not found.";
+
+        //Act
+        ServiceResult result = this.jobService.delete(this.job.getId());
+
+        //Assert
+        assertTrue(result.hasError());
+        assertNull(result.getObject());
+        assertEquals(expectedMessage, result.getMessage());
     }
 
     private void insertIntoDb() {

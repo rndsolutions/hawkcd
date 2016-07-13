@@ -1,13 +1,10 @@
 package net.hawkengine.services;
 
 import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.services.interfaces.IJobService;
 import net.hawkengine.services.interfaces.IStageService;
-
-import org.glassfish.jersey.process.internal.Stages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,9 +59,9 @@ public class JobService extends CrudService<Job> implements IJobService {
         Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
         List<Job> jobs = stage.getJobs();
 
-        for (Job jobFromDb : jobs){
-            if (jobFromDb.getId().equals(job.getId())){
-                return super.createServiceResult(job,true,"already exist");
+        for (Job jobFromDb : jobs) {
+            if (jobFromDb.getId().equals(job.getId())) {
+                return super.createServiceResult(null, true, "already exists");
             }
         }
 
@@ -72,13 +69,10 @@ public class JobService extends CrudService<Job> implements IJobService {
         stage.setJobs(jobs);
         ServiceResult serviceResult = this.stageService.update(stage);
 
-        if (serviceResult.hasError()) {
-            return super.createServiceResult(job, true, "not created");
-        }
         Job result = this.extractJobFromStage(stage, job.getId());
 
-        if (result == null) {
-            return super.createServiceResult(job, true, "not created");
+        if ((result == null) || serviceResult.hasError()) {
+            return super.createServiceResult(null, true, "not created");
         }
 
         return super.createServiceResult(result, false, "created successfully");
@@ -86,24 +80,23 @@ public class JobService extends CrudService<Job> implements IJobService {
 
     @Override
     public ServiceResult update(Job job) {
-        ServiceResult serviceResult = new ServiceResult();
+        ServiceResult serviceResult = null;
         Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
         List<Job> jobs = stage.getJobs();
         int jobsSize = jobs.size();
-        boolean isPresent = false;
         for (int i = 0; i < jobsSize; i++) {
             if (jobs.get(i).getId().equals(job.getId())) {
                 jobs.set(i, job);
-                isPresent = true;
                 stage.setJobs(jobs);
                 serviceResult = this.stageService.update(stage);
                 break;
             }
         }
 
-        if (!isPresent) {
-            return super.createServiceResult((Job) serviceResult.getObject(), true, "not found");
+        if (serviceResult == null) {
+            return super.createServiceResult(null, true, "not found");
         }
+
         if (serviceResult.hasError()) {
             serviceResult = super.createServiceResult((Job) serviceResult.getObject(), true, "not updated");
         } else {
@@ -116,6 +109,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     @Override
     public ServiceResult delete(String jobId) {
         Stage stageToUpdate = new Stage();
+        Job jobToDelete = null;
         List<Stage> stages = (List<Stage>) this.stageService.getAll().getObject();
 
         for (Stage stage : stages) {
@@ -123,31 +117,25 @@ public class JobService extends CrudService<Job> implements IJobService {
             for (Job job : jobs) {
                 if (job.getId().equals(jobId)) {
                     stageToUpdate = stage;
+                    jobToDelete = job;
                 }
             }
         }
 
-        boolean isRemoved = false;
-        ServiceResult serviceResult ;
+        if (jobToDelete == null) {
+            return super.createServiceResult(jobToDelete, true, "not found");
+        }
+
         List<Job> jobs = stageToUpdate.getJobs();
-        Job job = jobs.stream()
-                .filter(j -> j.getId().equals(jobId))
-                .findFirst()
-                .orElse(null);
-
-        if (job == null) {
-            return super.createServiceResult(job, true, "not found");
-        }
-
-        jobs.remove(job);
+        jobs.remove(jobToDelete);
         stageToUpdate.setJobs(jobs);
-        serviceResult = this.stageService.update(stageToUpdate);
+        ServiceResult serviceResult = this.stageService.update(stageToUpdate);
 
-        if (!serviceResult.hasError()){
-            return super.createServiceResult(job, false, "deleted successfully");
+        if (serviceResult.hasError()) {
+            return super.createServiceResult(null, true, "not found");
         }
 
-        return serviceResult;
+        return super.createServiceResult(jobToDelete, false, "deleted successfully");
     }
 
     private Job extractJobFromStage(Stage stage, String jobId) {
