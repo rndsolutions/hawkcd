@@ -3,7 +3,7 @@ package net.hawkengine.core.materialupdater;
 import net.hawkengine.model.GitMaterial;
 import net.hawkengine.model.MaterialDefinition;
 
-public class GitMaterialUpdater extends MaterialUpdater {
+public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
     private IGitService gitService;
 
     public GitMaterialUpdater() {
@@ -15,9 +15,7 @@ public class GitMaterialUpdater extends MaterialUpdater {
     }
 
     @Override
-    public MaterialDefinition getLatestMaterialVersion(MaterialDefinition materialDefinition) {
-        GitMaterial gitMaterial = (GitMaterial) materialDefinition;
-
+    public MaterialDefinition getLatestMaterialVersion(GitMaterial gitMaterial) {
         boolean repositoryExists = this.gitService.repositoryExists(gitMaterial);
         if (!repositoryExists) {
             String cloneResult = this.gitService.cloneRepository(gitMaterial);
@@ -40,7 +38,14 @@ public class GitMaterialUpdater extends MaterialUpdater {
     }
 
     @Override
-    public boolean areMaterialsSameVersion(MaterialDefinition latestMaterial, MaterialDefinition dbMaterial) {
-        return false;
+    public boolean areMaterialsSameVersion(GitMaterial latestMaterial, GitMaterial dbMaterial) {
+        boolean areSameVersion;
+        if (dbMaterial != null) {
+            areSameVersion = latestMaterial.getCommitId().equals(dbMaterial.getCommitId());
+        } else {
+            areSameVersion = false;
+        }
+
+        return areSameVersion;
     }
 }
