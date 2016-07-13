@@ -26,12 +26,18 @@ public class UploadArtifactExecutor extends TaskExecutor {
 
     private Client restClient;
     private IFileManagementService fileManagementService;
-    private
-    Gson jsonConverter;
+    private Gson jsonConverter;
 
     public UploadArtifactExecutor() {
         this.restClient = Client.create();
         this.fileManagementService = new FileManagementService();
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter()).create();
+    }
+
+    public UploadArtifactExecutor(Client client, IFileManagementService fileManagementService) {
+        this.setRestClient(client.create());
+        this.setFileManagementService(fileManagementService);
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter()).create();
     }
