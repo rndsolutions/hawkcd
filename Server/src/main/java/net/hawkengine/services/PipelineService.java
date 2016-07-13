@@ -56,6 +56,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             pipeline.setExecutionId(lastPipeline.getExecutionId() + 1);
         }
 
+        this.addMaterialsToPipeline(pipeline);
         this.addStagesToPipeline(pipeline);
         return super.add(pipeline);
     }
@@ -124,6 +125,15 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     private void addMaterialsToPipeline(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
+
+        List<Material> materials = new ArrayList<>();
+        for (MaterialDefinition materialDefinition : materialDefinitions) {
+            Material material = new Material();
+            material.setMaterialDefinition(materialDefinition);
+            materials.add(material);
+        }
+
+        pipeline.setMaterials(materials);
     }
 
     private void addStagesToPipeline(Pipeline pipeline) {
