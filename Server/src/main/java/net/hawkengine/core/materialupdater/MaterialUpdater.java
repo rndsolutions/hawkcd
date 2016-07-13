@@ -2,10 +2,10 @@ package net.hawkengine.core.materialupdater;
 
 import net.hawkengine.model.MaterialDefinition;
 
-public abstract class MaterialUpdater implements IMaterialUpdater {
+public abstract class MaterialUpdater<T extends MaterialDefinition> implements IMaterialUpdater<T> {
     @Override
-    public abstract MaterialDefinition getLatestMaterialVersion(MaterialDefinition materialDefinition);
+    public abstract MaterialDefinition getLatestMaterialVersion(T materialDefinition);
 
     @Override
-    public abstract boolean areMaterialsSameVersion(MaterialDefinition latestMaterial, MaterialDefinition dbMaterial);
+    public abstract boolean areMaterialsSameVersion(T latestMaterial, T dbMaterial);
 }
