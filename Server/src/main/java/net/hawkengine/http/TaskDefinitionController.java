@@ -8,9 +8,6 @@ import net.hawkengine.services.TaskDefinitionService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 @Path("/pipeline-definitions/{pipelineDefinitionId}/stage-definitions/{stageDefinitionId}/job-definitions/{jobDefinitionId}/task-definitions")
 @Consumes("application/json")

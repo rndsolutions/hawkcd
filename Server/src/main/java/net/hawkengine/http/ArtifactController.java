@@ -1,9 +1,5 @@
 package net.hawkengine.http;
 
-import com.sun.deploy.net.HttpRequest;
-import sun.management.AgentConfigurationError;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -13,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.ws.rs.Path;
 
 @Path("/Artifacts/{pipelineName}/{stageName}/{jobName}")
 public class ArtifactController {
@@ -26,7 +21,6 @@ public class ArtifactController {
                            File zipFile) {
 
         String basePath = System.getProperty("user.dir");
-
 
         String outputFolder = basePath + "\\Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
         byte[] buffer = new byte[1024];

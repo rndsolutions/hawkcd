@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AgentService extends CrudService<Agent> implements IAgentService {
+    //TODO: add jobService
     private IPipelineService pipelineService;
 
     public AgentService() {
@@ -91,7 +92,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                                 .forEach(job -> {
                                     workInfo.setPipelineExecutionID(pipeline.getExecutionId());
                                     workInfo.setStageExecutionID(stage.getExecutionId());
-                                    workInfo.getJob().setStatus(JobStatus.RUNNING);
+                                    job.setStatus(JobStatus.RUNNING);
                                     workInfo.setJob(job);
                                     workInfo.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
                                     workInfo.setStageDefinitionName(stage.getStageDefinitionName());
@@ -100,6 +101,8 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                                     result.setObject(workInfo);
                                     result.setError(false);
                                     result.setMessage("WorkInfo retrieved successfully");
+
+
                                 }));
             }
         } else {
