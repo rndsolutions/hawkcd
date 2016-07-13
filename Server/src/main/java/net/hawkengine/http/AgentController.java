@@ -12,11 +12,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+
 import java.util.List;
 
-@Path("/agents")
+
 @Consumes("application/json")
 @Produces("application/json")
+@Path("/agents")
 public class AgentController {
     private AgentService agentService;
     private SchemaValidator schemaValidator;
@@ -31,7 +34,7 @@ public class AgentController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAgents() {
+    public Response getAllAgents() throws Throwable {
         ServiceResult result = this.agentService.getAll();
         return Response.status(Status.OK)
                 .entity(result.getObject())
