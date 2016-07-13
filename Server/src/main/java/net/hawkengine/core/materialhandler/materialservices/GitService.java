@@ -7,7 +7,9 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +26,10 @@ public class GitService implements IGitService {
     @Override
     public String cloneRepository(GitMaterial gitMaterial) {
         try {
+            CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             Git.cloneRepository()
                     .setURI(gitMaterial.getRepositoryUrl())
+                    .setCredentialsProvider(credentials)
                     .setDirectory(new File(gitMaterial.getName()))
                     .setCloneSubmodules(true)
                     .call();
@@ -52,11 +56,23 @@ public class GitService implements IGitService {
             gitMaterial.setAuthorName(commit.getAuthorIdent().getName());
             gitMaterial.setAuthorEmail(commit.getAuthorIdent().getEmailAddress());
             gitMaterial.setComments(commit.getFullMessage());
+            git.close();
 
             return gitMaterial;
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private CredentialsProvider handleCredentials(GitMaterial gitMaterial) {
+        UsernamePasswordCredentialsProvider credentials = null;
+        String username = gitMaterial.getUsername();
+        String password = gitMaterial.getPassword();
+        if (username != null && password != null) {
+            credentials = new UsernamePasswordCredentialsProvider(username, password);
+        }
+
+        return credentials;
     }
 }
