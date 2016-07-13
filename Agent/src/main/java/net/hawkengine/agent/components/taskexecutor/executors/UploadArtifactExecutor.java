@@ -1,8 +1,6 @@
 package net.hawkengine.agent.components.taskexecutor.executors;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.jersey.api.client.Client;
@@ -21,14 +19,14 @@ import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 import net.hawkengine.agent.utils.jsonconverter.TaskDefinitionAdapter;
 
-import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.time.LocalDateTime;
 
 public class UploadArtifactExecutor extends TaskExecutor {
 
     private Client restClient;
-    private IFileManagementService fileManagementService; private
+    private IFileManagementService fileManagementService;
+    private
     Gson jsonConverter;
 
     public UploadArtifactExecutor() {
