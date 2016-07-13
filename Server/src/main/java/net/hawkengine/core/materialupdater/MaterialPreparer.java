@@ -40,7 +40,7 @@ public class MaterialPreparer implements Runnable {
                         }
 
                         if (updatedMaterial.isUpdated()) {
-                            this.materialService.update(material);
+                            this.materialService.add(material);
                         }
                     }
 
