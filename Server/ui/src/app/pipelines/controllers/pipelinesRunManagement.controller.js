@@ -476,7 +476,7 @@ angular
 
             //Prevents initial console errors
             //if (vm.selectedStage != undefined && vm.selectedStage.LastRunSelected >= 1 && vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1] != undefined) {
-            if(vm.lastRunSelected > 0 ) {
+            if(vm.currentPipelineRunStages.length > 0 ) {
                 for (var i = 0; i < vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs.length; i += 1) {
                     if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'AWAITING') {
                         allJobs.skippedJobs += 1;
@@ -484,7 +484,7 @@ angular
                     if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'SCHEDULED') {
                         allJobs.scheduledJobs += 1;
                     }
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'IN_PROGRESS') {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'RUNNING') {
                         allJobs.inProgress += 1;
                     }
                     if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'PASSED') {

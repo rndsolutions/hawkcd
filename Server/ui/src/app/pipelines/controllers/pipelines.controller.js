@@ -32,6 +32,11 @@ angular
 
         $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
+            viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                if(viewModel.allPipelines[pipelineIndex].stages.length == 0){
+                    viewModel.allPipelines[pipelineIndex].stages = viewModel.allPipelines[pipelineIndex].stageDefinitions;
+                }
+            });
             console.log(vm.allPipelines);
         }, true);
 
@@ -72,9 +77,15 @@ angular
             vm.currentStageRuns = [];
             vm.allPipelineRuns.forEach(function (currentPipeline, index, array) {
                 if (currentPipeline.pipelineDefinitionId == pipeline.id) {
-                    currentPipeline.stages.forEach(function (currentStage, index, array) {
-                        vm.currentStageRuns.push(currentStage);
-                    });
+                    if(currentPipeline.stageDefinitions.length == 0){
+                        pipeline.stageDefinitions.forEach(function (currentStageDefinition, stageIndex, stageArray) {
+                            vm.currentStageRuns.push(currentStageDefinition);
+                        });
+                    } else {
+                        currentPipeline.stages.forEach(function (currentStage, index, array) {
+                            vm.currentStageRuns.push(currentStage);
+                        });
+                    }
                 }
             });
             console.log(vm.currentStageRuns);

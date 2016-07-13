@@ -27,7 +27,7 @@
             <span ng-if="stage.status=='FAILED' && $index<9">
               <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
-            <span ng-if="stage.status == 'NOT_RUN' && $index<9">
+            <span ng-if="stage.status == 'NOT_RUN' || stage.status == 'undefined' && $index<9">
                  <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'IN_PROGRESS' && $index<9">
