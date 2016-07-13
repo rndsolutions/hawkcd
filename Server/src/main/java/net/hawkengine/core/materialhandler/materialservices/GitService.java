@@ -58,6 +58,5 @@ public class GitService implements IGitService {
             e.printStackTrace();
             return null;
         }
-
     }
 }
