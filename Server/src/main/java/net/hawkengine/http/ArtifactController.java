@@ -17,6 +17,22 @@ import java.util.zip.ZipInputStream;
 @Path("/Artifacts/{pipelineName}/{stageName}/{jobName}")
 public class ArtifactController {
     private IFileManagementService fileManagementService;
+    private String basePath;
+    private String outputFolder;
+
+    public ArtifactController(){
+        this.basePath = System.getProperty("user.dir");
+
+        this.outputFolder = this.basePath + "\\Temp\\";
+
+        File dir = new File(this.outputFolder);
+        for (File file : dir.listFiles()) {
+            if (!file.isDirectory()) {
+                file.delete();
+            }
+        }
+
+    }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -26,9 +42,7 @@ public class ArtifactController {
                            @PathParam("jobName") String jobName,
                            File zipFile) {
 
-        String basePath = System.getProperty("user.dir");
-
-        String outputFolder = basePath + "\\Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
+        this.outputFolder = this.basePath + "\\Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
         byte[] buffer = new byte[1024];
 
         try {
@@ -102,12 +116,9 @@ public class ArtifactController {
                 .type(MediaType.TEXT_HTML)
                 .build();
         }
+        this.outputFolder = this.basePath + "\\Temp\\";
 
-        String basePath = System.getProperty("user.dir");
-
-        String outputFolder = basePath + "\\Temp\\";
-
-        File zipFile = this.fileManagementService.generateUniqueFile(outputFolder, "zip");
+        File zipFile = this.fileManagementService.generateUniqueFile(this.outputFolder, "zip");
 
         String errorMessage = this.fileManagementService.zipFiles(zipFile.getPath(), files, rootPath, false);
 
@@ -117,7 +128,6 @@ public class ArtifactController {
                         .type(MediaType.TEXT_HTML)
                         .build();
         }
-
         return Response.status(Response.Status.OK)
                 .entity(zipFile)
                 .build();
