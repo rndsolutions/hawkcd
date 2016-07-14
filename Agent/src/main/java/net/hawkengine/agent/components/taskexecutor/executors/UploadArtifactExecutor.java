@@ -62,6 +62,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
         UploadArtifactTask taskDefinition = (UploadArtifactTask) task.getTaskDefinition();
+        workInfo.getJob().setReport(report);
 
         report.append(String.format("Start uploading artifact source: %s destination: %s", taskDefinition.getSource(), taskDefinition.getDestination()));
         this.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
@@ -73,6 +74,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
         if (rootPath.isEmpty()) {
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
+            report.append(System.getProperty("line.separator"));
             report.append(String.format("%s is Nonexistent source.", taskDefinition.getSource()));
             LOGGER.error("Nonexistent source.");
 
@@ -84,6 +86,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
         if (files == null) {
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
+            report.append(System.getProperty("line.separator"));
             report.append(String.format("%s is Nonexistent source.", taskDefinition.getSource()));
             LOGGER.error("Nonexistent source.");
 
@@ -98,7 +101,8 @@ public class UploadArtifactExecutor extends TaskExecutor {
             zipFile.delete();
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
-            report.append("Error occurred");
+            report.append(System.getProperty("line.separator"));
+            report.append("Error occurred in zipping files!");
             LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
 
             return task;
@@ -115,7 +119,8 @@ public class UploadArtifactExecutor extends TaskExecutor {
             zipFile.delete();
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
-            report.append("Error occurred");
+            report.append(System.getProperty("line.separator"));
+            report.append(String.format("Error occurred in server response! Returned status code: %s",response.getStatus()));
             LOGGER.debug(String.format("Could not get resource. TaskStatus code %d", response.getStatus()));
 
             return task;
@@ -124,7 +129,6 @@ public class UploadArtifactExecutor extends TaskExecutor {
         zipFile.delete();
 
         this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
-        workInfo.getJob().setReport(report);
 
         return task;
     }

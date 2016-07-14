@@ -106,12 +106,13 @@ public class UploadArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).getFiles(Mockito.anyString(), Mockito.anyString());
         Assert.assertEquals("Start uploading artifact source: correctSource destination: correctDestination",this.workInfo.getJob().getReport().toString());
         Assert.assertEquals(TaskStatus.PASSED, resultTask.getStatus());
     }
 
     @Test
-    public void uploadArtifactExecutor_failing() {
+    public void uploadArtifactExecutor_zippingFiles_failing() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
         Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
@@ -132,6 +133,89 @@ public class UploadArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
+        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Error occurred"));
+        Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
+        Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
+        Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
+    }
+
+    @Test
+    public void uploadArtifactExecutor_serverResponse_failing() {
+        //Arrange
+        Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
+        Mockito.when(this.mockedFileManagementService.getPattern(Mockito.anyString(), Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(this.mockedFileList);
+        Mockito.when(this.mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(this.mockedFile);
+        Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
+
+        Mockito.when(this.mockedClient.resource("my/path")).thenReturn(this.mockedResource);
+        Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
+        Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
+        Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, this.mockedFile)).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResponse.getStatus()).thenReturn(400);
+
+        //Act
+        Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
+
+        //Assert
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
+        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Error occurred"));
+        Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
+        Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
+        Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
+    }
+
+    @Test
+    public void uploadArtifactExecutor_getFiles_failing() {
+        //Arrange
+        Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
+        Mockito.when(this.mockedFileManagementService.getPattern(Mockito.anyString(), Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(this.mockedFile);
+        Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
+
+        Mockito.when(this.mockedClient.resource("my/path")).thenReturn(this.mockedResource);
+        Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
+        Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
+        Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, this.mockedFile)).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
+
+        //Act
+        Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
+
+        //Assert
+        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Nonexistent source"));
+        Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
+        Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
+        Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
+    }
+
+    @Test
+    public void uploadArtifactExecutor_emptyRootPath_failing() {
+        //Arrange
+        Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.getPattern(Mockito.anyString(), Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(this.mockedFile);
+        Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
+
+        Mockito.when(this.mockedClient.resource("my/path")).thenReturn(this.mockedResource);
+        Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
+        Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
+        Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, this.mockedFile)).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
+
+        //Act
+        Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
+
+        //Assert
+        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Nonexistent source"));
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
@@ -146,166 +230,4 @@ public class UploadArtifactExecutorTest extends TestBase {
         Assert.assertNotNull(executorClient);
         Assert.assertNotNull(executorFileService);
     }
-
-
-//    @InjectMocks
-//    private UploadArtifactExecutor uploadArtifactExecutor;
-//
-//    @Mock
-//    private Client mockedClient;
-//    @Mock
-//    private WebResource mockedResource;
-//    @Mock
-//    private ClientResponse mockedResponse;
-//    @Mock
-//    private IFileManagementService mockedFileManagementService;
-//
-//    private UploadArtifactTask task;
-//    private JobExecutionInfo jobExecutionInfo;
-//    private File mockedFile;
-//    private File[] mockedFileList;
-//
-//    @Before
-//    public void setUp() throws Exception {
-//        MockitoAnnotations.initMocks(this);
-//
-//        AgentConfiguration.configure();
-//
-//        this.task = new UploadArtifactTask();
-//        this.task.setSource("TestFolder");
-//
-//        this.jobExecutionInfo = new JobExecutionInfo();
-//        this.jobExecutionInfo.setPipelineName("Hawk");
-//
-//        this.mockedFile = new File("");
-//        this.mockedFileList = new File[1];
-//    }
-//
-//    @After
-//    public void tearDown() throws Exception {
-//
-//    }
-//
-//    @Test
-//    public void uploadArtifactExecutor_passed() throws Exception {
-//
-//        ExecutionState expectedState = ExecutionState.COMPLETED;
-//        ExecutionStatus expectedStatus = ExecutionStatus.PASSED;
-//
-//        AtomicBoolean testResult = new AtomicBoolean();
-//        testResult.set(true);
-//
-//        StringBuilder errorMessages = new StringBuilder();
-//
-//        Mockito.when(mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("Path");
-//        Mockito.when(mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(mockedFile);
-//        Mockito.when(mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(mockedFileList);
-//        //Mockito.when(mockedFileManagementService.zipFiles(Mockito.anyString(), Mockito.any(File[].class), Mockito.anyString())).thenReturn(null);
-//
-//        Mockito.when(mockedResponse.getStatus()).thenReturn(200);
-//        Mockito.when(mockedClient.resource(Mockito.anyString())).thenReturn(mockedResource);
-//        Mockito.when(mockedResource.post(ClientResponse.class, mockedFile)).thenReturn(mockedResponse);
-//
-//        TaskExecutionInfo result = this.uploadArtifactExecutor.ExecuteTask(this.task, this.jobExecutionInfo);
-//
-//        ExecutionStatus actualStatus = result.getStatus();
-//        ExecutionState actualState = result.getState();
-//
-//        super.checkResult(testResult, errorMessages, result != null, "The expected task result is taskExecutionInfo object, but the actual is null.");
-//        super.checkResult(testResult, errorMessages, actualStatus == expectedStatus, String.format("The expected task status is %s, but the actual is %s.", expectedStatus, actualStatus));
-//        super.checkResult(testResult, errorMessages, actualState == expectedState, String.format("The expected task state is %s, but the actual is %s.", expectedState, actualState));
-//
-//        Assert.assertEquals(errorMessages.toString(), true, testResult.get());
-//
-//    }
-//
-//    @Test
-//    public void uploadArtifactExecutor_corruptedArtifact_failed() throws Exception {
-//
-//        ExecutionState expectedState = ExecutionState.COMPLETED;
-//        ExecutionStatus expectedStatus = ExecutionStatus.FAILED;
-//
-//        AtomicBoolean testResult = new AtomicBoolean();
-//        testResult.set(true);
-//
-//        StringBuilder errorMessages = new StringBuilder();
-//
-//        Mockito.when(mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("Path");
-//        Mockito.when(mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(mockedFile);
-//        Mockito.when(mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(mockedFileList);
-//        //Mockito.when(mockedFileManagementService.zipFiles(Mockito.anyString(), Mockito.any(File[].class), Mockito.anyString())).thenReturn(null);
-//
-//        Mockito.when(mockedResponse.getStatus()).thenReturn(500);
-//        Mockito.when(mockedClient.resource(Mockito.anyString())).thenReturn(mockedResource);
-//        Mockito.when(mockedResource.post(ClientResponse.class, mockedFile)).thenReturn(mockedResponse);
-//
-//        TaskExecutionInfo result = this.uploadArtifactExecutor.ExecuteTask(this.task, this.jobExecutionInfo);
-//
-//        ExecutionStatus actualStatus = result.getStatus();
-//        ExecutionState actualState = result.getState();
-//
-//        super.checkResult(testResult, errorMessages, result != null, "The expected task result is taskExecutionInfo object, but the actual is null.");
-//        super.checkResult(testResult, errorMessages, actualStatus == expectedStatus, String.format("The expected task status is %s, but the actual is %s.", expectedStatus, actualStatus));
-//        super.checkResult(testResult, errorMessages, actualState == expectedState, String.format("The expected task state is %s, but the actual is %s.", expectedState, actualState));
-//
-//        Assert.assertEquals(errorMessages.toString(), true, testResult.get());
-//    }
-//
-//    @Test
-//    public void uploadArtifactExecutor_invalidArtifactSource_failed() throws Exception {
-//
-//        ExecutionState expectedState = ExecutionState.COMPLETED;
-//        ExecutionStatus expectedStatus = ExecutionStatus.FAILED;
-//
-//        AtomicBoolean testResult = new AtomicBoolean();
-//        testResult.set(true);
-//
-//        StringBuilder errorMessages = new StringBuilder();
-//
-//        Mockito.when(mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("Path");
-//        Mockito.when(mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(mockedFile);
-//        Mockito.when(mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
-//        //Mockito.when(mockedFileManagementService.zipFiles(Mockito.anyString(), Mockito.any(File[].class), Mockito.anyString())).thenReturn(null);
-//
-//        TaskExecutionInfo result = this.uploadArtifactExecutor.ExecuteTask(this.task, this.jobExecutionInfo);
-//
-//        ExecutionStatus actualStatus = result.getStatus();
-//        ExecutionState actualState = result.getState();
-//
-//        super.checkResult(testResult, errorMessages, result != null, "The expected task result is taskExecutionInfo object, but the actual is null.");
-//        super.checkResult(testResult, errorMessages, actualStatus == expectedStatus, String.format("The expected task status is %s, but the actual is %s.", expectedStatus, actualStatus));
-//        super.checkResult(testResult, errorMessages, actualState == expectedState, String.format("The expected task state is %s, but the actual is %s.", expectedState, actualState));
-//
-//        Assert.assertEquals(errorMessages.toString(), true, testResult.get());
-//    }
-//
-//    @Test
-//    public void uploadArtifactExecutor_zippingFailed_failed() throws Exception {
-//
-//        ExecutionState expectedState = ExecutionState.COMPLETED;
-//        ExecutionStatus expectedStatus = ExecutionStatus.FAILED;
-//
-//        AtomicBoolean testResult = new AtomicBoolean();
-//        testResult.set(true);
-//
-//        StringBuilder errorMessages = new StringBuilder();
-//
-//        Mockito.when(mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("Path");
-//        Mockito.when(mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(mockedFile);
-//        Mockito.when(mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(mockedFileList);
-//
-//        Mockito.when(mockedClient.resource(Mockito.anyString())).thenReturn(mockedResource);
-//        Mockito.when(mockedFileManagementService.zipFiles(Mockito.anyString(),Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean())).thenReturn("Error Message");
-//
-//        TaskExecutionInfo result = this.uploadArtifactExecutor.ExecuteTask(this.task, this.jobExecutionInfo);
-//
-//        ExecutionStatus actualStatus = result.getStatus();
-//        ExecutionState actualState = result.getState();
-//
-//        super.checkResult(testResult, errorMessages, result != null, "The expected task result is taskExecutionInfo object, but the actual is null.");
-//        super.checkResult(testResult, errorMessages, actualStatus == expectedStatus, String.format("The expected task status is %s, but the actual is %s.", expectedStatus, actualStatus));
-//        super.checkResult(testResult, errorMessages, actualState == expectedState, String.format("The expected task state is %s, but the actual is %s.", expectedState, actualState));
-//
-//        Assert.assertEquals(errorMessages.toString(), true, testResult.get());
-//    }
 }
