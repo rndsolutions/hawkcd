@@ -110,6 +110,8 @@ dependencies {
     compile 'org.mongodb:mongodb-driver:3.2.2'
 
     compile 'com.github.fakemongo:fongo:2.0.6'
+
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.4.0.201606070830-r'
     
     
     //mock-jedis dependency for junit testing.

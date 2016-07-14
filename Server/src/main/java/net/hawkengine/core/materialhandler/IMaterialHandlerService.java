@@ -1,4 +1,4 @@
-package net.hawkengine.core.materialupdater;
+package net.hawkengine.core.materialhandler;
 
 import net.hawkengine.model.Material;
 import net.hawkengine.model.PipelineDefinition;

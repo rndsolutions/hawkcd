@@ -1,11 +1,11 @@
 package net.hawkengine.core;
 
+import net.hawkengine.core.materialhandler.MaterialTracker;
 import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.ws.WsServlet;
-
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -20,15 +20,17 @@ public class HawkServer {
     private static final int PORT = 8080;
 
     private Server server;
-    private Thread jobAssigner;
     private Thread pipelinePreparer;
+    private Thread jobAssigner;
+    private Thread materialTracker;
     private EndpointFinder endpointFinder;
 
     public HawkServer() {
         RedisManager.connect();
         this.server = new Server();
-        this.jobAssigner = new Thread(new JobAssigner());
         this.pipelinePreparer = new Thread(new PipelinePreparer());
+        this.jobAssigner = new Thread(new JobAssigner());
+        this.materialTracker = new Thread(new MaterialTracker());
         this.endpointFinder = new EndpointFinder();
     }
 
@@ -43,7 +45,7 @@ public class HawkServer {
 
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
-        resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
+        resourceHandler.setWelcomeFiles(new String[]{"index.html"});
         //resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
@@ -62,14 +64,15 @@ public class HawkServer {
         context.addServlet(WsServlet.class, "/ws/v1");
 
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { resourceHandler, context, new DefaultHandler() });
+        handlers.setHandlers(new Handler[]{resourceHandler, context, new DefaultHandler()});
 
         this.server.setHandler(handlers);
     }
 
     public void start() throws Exception {
-        this.jobAssigner.start();
         this.pipelinePreparer.start();
+        this.jobAssigner.start();
+        this.materialTracker.start();
         this.server.start();
         this.server.join();
     }

@@ -1,4 +1,4 @@
-package net.hawkengine.core.materialupdater;
+package net.hawkengine.core.materialhandler.materialupdaters;
 
 import net.hawkengine.model.enums.MaterialType;
 

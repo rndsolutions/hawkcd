@@ -1,19 +1,10 @@
 package net.hawkengine.services;
 
 
-
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.Task;
-import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -21,8 +12,6 @@ import net.hawkengine.services.interfaces.IPipelineService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import redis.clients.jedis.JedisPoolConfig;
 
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
@@ -61,12 +50,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 .sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId()))
                 .findFirst()
                 .orElse(null);
-        if(lastPipeline == null){
+        if (lastPipeline == null) {
             pipeline.setExecutionId(1);
-        }
-        else{
+        } else {
             pipeline.setExecutionId(lastPipeline.getExecutionId() + 1);
         }
+
+        this.addMaterialsToPipeline(pipeline);
         this.addStagesToPipeline(pipeline);
         return super.add(pipeline);
     }
@@ -130,6 +120,20 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         result.setObject(updatedPipelines);
 
         return result;
+    }
+
+    private void addMaterialsToPipeline(Pipeline pipeline) {
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
+
+        List<Material> materials = new ArrayList<>();
+        for (MaterialDefinition materialDefinition : materialDefinitions) {
+            Material material = new Material();
+            material.setMaterialDefinition(materialDefinition);
+            materials.add(material);
+        }
+
+        pipeline.setMaterials(materials);
     }
 
     private void addStagesToPipeline(Pipeline pipeline) {

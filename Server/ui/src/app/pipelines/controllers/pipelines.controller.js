@@ -337,7 +337,7 @@ angular
                 "name": vm.formData.pipeline.name,
                 "pipelineGroupId": vm.groupId,
                 "pipelineGroupName": vm.groupName,
-                "materials": [material],
+                "materialDefinitions": [material],
                 "environmentVariables": [],
                 "parameters": [],
                 "environment": {},
