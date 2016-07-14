@@ -91,6 +91,8 @@ angular
         // Redirect any unmatched url
         $urlRouterProvider.otherwise("/");
 
+        $urlRouterProvider.when('/', '/pipelines');
+
         //$animateProvider.classNameFilter(/angular-animate/);
 
         $stateProvider

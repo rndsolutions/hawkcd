@@ -30,17 +30,17 @@ angular
 
         vm.allPipelines = viewModel.allPipelines;
 
-        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
             viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
-                if(viewModel.allPipelines[pipelineIndex].stages.length == 0){
+                if(viewModel.allPipelines[pipelineIndex].stages == 'undefined'){
                     viewModel.allPipelines[pipelineIndex].stages = viewModel.allPipelines[pipelineIndex].stageDefinitions;
                 }
             });
             console.log(vm.allPipelines);
-        }, true);
+        });
 
-        $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
@@ -66,12 +66,12 @@ angular
             });
 
             console.log(vm.allPipelineRuns);
-        }, true);
+        });
 
-        $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
             vm.allPipelineGroups = viewModel.allPipelineGroups;
             console.log(vm.allPipelineGroups);
-        }, true);
+        });
 
         vm.getStageRunsFromPipeline = function (pipeline) {
             vm.currentStageRuns = [];
@@ -127,8 +127,7 @@ angular
         vm.play = function (pipelineDefinition) {
             var pipeline = {
                 "pipelineDefinitionId": pipelineDefinition.id,
-                "pipelineDefinitionName": pipelineDefinition.name,
-                "areMaterialsUpdated": true
+                "pipelineDefinitionName": pipelineDefinition.name
             };
             pipeExecService.startPipeline(pipeline);
         };

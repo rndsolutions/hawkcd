@@ -26,6 +26,7 @@
         <table class="table table-striped table-bordered table-hover table-checkable order-column">
           <thead>
           <tr>
+            <th class="statusHeader"></th>
             <th>{{agents.defaultText.tableHeaders.agentName}}</th>
             <th class="custom-datatable-btns">{{agents.defaultText.tableHeaders.path}}</th>
             <th>{{agents.defaultText.tableHeaders.os}}</th>
@@ -41,11 +42,12 @@
           <tbody>
 
           <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
+            <td class="statusLabel" ng-class="{'labelEnabled' : agent.isEnabled && !agent.isRunning, 'labelDisabled' : !agent.isEnabled, 'labelRunning' : agent.isRunning}"></td>
             <td>{{agent.hostName + "-" +  agent.id.substr(0,8)}}</td>
             <td class="custom-datatable-btns">{{agent.rootPath}}</td>
             <td>{{agent.operatingSystem}}</td>
             <td>{{agent.ipAddress}}</td>
-            <td>{{agent.executionState}}</td>
+            <td>{{agent.status}}</td>
             <td>{{agent.freeSpace}}</td>
             <td>{{agent.resources}}</td>
             <td class="custom-datatable-btns">

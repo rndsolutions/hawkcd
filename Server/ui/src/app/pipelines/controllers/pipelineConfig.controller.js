@@ -74,7 +74,7 @@ angular
         //     console.log(vm.allPipelines.materials);
         // });
 
-        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
             vm.allPipelines.forEach(function (currentPipeline, index, array) {
                 if(currentPipeline.id == vm.pipeline.id) {
@@ -84,7 +84,7 @@ angular
                 }
             });
             console.log(vm.allPipelines);
-        }, true);
+        });
 
         // $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
         //     vm.allStages = viewModel.allStages;
@@ -107,9 +107,9 @@ angular
         //     console.log(vm.allJobs);
         // }, true);
 
-        $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
+        $scope.$watchCollection(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
             //viewModel.allPipelineGroups.forEach
-        }, true);
+        });
 
         // $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;

@@ -14,11 +14,12 @@ angular
             },
             table: {
                 run: 'Run',
+                repo: 'Repository',
+                commitId: 'Commit',
+                branch: 'Branch',
                 start: 'Start',
                 trigger: 'Trigger',
-                change: 'Change',
                 state: 'State',
-                outcome: 'Outcome',
                 execution: 'Execution'
             }
         };

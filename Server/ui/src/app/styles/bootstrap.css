@@ -1753,6 +1753,9 @@ pre code {
   .col-md-9 {
     width: 75%;
   }
+  .col-md-9.custom {
+    width: 100%!important;
+  }
   .col-md-8 {
     width: 66.66666667%;
   }
@@ -3744,6 +3747,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   width: 100%;
   border-bottom: 0;
 }
+
+.nav-tabs.nav-justified.custom {
+  width: 10%!important;
+}
+
 .nav-tabs.nav-justified > li {
   float: none;
 }
