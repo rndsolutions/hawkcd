@@ -113,7 +113,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.orange.redis-embedded/embedded-redis
     //compile group: 'com.orange.redis-embedded', name: 'embedded-redis', version: '0.6'
+
+    // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
     compile group: 'com.github.kstyrc', name: 'embedded-redis', version: '0.6'
+
 
 
     //mock-jedis dependency for junit testing.

@@ -10,9 +10,9 @@ import net.hawkengine.agent.constants.LoggerMessages;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.FetchArtifactTask;
 import net.hawkengine.agent.models.Task;
-import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
+import net.hawkengine.agent.models.payload.WorkInfo;
 
 import java.io.File;
 import java.io.IOException;

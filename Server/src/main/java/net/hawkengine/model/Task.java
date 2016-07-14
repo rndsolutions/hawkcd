@@ -20,6 +20,15 @@ public class Task extends DbEntry {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
+    private MaterialDefinition materialDefinition;
+
+    public MaterialDefinition getMaterialDefinition() {
+        return this.materialDefinition;
+    }
+
+    public void setMaterialDefinition(MaterialDefinition materialDefinition) {
+        this.materialDefinition = materialDefinition;
+    }
 
     public TaskDefinition getTaskDefinition() {
         return this.taskDefinition;

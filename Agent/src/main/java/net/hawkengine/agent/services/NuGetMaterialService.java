@@ -14,29 +14,29 @@ public class NuGetMaterialService extends MaterialService {
 
     @Override
     public String fetchMaterial(FetchMaterialTask task) {
-        String errorMessage;
+        String errorMessage = "";
 
-        HTTPBasicAuthFilter credentials = this.handleCredentials(task.getMaterialSpecificDetails());
-        if (credentials != null) {
-            super.restClient.addFilter(credentials);
-        }
-
-        String resource = this.constructResource(task.getSource(), task.getMaterialSpecificDetails());
-        WebResource webResource = super.restClient.resource(resource);
-        ClientResponse response = webResource.get(ClientResponse.class);
-
-        int responseCode = response.getStatus();
-        if (responseCode == 200) {
-            String materialDir = this.createMaterialDir(task);
-            String fileName = task.getMaterialSpecificDetails().get("packageId") + "." + task.getMaterialSpecificDetails().get("revision");
-            String filePath = Paths.get(materialDir, fileName + ".nupkg").toString();
-            errorMessage = super.fileManagementService.streamToFile(response.getEntityInputStream(), filePath);
-            if (errorMessage != null) {
-                return errorMessage;
-            }
-        } else {
-            errorMessage = this.generateErrorMessage(responseCode);
-        }
+//        HTTPBasicAuthFilter credentials = this.handleCredentials(task.getMaterialSpecificDetails());
+//        if (credentials != null) {
+//            super.restClient.addFilter(credentials);
+//        }
+//
+//        String resource = this.constructResource(task.getSource(), task.getMaterialSpecificDetails());
+//        WebResource webResource = super.restClient.resource(resource);
+//        ClientResponse response = webResource.get(ClientResponse.class);
+//
+//        int responseCode = response.getStatus();
+//        if (responseCode == 200) {
+//            String materialDir = this.createMaterialDir(task);
+//            String fileName = task.getMaterialSpecificDetails().get("packageId") + "." + task.getMaterialSpecificDetails().get("revision");
+//            String filePath = Paths.get(materialDir, fileName + ".nupkg").toString();
+//            errorMessage = super.fileManagementService.streamToFile(response.getEntityInputStream(), filePath);
+//            if (errorMessage != null) {
+//                return errorMessage;
+//            }
+//        } else {
+//            errorMessage = this.generateErrorMessage(responseCode);
+//        }
 
         return errorMessage;
     }

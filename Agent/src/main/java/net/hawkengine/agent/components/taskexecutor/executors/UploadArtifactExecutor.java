@@ -14,10 +14,9 @@ import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.TaskDefinition;
 import net.hawkengine.agent.models.UploadArtifactTask;
-import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
-import net.hawkengine.agent.utils.jsonconverter.TaskDefinitionAdapter;
+import net.hawkengine.agent.models.payload.WorkInfo;
 
 import java.io.File;
 import java.time.LocalDateTime;
