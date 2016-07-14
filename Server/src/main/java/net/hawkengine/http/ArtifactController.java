@@ -1,5 +1,8 @@
 package net.hawkengine.http;
 
+import net.hawkengine.services.FileManagementService;
+import net.hawkengine.services.interfaces.IFileManagementService;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -7,11 +10,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Path("/Artifacts/{pipelineName}/{stageName}/{jobName}")
 public class ArtifactController {
+    private IFileManagementService fileManagementService;
+
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
@@ -22,7 +28,7 @@ public class ArtifactController {
 
         String basePath = System.getProperty("user.dir");
 
-        String outputFolder = basePath + "\\Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
+        String outputFolder = basePath + "\\Server Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
         byte[] buffer = new byte[1024];
 
         try {
@@ -69,6 +75,51 @@ public class ArtifactController {
                     .build();
         }
         return Response.status(Response.Status.OK)
+                .build();
+    }
+
+    @Path("/fetch-artifact")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    public Response createZip(String directory) {
+        this.fileManagementService = new FileManagementService();
+
+        String rootPath = this.fileManagementService.getRootPath(directory);
+        String wildCardPattern = this.fileManagementService.getPattern(rootPath, directory);
+
+        if (rootPath.isEmpty()) {
+
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+
+        File[] files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
+
+        if (files == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                .type(MediaType.TEXT_HTML)
+                .build();
+        }
+
+        String basePath = System.getProperty("user.dir");
+
+        String outputFolder = basePath + "\\Temp\\";
+
+        File zipFile = this.fileManagementService.generateUniqueFile(outputFolder, "zip");
+
+        String errorMessage = this.fileManagementService.zipFiles(zipFile.getPath(), files, rootPath, false);
+
+            if (errorMessage != null) {
+            zipFile.delete();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .type(MediaType.TEXT_HTML)
+                        .build();
+        }
+
+        return Response.status(Response.Status.OK)
+                .entity(zipFile)
                 .build();
     }
 }

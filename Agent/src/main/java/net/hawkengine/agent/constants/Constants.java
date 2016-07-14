@@ -18,5 +18,5 @@ public final class Constants {
     public static final String SERVER_CHECK_FOR_WORK_API_ADDRESS = "agents/%s/work";
     public static final String SERVER_CREATE_ARTIFACT_API_ADDRESS = "Artifacts/%s/%s/%s";
     public static final String SERVER_FETCH_ARTIFACT_API_ADDRESS = "pipeline-definitions";
-    public static final String ARTIFACTS_DIRECTORY = "Artifacts";
+    public static final String ARTIFACTS_DIRECTORY = "Agent Artifacts";
 }
