@@ -1,7 +1,7 @@
-build/
-.gradle/
-.idea/
-/Pipelines
-/Temp
-/Log
-/Config
+.gradle
+gradle
+build
+Config
+Log
+Temp
+Pipelines
