@@ -234,7 +234,7 @@ hs_err_pid*
 build/
 gradle
 gradlew
-gradle.bat
+gradlew.bat
 
 # Ignore Gradle GUI config
 gradle-app.setting
