@@ -7,6 +7,7 @@ public class WorkInfo {
     private int pipelineExecutionID;
     private String stageDefinitionName;
     private int stageExecutionID;
+
     private Job job;
 
     public String getPipelineDefinitionName() {
