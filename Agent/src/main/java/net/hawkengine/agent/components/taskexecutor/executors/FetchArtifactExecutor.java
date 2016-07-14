@@ -71,6 +71,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
         if ((response.getStatus() != 200) || (response.getEntityInputStream() == null)) {
             super.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
+            report.append(System.getProperty("line.separator"));
             report.append(String.format("Could not get resource. TaskStatus code %d", response.getStatus()));
             LOGGER.debug(String.format("Could not get resource. TaskStatus code %d", response.getStatus()));
             return task;
@@ -92,7 +93,8 @@ public class FetchArtifactExecutor extends TaskExecutor {
         if (errorMessage != null) {
             super.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
-            report.append("Error occurred");
+            report.append(System.getProperty("line.separator"));
+            report.append("Error occurred in creating the artifact!");
             LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
             return task;
         }
@@ -110,13 +112,17 @@ public class FetchArtifactExecutor extends TaskExecutor {
         if (errorMessage != null) {
             super.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
-            report.append("Error occurred");
+            report.append(System.getProperty("line.separator"));
+            report.append("Error occurred in unzipping files!");
             LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
             return task;
         }
 
+        report.append(System.getProperty("line.separator"));
         report.append(String.format("Saved artifact to %s after verifying the integrity of its contents.", destination));
         super.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+
+        workInfo.getJob().setReport(report);
 
         return task;
     }
