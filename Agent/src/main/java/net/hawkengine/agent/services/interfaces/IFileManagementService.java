@@ -22,6 +22,8 @@ public interface IFileManagementService {
 
     String deleteFile(String filePath);
 
+    void deleteFilesInDirectory(String directoryPath);
+
     String deleteDirectoryRecursively(String directoryPath);
 
     String getRootPath(String fullPath);

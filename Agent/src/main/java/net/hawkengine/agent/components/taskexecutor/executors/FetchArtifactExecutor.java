@@ -103,12 +103,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
         String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), taskDefinition.getPipeline(), taskDefinition.getStage(), taskDefinition.getJob()).toString();
         errorMessage = this.fileManagementService.unzipFile(filePath, destination);
         filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath()).toString();
-        File directory = new File(filePath);
-        for (File file : directory.listFiles()) {
-            if (!file.isDirectory()) {
-                file.delete();
-            }
-        }
+        this.fileManagementService.deleteFilesInDirectory(filePath);
 
         if (errorMessage != null) {
             super.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());

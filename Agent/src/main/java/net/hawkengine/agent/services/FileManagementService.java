@@ -119,6 +119,16 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
+    public void deleteFilesInDirectory(String directoryPath){
+        File directory = new File(directoryPath);
+        for (File file : directory.listFiles()) {
+            if (!file.isDirectory()) {
+                file.delete();
+            }
+        }
+    }
+
+    @Override
     public String deleteDirectoryRecursively(String directoryPath) {
 
         String errorMessage = null;
