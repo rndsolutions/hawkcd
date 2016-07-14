@@ -8,6 +8,8 @@ import java.util.StringJoiner;
 
 public interface IFileManagementService {
 
+    void generateDirectory(File file);
+
     String unzipFile(String filePath, String destination);
 
     String streamToFile(InputStream stream, String filePath);

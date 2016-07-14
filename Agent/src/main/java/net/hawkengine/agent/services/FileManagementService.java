@@ -49,6 +49,10 @@ public class FileManagementService implements IFileManagementService {
         return errorMessage;
     }
 
+    public void generateDirectory(File file){
+        file.getParentFile().mkdirs();
+    }
+
     @Override
     public File generateUniqueFile(String filePath, String fileExtension) {
 
