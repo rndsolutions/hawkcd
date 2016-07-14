@@ -31,7 +31,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         MaterialDefinition result = null;
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-            for (MaterialDefinition materialDefinition : pipelineDefinition.getMaterials()) {
+            for (MaterialDefinition materialDefinition : pipelineDefinition.getMaterialDefinitions()) {
                 if (materialDefinition.getId().equals(materialDefinitionId)) {
                     result = materialDefinition;
                     return super.createServiceResult(result, false, this.successMessage);
@@ -48,7 +48,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         List<MaterialDefinition> materialDefinitions = new ArrayList<>();
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-            materialDefinitions.addAll(pipelineDefinition.getMaterials());
+            materialDefinitions.addAll(pipelineDefinition.getMaterialDefinitions());
         }
 
         return super.createServiceResultArray(materialDefinitions, false, this.successMessage);
@@ -66,7 +66,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
 
     public ServiceResult addMaterialDefinition(MaterialDefinition materialDefinition) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(materialDefinition.getPipelineDefinitionId()).getObject();
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
+        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
         List<MaterialDefinition> allMaterialDefinitions = (List<MaterialDefinition>) this.getAll().getObject();
         for (MaterialDefinition materialDefinitionToCheck : allMaterialDefinitions) {
             if (materialDefinitionToCheck.getId().equals(materialDefinition.getId())) {
@@ -79,7 +79,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         }
 
         materialDefinitions.add(materialDefinition);
-        pipelineDefinition.setMaterials(materialDefinitions);
+        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
         PipelineDefinition updatedPipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.update(pipelineDefinition).getObject();
 
         MaterialDefinition result = this.extractMaterialDefinitionFromPipelineDefinition(updatedPipelineDefinition, materialDefinition.getId());
@@ -104,7 +104,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         MaterialDefinition result = null;
 
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(materialDefinition.getPipelineDefinitionId()).getObject();
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
+        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(materialDefinitions, materialDefinition);
         if (hasNameCollision) {
             return super.createServiceResult(materialDefinition, true, "with the same name exists");
@@ -122,7 +122,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
                 }
 
                 materialDefinitions.set(i, materialDefinition);
-                pipelineDefinition.setMaterials(materialDefinitions);
+                pipelineDefinition.setMaterialDefinitions(materialDefinitions);
                 PipelineDefinition updatedPipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.update(pipelineDefinition).getObject();
                 result = this.extractMaterialDefinitionFromPipelineDefinition(updatedPipelineDefinition, materialDefinition.getId());
                 break;
@@ -146,7 +146,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService
                 .getById(materialDefinitionToDelete.getPipelineDefinitionId())
                 .getObject();
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterials();
+        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
 
         int lengthOfMaterialDefinitions = materialDefinitions.size();
         if (lengthOfMaterialDefinitions > 1) {
@@ -166,7 +166,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
             return super.createServiceResult(materialDefinitionToDelete, true, "not deleted");
         }
 
-        pipelineDefinition.setMaterials(materialDefinitions);
+        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
         PipelineDefinition updatedPipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.update(pipelineDefinition).getObject();
         MaterialDefinition result = this.extractMaterialDefinitionFromPipelineDefinition(updatedPipelineDefinition, materialDefinitionId);
         if (result != null) {
@@ -192,7 +192,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
 
     private MaterialDefinition extractMaterialDefinitionFromPipelineDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
         MaterialDefinition result = pipelineDefinition
-                .getMaterials()
+                .getMaterialDefinitions()
                 .stream()
                 .filter(md -> md.getId().equals(materialDefinitionId))
                 .findFirst()

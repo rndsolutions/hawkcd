@@ -478,7 +478,7 @@ angular
 
         vm.getMaterial = function (material) {
             if (vm.material != null) {
-                viewModel.allPipelines[vm.pipelineIndex].materials.forEach(function (currentMaterial, index, array) {
+                viewModel.allPipelines[vm.pipelineIndex].materialDefinitions.forEach(function (currentMaterial, index, array) {
                     if (currentMaterial.name == material.name) {
                         vm.material = array[index];
                         vm.materialIndex = index;
@@ -501,7 +501,7 @@ angular
         };
 
         vm.editMaterial = function (newMaterial) {
-            var material = angular.copy(vm.allPipelines[vm.pipelineIndex].materials[vm.materialIndex]);
+            var material = angular.copy(vm.allPipelines[vm.pipelineIndex].materialDefinitions[vm.materialIndex]);
             if (newMaterial.type == 'GIT') {
                 material = {
                     id: material.id,
