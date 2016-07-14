@@ -28,7 +28,7 @@ public class ArtifactController {
 
         String basePath = System.getProperty("user.dir");
 
-        String outputFolder = basePath + "\\Server Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
+        String outputFolder = basePath + "\\Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
         byte[] buffer = new byte[1024];
 
         try {

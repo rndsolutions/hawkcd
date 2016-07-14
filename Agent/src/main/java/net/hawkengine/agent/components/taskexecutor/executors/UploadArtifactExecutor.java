@@ -14,9 +14,10 @@ import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.TaskDefinition;
 import net.hawkengine.agent.models.UploadArtifactTask;
+import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
-import net.hawkengine.agent.models.payload.WorkInfo;
+import net.hawkengine.agent.utils.jsonconverter.TaskDefinitionAdapter;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -119,7 +120,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
 
             report.append(System.getProperty("line.separator"));
-            report.append(String.format("Error occurred in server response! Returned status code: %s",response.getStatus()));
+            report.append(String.format("Error occurred in server response! Returned status code: %s", response.getStatus()));
             LOGGER.debug(String.format("Could not get resource. TaskStatus code %d", response.getStatus()));
 
             return task;
