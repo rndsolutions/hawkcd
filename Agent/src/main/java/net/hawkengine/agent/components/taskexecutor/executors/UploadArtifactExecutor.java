@@ -124,6 +124,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
         zipFile.delete();
 
         this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+        workInfo.getJob().setReport(report);
 
         return task;
     }

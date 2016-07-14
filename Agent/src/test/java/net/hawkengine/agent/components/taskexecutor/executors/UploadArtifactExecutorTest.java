@@ -106,6 +106,7 @@ public class UploadArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
+        Assert.assertEquals("Start uploading artifact source: correctSource destination: correctDestination",this.workInfo.getJob().getReport().toString());
         Assert.assertEquals(TaskStatus.PASSED, resultTask.getStatus());
     }
 
