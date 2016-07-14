@@ -86,9 +86,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
 
         String filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), UUID.randomUUID() + ".zip").toString();
         File fetchArtifactDir = new File(filePath);
-
         this.fileManagementService.generateDirectory(fetchArtifactDir);
-
         errorMessage = this.fileManagementService.initiateFile(fetchArtifactDir,response.getEntityInputStream(), filePath);
 
         if (errorMessage != null) {
@@ -117,8 +115,6 @@ public class FetchArtifactExecutor extends TaskExecutor {
         report.append(System.getProperty("line.separator"));
         report.append(String.format("Saved artifact to %s after verifying the integrity of its contents.", destination));
         super.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
-
-        workInfo.getJob().setReport(report);
 
         return task;
     }

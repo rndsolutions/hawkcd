@@ -107,7 +107,6 @@ public class UploadArtifactExecutorTest extends TestBase {
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).getFiles(Mockito.anyString(), Mockito.anyString());
-        Assert.assertEquals("Start uploading artifact source: correctSource destination: correctDestination",this.workInfo.getJob().getReport().toString());
         Assert.assertEquals(TaskStatus.PASSED, resultTask.getStatus());
     }
 
@@ -133,7 +132,6 @@ public class UploadArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
-        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Error occurred"));
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
@@ -161,7 +159,6 @@ public class UploadArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
-        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Error occurred"));
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
@@ -188,7 +185,6 @@ public class UploadArtifactExecutorTest extends TestBase {
         Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
 
         //Assert
-        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Nonexistent source"));
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
@@ -215,7 +211,6 @@ public class UploadArtifactExecutorTest extends TestBase {
         Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
 
         //Assert
-        Assert.assertTrue(this.workInfo.getJob().getReport().toString().contains("Nonexistent source"));
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());

@@ -62,7 +62,6 @@ public class UploadArtifactExecutor extends TaskExecutor {
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
         UploadArtifactTask taskDefinition = (UploadArtifactTask) task.getTaskDefinition();
-        workInfo.getJob().setReport(report);
 
         report.append(String.format("Start uploading artifact source: %s destination: %s", taskDefinition.getSource(), taskDefinition.getDestination()));
         this.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
