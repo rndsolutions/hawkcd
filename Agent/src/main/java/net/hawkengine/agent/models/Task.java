@@ -1,6 +1,7 @@
 package net.hawkengine.agent.models;
 
 import net.hawkengine.agent.enums.*;
+import net.hawkengine.model.MaterialDefinition;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -17,6 +18,16 @@ public class Task {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
+
+    public MaterialDefinition getMaterialDefinition() {
+        return this.materialDefinition;
+    }
+
+    public void setMaterialDefinition(MaterialDefinition materialDefinition) {
+        this.materialDefinition = materialDefinition;
+    }
+
+    private MaterialDefinition materialDefinition;
 
     public Task() {
         this.startTime = LocalDateTime.now();
