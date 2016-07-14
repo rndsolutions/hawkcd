@@ -13,8 +13,11 @@ import net.hawkengine.agent.constants.LoggerMessages;
 import net.hawkengine.agent.enums.JobStatus;
 import net.hawkengine.agent.interfaces.IAgent;
 import net.hawkengine.agent.models.TaskDefinition;
-import net.hawkengine.agent.models.payload.WorkInfo;
+import net.hawkengine.agent.utils.jsonconverter.MaterialDefinitionAdapter;
 import net.hawkengine.agent.utils.jsonconverter.TaskDefinitionAdapter;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.agent.models.payload.WorkInfo;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -42,7 +45,9 @@ public class Agent implements IAgent {
         AgentConfiguration.configure();
         this.jobExecutor = new JobExecutor();
         this.jsonConverter = new GsonBuilder()
-                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter()).create();
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
         this.restClient = Client.create();
 
         ObjectMapper mapper = new ObjectMapper();
