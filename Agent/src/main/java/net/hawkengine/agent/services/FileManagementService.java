@@ -84,9 +84,17 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public String streamToFile(InputStream stream, String filePath) {
-
+    public String initiateFile(File file,InputStream stream, String filePath) {
         String errorMessage = null;
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                errorMessage = e.getMessage();
+                e.printStackTrace();
+            }
+        }
+
         try {
             byte[] bytes = IOUtils.toByteArray(stream);
             FileOutputStream fileOutputStream = new FileOutputStream(filePath);

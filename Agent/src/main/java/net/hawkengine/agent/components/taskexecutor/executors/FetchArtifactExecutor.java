@@ -88,12 +88,8 @@ public class FetchArtifactExecutor extends TaskExecutor {
         File fetchArtifactDir = new File(filePath);
 
         this.fileManagementService.generateDirectory(fetchArtifactDir);
-        try {
-            fetchArtifactDir.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        errorMessage = this.fileManagementService.streamToFile(response.getEntityInputStream(), filePath);
+
+        errorMessage = this.fileManagementService.initiateFile(fetchArtifactDir,response.getEntityInputStream(), filePath);
 
         if (errorMessage != null) {
             super.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());

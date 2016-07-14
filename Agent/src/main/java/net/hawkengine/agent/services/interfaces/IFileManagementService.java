@@ -12,7 +12,7 @@ public interface IFileManagementService {
 
     String unzipFile(String filePath, String destination);
 
-    String streamToFile(InputStream stream, String filePath);
+    String initiateFile(File file,InputStream stream, String filePath);
 
     File[] getFiles(String rootPath, String wildCardPattern);
 
