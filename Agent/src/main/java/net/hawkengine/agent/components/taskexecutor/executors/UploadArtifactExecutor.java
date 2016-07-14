@@ -66,7 +66,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
         report.append(String.format("Start uploading artifact source: %s destination: %s", taskDefinition.getSource(), taskDefinition.getDestination()));
         this.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
-        String fullPath = this.fileManagementService.pathCombine(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), workInfo.getPipelineDefinitionName(), taskDefinition.getSource());
+        String fullPath = this.fileManagementService.pathCombine(taskDefinition.getSource());
         String rootPath = this.fileManagementService.getRootPath(fullPath);
         String wildCardPattern = this.fileManagementService.getPattern(rootPath, fullPath);
 
