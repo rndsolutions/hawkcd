@@ -30,6 +30,11 @@ public class FetchArtifactExecutor extends TaskExecutor {
         this.fileManagementService = new FileManagementService();
     }
 
+    public FetchArtifactExecutor(Client client,IFileManagementService fileManagementService) {
+        this.setRestClient(client.create());
+        this.setFileManagementService(fileManagementService);
+    }
+
     public Client getRestClient() {
         return this.restClient;
     }
@@ -82,7 +87,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
         String filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), UUID.randomUUID() + ".zip").toString();
         File fetchArtifactDir = new File(filePath);
 
-        fetchArtifactDir.getParentFile().mkdirs();
+        this.fileManagementService.generateDirectory(fetchArtifactDir);
         try {
             fetchArtifactDir.createNewFile();
         } catch (IOException e) {
