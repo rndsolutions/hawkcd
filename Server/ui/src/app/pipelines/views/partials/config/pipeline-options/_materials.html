@@ -6,6 +6,7 @@
         <th> Name </th>
         <th> Type </th>
         <th> URL </th>
+        <th> Branch </th>
         <th> Controls </th>
       </tr>
       </thead>
@@ -15,7 +16,8 @@
       <tr ng-repeat="material in pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions">
         <td> {{material.name}} </td>
         <td> {{material.type}} </td>
-        <td> {{material.url}} </td>
+        <td> {{material.repositoryUrl}} </td>
+        <td> {{material.branch}} </td>
         <td>
           <button class="btn yellow" data-target="#editMaterial" data-toggle="modal"
                   ng-click="pipeConfig.getMaterial(material)">Edit</button>
