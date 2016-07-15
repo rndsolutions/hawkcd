@@ -77,7 +77,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
         File[] files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
 
         if (files == null) {
-            return this.NullProcessing(report,task,String.format("%s is Nonexistent source.", taskDefinition.getSource()));
+            return this.NullProcessing(report,task,String.format("Error in getting files in %s", fullPath));
         }
 
         File zipFile = this.fileManagementService.generateUniqueFile(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), "zip");

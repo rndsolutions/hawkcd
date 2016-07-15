@@ -167,7 +167,7 @@ public class UploadArtifactExecutorTest extends TestBase {
     @Test
     public void uploadArtifactExecutor_getFiles_failing() {
         //Arrange
-        Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
+        Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("full\\path");
         Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
         Mockito.when(this.mockedFileManagementService.getPattern(Mockito.anyString(), Mockito.anyString())).thenReturn("");
         Mockito.when(this.mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(null);

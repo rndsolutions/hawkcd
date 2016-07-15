@@ -91,7 +91,6 @@ public class FetchMaterialExecutorTest {
     public void executeTask_fetchMaterialFailed_taskFailed() {
         // Arrange
         StringBuilder report = new StringBuilder();
-        String expectedMessage = "Fetching material...Error in Git Service";
 
         // Act
         Task actualResult = this.fetchMaterialExecutor.executeTask(this.secondIncorrectFetchMaterialTask, report, this.workInfo);

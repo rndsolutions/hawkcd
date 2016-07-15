@@ -71,8 +71,12 @@ public class FetchArtifactExecutor extends TaskExecutor {
         WebResource webResource = this.restClient.resource(requestSource);
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, taskDefinition.getSource());
 
-        if ((response.getStatus() != 200) || (response.getEntityInputStream() == null)) {
+        if ((response.getStatus() != 200)) {
            return this.NullProcessing(report,task,String.format("Could not get resource. TaskStatus code %s",response.getStatus()));
+        }
+
+        if(response.getEntityInputStream() == null){
+            return this.NullProcessing(report,task,"Could not get resource. Input stream is null");
         }
 
         String errorMessage;
