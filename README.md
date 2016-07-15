@@ -2,7 +2,7 @@
 Continuous Delivery Software
 
 [![Build Status](https://travis-ci.org/rndsolutions/hawkcd.svg?branch=master)](https://travis-ci.org/rndsolutions/hawkcd)
-[![Coverage Status](https://coveralls.io/repos/github/rndsolutions/hawkcd/badge.svg?branch=master)](https://coveralls.io/github/rndsolutions/hawkcd?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/rndsolutions/hawk/badge.svg?branch=master)](https://coveralls.io/github/rndsolutions/hawk?branch=master)
 
 The HawkCD intends to be one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
 
