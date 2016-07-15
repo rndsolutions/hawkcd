@@ -17,7 +17,7 @@ angular
             user: 'User Management',
             group: 'Group Management',
             server: 'Server Management',
-            packages: 'Package Repositories',
+            packages: 'Materials',
             tableHeaders: {
                 action: 'Actions',
                 user: 'Username',
