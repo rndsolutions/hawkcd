@@ -23,7 +23,7 @@
       </div>
       <div class="portlet-body">
 
-        <table class="table table-striped table-bordered table-hover table-checkable order-column">
+        <table class="table table-striped table-bordered table-hover table-checkable order-column table-custom">
           <thead>
           <tr>
             <th class="statusHeader"></th>
@@ -42,7 +42,7 @@
           <tbody>
 
           <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
-            <td class="statusLabel" ng-class="{'labelEnabled' : agent.isEnabled && !agent.isRunning, 'labelDisabled' : !agent.isEnabled, 'labelRunning' : agent.isRunning}"></td>
+            <td class="statusLabel" ng-class="{'labelEnabled' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'labelDisabled' : !agent.isEnabled && agent.isConnected, 'labelRunning' : agent.isRunning && agent.isConnected, 'labelDisconnected' : !agent.isConnected}"></td>
             <td>{{agent.hostName + "-" +  agent.id.substr(0,8)}}</td>
             <td class="custom-datatable-btns">{{agent.rootPath}}</td>
             <td>{{agent.operatingSystem}}</td>
