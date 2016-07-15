@@ -80,7 +80,6 @@ angular
                 if(currentPipeline.id == vm.pipeline.id) {
                     vm.getPipelineForConfig(currentPipeline.name);
                     //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
-
                 }
             });
             console.log(vm.allPipelines);
@@ -243,9 +242,10 @@ angular
             if (newStage.jobDefinitions.taskDefinitions.type == 'EXEC') {
                 var stage = {
                     name: newStage.name,
-                    pipelineDefinitionId: vm.pipeline.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     jobDefinitions: [{
                         name: newStage.jobDefinitions.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         taskDefinitions: [{
                             type: newStage.jobDefinitions.taskDefinitions.type,
                             command: newStage.jobDefinitions.taskDefinitions.command,
@@ -262,6 +262,7 @@ angular
                 name: newStage.name,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
                         pipelineDefinition: newStage.jobDefinitions.taskDefinitions.pipeline,
@@ -279,6 +280,7 @@ angular
                 name: newStage.name,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
                         materialName: newStage.jobDefinitions.taskDefinitions.materialName,
@@ -292,6 +294,7 @@ angular
                 name: newStage.name,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
                         source: newStage.jobDefinitions.taskDefinitions.source,
