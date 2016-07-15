@@ -16,6 +16,7 @@ public abstract class MaterialDefinition extends DbEntry {
     private String pipelineDefinitionId;
     private String pipelineDefinitionName;
     private String name;
+    private String errorMessage;
     private MaterialType type;
     private boolean isPollingForChanges;
 
@@ -41,6 +42,14 @@ public abstract class MaterialDefinition extends DbEntry {
 
     public void setName(String value) {
         this.name = value;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public MaterialType getType() {
