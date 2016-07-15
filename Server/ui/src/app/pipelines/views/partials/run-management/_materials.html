@@ -1,8 +1,12 @@
 <div class="portlet light custom-portlet">
   <div class="portlet-title custom-title">
     <div class="caption custom-caption">
-      {{pipesRunManagement.defaultHeaders.materialsTitle}} : {{pipesRunManagement.currentPipelineRun.materials[0].type}}
-      {{pipesRunManagement.currentPipelineRun.materials[0].repositoryUrl}}
+      {{pipesRunManagement.defaultHeaders.materialsTitle}} :
+      <div class="text-height-custom">
+      <br/>Repository: {{pipesRunManagement.currentPipelineRun.materials[0].materialDefinition.repositoryUrl}}
+      <br/>Branch: {{pipesRunManagement.currentPipelineRun.materials[0].materialDefinition.branch}}
+      <br/>Commit: {{pipesRunManagement.currentPipelineRun.materials[0].materialDefinition.commitId}}
+      </div>
     </div>
     <div class="tools right">
       <a href="javascript:;" class="expand"> </a>
