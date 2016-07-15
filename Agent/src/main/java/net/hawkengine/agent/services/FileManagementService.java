@@ -119,13 +119,20 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public void deleteFilesInDirectory(String directoryPath){
+    public String deleteFilesInDirectory(String directoryPath){
+        String errorMessage = null;
+        if((directoryPath == null) || (directoryPath == "")){
+            return errorMessage = "Directory Path arguments is empty or null!";
+        }
+
         File directory = new File(directoryPath);
         for (File file : directory.listFiles()) {
             if (!file.isDirectory()) {
                 file.delete();
             }
         }
+
+        return errorMessage;
     }
 
     @Override
