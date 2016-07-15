@@ -8,7 +8,7 @@ angular
 
         vm.defaultPipelineText = {
             empty: "No pipelines in "
-        }
+        };
 
         vm.formData = {};
         vm.allPipelines = [];
@@ -42,15 +42,19 @@ angular
 
         $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.allPipelineRuns.sort(function (a, b) {
+                return a.executionId - b.executionId;
+            });
             vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
                     if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                        if(currentPipelineRun.triggerReason == null) {
+                            currentPipelineRun.triggerReason = "User";
+                        }
                         viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                        viewModel.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
                     }
                 });
-            });
-            vm.allPipelineRuns.sort(function (a, b) {
-                return a.executionId - b.executionId;
             });
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
                 viewModel.allPipelineGroups[index].pipelines.forEach(function (currentPipelineFromGroup, pipelineFromGroupIndex, array) {
