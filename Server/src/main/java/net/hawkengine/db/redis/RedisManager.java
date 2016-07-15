@@ -17,6 +17,7 @@ public class RedisManager {
         //poolConfig.setMaxTotal(20);
         poolConfig.setTestOnBorrow(true);
         jedisPool = new JedisPool(poolConfig, serverName);
+
     }
 
     public static void  initializeEmbededDb(int port) throws IOException, URISyntaxException {

@@ -49,8 +49,8 @@ public class AgentController {
         ServiceResult result = this.agentService.getById(agentId);
         if (result.hasError()) {
             return Response.status(Status.NOT_FOUND)
-                    .entity(result)
                     .type(MediaType.TEXT_HTML)
+                    .entity(result.getMessage())
                     .build();
         }
         return Response.status(Status.OK)
@@ -64,6 +64,11 @@ public class AgentController {
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getWorkInfo(agentId);
+        if (result.hasError()){
+            return Response.status(Status.OK)
+                    .entity(result.getMessage())
+                    .build();
+        }
         return Response.status(Status.OK)
                 .entity(result.getObject())
                 .build();
@@ -153,11 +158,7 @@ public class AgentController {
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.update(agent);
             if (result.hasError()) {
-                result = this.agentService.add(agent);
-            }
-
-            if (result.hasError()) {
-                return Response.status(Status.BAD_REQUEST)
+                return Response.status(Status.NOT_FOUND)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
@@ -230,11 +231,9 @@ public class AgentController {
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
-        } else {
-            return Response.status(Status.NO_CONTENT)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
         }
+            return Response.status(Status.NO_CONTENT)
+                    .build();
+
     }
 }
