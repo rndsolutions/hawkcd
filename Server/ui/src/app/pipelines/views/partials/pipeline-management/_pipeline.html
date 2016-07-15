@@ -3,8 +3,8 @@
         <div class="p-link">
             <div class="panel-heading p-head-box">
                 <span aria-hidden="true" class="icon-close font-lg ico" data-target="#removePipe" data-toggle="modal" ng-click="pipes.getPipeName(pipe)"></span>
-                <span aria-hidden="true" class="icon-settings font-lg ico" ui-sref="index.pipelineConfig.pipeline.general({groupName:pipe.groupName,pipelineName:pipe.name})" ></span>
-                <span ng-hide="pipe.ExecutionID==0" aria-hidden="true" class="icon-info font-lg ico" ui-sref="index.pipelineHistory.history({groupName:pipe.groupName,pipelineName:pipe.name})"></span>
+                <span aria-hidden="true" class="icon-settings font-lg ico" ui-sref="index.pipelineConfig.pipeline.general({groupName:pipegroup.name,pipelineName:pipe.name})" ></span>
+                <span ng-hide="pipe.ExecutionID==0" aria-hidden="true" class="icon-info font-lg ico" ui-sref="index.pipelineHistory.history({groupName:pipegroup.name,pipelineName:pipe.name})"></span>
                 <div>
                     <p class="p-name">{{pipe.name}}</p>
                 </div>
@@ -13,28 +13,28 @@
     </div>
     <div class="panel-body">
         <div class="info">
-            <p><strong>Started:</strong> {{pipe.Start | date:"dd/MM/yyyy HH:mm"}}</p>
+            <p><strong>Started:</strong> {{pipe.lastRun.startTime.time.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.startTime.time.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipe.lastRun.startTime.date.day}}/{{pipe.lastRun.startTime.date.month}}/{{pipe.lastRun.startTime.date.year}}</p>
             <p><strong>Finished:</strong> {{pipe.End | date:"dd/MM/yyyy HH:mm"}}</p>
-            <div style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap; "><strong>Reason:</strong> {{pipe.TriggerReason}}</div>
+            <div style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap; "><strong>Reason:</strong> {{pipe.lastRun.triggerReason}}</div>
 
         </div>
         <div class="stages">
 
             <span ng-repeat="stage in pipe.stages">
           <span ng-if="stage.status=='PASSED' && $index<9">
-<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
              </span>
             <span ng-if="stage.status=='FAILED' && $index<9">
-              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'NOT_RUN' || stage.status == 'undefined' && $index<9">
-                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'IN_PROGRESS' && $index<9">
-                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'SCHEDULED' && $index<9">
-                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipe.groupName})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             </span>
             <span ng-if="pipe.stageDefinitions.length > 10"> . . .</span>
