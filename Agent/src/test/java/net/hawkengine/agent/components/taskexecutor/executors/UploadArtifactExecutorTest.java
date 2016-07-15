@@ -95,7 +95,7 @@ public class UploadArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn(null);
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
 
-        Mockito.when(this.mockedClient.resource("my/path")).thenReturn(this.mockedResource);
+        Mockito.when(this.mockedClient.resource("my/path/upload-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, this.mockedFile)).thenReturn(this.mockedResponse);
@@ -121,7 +121,7 @@ public class UploadArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn("Error in zipFiles method!");
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
 
-        Mockito.when(this.mockedClient.resource("my/path")).thenReturn(this.mockedResource);
+        Mockito.when(this.mockedClient.resource("my/path/upload-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, this.mockedFile)).thenReturn(this.mockedResponse);
