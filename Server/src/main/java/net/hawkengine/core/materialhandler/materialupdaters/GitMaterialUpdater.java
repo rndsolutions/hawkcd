@@ -19,20 +19,18 @@ public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
     public GitMaterial getLatestMaterialVersion(GitMaterial gitMaterial) {
         boolean repositoryExists = this.gitService.repositoryExists(gitMaterial);
         if (!repositoryExists) {
-            String cloneResult = this.gitService.cloneRepository(gitMaterial);
-            if (cloneResult != null) {
+            // TODO: Clean directory
+            this.gitService.cloneRepository(gitMaterial);
+            if (!gitMaterial.getErrorMessage().isEmpty()) {
                 // TODO: Clean directory
                 // TODO: Send error to UI
-                return null;
+                return gitMaterial;
             }
-
         }
 
-        gitMaterial = this.gitService.fetchLatestCommit(gitMaterial);
-        if (gitMaterial == null) {
-            // TODO: Clean directory
+        this.gitService.fetchLatestCommit(gitMaterial);
+        if (!gitMaterial.getErrorMessage().isEmpty()) {
             // TODO: Send error to UI
-            return null;
         }
 
         return gitMaterial;

@@ -19,7 +19,7 @@ public class GitService implements IGitService {
     @Override
     public boolean repositoryExists(GitMaterial gitMaterial) {
         try {
-            Repository repository = Git.open(new File(gitMaterial.getName())).getRepository();
+            Repository repository = Git.open(new File("Materials" + File.separator + gitMaterial.getName())).getRepository();
             Config config = repository.getConfig();
             String repositoryUrl = config.getString("remote", "origin", "url");
             if (!repositoryUrl.equals(gitMaterial.getRepositoryUrl())) {
@@ -33,26 +33,29 @@ public class GitService implements IGitService {
     }
 
     @Override
-    public String cloneRepository(GitMaterial gitMaterial) {
+    public GitMaterial cloneRepository(GitMaterial gitMaterial) {
         try {
             CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             Git.cloneRepository()
                     .setURI(gitMaterial.getRepositoryUrl())
                     .setCredentialsProvider(credentials)
-                    .setDirectory(new File(gitMaterial.getName()))
+                    .setDirectory(new File("Materials" + File.separator + gitMaterial.getName()))
                     .setCloneSubmodules(true)
                     .call();
 
+            gitMaterial.setErrorMessage("");
+
             return null;
         } catch (GitAPIException e) {
-            return e.getMessage();
+            gitMaterial.setErrorMessage(e.getMessage());
+            return gitMaterial;
         }
     }
 
     @Override
     public GitMaterial fetchLatestCommit(GitMaterial gitMaterial) {
         try {
-            Git git = Git.open(new File(gitMaterial.getName() + File.separator + ".git"));
+            Git git = Git.open(new File("Materials" + File.separator +  gitMaterial.getName() + File.separator + ".git"));
             CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             git.fetch()
                     .setCredentialsProvider(credentials)
@@ -67,12 +70,13 @@ public class GitService implements IGitService {
             gitMaterial.setAuthorName(commit.getAuthorIdent().getName());
             gitMaterial.setAuthorEmail(commit.getAuthorIdent().getEmailAddress());
             gitMaterial.setComments(commit.getFullMessage());
+            gitMaterial.setErrorMessage("");
             git.close();
 
             return gitMaterial;
         } catch (IOException | GitAPIException e) {
-            e.printStackTrace();
-            return null;
+            gitMaterial.setErrorMessage(e.getMessage());
+            return gitMaterial;
         }
     }
 

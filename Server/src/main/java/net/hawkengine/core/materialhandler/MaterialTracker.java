@@ -51,21 +51,24 @@ public class MaterialTracker implements Runnable {
                 // MaterialPreparer
                 List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getObject();
                 for (Pipeline pipeline : pipelines) {
+                    boolean isPipelineUpdated = true;
                     for (Material material : pipeline.getMaterials()) {
-                        Material updatedMaterial = this.materialHandlerService.updateMaterial(material);
-                        if (updatedMaterial == null) {
+                        this.materialHandlerService.updateMaterial(material);
+                        if (material == null) {
+                            isPipelineUpdated = false;
                             ServiceResult result = this.pipelineService.delete(pipeline.getId());
                             EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "delete", result);
-                        }
 
-                        if (updatedMaterial.isUpdated()) {
+                        } else if (material.isUpdated()) {
                             this.materialService.add(material);
                         }
                     }
 
-                    pipeline.setMaterialsUpdated(true);
-                    ServiceResult result = this.pipelineService.update(pipeline);
-                    EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+                    if (isPipelineUpdated) {
+                        pipeline.setMaterialsUpdated(true);
+                        ServiceResult result = this.pipelineService.update(pipeline);
+                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+                    }
                 }
 
                 Thread.sleep(4 * 1000);
