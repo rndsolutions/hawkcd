@@ -29,9 +29,6 @@ public class FetchMaterialExecutor extends TaskExecutor {
 
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
-        if (report == null) {
-            report = new StringBuilder();
-        }
 
         FetchMaterialTask taskDefinition = (FetchMaterialTask) task.getTaskDefinition();
 
