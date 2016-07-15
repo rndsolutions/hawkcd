@@ -18,9 +18,17 @@
                 <input type="password" class="form-control" ng-model="password">
                 <label>Password</label>
             </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn green btn-block uppercase" ng-click="loginUser()">Login</button>
             </div>
+            </br>
+
+            <div class="form-actions">
+                <button class="btn green btn-block uppercase" ng-click="authenticate('github')">Sign in with Github</button>
+            </div>
+
+
             <div class="form-actions">
                 <!-- <div class="pull-left">
     <label class="rememberme check">

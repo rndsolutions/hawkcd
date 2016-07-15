@@ -117,7 +117,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
     compile group: 'com.github.kstyrc', name: 'embedded-redis', version: '0.6'
 
-
+    // https://mvnrepository.com/artifact/com.sun.jersey/jersey-client
+    compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.19.1'
 
     //mock-jedis dependency for junit testing.
     testCompile 'com.fiftyonred:mock-jedis:0.4.0'

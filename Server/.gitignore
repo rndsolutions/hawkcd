@@ -34,3 +34,6 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 Log
+/Server.iws
+/Server.iml
+/Server.ipr

@@ -3,7 +3,7 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig', function ($scope, loginService, accountService, profileService, authDataService, pipeConfig) {
+    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth', function ($scope, loginService, accountService, profileService, authDataService, pipeConfig, $auth) {
         $scope.$on('$viewContentLoaded', function () {
             //App.initComponents(); // init core components
             Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -90,33 +90,9 @@ angular
                 })
         };
 
-        function getLatestCommit() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeConfig.getLatestCommit(token)
-                    .then(function(res) {
-                        $scope.latestCommit = res.substring(0,7);
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function (res) {
-                        var token = res.access_token;
-                        pipeConfig.getLatestCommit(token)
-                            .then(function(res) {
-                                $scope.latestCommit = res.substring(0,7);
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                    }, function (err) {
-                        console.log(err);
-                    })
-            }
+        $scope.authenticate = function(provider){
+            $auth.authenticate(provider);
+            //console.log(provider);
         }
 
     }]);
