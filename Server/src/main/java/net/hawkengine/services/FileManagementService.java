@@ -77,6 +77,7 @@ public class FileManagementService implements IFileManagementService {
             zipFile.extractAll(destination);
         } catch (ZipException e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
         }
 
         return errorMessage;
