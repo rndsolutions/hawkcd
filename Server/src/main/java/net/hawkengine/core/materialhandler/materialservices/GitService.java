@@ -3,10 +3,11 @@ package net.hawkengine.core.materialhandler.materialservices;
 import net.hawkengine.model.GitMaterial;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -17,10 +18,18 @@ import java.io.IOException;
 public class GitService implements IGitService {
     @Override
     public boolean repositoryExists(GitMaterial gitMaterial) {
-        FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
-        File gitDirectory = repositoryBuilder.findGitDir(new File(gitMaterial.getName())).getGitDir();
+        try {
+            Repository repository = Git.open(new File(gitMaterial.getName())).getRepository();
+            Config config = repository.getConfig();
+            String repositoryUrl = config.getString("remote", "origin", "url");
+            if (!repositoryUrl.equals(gitMaterial.getRepositoryUrl())) {
+                return false;
+            }
+        } catch (IOException e) {
+            return false;
+        }
 
-        return gitDirectory != null ? true : false;
+        return true;
     }
 
     @Override
@@ -44,7 +53,9 @@ public class GitService implements IGitService {
     public GitMaterial fetchLatestCommit(GitMaterial gitMaterial) {
         try {
             Git git = Git.open(new File(gitMaterial.getName() + File.separator + ".git"));
+            CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             git.fetch()
+                    .setCredentialsProvider(credentials)
                     .setCheckFetchedObjects(true)
                     .setRefSpecs(new RefSpec("refs/heads/" + gitMaterial.getBranch() + ":refs/heads/" + gitMaterial.getBranch()))
                     .call();
