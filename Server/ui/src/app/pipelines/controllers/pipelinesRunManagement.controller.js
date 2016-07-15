@@ -137,6 +137,11 @@ angular
                     });
                 }
             });
+            if(vm.currentPipelineRunStages.length > 1){
+                if(vm.selectedJob == null && vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs != null){
+                    vm.selectedJob = vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs[vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs.length - 1];
+                }
+            }
         }, true);
 
         // vm.getAll = function () {
