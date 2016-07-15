@@ -1,5 +1,6 @@
 package net.hawkengine.agent.components.taskexecutor;
 
+import net.hawkengine.agent.constants.LoggerMessages;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.WorkInfo;
@@ -18,19 +19,17 @@ public abstract class TaskExecutor implements ITaskExecutor {
     }
 
     protected void updateTask(Task task, TaskStatus status, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-//        if (startDateTime != null) {
-//            task.setStartTime(startDateTime);
-//        }
-//
-//        if (endDateTime != null) {
-//            task.setEndTime(endDateTime);
-//        }
-
         task.setStartTime(null);
-
-
         task.setEndTime(null);
-
         task.setStatus(status);
+    }
+
+    @Override
+    public Task NullProcessing(StringBuilder report, Task task, String errorMessage) {
+        this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
+        report.append(System.getProperty("line.separator"));
+        report.append(errorMessage);
+        LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
+        return task;
     }
 }

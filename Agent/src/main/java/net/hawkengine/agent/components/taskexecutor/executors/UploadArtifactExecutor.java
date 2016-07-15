@@ -71,25 +71,13 @@ public class UploadArtifactExecutor extends TaskExecutor {
         String wildCardPattern = this.fileManagementService.getPattern(rootPath, fullPath);
 
         if (rootPath.isEmpty()) {
-            this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-
-            report.append(System.getProperty("line.separator"));
-            report.append(String.format("%s is Nonexistent source.", taskDefinition.getSource()));
-            LOGGER.error("Nonexistent source.");
-
-            return task;
+            return this.NullProcessing(report,task,String.format("%s is Nonexistent source.", taskDefinition.getSource()));
         }
 
         File[] files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
 
         if (files == null) {
-            this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-
-            report.append(System.getProperty("line.separator"));
-            report.append(String.format("%s is Nonexistent source.", taskDefinition.getSource()));
-            LOGGER.error("Nonexistent source.");
-
-            return task;
+            return this.NullProcessing(report,task,String.format("%s is Nonexistent source.", taskDefinition.getSource()));
         }
 
         File zipFile = this.fileManagementService.generateUniqueFile(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), "zip");
@@ -98,13 +86,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
 
         if (errorMessage != null) {
             zipFile.delete();
-            this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-
-            report.append(System.getProperty("line.separator"));
-            report.append("Error occurred in zipping files!");
-            LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
-
-            return task;
+            return this.NullProcessing(report,task,"Error occurred in zipping files!");
         }
 
         String folderPath = String.format(Constants.SERVER_CREATE_ARTIFACT_API_ADDRESS, workInfo.getPipelineDefinitionName(), workInfo.getStageDefinitionName(), workInfo.getJobDefinitionName());
@@ -116,13 +98,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
 
         if (response.getStatus() != 200) {
             zipFile.delete();
-            this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-
-            report.append(System.getProperty("line.separator"));
-            report.append(String.format("Error occurred in server response! Returned status code: %s", response.getStatus()));
-            LOGGER.debug(String.format("Could not get resource. TaskStatus code %d", response.getStatus()));
-
-            return task;
+            return this.NullProcessing(report,task,String.format("Error occurred in server response! Returned status code: %s", response.getStatus()));
         }
 
         zipFile.delete();
