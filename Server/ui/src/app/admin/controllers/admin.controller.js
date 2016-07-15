@@ -72,13 +72,20 @@ angular
             vm.newUser = {};
         };
 
-        vm.currentPipelineGroups = {};
+        vm.currentPipelineGroups = [];
+
+        vm.currentMaterials = [];
 
         vm.currentPipelineGroups = viewModel.allPipelineGroups;
 
-        $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
+        $scope.$watchCollection(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
             vm.currentPipelineGroups = viewModel.allPipelineGroups;
             console.log(vm.currentPipelineGroups);
+        });
+
+        $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
+            vm.currentMaterials = viewModel.allMaterialDefinitions;
+            console.log(vm.currentMaterials);
         });
 
         vm.addNewPipelineGroup = function () {

@@ -11,6 +11,8 @@ angular
 
         viewModel.allMaterials = [];
 
+        viewModel.allMaterialDefinitions = [];
+
         viewModel.allPipelineGroups = [];
             
         viewModel.allPipelineRuns = [];

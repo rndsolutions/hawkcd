@@ -129,7 +129,7 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "pipeConfigService", "pipeExecService", "toaster", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, pipeConfigService, pipeExecService, toaster) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "toaster", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, toaster) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
@@ -162,6 +162,7 @@ angular
                 pipeConfigService.getAllPipelineDefinitions();
                 agentService.getAllAgents();
                 pipeExecService.getAllPipelines();
+                adminMaterialService.getAllMaterialDefinitions();
             };
 
             $rootScope.socket.onclose = function (event) {
