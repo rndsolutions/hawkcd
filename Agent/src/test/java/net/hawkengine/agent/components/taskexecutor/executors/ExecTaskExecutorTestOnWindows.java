@@ -76,7 +76,7 @@ public class ExecTaskExecutorTestOnWindows extends TestBase {
         this.job.setTasks(jobTasks);
         this.expectedWorkInfo.setJob(this.job);
 
-        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
         new File(this.expectedWorkingDir).mkdirs();
 
         //Act
@@ -166,7 +166,7 @@ public class ExecTaskExecutorTestOnWindows extends TestBase {
         this.job.setTasks(jobTasks);
         this.expectedWorkInfo.setJob(this.job);
 
-        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
         new File(this.expectedWorkingDir).mkdirs();
 
         //Act

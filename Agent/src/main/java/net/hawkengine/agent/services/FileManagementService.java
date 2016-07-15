@@ -49,6 +49,10 @@ public class FileManagementService implements IFileManagementService {
         return errorMessage;
     }
 
+    public void generateDirectory(File file){
+        file.getParentFile().mkdirs();
+    }
+
     @Override
     public File generateUniqueFile(String filePath, String fileExtension) {
 
@@ -80,9 +84,17 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public String streamToFile(InputStream stream, String filePath) {
-
+    public String initiateFile(File file,InputStream stream, String filePath) {
         String errorMessage = null;
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                errorMessage = e.getMessage();
+                e.printStackTrace();
+            }
+        }
+
         try {
             byte[] bytes = IOUtils.toByteArray(stream);
             FileOutputStream fileOutputStream = new FileOutputStream(filePath);
@@ -101,6 +113,23 @@ public class FileManagementService implements IFileManagementService {
         File file = new File(filePath);
         if (file.exists()) {
             file.delete();
+        }
+
+        return errorMessage;
+    }
+
+    @Override
+    public String deleteFilesInDirectory(String directoryPath){
+        String errorMessage = null;
+        if((directoryPath == null) || (directoryPath == "")){
+            return errorMessage = "Directory Path arguments is empty or null!";
+        }
+
+        File directory = new File(directoryPath);
+        for (File file : directory.listFiles()) {
+            if (!file.isDirectory()) {
+                file.delete();
+            }
         }
 
         return errorMessage;

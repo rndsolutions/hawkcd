@@ -21,10 +21,6 @@ public class ExecTaskExecutor extends TaskExecutor {
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
-        if (report == null){
-            report = new StringBuilder();
-        }
-
         ExecTask execTask = (ExecTask) task.getTaskDefinition();
 
         String command = execTask.getCommand();

@@ -8,9 +8,11 @@ import java.util.StringJoiner;
 
 public interface IFileManagementService {
 
+    void generateDirectory(File file);
+
     String unzipFile(String filePath, String destination);
 
-    String streamToFile(InputStream stream, String filePath);
+    String initiateFile(File file,InputStream stream, String filePath);
 
     File[] getFiles(String rootPath, String wildCardPattern);
 
@@ -19,6 +21,8 @@ public interface IFileManagementService {
     File generateUniqueFile(String filePath, String fileExtension);
 
     String deleteFile(String filePath);
+
+    String deleteFilesInDirectory(String directoryPath);
 
     String deleteDirectoryRecursively(String directoryPath);
 
