@@ -21,9 +21,10 @@ public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
         if (!repositoryExists) {
             // TODO: Clean directory
             this.gitService.cloneRepository(gitMaterial);
+
             if (!gitMaterial.getErrorMessage().isEmpty()) {
                 // TODO: Clean directory
-                // TODO: Send error to UI
+
                 return gitMaterial;
             }
         }

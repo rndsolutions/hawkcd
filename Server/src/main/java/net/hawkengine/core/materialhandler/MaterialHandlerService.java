@@ -38,12 +38,17 @@ public class MaterialHandlerService implements IMaterialHandlerService {
         List<String> triggerMaterials = new ArrayList<>();
         List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
-            if (materialDefinition.isPollingForChanges() && materialDefinition.getErrorMessage().isEmpty()) {
+            if (materialDefinition.isPollingForChanges()) {
                 this.materialUpdater = MaterialUpdaterFactory.create(materialDefinition.getType());
+                String oldError = materialDefinition.getErrorMessage();
                 MaterialDefinition latestVersion = materialUpdater.getLatestMaterialVersion(materialDefinition);
-                if (!latestVersion.getErrorMessage().isEmpty()) {
+                String newError = materialDefinition.getErrorMessage();
+                if (!oldError.equals(newError)) {
                     ServiceResult result = this.materialDefinitionService.updateMaterialDefinition(latestVersion);
                     EndpointConnector.passResultToEndpoint(MaterialDefinitionService.class.getSimpleName(), "update", result);
+                }
+
+                if (!latestVersion.getErrorMessage().isEmpty()) {
                     continue;
                 }
 
@@ -68,10 +73,15 @@ public class MaterialHandlerService implements IMaterialHandlerService {
     @Override
     public Material updateMaterial(Material material) {
         this.materialUpdater = MaterialUpdaterFactory.create(material.getMaterialDefinition().getType());
+        String oldError = material.getMaterialDefinition().getErrorMessage();
         MaterialDefinition latestVersion = this.materialUpdater.getLatestMaterialVersion(material.getMaterialDefinition());
-        if (!latestVersion.getErrorMessage().isEmpty()) {
+        String newError = material.getMaterialDefinition().getErrorMessage();
+        if (!oldError.equals(newError)) {
             ServiceResult result = this.materialDefinitionService.update(latestVersion);
             EndpointConnector.passResultToEndpoint(PipelineDefinitionService.class.getSimpleName(), "update", result);
+        }
+
+        if (!material.getMaterialDefinition().getErrorMessage().isEmpty()) {
             return null;
         }
 
