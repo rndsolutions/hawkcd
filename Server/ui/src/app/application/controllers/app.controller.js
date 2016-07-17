@@ -3,7 +3,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth', function ($scope, loginService, accountService, profileService, authDataService, pipeConfig, $auth) {
+    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth',"$location",
+    function ($scope, loginService, accountService, profileService, authDataService, pipeConfig, $auth, $location) {
         $scope.$on('$viewContentLoaded', function () {
             //App.initComponents(); // init core components
             Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -48,7 +49,8 @@ angular
         }
 
         $scope.logoutUser = function () {
-            loginService.logOut();
+            $auth.logout();
+            $location.path("/authenticate");
         }
 
         $scope.me = {};
@@ -91,7 +93,14 @@ angular
         };
 
         $scope.authenticate = function(provider){
-            $auth.authenticate(provider);
+            $auth.authenticate(provider)
+            .then(function (response){
+                $auth.setToken(response.data.id);
+                $location.path("/pipelines");
+            })
+            .catch(function(response){
+                console.log(response);
+            });
             //console.log(provider);
         }
 

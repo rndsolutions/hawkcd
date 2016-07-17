@@ -1,4 +1,4 @@
-package net.hawkengine.core.filters;
+package net.hawkengine.http.filters;
 
 
 import java.io.IOException;

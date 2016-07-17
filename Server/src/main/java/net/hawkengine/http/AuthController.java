@@ -1,22 +1,26 @@
 package net.hawkengine.http;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+
+
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.GithubAuthDto;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.github.GitHubService;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,7 +33,7 @@ public class AuthController {
     //TODO: move this to the config
     private static final String GH_CLIENT_ID = "2d3dbbf586d2260cbd68";
     //TODO: move this to the config
-    private static final String GH_CLIENT_SERCRET = "4f2c569d33f6ad8ed4fb3595677321adc2af32b7";
+    private static final String GH_CLIENT_SERCRET = "";
 
     private UserService usrService;
 
@@ -54,17 +58,34 @@ public class AuthController {
         //read user email
         String email = (String) ghUserDetails.get("email");
 
-        //register a new user
-        User user =  new User();
-        user.setEmail(email);
-        user.setProvider("GitHub");
-        usrService.add(user);
+        ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
 
-            return Response.status(Response.Status.CREATED)
-                    .entity("User Registered")
-                    .build();
+        boolean isUserRegistered = false;
+        //loop through users to check if the user already exists
+
+        User user = null;
+        for(User usr:all){
+            String uEmail = usr.getEmail();
+            if ( uEmail.equals(email)){
+                isUserRegistered = true;
+                user = usr;
+                break;
+            }
+        }
+
+        if (!isUserRegistered){
+            //register a new user
+            user =  new User();
+            user.setEmail(email);
+            user.setProvider("GitHub");
+            usrService.add(user);
+        }
+
+
+        return Response.status(Response.Status.CREATED)
+                .entity(user)
+                .build();
     }
-
 
     private String getGitHubAccessToken(String authCode) {
 
@@ -94,6 +115,7 @@ public class AuthController {
             return null;
         }
     }
+
 }
 
 

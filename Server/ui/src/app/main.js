@@ -91,10 +91,13 @@ angular
     .config(['$stateProvider', '$urlRouterProvider', '$animateProvider','$authProvider',
             function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider) {
 
+             // used for debugging
+             //$authProvider.baseUrl = "http://localhost:8080";
              $authProvider.github({
                   clientId: '2d3dbbf586d2260cbd68',
-                   scope: ['user:email','repo'],
+                  scope: ['user:email','repo']
                 });
+
 
         // Redirect any unmatched url
         $urlRouterProvider.otherwise("/");
@@ -122,6 +125,8 @@ angular
                 resolve: {
                     auth: function (authDataService, pipeStatsService, agentService, $location,
                     $auth, $rootScope, $timeout) {
+
+                        console.log("isAuthenticated: "+ $auth.isAuthenticated());
 
                         if(!$auth.isAuthenticated()){
                             $timeout(function(){
