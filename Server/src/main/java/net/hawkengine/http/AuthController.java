@@ -7,6 +7,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.GithubAuthDto;
+import net.hawkengine.model.dto.LoginDto;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.github.GitHubService;
 
@@ -86,6 +87,36 @@ public class AuthController {
                 .entity(user)
                 .build();
     }
+
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/login")
+    public Response login(LoginDto login) throws IOException {
+
+        ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
+
+        User user = null;
+        for(User usr:all){
+            String uEmail = usr.getEmail();
+            String uPass = user.getPassword();
+            if ( uEmail.equals(login.getEmail()) && uPass.equals(login.getPassword())){
+                user = usr;
+                break;
+            }
+        }
+
+        if ( user == null ){
+            Response.status(Response.Status.FORBIDDEN)
+                    .entity(user)
+                    .build();
+        }
+        return Response.status(Response.Status.OK)
+                        .entity(user)
+                        .build();
+    }
+
 
     private String getGitHubAccessToken(String authCode) {
 

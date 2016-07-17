@@ -11,7 +11,7 @@
         <div class="clearfix"> </div>
         <form class="login-form log-box" method="post" ng-hide="app.forgotPassword">
             <div class="form-group form-md-line-input">
-                <input type="text" class="form-control" ng-model="username">
+                <input type="email" class="form-control" ng-model="email">
                 <label>Email</label>
             </div>
             <div class="form-group form-md-line-input">
@@ -20,7 +20,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn green btn-block uppercase" ng-click="loginUser()">Login</button>
+                <button type="submit" class="btn green btn-block uppercase" ng-click="login()">Login</button>
             </div>
             </br>
 

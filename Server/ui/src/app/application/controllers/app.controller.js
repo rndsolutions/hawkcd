@@ -104,4 +104,26 @@ angular
             //console.log(provider);
         }
 
+        $scope.login = function(){
+            debugger;
+            var user = {
+                email: $scope.email,
+                password: $scope.password
+            }
+
+            $auth.login(user)
+
+              .then(function(response) {
+
+                debugger;
+                // Redirect user here after a successful log in.
+              })
+              .catch(function(response) {
+
+              debugger;
+                // Handle errors here, such as displaying a notification
+                // for invalid email and/or password.
+              });
+        }
+
     }]);
