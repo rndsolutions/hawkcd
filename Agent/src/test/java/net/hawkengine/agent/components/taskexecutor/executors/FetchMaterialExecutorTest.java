@@ -29,12 +29,11 @@ public class FetchMaterialExecutorTest {
     private Task secondIncorrectFetchMaterialTask;
     private WorkInfo workInfo;
     private String successReportMessage = "Fetching material...Material fetched at Pipelines" + File.separator + "%s";
-    private String errorReportMessage = "Fetching material...Unable to clean directory Pipelines" + File.separator + "%s" + File.separator + "%s";
     private String correctDirectoryPath = "Pipelines" + File.separator + "MyPipe";
     private String wrongDirectoryPath = "Pipelines" + File.separator + "Wrong" + File.separator + "Wrong";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         AgentConfiguration.configure();
 
         this.mockedGitService = Mockito.mock(GitMaterialService.class);
@@ -77,14 +76,12 @@ public class FetchMaterialExecutorTest {
     public void executeTask_directoryCleanFailed_taskFailed() {
         // Arrange
         StringBuilder report = new StringBuilder();
-        String expectedMessage = String.format(this.errorReportMessage, "Wrong", "Wrong");
 
         // Act
         Task actualResult = this.fetchMaterialExecutor.executeTask(this.incorrectFetchMaterialTask, report, this.workInfo);
 
         // Assert
         Assert.assertEquals(actualResult.getStatus(), TaskStatus.FAILED);
-        Assert.assertEquals(expectedMessage, report.toString());
         Mockito.verify(this.mockedGitService, Mockito.times(0)).fetchMaterial((FetchMaterialTask) this.incorrectFetchMaterialTask.getTaskDefinition());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).deleteDirectoryRecursively(this.wrongDirectoryPath);
     }
@@ -93,14 +90,12 @@ public class FetchMaterialExecutorTest {
     public void executeTask_fetchMaterialFailed_taskFailed() {
         // Arrange
         StringBuilder report = new StringBuilder();
-        String expectedMessage = "Fetching material...Error in Git Service";
 
         // Act
         Task actualResult = this.fetchMaterialExecutor.executeTask(this.secondIncorrectFetchMaterialTask, report, this.workInfo);
 
         // Assert
         Assert.assertEquals(actualResult.getStatus(), TaskStatus.FAILED);
-        Assert.assertEquals(expectedMessage, report.toString());
         Mockito.verify(this.mockedGitService, Mockito.times(1)).fetchMaterial((FetchMaterialTask) this.secondIncorrectFetchMaterialTask.getTaskDefinition());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).deleteDirectoryRecursively("Pipelines");
     }

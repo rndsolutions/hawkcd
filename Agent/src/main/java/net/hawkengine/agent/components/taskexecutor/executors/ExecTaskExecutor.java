@@ -21,10 +21,6 @@ public class ExecTaskExecutor extends TaskExecutor {
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
-        if (report == null){
-            report = new StringBuilder();
-        }
-
         ExecTask execTask = (ExecTask) task.getTaskDefinition();
 
         String command = execTask.getCommand();
@@ -41,13 +37,14 @@ public class ExecTaskExecutor extends TaskExecutor {
         builder.redirectErrorStream(true);
 
         if ((execTask.getWorkingDirectory() != null) && !execTask.getWorkingDirectory().isEmpty()) {
-            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), workInfo.getPipelineDefinitionName(), execTask.getWorkingDirectory()).toString();
+            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName(), execTask.getWorkingDirectory()).toString();
             LOGGER.info(workingDir);
 
             builder.directory(new File(workingDir));
         } else {
-            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), workInfo.getPipelineDefinitionName()).toString();
+            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName()).toString();
             builder.directory(new File(workingDir));
+            LOGGER.info(workingDir);
         }
 
         Process process = null;
@@ -92,9 +89,6 @@ public class ExecTaskExecutor extends TaskExecutor {
             report.append(String.format("%s true \n", e.getMessage()));
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
         }
-
-
-//        workInfo.getJob().setReport(report);
 
         return task;
     }

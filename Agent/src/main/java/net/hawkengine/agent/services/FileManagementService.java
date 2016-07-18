@@ -20,7 +20,7 @@ import java.util.UUID;
 public class FileManagementService implements IFileManagementService {
 
     @Override
-    public String zipFiles(String zipFilePath, File[] files, String filesRootPath, boolean includeRootPath) {
+    public String zipFiles(String zipFilePath, List<File> files, String filesRootPath, boolean includeRootPath) {
 
         String errorMessage = null;
         ZipParameters parameters = new ZipParameters();
@@ -33,8 +33,8 @@ public class FileManagementService implements IFileManagementService {
         try {
             ZipFile zipFile = new ZipFile(zipFilePath);
 
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (int i = 0; i < files.size(); i++) {
+                File file = files.get(i);
                 if (file.isFile()) {
                     zipFile.addFile(file, parameters);
                 }
@@ -47,6 +47,10 @@ public class FileManagementService implements IFileManagementService {
         }
 
         return errorMessage;
+    }
+
+    public void generateDirectory(File file){
+        file.getParentFile().mkdirs();
     }
 
     @Override
@@ -80,9 +84,17 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public String streamToFile(InputStream stream, String filePath) {
-
+    public String initiateFile(File file,InputStream stream, String filePath) {
         String errorMessage = null;
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                errorMessage = e.getMessage();
+                e.printStackTrace();
+            }
+        }
+
         try {
             byte[] bytes = IOUtils.toByteArray(stream);
             FileOutputStream fileOutputStream = new FileOutputStream(filePath);
@@ -101,6 +113,23 @@ public class FileManagementService implements IFileManagementService {
         File file = new File(filePath);
         if (file.exists()) {
             file.delete();
+        }
+
+        return errorMessage;
+    }
+
+    @Override
+    public String deleteFilesInDirectory(String directoryPath){
+        String errorMessage = null;
+        if((directoryPath == null) || (directoryPath == "")){
+            return errorMessage = "Directory Path arguments is empty or null!";
+        }
+
+        File directory = new File(directoryPath);
+        for (File file : directory.listFiles()) {
+            if (!file.isDirectory()) {
+                file.delete();
+            }
         }
 
         return errorMessage;
@@ -168,7 +197,7 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public File[] getFiles(String rootPath, String wildCardPattern) {
+    public List<File> getFiles(String rootPath, String wildCardPattern) {
 
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(this.normalizePath(rootPath));
@@ -189,10 +218,7 @@ public class FileManagementService implements IFileManagementService {
             }
         }
 
-        if (allFiles.size() == 0) {
-            return null;
-        }
-        return allFiles.toArray(new File[]{});
+        return allFiles;
     }
 
     @Override

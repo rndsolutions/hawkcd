@@ -1,5 +1,6 @@
 package net.hawkengine.agent.components.taskexecutor;
 
+import net.hawkengine.agent.constants.LoggerMessages;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.WorkInfo;
@@ -7,6 +8,7 @@ import net.hawkengine.agent.models.payload.WorkInfo;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.time.LocalDateTime;
 
 public abstract class TaskExecutor implements ITaskExecutor {
@@ -18,19 +20,17 @@ public abstract class TaskExecutor implements ITaskExecutor {
     }
 
     protected void updateTask(Task task, TaskStatus status, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-//        if (startDateTime != null) {
-//            task.setStartTime(startDateTime);
-//        }
-//
-//        if (endDateTime != null) {
-//            task.setEndTime(endDateTime);
-//        }
-
         task.setStartTime(null);
-
-
         task.setEndTime(null);
-
         task.setStatus(status);
+    }
+
+    @Override
+    public Task nullProcessing(StringBuilder report, Task task, String errorMessage) {
+        this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
+        report.append(File.separator);
+        report.append(errorMessage);
+        LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
+        return task;
     }
 }

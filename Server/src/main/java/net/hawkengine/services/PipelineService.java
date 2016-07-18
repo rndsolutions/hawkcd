@@ -146,6 +146,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             Stage stage = new Stage();
             stage.setPipelineId(pipeline.getId());
             stage.setStageDefinitionId(stageDefinition.getId());
+            stage.setStageDefinitionName(stageDefinition.getName());
             stages.add(stage);
             this.addJobsToStage(stageDefinition, stage);
         }
@@ -162,6 +163,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             job.setPipelineId(stage.getPipelineId());
             job.setJobDefinitionId(jobDefinition.getId());
             job.setStageId(stage.getId());
+            job.setJobDefinitionName(jobDefinition.getName());
             jobs.add(job);
             this.addTasksToJob(jobDefinition, job);
         }

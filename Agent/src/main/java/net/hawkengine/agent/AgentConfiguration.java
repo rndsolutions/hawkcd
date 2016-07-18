@@ -89,7 +89,7 @@ public final class AgentConfiguration {
 
         installInfo.setAgentTempDirectoryPath(Paths.get(Constants.AGENT_SANDBOX, Constants.AGENT_TEMP_DIR).toString());
 
-        installInfo.setAgentPipelinesDirectoryPath(Paths.get(Constants.AGENT_SANDBOX, installInfo.getAgentPipelinesDir()).toString());
+        installInfo.setAgentArtifactsDirectoryPath(Paths.get(Constants.AGENT_SANDBOX, Constants.ARTIFACTS_DIRECTORY).toString());
     }
 
     private static void configureEnvironmentInfo() {
