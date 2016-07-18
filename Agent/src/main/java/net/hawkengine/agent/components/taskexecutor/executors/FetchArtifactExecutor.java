@@ -72,11 +72,11 @@ public class FetchArtifactExecutor extends TaskExecutor {
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, taskDefinition.getSource());
 
         if ((response.getStatus() != 200)) {
-           return this.NullProcessing(report,task,String.format("Could not get resource. TaskStatus code %s",response.getStatus()));
+           return this.nullProcessing(report,task,String.format("Could not get resource. TaskStatus code %s",response.getStatus()));
         }
 
         if(response.getEntityInputStream() == null){
-            return this.NullProcessing(report,task,"Could not get resource. Input stream is null");
+            return this.nullProcessing(report,task,"Could not get resource. Input stream is null");
         }
 
         String errorMessage;
@@ -87,7 +87,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
         errorMessage = this.fileManagementService.initiateFile(fetchArtifactDir, response.getEntityInputStream(), filePath);
 
         if (errorMessage != null) {
-           return this.NullProcessing(report,task,"Error occurred in creating the artifact!");
+           return this.nullProcessing(report,task,"Error occurred in creating the artifact!");
         }
 
         String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), taskDefinition.getPipeline(), taskDefinition.getStage(), taskDefinition.getJob()).toString();
@@ -96,11 +96,11 @@ public class FetchArtifactExecutor extends TaskExecutor {
         String deleteMessage = this.fileManagementService.deleteFilesInDirectory(filePath);
 
         if (errorMessage != null) {
-                return this.NullProcessing(report,task,"Error occurred in unzipping files!");
+                return this.nullProcessing(report,task,"Error occurred in unzipping files!");
         }
 
         if (deleteMessage != null) {
-            return this.NullProcessing(report, task, "Error occurred in deleting files!");
+            return this.nullProcessing(report, task, "Error occurred in deleting files!");
         }
 
         report.append(System.getProperty("line.separator"));

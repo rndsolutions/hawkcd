@@ -8,6 +8,7 @@ import net.hawkengine.agent.models.payload.WorkInfo;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.time.LocalDateTime;
 
 public abstract class TaskExecutor implements ITaskExecutor {
@@ -25,9 +26,9 @@ public abstract class TaskExecutor implements ITaskExecutor {
     }
 
     @Override
-    public Task NullProcessing(StringBuilder report, Task task, String errorMessage) {
+    public Task nullProcessing(StringBuilder report, Task task, String errorMessage) {
         this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-        report.append(System.getProperty("line.separator"));
+        report.append(File.separator);
         report.append(errorMessage);
         LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
         return task;

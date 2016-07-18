@@ -44,7 +44,7 @@ public class FetchMaterialExecutor extends TaskExecutor {
         String errorMessage = this.fileManagementService.deleteDirectoryRecursively(materialPath);
 
         if (errorMessage != null) {
-           return this.NullProcessing(report,task,String.format("Unable to clean directory %s", materialPath));
+           return this.nullProcessing(report,task,String.format("Unable to clean directory %s", materialPath));
         }
 
         errorMessage = this.materialService.fetchMaterial(taskDefinition);
@@ -54,7 +54,7 @@ public class FetchMaterialExecutor extends TaskExecutor {
 
             report.append(String.format("Material fetched at %s", materialPath));
         } else {
-           this.NullProcessing(report,task,errorMessage);
+           this.nullProcessing(report,task,errorMessage);
         }
 
         workInfo.getJob().setReport(report);

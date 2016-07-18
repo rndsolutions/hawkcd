@@ -219,10 +219,6 @@ public class UploadArtifactExecutorTest extends TestBase {
     @Test
     public void test_initialConstructor() {
         UploadArtifactExecutor executor = new UploadArtifactExecutor();
-        Client executorClient = executor.getRestClient();
-        IFileManagementService executorFileService = executor.getFileManagementService();
         Assert.assertNotNull(executor);
-        Assert.assertNotNull(executorClient);
-        Assert.assertNotNull(executorFileService);
     }
 }
