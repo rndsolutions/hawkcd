@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response.Status;
 
 @Consumes("application/json")
 @Produces("application/json")
-@Path("/pipeline-definitions/{pipelineDefinitionId}/stage-definitions")
+@Path("/stage-definitions")
 public class StageDefinitionController {
     private StageDefinitionService stageDefinitionService;
     private SchemaValidator schemaValidator;
@@ -24,7 +24,7 @@ public class StageDefinitionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStageDefinitions() {
+    public Response getAllStageDefinitions() {
         ServiceResult result = this.stageDefinitionService.getAll();
         return Response.status(Status.OK)
                 .entity(result.getObject())
@@ -52,8 +52,8 @@ public class StageDefinitionController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewStage(StageDefinition stageDefinition) {
-        String isValid = this.schemaValidator.validate(stageDefinition);
-        if (isValid.equals("OK")) {
+       // String isValid = this.schemaValidator.validate(stageDefinition);
+       // if (isValid.equals("OK")) {
             ServiceResult result = this.stageDefinitionService.add(stageDefinition);
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
@@ -65,22 +65,24 @@ public class StageDefinitionController {
                         .entity(result.getObject())
                         .build();
             }
-        } else {
+        }
+    /*else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
-    }
 
+    }
+*/
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateStage(StageDefinition stageDefinition) {
-        String isValid = this.schemaValidator.validate(stageDefinition);
-        if (isValid.equals("OK")) {
+       // String isValid = this.schemaValidator.validate(stageDefinition);
+       // if (isValid.equals("OK")) {
             ServiceResult result = this.stageDefinitionService.update(stageDefinition);
             if (result.hasError()) {
-                return Response.status(Status.BAD_REQUEST)
+                return Response.status(Status.NOT_FOUND)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
@@ -89,21 +91,23 @@ public class StageDefinitionController {
                         .entity(result.getObject())
                         .build();
             }
-        } else {
+
+        }
+    /*else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
-
+*/
     @DELETE
     @Consumes
     @Path("/{stageDefinitionId}")
     public Response deletePipeline(@PathParam("stageDefinitionId") String stageDefinitionId) {
         ServiceResult result = this.stageDefinitionService.delete(stageDefinitionId);
         if (result.hasError()) {
-            return Response.status(Status.BAD_REQUEST)
+            return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
