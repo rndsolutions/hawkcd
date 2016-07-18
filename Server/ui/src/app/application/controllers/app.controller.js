@@ -55,7 +55,7 @@ angular
 
         $scope.me = {};
         $scope.me.UserName = localStorage.username;
-        console.log($scope.me.UserName);
+        //console.log($scope.me.UserName);
 
         $scope.updatedUser = {};
         $scope.updatedUser.Email = localStorage.email;
@@ -71,6 +71,8 @@ angular
         //            }) 
         //        }
         //        getMe();
+
+
 
         $scope.updateUser = function (userName) {
             var user = {
@@ -92,6 +94,30 @@ angular
                 })
         };
 
+        $scope.showLoginForm = true;
+        $scope.showRegisterForm = false;
+        $scope.showForgotPasswordForm = false;
+
+
+        $scope.showRegistration =  function(){
+               $scope.showLoginForm = false;
+               $scope.showRegisterForm = true;
+               $scope.showForgotPasswordForm = false;
+
+        }
+
+        $scope.showLogin =  function(){
+               $scope.showLoginForm = true;
+               $scope.showRegisterForm = false;
+               $scope.showForgotPasswordForm = false;
+        }
+
+        $scope.showForgotPassword =  function(){
+            $scope.showLoginForm = false;
+            $scope.showRegisterForm = false;
+            $scope.showForgotPasswordForm = true;
+        }
+
         $scope.authenticate = function(provider){
             $auth.authenticate(provider)
             .then(function (response){
@@ -101,11 +127,10 @@ angular
             .catch(function(response){
                 console.log(response);
             });
-            //console.log(provider);
         }
 
         $scope.login = function(){
-            debugger;
+
             var user = {
                 email: $scope.email,
                 password: $scope.password
@@ -124,6 +149,10 @@ angular
                 // Handle errors here, such as displaying a notification
                 // for invalid email and/or password.
               });
+        }
+
+        $scope.register = function(user){
+
         }
 
     }]);
