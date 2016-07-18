@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.WebResource;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.GithubAuthDto;
 import net.hawkengine.model.dto.LoginDto;
+import net.hawkengine.model.dto.RegisterDto;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.github.GitHubService;
 
@@ -100,7 +101,7 @@ public class AuthController {
         User user = null;
         for(User usr:all){
             String uEmail = usr.getEmail();
-            String uPass = user.getPassword();
+            String uPass = usr.getPassword();
             if ( uEmail.equals(login.getEmail()) && uPass.equals(login.getPassword())){
                 user = usr;
                 break;
@@ -117,6 +118,44 @@ public class AuthController {
                         .build();
     }
 
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/register")
+    public Response register(RegisterDto newUser){
+
+        ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
+
+        User user = null;
+        for(User usr:all){
+            String uEmail = usr.getEmail();
+            String provider =  usr.getProvider();
+            if (uEmail.equals(newUser.getEmail()) && provider == null) /*check only users w/o providers*/{
+                user = usr;
+                break;
+            }
+        }
+
+        if (user == null){ // register a new user
+
+            User usr =  new User();
+            usr.setEmail(newUser.getEmail());
+            //TODO: Implement password hashing
+            usr.setPassword(newUser.getPassword());
+            this.usrService.add(usr);
+
+            return Response.status(Response.Status.CREATED)
+                    .entity(user)
+                    .build();
+
+        }else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{Message: User already exists}")
+                    .build();
+        }
+
+    }
 
     private String getGitHubAccessToken(String authCode) {
 

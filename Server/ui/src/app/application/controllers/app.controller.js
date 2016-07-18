@@ -3,8 +3,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth',"$location",
-    function ($scope, loginService, accountService, profileService, authDataService, pipeConfig, $auth, $location) {
+    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth',"$location","$http",
+    function ($scope, loginService, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
         $scope.$on('$viewContentLoaded', function () {
             //App.initComponents(); // init core components
             Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -98,7 +98,6 @@ angular
         $scope.showRegisterForm = false;
         $scope.showForgotPasswordForm = false;
 
-
         $scope.showRegistration =  function(){
                $scope.showLoginForm = false;
                $scope.showRegisterForm = true;
@@ -137,11 +136,9 @@ angular
             }
 
             $auth.login(user)
-
               .then(function(response) {
-
-                debugger;
-                // Redirect user here after a successful log in.
+                $auth.setToken(response.data.id);
+                $location.path("/pipelines");
               })
               .catch(function(response) {
 
@@ -153,6 +150,23 @@ angular
 
         $scope.register = function(user){
 
+            var user = {
+                        email: $scope.register_email,
+                        password: $scope.register_password,
+                        confirmPassword: $scope.confirm_password
+                    }
+
+              // Simple GET request example:
+              $http({
+                method: 'POST',
+                url: 'http://localhost:8080/auth/register',
+                data: user
+              }).then(function successCallback(response) {
+                       $scope.showLogin();
+                  console.log("success response: "+ response);
+                }, function errorCallback(response) {
+                  // show the error message
+               });
         }
 
     }]);
