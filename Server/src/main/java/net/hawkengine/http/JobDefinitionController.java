@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response.Status;
 
 @Consumes("application/json")
 @Produces("application/json")
-@Path("/pipeline-definitions/{pipelineDefinitionId}/stage-definitions/{stageDefinitionId}/job-definitions")
+@Path("/job-definitions")
 public class JobDefinitionController {
     private JobDefinitionService jobDefinitionService;
     private SchemaValidator schemaValidator;
@@ -52,8 +52,8 @@ public class JobDefinitionController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewJob(JobDefinition jobDefinition) {
-        String isValid = this.schemaValidator.validate(jobDefinition);
-        if (isValid.equals("OK")) {
+      //  String isValid = this.schemaValidator.validate(jobDefinition);
+      //  if (isValid.equals("OK")) {
             ServiceResult result = this.jobDefinitionService.add(jobDefinition);
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
@@ -65,22 +65,23 @@ public class JobDefinitionController {
                         .entity(result.getObject())
                         .build();
             }
-        } else {
+
+        }/* else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
-
+*/
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateJob(JobDefinition jobDefinition) {
-        String isValid = this.schemaValidator.validate(jobDefinition);
-        if (isValid.equals("OK")) {
+      //  String isValid = this.schemaValidator.validate(jobDefinition);
+        //if (isValid.equals("OK")) {
             ServiceResult result = this.jobDefinitionService.update(jobDefinition);
             if (result.hasError()) {
-                return Response.status(Status.BAD_REQUEST)
+                return Response.status(Status.NOT_FOUND)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
@@ -89,19 +90,19 @@ public class JobDefinitionController {
                         .entity(result.getObject())
                         .build();
             }
-        } else {
+
+        }/* else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
-
+*/
     @DELETE
     @Consumes
     @Path("/{jobDefinitionId}")
     public Response deleteJob(@PathParam("jobDefinitionId") String jobDefinitionId) {
-
         ServiceResult result = this.jobDefinitionService.delete(jobDefinitionId);
         if (result.hasError()) {
             return Response.status(Status.NOT_FOUND)
