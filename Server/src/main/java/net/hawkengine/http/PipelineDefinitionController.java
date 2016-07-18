@@ -52,36 +52,35 @@ public class PipelineDefinitionController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewPipeline(PipelineDefinition pipelineDefinition) {
-        String isValid = this.schemaValidator.validate(pipelineDefinition);
-        if (isValid.equals("OK")) {
-            ServiceResult result = this.pipelineDefinitionService.add(pipelineDefinition);
-            if (result.hasError()) {
-                return Response.status(Status.BAD_REQUEST)
-                        .entity(result.getMessage())
-                        .type(MediaType.TEXT_HTML)
-                        .build();
-            } else {
-                return Response.status(Status.CREATED)
-                        .entity(result.getObject())
-                        .build();
-            }
+       // String isValid = this.schemaValidator.validate(pipelineDefinition);
+        //  if (isValid.equals("OK")) {
+        ServiceResult result = this.pipelineDefinitionService.add(pipelineDefinition);
+        if (result.hasError()) {
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(result.getMessage())
+                    .type(MediaType.TEXT_HTML)
+                    .build();
         } else {
+            return Response.status(Status.CREATED)
+                    .entity(result.getObject())
+                    .build();
+        }
+    } /*else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
-    }
-
+        */
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePipeline(PipelineDefinition pipelineDefinition) {
-        String isValid = this.schemaValidator.validate(pipelineDefinition);
-        if (isValid.equals("OK")) {
+        //String isValid = this.schemaValidator.validate(pipelineDefinition);
+      //  if (isValid.equals("OK")) {
             ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
             if (result.hasError()) {
-                return Response.status(Status.BAD_REQUEST)
+                return Response.status(Status.NOT_FOUND)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
@@ -90,12 +89,14 @@ public class PipelineDefinitionController {
                         .entity(result.getObject())
                         .build();
             }
+        /*
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
+        */
     }
 
     @DELETE
