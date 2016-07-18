@@ -20,7 +20,7 @@ import java.util.UUID;
 public class FileManagementService implements IFileManagementService {
 
     @Override
-    public String zipFiles(String zipFilePath, File[] files, String filesRootPath, boolean includeRootPath) {
+    public String zipFiles(String zipFilePath, List<File> files, String filesRootPath, boolean includeRootPath) {
 
         String errorMessage = null;
         ZipParameters parameters = new ZipParameters();
@@ -33,8 +33,8 @@ public class FileManagementService implements IFileManagementService {
         try {
             ZipFile zipFile = new ZipFile(zipFilePath);
 
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (int i = 0; i < files.size(); i++) {
+                File file = files.get(i);
                 if (file.isFile()) {
                     zipFile.addFile(file, parameters);
                 }
@@ -197,7 +197,7 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public File[] getFiles(String rootPath, String wildCardPattern) {
+    public List<File> getFiles(String rootPath, String wildCardPattern) {
 
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(this.normalizePath(rootPath));
@@ -218,10 +218,7 @@ public class FileManagementService implements IFileManagementService {
             }
         }
 
-        if (allFiles.size() == 0) {
-            return null;
-        }
-        return allFiles.toArray(new File[]{});
+        return allFiles;
     }
 
     @Override

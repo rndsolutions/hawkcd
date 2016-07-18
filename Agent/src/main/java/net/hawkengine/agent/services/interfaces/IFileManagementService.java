@@ -2,9 +2,7 @@ package net.hawkengine.agent.services.interfaces;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 
 public interface IFileManagementService {
 
@@ -14,9 +12,9 @@ public interface IFileManagementService {
 
     String initiateFile(File file,InputStream stream, String filePath);
 
-    File[] getFiles(String rootPath, String wildCardPattern);
+    List<File> getFiles(String rootPath, String wildCardPattern);
 
-    String zipFiles(String zipFilePath, File[] files, String filesRootPath, boolean includeRootPath);
+    String zipFiles(String zipFilePath, List<File> files, String filesRootPath, boolean includeRootPath);
 
     File generateUniqueFile(String filePath, String fileExtension);
 
