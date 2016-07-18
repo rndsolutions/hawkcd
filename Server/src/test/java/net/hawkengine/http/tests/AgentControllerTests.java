@@ -170,7 +170,7 @@ public class AgentControllerTests extends JerseyTest {
         String expectedMessage = "Agent not found.";
 
         //Act
-        Response response = target("/agents/nonExistingId").request().put(entity);
+        Response response = target("/agents/").request().put(entity);
         String actualMessage = response.readEntity(String.class);
 
         //Assert
