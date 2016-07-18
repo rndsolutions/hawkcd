@@ -54,10 +54,8 @@ public class MaterialHandlerService implements IMaterialHandlerService {
 
                 Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId()).getObject();
 
-                boolean areTheSame;
-                if (dbLatestVersion == null) {
-                    areTheSame = false;
-                } else {
+                boolean areTheSame = false;
+                if (dbLatestVersion != null) {
                     areTheSame = this.materialUpdater.areMaterialsSameVersion(latestVersion, dbLatestVersion.getMaterialDefinition());
                 }
 
@@ -87,10 +85,8 @@ public class MaterialHandlerService implements IMaterialHandlerService {
 
         Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId()).getObject();
 
-        boolean areTheSame;
-        if (dbLatestVersion == null) {
-            areTheSame = false;
-        } else {
+        boolean areTheSame = false;
+        if (dbLatestVersion != null) {
             areTheSame = this.materialUpdater.areMaterialsSameVersion(latestVersion, dbLatestVersion.getMaterialDefinition());
         }
 

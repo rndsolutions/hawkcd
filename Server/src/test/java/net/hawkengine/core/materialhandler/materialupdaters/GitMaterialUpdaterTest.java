@@ -3,6 +3,8 @@ package net.hawkengine.core.materialhandler.materialupdaters;
 import net.hawkengine.core.materialhandler.materialservices.GitService;
 import net.hawkengine.core.materialhandler.materialservices.IGitService;
 import net.hawkengine.model.GitMaterial;
+import net.hawkengine.services.interfaces.IFileManagementService;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,11 +13,12 @@ import org.mockito.Mockito;
 public class GitMaterialUpdaterTest {
     private IMaterialUpdater<GitMaterial> gitMaterialUpdater;
     private IGitService mockedGitService;
+    private IFileManagementService mockedFileManagementService;
 
     @Before
     public void setUp() throws Exception {
         this.mockedGitService = Mockito.mock(GitService.class);
-        this.gitMaterialUpdater = new GitMaterialUpdater(this.mockedGitService);
+        this.gitMaterialUpdater = new GitMaterialUpdater(this.mockedGitService,this.mockedFileManagementService);
     }
 
     @Test

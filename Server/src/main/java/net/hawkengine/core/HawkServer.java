@@ -86,10 +86,10 @@ public class HawkServer {
     }
 
     public void start() throws Exception {
+        this.server.start();
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();
-        this.server.start();
         this.server.join();
     }
 

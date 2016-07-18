@@ -20,6 +20,10 @@ public abstract class MaterialDefinition extends DbEntry {
     private MaterialType type;
     private boolean isPollingForChanges;
 
+    public MaterialDefinition(){
+        this.setErrorMessage("");
+    }
+
     public String getPipelineDefinitionId() {
         return this.pipelineDefinitionId;
     }
@@ -45,7 +49,7 @@ public abstract class MaterialDefinition extends DbEntry {
     }
 
     public String getErrorMessage() {
-        return errorMessage;
+        return this.errorMessage;
     }
 
     public void setErrorMessage(String errorMessage) {

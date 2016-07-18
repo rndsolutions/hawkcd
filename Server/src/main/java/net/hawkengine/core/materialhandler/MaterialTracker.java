@@ -22,12 +22,14 @@ public class MaterialTracker implements Runnable {
     private IMaterialService materialService;
     private IMaterialHandlerService materialHandlerService;
     private static final Logger LOGGER = Logger.getLogger(MaterialTracker.class);
+    private String name;
 
     public MaterialTracker() {
         this.pipelineService = new PipelineService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
         this.materialService = new MaterialService();
         this.materialHandlerService = new MaterialHandlerService();
+        this.name = "MaterialTracker";
     }
 
     @Override
@@ -36,7 +38,7 @@ public class MaterialTracker implements Runnable {
         try {
             while (true) {
                 // MaterialTracker
-                List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+                List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAllAutomaticallyScheduledPipelines().getObject();
                 for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
                     String triggerMaterials = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
                     if (!triggerMaterials.isEmpty()) {
