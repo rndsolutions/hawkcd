@@ -31,11 +31,12 @@ public class GitMaterialUpdaterTest {
     public void getLatestMaterialVersion_successfullyFetchedLatest_allFieldsUpdated() {
         // Arrange
         GitMaterial expectedResult = new GitMaterial();
-        Mockito.when(this.mockedGitService.repositoryExists(expectedResult)).thenReturn(true);
         expectedResult.setCommitId("commitId");
         expectedResult.setAuthorName("authorName");
         expectedResult.setAuthorEmail("authorEmail");
         expectedResult.setComments("comment");
+        expectedResult.setErrorMessage("");
+        Mockito.when(this.mockedGitService.repositoryExists(expectedResult)).thenReturn(true);
         Mockito.when(this.mockedGitService.fetchLatestCommit(expectedResult)).thenReturn(expectedResult);
 
         // Act
@@ -50,31 +51,35 @@ public class GitMaterialUpdaterTest {
     }
 
     @Test
-    public void getLatestMaterialVersion_couldNotCloneRepository_null() {
+    public void getLatestMaterialVersion_couldNotCloneRepository_errorMessage() {
         // Arrange
         GitMaterial gitMaterial = new GitMaterial();
+        gitMaterial.setErrorMessage("errorMessage");
         Mockito.when(this.mockedGitService.repositoryExists(gitMaterial)).thenReturn(false);
-        Mockito.when(this.mockedGitService.cloneRepository(gitMaterial)).thenReturn("errorMessage");
+        Mockito.when(this.mockedGitService.cloneRepository(gitMaterial)).thenReturn(gitMaterial);
+        String expectedResult = "errorMessage";
 
         // Act
-        GitMaterial actualResult = this.gitMaterialUpdater.getLatestMaterialVersion(gitMaterial);
+        String actualResult = this.gitMaterialUpdater.getLatestMaterialVersion(gitMaterial).getErrorMessage();
 
         // Assert
-        Assert.assertNull(actualResult);
+        Assert.assertEquals(expectedResult, actualResult);
     }
 
     @Test
     public void getLatestMaterialVersion_couldFetchLatest_null() {
         // Arrange
         GitMaterial gitMaterial = new GitMaterial();
+        gitMaterial.setErrorMessage("errorMessage");
         Mockito.when(this.mockedGitService.repositoryExists(gitMaterial)).thenReturn(true);
         Mockito.when(this.mockedGitService.fetchLatestCommit(gitMaterial)).thenReturn(null);
+        String expectedResult = "errorMessage";
 
         // Act
-        GitMaterial actualResult = this.gitMaterialUpdater.getLatestMaterialVersion(gitMaterial);
+        String actualResult = this.gitMaterialUpdater.getLatestMaterialVersion(gitMaterial).getErrorMessage();
 
         // Assert
-        Assert.assertNull(actualResult);
+        Assert.assertEquals(expectedResult, actualResult);
     }
 
     @Test
