@@ -4,17 +4,9 @@ import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
 import javax.ws.rs.*;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 @Path("/Artifacts/{pipelineName}/{stageName}/{jobName}")
 public class ArtifactController {
@@ -22,13 +14,11 @@ public class ArtifactController {
     private String basePath;
     private String outputFolder;
 
-    public ArtifactController(){
+    public ArtifactController() {
         this.fileManagementService = new FileManagementService();
-
         this.basePath = System.getProperty("user.dir");
-        this.outputFolder = this.basePath + "\\Temp\\";
-
-        this.fileManagementService.deleteDirectoryRecursively(outputFolder);
+        this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
+        this.fileManagementService.deleteDirectoryRecursively(this.outputFolder);
     }
 
     public ArtifactController(IFileManagementService fileManagementService) {
@@ -44,12 +34,9 @@ public class ArtifactController {
                               @PathParam("jobName") String jobName,
                               File zipFile) {
 
-        String errorMessage;
+        this.outputFolder = this.basePath + File.separator + "Artifacts" + File.separator + pipelineName + File.separator + stageName + File.separator + jobName;
 
-        this.outputFolder = this.basePath + "\\Artifacts\\" + pipelineName + "\\" + stageName + "\\" + jobName;
-        String zipFilePath = zipFile.getPath();
-
-        errorMessage = this.fileManagementService.unzipFile(zipFile.getPath(), this.outputFolder);
+        String errorMessage = this.fileManagementService.unzipFile(zipFile.getPath(), this.outputFolder);
 
         if (errorMessage != null) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -79,27 +66,26 @@ public class ArtifactController {
 
         if (files == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                .type(MediaType.TEXT_HTML)
-                .build();
+                    .type(MediaType.TEXT_HTML)
+                    .build();
         }
-        this.outputFolder = this.basePath + "\\Temp\\";
+
+        this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
 
         File zipFile = this.fileManagementService.generateUniqueFile(this.outputFolder, "zip");
 
         String errorMessage = this.fileManagementService.zipFiles(zipFile.getPath(), files, rootPath, false);
 
-            if (errorMessage != null) {
+        if (errorMessage != null) {
             zipFile.delete();
 
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type(MediaType.TEXT_HTML)
-                        .build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
         }
 
         return Response.status(Response.Status.OK)
                 .entity(zipFile)
                 .build();
     }
-
-
 }
