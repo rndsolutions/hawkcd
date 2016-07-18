@@ -26,6 +26,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Client.class, WebResource.class})
@@ -39,7 +41,7 @@ public class UploadArtifactExecutorTest extends TestBase {
     private IFileManagementService mockedFileManagementService;
     private UploadArtifactTask uploadArtifactTaskDefinition;
     private File mockedFile;
-    private File[] mockedFileList;
+    private List<File> mockedFileList;
     private WorkInfo workInfo;
     private UploadArtifactExecutor uploadArtifactExecutor;
     private StringBuilder report;
@@ -63,10 +65,10 @@ public class UploadArtifactExecutorTest extends TestBase {
         this.mockedResponse = Mockito.mock(ClientResponse.class);
         this.mockedFileManagementService = Mockito.mock(FileManagementService.class);
         this.mockedFile = new File("pathToFile");
-        this.mockedFileList = new File[1];
+        this.mockedFileList = new ArrayList<>();
         this.uploadArtifactExecutor = new UploadArtifactExecutor(this.mockedClient, this.mockedFileManagementService);
         this.report = new StringBuilder();
-        setupData();
+        this.setupData();
     }
 
     private void setupData() {
@@ -76,6 +78,7 @@ public class UploadArtifactExecutorTest extends TestBase {
         this.uploadArtifactTaskDefinition.setSource("correctSource");
         this.uploadArtifactTaskDefinition.setDestination("correctDestination");
         this.correctUploadArtifactTask.setTaskDefinition(this.uploadArtifactTaskDefinition);
+        this.mockedFileList.add(new File(""));
 
         this.workInfo = new WorkInfo();
         this.workInfo.setPipelineDefinitionName("correct");
@@ -85,7 +88,13 @@ public class UploadArtifactExecutorTest extends TestBase {
     }
 
     @Test
-    public void uploadArtifactExecutor_passing() {
+    public void uploadArtifactExecutor_instantiated_notNull() {
+        UploadArtifactExecutor executor = new UploadArtifactExecutor();
+        Assert.assertNotNull(executor);
+    }
+
+    @Test
+    public void executeTask_artifactUploadedSuccessfully_taskPassed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
         Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
@@ -105,13 +114,13 @@ public class UploadArtifactExecutorTest extends TestBase {
         Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
 
         //Assert
-        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(this.mockedFileList.getClass()), Mockito.anyString(), Mockito.anyBoolean());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).getFiles(Mockito.anyString(), Mockito.anyString());
         Assert.assertEquals(TaskStatus.PASSED, resultTask.getStatus());
     }
 
     @Test
-    public void uploadArtifactExecutor_zippingFiles_failing() {
+    public void executeTask_failedToZipFiles_taskFailed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
         Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
@@ -131,14 +140,14 @@ public class UploadArtifactExecutorTest extends TestBase {
         Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
 
         //Assert
-        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(this.mockedFileList.getClass()), Mockito.anyString(), Mockito.anyBoolean());
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
     }
 
     @Test
-    public void uploadArtifactExecutor_serverResponse_failing() {
+    public void executeTask_responseNotOk_taskFailed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
         Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
@@ -158,19 +167,19 @@ public class UploadArtifactExecutorTest extends TestBase {
         Task resultTask = this.uploadArtifactExecutor.executeTask(this.correctUploadArtifactTask, this.report, this.workInfo);
 
         //Assert
-        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(File[].class), Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).zipFiles(Mockito.anyObject(), Mockito.any(this.mockedFileList.getClass()), Mockito.anyString(), Mockito.anyBoolean());
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
     }
 
     @Test
-    public void uploadArtifactExecutor_getFiles_failing() {
+    public void executeTask_noFilesToUpload_taskFailed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("full\\path");
         Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("rootPath");
         Mockito.when(this.mockedFileManagementService.getPattern(Mockito.anyString(), Mockito.anyString())).thenReturn("");
-        Mockito.when(this.mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.getFiles(Mockito.anyString(), Mockito.anyString())).thenReturn(new ArrayList<>());
         Mockito.when(this.mockedFileManagementService.generateUniqueFile(Mockito.anyString(), Mockito.anyString())).thenReturn(this.mockedFile);
         Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn(null);
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
@@ -191,7 +200,7 @@ public class UploadArtifactExecutorTest extends TestBase {
     }
 
     @Test
-    public void uploadArtifactExecutor_emptyRootPath_failing() {
+    public void executeTask_emptyRootPath_taskFailed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.pathCombine(Mockito.anyString())).thenReturn("");
         Mockito.when(this.mockedFileManagementService.getRootPath(Mockito.anyString())).thenReturn("");
@@ -214,11 +223,5 @@ public class UploadArtifactExecutorTest extends TestBase {
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition(), resultTask.getTaskDefinition());
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
-    }
-
-    @Test
-    public void test_initialConstructor() {
-        UploadArtifactExecutor executor = new UploadArtifactExecutor();
-        Assert.assertNotNull(executor);
     }
 }

@@ -3,7 +3,6 @@ package net.hawkengine.agent.components.taskexecutor.executors;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
 import net.hawkengine.agent.constants.Constants;
@@ -30,29 +29,12 @@ public class FetchArtifactExecutor extends TaskExecutor {
     }
 
     public FetchArtifactExecutor(Client client, IFileManagementService fileManagementService) {
-        this.setRestClient(client.create());
-        this.setFileManagementService(fileManagementService);
-    }
-
-    public Client getRestClient() {
-        return this.restClient;
-    }
-
-    public void setRestClient(Client restClient) {
-        this.restClient = restClient;
-    }
-
-    public IFileManagementService getFileManagementService() {
-        return this.fileManagementService;
-    }
-
-    public void setFileManagementService(IFileManagementService fileManagementService) {
+        this.restClient = client.create();
         this.fileManagementService = fileManagementService;
     }
 
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
-
         FetchArtifactTask taskDefinition = (FetchArtifactTask) task.getTaskDefinition();
         super.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
@@ -72,38 +54,37 @@ public class FetchArtifactExecutor extends TaskExecutor {
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, taskDefinition.getSource());
 
         if ((response.getStatus() != 200)) {
-           return this.nullProcessing(report,task,String.format("Could not get resource. TaskStatus code %s",response.getStatus()));
+            return this.nullProcessing(report, task, String.format("Could not get resource. TaskStatus code %s", response.getStatus()));
         }
 
-        if(response.getEntityInputStream() == null){
-            return this.nullProcessing(report,task,"Could not get resource. Input stream is null");
+        if (response.getEntityInputStream() == null) {
+            return this.nullProcessing(report, task, "Could not get resource. Input stream is null");
         }
-
-        String errorMessage;
 
         String filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), UUID.randomUUID() + ".zip").toString();
         File fetchArtifactDir = new File(filePath);
         this.fileManagementService.generateDirectory(fetchArtifactDir);
-        errorMessage = this.fileManagementService.initiateFile(fetchArtifactDir, response.getEntityInputStream(), filePath);
 
+        String errorMessage;
+        errorMessage = this.fileManagementService.initiateFile(fetchArtifactDir, response.getEntityInputStream(), filePath);
         if (errorMessage != null) {
-           return this.nullProcessing(report,task,"Error occurred in creating the artifact!");
+            return this.nullProcessing(report, task, "Error occurred in creating the artifact!");
         }
 
-        String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), taskDefinition.getPipeline(), taskDefinition.getStage(), taskDefinition.getJob()).toString();
+        String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentArtifactsDirectoryPath(), taskDefinition.getPipeline(), taskDefinition.getStage(), taskDefinition.getJob()).toString();
         errorMessage = this.fileManagementService.unzipFile(filePath, destination);
         filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath()).toString();
         String deleteMessage = this.fileManagementService.deleteFilesInDirectory(filePath);
 
         if (errorMessage != null) {
-                return this.nullProcessing(report,task,"Error occurred in unzipping files!");
+            return this.nullProcessing(report, task, "Error occurred in unzipping files!");
         }
 
         if (deleteMessage != null) {
             return this.nullProcessing(report, task, "Error occurred in deleting files!");
         }
 
-        report.append(System.getProperty("line.separator"));
+        report.append(File.separator);
         report.append(String.format("Saved artifact to %s after verifying the integrity of its contents.", destination));
         super.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
 

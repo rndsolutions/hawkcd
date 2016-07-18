@@ -29,12 +29,11 @@ public class FetchMaterialExecutorTest {
     private Task secondIncorrectFetchMaterialTask;
     private WorkInfo workInfo;
     private String successReportMessage = "Fetching material...Material fetched at Pipelines" + File.separator + "%s";
-    private String errorReportMessage = "Fetching material...Unable to clean directory Pipelines" + File.separator + "%s" + File.separator + "%s";
     private String correctDirectoryPath = "Pipelines" + File.separator + "MyPipe";
     private String wrongDirectoryPath = "Pipelines" + File.separator + "Wrong" + File.separator + "Wrong";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         AgentConfiguration.configure();
 
         this.mockedGitService = Mockito.mock(GitMaterialService.class);

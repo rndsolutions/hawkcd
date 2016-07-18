@@ -3,9 +3,7 @@ package net.hawkengine.agent.components.taskexecutor.executors;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-
 import junit.framework.Assert;
-
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.base.TestBase;
 import net.hawkengine.agent.enums.TaskStatus;
@@ -16,7 +14,6 @@ import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -95,10 +92,16 @@ public class FetchArtifactExecutorTest extends TestBase {
     }
 
     @Test
-    public void fetchArtifactExecutor_passing() {
+    public void fetchArtifactExecutor_instantiated_notNull() {
+        FetchArtifactExecutor executor = new FetchArtifactExecutor();
+        Assert.assertNotNull(executor);
+    }
+
+    @Test
+    public void executeTask_artifactFetchedSuccessfully_taskPassed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.unzipFile(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
-        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString())).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString())).thenReturn(null);
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("sourceForAPI");
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
@@ -112,19 +115,18 @@ public class FetchArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).unzipFile(Mockito.anyString(), Mockito.anyString());
-        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).urlCombine(Mockito.anyString());
         Mockito.verify(this.mockedResponse, Mockito.times(1)).getStatus();
         Assert.assertEquals(TaskStatus.PASSED, resultTask.getStatus());
-        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(),resultTask.getTaskDefinition().getName());
-
+        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(), resultTask.getTaskDefinition().getName());
     }
 
     @Test
-    public void fetchArtifactExecutor_deletingFiles_failed() {
+    public void executeTask_failedToDeleteFiles_taskFailed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.unzipFile(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
-        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString())).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString())).thenReturn(null);
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("sourceForAPI");
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
@@ -139,18 +141,17 @@ public class FetchArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).unzipFile(Mockito.anyString(), Mockito.anyString());
-        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).urlCombine(Mockito.anyString());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).deleteFilesInDirectory(Mockito.anyString());
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
-        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(),resultTask.getTaskDefinition().getName());
-
+        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(), resultTask.getTaskDefinition().getName());
     }
 
     @Test
-    public void fetchArtifactExecutor_unzippingFiles_failed() {
+    public void executeTask_failedToUnzipFiles_taskFailed() {
         //Arrange
-        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString())).thenReturn(null);
+        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString())).thenReturn(null);
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("sourceForAPI");
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
@@ -165,17 +166,16 @@ public class FetchArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).unzipFile(Mockito.anyString(), Mockito.anyString());
-        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).urlCombine(Mockito.anyString());
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
-        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(),resultTask.getTaskDefinition().getName());
-
+        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(), resultTask.getTaskDefinition().getName());
     }
 
     @Test
-    public void fetchArtifactExecutor_creatingFile_failed() {
+    public void executeTask_failedToCreateFiles_taskFailed() {
         //Arrange
-        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString())).thenReturn("Error");
+        Mockito.when(this.mockedFileManagementService.initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString())).thenReturn("Error");
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("sourceForAPI");
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
@@ -188,15 +188,14 @@ public class FetchArtifactExecutorTest extends TestBase {
         Task resultTask = this.fetchArtifactExecutor.executeTask(this.correctFetchArtifactTask, this.report, this.workInfo);
 
         //Assert
-        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class),Mockito.any(InputStream.class),Mockito.anyString());
+        Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).initiateFile(Mockito.any(File.class), Mockito.any(InputStream.class), Mockito.anyString());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).urlCombine(Mockito.anyString());
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
-        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(),resultTask.getTaskDefinition().getName());
-
+        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(), resultTask.getTaskDefinition().getName());
     }
 
     @Test
-    public void fetchArtifactExecutor_clientResponse_failed() {
+    public void executeTask_responseNotOk_taskFailed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("sourceForAPI");
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
@@ -211,14 +210,13 @@ public class FetchArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).urlCombine(Mockito.anyString());
-        Assert.assertEquals(400,this.mockedResponse.getStatus());
+        Assert.assertEquals(400, this.mockedResponse.getStatus());
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
-        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(),resultTask.getTaskDefinition().getName());
-
+        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(), resultTask.getTaskDefinition().getName());
     }
 
     @Test
-    public void fetchArtifactExecutor_inputStreamNull_failed() {
+    public void executeTask_inputStreamNull_taskFailed() {
         //Arrange
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("sourceForAPI");
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
@@ -233,21 +231,8 @@ public class FetchArtifactExecutorTest extends TestBase {
 
         //Assert
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).urlCombine(Mockito.anyString());
-        Assert.assertEquals(200,this.mockedResponse.getStatus());
+        Assert.assertEquals(200, this.mockedResponse.getStatus());
         Assert.assertEquals(TaskStatus.FAILED, resultTask.getStatus());
-        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(),resultTask.getTaskDefinition().getName());
-
-    }
-
-    @Test
-    public void fetchArtifactExecutor_testConstructors() {
-        FetchArtifactExecutor executor = new FetchArtifactExecutor(this.mockedClient, this.mockedFileManagementService);
-        FetchArtifactExecutor anotherExecutor = new FetchArtifactExecutor();
-        Assert.assertNotNull(anotherExecutor);
-        Assert.assertNotNull(anotherExecutor.getRestClient());
-        Assert.assertNotNull(anotherExecutor.getFileManagementService());
-        Assert.assertNotNull(executor);
-        Assert.assertNotNull(executor.getRestClient());
-        Assert.assertNotNull(executor.getFileManagementService());
+        Assert.assertEquals(this.fetchArtifactTaskDefinition.getName(), resultTask.getTaskDefinition().getName());
     }
 }
