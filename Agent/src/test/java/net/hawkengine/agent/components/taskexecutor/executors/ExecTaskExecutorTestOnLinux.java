@@ -56,7 +56,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     }
 
     @Test
-    public void executeTask_validTask_passedTaskStatus() throws Exception {
+    public void executeTask_validTask_taskPassed() {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
         expectedArguments.add("-c");
@@ -75,7 +75,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
         this.job.setTasks(jobTasks);
         this.expectedWorkInfo.setJob(this.job);
 
-        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
         new File(this.expectedWorkingDir).mkdirs();
 
         //Act
@@ -87,7 +87,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     }
 
     @Test
-    public void executeTask_invalidTask_failedTaskStatus() throws Exception {
+    public void executeTask_invalidTask_taskFailed() {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
         expectedArguments.add("-c");
@@ -106,7 +106,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
         this.job.setTasks(jobTasks);
         this.expectedWorkInfo.setJob(this.job);
 
-        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentArtifactsDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
         new File(this.expectedWorkingDir).mkdirs();
 
         //Act
@@ -118,7 +118,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     }
 
     @Test
-    public void executeTask_failingTaskNotIgnoringErrors_failedTaskStatus() throws Exception {
+    public void executeTask_failingTaskNotIgnoringErrors_taskFailed() {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
         expectedArguments.add("-c");
@@ -146,7 +146,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     }
 
     @Test
-    public void executeTask_failingTaskIgnoringErrors_passedTaskStatus() throws Exception {
+    public void executeTask_failingTaskIgnoringErrors_taskPassed() {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
         expectedArguments.add("-c");
@@ -165,7 +165,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
         this.job.setTasks(jobTasks);
         this.expectedWorkInfo.setJob(this.job);
 
-        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDirectoryPath(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
+        this.expectedWorkingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), this.expectedWorkInfo.getPipelineDefinitionName()).toString();
         new File(this.expectedWorkingDir).mkdirs();
 
         //Act
@@ -177,7 +177,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     }
 
     @Test
-    public void executeTask_nonExistingDirectory_failedTaskStatus() throws Exception {
+    public void executeTask_nonExistingDirectory_taskFailed() {
         //Assert
         List<String> expectedArguments = new ArrayList<>();
         expectedArguments.add("-c");

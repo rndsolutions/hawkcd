@@ -1,6 +1,6 @@
-package net.hawkengine.agent.services;
+package net.hawkengine.services;
 
-import net.hawkengine.agent.services.interfaces.IFileManagementService;
+import net.hawkengine.services.interfaces.IFileManagementService;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
@@ -8,10 +8,13 @@ import net.lingala.zip4j.util.Zip4jConstants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,7 @@ import java.util.UUID;
 public class FileManagementService implements IFileManagementService {
 
     @Override
-    public String zipFiles(String zipFilePath, List<File> files, String filesRootPath, boolean includeRootPath) {
+    public String zipFiles(String zipFilePath, File[] files, String filesRootPath, boolean includeRootPath) {
 
         String errorMessage = null;
         ZipParameters parameters = new ZipParameters();
@@ -33,8 +36,8 @@ public class FileManagementService implements IFileManagementService {
         try {
             ZipFile zipFile = new ZipFile(zipFilePath);
 
-            for (int i = 0; i < files.size(); i++) {
-                File file = files.get(i);
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
                 if (file.isFile()) {
                     zipFile.addFile(file, parameters);
                 }
@@ -43,14 +46,10 @@ public class FileManagementService implements IFileManagementService {
                 }
             }
         } catch (ZipException e) {
-            errorMessage = e.getMessage();
+            e.printStackTrace();
         }
 
         return errorMessage;
-    }
-
-    public void generateDirectory(File file){
-        file.getParentFile().mkdirs();
     }
 
     @Override
@@ -77,6 +76,7 @@ public class FileManagementService implements IFileManagementService {
             ZipFile zipFile = new ZipFile(filePath);
             zipFile.extractAll(destination);
         } catch (ZipException e) {
+            e.printStackTrace();
             errorMessage = e.getMessage();
         }
 
@@ -84,17 +84,9 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public String initiateFile(File file,InputStream stream, String filePath) {
-        String errorMessage = null;
-        if(!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                errorMessage = e.getMessage();
-                e.printStackTrace();
-            }
-        }
+    public String streamToFile(InputStream stream, String filePath) {
 
+        String errorMessage = null;
         try {
             byte[] bytes = IOUtils.toByteArray(stream);
             FileOutputStream fileOutputStream = new FileOutputStream(filePath);
@@ -113,23 +105,6 @@ public class FileManagementService implements IFileManagementService {
         File file = new File(filePath);
         if (file.exists()) {
             file.delete();
-        }
-
-        return errorMessage;
-    }
-
-    @Override
-    public String deleteFilesInDirectory(String directoryPath){
-        String errorMessage = null;
-        if((directoryPath == null) || (directoryPath == "")){
-            return errorMessage = "Directory Path arguments is empty or null!";
-        }
-
-        File directory = new File(directoryPath);
-        for (File file : directory.listFiles()) {
-            if (!file.isDirectory()) {
-                file.delete();
-            }
         }
 
         return errorMessage;
@@ -193,11 +168,11 @@ public class FileManagementService implements IFileManagementService {
 
         pattern = this.normalizePath(pattern);
 
-        return StringUtils.strip(pattern,"/") ;
+        return StringUtils.strip(pattern, "/");
     }
 
     @Override
-    public List<File> getFiles(String rootPath, String wildCardPattern) {
+    public File[] getFiles(String rootPath, String wildCardPattern) {
 
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(this.normalizePath(rootPath));
@@ -218,7 +193,10 @@ public class FileManagementService implements IFileManagementService {
             }
         }
 
-        return allFiles;
+        if (allFiles.size() == 0) {
+            return null;
+        }
+        return allFiles.toArray(new File[]{});
     }
 
     @Override

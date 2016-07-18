@@ -66,7 +66,7 @@ public class JobExecutor implements IJobExecutor {
             boolean isFirstTask = i == 0;
 
             // TODO: Job should be RUNNING
-            if (this.currentJob.getStatus() == JobStatus.SCHEDULED) {
+            if (this.currentJob.getStatus() == JobStatus.RUNNING) {
                 if ((currentTask.getRunIfCondition() == RunIf.PASSED) || (currentTask.getRunIfCondition() == RunIf.ANY) || isFirstTask) {
 
 //                    this.currentJob.appendToJobResult(String.format(LoggerMessages.TASK_STARTED, currentTask.getType(), currentTask.getId()), true);

@@ -5,7 +5,7 @@ public class InstallInfo {
     private int serverPort;
     private String agentSandbox;
     private String agentTempDirectoryPath;
-    private String agentPipelinesDirectoryPath;
+    private String agentArtifactsDirectoryPath;
     private String agentPipelinesDir;
     private String serverAddress;
     private String reportJobApiAddress;
@@ -78,12 +78,12 @@ public class InstallInfo {
         this.checkForWorkApiAddress = checkForWorkApiAddress;
     }
 
-    public String getAgentPipelinesDirectoryPath() {
-        return agentPipelinesDirectoryPath;
+    public String getAgentArtifactsDirectoryPath() {
+        return agentArtifactsDirectoryPath;
     }
 
-    public void setAgentPipelinesDirectoryPath(String agentPipelinesDirectoryPath) {
-        this.agentPipelinesDirectoryPath = agentPipelinesDirectoryPath;
+    public void setAgentArtifactsDirectoryPath(String agentArtifactsDirectoryPath) {
+        this.agentArtifactsDirectoryPath = agentArtifactsDirectoryPath;
     }
 
     public String getCreateArtifactApiAddress() {
