@@ -116,7 +116,7 @@ angular
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);
 
-        $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             viewModel.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 if(currentPipelineRun.pipelineDefinitionName == vm.pipelineName && currentPipelineRun.executionId == vm.pipelineExecutionID){
@@ -142,7 +142,7 @@ angular
                     vm.selectedJob = vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs[vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs.length - 1];
                 }
             }
-        }, true);
+        });
 
         // vm.getAll = function () {
         //     var tokenIsValid = authDataService.checkTokenExpiration();

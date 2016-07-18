@@ -339,7 +339,7 @@ angular
             var pipeline = {
                 "name": vm.formData.pipeline.name,
                 "pipelineGroupId": vm.groupId,
-                "pipelineGroupName": vm.groupName,
+                "groupName": vm.groupName,
                 "materialDefinitions": [material],
                 "environmentVariables": [],
                 "parameters": [],

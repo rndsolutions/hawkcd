@@ -38,7 +38,7 @@ angular
             })
 
             .state('index.pipelineRunManagement', {
-                url: 'pipelines/{pipelineName}/{executionID}/RunManagement',
+                url: 'pipelines/{groupName}/{pipelineName}/{executionID}/RunManagement',
                 templateUrl: "app/pipelines/views/runs-management.html",
                 data: {
                     pageTitle: 'Pipeline Run Management'
