@@ -96,14 +96,6 @@ public class Job extends DbEntry {
         this.status = status;
     }
 
-    public StringBuilder getReport() {
-        return this.report;
-    }
-
-    public void setReport(StringBuilder report) {
-        this.report = report;
-    }
-
     public LocalDateTime getStartTime() {
         return this.startTime;
     }
@@ -134,5 +126,13 @@ public class Job extends DbEntry {
 
     public void setAssignedAgentId(String assignedAgentId) {
         this.assignedAgentId = assignedAgentId;
+    }
+
+    public StringBuilder getReport() {
+        return this.report;
+    }
+
+    public void setReport(StringBuilder report) {
+        this.report = report;
     }
 }
