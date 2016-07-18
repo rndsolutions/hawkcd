@@ -10,6 +10,7 @@ import java.util.Set;
 public class Job {
     private String id;
     private String jobDefinitionId;
+    private String jobDefinitionName;
     private String stageId;
     private String pipelineId;
     private int executionId;
@@ -37,6 +38,14 @@ public class Job {
 
     public void setJobDefinitionId(String jobDefinitionId) {
         this.jobDefinitionId = jobDefinitionId;
+    }
+
+    public String getJobDefinitionName() {
+        return this.jobDefinitionName;
+    }
+
+    public void setJobDefinitionName(String jobDefinitionName) {
+        this.jobDefinitionName = jobDefinitionName;
     }
 
     public String getStageId() {

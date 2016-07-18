@@ -1,26 +1,20 @@
-package net.hawkengine.agent.services.interfaces;
+package net.hawkengine.services.interfaces;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.List;
 
 public interface IFileManagementService {
-
-    void generateDirectory(File file);
-
     String unzipFile(String filePath, String destination);
 
-    String initiateFile(File file,InputStream stream, String filePath);
+    String streamToFile(InputStream stream, String filePath);
 
-    List<File> getFiles(String rootPath, String wildCardPattern);
+    File[] getFiles(String rootPath, String wildCardPattern);
 
-    String zipFiles(String zipFilePath, List<File> files, String filesRootPath, boolean includeRootPath);
+    String zipFiles(String zipFilePath, File[] files, String filesRootPath, boolean includeRootPath);
 
     File generateUniqueFile(String filePath, String fileExtension);
 
     String deleteFile(String filePath);
-
-    String deleteFilesInDirectory(String directoryPath);
 
     String deleteDirectoryRecursively(String directoryPath);
 

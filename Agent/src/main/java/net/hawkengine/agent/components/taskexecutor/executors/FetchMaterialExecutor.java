@@ -2,7 +2,6 @@ package net.hawkengine.agent.components.taskexecutor.executors;
 
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
-import net.hawkengine.agent.constants.LoggerMessages;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.FetchMaterialTask;
 import net.hawkengine.agent.models.Task;
@@ -30,9 +29,6 @@ public class FetchMaterialExecutor extends TaskExecutor {
 
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
-        if (report == null) {
-            report = new StringBuilder();
-        }
 
         FetchMaterialTask taskDefinition = (FetchMaterialTask) task.getTaskDefinition();
 
@@ -48,13 +44,7 @@ public class FetchMaterialExecutor extends TaskExecutor {
         String errorMessage = this.fileManagementService.deleteDirectoryRecursively(materialPath);
 
         if (errorMessage != null) {
-            report.append(String.format("Unable to clean directory %s", materialPath));
-            LOGGER.error(errorMessage);
-
-            this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-            workInfo.getJob().setReport(report);
-
-            return task;
+           return this.nullProcessing(report,task,String.format("Unable to clean directory %s", materialPath));
         }
 
         errorMessage = this.materialService.fetchMaterial(taskDefinition);
@@ -64,10 +54,7 @@ public class FetchMaterialExecutor extends TaskExecutor {
 
             report.append(String.format("Material fetched at %s", materialPath));
         } else {
-            this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-
-            LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
-            report.append(errorMessage);
+           this.nullProcessing(report,task,errorMessage);
         }
 
         workInfo.getJob().setReport(report);

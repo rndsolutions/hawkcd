@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class Job extends DbEntry {
     private String jobDefinitionId;
+    private String jobDefinitionName;
     private String stageId;
     private String pipelineId;
     private int executionId;
@@ -38,6 +39,14 @@ public class Job extends DbEntry {
 
     public void setJobDefinitionId(String jobDefinitionId) {
         this.jobDefinitionId = jobDefinitionId;
+    }
+
+    public String getJobDefinitionName() {
+        return this.jobDefinitionName;
+    }
+
+    public void setJobDefinitionName(String jobDefinitionName) {
+        this.jobDefinitionName = jobDefinitionName;
     }
 
     public String getStageId() {

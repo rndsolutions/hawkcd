@@ -9,18 +9,22 @@ import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.payload.WorkInfo;
 import net.hawkengine.services.interfaces.IAgentService;
+import net.hawkengine.services.interfaces.IJobService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AgentService extends CrudService<Agent> implements IAgentService {
+    //TODO: add jobService
     private IPipelineService pipelineService;
+    private IJobService jobService;
 
     public AgentService() {
         super.setRepository(new RedisRepository(Agent.class));
         super.setObjectType("Agent");
         this.pipelineService = new PipelineService();
+        this.jobService = new JobService();
     }
 
     public AgentService(IDbRepository repository, IPipelineService pipelineService) {
@@ -91,12 +95,18 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                                 .forEach(job -> {
                                     workInfo.setPipelineExecutionID(pipeline.getExecutionId());
                                     workInfo.setStageExecutionID(stage.getExecutionId());
+                                    job.setStatus(JobStatus.RUNNING);
+                                    this.jobService.update(job);
                                     workInfo.setJob(job);
                                     workInfo.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
+                                    workInfo.setStageDefinitionName(stage.getStageDefinitionName());
+                                    workInfo.setJobDefinitionName(job.getJobDefinitionName());
 
                                     result.setObject(workInfo);
                                     result.setError(false);
                                     result.setMessage("WorkInfo retrieved successfully");
+
+
                                 }));
             }
         } else {
