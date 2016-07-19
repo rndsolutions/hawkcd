@@ -3,7 +3,10 @@ package net.hawkengine.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import net.hawkengine.model.enums.MaterialType;
+
+import net.hawkengine.agent.enums.MaterialType;
+import net.hawkengine.agent.models.GitMaterial;
+import net.hawkengine.agent.models.NugetMaterial;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -12,17 +15,12 @@ import net.hawkengine.model.enums.MaterialType;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT"),
         @JsonSubTypes.Type(value = NugetMaterial.class, name = "NUGET")})
-public abstract class MaterialDefinition extends DbEntry {
+public abstract class MaterialDefinition {
     private String pipelineDefinitionId;
     private String pipelineDefinitionName;
     private String name;
-    private String errorMessage;
     private MaterialType type;
     private boolean isPollingForChanges;
-
-    public MaterialDefinition(){
-        this.setErrorMessage("");
-    }
 
     public String getPipelineDefinitionId() {
         return this.pipelineDefinitionId;
@@ -46,14 +44,6 @@ public abstract class MaterialDefinition extends DbEntry {
 
     public void setName(String value) {
         this.name = value;
-    }
-
-    public String getErrorMessage() {
-        return this.errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
     public MaterialType getType() {

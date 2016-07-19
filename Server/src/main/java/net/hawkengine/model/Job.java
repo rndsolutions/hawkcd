@@ -41,6 +41,14 @@ public class Job extends DbEntry {
         this.jobDefinitionId = jobDefinitionId;
     }
 
+    public String getJobDefinitionName() {
+        return this.jobDefinitionName;
+    }
+
+    public void setJobDefinitionName(String jobDefinitionName) {
+        this.jobDefinitionName = jobDefinitionName;
+    }
+
     public String getStageId() {
         return this.stageId;
     }
@@ -97,14 +105,6 @@ public class Job extends DbEntry {
         this.status = status;
     }
 
-    public StringBuilder getReport() {
-        return this.report;
-    }
-
-    public void setReport(StringBuilder report) {
-        this.report = report;
-    }
-
     public LocalDateTime getStartTime() {
         return this.startTime;
     }
@@ -135,6 +135,14 @@ public class Job extends DbEntry {
 
     public void setAssignedAgentId(String assignedAgentId) {
         this.assignedAgentId = assignedAgentId;
+    }
+
+    public StringBuilder getReport() {
+        return this.report;
+    }
+
+    public void setReport(StringBuilder report) {
+        this.report = report;
     }
 
     public String getJobDefinitionName() {

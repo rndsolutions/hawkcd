@@ -22,12 +22,14 @@ public class MaterialTracker implements Runnable {
     private IMaterialService materialService;
     private IMaterialHandlerService materialHandlerService;
     private static final Logger LOGGER = Logger.getLogger(MaterialTracker.class);
+    private String name;
 
     public MaterialTracker() {
         this.pipelineService = new PipelineService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
         this.materialService = new MaterialService();
         this.materialHandlerService = new MaterialHandlerService();
+        this.name = "MaterialTracker";
     }
 
     @Override
@@ -36,7 +38,7 @@ public class MaterialTracker implements Runnable {
         try {
             while (true) {
                 // MaterialTracker
-                List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+                List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAllAutomaticallyScheduledPipelines().getObject();
                 for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
                     String triggerMaterials = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
                     if (!triggerMaterials.isEmpty()) {
@@ -51,21 +53,25 @@ public class MaterialTracker implements Runnable {
                 // MaterialPreparer
                 List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getObject();
                 for (Pipeline pipeline : pipelines) {
+                    boolean isPipelineUpdated = true;
                     for (Material material : pipeline.getMaterials()) {
-                        Material updatedMaterial = this.materialHandlerService.updateMaterial(material);
-                        if (updatedMaterial == null) {
+                        this.materialHandlerService.updateMaterial(material);
+                        if (material == null) {
+                            isPipelineUpdated = false;
                             ServiceResult result = this.pipelineService.delete(pipeline.getId());
                             EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "delete", result);
                         }
 
-                        if (updatedMaterial.isUpdated()) {
+                        } else if (material.isUpdated()) {
                             this.materialService.add(material);
                         }
                     }
 
-                    pipeline.setMaterialsUpdated(true);
-                    ServiceResult result = this.pipelineService.update(pipeline);
+                    if (isPipelineUpdated) {
+                        pipeline.setMaterialsUpdated(true);
+                        ServiceResult result = this.pipelineService.update(pipeline);
                     EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
+                    }
                 }
 
                 Thread.sleep(4 * 1000);

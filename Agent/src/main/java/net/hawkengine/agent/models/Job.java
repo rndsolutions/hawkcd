@@ -40,6 +40,14 @@ public class Job {
         this.jobDefinitionId = jobDefinitionId;
     }
 
+    public String getJobDefinitionName() {
+        return this.jobDefinitionName;
+    }
+
+    public void setJobDefinitionName(String jobDefinitionName) {
+        this.jobDefinitionName = jobDefinitionName;
+    }
+
     public String getStageId() {
         return this.stageId;
     }

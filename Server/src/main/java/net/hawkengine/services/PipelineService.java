@@ -6,6 +6,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
@@ -163,6 +164,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             job.setJobDefinitionId(jobDefinition.getId());
             job.setJobDefinitionName(jobDefinition.getName());
             job.setStageId(stage.getId());
+            job.setJobDefinitionName(jobDefinition.getName());
             jobs.add(job);
             this.addTasksToJob(jobDefinition, job);
         }
@@ -175,7 +177,12 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Task> tasks = new ArrayList<>();
         for (TaskDefinition taskDefinition : taskDefinitions) {
+
             Task task = new Task();
+            if(taskDefinition.getType() == TaskType.FETCH_MATERIAL){
+                FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinition;
+                task.setMaterialDefinition(fetchMaterialTask.getMaterialDefinition());
+            }
             task.setJobId(job.getId());
             task.setStageId(job.getStageId());
             task.setPipelineId(job.getPipelineId());

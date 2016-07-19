@@ -3,10 +3,12 @@ package net.hawkengine.core.materialhandler.materialservices;
 import net.hawkengine.model.GitMaterial;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -17,34 +19,47 @@ import java.io.IOException;
 public class GitService implements IGitService {
     @Override
     public boolean repositoryExists(GitMaterial gitMaterial) {
-        FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
-        File gitDirectory = repositoryBuilder.findGitDir(new File(gitMaterial.getName())).getGitDir();
+        try {
+            Repository repository = Git.open(new File("Materials" + File.separator + gitMaterial.getName())).getRepository();
+            Config config = repository.getConfig();
+            String repositoryUrl = config.getString("remote", "origin", "url");
+            if (!repositoryUrl.equals(gitMaterial.getRepositoryUrl())) {
+                return false;
+            }
+        } catch (IOException e) {
+            return false;
+        }
 
-        return gitDirectory != null ? true : false;
+        return true;
     }
 
     @Override
-    public String cloneRepository(GitMaterial gitMaterial) {
+    public GitMaterial cloneRepository(GitMaterial gitMaterial) {
         try {
             CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             Git.cloneRepository()
                     .setURI(gitMaterial.getRepositoryUrl())
                     .setCredentialsProvider(credentials)
-                    .setDirectory(new File(gitMaterial.getName()))
+                    .setDirectory(new File("Materials" + File.separator + gitMaterial.getName()))
                     .setCloneSubmodules(true)
                     .call();
 
+            gitMaterial.setErrorMessage("");
+
             return null;
-        } catch (GitAPIException e) {
-            return e.getMessage();
+        } catch (GitAPIException | JGitInternalException e) {
+            gitMaterial.setErrorMessage(e.getMessage());
+            return gitMaterial;
         }
     }
 
     @Override
     public GitMaterial fetchLatestCommit(GitMaterial gitMaterial) {
         try {
-            Git git = Git.open(new File(gitMaterial.getName() + File.separator + ".git"));
+            Git git = Git.open(new File("Materials" + File.separator +  gitMaterial.getName() + File.separator + ".git"));
+            CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             git.fetch()
+                    .setCredentialsProvider(credentials)
                     .setCheckFetchedObjects(true)
                     .setRefSpecs(new RefSpec("refs/heads/" + gitMaterial.getBranch() + ":refs/heads/" + gitMaterial.getBranch()))
                     .call();
@@ -56,12 +71,13 @@ public class GitService implements IGitService {
             gitMaterial.setAuthorName(commit.getAuthorIdent().getName());
             gitMaterial.setAuthorEmail(commit.getAuthorIdent().getEmailAddress());
             gitMaterial.setComments(commit.getFullMessage());
+            gitMaterial.setErrorMessage("");
             git.close();
 
             return gitMaterial;
         } catch (IOException | GitAPIException e) {
-            e.printStackTrace();
-            return null;
+            gitMaterial.setErrorMessage(e.getMessage());
+            return gitMaterial;
         }
     }
 

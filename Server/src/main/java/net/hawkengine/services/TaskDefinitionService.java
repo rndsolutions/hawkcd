@@ -209,12 +209,12 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
      * Method void for extracting TaskDefinitions from JobDefinition provided. Fills in a provided
      * List.
      */
-    private void extractTaskDefinitionsFromJobDefinitions(List<JobDefinition> jobDefinitions, List<TaskDefinition> taskDefinitions) {
-        for (JobDefinition jobDefinition : jobDefinitions) {
-            List<TaskDefinition> taskDefinitionsList = jobDefinition.getTaskDefinitions();
-            taskDefinitions.addAll(taskDefinitionsList);
-        }
-    }
+//    private void extractTaskDefinitionsFromJobDefinitions(List<JobDefinition> jobDefinitions, List<TaskDefinition> taskDefinitions) {
+//        for (JobDefinition jobDefinition : jobDefinitions) {
+//            List<TaskDefinition> taskDefinitionsList = jobDefinition.getTaskDefinitions();
+//            taskDefinitions.addAll(taskDefinitionsList);
+//        }
+//    }
 
     /**
      * Method boolean accepts a list of TaskDefinitions, performs name check and decides wheather it

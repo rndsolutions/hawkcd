@@ -1,62 +1,60 @@
 package net.hawkengine.agent.services;
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import net.hawkengine.agent.AgentConfiguration;
-import net.hawkengine.agent.models.FetchMaterialTask;
 
-import java.nio.file.Paths;
+import net.hawkengine.agent.models.FetchMaterialTask;
+import net.hawkengine.agent.services.MaterialService;
+import net.hawkengine.model.MaterialDefinition;
+
 import java.util.Map;
-import java.util.UUID;
 
 public class TFSMaterialService extends MaterialService {
 
     @Override
     public String fetchMaterial(FetchMaterialTask task) {
-        String errorMessage;
+        String errorMessage = "";
 
-        HTTPBasicAuthFilter credentials = this.handleCredentials(task.getMaterialSpecificDetails());
-        if (credentials != null) {
-            super.restClient.addFilter(credentials);
-        }
-
-        String resource = this.constructResource(task.getMaterialSpecificDetails());
-        WebResource webResource = super.restClient.resource(resource);
-        ClientResponse response = webResource.accept("application/zip").get(ClientResponse.class);
-
-        int responseCode = response.getStatus();
-        if (responseCode == 200) {
-
-            String filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), UUID.randomUUID() + ".zip").toString();
-            errorMessage = super.fileManagementService.streamToFile(response.getEntityInputStream(), filePath);
-            if (errorMessage != null) {
-                return errorMessage;
-            }
-
-            String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), task.getPipelineName(), task.getDestination()).toString();
-            errorMessage = super.fileManagementService.unzipFile(filePath, destination);
-            super.fileManagementService.deleteFile(filePath);
-            if (errorMessage != null) {
-                return errorMessage;
-            }
-        } else {
-            errorMessage = this.generateErrorMessage(responseCode);
-        }
+//        HTTPBasicAuthFilter credentials = this.handleCredentials(task.getMaterialSpecificDetails());
+//        if (credentials != null) {
+//            super.restClient.addFilter(credentials);
+//        }
+//
+//        String resource = this.constructResource(task.getMaterialSpecificDetails());
+//        WebResource webResource = super.restClient.resource(resource);
+//        ClientResponse response = webResource.accept("application/zip").get(ClientResponse.class);
+//
+//        int responseCode = response.getStatus();
+//        if (responseCode == 200) {
+//
+//            String filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), UUID.randomUUID() + ".zip").toString();
+//            errorMessage = super.fileManagementService.streamToFile(response.getEntityInputStream(), filePath);
+//            if (errorMessage != null) {
+//                return errorMessage;
+//            }
+//
+//            String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), task.getPipelineName(), task.getDestination()).toString();
+//            errorMessage = super.fileManagementService.unzipFile(filePath, destination);
+//            super.fileManagementService.deleteFile(filePath);
+//            if (errorMessage != null) {
+//                return errorMessage;
+//            }
+//        } else {
+//            errorMessage = this.generateErrorMessage(responseCode);
+//        }
 
         return errorMessage;
     }
 
-    private HTTPBasicAuthFilter handleCredentials(Map<String, Object> materialSpecificDetails) {
+    private HTTPBasicAuthFilter handleCredentials(MaterialDefinition definition) {
 
         HTTPBasicAuthFilter credentials = null;
-
-        if (materialSpecificDetails.containsKey("username") && materialSpecificDetails.containsKey("password")) {
-            String username = materialSpecificDetails.get("username").toString();
-            String password = super.securityService.decrypt(materialSpecificDetails.get("password").toString());
-
-            credentials = new HTTPBasicAuthFilter(username, password);
-        }
+//
+//        if (definition.getUsername() != null && definition.getPassword() != null) {
+//            String username = materialSpecificDetails.get("username").toString();
+//            String password = super.securityService.decrypt(materialSpecificDetails.get("password").toString());
+//
+//            credentials = new HTTPBasicAuthFilter(username, password);
+//        }
 
         return credentials;
     }

@@ -10,7 +10,9 @@ import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
 
@@ -69,5 +71,14 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     public ServiceResult delete(String pipelineDefinitionId) {
         return super.delete(pipelineDefinitionId);
+    }
+
+    @Override
+    public ServiceResult getAllAutomaticallyScheduledPipelines() {
+        ServiceResult result;
+        List<PipelineDefinition> allPipelines = (List<PipelineDefinition>) this.getAll().getObject();
+        List<PipelineDefinition> scheduledPipelines = allPipelines.stream().filter(p -> p.isAutoSchedulingEnabled()).collect(Collectors.toList());
+        result = super.createServiceResultArray(scheduledPipelines, false, "retrieved successfully");
+        return result;
     }
 }

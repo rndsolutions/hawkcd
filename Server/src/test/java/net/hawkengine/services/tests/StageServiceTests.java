@@ -66,6 +66,7 @@ public class StageServiceTests {
         final String expectedMessage = "Stages retrieved successfully.";
         List<Stage> stageList = new ArrayList<>();
         this.insertIntoDb();
+        this.stageService.add(this.stage);
         stageList.add(this.stage);
 
         //Act
@@ -83,15 +84,15 @@ public class StageServiceTests {
 
     @Test
     public void getById_returnsOneObject(){
-
         //Arrange
         this.insertIntoDb();
+        this.stageService.add(this.stage);
+        String expectedMessage = "Stage " + this.stage.getId() + " retrieved successfully.";
 
         //Act
         ServiceResult actualResult = this.stageService.getById(this.stage.getId());
         Stage actualStage = (Stage)actualResult.getObject();
-        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
-                " "  + actualStage.getId() + " retrieved successfully.";
+
 
         //Assert
         assertFalse(actualResult.hasError());
@@ -155,17 +156,17 @@ public class StageServiceTests {
     }
 
     @Test
-    public void delete_oneStage_nullObject(){
+    public void delete_oneStage_successMessage(){
         //Arrange
         this.insertIntoDb();
-        Stage secondStage= this.stage;
-        this.stageService.add(secondStage);
+        Stage stageTwo = new Stage();
+        stageTwo.setPipelineId(this.pipeline.getId());
+        this.stageService.add(stageTwo);
+        this.stageService.add(this.stage);
+        String expectedMessage = "Stage " + this.stage.getId() + " deleted successfully.";
 
         //Act
         ServiceResult actualResult = this.stageService.delete(this.stage.getId());
-        Stage actualStatus = (Stage)actualResult.getObject();
-        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
-                " "  + actualStatus.getId() + " deleted successfully.";
 
         //Assert
         assertFalse(actualResult.hasError());
@@ -183,6 +184,5 @@ public class StageServiceTests {
         this.pipelineService.add(this.pipeline);
         this.stage = new Stage();
         this.stage.setPipelineId(this.pipeline.getId());
-        this.stageService.add(this.stage);
     }
 }
