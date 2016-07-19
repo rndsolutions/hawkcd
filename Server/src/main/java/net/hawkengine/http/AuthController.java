@@ -11,6 +11,7 @@ import net.hawkengine.model.dto.LoginDto;
 import net.hawkengine.model.dto.RegisterDto;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.github.GitHubService;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,6 +96,7 @@ public class AuthController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
     public Response login(LoginDto login) throws IOException {
+        String hashedPassword = DigestUtils.sha256Hex(login.getPassword());
 
         ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
 
@@ -102,7 +104,7 @@ public class AuthController {
         for(User usr:all){
             String uEmail = usr.getEmail();
             String uPass = usr.getPassword();
-            if ( uEmail.equals(login.getEmail()) && uPass.equals(login.getPassword())){
+            if ( uEmail.equals(login.getEmail()) && uPass.equals(hashedPassword)){
                 user = usr;
                 break;
             }
@@ -125,6 +127,8 @@ public class AuthController {
     @Path("/register")
     public Response register(RegisterDto newUser){
 
+
+
         ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
 
         User user = null;
@@ -142,7 +146,9 @@ public class AuthController {
             User usr =  new User();
             usr.setEmail(newUser.getEmail());
             //TODO: Implement password hashing
-            usr.setPassword(newUser.getPassword());
+
+            String hashedPassword = DigestUtils.sha256Hex(newUser.getPassword());
+            usr.setPassword(hashedPassword);
             this.usrService.add(usr);
 
             return Response.status(Response.Status.CREATED)
