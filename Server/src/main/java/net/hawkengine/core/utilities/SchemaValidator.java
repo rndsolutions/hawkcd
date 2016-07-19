@@ -1,7 +1,6 @@
 package net.hawkengine.core.utilities;
 
 import net.hawkengine.model.*;
-import net.hawkengine.model.enums.MaterialType;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -72,11 +71,11 @@ public class SchemaValidator {
                 return this.message = "ERROR: PIPELINE DEFINITION NAME IS INVALID.";
             }
 
-            int pipelineMaterial = pipelineDefinition.getMaterials().size();
+            int pipelineMaterial = pipelineDefinition.getMaterialDefinitions().size();
             if (pipelineMaterial == 0) {
                 return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
             } else {
-                List<MaterialDefinition> materials = pipelineDefinition.getMaterials();
+                List<MaterialDefinition> materials = pipelineDefinition.getMaterialDefinitions();
                 materials.forEach(this::validate);
             }
 

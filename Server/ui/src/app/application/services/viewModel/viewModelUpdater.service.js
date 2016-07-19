@@ -92,7 +92,7 @@ angular
             viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
                 materialDefinitions.forEach(function (currentMaterial, materialIndex, materialArray) {
                     if(currentPipeline.id == currentMaterial.pipelineDefinitionId){
-                        viewModel.allPipelines[index].materials = materialDefinitions;
+                        viewModel.allPipelines[index].materialDefinitions = materialDefinitions;
                     }
                 });
             });
@@ -106,7 +106,7 @@ angular
         viewModelUpdater.addMaterialDefinition = function (materialDefinition) {
             viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
                 if(currentPipeline.id == materialDefinition.pipelineDefinitionId) {
-                    viewModel.allPipelines[index].materials.push(materialDefinition);
+                    viewModel.allPipelines[index].materialDefinitions.push(materialDefinition);
                 }
             });
         };
@@ -116,7 +116,7 @@ angular
                 if(currentPipeline.id == materialDefinition.pipelineDefinitionId) {
                     viewModel.allPipelines[index].materials.forEach(function (currentMaterial, materialIndex, array) {
                         if(currentMaterial.id == materialDefinition.id){
-                            viewModel.allPipelines[index].materials[materialIndex] = materialDefinition;
+                            viewModel.allPipelines[index].materialDefinitions[materialIndex] = materialDefinition;
                             toaster.pop('success', "Notification", "Material " + materialDefinition.name + " updated!");
                         }
                     });

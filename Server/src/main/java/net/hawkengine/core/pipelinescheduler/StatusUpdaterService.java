@@ -60,11 +60,14 @@ public class StatusUpdaterService {
 
     public void updateStageStatusesInSequence(List<Stage> stages) {
         for (Stage currentStage : stages) {
-            this.updateStageStatus(currentStage);
             if (currentStage.getStatus() == StageStatus.NOT_RUN) {
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
                 break;
-            } else if (currentStage.getStatus() == StageStatus.PASSED) {
+            }else if (currentStage.getStatus() == StageStatus.IN_PROGRESS){
+                this.updateStageStatus(currentStage);
+                break;
+            }
+            else if (currentStage.getStatus() == StageStatus.PASSED) {
                 continue;
             } else {
                 break;

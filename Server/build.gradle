@@ -107,6 +107,8 @@ dependencies {
 
     compile 'org.unitils:unitils-core:3.4.2'
 
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.4.0.201606070830-r'
+
     //Mongo
 
     compile 'org.mongodb:mongodb-driver:3.2.2'
