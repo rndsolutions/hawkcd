@@ -211,11 +211,15 @@ public class MaterialHandlerServiceTest {
         // Arrange
         Material material = new Material();
         GitMaterial gitMaterial = Mockito.mock(GitMaterial.class);
-        Mockito.when(gitMaterial.getErrorMessage()).thenReturn("not empty");
         material.setMaterialDefinition(gitMaterial);
-
+        ServiceResult updatedServiceResult = new ServiceResult();
+        updatedServiceResult.setError(true);
+        updatedServiceResult.setMessage("");
+        updatedServiceResult.setObject(gitMaterial);
+        Mockito.when(gitMaterial.getErrorMessage()).thenReturn("not empty").thenReturn("new message");
         Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class)))
                 .thenReturn(null);
+        Mockito.when(this.mockedMaterialDefinitionService.update(Mockito.any(MaterialDefinition.class))).thenReturn(updatedServiceResult);
 
         // Act
         Material actualResult = this.materialHandlerService.updateMaterial(material);
