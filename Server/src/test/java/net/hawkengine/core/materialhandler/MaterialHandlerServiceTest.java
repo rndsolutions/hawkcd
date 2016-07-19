@@ -210,7 +210,8 @@ public class MaterialHandlerServiceTest {
     public void updateMaterial_couldNotGetLatestMaterial_null() {
         // Arrange
         Material material = new Material();
-        GitMaterial gitMaterial = new GitMaterial();
+        GitMaterial gitMaterial = Mockito.mock(GitMaterial.class);
+        Mockito.when(gitMaterial.getErrorMessage()).thenReturn("not empty");
         material.setMaterialDefinition(gitMaterial);
 
         Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class)))
