@@ -96,6 +96,7 @@ angular
                     }
                 });
             });
+            viewModel.allMaterialDefinitions = materialDefinitions;
             toaster.pop('success', "Notification", "Materials updated!");
         };
 

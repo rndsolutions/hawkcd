@@ -1,66 +1,16 @@
-<h3 class="page-title"> {{pipesHistory.labels.headers.history}}</h3>
+<div class="col-md-9 custom">
+    <div class="tabbable-custom nav-justified">
+        <ul class="nav nav-tabs nav-justified custom">
+            <li ui-sref-active="active">
+                <a data-target="#current" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineHistory.current"> Current </a>
+            </li>
+            <li ui-sref-active="active">
+                <a data-target="#history" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineHistory.history({groupName:pipesHistory.groupName,pipelineName:pipesHistory.pipelineName})"> History </a>
+            </li>
+        </ul>
+        <div class="tab-content" ui-view>
 
-<div class="page-bar">
-  <ul class="page-breadcrumb">
-    <li>
-      <i class="icon-home"></i>
-      <a ui-sref="index.pipelines"> <span>{{pipesHistory.labels.breadCrumb.pipelines}}</span></a>
-    </li>
-    <li>
-      <i class="fa fa-angle-right"></i>
-      <a ui-sref="index.pipelineHistory({groupName:pipesHistory.groupName, pipelineName:pipesHistory.pipelineName})"> <span>{{pipesHistory.pipelineName}}</span></a>
-    </li>
-  </ul>
+        </div>
+    </div>
 </div>
 
-<div class="portlet box green">
-  <div class="portlet-title">
-    <div class="caption">
-      <i class="fa fa-cogs"></i>{{pipesHistory.pipelineName}}
-    </div>
-    <div class="tools right">
-      <a href="javascript:;" class="collapse"> </a>
-    </div>
-  </div>
-  <div class="portlet-body">
-    <div class="table-responsive">
-      <table class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-          <th ng-repeat="heading in pipesHistory.labels.table">{{heading}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="run in pipesHistory.currentPipelineRuns"
-            ui-sref="index.pipelineRunManagement({pipelineName:run.name, executionID: run.executionID, groupName: run.groupName})">
-          <td>{{run.executionId}}</td>
-          <td>{{run.start | date:'dd.MM.yyyy \'at\' HH:MM'}}</td>
-          <td>{{run.triggerReason}}</td>
-          <td>{{run.executionMaterials.commit-id}}</td>
-          <td>{{run.status}}</td>
-          <td>TEMP</td>
-          <td>
-                            <span ng-repeat="stage in run.stages">
-              <span ng-if="stage.status == 'PASSED'">
-  <button type="button" class="btn btn-success s"></button>
-               </span>
-                            <span ng-if="stage.status=='FAILED'">
-                <button type="button" class="btn btn-danger s"></button>
-                </span>
-                            <span ng-if="stage.status == 'NOT_RUN'">
-                   <button type="button" class="btn default s"></button>
-                </span>
-                           <span ng-if="stage.status == 'IN_PROGRESS'">
-                   <button type="button" class="btn yellow s"></button>
-                </span>
-                            <span ng-if="stage.status == 'SCHEDULED'">
-                    <button type="button" class="btn yellow-mint s"></button>
-                </span>
-                            </span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>

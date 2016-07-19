@@ -224,7 +224,7 @@ angular
             var className = "TaskDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.ExecTask\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
+            var args = ["{\"packageName\": \"net.hawkengine.model.TaskDefinition\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -236,7 +236,7 @@ angular
             var className = "TaskDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.ExecTask\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
+            var args = ["{\"packageName\": \"net.hawkengine.model.TaskDefinition\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

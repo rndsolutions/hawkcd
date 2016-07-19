@@ -1,7 +1,7 @@
 <div class="panel">
     <div class="panel-heading bg-grey-cararra">
         <div class="caption font-green-sharp bold uppercase custom-caption">
-            {{pipesRunManagement.selectedStage.Runs[0].Name}}
+            {{pipesRunManagement.selectedStage.jobs[0].jobDefinitionName}}
         </div>
     </div>
 
@@ -19,18 +19,18 @@
                     <a class="list-toggle-container" data-toggle="collapse" data-target="#skipped"
                        aria-expanded="false">
                         <div class="list-toggle uppercase bg-grey-salt border-dark">
-                            {{pipesRunManagement.runsInfoMenu.skipped}}
+                            Not Run
                             <span class="badge badge-default pull-right bg-white font-dark bold">{{pipesRunManagement.getJobResults().skippedJobs}}</span>
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="skipped" aria-expanded="false">
-                        <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
+                        <ul ng-repeat="job in pipesRunManagement.currentPipelineRunStages[pipesRunManagement.toggleRun][0].jobs">
                             <li class="mt-list-item border-grey-salt"
-                                ng-if="job.Status == 'Passed' && job.State == 'None'"
+                                ng-if="job.status == 'AWAITING'"
                                 ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                        <a href="javascript:;" class="bg-font-white">{{job.jobDefinitionName}}</a>
                                     </h3>
                                 </div>
                             </li>
@@ -44,13 +44,13 @@
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="scheduled" aria-expanded="false">
-                        <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
+                        <ul ng-repeat="job in pipesRunManagement.currentPipelineRunStages[pipesRunManagement.toggleRun][0].jobs">
                             <li class="mt-list-item border-yellow-lemon bg-hover-yellow-saffron"
-                                ng-if="job.Status == 'Passed' && job.State == 'Scheduled'"
+                                ng-if="job.status == 'SCHEDULED'"
                                 ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                        <a href="javascript:;" class="bg-font-white">{{job.jobDefinitionName}}</a>
                                     </h3>
                                 </div>
                             </li>
@@ -64,13 +64,13 @@
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="running" aria-expanded="false">
-                        <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
+                        <ul ng-repeat="job in pipesRunManagement.currentPipelineRunStages[pipesRunManagement.toggleRun][0].jobs">
                             <li class="mt-list-item border-dark"
-                                ng-if="job.Status == 'Passed' && job.State == 'Running'"
+                                ng-if="job.status == 'RUNNING'"
                                 ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                        <a href="javascript:;" class="bg-font-white">{{job.jobDefinitionName}}</a>
                                     </h3>
                                 </div>
                             </li>
@@ -95,15 +95,15 @@
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="passed" aria-expanded="false">
-                        <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
-                            <li class="mt-list-item done" ng-if="job.Status == 'Passed' && job.State == 'Completed'"
+                        <ul ng-repeat="job in pipesRunManagement.currentPipelineRunStages[pipesRunManagement.toggleRun][0].jobs">
+                            <li class="mt-list-item done" ng-if="job.status == 'PASSED'"
                                 ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-icon-container">
                                     <i class="icon-check"></i>
                                 </div>
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                        <a href="javascript:;" class="bg-font-white">{{job.jobDefinitionName}}</a>
                                     </h3>
                                 </div>
                             </li>
@@ -116,15 +116,16 @@
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="failed" aria-expanded="false">
-                        <ul ng-repeat="job in pipesRunManagement.selectedStage.Runs[pipesRunManagement.selectedStage.LastRunSelected-1].Jobs">
+                        <ul ng-repeat="job in pipesRunManagement.currentPipelineRunStages[pipesRunManagement.toggleRun][0].jobs">
                             <li class="mt-list-item bg-hover-red-sunglo border-red-thunderbird"
-                                ng-if="job.Status == 'Failed'" ng-click="pipesRunManagement.selectJob($index)">
+                                ng-if="job.status == 'FAILED'"
+                                ng-click="pipesRunManagement.selectJob($index)">
                                 <div class="list-icon-container">
                                     <i class="icon-close"></i>
                                 </div>
                                 <div class="list-item-content">
                                     <h3 class="uppercase">
-                                        <a href="javascript:;" class="bg-font-white">{{job.Name}}</a>
+                                        <a href="javascript:;" class="bg-font-white">{{job.jobDefinitionName}}</a>
                                     </h3>
                                 </div>
                             </li>

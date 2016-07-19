@@ -14,16 +14,19 @@ angular
             },
             table: {
                 run: 'Run',
+                repo: 'Repository',
+                commitId: 'Commit',
+                branch: 'Branch',
                 start: 'Start',
                 trigger: 'Trigger',
-                change: 'Change',
                 state: 'State',
-                outcome: 'Outcome',
                 execution: 'Execution'
             }
         };
 
         vm.currentPipelineRuns = [];
+
+        vm.currentJob = [];
 
         //Get the current group and pipeline name
         vm.groupName = $stateParams.groupName;
@@ -31,17 +34,26 @@ angular
 
         vm.allPipelineRuns = viewModel.allPipelineRuns;
 
-        $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
+                    if(currentPipelineRun.triggerReason == null){
+                        currentPipelineRun.triggerReason = "User";
+                    }
                     vm.currentPipelineRuns.push(currentPipelineRun);
                 }
             });
+            vm.currentPipelineRuns.sort(function (a, b) {
+                return b.executionId-a.executionId;
+            });
+            if(vm.currentPipelineRuns.length > 0){
+                vm.currentJob = vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs[vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs.length - 1];
+            }
             console.log(vm.allPipelineRuns);
             console.log(vm.currentPipelineRuns);
-        }, true);
+        });
 
 
         //Gets all executions of a pipeline by given name

@@ -6409,10 +6409,13 @@ Forms
 .form-control {
   outline: none !important;
   resize: none;
-  overflow-y: scroll;
   box-shadow: none !important; }
   .form-control.height-auto {
     height: auto; }
+
+.form-control-custom {
+  overflow-y: scroll!important;
+}
 
 .input-group-addon > i {
   color: #c5cdda; }
