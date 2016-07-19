@@ -15,17 +15,13 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
+import redis.embedded.RedisServer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import redis.embedded.RedisServer;
-
-
 public class HawkServer {
-
-    //TODO: pull this from the config
-    private static final int PORT = 8080;
+    private static final int PORT = ServerConfiguration.getConfiguration().getServerPort();
 
     private Server server;
     private Thread pipelinePreparer;
@@ -35,14 +31,10 @@ public class HawkServer {
     private RedisServer redisServer;
 
     public HawkServer() throws IOException, URISyntaxException {
-
-        //TODO:  move this to the config file
-        RedisManager.initializeEmbededDb(6379);
-
+        RedisManager.initializeEmbededDb(ServerConfiguration.getConfiguration().getEmbeddedDbPort());
         RedisManager.startEmbededDb();
+        RedisManager.connect(ServerConfiguration.getConfiguration().getServerName());
 
-        //TODO:  move this to the config file
-        RedisManager.connect("localhost");
         this.server = new Server();
         this.pipelinePreparer = new Thread(new PipelinePreparer());
         this.jobAssigner = new Thread(new JobAssigner());

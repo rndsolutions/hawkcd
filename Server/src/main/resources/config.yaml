@@ -1,0 +1,3 @@
+serverName: "localhost"
+serverPort: 8080
+embeddedDbPort: 6379
