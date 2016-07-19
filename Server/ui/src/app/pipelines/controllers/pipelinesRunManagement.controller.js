@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesRunManagement', function ($state, $scope, $stateParams, $interval, pipeStats, runManagementService, pipeExec, pipeConfig, authDataService) {
+    .controller('PipelinesRunManagement', function ($state, $scope, $stateParams, $interval, pipeStats, runManagementService, pipeExec, pipeConfig, authDataService, viewModel) {
         var vm = this;
 
         $scope.$on("$destroy", function () {
@@ -24,6 +24,8 @@ angular
 
         //Selected jobs from re-run modal.
         vm.selectedJobsForReRun = [];
+
+        vm.lastRunSelected = 1;
 
         vm.groupName = $stateParams.groupName;
         vm.pipelineName = $state.params.pipelineName;
@@ -101,6 +103,46 @@ angular
         var nameOfStage = '',
             resLength = 0;
         vm.selectedStageIndexInMainDB = 0;
+
+        vm.allPipelineRuns = [];
+
+        vm.currentPipelineRun = [];
+
+        vm.currentPipelineRunStages = [];
+
+        vm.temporaryStages = [];
+
+        // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+        //     vm.allPipelineRuns = viewModel.allPipelineRuns;
+        // }, true);
+
+        $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+            vm.allPipelineRuns = viewModel.allPipelineRuns;
+            viewModel.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+                if(currentPipelineRun.pipelineDefinitionName == vm.pipelineName && currentPipelineRun.executionId == vm.pipelineExecutionID){
+                    vm.currentPipelineRun = currentPipelineRun;
+                    viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                        if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                            vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
+                            vm.currentPipelineRunStages.forEach(function (currentStageDefinition, stageDefinitionIndex, stageDefinitionArray) {
+                                vm.currentPipelineRun.stages.forEach(function (currentStageRun, stageRunIndex, stageRunarray) {
+                                    if(currentStageDefinition.id == currentStageRun.stageDefinitionId) {
+                                        vm.temporaryStages.push(currentStageRun);
+                                    }
+                                });
+                                vm.currentPipelineRunStages[stageDefinitionIndex] = vm.temporaryStages;
+                                vm.temporaryStages = [];
+                            });
+                        }
+                    });
+                }
+            });
+            if(vm.currentPipelineRunStages.length > 1){
+                if(vm.selectedJob == null && vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs != null){
+                    vm.selectedJob = vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs[vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs.length - 1];
+                }
+            }
+        });
 
         // vm.getAll = function () {
         //     var tokenIsValid = authDataService.checkTokenExpiration();
@@ -374,44 +416,44 @@ angular
 
             vm.selectedStageIndexInMainDB = index;
 
-            //  Get the selected stage - with LastRun + all Runs
-            vm.selectedStage = vm.groupStages[index];
-            nameOfStage = vm.selectedStage.Runs[0].Name;
-
-            //Need this variable, so the runs are displayed in the modal for re run stage
-            vm.selectedStageRunsShow = vm.groupStages[index];
-
-            var runsLength = vm.selectedStage.Runs.length - 1;
-
-            vm.selectedJob = vm.selectedStage.Runs[runsLength].Jobs[0];
-            vm.selectedRunIndex = runsLength;
-            vm.selectedRunID = runsLength;
-            vm.jobIndex = 0;
-
-            //Check if selected stage does not have LastRunSelected - in this case assign it to the value of LastRun
-            if (vm.selectedStage.LastRunSelected == undefined) {
-                vm.selectedStage.LastRunSelected = vm.selectedStage.LastRun.ExecutionID;
-            }
-
-            //Every time the selected stage is changed, selected jobs is set to empty array
-            vm.selectedJobsForReRun = [];
+            // //  Get the selected stage - with LastRun + all Runs
+            vm.selectedStage = vm.currentPipelineRunStages[index];
+            // nameOfStage = vm.selectedStage.Runs[0].Name;
+            //
+            // //Need this variable, so the runs are displayed in the modal for re run stage
+            // vm.selectedStageRunsShow = vm.groupStages[index];
+            //
+            // var runsLength = vm.selectedStage.Runs.length - 1;
+            //
+            // vm.selectedJob = vm.selectedStage.Runs[runsLength].Jobs[0];
+            // vm.selectedRunIndex = runsLength;
+            // vm.selectedRunID = runsLength;
+            // vm.jobIndex = 0;
+            //
+            // //Check if selected stage does not have LastRunSelected - in this case assign it to the value of LastRun
+            // if (vm.selectedStage.LastRunSelected == undefined) {
+            //     vm.selectedStage.LastRunSelected = vm.selectedStage.LastRun.ExecutionID;
+            // }
+            //
+            // //Every time the selected stage is changed, selected jobs is set to empty array
+            // vm.selectedJobsForReRun = [];
         };
 
         vm.selectRun = function () {
-            vm.selectedRunID = vm.groupStages[vm.selectedStageIndexInMainDB].LastRunSelected - 1;
+            //vm.selectedRunID = vm.groupStages[vm.selectedStageIndexInMainDB].LastRunSelected - 1;
 
-            vm.groupStages[vm.selectedStageIndexInMainDB].LastRun = vm.selectedStage.Runs[vm.selectedRunID - 1];
-
-            if (vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID - 1] != undefined) {
-                nameOfStage = vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID - 1].Name;
-            }
-
-            //Prevents errors in console when stage re-run
-            if (vm.selectedStage.Runs[vm.selectedRunID - 1] != undefined) {
-                vm.selectedJob = vm.selectedStage.Runs[vm.selectedRunID - 1].Jobs[0];
-            }
-            vm.selectedRunIndex = vm.selectedRunID - 1;
-            vm.jobIndex = 0;
+            // vm.groupStages[vm.selectedStageIndexInMainDB].LastRun = vm.selectedStage.Runs[vm.selectedRunID - 1];
+            //
+            // if (vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID - 1] != undefined) {
+            //     nameOfStage = vm.groupStages[vm.selectedStageIndexInMainDB].Runs[vm.selectedRunID - 1].Name;
+            // }
+            //
+            // //Prevents errors in console when stage re-run
+            // if (vm.selectedStage.Runs[vm.selectedRunID - 1] != undefined) {
+            //     vm.selectedJob = vm.selectedStage.Runs[vm.selectedRunID - 1].Jobs[0];
+            // }
+            // vm.selectedRunIndex = vm.selectedRunID - 1;
+            // vm.jobIndex = 0;
 
         };
 
@@ -420,9 +462,9 @@ angular
         //});
 
         vm.selectJob = function (jobIndex) {
-            var selectedRunIndex = vm.selectedStage.LastRunSelected - 1;
+            var selectedRunIndex = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected] - 1;
 
-            vm.selectedJob = vm.selectedStage.Runs[selectedRunIndex].Jobs[jobIndex];
+            vm.selectedJob = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[jobIndex];
             vm.selectedRunIndex = selectedRunIndex;
             vm.jobIndex = jobIndex;
         };
@@ -438,28 +480,27 @@ angular
             };
 
             //Prevents initial console errors
-            if (vm.selectedStage != undefined && vm.selectedStage.LastRunSelected >= 1 && vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1] != undefined) {
-                for (var i = 0; i < vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs.length; i += 1) {
-                    if (vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].Status == 'Passed' &&
-                        vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].State == 'None') {
+            //if (vm.selectedStage != undefined && vm.selectedStage.LastRunSelected >= 1 && vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1] != undefined) {
+            if(vm.currentPipelineRunStages.length > 0 ) {
+                for (var i = 0; i < vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs.length; i += 1) {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'AWAITING') {
                         allJobs.skippedJobs += 1;
                     }
-                    if (vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].Status == 'Passed' &&
-                        vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].State == 'Scheduled') {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'SCHEDULED') {
                         allJobs.scheduledJobs += 1;
                     }
-                    if (vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].Status == 'Passed' &&
-                        vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].State == 'Running') {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'RUNNING') {
                         allJobs.inProgress += 1;
                     }
-                    if (vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].Status == 'Passed' &&
-                        vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].State == 'Completed') {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'PASSED') {
                         allJobs.passedJobs += 1;
                     }
-                    if (vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1].Jobs[i].Status == 'Failed') {
+                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'FAILED') {
                         allJobs.failedJobs += 1;
                     }
                 }
+                console.log(vm.lastRunSelected);
+                //}
             }
             return allJobs;
         };
@@ -493,7 +534,7 @@ angular
                 }
             }
 
-        }
+        };
 
         //Deselects all input job checkboxes
         vm.deSelectAll = function () {
@@ -507,13 +548,13 @@ angular
 
         vm.setSelectedStageForReRun = function (stage) {
             vm.selectedStage = stage;
-        }
+        };
 
         vm.selectAlllJobs = function (stage) {
             for (var i = 0; i < stage.Runs[stage.Runs.length - 1].Jobs.length; i++) {
                 vm.selectedJobsForReRun.push(stage.Runs[stage.Runs.length - 1].Jobs[i].Name);
             }
-        }
+        };
 
         //Initialize the controller
         // vm.getAll(true);

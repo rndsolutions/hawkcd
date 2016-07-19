@@ -18,7 +18,7 @@ angular
 
         $scope.openSidebar = function () {
             //getLatestCommit();
-            $scope.pageSidebarClosed = !$scope.pageSidebarClosed;
+            //$scope.pageSidebarClosed = !$scope.pageSidebarClosed;
         };
 
         $scope.userLoginForm = {};

@@ -107,7 +107,7 @@ public class AgentController {
             agent.setRunning(false);
             agent.setAssigned(false);
             ServiceResult result = this.agentService.update(agent);
-            EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+            EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
         }
 
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();

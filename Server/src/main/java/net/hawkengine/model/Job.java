@@ -144,4 +144,12 @@ public class Job extends DbEntry {
     public void setReport(StringBuilder report) {
         this.report = report;
     }
+
+    public String getJobDefinitionName() {
+        return jobDefinitionName;
+    }
+
+    public void setJobDefinitionName(String jobDefinitionName) {
+        this.jobDefinitionName = jobDefinitionName;
+    }
 }

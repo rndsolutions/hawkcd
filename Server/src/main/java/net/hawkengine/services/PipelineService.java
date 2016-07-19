@@ -162,6 +162,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             Job job = new Job();
             job.setPipelineId(stage.getPipelineId());
             job.setJobDefinitionId(jobDefinition.getId());
+            job.setJobDefinitionName(jobDefinition.getName());
             job.setStageId(stage.getId());
             job.setJobDefinitionName(jobDefinition.getName());
             jobs.add(job);

@@ -44,10 +44,17 @@ angular
 
         vm.currentAgents = viewModel.allAgents;
 
-        $scope.$watch(function () { return viewModel.allAgents }, function (newVal, oldVal) {
+        $scope.$watchCollection(function () { return viewModel.allAgents }, function (newVal, oldVal) {
             vm.currentAgents = viewModel.allAgents;
+            vm.currentAgents.forEach(function (currentAgent, agentIndex, agentArray) {
+                if(currentAgent.isRunning == false){
+                    vm.currentAgents[agentIndex].status = "Idle";
+                } else if(currentAgent.isRunning == true) {
+                    vm.currentAgents[agentIndex].status = "Running";
+                }
+            });
             console.log(vm.currentAgents);
-        }, true);
+        });
 
         vm.setAgentToDelete = function (agent) {
             vm.agentToDelete = agent;

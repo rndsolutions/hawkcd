@@ -537,3 +537,11 @@ p {
     padding: 50px;
     background-color: aliceblue;
 }
+
+.z-index-low {
+    z-index: 1!important;
+}
+
+.z-index-high {
+    z-index: 10!important;
+}
