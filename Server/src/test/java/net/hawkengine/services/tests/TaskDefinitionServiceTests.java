@@ -264,7 +264,6 @@ public class TaskDefinitionServiceTests {
         Mockito.when(mockedJobDefinitionService.getById(Mockito.anyString()).getObject()).thenReturn(mockedJobDefinition);
         Mockito.when(mockedJobDefinitionService.update(Mockito.any(JobDefinition.class))).thenReturn(mockedServiceResult);
 
-
         //Act
         ServiceResult actualExecResult = taskDefinitionServiceToTest.add(mockedTaskDefinition);
 
