@@ -47,7 +47,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     @Override
     public ServiceResult add(Agent agent) {
         ServiceResult result = super.add(agent);
-        EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
+        EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "add", result);
         return result;
     }
 

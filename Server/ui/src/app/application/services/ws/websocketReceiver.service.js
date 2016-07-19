@@ -30,6 +30,9 @@ angular
                     getById: function (object) {
                         viewModelUpdater.updateAgent(object.result);
                     },
+                    add: function (object) {
+                        viewModelUpdater.addAgent(object.result);
+                    },
                     update: function (object) {
                         viewModelUpdater.updateAgent(object.result);
                     },
