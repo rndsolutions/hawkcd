@@ -3,7 +3,6 @@ package net.hawkengine.core.materialhandler;
 import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
-import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.services.MaterialDefinitionService;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MaterialUpdaterFactory.class })
+@PrepareForTest({MaterialUpdaterFactory.class})
 public class MaterialHandlerServiceTest {
     private static final String MATERIAL_ONE = "MaterialOne";
 
@@ -31,8 +30,6 @@ public class MaterialHandlerServiceTest {
     private IMaterialDefinitionService mockedMaterialDefinitionService;
     private IMaterialService mockedMaterialService;
     private IMaterialUpdater mockedMaterialUpdater;
-    private MaterialDefinition mockedMaterial;
-    private MaterialDefinition mockedLatestVersionMaterial;
 
     @Before
     public void setUp() {
@@ -125,23 +122,23 @@ public class MaterialHandlerServiceTest {
     @Test
     public void checkPipelineForTriggerMaterials_couldNotGetLatestMaterial_noMessage() {
         // Arrange
-        this.mockedMaterial = Mockito.mock(GitMaterial.class);
-        this.mockedLatestVersionMaterial = Mockito.mock(GitMaterial.class);
-        Mockito.when(this.mockedLatestVersionMaterial.getErrorMessage()).thenReturn("not empty");
+        GitMaterial gitMaterial = Mockito.mock(GitMaterial.class);
+        GitMaterial latestGitMaterial = Mockito.mock(GitMaterial.class);
+        Mockito.when(latestGitMaterial.getErrorMessage()).thenReturn("errorMessage");
 
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         List<MaterialDefinition> materialDefinitions = new ArrayList<>();
         ServiceResult updatedMaterialDefinition = new ServiceResult();
         updatedMaterialDefinition.setMessage("");
         updatedMaterialDefinition.setError(false);
-        updatedMaterialDefinition.setObject(this.mockedMaterial);
+        updatedMaterialDefinition.setObject(gitMaterial);
 
-        Mockito.when(this.mockedMaterial.getErrorMessage()).thenReturn("first").thenReturn("second");
+        Mockito.when(gitMaterial.getErrorMessage()).thenReturn("first").thenReturn("second");
         Mockito.when(this.mockedMaterialDefinitionService.updateMaterialDefinition(Mockito.any(MaterialDefinition.class))).thenReturn(updatedMaterialDefinition);
-        Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class))).thenReturn(this.mockedLatestVersionMaterial);
-        Mockito.when(this.mockedMaterial.isPollingForChanges()).thenReturn(true);
+        Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class))).thenReturn(latestGitMaterial);
+        Mockito.when(gitMaterial.isPollingForChanges()).thenReturn(true);
 
-        materialDefinitions.add(this.mockedMaterial);
+        materialDefinitions.add(gitMaterial);
         pipelineDefinition.setMaterialDefinitions(materialDefinitions);
 
         // Act
