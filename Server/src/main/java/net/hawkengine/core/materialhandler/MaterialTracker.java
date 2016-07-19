@@ -60,8 +60,6 @@ public class MaterialTracker implements Runnable {
                             isPipelineUpdated = false;
                             ServiceResult result = this.pipelineService.delete(pipeline.getId());
                             EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "delete", result);
-                        }
-
                         } else if (material.isUpdated()) {
                             this.materialService.add(material);
                         }
@@ -70,7 +68,7 @@ public class MaterialTracker implements Runnable {
                     if (isPipelineUpdated) {
                         pipeline.setMaterialsUpdated(true);
                         ServiceResult result = this.pipelineService.update(pipeline);
-                    EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
+                        EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
                     }
                 }
 
