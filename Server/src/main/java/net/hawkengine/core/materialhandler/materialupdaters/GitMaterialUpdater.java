@@ -17,7 +17,7 @@ public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
         this.fileManagementService = new FileManagementService();
     }
 
-    public GitMaterialUpdater(IGitService gitService,IFileManagementService fileManagementService) {
+    public GitMaterialUpdater(IGitService gitService, IFileManagementService fileManagementService) {
         this.gitService = gitService;
         this.fileManagementService = fileManagementService;
     }
@@ -25,8 +25,8 @@ public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
     @Override
     public GitMaterial getLatestMaterialVersion(GitMaterial gitMaterial) {
         boolean repositoryExists = this.gitService.repositoryExists(gitMaterial);
-        String directoryToDelete = "Materials" + File.separator + gitMaterial.getName();
         if (!repositoryExists) {
+            String directoryToDelete = "Materials" + File.separator + gitMaterial.getName();
             this.fileManagementService.deleteDirectoryRecursively(directoryToDelete);
             this.gitService.cloneRepository(gitMaterial);
 
