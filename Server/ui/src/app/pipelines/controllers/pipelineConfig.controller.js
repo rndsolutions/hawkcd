@@ -310,6 +310,7 @@ angular
                 name: newStage.name,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
+                    pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
@@ -407,10 +408,11 @@ angular
                         }]
                     };
                 }
-                if (newJob.taskDefinitions.type == 'FETCH_MATERIALS') {
+                if (newJob.taskDefinitions.type == 'FETCH_MATERIAL') {
                     var job = {
                         name: newJob.name,
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                         stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                         taskDefinitions: [{
                             type: newJob.taskDefinitions.type,
@@ -611,14 +613,18 @@ angular
             if (newTask.type == 'FETCH_MATERIAL') {
                 var task = {
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    materialDefinition: JSON.parse(newTask.materialName),
                     type: newTask.type,
-                    materialType: newTask.materialType,
-                    materialName: newTask.materialName,
+                    materialType: JSON.parse(newTask.materialName).type,
+                    materialName: JSON.parse(newTask.materialName).name,
+                    destination: JSON.parse(newTask.materialName).name,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
+                debugger;
             }
             if (newTask.type == 'FETCH_ARTIFACT') {
                 var task = {
@@ -669,9 +675,11 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    materialDefinition: JSON.parse(newTask.materialName),
                     type: newTask.type,
-                    materialType: newTask.materialType,
-                    materialName: newTask.materialName,
+                    materialType: JSON.parse(newTask.materialName).type,
+                    materialName: JSON.parse(newTask.materialName).name,
+                    destination: JSON.parse(newTask.materialName).name,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };

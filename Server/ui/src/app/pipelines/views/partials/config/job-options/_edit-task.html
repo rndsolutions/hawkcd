@@ -116,7 +116,7 @@
                     <div ng-if="pipeConfig.task.type == 'FETCH_MATERIAL'">
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="materialSelect" id="editMaterialSelect" ng-model="pipeConfig.updatedTask.materialName" required>
-                                <option ng-repeat="material in pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions" value="{{material.name}}">{{material.name}}</option>
+                                <option ng-repeat="material in pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions" value="{{material}}">{{material.name}}</option>
                             </select>
                             <label for="editMaterialSelect">Material</label>
                         </div>
