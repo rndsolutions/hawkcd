@@ -3,6 +3,7 @@ package net.hawkengine.core.materialhandler.materialservices;
 import net.hawkengine.model.GitMaterial;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -46,7 +47,7 @@ public class GitService implements IGitService {
             gitMaterial.setErrorMessage("");
 
             return null;
-        } catch (GitAPIException e) {
+        } catch (GitAPIException | JGitInternalException e) {
             gitMaterial.setErrorMessage(e.getMessage());
             return gitMaterial;
         }
