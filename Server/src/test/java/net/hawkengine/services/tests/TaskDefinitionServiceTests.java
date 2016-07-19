@@ -361,32 +361,6 @@ public class TaskDefinitionServiceTests {
     }
 
     @Test
-    public void update_existingName_correctErrorMssage() {
-        //Arrange
-        ExecTask execTask = new ExecTask();
-        execTask.setName("myName");
-        execTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        execTask.setJobDefinitionId(this.jobDefinition.getId());
-        execTask.setStageDefinitionId(this.stageDefinition.getId());
-        ExecTask execTask2 = new ExecTask();
-        execTask2.setName("myName2");
-        execTask2.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        execTask2.setJobDefinitionId(this.jobDefinition.getId());
-        this.addTaskToPipeline(execTask);
-        this.addTaskToPipeline(execTask2);
-        execTask2.setName(execTask.getName());
-
-        //Act
-        ServiceResult actualResult = this.taskDefinitionService.update(execTask2);
-        ExecTask actualResultObject = (ExecTask) actualResult.getObject();
-
-        //Assert
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertNotNull(actualResult.getObject());
-        Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
-    }
-
-    @Test
     public void delete_validId_correctObject() {
         //Assert
         UploadArtifactTask expectedTask = new UploadArtifactTask();
@@ -432,7 +406,6 @@ public class TaskDefinitionServiceTests {
 
     @Test
     public void delete_invalidId_correctErrorMessage() {
-
         //Act
         ServiceResult actualResult = this.taskDefinitionService.delete("12345");
 
