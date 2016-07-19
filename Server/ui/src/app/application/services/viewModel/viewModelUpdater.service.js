@@ -7,14 +7,19 @@ angular
 
         viewModelUpdater.updateAgents = function (agents) {
             viewModel.allAgents = agents;
-            toaster.pop('success', "Notification", "Agents updated!");
+            //toaster.pop('success', "Notification", "Agents updated!");
+        };
+
+        viewModelUpdater.addAgent = function (agent) {
+            viewModel.allAgents.push(agent);
+            toaster.pop('success', "Notification", "Agent " + agent.id + " added!")
         };
 
         viewModelUpdater.updateAgent = function (agent) {
             viewModel.allAgents.forEach(function (currentAgent, index, array) {
                 if (currentAgent.id == agent.id) {
                     viewModel.allAgents[index] = agent;
-                    toaster.pop('success', "Notification", "Agent " + agent.hostName + "-" + agent.id.substr(0, 8) + " updated!");
+                    //toaster.pop('success', "Notification", "Agent " + agent.hostName + "-" + agent.id.substr(0, 8) + " updated!");
                 }
             })
         };
@@ -36,7 +41,7 @@ angular
                 }
             })
         };
-        
+
         viewModelUpdater.deletePipelineGroup = function () {
             adminGroupService.getAllPipelineGroups();
             toaster.pop('success', "Notification", "Pipeline Groups updated!")
@@ -160,20 +165,20 @@ angular
                 }
             });
         };
-        
+
         viewModelUpdater.deleteStageDefinition = function (stageDefinition) {
-            
+
         };
-        
+
         viewModelUpdater.getAllJobDefinitions = function (jobDefinitions) {
             viewModel.allJobs = jobDefinitions;
             toaster.pop('success', "Notification", "Jobs updated!")
         };
-        
+
         viewModelUpdater.getJobDefinitionById = function (jobDefinition) {
-            
+
         };
-        
+
         viewModelUpdater.addJobDefinition = function (jobDefinition) {
             //viewModel.allJobs.push(jobDefinition);
             viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
@@ -188,7 +193,7 @@ angular
             });
 
         };
-        
+
         viewModelUpdater.updateJobDefinition = function (jobDefinition) {
             viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
                 if(currentPipeline.id == jobDefinition.pipelineDefinitionId) {
@@ -205,9 +210,9 @@ angular
                 }
             });
         };
-        
+
         viewModelUpdater.deleteJobDefinition = function (jobDefinition) {
-            
+
         };
 
         viewModelUpdater.getAllPipelines = function (pipelines) {
