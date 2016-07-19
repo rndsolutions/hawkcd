@@ -3,8 +3,8 @@ package net.hawkengine.core.materialhandler.materialupdaters;
 import net.hawkengine.core.materialhandler.materialservices.GitService;
 import net.hawkengine.core.materialhandler.materialservices.IGitService;
 import net.hawkengine.model.GitMaterial;
+import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,8 @@ public class GitMaterialUpdaterTest {
     @Before
     public void setUp() throws Exception {
         this.mockedGitService = Mockito.mock(GitService.class);
-        this.gitMaterialUpdater = new GitMaterialUpdater(this.mockedGitService,this.mockedFileManagementService);
+        this.mockedFileManagementService = Mockito.mock(FileManagementService.class);
+        this.gitMaterialUpdater = new GitMaterialUpdater(this.mockedGitService, this.mockedFileManagementService);
     }
 
     @Test
@@ -59,6 +60,7 @@ public class GitMaterialUpdaterTest {
         GitMaterial gitMaterial = new GitMaterial();
         gitMaterial.setErrorMessage("errorMessage");
         Mockito.when(this.mockedGitService.repositoryExists(gitMaterial)).thenReturn(false);
+        Mockito.when(this.mockedFileManagementService.deleteDirectoryRecursively(Mockito.anyString())).thenReturn(null);
         Mockito.when(this.mockedGitService.cloneRepository(gitMaterial)).thenReturn(gitMaterial);
         String expectedResult = "errorMessage";
 
@@ -70,12 +72,12 @@ public class GitMaterialUpdaterTest {
     }
 
     @Test
-    public void getLatestMaterialVersion_couldFetchLatest_null() {
+    public void getLatestMaterialVersion_couldNotFetchLatest_errorMessage() {
         // Arrange
         GitMaterial gitMaterial = new GitMaterial();
         gitMaterial.setErrorMessage("errorMessage");
         Mockito.when(this.mockedGitService.repositoryExists(gitMaterial)).thenReturn(true);
-        Mockito.when(this.mockedGitService.fetchLatestCommit(gitMaterial)).thenReturn(null);
+        Mockito.when(this.mockedGitService.fetchLatestCommit(gitMaterial)).thenReturn(gitMaterial);
         String expectedResult = "errorMessage";
 
         // Act
