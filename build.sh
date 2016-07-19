@@ -1,12 +1,23 @@
 #!/usr/bin/env bash
 
+#fails the build if the exit code is differen than 0
+function failBuild  {
+    if [ $? -eq 0 ]
+        then
+            echo "Successfully created file"
+         else
+            echo "Error building agent" >&2
+           exit;
+    fi
+ }
+
 echo "building the agent.."
 cd Agent
+
 gradle build
+failBuild
 
-echo "$TRAVIS_BUILD_DIR" : $TRAVIS_BUILD_DIR
-
-echo "list current dir:"
+#echo "list current dir:"
 ls -al
 
 echo "creating dist folder.."
@@ -40,16 +51,17 @@ bower install
 
 echo "running the build.."
 gulp build
+failBuild
 
 cd ../
 echo "running the gradle build.."g
 gradle build jacocoTestReport coveralls
-
-echo "current directory: " pwd
+failBuild
 
 echo "copy files server build outputs to the dist folder"
 cp -r build/libs/* ../dist/Server
 
 echo "list current dir:"
 ls -al
+
 
