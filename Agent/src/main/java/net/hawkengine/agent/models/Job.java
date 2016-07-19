@@ -143,13 +143,5 @@ public class Job {
     public void setAssignedAgentId(String assignedAgentId) {
         this.assignedAgentId = assignedAgentId;
     }
-
-    public String getJobDefinitionName() {
-        return jobDefinitionName;
-    }
-
-    public void setJobDefinitionName(String jobDefinitionName) {
-        this.jobDefinitionName = jobDefinitionName;
-    }
 }
 
