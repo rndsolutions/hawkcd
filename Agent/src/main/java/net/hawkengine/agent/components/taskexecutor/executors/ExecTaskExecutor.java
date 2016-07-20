@@ -26,14 +26,10 @@ public class ExecTaskExecutor extends TaskExecutor {
         String command = execTask.getCommand();
         String arguments = String.join(" ", execTask.getArguments());
 
-        String commandAndArguments = command + " " + arguments;
-        String[] args = commandAndArguments.split(" ");
-
         report.append(String.format("Command: %s \n", command));
         report.append(String.format("Arguments: %s \n", arguments));
 
-        ProcessBuilder builder = new ProcessBuilder(args);
-
+        ProcessBuilder builder = new ProcessBuilder(command, arguments);
         builder.redirectErrorStream(true);
 
         if ((execTask.getWorkingDirectory() != null) && !execTask.getWorkingDirectory().isEmpty()) {
@@ -53,19 +49,23 @@ public class ExecTaskExecutor extends TaskExecutor {
             if (Files.exists(path)) {
                 process = builder.start();
 
-                this.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (line.isEmpty()) {
+                        reader.close();
                         break;
                     }
                     LOGGER.info(line);
                     report.append(String.format("%s", line));
                 }
-                reader.close();
 
-                process.destroy();
+                try {
+                    process.waitFor();
+                    process.destroy();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 if ((process != null) && (process.exitValue() == 0)) {
                     this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
@@ -76,7 +76,7 @@ public class ExecTaskExecutor extends TaskExecutor {
                         this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
                     }
                 }
-            } else{
+            } else {
                 this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
             }
 
