@@ -8,12 +8,14 @@ import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.TokenAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.dto.WsContractDto;
 
+import net.hawkengine.model.payload.TokenInfo;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -51,12 +53,24 @@ public class WsEndpoint extends WebSocketAdapter {
         super.onWebSocketConnect(session);
         System.out.println("Socket Connected: " + session);
         EndpointConnector.setWsEndpoint(this);
+
+        String tokenQuery = session.getUpgradeRequest().getQueryString();
+
+        if (!tokenQuery.equals("token=null")){
+            String token = tokenQuery.substring(6);
+
+            TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
+
+            RemoteEndpoint remoteEndpoint = session.getRemote();
+            String userAsString = this.jsonConverter.toJson(tokenInfo.getUser());
+            remoteEndpoint.sendStringByFuture(userAsString);
+        }
+
     }
 
     @Override
     public void onWebSocketText(String message) {
         WsContractDto contract = null;
-        Gson serializer = new Gson();
         RemoteEndpoint remoteEndpoint = null;
 
         try {
@@ -66,7 +80,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 contract = new WsContractDto();
                 contract.setError(true);
                 contract.setErrorMessage("Invalid Json was provided");
-                remoteEndpoint.sendString(serializer.toJson(contract));
+                remoteEndpoint.sendString(this.jsonConverter.toJson(contract));
                 return;
             }
 
@@ -89,14 +103,14 @@ public class WsEndpoint extends WebSocketAdapter {
             contract.setError(result.hasError());
             contract.setErrorMessage(result.getMessage());
 
-            String jsonResult = serializer.toJson(contract);
+            String jsonResult = this.jsonConverter.toJson(contract);
             remoteEndpoint.sendStringByFuture(jsonResult);
         } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         } catch (RuntimeException e) {
             LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
             e.printStackTrace();
-            this.errorDetails(contract, serializer, e, remoteEndpoint);
+            this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
         }
     }
 
