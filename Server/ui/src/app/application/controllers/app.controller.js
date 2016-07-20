@@ -50,6 +50,7 @@ angular
 
         $scope.logoutUser = function () {
             $auth.logout();
+            localStorage.clear();
             $location.path("/authenticate");
         }
 
@@ -139,7 +140,6 @@ angular
               .then(function(response) {
               console.log(response.data)
                   localStorage.setItem('token',response.data);
-              debugger;
                 $auth.setToken(response.data);
                 $location.path("/pipelines");
                   $rootScope.startWebsocket("ws://hawkserver:8080/ws/v1");

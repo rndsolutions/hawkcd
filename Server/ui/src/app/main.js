@@ -148,7 +148,7 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "toaster", "$auth", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, toaster, $auth) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "toaster", "$auth", "$location", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, toaster, $auth, $location) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
@@ -187,14 +187,19 @@ angular
             };
 
             $rootScope.socket.onclose = function (event) {
+                if(localStorage.getItem('token') == null){
+                    $auth.logout();
+                    $location.path('/authenticate');
+                    toaster.pop('error', "Notification", "Authentication failed. Please try again.");
+                    $rootScope.$apply();
+                    return;
+                }
                 if(!window.timerID){
                     window.timerID=setInterval(function(){start(wsServerLocation)}, 5000);
                 }
 
                 toaster.clear();
                 toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
-                console.log($rootScope.token);
-                console.log($rootScope.socket);
                 $rootScope.$apply();
             }
         };
