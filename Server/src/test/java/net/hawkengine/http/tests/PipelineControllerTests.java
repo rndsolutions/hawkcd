@@ -11,24 +11,22 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.omg.IOP.ENCODING_CDR_ENCAPS;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-
 import static org.junit.Assert.assertEquals;
 
 public class PipelineControllerTests extends JerseyTest {
     private static PipelineService pipelineService;
+    private static PipelineDefinitionService pipelineDefinitionService;
     private Pipeline pipeline;
     private PipelineDefinition pipelineDefinition;
-    private PipelineDefinitionService pipelineDefinitionService;
+
+
 
     public Application configure() {
         return new ResourceConfig(PipelineController.class);
@@ -39,6 +37,7 @@ public class PipelineControllerTests extends JerseyTest {
         RedisManager.initializeEmbededDb(6379);
         RedisManager.connect("redis");
         pipelineService = new PipelineService();
+        pipelineDefinitionService = new PipelineDefinitionService();
     }
 
     @AfterClass
@@ -68,9 +67,11 @@ public class PipelineControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/pipelines/" + this.pipeline.getId()).request().get();
+        Pipeline actualResult = response.readEntity(Pipeline.class);
 
         //Assert
         assertEquals(200,response.getStatus());
+        assertEquals(this.pipeline.getId(), actualResult.getId());
         this.removePipeline();
     }
 
@@ -89,34 +90,33 @@ public class PipelineControllerTests extends JerseyTest {
         assertEquals(expectedResult,actualResult);
         this.removePipeline();
     }
-/*
+
     @Test
-    public void addPipeline_pipelineRun_successMessage(){
+    public void addPipeline_pipelineRun_successMessage() {
         //Arrange
         this.prepearePipeline();
         Entity entity = Entity.entity(this.pipeline,"application/json");
 
         //Act
         Response response = target("/pipelines/").request().post(entity);
-        System.out.println(response.readEntity(String.class));
+        Pipeline actualObject = response.readEntity(Pipeline.class);
 
 
         //Assert
         assertEquals(200,response.getStatus());
+        assertEquals(this.pipeline.getId(),actualObject.getId());
         this.removePipeline();
-
-
     }
-*/
 
     private void prepearePipeline(){
         this.pipelineDefinition = new PipelineDefinition();
-        this.pipelineDefinition.setName("pipelineDefinition");
         this.pipelineDefinitionService = new PipelineDefinitionService();
+        this.pipelineDefinition.setName("pipelineDefinition");
         this.pipelineDefinitionService.add(this.pipelineDefinition);
         this.pipeline = new Pipeline();
         this.pipeline.setPipelineDefinitionName(this.pipelineDefinition.getName());
         this.pipeline.setPipelineDefinitionId(this.pipelineDefinition.getId());
+
     }
 
     private void removePipeline(){
