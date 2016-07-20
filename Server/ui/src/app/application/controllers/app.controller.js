@@ -142,6 +142,7 @@ angular
               debugger;
                 $auth.setToken(response.data);
                 $location.path("/pipelines");
+                  $rootScope.startWebsocket("ws://hawkserver:8080/ws/v1");
               })
               .catch(function(response) {
                 console.log(response)

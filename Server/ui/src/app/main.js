@@ -157,7 +157,8 @@ angular
 
         var timerID=0;
 
-        function start(wsServerLocation){
+
+        $rootScope.startWebsocket = function start(wsServerLocation){
             $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
 
             $rootScope.socket.onmessage = function (event) {
@@ -196,8 +197,11 @@ angular
                 console.log($rootScope.socket);
                 $rootScope.$apply();
             }
-        }
-        start(wsServerLocation);
+        };
+        //debugger;
+        // if(_.isEmpty($auth.getToken())){
+        //     start(wsServerLocation);
+        // }
 
     }]);
 
