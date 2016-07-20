@@ -138,7 +138,7 @@ angular
             $auth.login(user)
               .then(function(response) {
               console.log(response.data)
-                  $rootScope.token = response.data;
+                  localStorage.setItem('token',response.data);
               debugger;
                 $auth.setToken(response.data);
                 $location.path("/pipelines");

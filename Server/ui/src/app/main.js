@@ -159,7 +159,7 @@ angular
 
 
         $rootScope.startWebsocket = function start(wsServerLocation){
-            $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
+            $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + localStorage.getItem('token')));
 
             $rootScope.socket.onmessage = function (event) {
                 console.log(event.data);
@@ -199,9 +199,10 @@ angular
             }
         };
         //debugger;
-        // if(_.isEmpty($auth.getToken())){
-        //     start(wsServerLocation);
-        // }
+        if(localStorage.getItem('token') != null){
+            $rootScope.startWebsocket(wsServerLocation);
+            console.log(localStorage.getItem('token'));
+        }
 
     }]);
 
