@@ -99,7 +99,6 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void addJobDefinition_oneJobDefinition_successMessage(){
         //Arrange
         this.prepareJobDefinition();
-        jobDefinitionService.add(this.jobDefinition);
         Entity entity = Entity.entity(this.jobDefinition,"application/json");
 
         //Act
@@ -141,6 +140,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         assertEquals(200,response.getStatus());
         assertEquals(this.jobDefinition.getName(), actualResult.getName());
+        this.removeJobDefinition();
     }
 
     /*
@@ -185,7 +185,6 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.stageDefinition = new StageDefinition();
         this.stageDefinition.setPipelineDefinitionId(this.pipelineDefinition.getId());
         this.jobDefinition = new JobDefinition();
-
         this.jobDefinition.setStageDefinitionId(this.stageDefinition.getId());
         pipelineDefinitionService.add(this.pipelineDefinition);
         stageDefinitionService.add(this.stageDefinition);
