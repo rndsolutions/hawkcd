@@ -3,7 +3,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig', function ($scope, loginService, accountService, profileService, authDataService, pipeConfig) {
+    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth',"$location","$http",
+    function ($scope, loginService, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
         $scope.$on('$viewContentLoaded', function () {
             //App.initComponents(); // init core components
             Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -48,12 +49,13 @@ angular
         }
 
         $scope.logoutUser = function () {
-            loginService.logOut();
+            $auth.logout();
+            $location.path("/authenticate");
         }
 
         $scope.me = {};
         $scope.me.UserName = localStorage.username;
-        console.log($scope.me.UserName);
+        //console.log($scope.me.UserName);
 
         $scope.updatedUser = {};
         $scope.updatedUser.Email = localStorage.email;
@@ -69,6 +71,8 @@ angular
         //            }) 
         //        }
         //        getMe();
+
+
 
         $scope.updateUser = function (userName) {
             var user = {
@@ -90,33 +94,81 @@ angular
                 })
         };
 
-        function getLatestCommit() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeConfig.getLatestCommit(token)
-                    .then(function(res) {
-                        $scope.latestCommit = res.substring(0,7);
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function (res) {
-                        var token = res.access_token;
-                        pipeConfig.getLatestCommit(token)
-                            .then(function(res) {
-                                $scope.latestCommit = res.substring(0,7);
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                    }, function (err) {
-                        console.log(err);
-                    })
+        $scope.showLoginForm = true;
+        $scope.showRegisterForm = false;
+        $scope.showForgotPasswordForm = false;
+
+        $scope.showRegistration =  function(){
+               $scope.showLoginForm = false;
+               $scope.showRegisterForm = true;
+               $scope.showForgotPasswordForm = false;
+
+        }
+
+        $scope.showLogin =  function(){
+               $scope.showLoginForm = true;
+               $scope.showRegisterForm = false;
+               $scope.showForgotPasswordForm = false;
+        }
+
+        $scope.showForgotPassword =  function(){
+            $scope.showLoginForm = false;
+            $scope.showRegisterForm = false;
+            $scope.showForgotPasswordForm = true;
+        }
+
+        $scope.authenticate = function(provider){
+            $auth.authenticate(provider)
+            .then(function (response){
+                $auth.setToken(response.data.id);
+                $location.path("/pipelines");
+            })
+            .catch(function(response){
+                console.log(response);
+            });
+        }
+
+        $scope.login = function(){
+
+            var user = {
+                email: $scope.email,
+                password: $scope.password
             }
+
+            $auth.login(user)
+              .then(function(response) {
+              console.log(response.data)
+              debugger;
+                $auth.setToken(response.data);
+                $location.path("/pipelines");
+              })
+              .catch(function(response) {
+                console.log(response)
+              debugger;
+                // Handle errors here, such as displaying a notification
+                // for invalid email and/or password.
+              });
+        }
+
+        $scope.register = function(user){
+
+            var user = {
+                        email: $scope.register_email,
+                        password: $scope.register_password,
+                        confirmPassword: $scope.confirm_password
+                    }
+
+              // Simple GET request example:
+              $http({
+                method: 'POST',
+                url: 'http://localhost:8080/auth/register',
+                data: user
+              }).then(function successCallback(response) {
+                       $scope.showLogin();
+                  console.log("success response: "+ response);
+                }, function errorCallback(response) {
+                  console.log("error response: "+ response);
+               });
         }
 
     }]);
