@@ -604,7 +604,7 @@ angular
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     command: newTask.command,
-                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    arguments: newTask.arguments,
                     workingDirectory: newTask.workingDirectory,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
@@ -663,7 +663,7 @@ angular
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     command: newTask.command,
-                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    arguments: newTask.arguments,
                     workingDirectory: newTask.workingDirectory,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
