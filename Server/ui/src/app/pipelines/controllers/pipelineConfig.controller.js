@@ -1569,36 +1569,17 @@ angular
         //     }
         // };
         //
-        // vm.sortableOptions = {
-        //     cursor: "move",
-        //     update: function(e, ui) {
-        //         vm.job.Tasks = vm.allTasks;
-        //         var tokenIsValid = authDataService.checkTokenExpiration();
-        //         if (tokenIsValid) {
-        //             var token = window.localStorage.getItem("accessToken");
-        //             oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-        //                 .then(function(res) {
-        //                     console.log(res);
-        //                 }, function(err) {
-        //                     console.log(err);
-        //                 })
-        //         } else {
-        //             var currentRefreshToken = window.localStorage.getItem("refreshToken");
-        //             authDataService.getNewToken(currentRefreshToken)
-        //                .then(function (res) {
-        //                    var token = res.access_token;
-        //                    oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-        //                     .then(function(res) {
-        //                         console.log(res);
-        //                     }, function(err) {
-        //                         console.log(err);
-        //                     })
-        //                 }, function (err){
-        //                     console.log(err);
-        //                 })
-        //         }
-        //     },
-        // };
+        vm.sortableOptions = {
+            cursor: "move",
+            update: function (e, ui) {
+
+            },
+            stop: function () {
+                var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+
+                pipeConfigService.updateJobDefinition(newJob);
+            }
+        };
         //
         // vm.editJob = function(newJob) {
         //     if (vm.job != null) {
