@@ -137,11 +137,13 @@ angular
 
             $auth.login(user)
               .then(function(response) {
-                $auth.setToken(response.data.id);
+              console.log(response.data)
+              debugger;
+                $auth.setToken(response.data);
                 $location.path("/pipelines");
               })
               .catch(function(response) {
-
+                console.log(response)
               debugger;
                 // Handle errors here, such as displaying a notification
                 // for invalid email and/or password.
@@ -165,7 +167,7 @@ angular
                        $scope.showLogin();
                   console.log("success response: "+ response);
                 }, function errorCallback(response) {
-                  // show the error message
+                  console.log("error response: "+ response);
                });
         }
 

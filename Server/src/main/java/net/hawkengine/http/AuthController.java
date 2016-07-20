@@ -1,14 +1,17 @@
 package net.hawkengine.http;
 
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 
+import net.hawkengine.core.utilities.deserializers.TokenAdapter;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.GithubAuthDto;
 import net.hawkengine.model.dto.LoginDto;
 import net.hawkengine.model.dto.RegisterDto;
+import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.github.GitHubService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -93,7 +96,7 @@ public class AuthController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     @Path("/login")
     public Response login(LoginDto login) throws IOException {
         String hashedPassword = DigestUtils.sha256Hex(login.getPassword());
@@ -109,15 +112,22 @@ public class AuthController {
                 break;
             }
         }
-
         if ( user == null ){
             Response.status(Response.Status.FORBIDDEN)
                     .entity(user)
                     .build();
         }
-        return Response.status(Response.Status.OK)
-                        .entity(user)
-                        .build();
+
+        String token = TokenAdapter.createJsonWebToken(user, 30L);
+//        user.setToken(token);
+//        this.usrService.update(user);
+        Gson gson = new Gson();
+
+        String jsonToken = gson.toJson(token);
+
+        TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
+
+        return Response.ok(jsonToken).build();
     }
 
 

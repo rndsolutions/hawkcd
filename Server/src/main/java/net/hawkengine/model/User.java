@@ -6,6 +6,7 @@ public class User extends DbEntry {
     private String password;
     private String ghAuthCode;
     private String provider;
+//    private String token;
 
     public String getEmail(){
         return this.email;
@@ -38,4 +39,12 @@ public class User extends DbEntry {
     public void setProvider(String provider) {
         this.provider = provider;
     }
+
+//    public String getToken() {
+//        return this.token;
+//    }
+//
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
 }
