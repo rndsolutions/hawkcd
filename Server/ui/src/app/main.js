@@ -92,7 +92,7 @@ angular
             function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider) {
 
              // used for debugging
-             //$authProvider.baseUrl = "http://localhost:8080";
+             $authProvider.baseUrl = "http://localhost:8080";
              $authProvider.github({
                   clientId: '2d3dbbf586d2260cbd68',
                   scope: ['user:email','repo']
@@ -148,7 +148,7 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "toaster", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, toaster) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "toaster", "$auth", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, toaster, $auth) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
@@ -158,7 +158,8 @@ angular
         var timerID=0;
 
         function start(wsServerLocation){
-            $rootScope.socket = new WebSocket(wsServerLocation);
+            $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
+
             $rootScope.socket.onmessage = function (event) {
                 console.log(event.data);
                 websocketReceiverService.processEvent(JSON.parse(event.data));
@@ -191,6 +192,8 @@ angular
 
                 toaster.clear();
                 toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
+                console.log($rootScope.token);
+                console.log($rootScope.socket);
                 $rootScope.$apply();
             }
         }

@@ -3,8 +3,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth',"$location","$http",
-    function ($scope, loginService, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
+    .controller('AppController', ['$scope', '$rootScope', 'loginService', 'accountService', 'profileService', 'authDataService', 'pipeConfig','$auth',"$location","$http",
+    function ($scope, $rootScope, loginService, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
         $scope.$on('$viewContentLoaded', function () {
             //App.initComponents(); // init core components
             Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -41,8 +41,8 @@ angular
             loginService.login($scope.username, $scope.password)
                 .then(function (res) {
                     console.log(res);
-                    $scope.me.UserName = $scope.username;
-                    $scope.updatedUser.Email = $scope.username;
+                    $rootScope.me.UserName = $scope.username;
+                    $rootScope.updatedUser.Email = $scope.username;
                 }, function (err) {
                     console.log(err);
                 });
@@ -138,6 +138,7 @@ angular
             $auth.login(user)
               .then(function(response) {
               console.log(response.data)
+                  $rootScope.token = response.data;
               debugger;
                 $auth.setToken(response.data);
                 $location.path("/pipelines");
