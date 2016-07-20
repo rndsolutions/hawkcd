@@ -710,7 +710,7 @@ angular
                     ignoreErrors: newTask.ignoreErrors
                 }
             }
-            pipeConfigService.updateJobDefinition(updatedTask);
+            pipeConfigService.updateTaskDefinition(updatedTask);
         };
         
         vm.deleteTask = function (task) {
