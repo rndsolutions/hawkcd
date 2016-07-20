@@ -7,6 +7,7 @@ import com.sun.jersey.api.client.WebResource;
 
 
 import net.hawkengine.core.utilities.deserializers.TokenAdapter;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.GithubAuthDto;
 import net.hawkengine.model.dto.LoginDto;
@@ -41,10 +42,10 @@ public class AuthController {
     //TODO: move this to the config
     private static final String GH_CLIENT_SERCRET = "";
 
-    private UserService usrService;
+    private UserService userService;
 
     public AuthController(){
-        this.usrService =  new UserService();
+        this.userService =  new UserService();
     }
 
     @POST
@@ -64,7 +65,7 @@ public class AuthController {
         //read user email
         String email = (String) ghUserDetails.get("email");
 
-        ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
+        ArrayList<User> all = (ArrayList<User>) this.userService.getAll().getObject();
 
         boolean isUserRegistered = false;
         //loop through users to check if the user already exists
@@ -84,7 +85,7 @@ public class AuthController {
             user =  new User();
             user.setEmail(email);
             user.setProvider("GitHub");
-            usrService.add(user);
+            userService.add(user);
         }
 
 
@@ -101,26 +102,17 @@ public class AuthController {
     public Response login(LoginDto login) throws IOException {
         String hashedPassword = DigestUtils.sha256Hex(login.getPassword());
 
-        ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
-
-        User user = null;
-        for(User usr:all){
-            String uEmail = usr.getEmail();
-            String uPass = usr.getPassword();
-            if ( uEmail.equals(login.getEmail()) && uPass.equals(hashedPassword)){
-                user = usr;
-                break;
-            }
-        }
-        if ( user == null ){
-            Response.status(Response.Status.FORBIDDEN)
-                    .entity(user)
+        ServiceResult serviceResult = this.userService.getByEmailAndPassword(login.getEmail(), hashedPassword);
+        if (serviceResult.hasError()){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(serviceResult)
                     .build();
         }
 
-        String token = TokenAdapter.createJsonWebToken(user, 30L);
-//        user.setToken(token);
-//        this.usrService.update(user);
+        User userFromDb = (User) serviceResult.getObject();
+
+        String token = TokenAdapter.createJsonWebToken(userFromDb, 30L);
+
         Gson gson = new Gson();
 
         String jsonToken = gson.toJson(token);
@@ -136,41 +128,22 @@ public class AuthController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
     public Response register(RegisterDto newUser){
+        String hashedPassword = DigestUtils.sha256Hex(newUser.getPassword());
 
+            User user =  new User();
+            user.setEmail(newUser.getEmail());
+            user.setPassword(hashedPassword);
+            ServiceResult serviceResult = this.userService.addUserWithoutProvider(user);
 
-
-        ArrayList<User> all = (ArrayList<User>) this.usrService.getAll().getObject();
-
-        User user = null;
-        for(User usr:all){
-            String uEmail = usr.getEmail();
-            String provider =  usr.getProvider();
-            if (uEmail.equals(newUser.getEmail()) && provider == null) /*check only users w/o providers*/{
-                user = usr;
-                break;
-            }
-        }
-
-        if (user == null){ // register a new user
-
-            User usr =  new User();
-            usr.setEmail(newUser.getEmail());
-            //TODO: Implement password hashing
-
-            String hashedPassword = DigestUtils.sha256Hex(newUser.getPassword());
-            usr.setPassword(hashedPassword);
-            this.usrService.add(usr);
-
-            return Response.status(Response.Status.CREATED)
-                    .entity(user)
-                    .build();
-
-        }else {
+        if (serviceResult.hasError()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{Message: User already exists}")
+                    .entity(serviceResult)
+                    .build();
+        } else {
+            return Response.status(Response.Status.CREATED)
+                    .entity(serviceResult)
                     .build();
         }
-
     }
 
     private String getGitHubAccessToken(String authCode) {
