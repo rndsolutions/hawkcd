@@ -66,8 +66,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
 
         //Act
-        Response response = target("/pipeline-definitions/"+this.pipelineDefinition.getId()
-        +"stage-definitions").request().get();
+        Response response = target("/pipeline-definitions/"+this.pipelineDefinition.getId()).request().get();
         PipelineDefinition actualResult = response.readEntity(PipelineDefinition.class);
 
 
@@ -96,7 +95,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Arrange
         this.preparePipelineDefinition();
         Entity entity = Entity.entity(this.pipelineDefinition,"application/json");
-
 
         //Act
         Response response = target("/pipeline-definitions").request().post(entity);
@@ -189,6 +187,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
     private void preparePipelineDefinition() {
         this.pipelineDefinition = new PipelineDefinition();
+        this.pipelineDefinition.setName("pipelineDefinition");
         /*
         ExecTask execTask = new ExecTask();
         execTask.setName("execTask");
