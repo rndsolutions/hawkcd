@@ -1,16 +1,14 @@
 package net.hawkengine.model.dto;
 
-/**
- * Created by rado on 17.07.16.
- */
+import net.hawkengine.model.payload.Permission;
+
+import java.util.List;
+
 public class RegisterDto {
-
-
     private String email;
-
     private String password;
-
     private String confirmPassword;
+    private List<Permission> permissions;
 
     public String getEmail(){
         return this.email;
@@ -34,5 +32,13 @@ public class RegisterDto {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public List<Permission> getPermissions() {
+        return this.permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 }

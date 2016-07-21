@@ -133,6 +133,7 @@ public class AuthController {
             User user =  new User();
             user.setEmail(newUser.getEmail());
             user.setPassword(hashedPassword);
+            user.setPermissions((newUser.getPermissions()));
             ServiceResult serviceResult = this.userService.addUserWithoutProvider(user);
 
         if (serviceResult.hasError()) {
