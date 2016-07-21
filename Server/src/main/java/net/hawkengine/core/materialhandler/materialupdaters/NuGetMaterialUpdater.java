@@ -1,5 +1,7 @@
-package net.hawkengine.core.materialupdater;
+package net.hawkengine.core.materialhandler.materialupdaters;
 
+import net.hawkengine.core.materialhandler.materialservices.INuGetService;
+import net.hawkengine.core.materialhandler.materialservices.NuGetService;
 import net.hawkengine.model.MaterialDefinition;
 
 public class NuGetMaterialUpdater extends MaterialUpdater {

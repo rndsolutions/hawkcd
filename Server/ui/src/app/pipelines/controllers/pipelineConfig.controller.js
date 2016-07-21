@@ -74,17 +74,21 @@ angular
         //     console.log(vm.allPipelines.materials);
         // });
 
-        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
             vm.allPipelines.forEach(function (currentPipeline, index, array) {
                 if(currentPipeline.id == vm.pipeline.id) {
                     vm.getPipelineForConfig(currentPipeline.name);
                     //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
-
                 }
             });
             console.log(vm.allPipelines);
-        }, true);
+        });
+
+        $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
+            vm.allMaterials = viewModel.allMaterialDefinitions;
+            console.log(vm.allMaterials);
+        });
 
         // $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
         //     vm.allStages = viewModel.allStages;
@@ -107,9 +111,9 @@ angular
         //     console.log(vm.allJobs);
         // }, true);
 
-        $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
+        $scope.$watchCollection(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
             //viewModel.allPipelineGroups.forEach
-        }, true);
+        });
 
         // $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
@@ -213,6 +217,19 @@ angular
             vm.currentPipeline = pipeName;
         };
 
+        vm.getPipelineForTask = function (pipeline) {
+            vm.newTask.stage = '';
+            vm.selectedPipelineStages = {};
+            vm.selectedStageJobs = {};
+            for (var i = 0; i < vm.allPipelines.length; i++) {
+                if (vm.allPipelines[i].name == pipeline) {
+                    vm.selectedPipelineStages = vm.allPipelines[i].stageDefinitions;
+                    break;
+                }
+            }
+            console.log(vm.selectedPipelineStages);
+        };
+
         vm.editPipeline = function (pipeline) {
             var newPipeline = angular.copy(vm.allPipelines[vm.pipelineIndex]);
             newPipeline.name = pipeline.name;
@@ -239,13 +256,26 @@ angular
             vm.currentStage = stage;
         };
 
+        vm.getStageForTask = function (stage) {
+            vm.newTask.job = '';
+            vm.selectedStageJobs = {};
+            for (var i = 0; i < vm.selectedPipelineStages.length; i++) {
+                if (vm.selectedPipelineStages[i].name == stage) {
+                    vm.selectedStageJobs = vm.selectedPipelineStages[i].jobDefinitions;
+                    break;
+                }
+            }
+            console.log(vm.selectedStageJobs);
+        };
+
         vm.addStage = function (newStage) {
             if (newStage.jobDefinitions.taskDefinitions.type == 'EXEC') {
                 var stage = {
                     name: newStage.name,
-                    pipelineDefinitionId: vm.pipeline.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     jobDefinitions: [{
                         name: newStage.jobDefinitions.name,
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         taskDefinitions: [{
                             type: newStage.jobDefinitions.taskDefinitions.type,
                             command: newStage.jobDefinitions.taskDefinitions.command,
@@ -262,6 +292,7 @@ angular
                 name: newStage.name,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
                         pipelineDefinition: newStage.jobDefinitions.taskDefinitions.pipeline,
@@ -279,6 +310,8 @@ angular
                 name: newStage.name,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
+                    pipelineName: vm.allPipelines[vm.pipelineIndex].name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
                         materialName: newStage.jobDefinitions.taskDefinitions.materialName,
@@ -292,6 +325,7 @@ angular
                 name: newStage.name,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
                         source: newStage.jobDefinitions.taskDefinitions.source,
@@ -374,10 +408,11 @@ angular
                         }]
                     };
                 }
-                if (newJob.taskDefinitions.type == 'FETCH_MATERIALS') {
+                if (newJob.taskDefinitions.type == 'FETCH_MATERIAL') {
                     var job = {
                         name: newJob.name,
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                         stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                         taskDefinitions: [{
                             type: newJob.taskDefinitions.type,
@@ -478,7 +513,7 @@ angular
 
         vm.getMaterial = function (material) {
             if (vm.material != null) {
-                viewModel.allPipelines[vm.pipelineIndex].materials.forEach(function (currentMaterial, index, array) {
+                viewModel.allPipelines[vm.pipelineIndex].materialDefinitions.forEach(function (currentMaterial, index, array) {
                     if (currentMaterial.name == material.name) {
                         vm.material = array[index];
                         vm.materialIndex = index;
@@ -501,7 +536,7 @@ angular
         };
 
         vm.editMaterial = function (newMaterial) {
-            var material = angular.copy(vm.allPipelines[vm.pipelineIndex].materials[vm.materialIndex]);
+            var material = angular.copy(vm.allPipelines[vm.pipelineIndex].materialDefinitions[vm.materialIndex]);
             if (newMaterial.type == 'GIT') {
                 material = {
                     id: material.id,
@@ -563,7 +598,7 @@ angular
 
         vm.addTask = function (newTask) {
             if (newTask.type == 'EXEC') {
-                var execTask = {
+                var task = {
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
@@ -574,36 +609,58 @@ angular
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
-                pipeConfigService.addTaskDefinition(execTask);
             }
             if (newTask.type == 'FETCH_MATERIAL') {
-                var fetchMaterial = {
+                var task = {
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    pipelineName: vm.allPipelines[vm.pipelineIndex].name,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    materialDefinition: JSON.parse(newTask.materialName),
                     type: newTask.type,
-                    materialName: newTask.materialName,
-                    runIfCondition: newTask.runIfCondition
+                    materialType: JSON.parse(newTask.materialName).type,
+                    materialName: JSON.parse(newTask.materialName).name,
+                    destination: JSON.parse(newTask.materialName).name,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
                 };
+                debugger;
             }
             if (newTask.type == 'FETCH_ARTIFACT') {
-                var fetchArtifact = {
+                var task = {
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
-                    pipeline: newTask.pipeline,
-                    stage: newTask.stage,
-                    job: newTask.job,
                     source: newTask.source,
                     destination: newTask.destination,
-                    runIfCondition: newTask.runIfCondition
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
                 };
             }
+            if (newTask.type == 'UPLOAD_ARTIFACT') {
+                var task = {
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    source: newTask.source,
+                    destination: newTask.destination,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
+                }
+            }
+            pipeConfigService.addTaskDefinition(task);
         };
 
         vm.editTask = function (newTask) {
             var task = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].taskDefinitions[vm.taskIndex]);
             if (newTask.type == 'EXEC') {
-                var execTask = {
+                var updatedTask = {
                     id: task.id,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     command: newTask.command,
                     arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
@@ -611,37 +668,49 @@ angular
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
-                pipeConfigService.updateTaskDefinition(execTask);
             }
             if (newTask.type == 'FETCH_MATERIAL') {
-                var fetchMaterial = {
+                var updatedTask = {
                     id: task.id,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    materialDefinition: JSON.parse(newTask.materialName),
                     type: newTask.type,
-                    materialName: newTask.materialName,
-                    runIfCondition: newTask.runIfCondition
+                    materialType: JSON.parse(newTask.materialName).type,
+                    materialName: JSON.parse(newTask.materialName).name,
+                    destination: JSON.parse(newTask.materialName).name,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
                 };
-                pipeConfigService.updateTaskDefinition(fetchMaterial);
             }
             if (newTask.type == 'FETCH_ARTIFACT') {
-                var fetchArtifact = {
+                var updatedTask = {
                     id: task.id,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                    jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
-                    pipeline: newTask.pipeline,
-                    stage: newTask.stage,
-                    job: newTask.job,
                     source: newTask.source,
                     destination: newTask.destination,
-                    runIfCondition: newTask.runIfCondition
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
                 };
-                pipeConfigService.updateTaskDefinition(fetchArtifact);
             }
-            //pipeConfigService.updateJobDefinition(newTask);
+            if (newTask.type == 'UPLOAD_ARTIFACT') {
+                var updatedTask = {
+                    id: task.id,
+                    pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                    jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    type: newTask.type,
+                    source: newTask.source,
+                    destination: newTask.destination,
+                    runIfCondition: newTask.runIfCondition,
+                    ignoreErrors: newTask.ignoreErrors
+                }
+            }
+            pipeConfigService.updateTaskDefinition(updatedTask);
         };
         
         vm.deleteTask = function (task) {

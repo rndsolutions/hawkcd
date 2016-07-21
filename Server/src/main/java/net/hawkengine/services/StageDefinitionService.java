@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
@@ -102,6 +103,10 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
             return super.createServiceResult((StageDefinition) result.getObject(), true, "with that name already exists");
         }
 
+        List<JobDefinition> stageJobDefinitions = stageDefinition.getJobDefinitions();
+        for(JobDefinition jobDefinition : stageJobDefinitions) {
+            jobDefinition.setStageDefinitionId(stageDefinition.getId());
+        }
         stageDefinitions.add(stageDefinition);
         pipeline.setStageDefinitions(stageDefinitions);
 

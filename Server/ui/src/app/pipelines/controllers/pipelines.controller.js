@@ -8,7 +8,7 @@ angular
 
         vm.defaultPipelineText = {
             empty: "No pipelines in "
-        }
+        };
 
         vm.formData = {};
         vm.allPipelines = [];
@@ -30,17 +30,29 @@ angular
 
         vm.allPipelines = viewModel.allPipelines;
 
-        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
+            viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                if(viewModel.allPipelines[pipelineIndex].stages == 'undefined'){
+                    viewModel.allPipelines[pipelineIndex].stages = viewModel.allPipelines[pipelineIndex].stageDefinitions;
+                }
+            });
             console.log(vm.allPipelines);
-        }, true);
+        });
 
-        $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+        $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.allPipelineRuns.sort(function (a, b) {
+                return a.executionId - b.executionId;
+            });
             vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
                     if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                        if(currentPipelineRun.triggerReason == null) {
+                            currentPipelineRun.triggerReason = "User";
+                        }
                         viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                        viewModel.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
                     }
                 });
             });
@@ -52,22 +64,32 @@ angular
                         }
                     });
                 });
+                viewModel.allPipelineGroups[index].pipelines.sort(function (a, b) {
+                    return a.executionId - b.executionId;
+                });
             });
-            console.log(vm.allPipelineRuns);
-        }, true);
 
-        $scope.$watch(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
+            console.log(vm.allPipelineRuns);
+        });
+
+        $scope.$watchCollection(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
             vm.allPipelineGroups = viewModel.allPipelineGroups;
             console.log(vm.allPipelineGroups);
-        }, true);
+        });
 
         vm.getStageRunsFromPipeline = function (pipeline) {
             vm.currentStageRuns = [];
             vm.allPipelineRuns.forEach(function (currentPipeline, index, array) {
                 if (currentPipeline.pipelineDefinitionId == pipeline.id) {
-                    currentPipeline.stages.forEach(function (currentStage, index, array) {
-                        vm.currentStageRuns.push(currentStage);
-                    });
+                    if(currentPipeline.stageDefinitions.length == 0){
+                        pipeline.stageDefinitions.forEach(function (currentStageDefinition, stageIndex, stageArray) {
+                            vm.currentStageRuns.push(currentStageDefinition);
+                        });
+                    } else {
+                        currentPipeline.stages.forEach(function (currentStage, index, array) {
+                            vm.currentStageRuns.push(currentStage);
+                        });
+                    }
                 }
             });
             console.log(vm.currentStageRuns);
@@ -109,8 +131,7 @@ angular
         vm.play = function (pipelineDefinition) {
             var pipeline = {
                 "pipelineDefinitionId": pipelineDefinition.id,
-                "pipelineDefinitionName": pipelineDefinition.name,
-                "areMaterialsUpdated": true
+                "pipelineDefinitionName": pipelineDefinition.name
             };
             pipeExecService.startPipeline(pipeline);
         };
@@ -317,9 +338,9 @@ angular
 
             var pipeline = {
                 "name": vm.formData.pipeline.name,
-                "groupName": vm.groupName,
                 "pipelineGroupId": vm.groupId,
-                "materials": [material],
+                "groupName": vm.groupName,
+                "materialDefinitions": [material],
                 "environmentVariables": [],
                 "parameters": [],
                 "environment": {},

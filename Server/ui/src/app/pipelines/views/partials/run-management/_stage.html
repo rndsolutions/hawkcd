@@ -4,8 +4,8 @@
             <div class="panel-heading s-head-box" data-ng-class="{'selected-stage':pipesRunManagement.toggleRun == $index}">
                 <div class="p-head">
                     <p class="p-name" ng-model="stage">
-                        {{stage.Runs[0].Name}}
-                        <span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage.LastRun.Name})" class="icon-settings font-lg ico"></span>
+                        {{stage[0].stageDefinitionName}}
+                        <span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage[0].stageDefinitionName})" class="icon-settings font-lg ico"></span>
 
                     </p>
 
@@ -20,20 +20,20 @@
                     <span ng-if="stage.LastRun.ExecutionID!=0">
  <label>
    <input type="number" name="input"
-          min="1" max="{{stage.Runs.length}}" class="spinner-custom" ng-value="{{stage.LastRunSelected}}"
-          ng-change="pipesRunManagement.selectStage(null,$index);pipesRunManagement.selectRun(stage.LastRunSelected)"
-          ng-model="stage.LastRunSelected" required>
+          min="1" max="{{stage.length}}" class="spinner-custom" ng-value="stage.length"
+          ng-change="pipesRunManagement.selectStage(null,$index);pipesRunManagement.selectRun(pipesRunManagement.lastRunSelected)"
+          ng-model="pipesRunManagement.lastRunSelected" required>
  </label>
-          of {{stage.Runs.length}}</span>
+          of {{stage.length}}</span>
                 </p>
                 <p>
                     <strong>{{pipesRunManagement.stageDefaultText.state}}</strong>
-                    <span class="btn btn-success btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Completed' && stage.Runs[stage.LastRunSelected-1].Status=='Passed'">{{stage.Runs[stage.LastRunSelected-1].Status}}</span>
-                    <span class="btn btn-danger btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Completed'  && stage.Runs[stage.LastRunSelected-1].Status=='Failed'">{{stage.Runs[stage.LastRunSelected-1].Status}}</span>
-                    <span class="btn yellow btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Running'">{{stage.Runs[stage.LastRunSelected-1].State}}</span>
-                    <span class="btn yellow-mint btn-xs" ng-if="stage.Runs[stage.LastRunSelected-1].State=='Scheduled'">{{stage.Runs[stage.LastRunSelected-1].State}}</span>
-                    <span class="btn yellow-mint btn-xs" ng-if="stage.LastRun.State=='Scheduled' && stage.Runs.LastRunSelected==undefined ">{{stage.LastRun.State}}</span>
-                    <span class="btn btn-default btn-xs" ng-if="stage.LastRun.State=='None'">{{stage.Runs[stage.LastRunSelected-1].State}}</span>
+                    <span class="btn btn-success btn-xs" ng-if="stage[stage.length-1].status=='PASSED'">Passed</span>
+                    <span class="btn btn-danger btn-xs" ng-if="stage[stage.length-1].status=='FAILED'">Failed</span>
+                    <span class="btn yellow btn-xs" ng-if="stage[stage.length-1].status=='IN_PROGRESS'">Running</span>
+                    <span class="btn yellow-mint btn-xs" ng-if="stage[stage.length-1].status=='SCHEDULED'">Scheduled</span>
+                    <span class="btn yellow-mint btn-xs" ng-if="stage[stage.length-1].status=='SCHEDULED' && stage.Runs.LastRunSelected==undefined ">{{stage.LastRun.status}}</span>
+                    <span class="btn btn-default btn-xs" ng-if="stage[stage.length-1].status=='NOT_RUN'">Not run</span>
                 </p>
 
                 <p>
@@ -45,14 +45,14 @@
 
                 <p>
                     <strong>{{pipesRunManagement.stageDefaultText.duration}}</strong>
-                    <span ng-if="stage.LastRun.ExecutionID!=0">{{stage.Runs[stage.LastRunSelected-1].Duration}}</span>
-                    <span ng-if="stage.LastRun.ExecutionID==0">Not Executed yet</span>
+                    <span ng-if="stage[pipesRunManagement.lastRunSelected - 1].executionId!=0">{{stage[stage.LastRunSelected-1].duration}}</span>
+                    <span ng-if="stage[pipesRunManagement.lastRunSelected - 1].executionId==0">Not Executed yet</span>
 
                 </p>
 
                 <p><strong>{{pipesRunManagement.stageDefaultText.trigger}}</strong> TEMP </p>
                 <div class="controls left-buttons-stage">
-                    <button class="btn btn-default" ng-click="pipesRunManagement.disabledBtn = true;pipesRunManagement.selectAlllJobs(stage);pipesRunManagement.reRunStageJobs(stage)" ng-class="{'disabled': pipesRunManagement.disabledBtn}">
+                    <button class="btn btn-default" ng-click="pipesRunManagement.selectAlllJobs(stage);pipesRunManagement.reRunStageJobs(stage)">
                         <span class="glyphicon glyphicon-play control"></span>
                     </button>
 

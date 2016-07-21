@@ -1,7 +1,7 @@
 <div class="panel">
     <div class="panel-heading bg-grey-cararra">
         <div class="caption font-green-sharp uppercase custom-caption">
-            {{pipesRunManagement.selectedJob.Name}}
+            {{pipesRunManagement.selectedJob.jobDefinitionName}}
         </div>
     </div>
     <div class="panel-body">
@@ -31,7 +31,7 @@
             <div class="tab-content">
                 <!--console-->
                 <div id="console" class="tab-pane fade in active">
-                    <pre class="console" scroll-glue>{{pipesRunManagement.selectedJob.Result}}</pre>
+                    <pre class="console" scroll-glue>{{pipesRunManagement.selectedJob.report}}</pre>
                 </div>
 
                 <!--artifacts-->

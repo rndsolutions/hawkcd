@@ -57,7 +57,7 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
         if (latestMaterial != null) {
             return super.createServiceResult(latestMaterial, false, "retrieved successfully");
         } else {
-            return super.createServiceResult(latestMaterial, true, "retrieved successfully");
+            return super.createServiceResult(latestMaterial, true, "not found");
         }
     }
 }

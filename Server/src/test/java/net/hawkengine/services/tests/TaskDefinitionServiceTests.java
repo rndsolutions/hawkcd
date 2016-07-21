@@ -26,9 +26,11 @@ import net.hawkengine.services.interfaces.ITaskDefinitionService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -244,34 +246,31 @@ public class TaskDefinitionServiceTests {
     }
 
     @Test
-    public void add_existingTaskName_correctErrorMessage() {
+    public void add_task_correctErrorMessage() {
         //Arrange
-        UploadArtifactTask expectedTask = new UploadArtifactTask();
-        expectedTask.setName("myName");
-        expectedTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        expectedTask.setJobDefinitionId(this.jobDefinition.getId());
-        expectedTask.setStageDefinitionId(this.stageDefinition.getId());
+        JobDefinitionService mockedJobDefinitionService = Mockito.mock(JobDefinitionService.class);
+        TaskDefinitionService taskDefinitionServiceToTest = new TaskDefinitionService(mockedJobDefinitionService);
+        ServiceResult mockedServiceResult = Mockito.mock(ServiceResult.class);
+        JobDefinition mockedJobDefinition = Mockito.mock(JobDefinition.class);
+        ServiceResult getByIdServiceResult = Mockito.mock(ServiceResult.class);
 
-        UploadArtifactTask taskWithSameName = new UploadArtifactTask();
-        taskWithSameName.setName("myName");
-        taskWithSameName.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        taskWithSameName.setJobDefinitionId(this.jobDefinition.getId());
-        taskWithSameName.setStageDefinitionId(this.stageDefinition.getId());
+        Mockito.when(getByIdServiceResult.getObject()).thenReturn(mockedJobDefinition);
+        UploadArtifactTask mockedTaskDefinition = Mockito.mock(UploadArtifactTask.class);
+        Mockito.when(mockedTaskDefinition.getJobDefinitionId()).thenReturn(UUID.randomUUID().toString());
+        Mockito.when(mockedTaskDefinition.getId()).thenReturn(UUID.randomUUID().toString());
+
+        Mockito.when(mockedJobDefinition.getTaskDefinitions()).thenReturn(new ArrayList<>()).thenReturn(new ArrayList<>());
+        Mockito.when(mockedJobDefinitionService.getById(Mockito.anyString())).thenReturn(mockedServiceResult);
+        Mockito.when(mockedJobDefinitionService.getById(Mockito.anyString()).getObject()).thenReturn(mockedJobDefinition);
+        Mockito.when(mockedJobDefinitionService.update(Mockito.any(JobDefinition.class))).thenReturn(mockedServiceResult);
 
         //Act
-        this.addTaskToPipeline(expectedTask);
-        UploadArtifactTask def = (UploadArtifactTask) this.pipelineDefinition
-                .getStageDefinitions()
-                .get(0)
-                .getJobDefinitions()
-                .get(0).getTaskDefinitions().get(0);
-        ServiceResult actualExecResult = this.taskDefinitionService.add(taskWithSameName);
-        UploadArtifactTask actualExecResultObject = (UploadArtifactTask) actualExecResult.getObject();
+        ServiceResult actualExecResult = taskDefinitionServiceToTest.add(mockedTaskDefinition);
 
         //Assert
-        Assert.assertNotNull(actualExecResultObject);
+        Assert.assertNull(actualExecResult.getObject());
         Assert.assertTrue(actualExecResult.hasError());
-        Assert.assertEquals(this.existingNameErrorMessage, actualExecResult.getMessage());
+        Assert.assertEquals("TaskDefinition not added successfully.", actualExecResult.getMessage());
     }
 
     @Test
@@ -362,32 +361,6 @@ public class TaskDefinitionServiceTests {
     }
 
     @Test
-    public void update_existingName_correctErrorMssage() {
-        //Arrange
-        ExecTask execTask = new ExecTask();
-        execTask.setName("myName");
-        execTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        execTask.setJobDefinitionId(this.jobDefinition.getId());
-        execTask.setStageDefinitionId(this.stageDefinition.getId());
-        ExecTask execTask2 = new ExecTask();
-        execTask2.setName("myName2");
-        execTask2.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        execTask2.setJobDefinitionId(this.jobDefinition.getId());
-        this.addTaskToPipeline(execTask);
-        this.addTaskToPipeline(execTask2);
-        execTask2.setName(execTask.getName());
-
-        //Act
-        ServiceResult actualResult = this.taskDefinitionService.update(execTask2);
-        ExecTask actualResultObject = (ExecTask) actualResult.getObject();
-
-        //Assert
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertNotNull(actualResult.getObject());
-        Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
-    }
-
-    @Test
     public void delete_validId_correctObject() {
         //Assert
         UploadArtifactTask expectedTask = new UploadArtifactTask();
@@ -433,7 +406,6 @@ public class TaskDefinitionServiceTests {
 
     @Test
     public void delete_invalidId_correctErrorMessage() {
-
         //Act
         ServiceResult actualResult = this.taskDefinitionService.delete("12345");
 

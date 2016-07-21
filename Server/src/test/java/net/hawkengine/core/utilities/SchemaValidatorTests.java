@@ -1,7 +1,6 @@
 package net.hawkengine.core.utilities;
 
 import net.hawkengine.model.*;
-import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.model.enums.RunIf;
 import org.junit.Test;
 
@@ -146,7 +145,7 @@ public class SchemaValidatorTests {
 //        PipelineDefinition pipelineDefinition = new PipelineDefinition();
 //        pipelineDefinition.setName("pipelineDefinition");
 //        pipelineDefinition.setStageDefinitions(stage);
-//        pipelineDefinition.setMaterials(this.material);
+//        pipelineDefinition.setMaterialDefinitions(this.material);
 //
 //        //Act
 //        String actualResult = this.validator.validate(pipelineDefinition);
@@ -174,7 +173,7 @@ public class SchemaValidatorTests {
     public void validate_PipelineDefinitionName_Null(){
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setMaterials(material);
+        pipelineDefinition.setMaterialDefinitions(material);
         pipelineDefinition.setStageDefinitions(stage);
         String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
 
@@ -225,7 +224,7 @@ public class SchemaValidatorTests {
 //        PipelineDefinition pipelineDefinition = new PipelineDefinition();
 //        pipelineDefinition.setName("pipelineDefinition");
 //        //material.add(0,new MaterialDefinition());
-//        pipelineDefinition.setMaterials(material);
+//        pipelineDefinition.setMaterialDefinitions(material);
 //        String expectedResult = "ERROR: STAGE NOT ADDED.";
 //
 //        //Act
