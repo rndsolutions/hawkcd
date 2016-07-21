@@ -15,14 +15,14 @@
                     <td> {{stageVar.IsSecured ? '******' : stageVar.Value}} </td>
                     <td> {{stageVar.IsSecured ? 'Yes' : 'No'}} </td>
                     <td>
-                        <button class="btn yellow" data-target="#editStageVar" data-toggle="modal" ng-click="pipeConfig.getStageVar(stageVar.Name)">Edit</button>
-                        <button class="btn red" data-target="#removeStageVar" data-toggle="modal" ng-click="pipeConfig.getStageVar(stageVar.Name)">Delete</button>
+                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#editStageVar" data-toggle="modal" ng-click="pipeConfig.getStageVar(stageVar.Name)">Edit</button>
+                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#removeStageVar" data-toggle="modal" ng-click="pipeConfig.getStageVar(stageVar.Name)">Delete</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <button class="btn green" data-target="#addStageVar" data-toggle="modal">Add Environment Variable</button>
+    <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#addStageVar" data-toggle="modal">Add Environment Variable</button>
 </div>
 <div ng-include src="'app/pipelines/views/partials/config/stage-options/_add-variable.html'"></div>
 <div ng-include src="'app/pipelines/views/partials/config/stage-options/_edit-variable.html'"></div>

@@ -9,7 +9,7 @@ angular
 
         viewModel.allPipelines = [];
 
-        viewModel.allMaterials = [];
+        //viewModel.allMaterials = [];
 
         viewModel.allMaterialDefinitions = [];
 

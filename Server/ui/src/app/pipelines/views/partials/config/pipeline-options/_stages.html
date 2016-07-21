@@ -20,7 +20,7 @@
         <td> {{stage.jobDefinitions.length}} </td>
         <td>
           <button class="btn red" data-target="#removeStage" data-toggle="modal" 
-                  ng-click="pipeConfig.getStage(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1">Delete</button>
+                  ng-click="pipeConfig.getStage(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->
@@ -28,7 +28,7 @@
       </tbody>
     </table>
   </div>
-  <button class="btn green" data-target="#addStage" data-toggle="modal">Add Stage</button>
+  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#addStage" data-toggle="modal">Add Stage</button>
 </div>
 
 <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_add-stage.html'"></div>

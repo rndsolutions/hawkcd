@@ -23,6 +23,14 @@ angular
             };
 
             var dispatcher = {
+                UserInfo: {
+                    getPermissions: function (object) {
+                        viewModelUpdater.getAllPermissions(object.result);
+                    },
+                    updatePermission: function (object) {
+                        viewModelUpdater.updatePermissions(object.result);
+                    }
+                },
                 AgentService: {
                     getAll: function (object) {
                         viewModelUpdater.updateAgents(object.result);

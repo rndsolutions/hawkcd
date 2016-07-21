@@ -183,7 +183,7 @@ angular
                 pipeConfigService.getAllPipelineDefinitions();
                 agentService.getAllAgents();
                 pipeExecService.getAllPipelines();
-                adminMaterialService.getAllMaterialDefinitions();
+                //adminMaterialService.getAllMaterialDefinitions();
             };
 
             $rootScope.socket.onclose = function (event) {

@@ -20,9 +20,9 @@
         <td> {{material.branch}} </td>
         <td>
           <button class="btn yellow" data-target="#editMaterial" data-toggle="modal"
-                  ng-click="pipeConfig.getMaterial(material)">Edit</button>
+                  ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" ng-click="pipeConfig.getMaterial(material)">Edit</button>
           <button class="btn red" data-target="#removeMaterial" data-toggle="modal" 
-                  ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions.length > 1" ng-click="pipeConfig.getMaterial(material)">Delete</button>
+                  ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions.length > 1" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" ng-click="pipeConfig.getMaterial(material)">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->
@@ -30,7 +30,7 @@
       </tbody>
     </table>
   </div>
-  <button class="btn green" data-target="#addMaterials" data-toggle="modal">Add Material</button>
+  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#addMaterials" data-toggle="modal">Add Material</button>
 </div>
 
 <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_add-materials.html'"></div>
