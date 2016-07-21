@@ -247,15 +247,14 @@ public class SchemaValidatorTests {
         JobDefinition jobDefinition = new JobDefinition();
         jobDefinition.setName("jobDefinition");
         ExecTask execTask = new ExecTask();
-        ArrayList arguments = new ArrayList();
-        arguments.add("command1");
+        String argumentsList = "/c echo test";
+        execTask.setArguments(argumentsList);
         execTask.setName("execTask");
         execTask.setRunIfCondition(RunIf.ANY);
         execTask.setCommand("start");
-        execTask.setArguments(arguments);
         execTaskList.add(execTask);
         jobDefinition.setTaskDefinitions(execTaskList);
-        job.add(0,jobDefinition);;
+        job.add(0,jobDefinition);
         stageDefinition.setJobDefinitions(job);
 
         //Act
@@ -339,13 +338,12 @@ public class SchemaValidatorTests {
         jobDefinition.setName("jobDefinition");
 
         ExecTask execTask = new ExecTask();
-        ArrayList arguments = new ArrayList();
-        arguments.add("command1");
+        String argumentsList = "/c echo test";
+        execTask.setArguments(argumentsList);
         execTask.setName("execTask");
         execTask.setRunIfCondition(RunIf.ANY);
         execTask.setCommand("start");
-        execTask.setArguments(arguments);
-        execTaskList.add(execTask);;
+        execTaskList.add(execTask);
         jobDefinition.setTaskDefinitions(execTaskList);
 
         //Act
@@ -460,8 +458,7 @@ public class SchemaValidatorTests {
         execTask.setName("execTask");
         execTask.setRunIfCondition(RunIf.PASSED);
         execTask.setCommand("kill");
-        ArrayList argumentsList = new ArrayList();
-        argumentsList.add("killAll");
+        String argumentsList = "/c echo test";
         execTask.setArguments(argumentsList);
 
         //Act
@@ -511,8 +508,9 @@ public class SchemaValidatorTests {
         execTask.setRunIfCondition(RunIf.PASSED);
         execTask.setCommand("kill");
         execTask.setCommand("kill");
-        execTask.setArguments(new ArrayList());
-        String expectedResult = "ERROR: TASK ARGUMENT LIST IS EMPTY.";
+        String argumentsList = "/c echo test";
+        execTask.setArguments(argumentsList);
+        String expectedResult = "OK";
 
         //Act
         String actualReult = this.validator.validate(execTask);
