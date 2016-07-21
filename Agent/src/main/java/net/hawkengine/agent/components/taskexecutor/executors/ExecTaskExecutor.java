@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,20 +26,20 @@ public class ExecTaskExecutor extends TaskExecutor {
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
-        ExecTask execTask = (ExecTask) task.getTaskDefinition();
+         ExecTask execTask = (ExecTask) task.getTaskDefinition();
         ProcessBuilder builder;
         String command = execTask.getCommand();
-        String isArgumentValid = this.validateArguments(execTask);
+        boolean isArgumentValid = this.validateArguments(execTask);
 
-        if (isArgumentValid != null) {
-            return this.nullProcessing(report, task, isArgumentValid);
+        if (!isArgumentValid) {
+            return this.nullProcessing(report, task, "Invalid Arguments");
         }
 
-        String initialOption = execTask.getArguments().substring(0, 2);
-        boolean hasInitialArgument = hasInitialArgument(initialOption);
+        String commandSwitch = execTask.getArguments().substring(0, 2);
+        boolean hasInitialArgument = this.hasInitialArgument(commandSwitch);
 
         if (hasInitialArgument) {
-            builder = this.constructProcessBuilder(command, execTask, initialOption, true);
+            builder = this.constructProcessBuilder(command, execTask, commandSwitch, true);
         } else {
             builder = this.constructProcessBuilder(command, execTask, true);
         }
@@ -110,23 +111,21 @@ public class ExecTaskExecutor extends TaskExecutor {
         }
     }
 
-    private String validateArguments(ExecTask task) {
+    private boolean validateArguments(ExecTask task) {
         List<String> arguments = Arrays.asList(task.getArguments().split(" "));
-        String result = null;
-
-        if(arguments.size() == 1){
-            result = "Task argument is missing!";
-            return result;
-        }
-
-        for (String argumentToValidate : arguments) {
-            if (argumentToValidate == null || argumentToValidate.isEmpty()) {
-                result = "Task argument is missing!";
-                return result;
+        if(arguments.size() == 1) { // if true not cmd switch is provied;
+            arguments = Arrays.asList(task.getArguments().split("\n"));
+            if (arguments.size() == 1) {
+                return false;
+            }
+            //check for null or empty string
+            for (String argumentToValidate : arguments) {
+                if (argumentToValidate == null || argumentToValidate.isEmpty()) {
+                    return false;
+                }
             }
         }
-
-        return result;
+        return  true;
     }
 
     private boolean hasInitialArgument(String initialArgument) {
