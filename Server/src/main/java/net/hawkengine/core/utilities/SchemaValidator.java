@@ -181,29 +181,29 @@ public class SchemaValidator {
         return this.message;
     }
 
-//    private String validate(ExecTask execTask) {
-//        if (execTask != null) {
-//            String command = execTask.getCommand();
-//            if (command == null) {
-//                return this.message = "ERROR: TASK COMMAND IS NULL.";
-//            }
-//
-//            List arguments = execTask.getArguments();
-//            if (arguments == null) {
-//                return this.message = "ERROR TASK ARGUMENTS LIST IS NULL.";
-//            }
-//
-//            int argumentsList = execTask.getArguments().size();
-//            if (argumentsList == 0) {
-//                return this.message = "ERROR: TASK ARGUMENT LIST IS EMPTY.";
-//            }
-//
-//        } else {
-//            return this.message = "ERROR: EXEC TASK IS NULL.";
-//        }
-//
-//        return this.message;
-//    }
+    private String validate(ExecTask execTask) {
+        if (execTask != null) {
+            String command = execTask.getCommand();
+            if (command == null) {
+                return this.message = "ERROR: TASK COMMAND IS NULL.";
+            }
+
+            String arguments = execTask.getArguments();
+            if (arguments == null) {
+                return this.message = "ERROR TASK ARGUMENTS LIST IS NULL.";
+            }
+
+            int argumentsList = execTask.getArguments().split(" ").length;
+            if (argumentsList == 0) {
+                return this.message = "ERROR: TASK ARGUMENT LIST IS EMPTY.";
+            }
+
+        } else {
+            return this.message = "ERROR: EXEC TASK IS NULL.";
+        }
+
+        return this.message;
+    }
 
     private String validate(FetchArtifactTask fetchArtifactTask) {
         if (fetchArtifactTask != null) {

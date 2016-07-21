@@ -68,9 +68,7 @@ public class TaskDefinitionServiceTests {
     public void getById_validId_correctObject() {
         //Arrange
         ExecTask expectedTaskDefinition = new ExecTask();
-        List<String> args = new ArrayList<>();
-        args.add("firstArg");
-        args.add("secondArg");
+        String args = "/c echo test";
         expectedTaskDefinition.setName("myExecTask");
         expectedTaskDefinition.setWorkingDirectory("D//:myDir");
         expectedTaskDefinition.setIgnoringErrors(true);
@@ -143,14 +141,12 @@ public class TaskDefinitionServiceTests {
     public void add_execTask_correctObject() {
         //Arrange
         ExecTask expectedTask = new ExecTask();
-        List<String> args = new ArrayList<>();
-        args.add("firstArg");
-        args.add("secondArg");
         expectedTask.setName("myExecTask");
         expectedTask.setWorkingDirectory("D//:myDir");
         expectedTask.setIgnoringErrors(true);
         expectedTask.setCommand("cmd");
-        expectedTask.setArguments(args);
+        String argumentsList = "/c echo test";
+        expectedTask.setArguments(argumentsList);
         expectedTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
         expectedTask.setJobDefinitionId(this.jobDefinition.getId());
         expectedTask.setStageDefinitionId(this.stageDefinition.getId());
