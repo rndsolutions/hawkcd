@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExecTaskExecutor extends TaskExecutor {
 
@@ -111,7 +112,10 @@ public class ExecTaskExecutor extends TaskExecutor {
     }
 
     private String validateArguments(ExecTask task) {
-        List<String> arguments = Arrays.asList(task.getArguments().split(" "));
+        List<String> arguments = Arrays.asList(task.getArguments().trim().split("^[\\s\"]+|\"[\"]*\"|[ \\\\]"))
+                .stream()
+                .filter(ar -> !ar.isEmpty())
+                .collect(Collectors.toList());
         String result = null;
 
         if(arguments.size() == 1){
@@ -120,7 +124,7 @@ public class ExecTaskExecutor extends TaskExecutor {
         }
 
         for (String argumentToValidate : arguments) {
-            if (argumentToValidate == null || argumentToValidate.isEmpty()) {
+            if (argumentToValidate == null) {
                 result = "Task argument is missing!";
                 return result;
             }
