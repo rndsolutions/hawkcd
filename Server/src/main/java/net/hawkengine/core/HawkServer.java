@@ -31,9 +31,9 @@ public class HawkServer {
     private RedisServer redisServer;
 
     public HawkServer() throws IOException, URISyntaxException {
-        RedisManager.initializeEmbededDb(ServerConfiguration.getConfiguration().getEmbeddedDbPort());
+        RedisManager.initializeEmbededDb(6379);
         RedisManager.startEmbededDb();
-        RedisManager.connect(ServerConfiguration.getConfiguration().getServerName());
+        RedisManager.connect(ServerConfiguration.getConfiguration().getServerHost());
 
         this.server = new Server();
         this.pipelinePreparer = new Thread(new PipelinePreparer());
@@ -54,7 +54,7 @@ public class HawkServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{"index.html"});
-        //resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
+        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
 
