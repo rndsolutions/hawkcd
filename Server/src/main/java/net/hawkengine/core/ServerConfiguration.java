@@ -1,7 +1,7 @@
 package net.hawkengine.core;
 
 import net.hawkengine.core.utilities.constants.ConfigurationConstants;
-import net.hawkengine.model.Configuration;
+import net.hawkengine.model.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
