@@ -22,14 +22,18 @@ public class ExecTaskExecutor extends TaskExecutor {
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
         ExecTask execTask = (ExecTask) task.getTaskDefinition();
-
+        ProcessBuilder builder;
         String command = execTask.getCommand();
-        String arguments = String.join(" ", execTask.getArguments());
+        String initialOption = execTask.getArguments().substring(0,2);
+        Integer subStringEndIndex = execTask.getArguments().length();
+        String arguments = execTask.getArguments().substring(3,subStringEndIndex);
+        builder = new ProcessBuilder(command,initialOption,arguments);
+
 
         report.append(String.format("Command: %s \n", command));
         report.append(String.format("Arguments: %s \n", arguments));
 
-        ProcessBuilder builder = new ProcessBuilder(command, arguments);
+
         builder.redirectErrorStream(true);
 
         if ((execTask.getWorkingDirectory() != null) && !execTask.getWorkingDirectory().isEmpty()) {
