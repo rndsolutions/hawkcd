@@ -31,8 +31,6 @@ import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 
-;
-
 public class PipelineDefinitionControllerTest extends JerseyTest {
     private PipelineDefinitionService pipelineDefinitionService;
     private PipelineDefinition pipelineDefinition;
@@ -151,7 +149,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
-
     @Test
     public void updatePipelineDefinition_existingPipelineDefinition_updatedPipelineDefinition() {
         //Arrange
@@ -167,7 +164,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Assert
         assertEquals(200, response.getStatus());
         assertEquals(this.pipelineDefinition.getName(), actualResult.getName());
-
     }
 
     @Test
