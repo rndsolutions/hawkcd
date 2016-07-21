@@ -13,9 +13,11 @@ import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.User;
 import net.hawkengine.model.dto.WsContractDto;
 
 import net.hawkengine.model.payload.TokenInfo;
+import net.hawkengine.services.filters.factories.SecurityFactory;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -30,6 +32,8 @@ public class WsEndpoint extends WebSocketAdapter {
     static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
     private Gson jsonConverter;
     private UUID id;
+    private SecurityFactory securityFactory;
+    private User loggedUser;
 
     public WsEndpoint() {
         this.id = UUID.randomUUID();
@@ -38,6 +42,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
+        this.securityFactory = new SecurityFactory();
     }
 
     public UUID getId() {
@@ -63,6 +68,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
             RemoteEndpoint remoteEndpoint = session.getRemote();
             String userAsString = this.jsonConverter.toJson(tokenInfo.getUser());
+            this.loggedUser = tokenInfo.getUser();
             remoteEndpoint.sendStringByFuture(userAsString);
         }
 
@@ -97,20 +103,19 @@ public class WsEndpoint extends WebSocketAdapter {
 //                    return;
 //                }
 //            }
-
-            ServiceResult result = (ServiceResult) this.call(contract);
+            ServiceResult result = this.securityFactory.process(contract, this.loggedUser.getPermissions());
             contract.setResult(result.getObject());
             contract.setError(result.hasError());
             contract.setErrorMessage(result.getMessage());
 
             String jsonResult = this.jsonConverter.toJson(contract);
             remoteEndpoint.sendStringByFuture(jsonResult);
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
         } catch (RuntimeException e) {
             LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
             e.printStackTrace();
             this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -147,22 +152,7 @@ public class WsEndpoint extends WebSocketAdapter {
         remoteEndpoint.sendStringByFuture(jsonResult);
     }
 
-    public Object call(WsContractDto contract) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        String fullPackageName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
-        Object service = Class.forName(fullPackageName).newInstance();
-        List<Object> methodArgs = new ArrayList<>();
-        int contractArgsLength = contract.getArgs().length;
-        for (int i = 0; i < contractArgsLength; i++) {
-            if (contract.getArgs()[i] != null) {
-                Class objectClass = Class.forName(contract.getArgs()[i].getPackageName());
-                Object object = this.jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);
-                methodArgs.add(object);
-            }
-        }
 
-        Command command = new Command(service, contract.getMethodName(), methodArgs);
-        return command.execute();
-    }
 
     private void errorDetails(WsContractDto contract, Gson serializer, Exception e, RemoteEndpoint endPoint) {
         contract.setError(true);
