@@ -16,47 +16,36 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 public class ExecTaskExecutor extends TaskExecutor {
+
+
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
         ExecTask execTask = (ExecTask) task.getTaskDefinition();
         ProcessBuilder builder;
-        Integer subStringEndIndex;
-        String arguments;
         String command = execTask.getCommand();
-        String initialOption = execTask.getArguments().substring(0,2);
-        boolean isMissingInitialOption = false;
+        String isArgumentValid = this.validateArguments(execTask);
 
-        if(initialOption.equals("-c") || initialOption.equals("/c")){
-            subStringEndIndex = execTask.getArguments().length();
-            arguments = execTask.getArguments().substring(3,subStringEndIndex);
-            builder = new ProcessBuilder(command,initialOption,arguments);
+        if (isArgumentValid != null) {
+            return this.nullProcessing(report, task, isArgumentValid);
+        }
+
+        String initialOption = execTask.getArguments().substring(0, 2);
+        boolean hasInitialArgument = hasInitialArgument(initialOption);
+
+        if (hasInitialArgument) {
+            builder = this.constructProcessBuilder(command, execTask, initialOption, true);
         } else {
-            isMissingInitialOption = true;
-            arguments = String.join(" ", execTask.getArguments());
-            String commandAndArguments = command + " " + arguments;
-            String[] args = commandAndArguments.split(" ");
-            builder = new ProcessBuilder(args);
+            builder = this.constructProcessBuilder(command, execTask, true);
         }
 
         report.append(String.format("Command: %s \n", command));
-        report.append(String.format("Arguments: %s \n", arguments));
-
-
-        builder.redirectErrorStream(true);
-
-        if ((execTask.getWorkingDirectory() != null) && !execTask.getWorkingDirectory().isEmpty()) {
-            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName(), execTask.getWorkingDirectory()).toString();
-            LOGGER.info(workingDir);
-
-            builder.directory(new File(workingDir));
-        } else {
-            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName()).toString();
-            builder.directory(new File(workingDir));
-            LOGGER.info(workingDir);
-        }
+        report.append(String.format("Arguments: %s \n", execTask.getArguments()));
+        this.setProcessBuilderDirectory(builder, execTask, workInfo);
 
         Process process = null;
         try {
@@ -65,37 +54,9 @@ public class ExecTaskExecutor extends TaskExecutor {
                 process = builder.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.isEmpty()) {
-                        reader.close();
-                        break;
-                    }
-                    LOGGER.info(line);
-                    report.append(String.format("%s", line));
-                }
 
-                try {
-                    if(isMissingInitialOption){
-                        process.destroy();
-                    } else {
-                        process.waitFor();
-                        process.destroy();
-                    }
+                this.execute(task, process, reader, hasInitialArgument, report);
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if ((process != null) && (process.exitValue() == 0)) {
-                    this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
-                } else {
-                    if (!execTask.isIgnoringErrors()) {
-                        this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-                    } else {
-                        this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
-                    }
-                }
             } else {
                 this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
             }
@@ -107,5 +68,101 @@ public class ExecTaskExecutor extends TaskExecutor {
         }
 
         return task;
+    }
+
+    private void execute(Task task, Process process, BufferedReader reader, boolean hasInitialArgument, StringBuilder report) throws IOException {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.isEmpty()) {
+                reader.close();
+                break;
+            }
+            LOGGER.info(line);
+            report.append(String.format("%s", line));
+        }
+
+        try {
+            if (!hasInitialArgument) {
+                process.destroy();
+            } else {
+                process.waitFor();
+                process.destroy();
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        this.manageExitProcess(process, task);
+    }
+
+    private void manageExitProcess(Process process, Task task) {
+        ExecTask execTask = (ExecTask) task.getTaskDefinition();
+
+        if ((process != null) && (process.exitValue() == 0)) {
+            this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+        } else {
+            if (!execTask.isIgnoringErrors()) {
+                this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
+            } else {
+                this.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+            }
+        }
+    }
+
+    private String validateArguments(ExecTask task) {
+        List<String> arguments = Arrays.asList(task.getArguments().split(" "));
+        String result = null;
+
+        if(arguments.size() == 1){
+            result = "Task argument is missing!";
+            return result;
+        }
+
+        for (String argumentToValidate : arguments) {
+            if (argumentToValidate == null || argumentToValidate.isEmpty()) {
+                result = "Task argument is missing!";
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    private boolean hasInitialArgument(String initialArgument) {
+        if (initialArgument.equals("-c") || initialArgument.equals("/c")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private ProcessBuilder constructProcessBuilder(String command, ExecTask execTask, String initialOption, boolean redirectErrorStream) {
+        Integer subStringEndIndex = execTask.getArguments().length();
+        String arguments = execTask.getArguments().substring(3, subStringEndIndex);
+        ProcessBuilder builderToReturn = new ProcessBuilder(command, initialOption, arguments);
+        builderToReturn.redirectErrorStream(redirectErrorStream);
+        return builderToReturn;
+    }
+
+    private ProcessBuilder constructProcessBuilder(String command, ExecTask execTask, boolean redirectErrorStream) {
+        String arguments = String.join(" ", execTask.getArguments());
+        String commandAndArguments = command + " " + arguments;
+        String[] args = commandAndArguments.split(" ");
+        ProcessBuilder builderToReturn = new ProcessBuilder(args);
+        builderToReturn.redirectErrorStream(redirectErrorStream);
+        return builderToReturn;
+    }
+
+    private void setProcessBuilderDirectory(ProcessBuilder builder, ExecTask execTask, WorkInfo workInfo) {
+        if ((execTask.getWorkingDirectory() != null) && !execTask.getWorkingDirectory().isEmpty()) {
+            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName(), execTask.getWorkingDirectory()).toString();
+            LOGGER.info(workingDir);
+            builder.directory(new File(workingDir));
+        } else {
+            String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName()).toString();
+            builder.directory(new File(workingDir));
+            LOGGER.info(workingDir);
+        }
     }
 }
