@@ -23,12 +23,23 @@ public class ExecTaskExecutor extends TaskExecutor {
 
         ExecTask execTask = (ExecTask) task.getTaskDefinition();
         ProcessBuilder builder;
+        Integer subStringEndIndex;
+        String arguments;
         String command = execTask.getCommand();
         String initialOption = execTask.getArguments().substring(0,2);
-        Integer subStringEndIndex = execTask.getArguments().length();
-        String arguments = execTask.getArguments().substring(3,subStringEndIndex);
-        builder = new ProcessBuilder(command,initialOption,arguments);
+        boolean isMissingInitialOption = false;
 
+        if(initialOption.equals("-c") || initialOption.equals("/c")){
+            subStringEndIndex = execTask.getArguments().length();
+            arguments = execTask.getArguments().substring(3,subStringEndIndex);
+            builder = new ProcessBuilder(command,initialOption,arguments);
+        } else {
+            isMissingInitialOption = true;
+            arguments = String.join(" ", execTask.getArguments());
+            String commandAndArguments = command + " " + arguments;
+            String[] args = commandAndArguments.split(" ");
+            builder = new ProcessBuilder(args);
+        }
 
         report.append(String.format("Command: %s \n", command));
         report.append(String.format("Arguments: %s \n", arguments));
@@ -65,8 +76,13 @@ public class ExecTaskExecutor extends TaskExecutor {
                 }
 
                 try {
-                    process.waitFor();
-                    process.destroy();
+                    if(isMissingInitialOption){
+                        process.destroy();
+                    } else {
+                        process.waitFor();
+                        process.destroy();
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
