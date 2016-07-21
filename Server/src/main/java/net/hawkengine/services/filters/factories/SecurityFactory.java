@@ -12,6 +12,8 @@ public class SecurityFactory {
         switch (contract.getMethodName()) {
             case "getAll":
                 return new SecurityService().getAll(contract, permissions);
+            case "getAllPipelineGroupDTOs":
+                return new SecurityService().getPipelineDTOs(contract, permissions);
             case "getById":
                 return new SecurityService().getById(contract, permissions);
             case "add":

@@ -9,6 +9,8 @@ import java.util.List;
 public interface ISecurityService {
     ServiceResult getAll(WsContractDto contract, List<Permission> permissions);
 
+    ServiceResult getPipelineDTOs(WsContractDto contract, List<Permission> permissions);
+
     ServiceResult getById(WsContractDto contract, List<Permission> permissions);
 
     ServiceResult add(WsContractDto contract, List<Permission> permissions);

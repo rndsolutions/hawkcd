@@ -5,7 +5,7 @@ import net.hawkengine.model.payload.Permission;
 import java.util.List;
 
 public interface IAuthorizationService {
-    List<?> getAll(List<Permission> permissions);
+    List<?> getAll(List<Permission> permissions, List<?> entritiesToFilter);
 
     boolean getById(String entityId, List<Permission> permissions);
 
