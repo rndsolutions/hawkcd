@@ -21,11 +21,11 @@ public class RedisManager {
     }
 
     public static void  initializeEmbededDb(int port) throws IOException, URISyntaxException {
-        redisEmbededDb =  RedisServer.builder()
+        redisEmbededDb = RedisServer.builder()
                 .port(port)
-                .setting("daemonize yes")
-                .setting("appendonly yes")
-                .setting("maxheap 128M")
+             //   .setting("daemonize yes")
+             //   .setting("appendonly yes")
+             //   .setting("maxheap 128M")
                 .build();
     }
 

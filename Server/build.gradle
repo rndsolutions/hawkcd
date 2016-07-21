@@ -95,16 +95,11 @@ dependencies {
 
     compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.22.2'
 
-<<<<<<< HEAD
-    compile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-jdk-http', version: '2.22.1'
+    compile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-grizzly2', version: '2.23.1'
 
-
-
-            
-=======
     compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.9.1'
 
->>>>>>> b380e1a03d615dcc8ceae2af1a398ecb1368d812
+
     // Jedis
 
     compile 'redis.clients:jedis:2.8.0'
@@ -135,15 +130,11 @@ dependencies {
     //mock-jedis dependency for junit testing.
     testCompile 'com.fiftyonred:mock-jedis:0.4.0'
 
-<<<<<<< HEAD
-
-=======
     //mock-server
     testCompile "com.github.tomakehurst:wiremock:2.1.7"
 
     // https://mvnrepository.com/artifact/org.apache.ant/ant
     compile group: 'org.apache.ant', name: 'ant', version: '1.9.6'
->>>>>>> b380e1a03d615dcc8ceae2af1a398ecb1368d812
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
