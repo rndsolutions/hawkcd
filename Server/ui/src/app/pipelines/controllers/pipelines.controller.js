@@ -36,13 +36,14 @@ angular
             vm.allPipelines = viewModel.allPipelines;
             vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                 //TODO: Finish implementation once backend implementation is done
-                currentPipeline.role = 'ADMIN';
+                //currentPipeline.role = 'ADMIN';
 
-                // vm.allPermissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                //     if(currentPipeline.id == currentPermission.permittedEntityId) {
-                //         vm.allPipelines[pipelineIndex].role = currentPermission.role;
-                //     }
-                // });
+                viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
+                    if(currentPipeline.id == currentPermission.permittedEntityId) {
+                        currentPipeline.role = currentPermission.permissionType;
+                        console.log(currentPermission.role);
+                    }
+                });
             });
             console.log(vm.allPipelines);
         });
@@ -56,7 +57,7 @@ angular
                 viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
                     if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
                         if(currentPipelineRun.triggerReason == null) {
-                            currentPipelineRun.triggerReason = "User";
+                            currentPipelineRun.triggerReason = "User";0
                         }
                         viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
                         viewModel.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
@@ -83,13 +84,14 @@ angular
             vm.allPipelineGroups = viewModel.allPipelineGroups;
             vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
                 //TODO: Finish implementation once backend implementation is done
-                currentPipelineGroup.role = 'ADMIN';
+                //currentPipelineGroup.role = 'ADMIN';
 
-                // vm.allPermissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                //     if(currentPipelineGroup.id == currentPermission.permittedEntityId) {
-                //         vm.allPipelineGroups[pipelineGroupIndex].role = currentPermission.role;
-                //     }
-                // });
+                viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
+                    if(currentPipelineGroup.id == currentPermission.permittedEntityId) {
+                        currentPipelineGroup.role = currentPermission.permissionType;
+                        console.log(currentPermission.role);
+                    }
+                });
             });
             console.log(vm.allPipelineGroups);
         });

@@ -5,6 +5,11 @@ angular
     .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', function (viewModel, toaster, adminGroupService) {
         var viewModelUpdater = this;
 
+        viewModelUpdater.getUser = function (user) {
+            viewModel.user = user;
+            console.log(user);
+        };
+
         viewModelUpdater.getPermissions = function (permissions) {
             viewModel.allPermissions = permissions;
         };

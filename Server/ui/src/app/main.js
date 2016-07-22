@@ -148,7 +148,7 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "toaster", "$auth", "$location", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, toaster, $auth, $location) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
@@ -158,8 +158,9 @@ angular
         var timerID=0;
 
 
+        //TODO: Replace localStorage with $auth.isAuthenitcated()
         $rootScope.startWebsocket = function start(wsServerLocation){
-            $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + localStorage.getItem('token')));
+            $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
 
             $rootScope.socket.onmessage = function (event) {
                 console.log(event.data);
@@ -187,7 +188,7 @@ angular
             };
 
             $rootScope.socket.onclose = function (event) {
-                if(localStorage.getItem('token') == null){
+                if(!$auth.isAuthenticated()){
                     $auth.logout();
                     $location.path('/authenticate');
                     toaster.pop('error', "Notification", "Authentication failed. Please try again.");
@@ -204,9 +205,9 @@ angular
             }
         };
         //debugger;
-        if(localStorage.getItem('token') != null){
+        if($auth.isAuthenticated()){
             $rootScope.startWebsocket(wsServerLocation);
-            console.log(localStorage.getItem('token'));
+            console.log($auth.getToken());
         }
 
     }]);
