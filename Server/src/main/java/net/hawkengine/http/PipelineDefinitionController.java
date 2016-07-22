@@ -86,7 +86,7 @@ public class PipelineDefinitionController {
         if (isValid.equals("OK")) {
             ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
             if (result.hasError()) {
-                return Response.status(Status.NOT_FOUND)
+                return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();

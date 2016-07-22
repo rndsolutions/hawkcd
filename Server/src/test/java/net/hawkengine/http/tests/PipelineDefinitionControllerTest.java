@@ -69,7 +69,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     }
 
     @Test
-    public void getAllPipelineDefinition_existingObjects_allObjects()
+    public void getAllPipelineDefinitions_existingObjects_allObjects()
             throws IOException, InterruptedException {
         //Arrange
         List<PipelineDefinition> expectedResult = new ArrayList<>();
@@ -102,6 +102,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
         assertEquals(200, response.getStatus());
         assertEquals(this.pipelineDefinition.getId(), actualResult.getId());
+        this.removePipelineDefinition();
     }
 
     @Test
@@ -128,12 +129,13 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         PipelineDefinition actualResult = response.readEntity(PipelineDefinition.class);
 
         //Assert
-        assertEquals(200, response.getStatus());
+        assertEquals(201, response.getStatus());
         assertEquals(this.pipelineDefinition.getId(), actualResult.getId());
+        this.removePipelineDefinition();
     }
 
     @Test
-    public void addPipelineDefinition_invalidValidation_properErrorMessage() {
+    public void addPipelineDefinition_validationFails_properErrorMessage() {
         //Arrange
         this.preparePipelineDefinition();
         this.pipelineDefinition.setName(null);
@@ -164,6 +166,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Assert
         assertEquals(200, response.getStatus());
         assertEquals(this.pipelineDefinition.getName(), actualResult.getName());
+        this.removePipelineDefinition();
     }
 
     @Test
@@ -177,7 +180,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         Response response = target("/pipeline-definitions/").request().put(entity);
 
         //Assert
-        assertEquals(404, response.getStatus());
+        assertEquals(400, response.getStatus());
         assertEquals(expectedMessage, response.readEntity(String.class));
     }
 
@@ -217,6 +220,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         MaterialDefinition materialDefinition = new GitMaterial();
         materialDefinition.setType(MaterialType.GIT);
         materialDefinitions.add(materialDefinition);
+        materialDefinition.setName("gitName");
         this.pipelineDefinition.setMaterialDefinitions(materialDefinitions);
         StageDefinition stageDefinition = new StageDefinition();
         stageDefinition.setName("stageDefinition");
