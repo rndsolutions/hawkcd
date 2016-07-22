@@ -27,7 +27,7 @@ public class ExecTaskExecutor extends TaskExecutor {
     @Override
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
 
-         ExecTask execTask = (ExecTask) task.getTaskDefinition();
+        ExecTask execTask = (ExecTask) task.getTaskDefinition();
         ProcessBuilder builder;
         String command = execTask.getCommand();
         boolean isArgumentValid = this.validateArguments(execTask);
@@ -37,9 +37,9 @@ public class ExecTaskExecutor extends TaskExecutor {
         }
 
         String commandSwitch = execTask.getArguments().substring(0, 2);
-        boolean hasInitialArgument = this.hasInitialArgument(commandSwitch);
+        boolean isCommandSwitch = this.hasCommandSwitch(commandSwitch);
 
-        if (hasInitialArgument) {
+        if (isCommandSwitch) {
             builder = this.constructProcessBuilder(command, execTask, commandSwitch, true);
         } else {
             builder = this.constructProcessBuilder(command, execTask, true);
@@ -57,7 +57,7 @@ public class ExecTaskExecutor extends TaskExecutor {
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-                this.execute(task, process, reader, hasInitialArgument, report);
+                this.execute(task, process, reader, isCommandSwitch, report);
 
             } else {
                 this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
@@ -72,19 +72,15 @@ public class ExecTaskExecutor extends TaskExecutor {
         return task;
     }
 
-    private void execute(Task task, Process process, BufferedReader reader, boolean hasInitialArgument, StringBuilder report) throws IOException {
+    private void execute(Task task, Process process, BufferedReader reader, boolean commandSwitch, StringBuilder report) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.isEmpty()) {
-                reader.close();
-                break;
-            }
             LOGGER.info(line);
-            report.append(String.format("%s", line));
+            report.append(String.format("%s \n", line));
         }
 
         try {
-            if (!hasInitialArgument) {
+            if (!commandSwitch) {
                 process.destroy();
             } else {
                 process.waitFor();
@@ -129,7 +125,7 @@ public class ExecTaskExecutor extends TaskExecutor {
         return  true;
     }
 
-    private boolean hasInitialArgument(String initialArgument) {
+    private boolean hasCommandSwitch(String initialArgument) {
         if (initialArgument.equals("-c") || initialArgument.equals("/c")) {
             return true;
         }
