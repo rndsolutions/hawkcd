@@ -1,7 +1,7 @@
 package net.hawkengine.model.configuration;
 
 import net.hawkengine.model.enums.DatabaseType;
-import net.hawkengine.model.enums.ProviderType;
+import net.hawkengine.model.enums.OAuthProviderType;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ public final class Configuration {
     private int serverPort;
     private DatabaseType databaseType;
     private Map<DatabaseType, DatabaseConfig> databaseConfigs;
-    private Map<ProviderType, ProviderConfig> providerConfigs;
+    private Map<OAuthProviderType, ProviderConfig> oAuthProviderConfigs;
     private String materialsDestination;
     private String artifactsDestination;
     private int pipelineSchedulerPollInterval;
@@ -48,12 +48,12 @@ public final class Configuration {
         this.databaseConfigs = databaseConfigs;
     }
 
-    public Map<ProviderType, ProviderConfig> getProviderConfigs() {
-        return providerConfigs;
+    public Map<OAuthProviderType, ProviderConfig> getoAuthProviderConfigs() {
+        return oAuthProviderConfigs;
     }
 
-    public void setProviderConfigs(Map<ProviderType, ProviderConfig> providerConfigs) {
-        this.providerConfigs = providerConfigs;
+    public void setoAuthProviderConfigs(Map<OAuthProviderType, ProviderConfig> oAuthProviderConfigs) {
+        this.oAuthProviderConfigs = oAuthProviderConfigs;
     }
 
     public String getMaterialsDestination() {
