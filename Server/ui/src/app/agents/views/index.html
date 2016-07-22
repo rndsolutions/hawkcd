@@ -12,7 +12,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="portlet box green">
+    <div class="portlet light">
       <div class="portlet-title right">
         <div class="caption">
           <i class="fa fa-cogs"></i>{{agents.defaultText.agents}}
@@ -22,8 +22,8 @@
         </div>
       </div>
       <div class="portlet-body">
-
-        <table class="table table-striped table-bordered table-hover table-checkable order-column table-custom">
+      <div class="table-scrollable">
+        <table class="table table-hover">
           <thead>
           <tr>
             <th class="statusHeader"></th>
@@ -35,8 +35,6 @@
             <th>{{agents.defaultText.tableHeaders.freeSpace}}</th>
             <th>{{agents.defaultText.tableHeaders.resources}}</th>
             <th class="custom-datatable-btns">{{agents.defaultText.tableHeaders.action}}</th>
-
-
           </tr>
           </thead>
           <tbody>
@@ -50,29 +48,28 @@
             <td>{{agent.status}}</td>
             <td>{{agent.freeSpace}}</td>
             <td>{{agent.resources}}</td>
-            <td class="custom-datatable-btns">
-
-              <button class="btn btn-danger" data-target="#removeAgent" data-toggle="modal" ng-click="agents.setAgentToDelete(agent)">{{agents.status.delete}}
-              </button>
-              <button ng-click="agents.setAgentToAddResource(agent)" class="btn btn-info"  data-target="#addResourceAgent" data-toggle="modal"
-              >{{agents.status.resource}}
-              </button>
-              <button ng-click="agents.changeAgentStatus(agent)" class="btn btn-default"
-                       ng-if="agent.isEnabled == false" ng-show="agent.isConnected != false">{{agents.status.enable}}
-              </button>
-              <button class="btn default"
-                      ng-if="agent.isConnected == false" ng-class="{'disabled' : agent.isConnected == false}">Disconnected
-              </button>
-              <button ng-click="agents.changeAgentStatus(agent)" class="btn default"
-                      ng-if="agent.isEnabled == true" ng-show="agent.isConnected != false">{{agents.status.disable}}
-              </button>
+            <td >
+              <div class="btn-group btn-group-xs btn-group-solid">
+                <button class="btn btn-danger" data-target="#removeAgent" data-toggle="modal" ng-click="agents.setAgentToDelete(agent)">{{agents.status.delete}}
+                </button>
+                <button ng-click="agents.setAgentToAddResource(agent)" class="btn btn-info"  data-target="#addResourceAgent" data-toggle="modal"
+                >{{agents.status.resource}}
+                </button>
+                <button ng-click="agents.changeAgentStatus(agent)" class="btn btn-default"
+                        ng-if="agent.isEnabled == false" ng-show="agent.isConnected != false">{{agents.status.enable}}
+                </button>
+                <button class="btn default"
+                        ng-if="agent.isConnected == false" ng-class="{'disabled' : agent.isConnected == false}">Disconnected
+                </button>
+                <button ng-click="agents.changeAgentStatus(agent)" class="btn default"
+                        ng-if="agent.isEnabled == true" ng-show="agent.isConnected != false">{{agents.status.disable}}
+                </button>
+              </div>
             </td>
-
-
           </tr>
-
           </tbody>
         </table>
+      </div>
       </div>
     </div>
 
