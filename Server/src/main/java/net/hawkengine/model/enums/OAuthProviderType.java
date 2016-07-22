@@ -1,5 +1,5 @@
 package net.hawkengine.model.enums;
 
-public enum ProviderType {
+public enum OAuthProviderType {
     GITHUB
 }

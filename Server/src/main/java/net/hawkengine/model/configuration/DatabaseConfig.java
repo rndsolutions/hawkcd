@@ -1,6 +1,6 @@
 package net.hawkengine.model.configuration;
 
-public class Database {
+public class DatabaseConfig {
     private String name;
     private String host;
     private String port;

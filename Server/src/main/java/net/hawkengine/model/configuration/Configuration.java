@@ -9,8 +9,8 @@ public final class Configuration {
     private String serverHost;
     private int serverPort;
     private DatabaseType databaseType;
-    private Map<DatabaseType, Database> databases;
-    private Map<ProviderType, Provider> providers;
+    private Map<DatabaseType, DatabaseConfig> databaseConfigs;
+    private Map<ProviderType, ProviderConfig> providerConfigs;
     private String materialsDestination;
     private String artifactsDestination;
     private int pipelineSchedulerPollInterval;
@@ -40,20 +40,20 @@ public final class Configuration {
         this.databaseType = databaseType;
     }
 
-    public Map<DatabaseType, Database> getDatabases() {
-        return databases;
+    public Map<DatabaseType, DatabaseConfig> getDatabaseConfigs() {
+        return databaseConfigs;
     }
 
-    public void setDatabases(Map<DatabaseType, Database> databases) {
-        this.databases = databases;
+    public void setDatabaseConfigs(Map<DatabaseType, DatabaseConfig> databaseConfigs) {
+        this.databaseConfigs = databaseConfigs;
     }
 
-    public Map<ProviderType, Provider> getProviders() {
-        return providers;
+    public Map<ProviderType, ProviderConfig> getProviderConfigs() {
+        return providerConfigs;
     }
 
-    public void setProviders(Map<ProviderType, Provider> providers) {
-        this.providers = providers;
+    public void setProviderConfigs(Map<ProviderType, ProviderConfig> providerConfigs) {
+        this.providerConfigs = providerConfigs;
     }
 
     public String getMaterialsDestination() {

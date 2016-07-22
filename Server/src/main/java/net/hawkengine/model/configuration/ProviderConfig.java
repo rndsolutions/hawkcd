@@ -1,6 +1,6 @@
 package net.hawkengine.model.configuration;
 
-public class Provider {
+public class ProviderConfig {
     private String accessTokenUrl;
     private String clientId;
     private String clientSecret;
