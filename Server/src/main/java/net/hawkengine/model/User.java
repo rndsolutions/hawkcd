@@ -1,12 +1,21 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.payload.Permission;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class User extends DbEntry {
 
     private String email;
     private String password;
     private String ghAuthCode;
     private String provider;
-//    private String token;
+    private List<Permission> permissions;
+
+    public User(){
+        this.setPermissions(new ArrayList<>());
+    }
 
     public String getEmail(){
         return this.email;
@@ -40,11 +49,11 @@ public class User extends DbEntry {
         this.provider = provider;
     }
 
-//    public String getToken() {
-//        return this.token;
-//    }
-//
-//    public void setToken(String token) {
-//        this.token = token;
-//    }
+    public List<Permission> getPermissions() {
+        return this.permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 }
