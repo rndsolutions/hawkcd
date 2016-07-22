@@ -14,6 +14,7 @@ import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.User;
+import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
 
 import net.hawkengine.model.payload.TokenInfo;
@@ -65,11 +66,18 @@ public class WsEndpoint extends WebSocketAdapter {
             String token = tokenQuery.substring(6);
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
-
-            RemoteEndpoint remoteEndpoint = session.getRemote();
-            String userAsString = this.jsonConverter.toJson(tokenInfo.getUser());
             this.loggedUser = tokenInfo.getUser();
-            remoteEndpoint.sendStringByFuture(userAsString);
+
+            UserDto userDto = new UserDto();
+            userDto.setUsername(tokenInfo.getUser().getEmail());
+            userDto.setPermissions(tokenInfo.getUser().getPermissions());
+
+            ServiceResult serviceResult = new ServiceResult();
+            serviceResult.setError(false);
+            serviceResult.setMessage("User details retrieved successfully");
+            serviceResult.setObject(userDto);
+
+            EndpointConnector.passResultToEndpoint("UserInfo", "getUser", serviceResult);
         }
 
     }

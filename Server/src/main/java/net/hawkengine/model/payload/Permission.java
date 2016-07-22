@@ -2,24 +2,26 @@ package net.hawkengine.model.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.DbEntry;
-import net.hawkengine.model.enums.OperatingArea;
-import net.hawkengine.model.enums.Role;
+import net.hawkengine.model.enums.PermissionScope;
+import net.hawkengine.model.enums.PermissionType;
 
 public class Permission extends DbEntry{
-    private OperatingArea operatingArea;
+    //TODO: Rename Scope
+    private PermissionScope permissionScope;
     private String permittedEntityId;
-    private Role role;
+    //TODO: permission type
+    private PermissionType permissionType;
     private boolean isAbleToAdd;
     private boolean isAbleToGet;
     private boolean isAbleToUpdate;
     private boolean isAbleToDelete;
 
-    public OperatingArea getOperatingArea() {
-        return this.operatingArea;
+    public PermissionScope getPermissionScope() {
+        return this.permissionScope;
     }
 
-    public void setOperatingArea(OperatingArea operatingArea) {
-        this.operatingArea = operatingArea;
+    public void setPermissionScope(PermissionScope permissionScope) {
+        this.permissionScope = permissionScope;
     }
 
     public String getPermittedEntityId() {
@@ -30,12 +32,12 @@ public class Permission extends DbEntry{
         this.permittedEntityId = permittedEntityId;
     }
 
-    public Role getRole() {
-        return this.role;
+    public PermissionType getPermissionType() {
+        return this.permissionType;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setPermissionType(PermissionType permissionType) {
+        this.permissionType = permissionType;
     }
 
     public boolean isAbleToAdd() {

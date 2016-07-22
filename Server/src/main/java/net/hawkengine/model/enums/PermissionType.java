@@ -1,6 +1,6 @@
 package net.hawkengine.model.enums;
 
-public enum Role {
+public enum PermissionType {
     NONE,
     ADMIN,
     OPERATOR,

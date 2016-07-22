@@ -12,14 +12,17 @@ import net.hawkengine.model.User;
 import net.hawkengine.model.dto.GithubAuthDto;
 import net.hawkengine.model.dto.LoginDto;
 import net.hawkengine.model.dto.RegisterDto;
+import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserService;
+import net.hawkengine.services.filters.factories.PermissionFactory;
 import net.hawkengine.services.github.GitHubService;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,9 +46,11 @@ public class AuthController {
     private static final String GH_CLIENT_SERCRET = "";
 
     private UserService userService;
+    private PermissionFactory permissionFactory;
 
     public AuthController(){
         this.userService =  new UserService();
+        this.permissionFactory = new PermissionFactory();
     }
 
     @POST
@@ -129,12 +134,23 @@ public class AuthController {
     @Path("/register")
     public Response register(RegisterDto newUser){
         String hashedPassword = DigestUtils.sha256Hex(newUser.getPassword());
+        List<Permission> userPermissions = new ArrayList<>();
 
-            User user =  new User();
-            user.setEmail(newUser.getEmail());
-            user.setPassword(hashedPassword);
-            user.setPermissions((newUser.getPermissions()));
-            ServiceResult serviceResult = this.userService.addUserWithoutProvider(user);
+        User user =  new User();
+        user.setEmail(newUser.getEmail());
+        user.setPassword(hashedPassword);
+
+        //TODO: move this to update user, should not be here, left till adminUsers is ready
+        if (newUser.getPermissions() != null) {
+            userPermissions.addAll(newUser.getPermissions());
+            for (Permission permission : newUser.getPermissions()) {
+                List<Permission> distributedPermissions = this.permissionFactory.distributePermissions(permission, user);
+                userPermissions.addAll(distributedPermissions);
+            }
+        }
+        user.setPermissions(userPermissions);
+
+        ServiceResult serviceResult = this.userService.addUserWithoutProvider(user);
 
         if (serviceResult.hasError()) {
             return Response.status(Response.Status.BAD_REQUEST)

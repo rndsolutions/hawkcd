@@ -1,6 +1,6 @@
 package net.hawkengine.model.enums;
 
-public enum OperatingArea {
+public enum PermissionScope {
     SERVER,
     ENVIRONMENT,
     PIPELINE_GROUP,
