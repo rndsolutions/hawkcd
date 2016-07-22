@@ -9,6 +9,14 @@ import java.util.List;
 public abstract class Service<T extends DbEntry> implements IService<T> {
     private String objectType;
 
+    public String getObjectType() {
+        return this.objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
+
     @Override
     public ServiceResult createServiceResult(T object, boolean hasErrors, String messsage) {
         ServiceResult result = new ServiceResult();
@@ -34,13 +42,5 @@ public abstract class Service<T extends DbEntry> implements IService<T> {
         result.setMessage(this.getObjectType() + "s " + messsage + ".");
 
         return result;
-    }
-
-    public String getObjectType() {
-        return this.objectType;
-    }
-
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
     }
 }
