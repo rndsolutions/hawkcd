@@ -18,7 +18,7 @@ public class SecurityFactory {
                 return new SecurityService().getById(contract, permissions);
             case "add":
                 return new SecurityService().add(contract, permissions);
-            case "upload":
+            case "update":
                 return new SecurityService().update(contract, permissions);
             case "delete":
                 return new SecurityService().delete(contract, permissions);
