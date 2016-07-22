@@ -143,10 +143,10 @@ public class AuthController {
         //TODO: move this to update user, should not be here, left till adminUsers is ready
         if (newUser.getPermissions() != null) {
             userPermissions.addAll(newUser.getPermissions());
-            for (Permission permission : newUser.getPermissions()) {
-                List<Permission> distributedPermissions = this.permissionFactory.distributePermissions(permission, user);
-                userPermissions.addAll(distributedPermissions);
-            }
+//            for (Permission permission : newUser.getPermissions()) {
+//                List<Permission> distributedPermissions = this.permissionFactory.distributePermissions(permission, user);
+//                userPermissions.addAll(distributedPermissions);
+//            }
         }
         user.setPermissions(userPermissions);
 
