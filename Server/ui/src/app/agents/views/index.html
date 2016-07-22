@@ -27,28 +27,26 @@
           <thead>
           <tr>
             <th class="statusHeader"></th>
-            <th>{{agents.defaultText.tableHeaders.agentName}}</th>
-            <th class="custom-datatable-btns">{{agents.defaultText.tableHeaders.path}}</th>
-            <th>{{agents.defaultText.tableHeaders.os}}</th>
-            <th>{{agents.defaultText.tableHeaders.ip}}</th>
-            <th>{{agents.defaultText.tableHeaders.status}}</th>
-            <th>{{agents.defaultText.tableHeaders.freeSpace}}</th>
-            <th>{{agents.defaultText.tableHeaders.resources}}</th>
-            <th class="custom-datatable-btns">{{agents.defaultText.tableHeaders.action}}</th>
+            <th><h4 title="Agent Name">{{agents.defaultText.tableHeaders.agentName}} <span class="badge badge-default">?</span> </h4></th>
+            <th><h4 title="The Install location of the agent on the server">{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default">?</span></h4></th>
+            <th><h4 title="The Operation System the agent is running on"> {{agents.defaultText.tableHeaders.os}} <span class="badge badge-default">?</span></h4></th>
+            <th><H4 title="The server IP">{{agents.defaultText.tableHeaders.ip}} <span class="badge badge-default">?</span></H4></th>
+            <!--<th><h4 titile="The free space of the disk the agent is running on">{{agents.defaultText.tableHeaders.freeSpace}} <span class="badge badge-default">?</span> </h4> </th>-->
+            <th><h4 title="The resource tags used by the server to distribute jobs">{{agents.defaultText.tableHeaders.resources}} <span class="badge badge-default">?</span></h4></th>
+            <th class="custom-datatable-btns"> <h4>  {{agents.defaultText.tableHeaders.action}} <span class="badge badge-default">?</span> </h4></th>
           </tr>
           </thead>
           <tbody>
 
           <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
             <td class="statusLabel" ng-class="{'labelEnabled' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'labelDisabled' : !agent.isEnabled && agent.isConnected, 'labelRunning' : agent.isRunning && agent.isConnected, 'labelDisconnected' : !agent.isConnected}"></td>
-            <td>{{agent.hostName + "-" +  agent.id.substr(0,8)}}</td>
-            <td class="custom-datatable-btns">{{agent.rootPath}}</td>
-            <td>{{agent.operatingSystem}}</td>
-            <td>{{agent.ipAddress}}</td>
-            <td>{{agent.status}}</td>
-            <td>{{agent.freeSpace}}</td>
-            <td>{{agent.resources}}</td>
-            <td >
+            <td><h5> {{agent.hostName + "-" +  agent.id.substr(0,8)}}</h5></td>
+            <td><h5>{{agent.rootPath}} </h5></td>
+            <td><h5>{{agent.operatingSystem}}</h5></td>
+            <td><h5>{{agent.ipAddress}}</h5></td>
+            <!--<td><h5>{{agent.freeSpace}}</h5></td>-->
+            <td><h5>{{agent.resources}}</h5></td>
+            <td><h5>
               <div class="btn-group btn-group-xs btn-group-solid">
                 <button class="btn btn-danger" data-target="#removeAgent" data-toggle="modal" ng-click="agents.setAgentToDelete(agent)">{{agents.status.delete}}
                 </button>
@@ -65,6 +63,7 @@
                         ng-if="agent.isEnabled == true" ng-show="agent.isConnected != false">{{agents.status.disable}}
                 </button>
               </div>
+            </h5>
             </td>
           </tr>
           </tbody>
