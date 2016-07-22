@@ -58,10 +58,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     @Test
     public void executeTask_validTask_taskPassed() {
         //Assert
-        List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("-c");
-        expectedArguments.add("echo");
-        expectedArguments.add("test");
+        String expectedArguments = "-c echo test";
 
         this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);
@@ -89,10 +86,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     @Test
     public void executeTask_invalidTask_taskFailed() {
         //Assert
-        List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("-c");
-        expectedArguments.add("echo");
-        expectedArguments.add("test");
+        String expectedArguments = "-c echo test";
 
         this.expectedExecTask.setCommand("/bin/bashh");
         this.expectedExecTask.setArguments(expectedArguments);
@@ -120,10 +114,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     @Test
     public void executeTask_failingTaskNotIgnoringErrors_taskFailed() {
         //Assert
-        List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("-c");
-        expectedArguments.add("echo");
-        expectedArguments.add("test");
+        String expectedArguments = "-c echo test";
 
         this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);
@@ -148,10 +139,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     @Test
     public void executeTask_failingTaskIgnoringErrors_taskPassed() {
         //Assert
-        List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("-c");
-        expectedArguments.add("echo");
-        expectedArguments.add("test");
+        String expectedArguments = "-c echo test";
 
         this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);
@@ -179,10 +167,7 @@ public class ExecTaskExecutorTestOnLinux extends TestBase {
     @Test
     public void executeTask_nonExistingDirectory_taskFailed() {
         //Assert
-        List<String> expectedArguments = new ArrayList<>();
-        expectedArguments.add("-c");
-        expectedArguments.add("echo");
-        expectedArguments.add("test");
+        String expectedArguments = "-c echo test";
 
         this.expectedExecTask.setCommand("/bin/bash");
         this.expectedExecTask.setArguments(expectedArguments);

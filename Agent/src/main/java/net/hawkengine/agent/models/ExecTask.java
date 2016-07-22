@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ExecTask extends TaskDefinition {
     private String command;
-    private List arguments;
+    private String arguments;
     private String lookUpCommands;
     private String workingDirectory;
     private boolean isIgnoringErrors;
@@ -24,11 +24,11 @@ public class ExecTask extends TaskDefinition {
         this.command = value;
     }
 
-    public List getArguments() {
+    public String getArguments() {
         return this.arguments;
     }
 
-    public void setArguments(List value) {
+    public void setArguments(String value) {
         this.arguments = value;
     }
 
