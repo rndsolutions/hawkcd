@@ -28,11 +28,11 @@ public class SecurityService implements ISecurityService {
     public ServiceResult getAll(WsContractDto contract, List<Permission> permissions) {
         try {
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-            List<?> entitiesToFilter = (List<?>) this.result.getObject();
-            String entityType = contract.getClassName().substring(0, contract.getClassName().length() - 7);
-            List<?> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
-            this.result.setObject(filteredEntities);
-            int a =5;
+//            List<?> entitiesToFilter = (List<?>) this.result.getObject();
+//            String entityType = contract.getClassName().substring(0, contract.getClassName().length() - 7);
+//            List<?> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
+//            this.result.setObject(filteredEntities);
+//            int a =5;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
