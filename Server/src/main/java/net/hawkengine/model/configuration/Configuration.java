@@ -45,7 +45,7 @@ public final class Configuration {
         return databaseConfigs;
     }
 
-    public boolean isShouldUseEmbeddedDb() {
+    public boolean shouldUseEmbeddedDb() {
         return shouldUseEmbeddedDb;
     }
 
