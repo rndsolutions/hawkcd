@@ -25,21 +25,21 @@
       <div class="col-sm-2">
         <ul class="nav nav-tabs tabs-left">
           <li ui-sref-active="active">
-            <a ui-sref="index.admin.groups"  aria-expanded="true"> {{admin.defaultText.group}} </a>
+            <a ui-sref="index.admin.groups"  aria-expanded="true"> <h4>{{admin.defaultText.group}} </h4></a>
           <li ui-sref-active="active">
             <a ui-sref="index.admin.packages" data-target="#admin-packages" data-toggle="tab" aria-expanded="false">
-              {{admin.defaultText.packages}} </a>
+            <h4>  {{admin.defaultText.packages}} </h4></a>
           <li ui-sref-active="active">
             <a ui-sref="index.admin.servers" data-target="#admin-servers" data-toggle="tab" aria-expanded="false">
-              {{admin.defaultText.server}} </a>
+              <h4>{{admin.defaultText.server}} </h4></a>
           <li ui-sref-active="active">
             <a ui-sref="index.admin.users" data-target="#admin-users" data-toggle="tab" aria-expanded="false">
-              {{admin.defaultText.user}} </a>
+              <h4>{{admin.defaultText.user}} </h4> </a>
           </li>
         </ul>
       </div>
       <div class="col-sm-10">
-        <div class="tabbable-custom nav-justified">
+        <div class="nav-justified">
           <div class="tab-content" ui-view>
           </div>
         </div>
