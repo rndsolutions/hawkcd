@@ -15,25 +15,16 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
-import redis.embedded.RedisServer;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 public class HawkServer {
-    private static final int PORT = ServerConfiguration.getConfiguration().getServerPort();
-
     private Server server;
     private Thread pipelinePreparer;
     private Thread jobAssigner;
     private Thread materialTracker;
     private EndpointFinder endpointFinder;
-    private RedisServer redisServer;
 
-    public HawkServer() throws IOException, URISyntaxException {
-        RedisManager.initializeEmbededDb(6379);
-        RedisManager.startEmbededDb();
-        RedisManager.connect(ServerConfiguration.getConfiguration().getServerHost());
+    public HawkServer() {
+        RedisManager.connect();
 
         this.server = new Server();
         this.pipelinePreparer = new Thread(new PipelinePreparer());
@@ -45,7 +36,8 @@ public class HawkServer {
     public void configureJetty() {
         // HTTP connector
         ServerConnector connector = new ServerConnector(this.server);
-        connector.setPort(PORT);
+        int port = ServerConfiguration.getConfiguration().getServerPort();
+        connector.setPort(port);
         this.server.addConnector(connector);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -85,8 +77,7 @@ public class HawkServer {
         this.server.join();
     }
 
-    public void stop() throws InterruptedException {
-        RedisManager.release();
-        RedisManager.stopEmbededDb();
+    public void stop() {
+        RedisManager.disconnect();
     }
 }

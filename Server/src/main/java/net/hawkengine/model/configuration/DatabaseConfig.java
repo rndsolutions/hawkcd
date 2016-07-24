@@ -3,7 +3,7 @@ package net.hawkengine.model.configuration;
 public class DatabaseConfig {
     private String name;
     private String host;
-    private String port;
+    private int port;
     private String username;
     private String password;
 
@@ -23,11 +23,11 @@ public class DatabaseConfig {
         this.host = host;
     }
 
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
