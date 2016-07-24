@@ -1,8 +1,9 @@
 package net.hawkengine.services;
 
 import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.core.utilities.constants.ConfigurationConstants;
+import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
@@ -17,20 +18,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AgentService extends CrudService<Agent> implements IAgentService {
-    //TODO: add jobService
+    private static final Class CLASS_TYPE = Agent.class;
+
     private IPipelineService pipelineService;
     private IJobService jobService;
 
     public AgentService() {
-        super.setRepository(new RedisRepository(Agent.class));
-        super.setObjectType("Agent");
+        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineService = new PipelineService();
         this.jobService = new JobService();
     }
 
     public AgentService(IDbRepository repository, IPipelineService pipelineService) {
         super.setRepository(repository);
-        super.setObjectType("Agent");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineService = pipelineService;
     }
 

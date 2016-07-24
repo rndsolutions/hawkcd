@@ -1,5 +1,6 @@
 package net.hawkengine.core.materialhandler;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
@@ -11,6 +12,7 @@ import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,6 +32,11 @@ public class MaterialHandlerServiceTest {
     private IMaterialDefinitionService mockedMaterialDefinitionService;
     private IMaterialService mockedMaterialService;
     private IMaterialUpdater mockedMaterialUpdater;
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Before
     public void setUp() {

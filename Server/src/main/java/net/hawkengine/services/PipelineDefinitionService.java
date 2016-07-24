@@ -1,29 +1,26 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.constants.ConfigurationConstants;
+import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.*;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
+    private static final Class CLASS_TYPE = PipelineDefinition.class;
 
     public PipelineDefinitionService() {
-        super.setRepository(new RedisRepository(PipelineDefinition.class));
-        super.setObjectType("PipelineDefinition");
+        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public PipelineDefinitionService(IDbRepository repository) {
         super.setRepository(repository);
-        super.setObjectType("PipelineDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override
@@ -39,7 +36,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
         List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
-        for(MaterialDefinition materialDefinition : materialDefinitions){
+        for (MaterialDefinition materialDefinition : materialDefinitions) {
             materialDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
         }
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();

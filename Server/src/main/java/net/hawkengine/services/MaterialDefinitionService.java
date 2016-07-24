@@ -1,6 +1,8 @@
 package net.hawkengine.services;
 
-import net.hawkengine.db.redis.RedisRepository;
+import net.hawkengine.core.utilities.constants.ConfigurationConstants;
+import net.hawkengine.db.DbRepositoryFactory;
+import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -10,19 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaterialDefinitionService extends CrudService<MaterialDefinition> implements IMaterialDefinitionService {
+    private static final Class CLASS_TYPE = MaterialDefinition.class;
+
     private IPipelineDefinitionService pipelineDefinitionService;
     private String successMessage = "retrieved successfully";
     private String failureMessage = "not found";
 
     public MaterialDefinitionService() {
-        super.setRepository(new RedisRepository(MaterialDefinition.class));
+        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
         this.pipelineDefinitionService = new PipelineDefinitionService();
-        super.setObjectType("MaterialDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public MaterialDefinitionService(IPipelineDefinitionService pipelineDefinitionService) {
         this.pipelineDefinitionService = pipelineDefinitionService;
-        super.setObjectType("MaterialDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override

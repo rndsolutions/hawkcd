@@ -1,9 +1,9 @@
 package net.hawkengine.services;
 
-
 import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.core.utilities.constants.ConfigurationConstants;
+import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskType;
@@ -14,20 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
+    private static final Class CLASS_TYPE = Pipeline.class;
+
     private IPipelineDefinitionService pipelineDefinitionService;
 
     public PipelineService() {
-        super.setRepository(new RedisRepository(Pipeline.class));
+        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
         this.pipelineDefinitionService = new PipelineDefinitionService();
-        super.setObjectType("Pipeline");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public PipelineService(IDbRepository repository, IPipelineDefinitionService pipelineDefinitionService) {
         super.setRepository(repository);
         this.pipelineDefinitionService = pipelineDefinitionService;
-        super.setObjectType("Pipeline");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override
@@ -179,7 +181,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         for (TaskDefinition taskDefinition : taskDefinitions) {
 
             Task task = new Task();
-            if(taskDefinition.getType() == TaskType.FETCH_MATERIAL){
+            if (taskDefinition.getType() == TaskType.FETCH_MATERIAL) {
                 FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinition;
                 task.setMaterialDefinition(fetchMaterialTask.getMaterialDefinition());
             }
