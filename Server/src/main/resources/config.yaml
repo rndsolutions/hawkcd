@@ -4,6 +4,7 @@ serverPort: 8080
 
 # Database settings
 databaseType: REDIS
+shouldUseEmbeddedDb: true
 databaseConfigs:
   REDIS:
     name: redis
