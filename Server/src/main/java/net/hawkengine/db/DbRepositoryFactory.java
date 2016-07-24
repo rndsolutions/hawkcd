@@ -4,7 +4,7 @@ import net.hawkengine.db.mongodb.MongoDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.enums.DatabaseType;
 
-public class RepositoryFactory {
+public class DbRepositoryFactory {
     public static IDbRepository create(DatabaseType databaseType, Class classType) {
         switch (databaseType) {
             case REDIS:
