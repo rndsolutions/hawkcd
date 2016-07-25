@@ -17,7 +17,7 @@ angular
             user: 'Users & Roles',
             group: 'Groups',
             server: 'Evironments',
-            packages: 'Materials',
+            materials: 'Materials',
             tableHeaders: {
                 action: 'Actions',
                 user: 'Username',
@@ -101,7 +101,7 @@ angular
         vm.setPipelineForDelete = function (pipelineName) {
             vm.pipelineToDeleteName = pipelineName;
         };
-        
+
         vm.pipelineGroupToDelete;
 
         vm.setPipelineGroupToDelete = function (pipelineGroup) {
