@@ -178,12 +178,12 @@ angular
                 // pipeConfigService.getAllStageDefinitions();
                 //pipeStatsService.getAgentById();
 
-                adminGroupService.getAllPipelineGroups();
-                pipeConfigService.getAllPipelineGroupDTOs();
+                //adminGroupService.getAllPipelineGroups();
                 pipeConfigService.getAllPipelineDefinitions();
+                pipeConfigService.getAllPipelineGroupDTOs();
                 agentService.getAllAgents();
                 pipeExecService.getAllPipelines();
-                adminMaterialService.getAllMaterialDefinitions();
+                //adminMaterialService.getAllMaterialDefinitions();
             };
 
             $rootScope.socket.onclose = function (event) {

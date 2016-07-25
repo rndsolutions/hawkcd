@@ -1,5 +1,6 @@
 package net.hawkengine.services.filters.interfaces;
 
+import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.payload.Permission;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface IAuthorizationService {
 
     boolean delete(String entrityId, List<Permission> permissions);
 
-
+    List<PipelineDefinition> getAllPipelineDefinitions (List<Permission> permissions, List<PipelineDefinition> entitiesToFilter);
 }
