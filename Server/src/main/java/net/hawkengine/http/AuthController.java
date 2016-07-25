@@ -15,7 +15,6 @@ import net.hawkengine.model.dto.RegisterDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserService;
-import net.hawkengine.services.filters.factories.PermissionFactory;
 import net.hawkengine.services.github.GitHubService;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -46,11 +45,9 @@ public class AuthController {
     private static final String GH_CLIENT_SERCRET = "";
 
     private UserService userService;
-    private PermissionFactory permissionFactory;
 
     public AuthController(){
         this.userService =  new UserService();
-        this.permissionFactory = new PermissionFactory();
     }
 
     @POST
@@ -143,10 +140,6 @@ public class AuthController {
         //TODO: move this to update user, should not be here, left till adminUsers is ready
         if (newUser.getPermissions() != null) {
             userPermissions.addAll(newUser.getPermissions());
-//            for (Permission permission : newUser.getPermissions()) {
-//                List<Permission> distributedPermissions = this.permissionFactory.distributePermissions(permission, user);
-//                userPermissions.addAll(distributedPermissions);
-//            }
         }
         user.setPermissions(userPermissions);
 
