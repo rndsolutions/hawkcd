@@ -1,0 +1,32 @@
+<div id="materials">
+    <div class="table-scrollable table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th> Name </th>
+                    <th> Type </th>
+                    <th> URL </th>
+                    <th> Branch </th>
+                    <th> Controls </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <!--ng-repeat-->
+                <tr ng-repeat="material in admin.currentMaterials">
+                    <td> {{material.name}} </td>
+                    <td> <i class="fa fa-github-square" ng-if="material.type == 'GIT'"> GitHub</i> </td>
+                    <td> {{material.repositoryUrl}} </td>
+                    <td> {{material.branch}} </td>
+                    <td>
+                        <button class="btn yellow" data-target="#editMaterial" data-toggle="modal" ng-click="pipeConfig.getMaterial(material)">Edit</button>
+                        <button class="btn red" data-target="#removeMaterial" data-toggle="modal" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions.length > 1" ng-click="pipeConfig.getMaterial(material)">Delete</button>
+                    </td>
+                </tr>
+                <!--end ng-repeat-->
+
+            </tbody>
+        </table>
+    </div>
+    <button class="btn green" data-target="#addMaterials" data-toggle="modal">Add Material</button>
+</div>
