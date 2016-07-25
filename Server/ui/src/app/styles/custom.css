@@ -431,7 +431,7 @@ p {
 }
 
 .nav-tabs>.active {
-    border-top: 3px solid #E55E09!important;
+    /*border-top: 3px solid #E55E09!important*/;
 }
 
 .selectedS {

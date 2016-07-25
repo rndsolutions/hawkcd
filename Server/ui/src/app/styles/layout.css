@@ -76,7 +76,7 @@ Page Header
       padding-top: 12px; }
   .page-header.navbar .page-top {
     height: 68px;
-    background: #BAC0B6; }
+    /*background: #BAC0B6;*/ }
   .page-header.navbar .search-form {
     margin-left: 10px;
     display: inline-block;

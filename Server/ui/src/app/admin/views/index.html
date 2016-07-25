@@ -11,22 +11,40 @@
     </li>
   </ul>
 </div>
-<div class="tabbable-custom nav-justified">
-  <ul class="nav nav-tabs nav-justified custom-admin">
-    <li ui-sref-active="active">
-      <a ui-sref="index.admin.groups"  aria-expanded="true"> {{admin.defaultText.group}} </a>
-    <li ui-sref-active="active">
-      <a ui-sref="index.admin.packages" data-target="#admin-packages" data-toggle="tab" aria-expanded="false">
-        {{admin.defaultText.packages}} </a>
-    <li ui-sref-active="active">
-      <a ui-sref="index.admin.servers" data-target="#admin-servers" data-toggle="tab" aria-expanded="false">
-        {{admin.defaultText.server}} </a>
-    <li ui-sref-active="active">
-      <a ui-sref="index.admin.users" data-target="#admin-users" data-toggle="tab" aria-expanded="false">
-        {{admin.defaultText.user}} </a>
-    </li>
-  </ul>
-  <div class="tab-content" ui-view>
-
+<div class="portlet light">
+  <div class="portlet-title right">
+    <div class="caption ng-binding">
+      <i class="fa fa-cogs"></i>Server
+    </div>
+    <div class="tools right">
+      <a href="javascript:;" class="collapse"> </a>
+    </div>
+  </div>
+  <div class="portlet-body">
+    <div class="row">
+      <div class="col-sm-2">
+        <ul class="nav nav-tabs tabs-left">
+          <li ui-sref-active="active">
+            <a ui-sref="index.admin.groups"  aria-expanded="true"> <h4>{{admin.defaultText.group}} </h4></a>
+          <li ui-sref-active="active">
+            <a ui-sref="index.admin.packages" data-target="#admin-packages" data-toggle="tab" aria-expanded="false">
+            <h4>  {{admin.defaultText.packages}} </h4></a>
+          <li ui-sref-active="active">
+            <a ui-sref="index.admin.servers" data-target="#admin-servers" data-toggle="tab" aria-expanded="false">
+              <h4>{{admin.defaultText.server}} </h4></a>
+          <li ui-sref-active="active">
+            <a ui-sref="index.admin.users" data-target="#admin-users" data-toggle="tab" aria-expanded="false">
+              <h4>{{admin.defaultText.user}} </h4> </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-10">
+        <div class="nav-justified">
+          <div class="tab-content" ui-view>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+

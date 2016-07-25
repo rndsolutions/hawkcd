@@ -14,9 +14,9 @@ angular
         vm.defaultText = {
             pageHeader: 'Administration',
             breadCrumb: 'Admin',
-            user: 'User Management',
-            group: 'Group Management',
-            server: 'Server Management',
+            user: 'Users & Roles',
+            group: 'Groups',
+            server: 'Evironments',
             packages: 'Materials',
             tableHeaders: {
                 action: 'Actions',

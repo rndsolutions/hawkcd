@@ -14,7 +14,7 @@ angular
         "hawk.profileManagement",
         "ui.router",
         'ui.sortable',
-        //"ui.bootstrap",
+        "ui.bootstrap",
         //"oc.lazyLoad",
         //"ngSanitize",
         'luegg.directives',
