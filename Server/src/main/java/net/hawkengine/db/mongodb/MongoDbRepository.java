@@ -2,11 +2,17 @@ package net.hawkengine.db.mongodb;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.mongodb.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.DbEntry;
+
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.NotFoundException;
 import java.lang.reflect.Type;
@@ -15,22 +21,20 @@ import java.util.List;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
-    private DBCollection collection;
+    private MongoCollection collection;
     private Type entryType;
     private Gson jsonConverter;
-    private DB mongoDatabase;
+    private MongoDatabase mongoDatabase;
 
     public MongoDbRepository(Class<T> entry) {
         this.entryType = entry;
-
         this.jsonConverter = new GsonBuilder().create();
         this.mongoDatabase = MongoDbManager.getInstance().getDb();
         this.collection = this.mongoDatabase.getCollection(this.entryType.getTypeName());
     }
 
-    public MongoDbRepository(Class entry, DBCollection mockedMongoCollection) {
+    public MongoDbRepository(Class entry, MongoCollection mockedMongoCollection) {
         this.entryType = entry;
-
         this.jsonConverter = new GsonBuilder().create();
         this.collection = mockedMongoCollection;
     }
@@ -39,14 +43,13 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     public T getById(String id) {
         T result;
         try {
-            BasicDBObject query = new BasicDBObject("id", id);
-            DBCursor documents = this.collection.find(query);
+            BasicDBObject query = new BasicDBObject();
+            query.put("_id",new ObjectId(id));
+            DBObject document = (DBObject) collection.find(query);
 
-            if (documents.size() > 0) {
-                String document = JSON.serialize(documents.next());
-
-                result = this.jsonConverter.fromJson(document, this.entryType);
-
+            if (document != null) {
+//                String document = JSON.serialize(documents.next());
+                result = this.jsonConverter.fromJson((JsonElement) document, this.entryType);
                 return result;
             }
             return null;
@@ -61,9 +64,9 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
         T resultElement;
         List<T> result = new ArrayList<>();
         try {
-            DBCursor documents = this.collection.find();
+            FindIterable documents = this.collection.find();
 
-            for (DBObject document : documents) {
+            for (Object document : documents) {
                 String documentToJson = JSON.serialize(document);
                 resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
                 result.add(resultElement);
@@ -85,7 +88,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
                 String entryToJson = this.jsonConverter.toJson(entry);
                 DBObject myDoc = (DBObject) JSON.parse(entryToJson);
 
-                this.collection.insert(myDoc);
+                this.collection.insertOne(myDoc);
 
                 return entry;
             } catch (RuntimeException e) {
@@ -104,7 +107,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
             BasicDBObject searchQuery = new BasicDBObject().append("id", entry.getId());
 
-            this.collection.findAndModify(searchQuery, newDocument);
+            this.collection.findOneAndUpdate(searchQuery, newDocument);
 
             return entry;
         } catch (RuntimeException e) {
@@ -118,7 +121,7 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
         T result = null;
         try {
             BasicDBObject searchQuery = new BasicDBObject().append("id", id);
-            DBObject dbObject = this.collection.findAndRemove(searchQuery);
+            DBObject dbObject = (DBObject) this.collection.findOneAndDelete(searchQuery);
             String document = JSON.serialize(dbObject);
             result = this.jsonConverter.fromJson(document, this.entryType);
             return result;
