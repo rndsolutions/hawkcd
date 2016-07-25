@@ -7,15 +7,9 @@ databaseType: REDIS
 shouldUseEmbeddedDb: true
 databaseConfigs:
   REDIS:
-    name: redis
+    name: hawkdb
     host: localhost
     port: 6379
-    username:
-    password:
-  MONGODB:
-    name: mongoDb
-    host: localhost
-    port: 27017
     username:
     password:
 
