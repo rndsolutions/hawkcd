@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <div class="actions pull-right">
+    <div class="actions pull-left">
       <a data-target="#addNewPipelineGroup" data-toggle="modal" class="btn btn-default">
         <i class="fa fa-plus"></i> Add </a>
     </div>
@@ -16,22 +16,22 @@
            ng-repeat="pipeGroup in admin.currentPipelineGroups">
         <!-- pipelines container-->
         <uib-accordion-heading>
-              <span> <i class="fa fa-edit pull-right"></i> </span>
+              <span ng-show="false"> <i class="fa fa-edit pull-right"></i> </span>
               <span data-target="#removePipelineGroupAdmin"
                     ng-if="pipeGroup.pipelines.length==0"
                     data-toggle="modal"
                     ng-click="admin.setPipelineGroupToDelete(pipeGroup)">
                 <i class="fa fa-trash pull-right"></i>
               </span>
-            <h5> {{pipeGroup.name}} <span class="badge badge-default "> {{pipeGroup.pipelines.length}} </span></h5>
+            <h5> {{pipeGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{pipeGroup.pipelines.length}} </span></h5>
         </uib-accordion-heading>
-        <div ng-repeat="pipeline in pipeGroup.pipelines">
-          <span class="label label-default"> {{pipeline.name}}</span>
+        <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in pipeGroup.pipelines">
+          <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{pipeline.name}}</span>
         </div>
         </br>
         <div class="pull-right">
           <button type="button" class="btn btn-xs green">Assign pipeline <i class="fa fa-plus"></i></button>
-          <button  class="btn btn-xs red">
+          <button  class="btn btn-xs" ng-class="{'disabled': admin.togglePipeline == null, 'red': admin.togglePipeline != null}">
             Remove Pipeline <i class="fa fa-times"></i>  </button>
         </div>
       </div>

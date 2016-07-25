@@ -76,6 +76,12 @@ angular
 
         vm.currentMaterials = [];
 
+        vm.togglePipeline = null;
+
+        vm.selectPipeline = function (pipeline, index) {
+            vm.togglePipeline = index;
+        };
+
         vm.currentPipelineGroups = viewModel.allPipelineGroups;
 
         $scope.$watchCollection(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
