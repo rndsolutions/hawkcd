@@ -1,16 +1,21 @@
 package net.hawkengine.services.filters;
 
-import net.hawkengine.model.DbEntry;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.PipelineGroup;
-import net.hawkengine.model.ServiceResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
+import net.hawkengine.model.*;
+import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
+import net.hawkengine.services.filters.factories.AuthorizationFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 import net.hawkengine.ws.WsEndpoint;
 import net.hawkengine.ws.WsObjectProcessor;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +25,18 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     private WsObjectProcessor wsObjectProcessor;
     private ServiceResult result;
     private IAuthorizationService authorizationService;
+    private AuthorizationFactory authorizationFactory;
+    private Gson jsonConverter;
 
     public SecurityService() {
         this.wsObjectProcessor = new WsObjectProcessor();
         this.result = new ServiceResult();
-        this.authorizationService = new AuthorizationService();
+        this.authorizationFactory = new AuthorizationFactory();
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
     }
 
 
@@ -33,12 +45,13 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         try {
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
             List<T> entitiesToFilter = (List<T>) this.result.getObject();
-            List<T> filteredEntities = (List<T>) this.authorizationService.getAllPipelineDefinitions(permissions, (List<PipelineDefinition>) entitiesToFilter);
-
+            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
             this.result.setObject(filteredEntities);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+
         return this.result;
     }
 
@@ -46,17 +59,11 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     public ServiceResult getPipelineDTOs(WsContractDto contract, List<Permission> permissions) {
         try {
         ServiceResult pipelineDefinitionsServiceResult = this.result;
-//        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionsServiceResult.getObject();
-//        List<PipelineGroup> pipelineGroups = new ArrayList<>();
-//        this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//
-//        for (PipelineDefinition pipelineDefinition: pipelineDefinitions){
-//
-//        }
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
             List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionsServiceResult.getObject();
             List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.result.getObject();
-            List<T> entitiesToFilter = new ArrayList<>();
+
+            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
             List<T> filteredEntities = (List<T>)this.authorizationService.getAll(permissions, pipelineGroups);
             for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
                 PipelineGroup entityToAdd = pipelineGroups.stream().filter(g -> g.getId().equals(pipelineDefinition.getPipelineGroupId())).findFirst().orElse(null);
@@ -82,7 +89,18 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult getById(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            String entity = contract.getArgs()[0].getObject();
+            String entityId = entity.substring(1, entity.length()- 1);
+            boolean hasPermisssion = this.authorizationService.getById(entityId, permissions);
+            if (hasPermisssion) {
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            } else{
+                this.result.setError(true);
+                this.result.setMessage("Unathorized");
+                this.result.setObject(null);
+            }
+
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
@@ -92,7 +110,16 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult add(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            String entity = contract.getArgs()[0].getObject();
+            boolean hasPermission = this.authorizationService.add(entity, permissions);
+            if (hasPermission) {
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            } else {
+                this.result.setError(true);
+                this.result.setMessage("Unathorized");
+                this.result.setObject(null);
+            }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
@@ -102,7 +129,16 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult update(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            String entity = contract.getArgs()[0].getObject();
+            boolean hasPermission = this.authorizationService.update(entity, permissions);
+            if (hasPermission) {
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            } else {
+                this.result.setError(true);
+                this.result.setMessage("Unathorized");
+                this.result.setObject(null);
+            }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
@@ -112,7 +148,17 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult delete(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            String entity = contract.getArgs()[0].getObject();
+            String entityId = entity.substring(1, entity.length()- 1);
+            boolean hasPermisssion = this.authorizationService.delete(entityId, permissions);
+            if (hasPermisssion) {
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            } else{
+                this.result.setError(true);
+                this.result.setMessage("Unathorized");
+                this.result.setObject(null);
+            }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
