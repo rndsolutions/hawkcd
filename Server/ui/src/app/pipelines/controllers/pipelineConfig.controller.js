@@ -88,13 +88,15 @@ angular
                     //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
                 }
                 //TODO: Implement this when backend implementation is complete
-                currentPipeline.role = 'ADMIN';
+                // currentPipeline.role = 'ADMIN';
 
-                // vm.allPermissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                //     if(currentPipeline.id == currentPermission.permittedEntityId) {
-                //         vm.allPipelines[pipelineIndex].role = currentPermission.role;
-                //     }
-                // });
+                viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
+                    if(currentPipeline.id == currentPermission.permittedEntityId) {
+                        currentPipeline.role = currentPermission.permissionType;
+
+                    }
+                });
+                vm.allPipelines[0].role = 'ADMIN';
             });
             console.log(vm.allPipelines);
         });
