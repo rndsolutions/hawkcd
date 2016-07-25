@@ -235,7 +235,7 @@ angular
 
         viewModelUpdater.addPipeline = function (pipeline) {
             viewModel.allPipelineRuns.push(pipeline);
-            toaster.pop('success', "Notification", "Pipeline run started successfully!")
+            //toaster.pop('success', "Notification", "Pipeline run started successfully!")
         };
 
         viewModelUpdater.updatePipeline = function (pipeline) {

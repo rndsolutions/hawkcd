@@ -47,7 +47,12 @@ angular
                         viewModelUpdater.addAgent(object.result);
                     },
                     update: function (object) {
-                        viewModelUpdater.updateAgent(object.result);
+
+                        if(object.error == false) {
+                            viewModelUpdater.updateAgent(object.result);
+                        } else {
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
                     },
                     delete: function (object) {
                         if (object.error == false) {
@@ -116,6 +121,11 @@ angular
                     },
                     add: function (object) {
                         viewModelUpdater.addPipeline(object.result);
+                        if(object.error == false) {
+                        toaster.pop('success', "Notification", object.errorMessage);
+                        } else {
+                        toaster.pop('error', "Notification", object.errorMessage);
+                        }
                     },
                     update: function (object) {
                         viewModelUpdater.updatePipeline(object.result);
