@@ -93,9 +93,9 @@ public class PipelineAuthorizationService implements IAuthorizationService {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         for (Permission permission : permissions) {
             if (permission.getPermittedEntityId().equals(pipeline.getPipelineDefinitionId()) ||
-                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
-                if (permission.isAbleToAdd() ||
-                        ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId()) ||
+                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                if (permission.isAbleToAdd()) {
                     return true;
                 }
             }
@@ -108,9 +108,9 @@ public class PipelineAuthorizationService implements IAuthorizationService {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         for (Permission permission : permissions) {
             if (permission.getPermittedEntityId().equals(pipeline.getPipelineDefinitionId()) ||
-                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
-                if ((permission.isAbleToUpdate() && permission.isAbleToDelete()) ||
-                        ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId()) ||
+                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                if ((permission.isAbleToUpdate() && permission.isAbleToDelete())) {
                     return true;
                 }
             }

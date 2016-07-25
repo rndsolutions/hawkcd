@@ -85,9 +85,9 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     private boolean hasPermissionToAdd(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         for (Permission permission : permissions) {
             if (permission.getPermittedEntityId().equals(pipelineDefinition.getId()) ||
-                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
-                if (permission.isAbleToAdd() ||
-                        ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId()) ||
+                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                if (permission.isAbleToAdd()) {
                     return true;
                 }
             }
@@ -99,9 +99,9 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     private boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         for (Permission permission : permissions) {
             if (permission.getPermittedEntityId().equals(pipelineDefinition.getId()) ||
-                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
-                if ((permission.isAbleToUpdate() && permission.isAbleToDelete()) ||
-                        ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId()) ||
+                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
+                if ((permission.isAbleToUpdate() && permission.isAbleToDelete())) {
                     return true;
                 }
             }

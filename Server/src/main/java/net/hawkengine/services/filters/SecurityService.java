@@ -30,8 +30,13 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     public SecurityService() {
         this.wsObjectProcessor = new WsObjectProcessor();
-        this.result = new ServiceResult();
         this.authorizationFactory = new AuthorizationFactory();
+
+        this.result = new ServiceResult();
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
+
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -64,6 +69,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.result.getObject();
 
             this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            //TODO: REFACTOR THIS PART
             List<T> filteredEntities = (List<T>)this.authorizationService.getAll(permissions, pipelineGroups);
             for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
                 PipelineGroup entityToAdd = pipelineGroups.stream().filter(g -> g.getId().equals(pipelineDefinition.getPipelineGroupId())).findFirst().orElse(null);
@@ -91,14 +97,12 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         try {
             this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
+
+            //TODO: See why there are aditional quotes
             String entityId = entity.substring(1, entity.length()- 1);
             boolean hasPermisssion = this.authorizationService.getById(entityId, permissions);
             if (hasPermisssion) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-            } else{
-                this.result.setError(true);
-                this.result.setMessage("Unathorized");
-                this.result.setObject(null);
             }
 
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -115,14 +119,11 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             boolean hasPermission = this.authorizationService.add(entity, permissions);
             if (hasPermission) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-            } else {
-                this.result.setError(true);
-                this.result.setMessage("Unathorized");
-                this.result.setObject(null);
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+
         return this.result;
     }
 
@@ -134,14 +135,11 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             boolean hasPermission = this.authorizationService.update(entity, permissions);
             if (hasPermission) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-            } else {
-                this.result.setError(true);
-                this.result.setMessage("Unathorized");
-                this.result.setObject(null);
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+
         return this.result;
     }
 
@@ -150,18 +148,17 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         try {
             this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
+
+            //TODO: See why there are aditional quotes
             String entityId = entity.substring(1, entity.length()- 1);
             boolean hasPermisssion = this.authorizationService.delete(entityId, permissions);
             if (hasPermisssion) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-            } else{
-                this.result.setError(true);
-                this.result.setMessage("Unathorized");
-                this.result.setObject(null);
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+
         return this.result;
     }
 }
