@@ -1,8 +1,7 @@
-
 <div class="row">
   <div class="col-sm-12">
     <div class="actions pull-right">
-      <a href="javascript:;" class="btn btn-default">
+      <a data-target="#addNewPipelineGroup" data-toggle="modal" class="btn btn-default">
         <i class="fa fa-plus"></i> Add </a>
     </div>
   </div>
@@ -10,19 +9,30 @@
 </br>
 <div class="row">
   <div class="col-sm-12">
-    <uib-accordion close-others="oneAtATime">
+    <uib-accordion close-others="true">
       <div uib-accordion-group class="panel-default"
            is-open="status.isFirstOpen"
            is-disabled="status.isFirstDisabled"
            ng-repeat="pipeGroup in admin.currentPipelineGroups">
         <!-- pipelines container-->
         <uib-accordion-heading>
-          <span> <i class="fa fa-edit pull-right"></i> </span>
-          <span> <i class="fa fa-trash pull-right"></i></span>
-          <h5> {{pipeGroup.name}} <span class="badge badge-default "> {{pipeGroup.pipelines.length}} </span> </h5>
+              <span> <i class="fa fa-edit pull-right"></i> </span>
+              <span data-target="#removePipelineGroupAdmin"
+                    ng-if="pipeGroup.pipelines.length==0"
+                    data-toggle="modal"
+                    ng-click="admin.setPipelineGroupToDelete(pipeGroup)">
+                <i class="fa fa-trash pull-right"></i>
+              </span>
+            <h5> {{pipeGroup.name}} <span class="badge badge-default "> {{pipeGroup.pipelines.length}} </span></h5>
         </uib-accordion-heading>
         <div ng-repeat="pipeline in pipeGroup.pipelines">
           <span class="label label-default"> {{pipeline.name}}</span>
+        </div>
+        </br>
+        <div class="pull-right">
+          <button type="button" class="btn btn-xs green">Assign pipeline <i class="fa fa-plus"></i></button>
+          <button  class="btn btn-xs red">
+            Remove Pipeline <i class="fa fa-times"></i>  </button>
         </div>
       </div>
     </uib-accordion>
