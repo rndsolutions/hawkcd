@@ -1,6 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.constants.ConfigurationConstants;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Material;
@@ -13,7 +12,7 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
     private static final Class CLASS_TYPE = Material.class;
 
     public MaterialService() {
-        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }

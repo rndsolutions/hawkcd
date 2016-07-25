@@ -1,6 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.constants.ConfigurationConstants;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
@@ -13,7 +12,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     private static final Class CLASS_TYPE = PipelineDefinition.class;
 
     public PipelineDefinitionService() {
-        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }

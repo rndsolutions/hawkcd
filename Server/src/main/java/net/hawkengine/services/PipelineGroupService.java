@@ -1,6 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.constants.ConfigurationConstants;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.PipelineDefinition;
@@ -18,7 +17,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     private IPipelineDefinitionService pipelineDefinitionService;
 
     public PipelineGroupService() {
-        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineDefinitionService = new PipelineDefinitionService();

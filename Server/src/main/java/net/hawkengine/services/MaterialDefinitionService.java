@@ -1,6 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.constants.ConfigurationConstants;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
@@ -19,7 +18,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     private String failureMessage = "not found";
 
     public MaterialDefinitionService() {
-        IDbRepository repository = DbRepositoryFactory.create(ConfigurationConstants.DATABASE_TYPE, CLASS_TYPE);
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         this.pipelineDefinitionService = new PipelineDefinitionService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
