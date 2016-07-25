@@ -139,14 +139,12 @@ angular
             $auth.login(user)
               .then(function(response) {
               console.log(response.data)
-                  localStorage.setItem('token',response.data);
                 $auth.setToken(response.data);
                 $location.path("/pipelines");
                   $rootScope.startWebsocket("ws://hawkserver:8080/ws/v1");
               })
               .catch(function(response) {
                 console.log(response)
-              debugger;
                 // Handle errors here, such as displaying a notification
                 // for invalid email and/or password.
               });

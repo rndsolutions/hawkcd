@@ -4,14 +4,14 @@
     <div style="width: 300px">
 
       <div class="form-group form-md-line-input">
-        <input type="text" class="form-control" ng-model="pipeConfig.updatedStage.name" ng-pattern="/^([\w-]+)$/" required>
+        <input type="text" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" class="form-control" ng-model="pipeConfig.updatedStage.name" ng-pattern="/^([\w-]+)$/" required>
         <label>Stage Name</label>
       </div>
       <div class="form-group form-md-radios">
         <label>Stage Type</label>
         <div class="md-radio-list">
           <div class="md-radio">
-            <input type="radio" id="sManual" name="trigger"
+            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" id="sManual" name="trigger"
                    value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
             <label for="sManual">
               <span></span>
@@ -19,7 +19,7 @@
               <span class="box"></span> Manual </label>
           </div>
           <div class="md-radio">
-            <input type="radio" id="sOnSuccess" name="trigger"
+            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" id="sOnSuccess" name="trigger"
                    value="false" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
             <label for="sOnSuccess">
               <span></span>
@@ -31,7 +31,7 @@
     </div>
 
     <button class="btn green-sharp" ng-click="pipeConfig.editStage(pipeConfig.updatedStage)"
-            ng-disabled="editStageForm.$invalid || pipeConfig.updatedStage.StageType == pipeConfig.stage.StageType && pipeConfig.updatedStage.name == pipeConfig.stage.name">
+            ng-disabled="editStageForm.$invalid || pipeConfig.updatedStage.StageType == pipeConfig.stage.StageType && pipeConfig.updatedStage.name == pipeConfig.stage.name || pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'">
       Update
     </button>
   </form>

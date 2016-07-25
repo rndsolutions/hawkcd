@@ -7,9 +7,11 @@ angular
 
         viewModel.allAgents = [];
 
+        viewModel.user = {};
+
         viewModel.allPipelines = [];
 
-        viewModel.allMaterials = [];
+        //viewModel.allMaterials = [];
 
         viewModel.allMaterialDefinitions = [];
 

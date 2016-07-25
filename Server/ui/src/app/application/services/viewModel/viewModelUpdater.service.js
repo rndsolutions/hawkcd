@@ -2,8 +2,21 @@
 
 angular
     .module('hawk')
-    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', '$rootScope', function (viewModel, toaster, adminGroupService, $rootScope) {
+    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', function (viewModel, toaster, adminGroupService) {
         var viewModelUpdater = this;
+
+        viewModelUpdater.getUser = function (user) {
+            viewModel.user = user;
+            console.log(user);
+        };
+
+        viewModelUpdater.getPermissions = function (permissions) {
+            viewModel.allPermissions = permissions;
+        };
+
+        viewModelUpdater.updatePermissions = function (permission) {
+            //TODO: Implement this
+        };
 
         viewModelUpdater.updateAgents = function (agents) {
             viewModel.allAgents = agents;
@@ -101,7 +114,7 @@ angular
                     }
                 });
             });
-            viewModel.allMaterialDefinitions = materialDefinitions;
+            //viewModel.allMaterialDefinitions = materialDefinitions;
             toaster.pop('success', "Notification", "Materials updated!");
         };
 
