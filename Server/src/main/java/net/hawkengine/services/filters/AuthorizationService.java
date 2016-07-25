@@ -1,6 +1,7 @@
 package net.hawkengine.services.filters;
 
 import net.hawkengine.model.DbEntry;
+import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 
@@ -17,6 +18,24 @@ public class AuthorizationService<T extends DbEntry> implements IAuthorizationSe
             String entityToFilterId = object.getId();
             for (Permission permission: permissions) {
                 if (permission.getPermittedEntityId().equals(entityToFilterId)){
+                    if (permission.isAbleToGet()){
+                        result.add(entityToFilter);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<PipelineDefinition> getAllPipelineDefinitions(List<Permission> permissions, List<PipelineDefinition> entitiesToFilter) {
+        List<PipelineDefinition> result = new ArrayList<>();
+        for (PipelineDefinition entityToFilter: entitiesToFilter) {
+            PipelineDefinition object = entityToFilter;
+            String entityToFilterId = object.getId();
+            for (Permission permission: permissions) {
+                if (permission.getPermittedEntityId().equals(entityToFilterId) ||
+                        permission.getPermittedEntityId().equals(entityToFilter.getPipelineGroupId())){
                     if (permission.isAbleToGet()){
                         result.add(entityToFilter);
                     }
