@@ -1,5 +1,6 @@
 package net.hawkengine.core.materialhandler;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Material;
@@ -72,7 +73,7 @@ public class MaterialTracker implements Runnable {
                     }
                 }
 
-                Thread.sleep(4 * 1000);
+                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

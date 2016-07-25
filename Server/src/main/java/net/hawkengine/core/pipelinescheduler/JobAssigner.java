@@ -1,5 +1,6 @@
 package net.hawkengine.core.pipelinescheduler;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Agent;
@@ -57,7 +58,7 @@ public class JobAssigner implements Runnable {
                     EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
                 }
 
-                Thread.sleep(4 * 1000);
+                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
