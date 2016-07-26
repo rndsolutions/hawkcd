@@ -30,9 +30,9 @@
         </div>
         </br>
         <div class="pull-right">
-          <button type="button" class="btn btn-xs green">Assign pipeline <i class="fa fa-plus"></i></button>
-          <button  class="btn btn-xs" ng-class="{'disabled': admin.togglePipeline == null, 'red': admin.togglePipeline != null}">
-            Remove Pipeline <i class="fa fa-times"></i>  </button>
+          <button type="button" class="btn btn-xs green" data-target="#assignPipeline" data-toggle="modal" ng-click="admin.setPipelineGroupToAssign(pipeGroup)">Assign pipeline <i class="fa fa-plus"></i></button>
+          <button class="btn btn-xs" ng-class="{'disabled': admin.togglePipeline == null, 'red': admin.togglePipeline != null}">
+            Unassign Pipeline <i class="fa fa-times"></i>  </button>
         </div>
       </div>
     </uib-accordion>
@@ -115,3 +115,5 @@
 <div ng-include src="'app/admin/views/partials/_addNewPipelineGroup.html'"></div>
 <div ng-include src="'app/admin/views/partials/_removePipeline.html'"></div>
 <div ng-include src="'app/admin/views/partials/_removePipelineGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_assignPipeline.html'"></div>
+<div ng-include src="'app/admin/views/partials/_unassignPipeline.html'"></div>

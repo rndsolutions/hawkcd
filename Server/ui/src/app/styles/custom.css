@@ -553,7 +553,8 @@ p {
 }
 
 .custom-admin-pipeline-padding {
-    padding-bottom: 10px!important;
+    padding-right: 10px!important;
+    float:left!important;
 }
 
 .custom-admin-badge-color {
@@ -563,10 +564,11 @@ p {
 .admin-custom:hover {
     cursor: pointer!important;
     cursor: hand!important;
+    display:inline!important;
 }
 
 #materials table td > i {
-  padding-left: 0.01em;
-  padding-top: 0.29em;
-  font-size:3.0em;
+    padding-left: 0.01em;
+    padding-top: 0.29em;
+    font-size:3.0em;
 }

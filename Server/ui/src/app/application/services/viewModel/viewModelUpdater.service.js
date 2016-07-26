@@ -54,6 +54,13 @@ angular
 
         viewModelUpdater.getAllPipelineDefinitions = function (pipelineDefinitions){
             viewModel.allPipelines = pipelineDefinitions;
+            viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                if(currentPipeline.pipelineGroupId == ''){
+                    viewModel.unassignedPipelines.push(currentPipeline);
+                } else {
+                    viewModel.assignedPipelines.push(currentPipeline);
+                }
+            });
             toaster.pop('success', "Notification", "Pipelines updated!");
         };
 
@@ -67,17 +74,23 @@ angular
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroupDTO, index, array) {
                 if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId){
                     array[index].pipelines.push(pipelineDefinition);
-                    viewModel.allPipelines.push(pipelineDefinition);
+                    viewModel.assignedPipelines.push(pipelineDefinition);
                     toaster.pop('success', "Notification", "Pipeline Definition " + pipelineDefinition.name + " added!")
+                } else if (pipelineDefinition.pipelineGroupId == '') {
+                    viewModel.unassignedPipelines.push(pipelineDefinition);
                 }
             });
         };
 
         viewModelUpdater.updatePipelineDefinition = function (pipelineDefinition) {
             viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
-                if(currentPipeline.id == pipelineDefinition.id){
-                    viewModel.allPipelines[index] = pipelineDefinition;
+                if(currentPipeline.id == pipelineDefinition.id && pipelineDefinition.pipelineGroupId != ''){
+                    viewModel.assignedPipelines[index] = pipelineDefinition;
                     toaster.pop('success', "Notification", "Pipeline Definition " + pipelineDefinition.name + " updated!")
+                } else if(pipelineDefinition.pipelineGroupId == '') {
+                    viewModel.unassignedPipelines.forEach(function (currentUnassignedPipeline, unassignedPipelineIndex, unassignedPipelineArray) {
+                        viewModel.unassignedPipelines.push(pipelineDefinition);
+                    });
                 }
             });
 
@@ -89,6 +102,7 @@ angular
                         }
                     });
                 }
+
             });
         };
 

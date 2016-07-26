@@ -1,0 +1,26 @@
+<div id="assignPipeline" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="assignPipelineForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.close()"></button>
+                    <h4 class="modal-title">Assigned Pipelines</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in admin.unassignedPipelines">
+                        <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{pipeline.name}}</span>
+                    </div>
+                </div>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.close()"></button>
+                    <h4 class="modal-title">Unassigned Pipelines</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in admin.pipelineGroupToAssign">
+                        <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{pipeline.name}}</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

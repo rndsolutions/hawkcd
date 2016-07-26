@@ -78,12 +78,22 @@ angular
 
         vm.togglePipeline = null;
 
+        vm.pipelineGroupToAssign = {};
+
         vm.selectPipeline = function (pipeline, index) {
             vm.togglePipeline = index;
         };
 
+        vm.setPipelineGroupToAssign = function (pipelineGroup) {
+            vm.pipelineGroupToAssign = pipelineGroup;
+        };
+
         vm.clearSelection = function() {
             vm.togglePipeline = null;
+        };
+
+        vm.close = function () {
+            vm.pipelineGroupToAssign = {};
         };
 
         vm.currentPipelineGroups = viewModel.allPipelineGroups;
