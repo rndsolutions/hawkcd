@@ -272,6 +272,28 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
 */
 
+
+
+    @Test
+    public void updatePipelineDefinition_invalidField_properErrorMessage() {
+        //Arrange
+        this.preparePipelineDefinition();
+        String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
+        this.serviceResult.setMessage(expectedResult);
+        this.serviceResult.setError(true);
+        this.pipelineDefinition.setName(null);
+        Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
+
+        //Act
+        Response response = target("/pipeline-definitions").request().put(entity);
+        String actualResult = response.readEntity(String.class);
+
+        //Assert
+        assertEquals(400, response.getStatus());
+        assertEquals(expectedResult, actualResult);
+    }
+
     @Test
     public void deletePipelineDefinition_pipelineDefintionId_successMessage() {
         //Arrange

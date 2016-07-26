@@ -18,14 +18,11 @@ import net.hawkengine.services.interfaces.IStageDefinitionService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -48,7 +45,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     }
 
     @Test
-    public void stageDefinitionController_constructorTest_notNull(){
+    public void stageDefinitionController_constructorTest_notNull() {
 
         StageDefinitionController stageDefinitionController = new StageDefinitionController();
 
@@ -75,7 +72,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     @Test
     public void getAllStageDefinitions_existingObjects_twoObjects() {
         //Arrange
-        Set<StageDefinition> expectedResult = new HashSet<>();
+        List<StageDefinition> expectedResult = new ArrayList<>();
         expectedResult.add(this.stageDefinition);
         expectedResult.add(this.stageDefinition);
         this.serviceResult.setObject(expectedResult);
@@ -87,7 +84,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult.size(),actualResult.size());
+        assertEquals(expectedResult.size(), actualResult.size());
 
     }
 
@@ -123,7 +120,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(404, response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(expectedResult, actualResult);
     }
 
 
@@ -161,11 +158,11 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void addStageDefinition_existingObject_properErrorMessage(){
+    public void addStageDefinition_existingObject_properErrorMessage() {
         //Arrange
         this.prepareStageDefinition();
         String expectedResult = "StageDefinition already exists.";
@@ -173,7 +170,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setObject(null);
         Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
-        Entity entity = Entity.entity(this.stageDefinition,"application/json");
+        Entity entity = Entity.entity(this.stageDefinition, "application/json");
 
         //Act
         Response response = target("/stage-definitions").request().post(entity);
@@ -181,7 +178,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -201,7 +198,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(expectedResult, actualResult);
 
     }
 
@@ -263,6 +260,26 @@ public class StageDefinitionControllerTests extends JerseyTest {
     }
 
     @Test
+    public void updateStageDefinition_invalidField_properErrorMessage() {
+        //Arrange
+        this.prepareStageDefinition();
+        String expectedResult = "ERROR: STAGE DEFINITION NAME IS NULL.";
+        this.serviceResult.setMessage(expectedResult);
+        this.serviceResult.setError(true);
+        this.stageDefinition.setName(null);
+        Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Entity entity = Entity.entity(this.stageDefinition, "application/json");
+
+        //Act
+        Response response = target("/stage-definitions").request().put(entity);
+        String actualResult = response.readEntity(String.class);
+
+        //Assert
+        assertEquals(400, response.getStatus());
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
     public void deleteStageDefinition_stageDefinition_successMessage() {
         //Arrange
         this.prepareStageDefinition();
@@ -276,7 +293,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     }
 
     @Test
-    public void deleteStageDefinition_nonExistingStageDefinition_errorMessage(){
+    public void deleteStageDefinition_nonExistingStageDefinition_errorMessage() {
         //Arrange
         String expectedMessage = "StageDefinition not found.";
         this.serviceResult.setError(true);
@@ -293,16 +310,16 @@ public class StageDefinitionControllerTests extends JerseyTest {
     }
 
     @Test
-    public void deleteStageDefinition_lastStageDefinition_errorMessage(){
+    public void deleteStageDefinition_lastStageDefinition_errorMessage() {
         //Arrange
         this.prepareStageDefinition();
-        String expectedMessage = this.stageDefinition+" is the last Stage Definition and cannot be deleted.";
+        String expectedMessage = this.stageDefinition.getId() + " is the last Stage Definition and cannot be deleted.";
         this.serviceResult.setError(true);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.stageDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
-        Response response = target("/stage-definitions/"+this.stageDefinition.getId()).request().delete();
+        Response response = target("/stage-definitions/" + this.stageDefinition.getId()).request().delete();
         String actualMessage = response.readEntity(String.class);
 
         //Assert
