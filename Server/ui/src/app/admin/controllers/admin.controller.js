@@ -3,7 +3,7 @@
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, profileService, adminGroupService, authDataService, viewModel, $rootScope) {
+        function($state, $interval, $scope, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, authDataService, viewModel, $rootScope) {
             var vm = this;
 
 
@@ -48,6 +48,10 @@ angular
                 deleteGroupModal: {
                     header: 'Delete Pipeline Group',
                     confirm: 'Are you sure you want to delete Group: '
+                },
+                unassignPipelineModal: {
+                    header: 'Unassign Pipeline',
+                    confirm: 'Are you sure you want to unassign Pipeline: '
                 }
             };
 
@@ -99,12 +103,50 @@ angular
 
             vm.currentMaterials = [];
 
+            vm.toggleAssignedPipeline = null;
+
             vm.togglePipeline = null;
 
             vm.pipelineGroupToAssign = {};
 
+            vm.pipelineToAssign = null;
+
+            vm.pipelineToUnassign = null;
+
+            vm.unassignedPipelines = [];
+
             vm.selectPipeline = function(pipeline, index) {
                 vm.togglePipeline = index;
+            };
+
+            vm.selectAssignedPipelineToAssign = function(pipeline, index) {
+                vm.toggleAssignedPipeline = index;
+                vm.toggleUnassignedPipeline = null;
+                vm.pipelineToAssign = pipeline;
+            };
+
+            vm.selectUnassignedPipelineToAssign = function(pipeline, index) {
+                vm.toggleUnassignedPipeline = index;
+                vm.toggleAssignedPipeline = null;
+                vm.pipelineToAssign = pipeline;
+            };
+
+            vm.selectAssignedPipelineToUnassign = function(pipeline) {
+                vm.pipelineToUnassign = angular.copy(pipeline);
+            };
+
+            vm.assignPipeline = function(pipeline) {
+                var updatedPipeline = angular.copy(pipeline);
+                updatedPipeline.pipelineGroupId = vm.pipelineGroupToAssign.id;
+                updatedPipeline.groupName = vm.pipelineGroupToAssign.name;
+                pipeConfigService.updatePipelineDefinition(updatedPipeline);
+            };
+
+            vm.unassignPipeline = function() {
+                var updatedPipeline = angular.copy(vm.pipelineToUnassign);
+                updatedPipeline.pipelineGroupId = '';
+                updatedPipeline.groupName = '';
+                pipeConfigService.updatePipelineDefinition(updatedPipeline);
             };
 
             vm.setPipelineGroupToAssign = function(pipelineGroup) {
@@ -113,13 +155,24 @@ angular
 
             vm.clearSelection = function() {
                 vm.togglePipeline = null;
+                vm.toggleAssignedPipeline = null;
+                vm.toggleUnassignedPipeline = null;
             };
 
             vm.close = function() {
                 vm.pipelineGroupToAssign = {};
+                vm.pipelineToAssign = null;
+                vm.pipelineToUnassign = null;
+                vm.toggleAssignedPipeline = null;
+                vm.toggleUnassignedPipeline = null;
+                vm.clearSelection();
             };
 
             vm.currentPipelineGroups = viewModel.allPipelineGroups;
+
+            $scope.$watchCollection(function () { return viewModel.unassignedPipelines }, function(newVal, oldVal) {
+                vm.unassignedPipelines = viewModel.unassignedPipelines;
+            });
 
             $scope.$watchCollection(function() {
                 return viewModel.allPipelineGroups

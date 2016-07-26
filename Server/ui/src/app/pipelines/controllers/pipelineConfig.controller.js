@@ -85,10 +85,10 @@ angular
             console.log(vm.allPipelines);
         });
 
-        $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
-            vm.allMaterials = viewModel.allMaterialDefinitions;
-            console.log(vm.allMaterials);
-        });
+        // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
+        //     vm.allMaterials = viewModel.allMaterialDefinitions;
+        //     console.log(vm.allMaterials);
+        // });
 
         // $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
         //     vm.allStages = viewModel.allStages;
