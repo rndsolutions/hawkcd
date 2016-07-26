@@ -58,7 +58,7 @@ public class JobAssigner implements Runnable {
                     EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
                 }
 
-                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval());
+                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

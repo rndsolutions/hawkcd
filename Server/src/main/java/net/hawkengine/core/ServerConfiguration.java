@@ -110,14 +110,12 @@ public class ServerConfiguration {
 
         // Worker settings
         int pipelineSchedulerPollInterval = configuration.getPipelineSchedulerPollInterval();
-        if (pipelineSchedulerPollInterval < MIN_WORKER_POLL_INTERVAL ||
-                pipelineSchedulerPollInterval > MAX_WORKER_POLL_INTERVAL) {
+        if (pipelineSchedulerPollInterval < MIN_WORKER_POLL_INTERVAL || pipelineSchedulerPollInterval > MAX_WORKER_POLL_INTERVAL) {
             errorMessage.append(String.format(WORKER_POLL_INTERVAL_ERROR, PROPERTY_SCHEDULER_POLL_INTERVAL, MIN_WORKER_POLL_INTERVAL, MAX_WORKER_POLL_INTERVAL));
         }
 
         int materialTrackerPollInterval = configuration.getMaterialTrackerPollInterval();
-        if (materialTrackerPollInterval < MIN_WORKER_POLL_INTERVAL ||
-                materialTrackerPollInterval > MAX_WORKER_POLL_INTERVAL) {
+        if (materialTrackerPollInterval < MIN_WORKER_POLL_INTERVAL || materialTrackerPollInterval > MAX_WORKER_POLL_INTERVAL) {
             errorMessage.append(String.format(WORKER_POLL_INTERVAL_ERROR, PROPERTY_TRACKER_POLL_INTERVAL, MIN_WORKER_POLL_INTERVAL, MAX_WORKER_POLL_INTERVAL));
         }
 

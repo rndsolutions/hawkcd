@@ -16,7 +16,7 @@ public final class ConfigurationConstants {
     public static final String PROPERTY_SCHEDULER_POLL_INTERVAL = "pipelineSchedulerPollInterval";
     public static final String PROPERTY_TRACKER_POLL_INTERVAL = "materialTrackerPollInterval";
 
-    public static final int MIN_WORKER_POLL_INTERVAL = 1000;
-    public static final int MAX_WORKER_POLL_INTERVAL = 30000;
-    public static final String WORKER_POLL_INTERVAL_ERROR = "Property '%s' must be set between %n and %n." + System.getProperty("line.separator");
+    public static final int MIN_WORKER_POLL_INTERVAL = 1;
+    public static final int MAX_WORKER_POLL_INTERVAL = 30;
+    public static final String WORKER_POLL_INTERVAL_ERROR = "Property '%s' must be set between %d and %d seconds." + System.getProperty("line.separator");
 }

@@ -73,7 +73,7 @@ public class MaterialTracker implements Runnable {
                     }
                 }
 
-                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval());
+                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

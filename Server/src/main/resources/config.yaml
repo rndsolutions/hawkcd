@@ -3,6 +3,7 @@ serverHost: localhost
 serverPort: 8080
 
 # Database settings
+# Allowed Database Types: 'REDIS'
 databaseType: REDIS
 shouldUseEmbeddedDb: true
 databaseConfigs:
@@ -26,7 +27,7 @@ materialsDestination: Materials
 artifactsDestination: Artifacts
 
 # Worker settings
-# Min 1000; Max 30000
-pipelineSchedulerPollInterval: 4000
-materialTrackerPollInterval: 4000
+# Min 1 second; Max 30 seconds
+pipelineSchedulerPollInterval: 4
+materialTrackerPollInterval: 4
 

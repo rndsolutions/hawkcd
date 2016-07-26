@@ -52,7 +52,7 @@ public class PipelinePreparer implements Runnable {
                     LOGGER.info(preparedPipeline.getPipelineDefinitionName() + " prepared.");
                 }
 
-                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval());
+                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
