@@ -17,23 +17,24 @@ import net.hawkengine.model.User;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
 
+import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
-import net.hawkengine.services.filters.factories.SecurityFactory;
+import net.hawkengine.services.filters.factories.SecurityServiceInvoker;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class WsEndpoint extends WebSocketAdapter {
     static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
     private Gson jsonConverter;
     private UUID id;
-    private SecurityFactory securityFactory;
+    private SecurityServiceInvoker securityServiceInvoker;
     private User loggedUser;
 
     public WsEndpoint() {
@@ -43,7 +44,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
-        this.securityFactory = new SecurityFactory();
+        this.securityServiceInvoker = new SecurityServiceInvoker();
     }
 
     public UUID getId() {
@@ -111,7 +112,10 @@ public class WsEndpoint extends WebSocketAdapter {
 //                    return;
 //                }
 //            }
-            ServiceResult result = this.securityFactory.process(contract, this.loggedUser.getPermissions());
+            List<Permission> orderedPermissions = this.loggedUser.getPermissions().stream()
+                    .sorted((p1, p2) -> p1.getPermissionScope().compareTo(p2.getPermissionScope())).collect(Collectors.toList());
+
+            ServiceResult result = this.securityServiceInvoker.process(contract, orderedPermissions);
             contract.setResult(result.getObject());
             contract.setError(result.hasError());
             contract.setErrorMessage(result.getMessage());

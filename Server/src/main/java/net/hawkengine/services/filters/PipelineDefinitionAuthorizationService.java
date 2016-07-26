@@ -13,9 +13,12 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import org.omg.CORBA.PERSIST_STORE;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class PipelineDefinitionAuthorizationService implements IAuthorizationService {
     private IPipelineDefinitionService pipelineDefinitionService;
@@ -23,6 +26,15 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
 
     public PipelineDefinitionAuthorizationService(){
         this.pipelineDefinitionService = new PipelineDefinitionService();
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
+    }
+
+    public PipelineDefinitionAuthorizationService(IPipelineDefinitionService pipelineDefinitionService){
+        this.pipelineDefinitionService = pipelineDefinitionService;
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -69,44 +81,71 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     }
 
     private boolean hasPermissionToRead(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
+        boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId()) ||
-                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())  ||
-                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
-                if (permission.isAbleToGet()) {
-                    return true;
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+                hasPermission = true;
+            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
+                if (permission.getPermissionType() == PermissionType.NONE){
+                    hasPermission = false;
+                } else{
+                    hasPermission = true;
+                }
+            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
+                if (permission.getPermissionType() == PermissionType.NONE){
+                    hasPermission = false;
+                } else{
+                    hasPermission = true;
+                    return hasPermission;
                 }
             }
         }
-
-        return false;
+        return hasPermission;
     }
 
     private boolean hasPermissionToAdd(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
+        boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId()) ||
-                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId()) ||
-                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
-                if (permission.isAbleToAdd()) {
-                    return true;
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+                hasPermission = true;
+            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
+                if (permission.getPermissionType() == PermissionType.ADMIN){
+                    hasPermission = true;
+                } else{
+                    hasPermission = false;
+                }
+            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
+                if (permission.getPermissionType() == PermissionType.ADMIN || permission.getPermissionType() == PermissionType.OPERATOR){
+                    hasPermission = true;
+                    return hasPermission;
+                } else{
+                    hasPermission = false;
                 }
             }
         }
-
-        return false;
+        return hasPermission;
     }
 
     private boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
+        boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId()) ||
-                    permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId()) ||
-                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
-                if ((permission.isAbleToUpdate() && permission.isAbleToDelete())) {
-                    return true;
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+                hasPermission = true;
+            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
+                if (permission.getPermissionType() == PermissionType.ADMIN){
+                    hasPermission = true;
+                } else{
+                    hasPermission = false;
+                }
+            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
+                if (permission.getPermissionType() == PermissionType.ADMIN){
+                    hasPermission = true;
+                    return hasPermission;
+                } else{
+                    hasPermission = false;
                 }
             }
         }
-
-        return false;
+        return hasPermission;
     }
 }

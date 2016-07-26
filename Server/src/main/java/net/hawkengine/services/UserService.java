@@ -16,6 +16,11 @@ public class UserService extends CrudService<User> implements IUserService {
         super.setObjectType("User");
     }
 
+    public  UserService(RedisRepository redisRepository){
+        super.setRepository(redisRepository);
+        super.setObjectType("User");
+    }
+
     @Override
     public ServiceResult getById(String id) {
         return super.getById(id);
