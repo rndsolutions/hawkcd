@@ -2,9 +2,10 @@
     <button class="btn btn-default" data-target="#addMaterials" data-toggle="modal">
         <i class="fa fa-plus"></i> Add</button>
     <div class="table-scrollable table-responsive">
-        <table class="table table-hover">
+        <table class="table table-hover table-advance">
             <thead>
                 <tr>
+                  <th class="statusHeader"></th>
                     <th>
                         <h4>{{admin.popOverOptions.tableTitles.name}} <span class="badge badge-default" uib-popover="{{admin.popOverOptions.popOverTitles.name}}"
                                                                                                         popover-placement="{{admin.popOverOptions.placements.top}}"
@@ -46,14 +47,15 @@
 
                 <!--ng-repeat-->
                 <tr ng-repeat="material in admin.currentMaterials">
-                    <td> {{material.name}} </td>
+                    <td class="highlight"><div ng-class="{'success':true,'status-position':true}"></div></td>
+                    <td><h5> {{material.name}} </h5></td>
                     <td> <i class="fa fa-github" ng-if="material.type == 'GIT'"></i> </td>
-                    <td> {{material.repositoryUrl}} </td>
-                    <td> {{material.branch}} </td>
-                    <td>
-                        <button class="btn yellow" data-target="#editMaterial" data-toggle="modal" ng-click="pipeConfig.getMaterial(material)">Edit</button>
-                        <button class="btn red" data-target="#removeMaterial" data-toggle="modal" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions.length > 1" ng-click="pipeConfig.getMaterial(material)">Delete</button>
-                    </td>
+                    <td><h5> {{material.repositoryUrl}} </h5></td>
+                    <td><h5> {{material.branch}} </h5></td>
+                    <td><h5><div class="btn-group btn-group-xs btn-group-solid">
+                        <button class="btn btn-info" data-target="#editMaterial" data-toggle="modal" ng-click="pipeConfig.getMaterial(material)">Edit</button>
+                        <button class="btn btn-danger" data-target="#removeMaterial" data-toggle="modal" ng-if="true" ng-click="pipeConfig.getMaterial(material)">Delete</button>
+                    </div></h5></td>
                 </tr>
                 <!--end ng-repeat-->
 

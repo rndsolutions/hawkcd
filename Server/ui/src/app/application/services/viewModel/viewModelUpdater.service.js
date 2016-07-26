@@ -108,13 +108,6 @@ angular
 
         viewModelUpdater.getAllMaterialDefinitions = function (materialDefinitions) {
             //viewModel.allMaterials = materialDefinitions;
-            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
-                materialDefinitions.forEach(function (currentMaterial, materialIndex, materialArray) {
-                    if(currentPipeline.id == currentMaterial.pipelineDefinitionId){
-                        viewModel.allPipelines[index].materialDefinitions = materialDefinitions;
-                    }
-                });
-            });
             viewModel.allMaterialDefinitions = materialDefinitions;
             toaster.pop('success', "Notification", "Materials updated!");
         };

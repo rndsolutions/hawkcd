@@ -572,3 +572,7 @@ p {
     padding-top: 0.29em;
     font-size:3.0em;
 }
+
+.status-position{
+  position:relative!important;
+}
