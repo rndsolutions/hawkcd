@@ -174,7 +174,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         }
 
         boolean isRemoved = false;
-        ServiceResult serviceResult;
+        ServiceResult serviceResult = new ServiceResult();
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
         StageDefinition stageDefinition = stageDefinitions
                 .stream()
@@ -182,18 +182,20 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
                 .findFirst()
                 .orElse(null);
 
+        if (stageDefinition == null) {
+            serviceResult = super.createServiceResult(stageDefinition, true, "not found");
+        }
+
         if (stageDefinitions.size() > 1) {
             isRemoved = stageDefinitions.remove(stageDefinition);
         } else {
-            return super.createServiceResult(stageDefinition, true, "is the last Stage Definition and cannot be deleted");
+             super.createServiceResult(stageDefinition, true, "is the last Stage Definition and cannot be deleted");
         }
 
         if (isRemoved) {
             pipeline.setStageDefinitions(stageDefinitions);
             this.pipelineDefinitionService.update(pipeline);
             serviceResult = super.createServiceResult(stageDefinition, false, "deleted successfully");
-        } else {
-            serviceResult = super.createServiceResult(stageDefinition, true, "not found");
         }
 
         return serviceResult;
