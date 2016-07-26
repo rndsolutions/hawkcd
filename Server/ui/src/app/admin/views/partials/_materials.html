@@ -1,15 +1,20 @@
 <div id="materials">
-  <button class="btn btn-default" data-target="#addMaterials" data-toggle="modal">
-    <i class="fa fa-plus"></i> Add</button>
+    <button class="btn btn-default" data-target="#addMaterials" data-toggle="modal">
+        <i class="fa fa-plus"></i> Add</button>
     <div class="table-scrollable table-responsive">
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th><h4> Name </h4></th>
-                    <th><h4> Type </h4></th>
-                    <th><h4> URL </h4></th>
-                    <th><h4> Branch </h4></th>
-                    <th><h4> Controls </h4></th>
+                    <th>
+                        <h4> Name </h4></th>
+                    <th>
+                        <h4> Type </h4></th>
+                    <th>
+                        <h4> URL </h4></th>
+                    <th>
+                        <h4> Branch </h4></th>
+                    <th>
+                        <h4> Controls </h4></th>
                 </tr>
             </thead>
             <tbody>
@@ -17,7 +22,7 @@
                 <!--ng-repeat-->
                 <tr ng-repeat="material in admin.currentMaterials">
                     <td> {{material.name}} </td>
-                    <td> <i class="fa fa-github-square" ng-if="material.type == 'GIT'"> GitHub</i> </td>
+                    <td> <i class="fa fa-github" ng-if="material.type == 'GIT'"></i> </td>
                     <td> {{material.repositoryUrl}} </td>
                     <td> {{material.branch}} </td>
                     <td>

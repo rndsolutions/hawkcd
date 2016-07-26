@@ -564,3 +564,9 @@ p {
     cursor: pointer!important;
     cursor: hand!important;
 }
+
+#materials table td > i {
+  padding-left: 0.01em;
+  padding-top: 0.29em;
+  font-size:3.0em;
+}
