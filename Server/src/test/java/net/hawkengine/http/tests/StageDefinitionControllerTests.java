@@ -190,7 +190,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         this.prepareStageDefinition();
         this.serviceResult.setObject(null);
         this.serviceResult.setError(true);
-        String expectedResult = "PipelineDefinition with that name already exists.";
+        String expectedResult = "StageDefinition with that name already exists.";
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
