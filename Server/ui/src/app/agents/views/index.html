@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="portlet-body">
-                <div class="table-responsive">
+                <div class="table-responsive table-advance">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -64,7 +64,7 @@
                         <tbody>
 
                             <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
-                                <td class="statusLabel" ng-class="{'labelEnabled' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'labelDisabled' : !agent.isEnabled && agent.isConnected, 'labelRunning' : agent.isRunning && agent.isConnected, 'labelDisconnected' : !agent.isConnected}"></td>
+                                <td class="highlight"><div ng-class="{'success' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'warning' : !agent.isEnabled && agent.isConnected}"></div></td>
                                 <td>
                                     <h5> {{agent.hostName + "-" +  agent.id.substr(0,8)}}</h5></td>
                                 <td>
