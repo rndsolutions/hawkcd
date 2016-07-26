@@ -30,6 +30,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 public class PipelineDefinitionControllerTest extends JerseyTest {
@@ -46,9 +47,18 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     }
 
     @Test
+    public void pipelineDefinitionController_constructorTest_notNull(){
+
+        PipelineDefinitionController pipelineDefinitionController = new PipelineDefinitionController();
+
+        assertNotNull(pipelineDefinitionController);
+    }
+
+
+    @Test
     public void getAllPipelineDefinitions_nonExistingObjects_emptyList() {
         //Arrange
-        Set<PipelineDefinition> expectedResult = new HashSet<>();
+        List<PipelineDefinition> expectedResult = new ArrayList<>();
         this.serviceResult.setObject(expectedResult);
         Mockito.when(this.pipelineDefinitionService.getAll()).thenReturn(this.serviceResult);
 
@@ -137,19 +147,20 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     public void addPipelineDefinition_invalidField_properErrorMessage() {
         //Arrange
         this.preparePipelineDefinition();
-        String expectedMessage = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
-        this.serviceResult.setMessage(expectedMessage);
+        String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
+        this.serviceResult.setMessage(expectedResult);
+        this.serviceResult.setError(true);
         this.pipelineDefinition.setName(null);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
 
         //Act
         Response response = target("/pipeline-definitions").request().post(entity);
-        String actualMessage = response.readEntity(String.class);
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
