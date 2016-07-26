@@ -49,7 +49,7 @@
                 <tr ng-repeat="material in admin.currentMaterials">
                     <td class="highlight"><div ng-class="{'success':true,'status-position':true}"></div></td>
                     <td><h5> {{material.name}} </h5></td>
-                    <td> <i class="fa fa-github" ng-if="material.type == 'GIT'"></i> </td>
+                    <td> <i class="fa fa-github-square" ng-if="material.type == 'GIT'"></i> </td>
                     <td><h5> {{material.repositoryUrl}} </h5></td>
                     <td><h5> {{material.branch}} </h5></td>
                     <td><h5><div class="btn-group btn-group-xs btn-group-solid">
