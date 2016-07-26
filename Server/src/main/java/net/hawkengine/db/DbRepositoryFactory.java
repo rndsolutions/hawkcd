@@ -1,6 +1,5 @@
 package net.hawkengine.db;
 
-import net.hawkengine.db.mongodb.MongoDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.enums.DatabaseType;
 
@@ -9,8 +8,6 @@ public class DbRepositoryFactory {
         switch (databaseType) {
             case REDIS:
                 return new RedisRepository(classType);
-            case MONGODB:
-                return new MongoDbRepository(classType);
             default:
                 return null;
         }
