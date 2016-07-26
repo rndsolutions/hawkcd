@@ -11,7 +11,7 @@
         <th width="15%"> Controls </th>
       </tr>
       </thead>
-      <tbody ui-sortable="pipeConfig.sortableOptions" class="sortable" ng-model="pipeConfig.job.taskDefinitions">
+      <tbody ng-model="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions" ui-sortable="pipeConfig.sortableOptions"  class="sortable">
 
       <!--ng-repeat-->
       <tr ng-repeat="task in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions">
