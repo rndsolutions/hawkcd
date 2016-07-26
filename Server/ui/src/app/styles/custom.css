@@ -148,8 +148,8 @@ p {
 }
 
 .admin-selected-pipeline {
-    background-color: #26344B !important;
-    color: #A5B1C8;
+    background-color: #337ab7 !important;
+    color: #ffffff;
     text-underline: none;
 }
 

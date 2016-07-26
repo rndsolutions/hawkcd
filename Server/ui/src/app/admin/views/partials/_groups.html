@@ -23,7 +23,7 @@
                     ng-click="admin.setPipelineGroupToDelete(pipeGroup)">
                 <i class="fa fa-trash pull-right"></i>
               </span>
-            <h5> {{pipeGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{pipeGroup.pipelines.length}} </span></h5>
+            <h5 ng-click="admin.clearSelection()"> {{pipeGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{pipeGroup.pipelines.length}} </span></h5>
         </uib-accordion-heading>
         <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in pipeGroup.pipelines">
           <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{pipeline.name}}</span>

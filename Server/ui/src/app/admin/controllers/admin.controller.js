@@ -82,6 +82,10 @@ angular
             vm.togglePipeline = index;
         };
 
+        vm.clearSelection = function() {
+            vm.togglePipeline = null;
+        };
+
         vm.currentPipelineGroups = viewModel.allPipelineGroups;
 
         $scope.$watchCollection(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
