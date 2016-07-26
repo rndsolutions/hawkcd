@@ -8,11 +8,15 @@ import net.hawkengine.services.filters.interfaces.ISecurityService;
 
 import java.util.List;
 
-public class SecurityFactory {
+public class SecurityServiceInvoker {
     private ISecurityService securityService;
 
-    public SecurityFactory(){
+    public SecurityServiceInvoker(){
         this.securityService = new SecurityService();
+    }
+
+    public SecurityServiceInvoker(ISecurityService securityService){
+        this.securityService = securityService;
     }
     public ServiceResult process(WsContractDto contract, List<Permission> permissions) {
         switch (contract.getMethodName()) {

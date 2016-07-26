@@ -73,7 +73,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
         return this.hasPermissionToUpdateAndDelete(permissions, pipeline);
     }
 
-    private boolean hasPermissionToRead(List<Permission> permissions, Pipeline pipeline) {
+    public boolean hasPermissionToRead(List<Permission> permissions, Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         for (Permission permission : permissions) {
             if (permission.getPermittedEntityId().equals(pipeline.getPipelineDefinitionId()) ||
@@ -89,7 +89,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
         return false;
     }
 
-    private boolean hasPermissionToAdd(List<Permission> permissions, Pipeline pipeline) {
+    public boolean hasPermissionToAdd(List<Permission> permissions, Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         for (Permission permission : permissions) {
             if (permission.getPermittedEntityId().equals(pipeline.getPipelineDefinitionId()) ||
@@ -104,7 +104,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
         return false;
     }
 
-    private boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, Pipeline pipeline) {
+    public boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         for (Permission permission : permissions) {
             if (permission.getPermittedEntityId().equals(pipeline.getPipelineDefinitionId()) ||

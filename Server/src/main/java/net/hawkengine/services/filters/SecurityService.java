@@ -6,16 +6,14 @@ import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
-import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
-import net.hawkengine.services.filters.factories.AuthorizationFactory;
+import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 import net.hawkengine.ws.WsEndpoint;
 import net.hawkengine.ws.WsObjectProcessor;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +23,12 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     private WsObjectProcessor wsObjectProcessor;
     private ServiceResult result;
     private IAuthorizationService authorizationService;
-    private AuthorizationFactory authorizationFactory;
+    private AuthorizationServiceFactory authorizationServiceFactory;
     private Gson jsonConverter;
 
     public SecurityService() {
         this.wsObjectProcessor = new WsObjectProcessor();
-        this.authorizationFactory = new AuthorizationFactory();
+        this.authorizationServiceFactory = new AuthorizationServiceFactory();
 
         this.result = new ServiceResult();
         this.result.setError(true);
@@ -50,7 +48,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         try {
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
             List<T> entitiesToFilter = (List<T>) this.result.getObject();
-            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
             this.result.setObject(filteredEntities);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -68,7 +66,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionsServiceResult.getObject();
             List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.result.getObject();
 
-            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             //TODO: REFACTOR THIS PART
             List<T> filteredEntities = (List<T>)this.authorizationService.getAll(permissions, pipelineGroups);
             for (PipelineDefinition pipelineDefinition: pipelineDefinitions) {
@@ -95,7 +93,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult getById(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
 
             //TODO: See why there are aditional quotes
@@ -114,7 +112,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult add(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
             boolean hasPermission = this.authorizationService.add(entity, permissions);
             if (hasPermission) {
@@ -130,7 +128,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult update(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
             boolean hasPermission = this.authorizationService.update(entity, permissions);
             if (hasPermission) {
@@ -146,7 +144,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult delete(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationFactory.filter(contract.getClassName());
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
 
             //TODO: See why there are aditional quotes
