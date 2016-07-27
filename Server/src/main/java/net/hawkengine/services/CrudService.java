@@ -1,13 +1,17 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.DbEntry;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.DatabaseType;
 import net.hawkengine.services.interfaces.ICrudService;
 
 import java.util.List;
 
 public abstract class CrudService<T extends DbEntry> extends Service<T> implements ICrudService<T> {
+    static final DatabaseType DATABASE_TYPE = ServerConfiguration.getConfiguration().getDatabaseType();
+
     private IDbRepository<T> repository;
 
     public IDbRepository<T> getRepository() {
