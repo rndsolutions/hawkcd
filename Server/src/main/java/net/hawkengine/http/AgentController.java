@@ -194,6 +194,7 @@ public class AgentController {
             agentFromDb.setIpAddress(agent.getIpAddress());
             agentFromDb.setRootPath(agent.getRootPath());
             agentFromDb.setName(agent.getName());
+            agentFromDb.setRunning(agent.isRunning());
 
             result = this.agentService.update(agentFromDb);
 
