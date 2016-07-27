@@ -64,7 +64,7 @@
                         <tbody>
                             <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
                                 <td class="highlight">
-                                    <div style="position:relative;" ng-class="{'success' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'warning' : (!agent.isEnabled && agent.isConnected) || (!agent.isEnabled && !agent.isConnected), 'info' : (agent.isRunning && agent.isConnected && agent.isEnabled)}">
+                                    <div ng-class="{'status-position':true,'success' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'warning' : (!agent.isEnabled && agent.isConnected) || (!agent.isEnabled && !agent.isConnected), 'info' : (agent.isRunning && agent.isConnected && agent.isEnabled)}">
                                     </div>
                                 </td>
                                 <td>
