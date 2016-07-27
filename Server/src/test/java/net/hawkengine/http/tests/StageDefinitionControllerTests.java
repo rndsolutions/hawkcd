@@ -73,6 +73,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     public void getAllStageDefinitions_existingObjects_twoObjects() {
         //Arrange
         List<StageDefinition> expectedResult = new ArrayList<>();
+        this.stageDefinition = new StageDefinition();
         expectedResult.add(this.stageDefinition);
         expectedResult.add(this.stageDefinition);
         this.serviceResult.setObject(expectedResult);
@@ -145,10 +146,11 @@ public class StageDefinitionControllerTests extends JerseyTest {
     public void addStageDefinition_invalidField_properErrorMessage() {
         //Arrange
         this.prepareStageDefinition();
+        this.stageDefinition.setName(null);
         String expectedResult = "ERROR: STAGE DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setError(true);
-        this.stageDefinition.setName(null);
+        this.serviceResult.setObject(this.stageDefinition);
         Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
 
@@ -267,7 +269,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setError(true);
         this.stageDefinition.setName(null);
-        Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.stageDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
 
         //Act

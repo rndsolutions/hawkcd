@@ -148,9 +148,10 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Arrange
         this.preparePipelineDefinition();
         String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
+        this.pipelineDefinition.setName(null);
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setError(true);
-        this.pipelineDefinition.setName(null);
+        this.serviceResult.setObject(this.pipelineDefinition);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
 

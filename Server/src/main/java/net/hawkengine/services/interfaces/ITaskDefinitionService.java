@@ -11,6 +11,8 @@ public interface ITaskDefinitionService extends ICrudService<TaskDefinition> {
 
     ServiceResult add(FetchArtifactTask taskDefinition);
 
+    ServiceResult addTask(TaskDefinition taskDefinition);
+
     ServiceResult update(ExecTask taskDefintion);
 
     ServiceResult update(UploadArtifactTask taskDefintion);
@@ -18,4 +20,6 @@ public interface ITaskDefinitionService extends ICrudService<TaskDefinition> {
     ServiceResult update(FetchMaterialTask taskDefintion);
 
     ServiceResult update(FetchArtifactTask taskDefintion);
+
+    ServiceResult updateTask(TaskDefinition taskDefinition);
 }
