@@ -1,12 +1,6 @@
 package net.hawkengine.services;
 
-import net.hawkengine.model.ExecTask;
-import net.hawkengine.model.FetchArtifactTask;
-import net.hawkengine.model.FetchMaterialTask;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.UploadArtifactTask;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.ITaskDefinitionService;
@@ -15,17 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDefinitionService extends CrudService<TaskDefinition> implements ITaskDefinitionService {
+    private static final Class CLASS_TYPE = TaskDefinition.class;
+
     private IJobDefinitionService jobDefinitionService;
     private String successMessage = "retrieved successfully";
     private String failureMessage = "not found";
 
     public TaskDefinitionService() {
-        super.setObjectType("TaskDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.jobDefinitionService = new JobDefinitionService();
     }
 
     public TaskDefinitionService(IJobDefinitionService jobDefinitionService) {
-        super.setObjectType("TaskDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.jobDefinitionService = jobDefinitionService;
     }
 
