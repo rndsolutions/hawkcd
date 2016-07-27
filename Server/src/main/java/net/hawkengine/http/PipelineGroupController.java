@@ -19,9 +19,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-@Path("/pipeline-groups")
+import static javax.security.auth.callback.ConfirmationCallback.OK;
+
+
 @Consumes("application/json")
 @Produces("application/json")
+@Path("/pipeline-groups")
 public class PipelineGroupController {
     private IPipelineGroupService pipelineGroupService;
     private SchemaValidator schemaValidator;
@@ -60,7 +63,7 @@ public class PipelineGroupController {
     }
 
     @POST
-    @Produces
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addPipelineGroup(PipelineGroup pipelineGroup) {
         String isValid = this.schemaValidator.validate(pipelineGroup);
         if (isValid.equals("OK")) {
@@ -72,6 +75,7 @@ public class PipelineGroupController {
                         .build();
             }
 
+
             return Response.status(Status.CREATED).entity(result.getObject()).build();
 
         } else {
@@ -80,14 +84,15 @@ public class PipelineGroupController {
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
+
     }
 
     @PUT
-    @Produces
+    @Produces(MediaType.APPLICATION_JSON)
     public Response updatePipelineGroup(PipelineGroup pipelineGroup) {
         String isValid = this.schemaValidator.validate(pipelineGroup);
         if (isValid.equals("OK")) {
-            ServiceResult result = this.pipelineGroupService.add(pipelineGroup);
+            ServiceResult result = this.pipelineGroupService.update(pipelineGroup);
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())

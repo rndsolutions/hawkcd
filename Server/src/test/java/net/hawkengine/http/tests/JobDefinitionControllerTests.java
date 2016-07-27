@@ -139,7 +139,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
     }
 
     @Test
-    public void addJobDefinition_validationFails_properErrorMessage() {
+    public void addJobDefinition_invalidField_properErrorMessage() {
         //Arrange
         this.prepareJobDefinition();
         this.jobDefinition.setName(null);
