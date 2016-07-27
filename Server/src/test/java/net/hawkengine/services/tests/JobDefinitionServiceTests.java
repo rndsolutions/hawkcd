@@ -1,32 +1,23 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.EnvironmentVariable;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.*;
 import net.hawkengine.services.JobDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.StageDefinitionService;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mockito;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import redis.clients.jedis.JedisPoolConfig;
 
 import static org.mockito.Mockito.when;
 
@@ -48,6 +39,11 @@ public class JobDefinitionServiceTests {
     private String deletionSuccessMessage = "JobDefinition deleted successfully.";
     private String notDeletedFailureMessage = "not deleted successfully";
     private ServiceResult count;
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Before
     public void setUp() {

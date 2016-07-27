@@ -1,6 +1,7 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
@@ -9,6 +10,7 @@ import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -21,6 +23,11 @@ public class PipelineDefinitionServiceTests {
 
     private IDbRepository<PipelineDefinition> mockedRepository;
     private IPipelineDefinitionService mockedPipeLineDefinitionService;
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Before
     public void setUp() {

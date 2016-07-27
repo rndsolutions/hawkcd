@@ -1,19 +1,11 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.ExecTask;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.Status;
@@ -21,15 +13,14 @@ import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
-
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import redis.clients.jedis.JedisPoolConfig;
 
 public class PipelineServiceTests {
     private IDbRepository<Pipeline> pipelineRepo;
@@ -37,6 +28,11 @@ public class PipelineServiceTests {
     private IPipelineService pipelineService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private PipelineDefinition expectedPipelineDefinition;
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Before
     public void setUp() {

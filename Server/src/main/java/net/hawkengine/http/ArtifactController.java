@@ -1,5 +1,6 @@
 package net.hawkengine.http;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
@@ -33,8 +34,8 @@ public class ArtifactController {
                               @PathParam("stageName") String stageName,
                               @PathParam("jobName") String jobName,
                               File zipFile) {
-
-        this.outputFolder = this.basePath + File.separator + "Artifacts" + File.separator + pipelineName + File.separator + stageName + File.separator + jobName;
+        String artifactsFolder = ServerConfiguration.getConfiguration().getArtifactsDestination();
+        this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + stageName + File.separator + jobName;
 
         String errorMessage = this.fileManagementService.unzipFile(zipFile.getPath(), this.outputFolder);
 

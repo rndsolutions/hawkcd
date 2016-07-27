@@ -1,25 +1,31 @@
 package net.hawkengine.services;
 
+import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineGroupService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PipelineGroupService extends CrudService<PipelineGroup> implements IPipelineGroupService {
-    PipelineDefinitionService pipelineDefinitionService;
+    private static final Class CLASS_TYPE = PipelineGroup.class;
+
+    private IPipelineDefinitionService pipelineDefinitionService;
+
     public PipelineGroupService() {
-        super.setRepository(new RedisRepository(PipelineGroup.class));
-        super.setObjectType("PipelineGroup");
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineDefinitionService = new PipelineDefinitionService();
     }
 
     public PipelineGroupService(IDbRepository repository) {
         super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override
@@ -56,7 +62,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
         for (PipelineGroup pipelineGroup : pipelineGroups) {
             List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                if(pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())){
+                if (pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
                     pipelineDefinitionsToAdd.add(pipelineDefinition);
                 }
             }

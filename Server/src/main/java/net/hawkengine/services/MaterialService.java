@@ -1,7 +1,7 @@
 package net.hawkengine.services;
 
+import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Material;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.interfaces.IMaterialService;
@@ -9,14 +9,17 @@ import net.hawkengine.services.interfaces.IMaterialService;
 import java.util.List;
 
 public class MaterialService extends CrudService<Material> implements IMaterialService {
+    private static final Class CLASS_TYPE = Material.class;
+
     public MaterialService() {
-        super.setRepository(new RedisRepository(Material.class));
-        super.setObjectType("Material");
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public MaterialService(IDbRepository repository) {
         super.setRepository(repository);
-        super.setObjectType("Material");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override
