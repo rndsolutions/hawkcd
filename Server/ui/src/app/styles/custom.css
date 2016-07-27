@@ -581,3 +581,13 @@ p {
   margin-bottom:0px!important;
   height:40px!important;
 }
+
+.custom-unassigned-pipeline-title-padding {
+    margin-left: 20px!important;
+}
+
+.custom-unassigned-pipeline-padding {
+    padding-bottom: 20px!important;
+    margin-left: 30px!important;
+    margin-bottom: 30px!important;
+}
