@@ -142,10 +142,11 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void addJobDefinition_validationFails_properErrorMessage() {
         //Arrange
         this.prepareJobDefinition();
+        this.jobDefinition.setName(null);
         String expectedResult = "ERROR: JOB DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setError(true);
-        this.jobDefinition.setName(null);
+        this.serviceResult.setObject(this.jobDefinition);
         Mockito.when(this.jobDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
 
