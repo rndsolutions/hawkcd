@@ -159,4 +159,46 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
         return this.result;
     }
+
+    @Override
+    public ServiceResult addUserToGroup(WsContractDto contract, List<Permission> permissions) {
+//        try {
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            String userId = contract.getArgs()[0].getObject();
+            String groupId = contract.getArgs()[1].getObject();
+
+        int a =5;
+
+//            //TODO: See why there are aditional quotes
+//            String entityId = entity.substring(1, entity.length()- 1);
+//            boolean hasPermisssion = this.authorizationService.delete(entityId, permissions);
+//            if (hasPermisssion) {
+//                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+//            }
+//        }
+//        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+//            LOGGER.error(e.getMessage());
+//        }
+
+        return this.result;
+    }
+
+    @Override
+    public ServiceResult removeUserFromGroup(WsContractDto contract, List<Permission> permissions) {
+        try {
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            String entity = contract.getArgs()[0].getObject();
+
+            //TODO: See why there are aditional quotes
+            String entityId = entity.substring(1, entity.length()- 1);
+            boolean hasPermisssion = this.authorizationService.delete(entityId, permissions);
+            if (hasPermisssion) {
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return this.result;
+    }
 }

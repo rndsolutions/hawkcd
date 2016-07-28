@@ -18,4 +18,8 @@ public interface ISecurityService {
     ServiceResult update(WsContractDto contract, List<Permission> permissions);
 
     ServiceResult delete(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult addUserToGroup(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult removeUserFromGroup(WsContractDto contract, List<Permission> permissions);
 }

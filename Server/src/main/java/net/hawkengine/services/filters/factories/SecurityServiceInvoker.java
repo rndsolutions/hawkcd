@@ -32,6 +32,10 @@ public class SecurityServiceInvoker {
                 return this.securityService.update(contract, permissions);
             case "delete":
                 return this.securityService.delete(contract, permissions);
+            case "addUserToGroup":
+                return this.securityService.addUserToGroup(contract, permissions);
+            case "removeUserFromGroup":
+                return this.securityService.removeUserFromGroup(contract, permissions);
             default:
                 return null;
         }
