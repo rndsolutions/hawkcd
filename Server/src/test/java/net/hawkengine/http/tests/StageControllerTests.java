@@ -1,31 +1,18 @@
 package net.hawkengine.http.tests;
 
-import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.StageController;
-import net.hawkengine.http.StageDefinitionController;
-import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.Service;
-import net.hawkengine.services.StageDefinitionService;
 import net.hawkengine.services.StageService;
-import net.hawkengine.services.interfaces.IStageDefinitionService;
 import net.hawkengine.services.interfaces.IStageService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +30,6 @@ public class StageControllerTests extends JerseyTest {
     private Stage stage;
     private ServiceResult serviceResult;
 
-
-
     public Application configure() {
         this.stageService = Mockito.mock(StageService.class);
         this.stageController = new StageController(this.stageService);
@@ -53,7 +38,7 @@ public class StageControllerTests extends JerseyTest {
     }
 
     @Test
-    public void testStageController_constructorTest_notNull(){
+    public void testStageController_constructorTest_notNull() {
 
         StageController stageController = new StageController();
 
@@ -75,7 +60,6 @@ public class StageControllerTests extends JerseyTest {
         assertEquals(200, response.getStatus());
         assertEquals(expectedResult, actualResult);
     }
-
 
     @Test
     public void getAllStages_existingObjects_twoObjects() {
