@@ -43,14 +43,14 @@ public class StageController {
         }
             return Response.status(Status.OK).entity(response.getObject()).build();
     }
-
+/*
     @GET
     @Path("/{stageId}/latest")
     public Response getLatest(@PathParam("stageId") String stageId) {
         // TODO: service to be implemented.
        return Response.noContent().build();
     }
-
+*/
     @POST
     public Response addNewStage(Stage stage){
         ServiceResult result = this.stageService.add(stage);

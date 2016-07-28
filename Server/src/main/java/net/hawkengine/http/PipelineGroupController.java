@@ -19,8 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import static javax.security.auth.callback.ConfirmationCallback.OK;
-
 
 @Consumes("application/json")
 @Produces("application/json")
@@ -75,7 +73,6 @@ public class PipelineGroupController {
                         .build();
             }
 
-
             return Response.status(Status.CREATED).entity(result.getObject()).build();
 
         } else {
@@ -84,7 +81,6 @@ public class PipelineGroupController {
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
-
     }
 
     @PUT

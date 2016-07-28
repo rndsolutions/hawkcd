@@ -20,7 +20,7 @@ public class Stage extends DbEntry{
     private Duration duration;
 
     public Stage() {
-        this.startTime = LocalDateTime.now();
+       // this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());
         this.status = StageStatus.NOT_RUN;

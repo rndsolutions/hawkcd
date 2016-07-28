@@ -6,6 +6,7 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IAgentService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import javax.ws.rs.*;
@@ -29,6 +30,14 @@ public class AgentController {
         this.agentService = new AgentService();
         this.schemaValidator = new SchemaValidator();
         this.pipelineService = new PipelineService();
+    }
+
+    public AgentController(AgentService agentService) {
+        this.agentService = agentService;
+        this.schemaValidator = new SchemaValidator();
+        this.pipelineService = new PipelineService();
+
+
     }
 
     @GET
@@ -65,7 +74,7 @@ public class AgentController {
     public Response getWork(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getWorkInfo(agentId);
         if (result.hasError()){
-            return Response.status(Status.OK)
+            return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .build();
         }
@@ -88,7 +97,7 @@ public class AgentController {
                         .build();
             }
 
-            return Response.status(Status.OK)
+            return Response.status(Status.CREATED)
                     .entity(result.getObject())
                     .build();
         } else {
@@ -161,11 +170,11 @@ public class AgentController {
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
-            } else {
+            }
                 return Response.status(Status.OK)
                         .entity(result.getObject())
                         .build();
-            }
+
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
