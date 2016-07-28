@@ -7,8 +7,10 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
@@ -22,11 +24,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@SuppressWarnings({"unchecked", "PackageVisibleField", "InstanceMethodNamingConvention"})
 public class PipelinePreparerTests {
     private IPipelineService pipelineService;
     private IPipelineDefinitionService pipelineDefinitionService;
-    @SuppressWarnings("InstanceVariableOfConcreteClass")
+    private IMaterialDefinitionService materialDefinitionService;
     private PipelinePreparer pipelinePreparer;
     private PipelineDefinition expectedPipelineDefinition;
 
@@ -38,10 +39,12 @@ public class PipelinePreparerTests {
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelinePreparer");
-        IDbRepository mockedPipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
-        IDbRepository mockedPipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(mockedPipelineDefinitionRepo);
-        this.pipelineService = new PipelineService(mockedPipelineRepo, this.pipelineDefinitionService);
+        IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
+        IDbRepository pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
+        IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockedPool);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo);
+        this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
+        this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.pipelinePreparer = new PipelinePreparer(this.pipelineService, this.pipelineDefinitionService);
         this.expectedPipelineDefinition = new PipelineDefinition();
         this.pipelineDefinitionService.add(this.expectedPipelineDefinition);

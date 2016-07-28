@@ -173,7 +173,6 @@ public class SchemaValidatorTests {
     public void validate_PipelineDefinitionName_Null(){
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setMaterialDefinitions(material);
         pipelineDefinition.setStageDefinitions(stage);
         String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
 
@@ -198,23 +197,6 @@ public class SchemaValidatorTests {
         //Assert
         assertNotNull(actualResult);
         assertEquals(expectedResult, actualResult);
-    }
-
-    @Test
-    public void validate_PipelineDefinitionMaterials_NotAdded(){
-        //Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("pipelineDefinition");
-        pipelineDefinition.setPipelineGroupId("pipelineGroupId");
-        pipelineDefinition.setStageDefinitions(stage);
-        String expectedResult = "ERROR: PIPELINE MATERIALS NOT ADDED.";
-
-        //Act
-        String actualResult = this.validator.validate(pipelineDefinition);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
     }
 
     // TODO: Refactor
