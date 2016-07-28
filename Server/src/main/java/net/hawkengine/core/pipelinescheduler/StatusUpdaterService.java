@@ -10,6 +10,7 @@ import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class StatusUpdaterService {
@@ -107,6 +108,8 @@ public class StatusUpdaterService {
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.FAILED));
         } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
+            LocalDateTime endTime = LocalDateTime.now();
+            pipeline.setEndTime(endTime);
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.PASSED));
         }
     }

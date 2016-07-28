@@ -147,6 +147,12 @@ p {
     text-underline: none;
 }
 
+.admin-selected-pipeline {
+    background-color: #337ab7 !important;
+    color: #ffffff;
+    text-underline: none;
+}
+
 .mat-logo {
     border: 0;
     display: inline-block;
@@ -431,7 +437,7 @@ p {
 }
 
 .nav-tabs>.active {
-    border-top: 3px solid #E55E09!important;
+    /*border-top: 3px solid #E55E09!important*/;
 }
 
 .selectedS {
@@ -544,4 +550,85 @@ p {
 
 .z-index-high {
     z-index: 10!important;
+}
+
+.custom-admin-pipeline-padding {
+    padding-right: 10px!important;
+    float:left!important;
+}
+
+.custom-admin-badge-color {
+    background-color: #999999!important;
+}
+
+.admin-custom:hover {
+    cursor: pointer!important;
+    cursor: hand!important;
+    display:inline!important;
+}
+
+#materials table td > i {
+    padding-left: 0.01em;
+    padding-top: 0.29em;
+    font-size:1.5em;
+}
+
+.status-position{
+  position:relative!important;
+  padding-top:0px!important;
+  padding-bottom: 0px!important;
+  margin-top:0px!important;
+  margin-bottom:0px!important;
+  height:40px!important;
+}
+
+.center-text {
+  position:absolute!important;
+  float:left!important;
+  left:0!important;
+  margin-left: 70px!important;
+  padding-top:15px!important;
+  margin-right: 0px!important;
+  padding-right: 0px!important;
+}
+
+div.vertical-line{
+  position:absolute!important;
+  margin-top: 0px!important;
+  margin-left: 160px!important;
+  width: 3px;
+  background-color: #D3D3D3;
+  height: 40px!important;
+  float:left!important;
+}
+
+#ruler {
+    height: 4px;
+    border: 0;
+    box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);
+}
+
+#history-git-icon {
+  position:absolute!important;
+  margin: 0!important;
+  padding:0!important;
+  top:4px!important;
+  font-size:1.3em;
+}
+
+#table-pipeline-runs > tbody > td > th {
+  border-top:0!important;
+  border: none!important;
+}
+
+#data-container {
+  position:relative!important;
+}
+
+#management-link {
+  position:absolute!important;
+  margin: 0!important;
+  padding:0!important;
+  top:20px!important;
+  right: -5px!important;
 }

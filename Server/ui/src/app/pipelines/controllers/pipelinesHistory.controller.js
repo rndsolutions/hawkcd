@@ -2,8 +2,11 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController', function ($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel) {
+    .controller('PipelinesHistoryController', function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel) {
         var vm = this;
+        vm.clockVariables = {
+            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        }
 
         vm.labels = {
             headers: {
@@ -34,21 +37,35 @@ angular
 
         vm.allPipelineRuns = viewModel.allPipelineRuns;
 
-        $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+        vm.updateClock = function(pipelineRun) {}
+
+
+
+        vm.diffDates = function(date, secondDate) {
+            var utcFirst = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+            var utcSecond = Date.UTC(secondDate.getFullYear(), secondDate.getMonth(), secondDate.getDate(), secondDate.getHours(), secondDate.getMinutes(), secondDate.getSeconds(), secondDate.getMilliseconds());
+            // var result = (utcSecond - utcFirst) / 86400000
+            var result = new Date(utcSecond - utcFirst);
+            return result;
+        };
+
+        $scope.$watchCollection(function() {
+            return viewModel.allPipelineRuns
+        }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             vm.currentPipelineRuns = [];
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+            vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
-                    if(currentPipelineRun.triggerReason == null){
+                    if (currentPipelineRun.triggerReason == null) {
                         currentPipelineRun.triggerReason = "User";
                     }
                     vm.currentPipelineRuns.push(currentPipelineRun);
                 }
             });
-            vm.currentPipelineRuns.sort(function (a, b) {
-                return b.executionId-a.executionId;
+            vm.currentPipelineRuns.sort(function(a, b) {
+                return b.executionId - a.executionId;
             });
-            if(vm.currentPipelineRuns.length > 0){
+            if (vm.currentPipelineRuns.length > 0) {
                 vm.currentJob = vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs[vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs.length - 1];
             }
             console.log(vm.allPipelineRuns);
