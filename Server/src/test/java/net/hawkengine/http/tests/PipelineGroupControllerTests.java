@@ -1,6 +1,7 @@
 package net.hawkengine.http.tests;
 
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.PipelineGroupController;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.Pipeline;
@@ -31,6 +32,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
     ServiceResult serviceResult;
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.pipelineGroupService = Mockito.mock(PipelineGroupService.class);
         this.pipelineGroupController = new PipelineGroupController(this.pipelineGroupService);
         this.serviceResult = new ServiceResult();

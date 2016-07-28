@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.PipelineController;
 import net.hawkengine.model.JobDefinition;
@@ -46,6 +47,7 @@ public class PipelineControllerTests extends JerseyTest {
 
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.pipelineService = Mockito.mock(PipelineService.class);
         this.pipelineController = new PipelineController(this.pipelineService);
         this.serviceResult = new ServiceResult();

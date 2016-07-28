@@ -1,5 +1,6 @@
 package net.hawkengine.http.tests;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.JobController;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
@@ -31,6 +32,7 @@ public class JobControllerTests extends JerseyTest {
     private ServiceResult serviceResult;
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.jobService = Mockito.mock(JobService.class);
         this.jobController = new JobController(this.jobService);
         this.serviceResult = new ServiceResult();

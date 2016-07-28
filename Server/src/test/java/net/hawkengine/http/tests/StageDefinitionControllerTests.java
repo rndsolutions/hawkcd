@@ -1,5 +1,6 @@
 package net.hawkengine.http.tests;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.StageDefinitionController;
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.GitMaterial;
@@ -38,6 +39,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     private ServiceResult serviceResult;
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.stageDefinitionService = Mockito.mock(StageDefinitionService.class);
         this.stageDefinitionController = new StageDefinitionController(this.stageDefinitionService);
         this.serviceResult = new ServiceResult();
@@ -344,8 +346,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         execTask.setJobDefinitionId(jobDefinition.getId());
         execTask.setName("execTask");
         execTask.setCommand("command");
-        ArrayList arguments = new ArrayList();
-        arguments.add("argument");
+        String arguments = new String("argument");
         execTask.setArguments(arguments);
         execTask.setRunIfCondition(RunIf.PASSED);
         execTask.setType(TaskType.EXEC);

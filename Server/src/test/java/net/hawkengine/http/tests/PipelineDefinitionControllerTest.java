@@ -1,5 +1,6 @@
 package net.hawkengine.http.tests;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.PipelineDefinitionController;
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.GitMaterial;
@@ -40,6 +41,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     private ServiceResult serviceResult;
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.pipelineDefinitionService = Mockito.mock(PipelineDefinitionService.class);
         this.pipelineDefinitionController = new PipelineDefinitionController(this.pipelineDefinitionService);
         this.serviceResult = new ServiceResult();
@@ -340,8 +342,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         execTask.setJobDefinitionId(jobDefinition.getId());
         execTask.setName("execTask");
         execTask.setCommand("command");
-        ArrayList arguments = new ArrayList();
-        arguments.add("argument");
+        String arguments = new String("argument");;
         execTask.setArguments(arguments);
         execTask.setRunIfCondition(RunIf.PASSED);
         execTask.setType(TaskType.EXEC);

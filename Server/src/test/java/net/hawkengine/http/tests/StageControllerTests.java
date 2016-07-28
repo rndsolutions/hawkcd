@@ -1,5 +1,6 @@
 package net.hawkengine.http.tests;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.StageController;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
@@ -31,6 +32,7 @@ public class StageControllerTests extends JerseyTest {
     private ServiceResult serviceResult;
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.stageService = Mockito.mock(StageService.class);
         this.stageController = new StageController(this.stageService);
         this.serviceResult = new ServiceResult();

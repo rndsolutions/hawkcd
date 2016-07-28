@@ -1,5 +1,6 @@
 package net.hawkengine.http.tests;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.TaskDefinitionController;
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.GitMaterial;
@@ -38,6 +39,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
 
     @Override
     public Application configure() {
+        ServerConfiguration.configure();
         this.taskDefinitionService = Mockito.mock(TaskDefinitionService.class);
         this.taskDefinitionController = new TaskDefinitionController(this.taskDefinitionService);
         this.serviceResult = new ServiceResult();
@@ -357,8 +359,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         execTask.setJobDefinitionId(jobDefinition.getId());
         execTask.setName("execTask");
         execTask.setCommand("taskCommand");
-        ArrayList arguments = new ArrayList();
-        arguments.add("argument");
+        String arguments = new String("argument");
         execTask.setArguments(arguments);
         execTask.setRunIfCondition(RunIf.PASSED);
         execTask.setType(TaskType.EXEC);

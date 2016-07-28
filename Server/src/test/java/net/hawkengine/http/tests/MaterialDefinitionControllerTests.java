@@ -1,6 +1,7 @@
 package net.hawkengine.http.tests;
 
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.MaterialDefinitionController;
 import net.hawkengine.model.GitMaterial;
 import net.hawkengine.model.JobDefinition;
@@ -32,6 +33,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
     private ServiceResult serviceResult;
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.materialDefinitionService = Mockito.mock(MaterialDefinitionService.class);
         this.materialDefinitionController = new MaterialDefinitionController(this.materialDefinitionService);
         this.serviceResult = new ServiceResult();

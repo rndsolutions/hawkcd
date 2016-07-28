@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import com.sun.org.apache.bcel.internal.generic.MONITORENTER;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.AgentController;
 import net.hawkengine.model.Agent;
@@ -43,6 +44,7 @@ public class AgentControllerTests extends JerseyTest {
     private ServiceResult serviceResult;
 
     public Application configure() {
+        ServerConfiguration.configure();
         this.agentService = Mockito.mock(AgentService.class);
         this.agentController = new AgentController(this.agentService);
         this.serviceResult = new ServiceResult();
