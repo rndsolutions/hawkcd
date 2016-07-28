@@ -12,9 +12,11 @@ public class User extends DbEntry {
     private String ghAuthCode;
     private String provider;
     private List<Permission> permissions;
+    private List<String> userGroupIds;
 
     public User(){
         this.setPermissions(new ArrayList<>());
+        this.setUserGroupIds(new ArrayList<>());
     }
 
     public String getEmail(){
@@ -55,5 +57,13 @@ public class User extends DbEntry {
 
     public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    public List<String> getUserGroupIds() {
+        return this.userGroupIds;
+    }
+
+    public void setUserGroupIds(List<String> userGroupIds) {
+        this.userGroupIds = userGroupIds;
     }
 }
