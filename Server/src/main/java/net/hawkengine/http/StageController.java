@@ -24,6 +24,10 @@ public class StageController {
         this.stageService = new StageService();
     }
 
+    public StageController(IStageService stageService) {
+        this.stageService = stageService;
+    }
+
     @GET
     public Response getAllStages(){
         ServiceResult response = this.stageService.getAll();
@@ -53,7 +57,7 @@ public class StageController {
         if (result.hasError()){
             return Response.status(Status.BAD_REQUEST).entity(result.getMessage()).build();
         }
-        return Response.status(Status.OK).entity(result.getObject()).build();
+        return Response.status(Status.CREATED).entity(result.getObject()).build();
     }
 
     /*
