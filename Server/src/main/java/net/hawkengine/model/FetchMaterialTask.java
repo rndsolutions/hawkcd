@@ -3,12 +3,10 @@ package net.hawkengine.model;
 import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.model.enums.TaskType;
 
-import java.util.HashMap;
-
 public class FetchMaterialTask extends TaskDefinition {
     private String materialName;
     private String pipelineName;
-    private MaterialType materialType = MaterialType.GIT;
+    private MaterialType materialType;
     private String source;
     private String destination;
     private MaterialDefinition materialDefinition;
