@@ -10,7 +10,7 @@ public class PipelineDefinition extends DbEntry {
     private String pipelineGroupId;
     private String groupName;
     private String labelTemplate;
-    private List<MaterialDefinition> materialDefinitions;
+    private List<String> materialDefinitionIds;
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
     private List<StageDefinition> stageDefinitions;
@@ -20,7 +20,7 @@ public class PipelineDefinition extends DbEntry {
     public PipelineDefinition() {
         this.setLabelTemplate("%COUNT%");
         this.setEnvironmentVariables(new ArrayList<>());
-        this.setMaterialDefinitions(new ArrayList<>());
+        this.setMaterialDefinitionIds(new ArrayList<>());
         this.setEnvironments(new ArrayList<>());
         this.setStageDefinitions(new ArrayList<>());
     }
@@ -49,12 +49,12 @@ public class PipelineDefinition extends DbEntry {
         this.labelTemplate = labelTemplate;
     }
 
-    public List<MaterialDefinition> getMaterialDefinitions() {
-        return this.materialDefinitions;
+    public List<String> getMaterialDefinitionIds() {
+        return materialDefinitionIds;
     }
 
-    public void setMaterialDefinitions(List<MaterialDefinition> materialDefinitions) {
-        this.materialDefinitions = materialDefinitions;
+    public void setMaterialDefinitionIds(List<String> materialDefinitionIds) {
+        this.materialDefinitionIds = materialDefinitionIds;
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {
