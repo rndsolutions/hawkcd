@@ -4,7 +4,10 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
-import net.hawkengine.model.*;
+import net.hawkengine.model.GitMaterial;
+import net.hawkengine.model.Material;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.MaterialService;
@@ -19,9 +22,6 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MaterialUpdaterFactory.class})
@@ -68,115 +68,115 @@ public class MaterialHandlerServiceTest {
         Assert.assertNotNull(this.materialHandlerService);
     }
 
-    @Test
-    public void checkPipelineForTriggerMaterials_oneTriggerMaterial_correctMessage() {
-        // Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
-        GitMaterial gitMaterial = new GitMaterial();
-        gitMaterial.setName(MATERIAL_ONE);
-        gitMaterial.setPollingForChanges(true);
-        materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
-        String expectedResult = MATERIAL_ONE;
-
-        // Act
-        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
-
-        // Assert
-        Assert.assertEquals(expectedResult, actualResult);
-    }
-
-    @Test
-    public void checkPipelineForTriggerMaterials_noTriggerMaterial_noMessage() {
-        // Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
-        GitMaterial gitMaterial = new GitMaterial();
-        gitMaterial.setName(MATERIAL_ONE);
-        gitMaterial.setPollingForChanges(true);
-        materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
-
-        Mockito.when(this.mockedMaterialUpdater.areMaterialsSameVersion(Mockito.any(MaterialDefinition.class), Mockito.any(MaterialDefinition.class)))
-                .thenReturn(true);
-
-        // Act
-        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
-
-        // Assert
-        Assert.assertTrue(actualResult.isEmpty());
-    }
-
-    @Test
-    public void checkPipelineForTriggerMaterials_materialNotPolling_noMessage() {
-        // Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
-        GitMaterial gitMaterial = new GitMaterial();
-        gitMaterial.setName(MATERIAL_ONE);
-        gitMaterial.setPollingForChanges(false);
-        materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
-
-        // Act
-        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
-
-        // Assert
-        Assert.assertTrue(actualResult.isEmpty());
-    }
-
-    @Test
-    public void checkPipelineForTriggerMaterials_couldNotGetLatestMaterial_noMessage() {
-        // Arrange
-        GitMaterial gitMaterial = Mockito.mock(GitMaterial.class);
-        GitMaterial latestGitMaterial = Mockito.mock(GitMaterial.class);
-        Mockito.when(latestGitMaterial.getErrorMessage()).thenReturn("errorMessage");
-
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
-        ServiceResult updatedMaterialDefinition = new ServiceResult();
-        updatedMaterialDefinition.setMessage("");
-        updatedMaterialDefinition.setError(false);
-        updatedMaterialDefinition.setObject(gitMaterial);
-
-        Mockito.when(gitMaterial.getErrorMessage()).thenReturn("first").thenReturn("second");
-        Mockito.when(this.mockedMaterialDefinitionService.updateMaterialDefinition(Mockito.any(MaterialDefinition.class))).thenReturn(updatedMaterialDefinition);
-        Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class))).thenReturn(latestGitMaterial);
-        Mockito.when(gitMaterial.isPollingForChanges()).thenReturn(true);
-
-        materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
-
-        // Act
-        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
-
-        // Assert
-        Assert.assertTrue(actualResult.isEmpty());
-    }
-
-    @Test
-    public void checkPipelineForTriggerMaterials_noPreviousMaterialInDb_triggerMessage() {
-        // Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
-        GitMaterial gitMaterial = new GitMaterial();
-        gitMaterial.setName(MATERIAL_ONE);
-        gitMaterial.setPollingForChanges(true);
-        materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
-        String expectedResult = MATERIAL_ONE;
-
-        ServiceResult latestMaterialServiceResult = new ServiceResult();
-        latestMaterialServiceResult.setObject(null);
-        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.any(String.class))).thenReturn(latestMaterialServiceResult);
-
-        // Act
-        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
-
-        // Assert
-        Assert.assertEquals(expectedResult, actualResult);
-    }
+//    @Test
+//    public void checkPipelineForTriggerMaterials_oneTriggerMaterial_correctMessage() {
+//        // Arrange
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
+//        GitMaterial gitMaterial = new GitMaterial();
+//        gitMaterial.setName(MATERIAL_ONE);
+//        gitMaterial.setPollingForChanges(true);
+//        materialDefinitions.add(gitMaterial);
+//        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+//        String expectedResult = MATERIAL_ONE;
+//
+//        // Act
+//        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
+//
+//        // Assert
+//        Assert.assertEquals(expectedResult, actualResult);
+//    }
+//
+//    @Test
+//    public void checkPipelineForTriggerMaterials_noTriggerMaterial_noMessage() {
+//        // Arrange
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
+//        GitMaterial gitMaterial = new GitMaterial();
+//        gitMaterial.setName(MATERIAL_ONE);
+//        gitMaterial.setPollingForChanges(true);
+//        materialDefinitions.add(gitMaterial);
+//        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+//
+//        Mockito.when(this.mockedMaterialUpdater.areMaterialsSameVersion(Mockito.any(MaterialDefinition.class), Mockito.any(MaterialDefinition.class)))
+//                .thenReturn(true);
+//
+//        // Act
+//        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
+//
+//        // Assert
+//        Assert.assertTrue(actualResult.isEmpty());
+//    }
+//
+//    @Test
+//    public void checkPipelineForTriggerMaterials_materialNotPolling_noMessage() {
+//        // Arrange
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
+//        GitMaterial gitMaterial = new GitMaterial();
+//        gitMaterial.setName(MATERIAL_ONE);
+//        gitMaterial.setPollingForChanges(false);
+//        materialDefinitions.add(gitMaterial);
+//        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+//
+//        // Act
+//        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
+//
+//        // Assert
+//        Assert.assertTrue(actualResult.isEmpty());
+//    }
+//
+//    @Test
+//    public void checkPipelineForTriggerMaterials_couldNotGetLatestMaterial_noMessage() {
+//        // Arrange
+//        GitMaterial gitMaterial = Mockito.mock(GitMaterial.class);
+//        GitMaterial latestGitMaterial = Mockito.mock(GitMaterial.class);
+//        Mockito.when(latestGitMaterial.getErrorMessage()).thenReturn("errorMessage");
+//
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
+//        ServiceResult updatedMaterialDefinition = new ServiceResult();
+//        updatedMaterialDefinition.setMessage("");
+//        updatedMaterialDefinition.setError(false);
+//        updatedMaterialDefinition.setObject(gitMaterial);
+//
+//        Mockito.when(gitMaterial.getErrorMessage()).thenReturn("first").thenReturn("second");
+//        Mockito.when(this.mockedMaterialDefinitionService.updateMaterialDefinition(Mockito.any(MaterialDefinition.class))).thenReturn(updatedMaterialDefinition);
+//        Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class))).thenReturn(latestGitMaterial);
+//        Mockito.when(gitMaterial.isPollingForChanges()).thenReturn(true);
+//
+//        materialDefinitions.add(gitMaterial);
+//        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+//
+//        // Act
+//        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
+//
+//        // Assert
+//        Assert.assertTrue(actualResult.isEmpty());
+//    }
+//
+//    @Test
+//    public void checkPipelineForTriggerMaterials_noPreviousMaterialInDb_triggerMessage() {
+//        // Arrange
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
+//        GitMaterial gitMaterial = new GitMaterial();
+//        gitMaterial.setName(MATERIAL_ONE);
+//        gitMaterial.setPollingForChanges(true);
+//        materialDefinitions.add(gitMaterial);
+//        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+//        String expectedResult = MATERIAL_ONE;
+//
+//        ServiceResult latestMaterialServiceResult = new ServiceResult();
+//        latestMaterialServiceResult.setObject(null);
+//        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.any(String.class))).thenReturn(latestMaterialServiceResult);
+//
+//        // Act
+//        String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
+//
+//        // Assert
+//        Assert.assertEquals(expectedResult, actualResult);
+//    }
 
     @Test
     public void updateMaterial_newVersion_materialUpdated() {
