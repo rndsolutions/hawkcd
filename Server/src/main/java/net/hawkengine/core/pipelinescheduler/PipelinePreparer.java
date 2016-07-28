@@ -1,5 +1,6 @@
 package net.hawkengine.core.pipelinescheduler;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Environment;
 import net.hawkengine.model.EnvironmentVariable;
@@ -51,7 +52,7 @@ public class PipelinePreparer implements Runnable {
                     LOGGER.info(preparedPipeline.getPipelineDefinitionName() + " prepared.");
                 }
 
-                Thread.sleep(4 * 1000);
+                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

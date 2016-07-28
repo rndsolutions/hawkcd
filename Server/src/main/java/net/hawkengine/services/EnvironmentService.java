@@ -1,20 +1,23 @@
 package net.hawkengine.services;
 
+import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Environment;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.interfaces.IEnvironmentService;
 
 public class EnvironmentService extends CrudService<Environment> implements IEnvironmentService {
+    private static final Class CLASS_TYPE = Environment.class;
+
     public EnvironmentService() {
-        super.setRepository(new RedisRepository(Environment.class));
-        super.setObjectType("Environment");
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public EnvironmentService(IDbRepository repository) {
         super.setRepository(repository);
-        super.setObjectType("Environment");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override

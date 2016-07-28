@@ -11,16 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StageDefinitionService extends CrudService<StageDefinition> implements IStageDefinitionService {
+    private static final Class CLASS_TYPE = StageDefinition.class;
+
     private IPipelineDefinitionService pipelineDefinitionService;
 
     public StageDefinitionService() {
         this.pipelineDefinitionService = new PipelineDefinitionService();
-        super.setObjectType("StageDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public StageDefinitionService(IPipelineDefinitionService pipelineDefinitionService) {
         this.pipelineDefinitionService = pipelineDefinitionService;
-        super.setObjectType("StageDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override
@@ -104,7 +106,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         }
 
         List<JobDefinition> stageJobDefinitions = stageDefinition.getJobDefinitions();
-        for(JobDefinition jobDefinition : stageJobDefinitions) {
+        for (JobDefinition jobDefinition : stageJobDefinitions) {
             jobDefinition.setStageDefinitionId(stageDefinition.getId());
         }
         stageDefinitions.add(stageDefinition);

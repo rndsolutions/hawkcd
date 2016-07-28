@@ -2,6 +2,7 @@ package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Agent;
@@ -10,11 +11,16 @@ import net.hawkengine.services.interfaces.IAgentService;
 
 import org.junit.Before;
 
+import org.junit.BeforeClass;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class AgentServiceTests {
-
     private IAgentService mockedAgentService;
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Before
     public void setUp() {

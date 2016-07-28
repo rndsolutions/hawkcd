@@ -199,12 +199,12 @@ public class SchemaValidator {
                 return this.message = "ERROR: TASK COMMAND IS NULL.";
             }
 
-            List arguments = execTask.getArguments();
+            String arguments = execTask.getArguments();
             if (arguments == null) {
                 return this.message = "ERROR TASK ARGUMENTS LIST IS NULL.";
             }
 
-            int argumentsList = execTask.getArguments().size();
+            int argumentsList = execTask.getArguments().split(" ").length;
             if (argumentsList == 0) {
                 return this.message = "ERROR: TASK ARGUMENT LIST IS EMPTY.";
             }

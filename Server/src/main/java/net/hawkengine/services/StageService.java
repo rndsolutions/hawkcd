@@ -5,23 +5,25 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class StageService extends CrudService<Stage> implements IStageService {
+    private static final Class CLASS_TYPE = Stage.class;
+
     private IPipelineService pipelineService;
     private String failureMessage = "not found";
     private String successMessage = "retrieved successfully";
 
     public StageService() {
         this.pipelineService = new PipelineService();
-        super.setObjectType("Stage");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public StageService(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
-        super.setObjectType("Stage");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override
@@ -68,10 +70,10 @@ public class StageService extends CrudService<Stage> implements IStageService {
         pipeline.setStages(stages);
         ServiceResult serviceResult = this.pipelineService.update(pipeline);
 
-        if (serviceResult.hasError()){
+        if (serviceResult.hasError()) {
             return super.createServiceResult(stage, true, "not created");
         }
-        Stage result =  this.extractStageFromPipeline(pipeline, stage.getId());
+        Stage result = this.extractStageFromPipeline(pipeline, stage.getId());
 
         if (result == null) {
             return super.createServiceResult(result, true, "not created");
@@ -99,7 +101,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         }
 
         pipeline.setStages(stages);
-         serviceResult = this.pipelineService.update(pipeline);
+        serviceResult = this.pipelineService.update(pipeline);
 
         if (serviceResult.hasError()) {
             serviceResult = super.createServiceResult((Stage) serviceResult.getObject(), true, "not updated");
@@ -133,11 +135,11 @@ public class StageService extends CrudService<Stage> implements IStageService {
                 .findFirst()
                 .orElse(null);
 
-        if (stage == null){
+        if (stage == null) {
             serviceResult = super.createServiceResult(stage, true, "not found");
         }
 
-        if ( stages.size() > 1) {
+        if (stages.size() > 1) {
             isRemoved = stages.remove(stage);
         } else {
             return super.createServiceResult(stage, true, "is the last Stage and cannot be deleted");
@@ -146,7 +148,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         if (isRemoved) {
             pipelineToUpdate.setStages(stages);
             serviceResult = this.pipelineService.update(pipelineToUpdate);
-            if (!serviceResult.hasError()){
+            if (!serviceResult.hasError()) {
 
                 serviceResult = super.createServiceResult(stage, false, "deleted successfully");
             }
@@ -154,7 +156,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         return serviceResult;
     }
 
-    private Stage extractStageFromPipeline(Pipeline pipline, String stageId){
+    private Stage extractStageFromPipeline(Pipeline pipline, String stageId) {
         Stage result = pipline.getStages().stream()
                 .filter(stage -> stage.getId().equals(stageId))
                 .findFirst()

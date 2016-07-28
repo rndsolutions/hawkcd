@@ -10,17 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JobDefinitionService extends CrudService<JobDefinition> implements IJobDefinitionService {
+    private static final Class CLASS_TYPE = JobDefinition.class;
+
     private IStageDefinitionService stageDefinitionService;
     private String successMessage = "retrieved successfully";
     private String failureMessage = "not found";
 
     public JobDefinitionService() {
-        super.setObjectType("JobDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.stageDefinitionService = new StageDefinitionService();
     }
 
     public JobDefinitionService(IStageDefinitionService stageDefinitionService) {
-        super.setObjectType("JobDefinition");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.stageDefinitionService = stageDefinitionService;
     }
 

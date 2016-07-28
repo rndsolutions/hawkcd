@@ -1,5 +1,6 @@
 package net.hawkengine.core.materialhandler.materialservices;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.model.GitMaterial;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -17,10 +18,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class GitService implements IGitService {
+    private static final String MATERIALS_FOLDER = ServerConfiguration.getConfiguration().getMaterialsDestination();
+
     @Override
     public boolean repositoryExists(GitMaterial gitMaterial) {
         try {
-            Repository repository = Git.open(new File("Materials" + File.separator + gitMaterial.getName())).getRepository();
+            Repository repository = Git.open(new File(MATERIALS_FOLDER + File.separator + gitMaterial.getName())).getRepository();
             Config config = repository.getConfig();
             String repositoryUrl = config.getString("remote", "origin", "url");
             if (!repositoryUrl.equals(gitMaterial.getRepositoryUrl())) {
@@ -40,7 +43,7 @@ public class GitService implements IGitService {
             Git.cloneRepository()
                     .setURI(gitMaterial.getRepositoryUrl())
                     .setCredentialsProvider(credentials)
-                    .setDirectory(new File("Materials" + File.separator + gitMaterial.getName()))
+                    .setDirectory(new File(MATERIALS_FOLDER + File.separator + gitMaterial.getName()))
                     .setCloneSubmodules(true)
                     .call();
 
@@ -56,7 +59,7 @@ public class GitService implements IGitService {
     @Override
     public GitMaterial fetchLatestCommit(GitMaterial gitMaterial) {
         try {
-            Git git = Git.open(new File("Materials" + File.separator +  gitMaterial.getName() + File.separator + ".git"));
+            Git git = Git.open(new File(MATERIALS_FOLDER + File.separator +  gitMaterial.getName() + File.separator + ".git"));
             CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             git.fetch()
                     .setCredentialsProvider(credentials)

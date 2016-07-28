@@ -10,17 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JobService extends CrudService<Job> implements IJobService {
+    private static final Class CLASS_TYPE = Job.class;
+
     private IStageService stageService;
     private String failureMessage = "not found";
     private String successMessage = "retrieved successfully";
 
     public JobService() {
-        super.setObjectType("Job");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.stageService = new StageService();
     }
 
     public JobService(IStageService stageService) {
-        super.setObjectType("Job");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.stageService = stageService;
     }
 
