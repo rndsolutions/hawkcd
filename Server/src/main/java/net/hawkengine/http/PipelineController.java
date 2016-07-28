@@ -28,6 +28,10 @@ public class PipelineController {
         this.pipelineService = new PipelineService();
     }
 
+    public PipelineController(IPipelineService pipelineService) {
+        this.pipelineService = pipelineService;
+    }
+
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getPipelines() {
@@ -87,7 +91,7 @@ public class PipelineController {
                     .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-         return Response.status(Status.OK)
+         return Response.status(Status.CREATED)
                  .entity(response.getObject())
                  .build();
         }
