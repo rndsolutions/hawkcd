@@ -8,8 +8,8 @@
 </div>
 </br>
 <div class="row">
-  <h4 class="custom-unassigned-pipeline-title-padding">Unassigned Pipelines</h4>
-  <div class="custom-unassigned-pipeline-padding">
+  <div class="custom-unassigned-pipeline-padding" ng-if="admin.unassignedPipelines.length > 0">
+  <h4>Unassigned Pipelines</h4>
   <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in admin.unassignedPipelines">
     <span class="label label-default admin-custom" ng-click="admin.selectUnassignedPipelineToAssign(pipeline, $index);admin.toggleUnassignedPipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.toggleUnassignedPipeline == $index}"> {{pipeline.name}}</span>
   </div>
