@@ -72,8 +72,8 @@ public class StageDefinitionControllerTests extends JerseyTest {
     @Test
     public void getAllStageDefinitions_existingObjects_twoObjects() {
         //Arrange
+        this.prepareStageDefinition();
         List<StageDefinition> expectedResult = new ArrayList<>();
-        this.stageDefinition = new StageDefinition();
         expectedResult.add(this.stageDefinition);
         expectedResult.add(this.stageDefinition);
         this.serviceResult.setObject(expectedResult);

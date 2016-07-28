@@ -42,9 +42,6 @@ public class AgentControllerTests extends JerseyTest {
     private Agent agent;
     private ServiceResult serviceResult;
 
-    //TODO: implement getWork_agentAssigned_workInfo();
-
-
     public Application configure() {
         this.agentService = Mockito.mock(AgentService.class);
         this.agentController = new AgentController(this.agentService);
@@ -97,7 +94,7 @@ public class AgentControllerTests extends JerseyTest {
     }
 
     @Test
-    public void getById_request_oneObject() throws IOException {
+    public void getAgentById_oneObject_correctObject() {
         //Arrange
         this.prepareAgent();
         this.serviceResult.setObject(this.agent);
@@ -129,6 +126,8 @@ public class AgentControllerTests extends JerseyTest {
         assertEquals(404, response.getStatus());
         assertEquals(expectedResult, actualResult);
     }
+
+    //TODO: implement getWork_agentAssigned_workInfo();
 
     @Test
     public void getWork_agentObject_noJobAssigned() {

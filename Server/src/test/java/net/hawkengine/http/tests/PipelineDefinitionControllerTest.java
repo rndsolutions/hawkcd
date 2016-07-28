@@ -75,7 +75,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     public void getAllPipelineDefinitions_existingObjects_twoObjects() {
         //Arrange
         this.preparePipelineDefinition();
-        Set<PipelineDefinition> expectedResult = new HashSet<>();
+        List<PipelineDefinition> expectedResult = new ArrayList<>();
         expectedResult.add(this.pipelineDefinition);
         expectedResult.add(this.pipelineDefinition);
         this.serviceResult.setObject(expectedResult);
@@ -272,8 +272,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     }
 
 */
-
-
 
     @Test
     public void updatePipelineDefinition_invalidField_properErrorMessage() {
