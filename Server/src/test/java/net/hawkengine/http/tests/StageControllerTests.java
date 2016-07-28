@@ -46,7 +46,7 @@ public class StageControllerTests extends JerseyTest {
     }
 
     @Test
-    public void getAllJobDefinitions_nonExistingObjects_emptyList() {
+    public void getAllStages_nonExistingObjects_emptyList() {
         //Arrange
         List<Stage> expectedResult = new ArrayList<>();
         this.serviceResult.setObject(expectedResult);
@@ -81,7 +81,7 @@ public class StageControllerTests extends JerseyTest {
     }
 
     @Test
-    public void getJobDefinitionById_existingObject_correctObject() {
+    public void getStageById_existingObject_correctObject() {
         //Arrange
         this.stage = new Stage();
         this.serviceResult.setObject(this.stage);

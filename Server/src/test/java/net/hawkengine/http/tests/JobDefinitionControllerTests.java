@@ -253,7 +253,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
 
         //Act
-        Response response = target("/job-definitions/").request().put(entity);
+        Response response = target("/job-definitions").request().put(entity);
         String actualMessage = response.readEntity(String.class);
 
         //Assert
@@ -269,7 +269,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setError(true);
         this.jobDefinition.setName(null);
-        Mockito.when(this.jobDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
 
         //Act

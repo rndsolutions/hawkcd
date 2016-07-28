@@ -36,7 +36,7 @@ public class StageController {
 
     @GET
     @Path("/{stageId}")
-    public Response getById(@PathParam("stageId") String stageId) {
+    public Response getStageById(@PathParam("stageId") String stageId) {
         ServiceResult response = this.stageService.getById(stageId);
         if (response.hasError()) {
             return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
