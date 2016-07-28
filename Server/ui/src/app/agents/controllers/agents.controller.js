@@ -13,8 +13,8 @@ angular
             agents: "Agents",
             tableHeaders: {
                 action: "Actions",
-                agentName: "Agent Name",
-                path: "Path",
+                agentName: "Name",
+                path: "Sandbox",
                 os: "OS",
                 ip: "IP Address",
                 status: "Status",
