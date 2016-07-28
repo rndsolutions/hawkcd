@@ -64,27 +64,37 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     }
 
     private boolean hasPermissionToRead(List<Permission> permissions, String pipelineGroupId) {
+        boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if ((permission.getPermittedEntityId().equals(pipelineGroupId))  ||
-                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
-                if (permission.isAbleToGet()) {
-                    return true;
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+                hasPermission = true;
+            } else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
+                if (permission.getPermissionType() == PermissionType.NONE){
+                    hasPermission = false;
+                } else{
+                    hasPermission = true;
+                    return hasPermission;
                 }
             }
         }
-
-        return false;
+        return hasPermission;
     }
 
     private boolean hasPermissionToAdd(List<Permission> permissions, String pipelineGroupId) {
+        boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if (permission.isAbleToAdd() ||
-                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
-                return true;
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+                hasPermission = true;
+            } else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
+                if (permission.getPermissionType() == PermissionType.NONE){
+                    hasPermission = false;
+                } else{
+                    hasPermission = true;
+                    return hasPermission;
+                }
             }
         }
-
-        return false;
+        return hasPermission;
     }
 
     private boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, String pipelineGroupId) {
