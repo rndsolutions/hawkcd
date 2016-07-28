@@ -1,9 +1,6 @@
 package net.hawkengine.services.filters.factories;
 
-import net.hawkengine.services.filters.AgentAuthorizationService;
-import net.hawkengine.services.filters.PipelineAuthorizationService;
-import net.hawkengine.services.filters.PipelineDefinitionAuthorizationService;
-import net.hawkengine.services.filters.PipelineGroupAuthorizationService;
+import net.hawkengine.services.filters.*;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 
 public class AuthorizationServiceFactory {
@@ -23,6 +20,9 @@ public class AuthorizationServiceFactory {
                 return this.authorizationService;
             case "PipelineGroupService":
                 this.authorizationService = new PipelineGroupAuthorizationService();
+                return this.authorizationService;
+            case "UserGroupService":
+                this.authorizationService = new UserGroupAuthorizationService();
                 return this.authorizationService;
             default:
                 return null;
