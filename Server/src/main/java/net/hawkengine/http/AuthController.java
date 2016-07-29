@@ -119,8 +119,6 @@ public class AuthController {
 
         String jsonToken = gson.toJson(token);
 
-        TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
-
         return Response.ok(jsonToken).build();
     }
 

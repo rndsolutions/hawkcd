@@ -59,6 +59,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
                     iter.remove();
                 }
             }
+
             user.setUserGroupIds(userGroupIds);
             ServiceResult removeGroupFromAllUsers = this.userService.update(user);
             if (removeGroupFromAllUsers.hasError()){
@@ -79,7 +80,6 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         this.userService.update(user);
 
         return this.update(userGroup);
-
     }
 
     @Override
@@ -93,6 +93,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
                 iter.remove();
             }
         }
+
         userGroup.setUserIds(userIds);
 
         User user = (User) this.userService.getById(userId).getObject();
@@ -104,6 +105,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
                 iter.remove();
             }
         }
+
         user.setUserGroupIds(userGroupIds);
 
         ServiceResult updateUserServiceResult = this.userService.update(user);
@@ -111,6 +113,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         if (updateUserServiceResult.hasError()){
             return updateUserServiceResult;
         }
+
         return this.update(userGroup);
     }
 
