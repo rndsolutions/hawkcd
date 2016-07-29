@@ -24,6 +24,9 @@ public class AuthorizationServiceFactory {
             case "UserGroupService":
                 this.authorizationService = new UserGroupAuthorizationService();
                 return this.authorizationService;
+            case "UserService":
+                this.authorizationService = new UserAuthorizationService();
+                return this.authorizationService;
             default:
                 return null;
         }
