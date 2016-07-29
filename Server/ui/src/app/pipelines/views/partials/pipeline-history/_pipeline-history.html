@@ -32,7 +32,7 @@
                         <td class="highlight">
                             <div ng-class="{'status-position':true,'success' : run.status == 'PASSED', 'danger' : run.status == 'FAILED', 'warning' : run.status == 'IN_PROGRESS'}"></div>
                         </td>
-                        <td class="center-text">#{{run.executionId}} {{run.pipelineDefinitionName}}</td>
+                        <td class="center-text"><h4>#{{run.executionId}} {{run.pipelineDefinitionName}}</h4></td>
                         <td>
                             <div class="vertical-line"></div>
                         </td>
@@ -49,7 +49,7 @@
                             <div class="materials-block">
                                 <span ng-repeat="material in run.materials">
                                       <i class="fa fa-gg"></i>
-                                    <a display="block" href="{{material.materialDefinition.repositoryUrl}}" class="green-jungle"><strong>{{material.materialDefinition.commitId.substring(0,6)}}</strong></a> <strong> {{material.materialDefinition.comments}}</strong>
+                                    <a display="block" target="_blank" href="{{material.materialDefinition.commitId}}" class="green-jungle"><span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a> <span> {{material.materialDefinition.comments}}</span>
                                     <br/>
                                   </span>
                             </div>
@@ -67,7 +67,8 @@
                         </td>
                         <td>
                             <div id="management-link" ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId, groupName: run.groupName})" class="fa-item pull-right">
-                                <i class="fa fa-list"></i></div>
+                                <i class="fa fa-list"></i>
+                            </div>
                         </td>
                     </tr>
                     <tr ng-repeat-end>

@@ -581,7 +581,7 @@ p {
 }
 
 .center-text {
-  text-align: center!important;
+  text-align: left;
   vertical-align: middle!important;
   margin: 0!important;
   padding: 0!important;
@@ -613,6 +613,7 @@ p {
 }
 
 .vertical-line {
+  display:inline-block;
   position:relative!important;
   border-left: 3px solid #95A5A6;
   height: 100%!important;
@@ -638,7 +639,8 @@ p {
 }
 
 .stages-size {
-  width:15%!important;
+  min-width:100px!important;
+  max-width: 200px!important;
   border-style:4px solid #000000!important;
   margin-left: 2px!important;
 }
@@ -653,4 +655,17 @@ p {
 
 .stage-margin {
   margin-bottom:1%!important;
+}
+
+.icon-container {
+  position:absolute!important;
+}
+
+.spinner {
+  position:relative!important;
+  margin:0 auto !important;
+  padding:0 auto !important;
+    right: 0!important;
+    bottom:0!important;
+    margin-left:65%!important;
 }
