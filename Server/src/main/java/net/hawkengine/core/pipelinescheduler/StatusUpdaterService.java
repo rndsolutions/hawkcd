@@ -105,6 +105,8 @@ public class StatusUpdaterService {
 
         if (stageStatuses.contains(StageStatus.FAILED)) {
             pipeline.setStatus(Status.FAILED);
+            LocalDateTime endTime = LocalDateTime.now();
+            pipeline.setEndTime(endTime);
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.FAILED));
         } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
