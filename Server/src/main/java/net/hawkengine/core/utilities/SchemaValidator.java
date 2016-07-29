@@ -1,19 +1,30 @@
 package net.hawkengine.core.utilities;
 
-import net.hawkengine.model.*;
+import net.hawkengine.model.Agent;
+import net.hawkengine.model.ExecTask;
+import net.hawkengine.model.FetchArtifactTask;
+import net.hawkengine.model.FetchMaterialTask;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.UploadArtifactTask;
+import net.hawkengine.services.interfaces.IValidator;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SchemaValidator {
-    private String message = "OK";
+public class SchemaValidator implements IValidator {
     private static final String NAME_PATTERN = "^[A-Za-z][A-Za-z0-9_-]*${3,20}";
     private static final String GIT_PATTERN = "((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?";
     private static final String NUGET_PATTERN = "[a-z]{5,50}";
+    private String message = "OK";
 
     public String validate(Object object) {
-        switch (object.getClass().getSimpleName()){
+        switch (object.getClass().getSimpleName()) {
             case "PipelineGroup":
                 this.message = this.validate((PipelineGroup) object);
                 break;
@@ -24,7 +35,7 @@ public class SchemaValidator {
                 this.message = this.validate((StageDefinition) object);
                 break;
             case "JobDefinition":
-                this.message  = this.validate((JobDefinition)object);
+                this.message = this.validate((JobDefinition) object);
                 break;
             case "ExecTask":
             case "UploadArtifactTask":
