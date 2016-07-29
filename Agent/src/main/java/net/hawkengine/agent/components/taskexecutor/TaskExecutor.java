@@ -33,4 +33,9 @@ public abstract class TaskExecutor implements ITaskExecutor {
         LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
         return task;
     }
+
+
+
+
+
 }
