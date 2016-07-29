@@ -1,10 +1,11 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.enums.Status;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Pipeline extends DbEntry {
@@ -16,15 +17,15 @@ public class Pipeline extends DbEntry {
     private List<Environment> environments;
     private List<Stage> stages;
     private Status status;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Date startTime;
+    private Date endTime;
     private Duration duration;
     private String triggerReason;
     private boolean areMaterialsUpdated;
     private boolean isPrepared;
 
     public Pipeline() {
-      //  this.startTime = LocalDateTime.now();
+        this.startTime = new Date();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setMaterials(new ArrayList<>());
         this.setEnvironments(new ArrayList<>());
@@ -96,19 +97,19 @@ public class Pipeline extends DbEntry {
         this.status = status;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return this.startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return this.endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -128,18 +129,22 @@ public class Pipeline extends DbEntry {
         this.triggerReason = triggerReason;
     }
 
+    @JsonProperty("areMaterialsUpdated")
     public boolean areMaterialsUpdated() {
         return this.areMaterialsUpdated;
     }
 
+    @JsonProperty("areMaterialsUpdated")
     public void setMaterialsUpdated(boolean areMaterialsUpdated) {
         this.areMaterialsUpdated = areMaterialsUpdated;
     }
 
+    @JsonProperty("isPrepared")
     public boolean isPrepared() {
         return this.isPrepared;
     }
 
+    @JsonProperty("isPrepared")
     public void setPrepared(boolean prepared) {
         this.isPrepared = prepared;
     }
