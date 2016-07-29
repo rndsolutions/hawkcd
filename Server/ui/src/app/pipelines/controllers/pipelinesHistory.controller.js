@@ -2,11 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController', function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel) {
+    .controller('PipelinesHistoryController', function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment) {
         var vm = this;
-        vm.clockVariables = {
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        }
 
         vm.labels = {
             headers: {
@@ -37,17 +34,24 @@ angular
 
         vm.allPipelineRuns = viewModel.allPipelineRuns;
 
-        vm.updateClock = function(pipelineRun) {}
+        vm.updateClock = function(pipelineRun) {
 
+        }
 
-
-        vm.diffDates = function(date, secondDate) {
-            var utcFirst = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-            var utcSecond = Date.UTC(secondDate.getFullYear(), secondDate.getMonth(), secondDate.getDate(), secondDate.getHours(), secondDate.getMinutes(), secondDate.getSeconds(), secondDate.getMilliseconds());
-            // var result = (utcSecond - utcFirst) / 86400000
-            var result = new Date(utcSecond - utcFirst);
+        vm.getLastRunAction = function(pipelineRun) {
+            var result = {};
+            debugger;
+            var runDate = pipelineRun.endTime.date;
+            var runEndTime = pipelineRun.endTime.time;
+            var delta = moment([runDate.year, (runDate.month - 1), runDate.day, runEndTime.hour, runEndTime.minute, runEndTime.second]);
+            var now = moment();
+            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
+            debugger;
+            result.output = diff + " ago";
             return result;
-        };
+        }
+
+
 
         $scope.$watchCollection(function() {
             return viewModel.allPipelineRuns
@@ -56,6 +60,8 @@ angular
             vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
+                    var result = vm.getLastRunAction(currentPipelineRun);
+                    currentPipelineRun.lastPipelineAction = result;
                     if (currentPipelineRun.triggerReason == null) {
                         currentPipelineRun.triggerReason = "User";
                     }

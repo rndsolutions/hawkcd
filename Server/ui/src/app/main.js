@@ -18,7 +18,8 @@ angular
         //"oc.lazyLoad",
         //"ngSanitize",
         'luegg.directives',
-        'toaster'
+        'toaster',
+        'momentjs'
         //'ngAnimate'
         //'flow'
     ])
