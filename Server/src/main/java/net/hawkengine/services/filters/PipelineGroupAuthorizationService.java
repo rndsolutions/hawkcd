@@ -68,7 +68,13 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
                 hasPermission = true;
-            } else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
+            } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
+                if ((permission.getPermissionType() == PermissionType.NONE)) {
+                    hasPermission = false;
+                } else {
+                    hasPermission = true;
+                }
+            }else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
                 if (permission.getPermissionType() == PermissionType.NONE){
                     hasPermission = false;
                 } else{
@@ -85,6 +91,12 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
                 hasPermission = true;
+            } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
+                if ((permission.getPermissionType() == PermissionType.ADMIN)) {
+                    hasPermission = true;
+                } else {
+                    hasPermission = false;
+                }
             } else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
                 if (permission.getPermissionType() == PermissionType.NONE){
                     hasPermission = false;
@@ -102,7 +114,13 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
                 hasPermission = true;
-            } else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
+            } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
+                if ((permission.getPermissionType() == PermissionType.ADMIN)) {
+                    hasPermission = true;
+                } else {
+                    hasPermission = false;
+                }
+            }else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
                 if (permission.getPermissionType() != PermissionType.ADMIN){
                     hasPermission = false;
                 } else{
