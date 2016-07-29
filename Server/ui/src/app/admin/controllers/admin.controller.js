@@ -3,7 +3,7 @@
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, authDataService, viewModel, $rootScope) {
+        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, authDataService, viewModel, $rootScope) {
             var vm = this;
 
 
@@ -14,9 +14,9 @@ angular
             vm.defaultText = {
                 pageHeader: 'Administration',
                 breadCrumb: 'Admin',
-                user: 'Users & Roles',
+                user: 'User Groups',
                 group: 'Groups',
-                server: 'Evironments',
+                server: 'Environments',
                 materials: 'Materials',
                 tableHeaders: {
                     action: 'Actions',
@@ -115,6 +115,10 @@ angular
 
             vm.unassignedPipelines = [];
 
+            vm.userGroupToManage = {};
+
+            vm.truefalse = {};
+
             vm.selectPipeline = function(pipeline, index) {
                 vm.togglePipeline = index;
             };
@@ -170,6 +174,113 @@ angular
 
             vm.currentPipelineGroups = viewModel.allPipelineGroups;
 
+            $scope.sortingOrder = 'name';
+            $scope.pageSizes = [5,10,25,50];
+            $scope.reverse = false;
+            $scope.filteredItems = [];
+            $scope.groupedItems = [];
+            $scope.itemsPerPage = 10;
+            $scope.pagedItems = [];
+            $scope.currentPage = 0;
+            vm.query = "";
+            $scope.items = vm.currentPipelineGroups;
+
+
+            $(document).ready(function() {
+                $('#users').DataTable();
+            } );
+
+            var searchMatch = function (haystack, needle) {
+                if (!needle) {
+                    return true;
+                }
+                var result = haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                return result;
+            };
+
+            $scope.search = function () {
+                $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                    if (searchMatch(item["name"], vm.query))
+                    {
+                        return true;
+                    }
+                    return false;
+                });
+                // take care of the sorting order
+                if ($scope.sortingOrder !== '') {
+                    $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                }
+                $scope.currentPage = 0;
+                // now group by pages
+                $scope.groupToPages();
+            };
+
+            // show items per page
+            $scope.perPage = function () {
+                $scope.groupToPages();
+            };
+
+            // calculate page in place
+            $scope.groupToPages = function () {
+                $scope.pagedItems = [];
+
+                for (var i = 0; i < $scope.filteredItems.length; i++) {
+                    if (i % $scope.itemsPerPage === 0) {
+                        $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ $scope.filteredItems[i] ];
+                    } else {
+                        $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                    }
+                }
+            };
+
+            $scope.deleteItem = function (idx) {
+                var itemToDelete = $scope.pagedItems[$scope.currentPage][idx];
+                var idxInItems = $scope.items.indexOf(itemToDelete);
+                $scope.items.splice(idxInItems,1);
+                $scope.search();
+
+                return false;
+            };
+
+            $scope.range = function (start, end) {
+                var ret = [];
+                if (!end) {
+                    end = start;
+                    start = 0;
+                }
+                for (var i = start; i < end; i++) {
+                    ret.push(i);
+                }
+                return ret;
+            };
+
+            $scope.prevPage = function () {
+                if ($scope.currentPage > 0) {
+                    $scope.currentPage--;
+                }
+            };
+
+            $scope.nextPage = function () {
+                if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                    $scope.currentPage++;
+                }
+            };
+
+            $scope.setPage = function () {
+                $scope.currentPage = this.n;
+            };
+
+            $scope.search();
+
+
+            // change sorting order
+            $scope.sort_by = function(newSortingOrder) {
+                if ($scope.sortingOrder == newSortingOrder)
+                    $scope.reverse = !$scope.reverse;
+
+                $scope.sortingOrder = newSortingOrder;
+            };
+
             $scope.$watchCollection(function () { return viewModel.unassignedPipelines }, function(newVal, oldVal) {
                 vm.unassignedPipelines = viewModel.unassignedPipelines;
             });
@@ -204,6 +315,10 @@ angular
 
             vm.deletePipelineGroup = function() {
                 adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete.id);
+            };
+
+            vm.setUserGroupToManage = function (userGroup) {
+                vm.userGroupToManage = userGroup;
             };
 
             // function getAllUsers() {

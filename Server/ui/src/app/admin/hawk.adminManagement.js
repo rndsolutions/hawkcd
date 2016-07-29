@@ -39,7 +39,7 @@ angular
             data: {
                 pageTitle: 'User Management'
             },
-            templateUrl: "app/admin/views/partials/_users.html"
+            templateUrl: "app/admin/views/partials/_userGroups.html"
         })
 
         .state('index.admin.materials', {
