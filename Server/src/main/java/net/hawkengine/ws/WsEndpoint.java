@@ -3,29 +3,27 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TokenAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.User;
+import net.hawkengine.model.*;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
-
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
+import net.hawkengine.services.UserGroupService;
 import net.hawkengine.services.filters.factories.SecurityServiceInvoker;
+import net.hawkengine.services.interfaces.IUserGroupService;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,6 +34,7 @@ public class WsEndpoint extends WebSocketAdapter {
     private UUID id;
     private SecurityServiceInvoker securityServiceInvoker;
     private User loggedUser;
+    private IUserGroupService userGroupService;
 
     public WsEndpoint() {
         this.id = UUID.randomUUID();
@@ -45,6 +44,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
         this.securityServiceInvoker = new SecurityServiceInvoker();
+        this.userGroupService = new UserGroupService();
     }
 
     public UUID getId() {
@@ -63,7 +63,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
         String tokenQuery = session.getUpgradeRequest().getQueryString();
 
-        if (!tokenQuery.equals("token=null")){
+        if (!tokenQuery.equals("token=null")) {
             String token = tokenQuery.substring(6);
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
@@ -112,6 +112,8 @@ public class WsEndpoint extends WebSocketAdapter {
 //                    return;
 //                }
 //            }
+            this.loggedUser.getPermissions().addAll(this.getUniqueUserGroupPermissions(this.loggedUser));
+
             List<Permission> orderedPermissions = this.loggedUser.getPermissions().stream()
                     .sorted((p1, p2) -> p1.getPermissionScope().compareTo(p2.getPermissionScope())).collect(Collectors.toList());
 
@@ -165,7 +167,6 @@ public class WsEndpoint extends WebSocketAdapter {
     }
 
 
-
     private void errorDetails(WsContractDto contract, Gson serializer, Exception e, RemoteEndpoint endPoint) {
         contract.setError(true);
         contract.setErrorMessage(e.getMessage());
@@ -175,5 +176,45 @@ public class WsEndpoint extends WebSocketAdapter {
         } catch (IOException | RuntimeException e1) {
             e1.printStackTrace();
         }
+    }
+
+    private List<Permission> getUniqueUserGroupPermissions(User user) {
+        List<Permission> userGroupPermissions = new ArrayList<>();
+        String userId = user.getId();
+        List<String> userGroupIds = user.getUserGroupIds();
+
+        for (String userGroupId : userGroupIds) {
+            UserGroup userGroup = (UserGroup) this.userGroupService.getById(userGroupId).getObject();
+            List<String> userIds = userGroup.getUserIds();
+            boolean isPresent = false;
+
+            for (String userWithinGroupId : userIds) {
+                if (userWithinGroupId.equals(userId)) {
+                    isPresent = true;
+                    break;
+                }
+            }
+            if (isPresent) {
+                List<Permission> userGroupPermissionsFromDb = userGroup.getPermissions();
+
+                for (Permission userGroupPermissionFromDb: userGroupPermissionsFromDb) {
+                    boolean isPermissionPresent = false;
+                    for (Permission userPersmission:user.getPermissions()){
+                        if (userGroupPermissionFromDb.getPermissionScope() == userPersmission.getPermissionScope() &&
+                                userGroupPermissionFromDb.getPermittedEntityId().equals(userPersmission.getPermittedEntityId()) &&
+                                userGroupPermissionFromDb.getPermissionType() == userPersmission.getPermissionType()){
+                            isPermissionPresent = true;
+                            break;
+                        }
+                    }
+                    if (!isPermissionPresent){
+                        userGroupPermissions.add(userGroupPermissionFromDb);
+                    }
+                }
+            }
+        }
+
+
+        return userGroupPermissions;
     }
 }
