@@ -6,17 +6,21 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IAgentService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.ExceptionMapper;
+
 import java.util.List;
 
-@Path("/agents")
+
 @Consumes("application/json")
 @Produces("application/json")
+@Path("/agents")
 public class AgentController {
     private AgentService agentService;
     private SchemaValidator schemaValidator;
@@ -28,10 +32,18 @@ public class AgentController {
         this.pipelineService = new PipelineService();
     }
 
+    public AgentController(AgentService agentService) {
+        this.agentService = agentService;
+        this.schemaValidator = new SchemaValidator();
+        this.pipelineService = new PipelineService();
+
+
+    }
+
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAgents() {
+    public Response getAllAgents() throws Throwable {
         ServiceResult result = this.agentService.getAll();
         return Response.status(Status.OK)
                 .entity(result.getObject())
@@ -46,8 +58,8 @@ public class AgentController {
         ServiceResult result = this.agentService.getById(agentId);
         if (result.hasError()) {
             return Response.status(Status.NOT_FOUND)
-                    .entity(result)
                     .type(MediaType.TEXT_HTML)
+                    .entity(result.getMessage())
                     .build();
         }
         return Response.status(Status.OK)
@@ -61,6 +73,11 @@ public class AgentController {
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getWorkInfo(agentId);
+        if (result.hasError()){
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(result.getMessage())
+                    .build();
+        }
         return Response.status(Status.OK)
                 .entity(result.getObject())
                 .build();
@@ -80,7 +97,7 @@ public class AgentController {
                         .build();
             }
 
-            return Response.status(Status.OK)
+            return Response.status(Status.CREATED)
                     .entity(result.getObject())
                     .build();
         } else {
@@ -144,25 +161,20 @@ public class AgentController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{agentId}")
     public Response updateAgent(Agent agent) {
         String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.update(agent);
             if (result.hasError()) {
-                result = this.agentService.add(agent);
-            }
-
-            if (result.hasError()) {
-                return Response.status(Status.BAD_REQUEST)
+                return Response.status(Status.NOT_FOUND)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
-            } else {
+            }
                 return Response.status(Status.OK)
                         .entity(result.getObject())
                         .build();
-            }
+
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
@@ -228,11 +240,9 @@ public class AgentController {
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
-        } else {
-            return Response.status(Status.NO_CONTENT)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
         }
+            return Response.status(Status.NO_CONTENT)
+                    .build();
+
     }
 }

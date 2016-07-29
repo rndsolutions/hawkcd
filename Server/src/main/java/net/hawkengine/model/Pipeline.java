@@ -24,7 +24,7 @@ public class Pipeline extends DbEntry {
     private boolean isPrepared;
 
     public Pipeline() {
-        this.startTime = LocalDateTime.now();
+      //  this.startTime = LocalDateTime.now();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setMaterials(new ArrayList<>());
         this.setEnvironments(new ArrayList<>());
