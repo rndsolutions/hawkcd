@@ -98,13 +98,19 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     }
 
     private boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, String pipelineGroupId) {
+        boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if ((permission.isAbleToUpdate() && permission.isAbleToDelete()) ||
-                    ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN))) {
-                return true;
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+                hasPermission = true;
+            } else if (permission.getPermittedEntityId().equals(pipelineGroupId)){
+                if (permission.getPermissionType() != PermissionType.ADMIN){
+                    hasPermission = false;
+                } else{
+                    hasPermission = true;
+                    return hasPermission;
+                }
             }
         }
-
-        return false;
+        return hasPermission;
     }
 }

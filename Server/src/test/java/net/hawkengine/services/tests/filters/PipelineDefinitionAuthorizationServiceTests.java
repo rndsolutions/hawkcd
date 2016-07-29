@@ -202,46 +202,25 @@ public class PipelineDefinitionAuthorizationServiceTests {
         firstPermission.setPermissionType(PermissionType.NONE);
         firstPermission.setPermissionScope(PermissionScope.PIPELINE_GROUP);
         firstPermission.setPermittedEntityId(this.firstPipelineGroup.getId());
-        firstPermission.setAbleToGet(false);
-        firstPermission.setAbleToAdd(false);
-        firstPermission.setAbleToUpdate(false);
-        firstPermission.setAbleToDelete(false);
 
         Permission secondPermission = new Permission();
         secondPermission.setPermissionType(PermissionType.OPERATOR);
         secondPermission.setPermissionScope(PermissionScope.PIPELINE);
         secondPermission.setPermittedEntityId(this.firstPipeline.getId());
-        secondPermission.setAbleToGet(true);
-        secondPermission.setAbleToAdd(true);
-        secondPermission.setAbleToUpdate(false);
-        secondPermission.setAbleToDelete(false);
 
         Permission thirdPermission = new Permission();
         thirdPermission.setPermissionType(PermissionType.ADMIN);
         thirdPermission.setPermissionScope(PermissionScope.SERVER);
-        thirdPermission.setPermittedEntityId("SERVER");
-        thirdPermission.setAbleToGet(true);
-        thirdPermission.setAbleToAdd(true);
-        thirdPermission.setAbleToUpdate(true);
-        thirdPermission.setAbleToDelete(true);
 
         Permission fourthPermission = new Permission();
         fourthPermission.setPermissionType(PermissionType.VIEWER);
         fourthPermission.setPermissionScope(PermissionScope.PIPELINE_GROUP);
         fourthPermission.setPermittedEntityId(this.secondPipelineGroup.getId());
-        fourthPermission.setAbleToGet(true);
-        fourthPermission.setAbleToAdd(false);
-        fourthPermission.setAbleToUpdate(false);
-        fourthPermission.setAbleToDelete(false);
 
         Permission fifthPermission = new Permission();
         fifthPermission.setPermissionType(PermissionType.ADMIN);
         fifthPermission.setPermissionScope(PermissionScope.PIPELINE);
         fifthPermission.setPermittedEntityId(this.thirdPipeline.getId());
-        fifthPermission.setAbleToGet(true);
-        fifthPermission.setAbleToAdd(true);
-        fifthPermission.setAbleToUpdate(true);
-        fifthPermission.setAbleToDelete(true);
 
         permissions.add(firstPermission);
         permissions.add(secondPermission);
