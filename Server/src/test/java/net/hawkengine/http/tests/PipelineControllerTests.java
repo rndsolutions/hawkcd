@@ -1,40 +1,26 @@
 package net.hawkengine.http.tests;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.PipelineController;
-import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.Service;
-import net.hawkengine.services.interfaces.IPipelineGroupService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.channels.Pipe;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -44,10 +30,12 @@ public class PipelineControllerTests extends JerseyTest {
     private Pipeline pipeline;
     private ServiceResult serviceResult;
 
-
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     public Application configure() {
-        ServerConfiguration.configure();
         this.pipelineService = Mockito.mock(PipelineService.class);
         this.pipelineController = new PipelineController(this.pipelineService);
         this.serviceResult = new ServiceResult();
@@ -55,7 +43,7 @@ public class PipelineControllerTests extends JerseyTest {
     }
 
     @Test
-    public void PipelineController_constructorTest_notNull(){
+    public void PipelineController_constructorTest_notNull() {
 
         PipelineController pipelineController = new PipelineController();
 
@@ -63,7 +51,7 @@ public class PipelineControllerTests extends JerseyTest {
     }
 
     @Test
-    public void getAllPipelines_request_emptyList(){
+    public void getAllPipelines_request_emptyList() {
         //Arrange
         List<Pipeline> expectedResult = new ArrayList<>();
         this.serviceResult.setObject(expectedResult);
@@ -74,8 +62,8 @@ public class PipelineControllerTests extends JerseyTest {
         List<Pipeline> actualResult = response.readEntity(List.class);
 
         //Assert
-        assertEquals(200,response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(200, response.getStatus());
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -147,11 +135,9 @@ public class PipelineControllerTests extends JerseyTest {
         //Assert
         assertEquals(201, response.getStatus());
         assertEquals(this.pipeline.getId(), actualResult.getId());
-
     }
 
-
-    private void prepearePipeline(){
+    private void prepearePipeline() {
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinition.setName("pipelineDefinition");
         this.pipeline = new Pipeline();

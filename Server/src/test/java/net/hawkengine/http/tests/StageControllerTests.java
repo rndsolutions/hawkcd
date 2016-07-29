@@ -11,6 +11,7 @@ import net.hawkengine.services.interfaces.IStageService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -24,15 +25,18 @@ import javax.ws.rs.core.Response;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-
 public class StageControllerTests extends JerseyTest {
     private StageController stageController;
     private IStageService stageService;
     private Stage stage;
     private ServiceResult serviceResult;
 
-    public Application configure() {
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.stageService = Mockito.mock(StageService.class);
         this.stageController = new StageController(this.stageService);
         this.serviceResult = new ServiceResult();
@@ -141,6 +145,4 @@ public class StageControllerTests extends JerseyTest {
         this.stage = new Stage();
         this.stage.setPipelineId(pipeline.getId());
     }
-
-
 }

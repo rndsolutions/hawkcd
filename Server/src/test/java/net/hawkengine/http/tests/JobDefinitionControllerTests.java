@@ -1,6 +1,5 @@
 package net.hawkengine.http.tests;
 
-
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.JobDefinitionController;
 import net.hawkengine.model.ExecTask;
@@ -19,6 +18,7 @@ import net.hawkengine.services.interfaces.IJobDefinitionService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -38,8 +38,12 @@ public class JobDefinitionControllerTests extends JerseyTest {
     private JobDefinition jobDefinition;
     private ServiceResult serviceResult;
 
-    public Application configure() {
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.jobDefinitionService = Mockito.mock(JobDefinitionService.class);
         this.jobDefinitionController = new JobDefinitionController(this.jobDefinitionService);
         this.serviceResult = new ServiceResult();
@@ -88,7 +92,6 @@ public class JobDefinitionControllerTests extends JerseyTest {
         assertEquals(200, response.getStatus());
         assertEquals(expectedResult.size(), actualResult.size());
     }
-
 
     @Test
     public void getJobDefinitionById_existingObject_correctObject() {
@@ -203,7 +206,6 @@ public class JobDefinitionControllerTests extends JerseyTest {
         //Assert
         assertEquals(400, response.getStatus());
         assertEquals(expectedResult, actualResult);
-
     }
 
     @Test
@@ -234,7 +236,6 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
-
 
         //Act
         Response response = target("/job-definitions").request().put(entity);
@@ -357,7 +358,6 @@ public class JobDefinitionControllerTests extends JerseyTest {
         stageDefinition.setJobDefinitions(jobDefinitions);
         List<StageDefinition> stageDefinitions = new ArrayList<>();
         stageDefinitions.add(stageDefinition);
-        pipelineDefinition.setStageDefinitions(stageDefinitions);
         List<MaterialDefinition> materialDefinitions = new ArrayList<>();
         MaterialDefinition materialDefinition = new GitMaterial();
         materialDefinition.setType(MaterialType.GIT);
@@ -365,6 +365,6 @@ public class JobDefinitionControllerTests extends JerseyTest {
         materialDefinition.setName("gitName");
         materialDefinitions.add(materialDefinition);
         pipelineDefinition.setMaterialDefinitions(materialDefinitions);
-        this.jobDefinitionService.add(this.jobDefinition);
+        pipelineDefinition.setStageDefinitions(stageDefinitions);
     }
 }

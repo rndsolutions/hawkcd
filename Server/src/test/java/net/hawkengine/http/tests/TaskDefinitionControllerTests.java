@@ -18,6 +18,7 @@ import net.hawkengine.services.interfaces.ITaskDefinitionService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -37,15 +38,18 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     private TaskDefinition taskDefinition;
     private ServiceResult serviceResult;
 
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
+
     @Override
     public Application configure() {
-        ServerConfiguration.configure();
         this.taskDefinitionService = Mockito.mock(TaskDefinitionService.class);
         this.taskDefinitionController = new TaskDefinitionController(this.taskDefinitionService);
         this.serviceResult = new ServiceResult();
         return new ResourceConfig().register(this.taskDefinitionController);
     }
-
 
     @Test
     public void TaskDefinitionController_constructorTest_notNull() {
@@ -61,7 +65,6 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         List<PipelineDefinition> expectedResult = new ArrayList<>();
         this.serviceResult.setObject(expectedResult);
         Mockito.when(this.taskDefinitionService.getAll()).thenReturn(this.serviceResult);
-
 
         //Act
         Response response = target("/task-definitions").request().get();
@@ -134,7 +137,6 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         Mockito.when(this.taskDefinitionService.addTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
 
-
         //Act
         Response response = target("/task-definitions").request().post(entity);
         TaskDefinition actualResult = response.readEntity(TaskDefinition.class);
@@ -166,7 +168,6 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     }
 
     /*
-
     TODO: service that checks for object duplication to be implemented.
     @Test
     public void addTaskDefinition_existingObject_properErrorMessage() {
@@ -187,7 +188,6 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-
     TODO: service that checks for name collision to be implemented.
     @Test
     public void addStageDefinition_withSameName_properErrorMessage() {
@@ -207,10 +207,8 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         //Assert
         assertEquals(400, response.getStatus());
         assertEquals(expectedResult, actualResult);
-
     }
 */
-
     @Test
     public void updateTaskDefinition_existingTaskDefinition_updatedTaskDefinition() {
         //Arrange
@@ -247,29 +245,29 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         assertEquals(400, response.getStatus());
         assertEquals(expectedMessage, actualMessage);
     }
-/*
-    TODO: service that checks for name collision to be implemented.
-    @Test
-    public void updateTaskDefinition_withSameName_properErrorMessage() {
-        //Arrange
-        this.prepareTaskDefinition();
-        String expectedMessage = "TaskDefinition with that name already exists";
-        this.serviceResult.setError(true);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.taskDefinitionService.updateTask(Mockito.anyObject())).thenReturn(this.serviceResult);
-        Entity entity = Entity.entity(this.taskDefinition, "application/json");
 
-        //Act
-        Response response = target("/task-definitions/").request().put(entity);
-        String actualMessage = response.readEntity(String.class);
+    /*
+        TODO: service that checks for name collision to be implemented.
+        @Test
+        public void updateTaskDefinition_withSameName_properErrorMessage() {
+            //Arrange
+            this.prepareTaskDefinition();
+            String expectedMessage = "TaskDefinition with that name already exists";
+            this.serviceResult.setError(true);
+            this.serviceResult.setMessage(expectedMessage);
+            Mockito.when(this.taskDefinitionService.updateTask(Mockito.anyObject())).thenReturn(this.serviceResult);
+            Entity entity = Entity.entity(this.taskDefinition, "application/json");
+
+            //Act
+            Response response = target("/task-definitions/").request().put(entity);
+            String actualMessage = response.readEntity(String.class);
 
 
-        //Assert
-        assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
-*/
-
+            //Assert
+            assertEquals(400, response.getStatus());
+            assertEquals(expectedMessage, actualMessage);
+        }
+    */
     @Test
     public void updateTaskDefinition_invalidField_properErrorMessage() {
         //Arrange
@@ -337,7 +335,6 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         assertEquals(400, response.getStatus());
         assertEquals(expectedMessage, actualMessage);
     }
-
 
     private void prepareTaskDefinition() {
         PipelineDefinition pipelineDefinition = new PipelineDefinition();

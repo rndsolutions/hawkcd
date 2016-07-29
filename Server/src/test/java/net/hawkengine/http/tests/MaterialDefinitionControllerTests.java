@@ -1,6 +1,5 @@
 package net.hawkengine.http.tests;
 
-
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.MaterialDefinitionController;
 import net.hawkengine.model.GitMaterial;
@@ -13,6 +12,7 @@ import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -32,8 +32,12 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
     private MaterialDefinition materialDefinition;
     private ServiceResult serviceResult;
 
-    public Application configure() {
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.materialDefinitionService = Mockito.mock(MaterialDefinitionService.class);
         this.materialDefinitionController = new MaterialDefinitionController(this.materialDefinitionService);
         this.serviceResult = new ServiceResult();
@@ -175,7 +179,6 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-
     @Test
     public void addMaterialDefinition_withSameName_properErrorMessage() {
         //Arrange
@@ -225,7 +228,6 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         Mockito.when(this.materialDefinitionService.updateMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
 
-
         //Act
         Response response = target("/materials").request().put(entity);
 
@@ -233,7 +235,6 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         assertEquals(400, response.getStatus());
         assertEquals(expectedMessage, response.readEntity(String.class));
     }
-
 
     @Test
     public void updateJobDefinition_withSameName_properErrorMessage() {
@@ -304,7 +305,6 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         assertEquals(404, response.getStatus());
         assertEquals(expectedMessage, actualMessage);
     }
-
 
     private void prepareMaterialDefinition() {
         this.materialDefinition = new GitMaterial();

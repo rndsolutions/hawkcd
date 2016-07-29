@@ -18,13 +18,12 @@ import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -40,8 +39,12 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     private PipelineDefinition pipelineDefinition;
     private ServiceResult serviceResult;
 
-    public Application configure() {
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.pipelineDefinitionService = Mockito.mock(PipelineDefinitionService.class);
         this.pipelineDefinitionController = new PipelineDefinitionController(this.pipelineDefinitionService);
         this.serviceResult = new ServiceResult();
@@ -49,13 +52,12 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     }
 
     @Test
-    public void pipelineDefinitionController_constructorTest_notNull(){
+    public void pipelineDefinitionController_constructorTest_notNull() {
 
         PipelineDefinitionController pipelineDefinitionController = new PipelineDefinitionController();
 
         assertNotNull(pipelineDefinitionController);
     }
-
 
     @Test
     public void getAllPipelineDefinitions_nonExistingObjects_emptyList() {
@@ -90,7 +92,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Assert
         assertEquals(200, response.getStatus());
         assertEquals(expectedResult.size(), actualResult.size());
-
     }
 
     @Test
@@ -108,7 +109,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         assertEquals(200, response.getStatus());
         assertEquals(this.pipelineDefinition.getId(), actualResult.getId());
     }
-
 
     @Test
     public void getPipelineDefinitionById_nonExistingPiplineDefinition_properErrorMessage() {
@@ -226,9 +226,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Assert
         assertEquals(200, response.getStatus());
         assertEquals(this.pipelineDefinition.getName(), actualResult.getName());
-
     }
-
 
     @Test
     public void updatePipelineDefinition_nonExistingObject_properErrorMessage() {
@@ -250,7 +248,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     }
 
     /*
-
      TODO: service that checks for name collision to be implemented.
 
     @Test
@@ -272,7 +269,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         assertEquals(400, response.getStatus());
         assertEquals(expectedMessage, actualMessage);
     }
-
 */
 
     @Test
@@ -342,7 +338,8 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         execTask.setJobDefinitionId(jobDefinition.getId());
         execTask.setName("execTask");
         execTask.setCommand("command");
-        String arguments = new String("argument");;
+        String arguments = new String("argument");
+        ;
         execTask.setArguments(arguments);
         execTask.setRunIfCondition(RunIf.PASSED);
         execTask.setType(TaskType.EXEC);

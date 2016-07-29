@@ -4,7 +4,6 @@ package net.hawkengine.http.tests;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.PipelineGroupController;
 import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.PipelineGroupService;
@@ -12,6 +11,7 @@ import net.hawkengine.services.interfaces.IPipelineGroupService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -31,8 +31,12 @@ public class PipelineGroupControllerTests extends JerseyTest {
     PipelineGroup pipelineGroup;
     ServiceResult serviceResult;
 
-    public Application configure() {
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.pipelineGroupService = Mockito.mock(PipelineGroupService.class);
         this.pipelineGroupController = new PipelineGroupController(this.pipelineGroupService);
         this.serviceResult = new ServiceResult();
@@ -153,7 +157,6 @@ public class PipelineGroupControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-
     @Test
     public void addPipelineGroup_existingObject_properErrorMessage() {
         //Arrange
@@ -197,6 +200,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
 
         }
     */
+
     @Test
     public void updatePipelineGroup_existingPipelineGroup_updatedPipelineGroup() {
         //Arrange
@@ -224,7 +228,6 @@ public class PipelineGroupControllerTests extends JerseyTest {
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.pipelineGroupService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineGroup, "application/json");
-
 
         //Act
         Response response = target("/pipeline-groups").request().put(entity);
@@ -257,6 +260,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
 
         }
     */
+
     @Test
     public void updatePipelineGroup_invalidField_properErrorMessage() {
         //Arrange
@@ -308,11 +312,8 @@ public class PipelineGroupControllerTests extends JerseyTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
-
-
     private void preparePipelineGroup() {
         this.pipelineGroup = new PipelineGroup();
         this.pipelineGroup.setName("pipelineGroup");
     }
-
 }

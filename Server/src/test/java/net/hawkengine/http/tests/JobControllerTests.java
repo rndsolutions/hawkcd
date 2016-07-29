@@ -3,15 +3,13 @@ package net.hawkengine.http.tests;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.JobController;
 import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
 import net.hawkengine.services.JobService;
 import net.hawkengine.services.interfaces.IJobService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -24,15 +22,19 @@ import javax.ws.rs.core.Response;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-
 public class JobControllerTests extends JerseyTest {
     private JobController jobController;
     private IJobService jobService;
     private Job job;
     private ServiceResult serviceResult;
 
-    public Application configure() {
+
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.jobService = Mockito.mock(JobService.class);
         this.jobController = new JobController(this.jobService);
         this.serviceResult = new ServiceResult();

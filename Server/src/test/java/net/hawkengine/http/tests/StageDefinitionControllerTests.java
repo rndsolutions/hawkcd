@@ -19,6 +19,7 @@ import net.hawkengine.services.interfaces.IStageDefinitionService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -38,8 +39,12 @@ public class StageDefinitionControllerTests extends JerseyTest {
     private StageDefinition stageDefinition;
     private ServiceResult serviceResult;
 
-    public Application configure() {
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.stageDefinitionService = Mockito.mock(StageDefinitionService.class);
         this.stageDefinitionController = new StageDefinitionController(this.stageDefinitionService);
         this.serviceResult = new ServiceResult();
@@ -60,7 +65,6 @@ public class StageDefinitionControllerTests extends JerseyTest {
         List<PipelineDefinition> expectedResult = new ArrayList<>();
         this.serviceResult.setObject(expectedResult);
         Mockito.when(this.stageDefinitionService.getAll()).thenReturn(this.serviceResult);
-
 
         //Act
         Response response = target("/stage-definitions").request().get();
@@ -88,7 +92,6 @@ public class StageDefinitionControllerTests extends JerseyTest {
         //Assert
         assertEquals(200, response.getStatus());
         assertEquals(expectedResult.size(), actualResult.size());
-
     }
 
     @Test
@@ -105,7 +108,6 @@ public class StageDefinitionControllerTests extends JerseyTest {
         //Assert
         assertEquals(200, response.getStatus());
         assertEquals(this.stageDefinition.getId(), actualResult.getId());
-
     }
 
     @Test
@@ -125,7 +127,6 @@ public class StageDefinitionControllerTests extends JerseyTest {
         assertEquals(404, response.getStatus());
         assertEquals(expectedResult, actualResult);
     }
-
 
     @Test
     public void addStageDefinition_oneObject_successMessage() {
@@ -330,7 +331,6 @@ public class StageDefinitionControllerTests extends JerseyTest {
         assertEquals(400, response.getStatus());
         assertEquals(expectedMessage, actualMessage);
     }
-
 
     private void prepareStageDefinition() {
         PipelineDefinitionService pipelineDefinitionService = new PipelineDefinitionService();

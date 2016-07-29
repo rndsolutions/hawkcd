@@ -1,41 +1,28 @@
 package net.hawkengine.http.tests;
 
-import com.google.gson.Gson;
-
-import com.sun.org.apache.bcel.internal.generic.MONITORENTER;
-
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.http.AgentController;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Environment;
-import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.AgentService;
-import net.hawkengine.services.interfaces.IAgentService;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
 
 public class AgentControllerTests extends JerseyTest {
     private AgentService agentService;
@@ -43,8 +30,12 @@ public class AgentControllerTests extends JerseyTest {
     private Agent agent;
     private ServiceResult serviceResult;
 
-    public Application configure() {
+    @BeforeClass
+    public static void setUpClass() {
         ServerConfiguration.configure();
+    }
+
+    public Application configure() {
         this.agentService = Mockito.mock(AgentService.class);
         this.agentController = new AgentController(this.agentService);
         this.serviceResult = new ServiceResult();
@@ -78,7 +69,6 @@ public class AgentControllerTests extends JerseyTest {
     @Test
     public void getAllAgents_existingObjects_twoAgents() {
         //Arrange
-
         List<Agent> expectedResult = new ArrayList<>();
         expectedResult.add(this.agent);
         expectedResult.add(this.agent);
@@ -92,7 +82,6 @@ public class AgentControllerTests extends JerseyTest {
         //Assert
         assertEquals(200, response.getStatus());
         assertEquals(expectedResult.size(), actualResult.size());
-
     }
 
     @Test
@@ -103,7 +92,7 @@ public class AgentControllerTests extends JerseyTest {
         Mockito.when(this.agentService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
-        Response response = target("/agents/" +this.agent.getId()).request().get();
+        Response response = target("/agents/" + this.agent.getId()).request().get();
         Agent actualResult = response.readEntity(Agent.class);
 
         //Assert
@@ -139,16 +128,14 @@ public class AgentControllerTests extends JerseyTest {
         this.serviceResult.setObject(expectedResult);
         Mockito.when(this.agentService.getWorkInfo(Mockito.anyString())).thenReturn(this.serviceResult);
 
-
         //Act
-        Response response = target("/agents/"+this.agent.getId()+"/work").request().get();
+        Response response = target("/agents/" + this.agent.getId() + "/work").request().get();
         String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(expectedResult, actualResult);
     }
-
 
     @Test
     public void addAgent_oneAgent_successMessage() {
@@ -182,11 +169,10 @@ public class AgentControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedResult,response.readEntity(String.class));
+        assertEquals(expectedResult, response.readEntity(String.class));
     }
 
     /*
-
     TODO: service that checks for name collision to be implemented.
     @Test
     public void addPipelineDefinition_withSameName_properErrorMessage() {
@@ -206,7 +192,6 @@ public class AgentControllerTests extends JerseyTest {
         //Assert
         assertEquals(400, response.getStatus());
         assertEquals(expectedResult,actualResult);
-
     }
     */
 
@@ -230,9 +215,6 @@ public class AgentControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualMessage);
     }
 
-
-
-
     @Test
     public void updateAgent_existingAgent_updatedAgent() {
         //Arrange
@@ -240,7 +222,7 @@ public class AgentControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.agent);
         this.agent.setName("updatedAgent");
         Mockito.when(this.agentService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
-        Entity entity = Entity.entity(this.agent,"application/json");
+        Entity entity = Entity.entity(this.agent, "application/json");
 
         //Act
         Response response = target("/agents/").request().put(entity);
@@ -260,8 +242,7 @@ public class AgentControllerTests extends JerseyTest {
         this.serviceResult.setObject(null);
         this.serviceResult.setError(true);
         Mockito.when(this.agentService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
-        Entity entity = Entity.entity(this.agent,"application/json");
-
+        Entity entity = Entity.entity(this.agent, "application/json");
 
         //Act
         Response response = target("/agents/").request().put(entity);
@@ -269,9 +250,8 @@ public class AgentControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(404, response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(expectedResult, actualResult);
     }
-
 
     @Test
     public void updateAgent_invalidField_properErrorMessage() {
@@ -288,26 +268,25 @@ public class AgentControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedResult,response.readEntity(String.class));
+        assertEquals(expectedResult, response.readEntity(String.class));
     }
 
 
     @Test
-    public void deleteAgent_agentObject_successMessage(){
+    public void deleteAgent_agentObject_successMessage() {
         //Arrange
         this.prepareAgent();
         Mockito.when(this.agentService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
-        Response response = target("/agents/"+this.agent.getId()).request().delete();
+        Response response = target("/agents/" + this.agent.getId()).request().delete();
 
         //Assert
-        assertEquals(204,response.getStatus());
-
+        assertEquals(204, response.getStatus());
     }
 
     @Test
-    public void deleteAgent_nonExistingAgent_errorMessage(){
+    public void deleteAgent_nonExistingAgent_errorMessage() {
         //Arrange
         String expectedResult = "Agent not found.";
         this.serviceResult.setError(true);
@@ -319,12 +298,12 @@ public class AgentControllerTests extends JerseyTest {
         String actualResult = response.readEntity(String.class);
 
         //Assert
-        assertEquals(404,response.getStatus());
-        assertEquals(expectedResult,actualResult);
+        assertEquals(404, response.getStatus());
+        assertEquals(expectedResult, actualResult);
 
     }
 
-    private void prepareAgent(){
+    private void prepareAgent() {
         this.agent = new Agent();
         this.agent.setHostName("localhost");
         this.agent.setIpAddress("127.0.0.1");
@@ -332,9 +311,5 @@ public class AgentControllerTests extends JerseyTest {
         this.agent.setName("Blond007");
         this.agent.setOperatingSystem("android");
         this.agent.setEnvironment(new Environment());
-    }
-
-    private void removeAgent(){
-        agentService.delete(this.agent.getId());
     }
 }
