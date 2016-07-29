@@ -130,12 +130,12 @@ public class AuthController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
     public Response register(RegisterDto newUser){
-        String hashedPassword = DigestUtils.sha256Hex(newUser.getPassword());
+
         List<Permission> userPermissions = new ArrayList<>();
 
         User user =  new User();
         user.setEmail(newUser.getEmail());
-        user.setPassword(hashedPassword);
+        user.setPassword(newUser.getPassword());
 
         //TODO: move this to update user, should not be here, left till adminUsers is ready
         if (newUser.getPermissions() != null) {

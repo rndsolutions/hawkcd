@@ -46,7 +46,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 .create();
     }
 
-
     @Override
     public ServiceResult getAll(WsContractDto contract, List<Permission> permissions) {
         try {
