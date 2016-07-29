@@ -46,6 +46,7 @@ public class JobDefinitionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{jobDefinitionId}")
     public Response getJobDefinitionById(@PathParam("jobDefinitionId") String jobDefinitionId) {
         ServiceResult result = this.jobDefinitionService.getById(jobDefinitionId);
@@ -110,7 +111,7 @@ public class JobDefinitionController {
     }
 
     @DELETE
-    @Consumes
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{jobDefinitionId}")
     public Response deleteJobDefinition(@PathParam("jobDefinitionId") String jobDefinitionId) {
         ServiceResult result = this.jobDefinitionService.delete(jobDefinitionId);

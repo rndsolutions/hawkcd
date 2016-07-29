@@ -45,6 +45,7 @@ public class MaterialDefinitionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{materialDefinitionId}")
     public Response getMaterialDefinitionById(@PathParam("materialDefinitionId")
                                                       String materialDefinitionId) {
@@ -115,6 +116,4 @@ public class MaterialDefinitionController {
 
         return Response.status(Status.NO_CONTENT).build();
     }
-
-
 }

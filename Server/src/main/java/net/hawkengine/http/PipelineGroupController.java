@@ -1,6 +1,5 @@
 package net.hawkengine.http;
 
-
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
@@ -38,13 +37,14 @@ public class PipelineGroupController {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPipelineGroups() {
         ServiceResult result = this.pipelineGroupService.getAll();
         return Response.status(Status.OK).entity(result.getObject()).build();
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{pipelineGroupId}")
     public Response getPipelineGroupById(@PathParam("pipelineGroupId") String pipelineGroupId) {

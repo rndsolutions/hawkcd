@@ -36,7 +36,7 @@ public class TaskDefinitionController {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getAllTaskDefinitions() {
         ServiceResult result = this.taskDefinitionService.getAll();
         return Response.status(Status.OK)
@@ -45,7 +45,7 @@ public class TaskDefinitionController {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{taskDefinitionId}")
     public Response getTaskDefinitionById(@PathParam("taskDefinitionId") String taskDefinitionId) {
         ServiceResult result = this.taskDefinitionService.getById(taskDefinitionId);
@@ -61,7 +61,7 @@ public class TaskDefinitionController {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewTaskDefinition(TaskDefinition taskDefinition) {
         String isValid = this.schemaValidator.validate(taskDefinition);
         if (isValid.equals("OK")) {
@@ -85,7 +85,7 @@ public class TaskDefinitionController {
     }
 
     @PUT
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response updateTaskDefinition(TaskDefinition taskDefinition) {
         String isValid = this.schemaValidator.validate(taskDefinition);
         if (isValid.equals("OK")) {

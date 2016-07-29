@@ -6,17 +6,12 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.interfaces.IAgentService;
 import net.hawkengine.services.interfaces.IPipelineService;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.ext.ExceptionMapper;
-
 import java.util.List;
-
 
 @Consumes("application/json")
 @Produces("application/json")
@@ -36,8 +31,6 @@ public class AgentController {
         this.agentService = agentService;
         this.schemaValidator = new SchemaValidator();
         this.pipelineService = new PipelineService();
-
-
     }
 
     @GET
@@ -113,7 +106,6 @@ public class AgentController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/work")
     public Response addWork(Job job) {
-
         // TODO: Move logic into JobService
         if (job == null) {
             return Response.status(Status.OK).build();
@@ -243,6 +235,5 @@ public class AgentController {
         }
             return Response.status(Status.NO_CONTENT)
                     .build();
-
     }
 }

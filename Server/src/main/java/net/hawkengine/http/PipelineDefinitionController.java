@@ -21,7 +21,6 @@ import javax.ws.rs.core.Response.Status;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/pipeline-definitions")
-
 public class PipelineDefinitionController {
     private IPipelineDefinitionService pipelineDefinitionService;
     private SchemaValidator schemaValidator;
@@ -47,6 +46,7 @@ public class PipelineDefinitionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{pipelineDefinitionId}")
     public Response getPipelineDefinitionById(@PathParam("pipelineDefinitionId")
                                                       String pipelineDefinitionId) {
@@ -110,7 +110,7 @@ public class PipelineDefinitionController {
     }
 
     @DELETE
-    @Consumes
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{pipelineDefinitionId}")
     public Response deletePipeline(@PathParam("pipelineDefinitionId")
                                            String pipelineDefinitionId) {

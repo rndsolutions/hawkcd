@@ -46,6 +46,7 @@ public class StageDefinitionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{stageDefinitionId}")
     public Response getStageDefinitionById(@PathParam("stageDefinitionId")
                                                    String stageDefinitionId) {
@@ -108,7 +109,7 @@ public class StageDefinitionController {
     }
 
     @DELETE
-    @Consumes
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{stageDefinitionId}")
     public Response deleteStage(@PathParam("stageDefinitionId") String stageDefinitionId) {
         ServiceResult result = this.stageDefinitionService.delete(stageDefinitionId);

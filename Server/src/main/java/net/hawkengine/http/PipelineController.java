@@ -2,9 +2,7 @@ package net.hawkengine.http;
 
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
 import javax.ws.rs.Consumes;
@@ -33,7 +31,7 @@ public class PipelineController {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getPipelines() {
         ServiceResult response = this.pipelineService.getAll();
         return Response.status(Status.OK)
@@ -41,8 +39,9 @@ public class PipelineController {
                 .build();
     }
 
-    @Consumes(MediaType.APPLICATION_JSON)
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{pipelineDefinitionId}")
     public Response getPipelineById(@PathParam("pipelineDefinitionId") String pipelineDefinitionId) {
         ServiceResult response = this.pipelineService.getById(pipelineDefinitionId);
@@ -79,7 +78,6 @@ public class PipelineController {
 
     */
 
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addPipeline(Pipeline pipeline){
@@ -108,7 +106,4 @@ public class PipelineController {
     TODO: service to be implemented.
 
     */
-
-
-
 }
