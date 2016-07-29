@@ -376,7 +376,7 @@ angular
                         "name": "defaultJob",
                         "taskDefinitions": [{
                             "command": "cmd",
-                            "arguments": ["/c"],
+                            "arguments": "/c",
                             "runIfCondition": 'PASSED',
                             "type": 'EXEC'
                         }],
@@ -389,7 +389,7 @@ angular
                 }],
                 "autoScheduling": vm.formData.pipeline.autoSchedule
             };
-            
+
             pipeConfigService.addPipelineDefinition(pipeline);
 
             // var tokenIsValid = authDataService.checkTokenExpiration();

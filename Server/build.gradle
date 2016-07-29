@@ -109,6 +109,8 @@ dependencies {
 
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.4.0.201606070830-r'
 
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.17'
+
     //Mongo
 
     compile 'org.mongodb:mongodb-driver:3.2.2'

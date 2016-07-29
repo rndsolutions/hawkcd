@@ -7,7 +7,7 @@ function failBuild  {
             echo "Successfully created file"
          else
             echo "Error building agent" >&2
-           exit;
+           exit 1;
     fi
  }
 
@@ -55,8 +55,13 @@ failBuild
 
 cd ../
 echo "running the gradle build.."g
-gradle build jacocoTestReport coveralls
+gradle build
 failBuild
+gradle jacocoTestReport
+failBuild
+gradle coveralls
+failBuild
+
 
 echo "copy files server build outputs to the dist folder"
 cp -r build/libs/* ../dist/Server

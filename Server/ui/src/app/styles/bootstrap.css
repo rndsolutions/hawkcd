@@ -2094,7 +2094,7 @@ th {
   line-height: 3!important;
 }
 .table > thead > tr > th {
-  text-align: center!important;
+  text-align: left/*center!important*/;
   border: none!important;
   vertical-align: bottom;
   border-bottom: 2px solid #ddd;

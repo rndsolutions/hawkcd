@@ -295,7 +295,7 @@ angular
                         taskDefinitions: [{
                             type: newStage.jobDefinitions.taskDefinitions.type,
                             command: newStage.jobDefinitions.taskDefinitions.command,
-                            arguments: newStage.jobDefinitions.taskDefinitions.arguments ? newStage.jobDefinitions.taskDefinitions.arguments.split('\n') : [],
+                            arguments: newStage.jobDefinitions.taskDefinitions.arguments,
                             workingDirectory: newStage.jobDefinitions.taskDefinitions.workingDirectory,
                             runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition,
                             ignoreErrors: newStage.jobDefinitions.taskDefinitions.ignoreErrors || false
@@ -352,14 +352,14 @@ angular
         }
         pipeConfigService.addStageDefinition(stage);
     };
-        
+
         vm.editStage = function(stage) {
             var newStage = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex]);
             newStage.name = stage.name;
             $state.go('index.pipelineConfig.stage.settings', {groupName:vm.pipeline.groupName, pipelineName:vm.pipeline.name, stageName:stage.name});
             pipeConfigService.updateStageDefinition(newStage);
         };
-        
+
         vm.deleteStage = function(stage){
             pipeConfigService.deleteStageDefinition(stage.id);
         };
@@ -399,7 +399,7 @@ angular
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                         command: newJob.taskDefinitions.command,
-                        arguments: newJob.taskDefinitions.arguments ? newJob.taskDefinitions.arguments.split('\n') : [],
+                        arguments: newJob.taskDefinitions.arguments,
                         workingDirectory: newJob.taskDefinitions.workingDirectory,
                         runIfCondition: newJob.taskDefinitions.runIfCondition,
                         ignoreErrors: newJob.taskDefinitions.ignoreErrors || false
@@ -620,7 +620,7 @@ angular
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     command: newTask.command,
-                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    arguments: newTask.arguments,
                     workingDirectory: newTask.workingDirectory,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
@@ -679,7 +679,7 @@ angular
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     command: newTask.command,
-                    arguments: newTask.arguments ? newTask.arguments.split('\n') : [],
+                    arguments: newTask.arguments,
                     workingDirectory: newTask.workingDirectory,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
@@ -728,7 +728,7 @@ angular
             }
             pipeConfigService.updateTaskDefinition(updatedTask);
         };
-        
+
         vm.deleteTask = function (task) {
             pipeConfigService.deleteTaskDefinition(task.id);
         };
@@ -1585,36 +1585,17 @@ angular
         //     }
         // };
         //
-        // vm.sortableOptions = {
-        //     cursor: "move",
-        //     update: function(e, ui) {
-        //         vm.job.Tasks = vm.allTasks;
-        //         var tokenIsValid = authDataService.checkTokenExpiration();
-        //         if (tokenIsValid) {
-        //             var token = window.localStorage.getItem("accessToken");
-        //             oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-        //                 .then(function(res) {
-        //                     console.log(res);
-        //                 }, function(err) {
-        //                     console.log(err);
-        //                 })
-        //         } else {
-        //             var currentRefreshToken = window.localStorage.getItem("refreshToken");
-        //             authDataService.getNewToken(currentRefreshToken)
-        //                .then(function (res) {
-        //                    var token = res.access_token;
-        //                    oldpipeConfig.updateJob(vm.currentPipeline, vm.currentStage, vm.currentJob, vm.job, token)
-        //                     .then(function(res) {
-        //                         console.log(res);
-        //                     }, function(err) {
-        //                         console.log(err);
-        //                     })
-        //                 }, function (err){
-        //                     console.log(err);
-        //                 })
-        //         }
-        //     },
-        // };
+        vm.sortableOptions = {
+            cursor: "move",
+            update: function (e, ui) {
+
+            },
+            stop: function () {
+                var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+
+                pipeConfigService.updateJobDefinition(newJob);
+            }
+        };
         //
         // vm.editJob = function(newJob) {
         //     if (vm.job != null) {
