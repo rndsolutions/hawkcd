@@ -10,13 +10,13 @@ import java.util.List;
 
 public class UserService extends CrudService<User> implements IUserService {
 
-    public UserService(){
+    public UserService() {
 
         super.setRepository(new RedisRepository(User.class));
         super.setObjectType("User");
     }
 
-    public  UserService(RedisRepository redisRepository){
+    public UserService(RedisRepository redisRepository) {
         super.setRepository(redisRepository);
         super.setObjectType("User");
     }
@@ -57,9 +57,9 @@ public class UserService extends CrudService<User> implements IUserService {
                 .findFirst()
                 .orElse(null);
 
-        if (user == null){
+        if (user == null) {
             return super.createServiceResult(user, true, "not found");
-        }else{
+        } else {
             return super.createServiceResult(user, false, "retrieved successfully");
         }
     }
@@ -74,10 +74,10 @@ public class UserService extends CrudService<User> implements IUserService {
                 .findFirst()
                 .orElse(null);
 
-        if (userFromDb == null){
+        if (userFromDb == null) {
             this.add(user);
             return super.createServiceResult(user, false, "created successfully");
-        }else{
+        } else {
             return super.createServiceResult(user, true, "already present");
         }
     }

@@ -2,12 +2,18 @@ package net.hawkengine.model;
 
 import net.hawkengine.model.payload.Permission;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserGroup extends DbEntry{
     private String name;
     private List<String> userIds;
     private List<Permission> permissions;
+
+    public UserGroup(){
+        this.setUserIds(new ArrayList<>());
+        this.setPermissions(new ArrayList<>());
+    }
 
     public String getName() {
         return this.name;
