@@ -120,7 +120,7 @@ public class UserGroupController {
 
         return Response.status(Status.NO_CONTENT).build();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
