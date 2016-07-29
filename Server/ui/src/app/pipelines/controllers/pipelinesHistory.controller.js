@@ -39,14 +39,15 @@ angular
         }
 
         vm.getLastRunAction = function(pipelineRun) {
+            if(pipelineRun.endTime == undefined){
+              return;
+            }
             var result = {};
-            debugger;
             var runDate = pipelineRun.endTime.date;
             var runEndTime = pipelineRun.endTime.time;
             var delta = moment([runDate.year, (runDate.month - 1), runDate.day, runEndTime.hour, runEndTime.minute, runEndTime.second]);
             var now = moment();
             var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
-            debugger;
             result.output = diff + " ago";
             return result;
         }
