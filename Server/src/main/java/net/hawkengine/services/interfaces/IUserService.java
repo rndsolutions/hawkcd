@@ -1,5 +1,5 @@
-package net.hawkengine.services.interfaces;
 
+package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;

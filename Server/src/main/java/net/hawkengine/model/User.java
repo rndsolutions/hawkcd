@@ -1,4 +1,5 @@
 package net.hawkengine.model;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,8 @@ public class User extends DbEntry {
     }
 
     public void setPassword(String password){
-        this.password = password;
+        String hashedPassword = DigestUtils.sha256Hex(password);
+        this.password = hashedPassword;
     }
 
     public String getGhAuthCode() {

@@ -10,8 +10,7 @@ import net.hawkengine.services.interfaces.IUserService;
 import java.util.Iterator;
 import java.util.List;
 
-
-public class UserGroupService extends CrudService<UserGroup> implements IUserGroupService {
+public class UserGroupService extends CrudService<UserGroup> implements IUserGroupService{
     private IUserService userService;
 
     public UserGroupService(){
@@ -48,33 +47,71 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
     @Override
     public ServiceResult delete(String id) {
+        List<User> users = (List<User>) this.userService.getAll().getObject();
+
+        for (User user: users) {
+            List<String> userGroupIds = user.getUserGroupIds();
+
+            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ){
+                String currentUserGroupId = iter.next();
+                if (currentUserGroupId.equals(id)){
+                    iter.remove();
+                }
+            }
+
+            user.setUserGroupIds(userGroupIds);
+            ServiceResult removeGroupFromAllUsers = this.userService.update(user);
+            if (removeGroupFromAllUsers.hasError()){
+                return removeGroupFromAllUsers;
+            }
+        }
+
         return super.delete(id);
     }
 
     @Override
-    public ServiceResult addUserToGroup(User user, String groupId) {
+    public ServiceResult addUserToGroup(String userId, String groupId) {
         UserGroup userGroup = (UserGroup) this.getById(groupId).getObject();
-        userGroup.getUserIds().add(user.getId());
+        userGroup.getUserIds().add(userId);
 
+        User user = (User) this.userService.getById(userId).getObject();
         user.getUserGroupIds().add(groupId);
         this.userService.update(user);
 
         return this.update(userGroup);
-
     }
 
     @Override
-    public ServiceResult removeUserFromGroup(User user, String groupId) {
+    public ServiceResult removeUserFromGroup(String userId, String groupId) {
         UserGroup userGroup = (UserGroup) this.getById(groupId).getObject();
         List<String> userIds = userGroup.getUserIds();
 
         for (Iterator<String> iter = userIds.listIterator(); iter.hasNext(); ) {
-            String userId = iter.next();
-            if (userId.equals(user.getId())) {
+            String currentUserId = iter.next();
+            if (currentUserId.equals(userId)) {
                 iter.remove();
             }
         }
+
         userGroup.setUserIds(userIds);
+
+        User user = (User) this.userService.getById(userId).getObject();
+        List<String> userGroupIds = user.getUserGroupIds();
+
+        for(Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ){
+            String currentUserGroupId = iter.next();
+            if (currentUserGroupId.equals(groupId)){
+                iter.remove();
+            }
+        }
+
+        user.setUserGroupIds(userGroupIds);
+
+        ServiceResult updateUserServiceResult = this.userService.update(user);
+
+        if (updateUserServiceResult.hasError()){
+            return updateUserServiceResult;
+        }
 
         return this.update(userGroup);
     }
