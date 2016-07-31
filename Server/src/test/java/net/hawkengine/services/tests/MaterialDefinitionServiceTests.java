@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MaterialDefinitionServiceTests {
     private IMaterialDefinitionService materialDefinitionService;
@@ -48,6 +49,38 @@ public class MaterialDefinitionServiceTests {
     }
 
     @Test
+    public void getById_withValidId_correctObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.getById(expectedMaterialDefinition.getId());
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void getById_withInvalidId_null() {
+        // Arrange
+        String wrongId = UUID.randomUUID().toString();
+
+        Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(null);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.getById(wrongId);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
+        Assert.assertTrue(actualResult.hasError());
+    }
+
+    @Test
     public void getAll_withOneId_oneObject() {
         // Arrange
         List<MaterialDefinition> expectedMaterialDefinitions = new ArrayList<>();
@@ -63,6 +96,22 @@ public class MaterialDefinitionServiceTests {
         // Assert
         Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
         Assert.assertEquals(expectedMaterialDefinitions.get(0).getId(), actualMaterialDefinitions.get(0).getId());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void getAll_withNoId_noObjects() {
+        // Arrange
+        List<MaterialDefinition> expectedMaterialDefinitions = new ArrayList<>();
+
+        Mockito.when(this.mockedRepository.getAll()).thenReturn(expectedMaterialDefinitions);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.getAll();
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
         Assert.assertFalse(actualResult.hasError());
     }
 
@@ -110,6 +159,70 @@ public class MaterialDefinitionServiceTests {
         // Assert
         Assert.assertEquals(0, actualMaterialDefinitions.size());
         Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void add_nonExistingObject_correctObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.add(Mockito.any(MaterialDefinition.class))).thenReturn(expectedMaterialDefinition);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void add_existingObject_null() {
+        // Arrange
+        MaterialDefinition materialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.add(Mockito.any(MaterialDefinition.class))).thenReturn(null);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.add(materialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
+        Assert.assertTrue(actualResult.hasError());
+    }
+
+    @Test
+    public void update_existingObject_correctObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.update(Mockito.any(MaterialDefinition.class))).thenReturn(expectedMaterialDefinition);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.update(expectedMaterialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void update_existingObject_null() {
+        // Arrange
+        MaterialDefinition materialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.update(Mockito.any(MaterialDefinition.class))).thenReturn(null);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.update(materialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
+        Assert.assertTrue(actualResult.hasError());
     }
 
     @Test
