@@ -139,8 +139,7 @@ public class UserGroupController {
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{groupId}")
+    @Path("remove-from-group/{groupId}")
     public Response removeUserFromUserGroup(@PathParam("groupId") String groupId, String userId) {
         ServiceResult result = this.userGroupService.removeUserFromGroup(userId, groupId);
         if (result.hasError()) {
