@@ -86,13 +86,16 @@ public class PipelineAuthorizationService implements IAuthorizationService {
                 } else {
                     hasPermission = true;
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
-                if (permission.getPermissionType() == PermissionType.NONE){
-                    hasPermission = false;
-                } else{
-                    hasPermission = true;
+            } else if (pipelineDefinition.getPipelineGroupId() != null) {
+                if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
+                    if (permission.getPermissionType() == PermissionType.NONE) {
+                        hasPermission = false;
+                    } else {
+                        hasPermission = true;
+                    }
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
+            }
+            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
                 if (permission.getPermissionType() == PermissionType.NONE){
                     hasPermission = false;
                 } else{
@@ -122,13 +125,16 @@ public class PipelineAuthorizationService implements IAuthorizationService {
                 } else {
                     hasPermission = false;
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
-                if (permission.getPermissionType() == PermissionType.ADMIN){
-                    hasPermission = true;
-                } else{
-                    hasPermission = false;
+            } else if (pipelineDefinition.getPipelineGroupId() != null) {
+                if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
+                    if (permission.getPermissionType() == PermissionType.ADMIN) {
+                        hasPermission = true;
+                    } else {
+                        hasPermission = false;
+                    }
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
+            }
+            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
                 if ((permission.getPermissionType() == PermissionType.ADMIN) || (permission.getPermissionType() == PermissionType.OPERATOR)){
                     hasPermission = true;
                     return hasPermission;
@@ -152,13 +158,16 @@ public class PipelineAuthorizationService implements IAuthorizationService {
                 } else {
                     hasPermission = false;
                 }
-            }else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
-                if (permission.getPermissionType() == PermissionType.ADMIN){
-                    hasPermission = true;
-                } else{
-                    hasPermission = false;
+            } else if (pipelineDefinition.getPipelineGroupId() != null) {
+                if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
+                    if (permission.getPermissionType() == PermissionType.ADMIN) {
+                        hasPermission = true;
+                    } else {
+                        hasPermission = false;
+                    }
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
+            }
+            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
                 if (permission.getPermissionType() == PermissionType.ADMIN){
                     hasPermission = true;
                     return hasPermission;
