@@ -1,0 +1,42 @@
+<div id="assignPipeline" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <br name="assignPipelineForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.close()"></button>
+                    <h4 class="modal-title">Unassigned Pipelines</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in admin.unassignedPipelines">
+                        <span class="label label-default admin-custom" ng-click="admin.selectUnassignedPipelineToAssign(pipeline, $index);admin.toggleUnassignedPipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.toggleUnassignedPipeline == $index}"> {{pipeline.name}}</span>
+                    </div>
+                </div>
+                </br>
+                <div class="modal-header">
+                    <h4 class="modal-title">Assigned Pipelines</h4>
+                </div>
+                <div class="modal-body">
+                    <uib-accordion close-others="true">
+                    <div uib-accordion-group class="panel-default"
+                         is-open="status.isFirstOpen"
+                         is-disabled="status.isFirstDisabled"
+                         ng-repeat="pipeGroup in admin.currentPipelineGroups"
+                         ng-if="pipeGroup.id != admin.pipelineGroupToAssign.id">
+                        <uib-accordion-heading>
+                        <h5 ng-click="admin.clearSelection()"> {{pipeGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{pipeGroup.pipelines.length}} </span></h5>
+                        </uib-accordion-heading>
+                    <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in pipeGroup.pipelines">
+                        <span class="label label-default admin-custom" ng-click="admin.selectAssignedPipelineToAssign(pipeline, $index);admin.toggleAssignedPipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.toggleAssignedPipeline == $index}"> {{pipeline.name}}</span>
+                    </div>
+                    </div>
+                    </uib-accordion>
+                </div>
+                </br>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal" ng-click="admin.assignPipeline(admin.pipelineToAssign)" ng-disabled="admin.pipelineToAssign == null">Assign Pipeline</button>
+                    <button class="btn" data-dismiss="modal" ng-click="admin.close()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

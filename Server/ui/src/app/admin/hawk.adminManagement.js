@@ -42,11 +42,11 @@ angular
             templateUrl: "app/admin/views/partials/_users.html"
         })
 
-        .state('index.admin.packages', {
-            url: "/packages",
+        .state('index.admin.materials', {
+            url: "/materials",
             data: {
-                pageTitle: 'Package Repositories'
+                pageTitle: 'Material Repositories'
             },
-            templateUrl: "app/admin/views/partials/_packages.html"
+            templateUrl: "app/admin/views/partials/_materials.html"
         })
                 }]);
