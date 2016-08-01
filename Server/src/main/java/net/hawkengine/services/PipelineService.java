@@ -187,8 +187,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             Task task = new Task();
             if (taskDefinition.getType() == TaskType.FETCH_MATERIAL) {
                 FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinition;
-                task.setMaterialDefinition(fetchMaterialTask.getMaterialDefinition());
+                task.setTaskDefinition(fetchMaterialTask);
             }
+
             task.setJobId(job.getId());
             task.setStageId(job.getStageId());
             task.setPipelineId(job.getPipelineId());

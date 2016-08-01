@@ -243,10 +243,10 @@ public class SchemaValidator {
                 return this.message = "ERROR: FETCH MATERIAL PIPELINE NAME IS NULL.";
             }
 
-            String source = fetchMaterialTask.getSource();
-            if (source == null) {
-                return this.message = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
-            }
+//            String source = fetchMaterialTask.getSource();
+//            if (source == null) {
+//                return this.message = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
+//            }
 
             String destination = fetchMaterialTask.getDestination();
             if (destination == null) {

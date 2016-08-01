@@ -679,7 +679,7 @@ public class SchemaValidatorTests {
         fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
         fetchMaterialTask.setMaterialName("materialName");
         fetchMaterialTask.setPipelineName("pipelineName");
-        fetchMaterialTask.setSource("source");
+//        fetchMaterialTask.setSource("source");
         fetchMaterialTask.setDestination("destination");
 
         //Arrange
@@ -725,23 +725,6 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchMaterialtTaskSourceFolder_Null(){
-        //Arrange
-        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
-        fetchMaterialTask.setName("definitionName");
-        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
-        fetchMaterialTask.setMaterialName("fetchMaterial");
-        fetchMaterialTask.setPipelineName("taskPipeline");
-        String expectedResult = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
-
-        //Arrange
-        String actualResult = this.validator.validate(fetchMaterialTask);
-
-        //Assert
-        assertEquals(expectedResult,actualResult);
-    }
-
-    @Test
     public void validate_FetchMaterialtTaskDestinationFolder_Null(){
         //Arrange
         FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
@@ -749,7 +732,7 @@ public class SchemaValidatorTests {
         fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
         fetchMaterialTask.setMaterialName("fetchMaterial");
         fetchMaterialTask.setPipelineName("taskPipeline");
-        fetchMaterialTask.setSource("sourceFolder");
+//        fetchMaterialTask.setSource("sourceFolder");
         String expectedResult = "ERROR: FETCH MATERIAL TASK DESTINATION FOLDER IS NULL.";
 
         //Arrange

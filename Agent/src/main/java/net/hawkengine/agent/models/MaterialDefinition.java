@@ -1,12 +1,9 @@
-package net.hawkengine.model;
+package net.hawkengine.agent.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import net.hawkengine.agent.enums.MaterialType;
-import net.hawkengine.agent.models.GitMaterial;
-import net.hawkengine.agent.models.NugetMaterial;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
