@@ -126,6 +126,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     public void getById_withPermissionToGet_true() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
+
         //Act
         boolean hasPermission = this.authorizationService.getById(this.firstPipelineDefinition.getId(), permissions);
 
@@ -137,6 +138,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     public void getById_withoutPermissionToGet_false() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
+
         //Act
         boolean hasPermission = this.authorizationService.getById(this.secondPipelineDefinition.getId(), permissions);
 
@@ -145,13 +147,12 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void add_withPersmissionToAdd_true(){
+    public void add_withPersmissionToAdd_true() {
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinition.setPipelineGroupId(this.secondPipelineGroup.getId());
 
         List<Permission> permissions = this.createPermissions();
-
         String entityToAdd = this.jsonConverter.toJson(pipelineDefinition);
 
         //Act
@@ -168,8 +169,8 @@ public class PipelineDefinitionAuthorizationServiceTests {
         pipelineDefinition.setPipelineGroupId(this.firstPipelineGroup.getId());
 
         List<Permission> permissions = this.createPermissions();
-
         String entityToAdd = this.jsonConverter.toJson(pipelineDefinition);
+
         //Act
         boolean hasPermission = this.authorizationService.add(entityToAdd, permissions);
 
@@ -273,8 +274,6 @@ public class PipelineDefinitionAuthorizationServiceTests {
         thirdPipelineDefinitionPermission.setPermissionType(PermissionType.ADMIN);
         thirdPipelineDefinitionPermission.setPermissionScope(PermissionScope.PIPELINE);
         thirdPipelineDefinitionPermission.setPermittedEntityId(this.fifthPilineDefinition.getId());
-
-
 
         permissions.add(adminServerPermission);
         permissions.add(pipelineGroupPermission);
