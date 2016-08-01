@@ -3,6 +3,7 @@ package net.hawkengine.services.tests.filters;
 import com.fiftyonred.mock_jedis.MockJedisPool;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
@@ -69,6 +70,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
                 .create();
 
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionService");
+        ServerConfiguration.configure();
         this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository);
 
@@ -81,7 +83,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_getAll_twoEntities() {
+    public void getAll_withPermissionsForTwoEntities_twoEntities() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
 
@@ -99,7 +101,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_getById_true() {
+    public void getById_withPermissionToGet_true() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
         //Act
@@ -110,7 +112,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_getById_false() {
+    public void getById_withoutPermissionToGet_false() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
         //Act
@@ -121,7 +123,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_add_false() {
+    public void add_withoutPermissionToAdd_false() {
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinition.setPipelineGroupId(this.firstPipelineGroup.getId());
@@ -137,7 +139,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_update_true() {
+    public void update_withPermissionToUpdate_true() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
         String entityToUpdate = this.jsonConverter.toJson(this.thirdPipeline);
@@ -150,7 +152,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_update_false() {
+    public void update_withoutPermissionToUpdate_false() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
         String entityToUpdate = this.jsonConverter.toJson(this.fourthPipeline);
@@ -163,7 +165,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_delete_true() {
+    public void delete_withPermissionToDelete_true() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
 
@@ -175,7 +177,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_delete_false() {
+    public void delete_withoutPermissionToDelete_false() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
 
@@ -187,7 +189,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     }
 
     @Test
-    public void pipelineDefinitionAuthorizationService_initialize_notNull(){
+    public void initialize_validConstructor_notNull() {
         //Act
         this.authorizationService = new PipelineDefinitionAuthorizationService();
 
