@@ -1,11 +1,15 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.TaskStatus;
 import net.hawkengine.model.enums.TaskType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
 
 public class Task extends DbEntry {
     private TaskDefinition taskDefinition;
