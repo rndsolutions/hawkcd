@@ -218,7 +218,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult getAllUserGroupDTOs(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult getAllUserGroups(WsContractDto contract, List<Permission> permissions) {
         try {
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
             List<T> entitiesToFilter = (List<T>) this.result.getObject();
