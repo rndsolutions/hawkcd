@@ -49,6 +49,9 @@ public class SchemaValidator implements IValidator {
             case "Agent":
                 this.message = this.validate((Agent) object);
                 break;
+            case "UserGroup":
+                this.message = "OK";
+                break;
             default:
                 this.message = "ERROR: INVALID OBJECT.";
         }

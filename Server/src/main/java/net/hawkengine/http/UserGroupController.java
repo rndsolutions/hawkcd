@@ -32,7 +32,7 @@ public class UserGroupController {
     }
 
     public UserGroupController(IUserGroupService userGroupService) {
-        this.userGroupService = new UserGroupService();
+        this.userGroupService = userGroupService;
         this.validator = new SchemaValidator();
     }
 
@@ -113,37 +113,6 @@ public class UserGroupController {
         ServiceResult result = this.userGroupService.delete(id);
         if (result.hasError()) {
             return Response.status(Status.NOT_FOUND)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        }
-
-        return Response.status(Status.NO_CONTENT).build();
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{groupId}")
-    public Response addUserToUserGroup(@PathParam("groupId") String groupId, String userId) {
-        ServiceResult result = this.userGroupService.addUserToGroup(userId, groupId);
-        if (result.hasError()) {
-            return Response.status(Status.BAD_REQUEST)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        }
-
-        return Response.status(Status.OK).entity(result.getObject()).build();
-    }
-
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("remove-from-group/{groupId}")
-    public Response removeUserFromUserGroup(@PathParam("groupId") String groupId, String userId) {
-        ServiceResult result = this.userGroupService.removeUserFromGroup(userId, groupId);
-        if (result.hasError()) {
-            return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
