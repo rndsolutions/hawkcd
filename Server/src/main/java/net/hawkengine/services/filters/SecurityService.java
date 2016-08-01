@@ -76,7 +76,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 PipelineGroup entityToAdd = pipelineGroups.stream().filter(g -> g.getId().equals(pipelineDefinition.getPipelineGroupId())).findFirst().orElse(null);
                 boolean isFiltered = false;
                 for (T filteredEntity : filteredEntities) {
-                    if (pipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
+                    if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
                         isFiltered = true;
                     }
                 }
