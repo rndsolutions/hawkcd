@@ -5,7 +5,10 @@ import com.google.gson.GsonBuilder;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
-import net.hawkengine.model.*;
+import net.hawkengine.model.DbEntry;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
@@ -13,18 +16,15 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
-import org.omg.CORBA.PERSIST_STORE;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class PipelineDefinitionAuthorizationService implements IAuthorizationService {
     private IPipelineDefinitionService pipelineDefinitionService;
     private Gson jsonConverter;
 
-    public PipelineDefinitionAuthorizationService(){
+    public PipelineDefinitionAuthorizationService() {
         this.pipelineDefinitionService = new PipelineDefinitionService();
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
@@ -33,7 +33,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
                 .create();
     }
 
-    public PipelineDefinitionAuthorizationService(IPipelineDefinitionService pipelineDefinitionService){
+    public PipelineDefinitionAuthorizationService(IPipelineDefinitionService pipelineDefinitionService) {
         this.pipelineDefinitionService = pipelineDefinitionService;
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
@@ -41,6 +41,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
     }
+
     @Override
     public List<DbEntry> getAll(List permissions, List pipelineDefinitions) {
         List<DbEntry> result = new ArrayList<>();
@@ -54,7 +55,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition)this.pipelineDefinitionService.getById(entityId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(entityId).getObject();
 
         return this.hasPermissionToRead(permissions, pipelineDefinition);
     }
@@ -83,24 +84,25 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     private boolean hasPermissionToRead(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 hasPermission = true;
-            } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()) || permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString()) ) {
+            } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()) || permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
                 if ((permission.getPermissionType() != PermissionType.NONE)) {
                     hasPermission = true;
                 } else {
                     hasPermission = false;
                 }
-            }else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
-                if (permission.getPermissionType() == PermissionType.NONE){
+            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
+                if (permission.getPermissionType() == PermissionType.NONE) {
                     hasPermission = false;
-                } else{
+                } else {
                     hasPermission = true;
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
-                if (permission.getPermissionType() == PermissionType.NONE){
+            }
+            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())) {
+                if (permission.getPermissionType() == PermissionType.NONE) {
                     hasPermission = false;
-                } else{
+                } else {
                     hasPermission = true;
                     return hasPermission;
                 }
@@ -112,7 +114,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     private boolean hasPermissionToAdd(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 hasPermission = true;
             } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()) || permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
                 if ((permission.getPermissionType() == PermissionType.ADMIN)) {
@@ -120,17 +122,20 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
                 } else {
                     hasPermission = false;
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
-                if (permission.getPermissionType() == PermissionType.ADMIN){
-                    hasPermission = true;
-                } else{
-                    hasPermission = false;
+            } else if (pipelineDefinition.getPipelineGroupId() != null) {
+                if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
+                    if (permission.getPermissionType() == PermissionType.ADMIN) {
+                        hasPermission = true;
+                    } else {
+                        hasPermission = false;
+                    }
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
-                if (permission.getPermissionType() == PermissionType.ADMIN){
+            }
+            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())) {
+                if (permission.getPermissionType() == PermissionType.ADMIN) {
                     hasPermission = true;
                     return hasPermission;
-                } else{
+                } else {
                     hasPermission = false;
                 }
             }
@@ -141,7 +146,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     private boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)){
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 hasPermission = true;
             } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()) || permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
                 if ((permission.getPermissionType() == PermissionType.ADMIN)) {
@@ -149,17 +154,20 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
                 } else {
                     hasPermission = false;
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())){
-                if (permission.getPermissionType() == PermissionType.ADMIN){
-                    hasPermission = true;
-                } else{
-                    hasPermission = false;
+            } else if (pipelineDefinition.getPipelineGroupId() != null) {
+                if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
+                    if (permission.getPermissionType() == PermissionType.ADMIN) {
+                        hasPermission = true;
+                    } else {
+                        hasPermission = false;
+                    }
                 }
-            } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
-                if (permission.getPermissionType() == PermissionType.ADMIN){
+            }
+            if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())) {
+                if (permission.getPermissionType() == PermissionType.ADMIN) {
                     hasPermission = true;
                     return hasPermission;
-                } else{
+                } else {
                     hasPermission = false;
                 }
             }
