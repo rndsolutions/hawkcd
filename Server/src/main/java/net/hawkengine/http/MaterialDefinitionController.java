@@ -63,7 +63,7 @@ public class MaterialDefinitionController {
     public Response addMaterialDefinition(MaterialDefinition materialDefinition) {
         String isValid = this.schemaValidator.validate(materialDefinition);
         if (isValid.equals("OK")) {
-            ServiceResult result = this.materialDefinitionService.addMaterialDefinition(materialDefinition);
+            ServiceResult result = this.materialDefinitionService.add(materialDefinition);
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
@@ -86,7 +86,7 @@ public class MaterialDefinitionController {
     public Response updateMaterialDefinition(MaterialDefinition materialDefinition) {
         String isValid = this.schemaValidator.validate(materialDefinition);
         if (isValid.equals("OK")) {
-            ServiceResult result = this.materialDefinitionService.updateMaterialDefinition(materialDefinition);
+            ServiceResult result = this.materialDefinitionService.update(materialDefinition);
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
