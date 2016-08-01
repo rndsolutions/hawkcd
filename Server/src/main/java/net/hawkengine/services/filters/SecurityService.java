@@ -80,7 +80,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                         isFiltered = true;
                     }
                 }
-                if (!isFiltered && entityToAdd.getId().equals(pipelineDefinition.getPipelineGroupId())) {
+                if (!isFiltered && !pipelineDefinition.getPipelineGroupId().isEmpty() && entityToAdd.getId().equals(pipelineDefinition.getPipelineGroupId())) {
                     entityToAdd.setPipelines(new ArrayList<>());
                     entityToAdd.getPipelines().add(pipelineDefinition);
                     filteredEntities.add((T) entityToAdd);
