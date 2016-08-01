@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PipelineAuthorizationTests {
+public class PipelineAuthorizationServiceTests {
     private PipelineDefinition firstPipelineDefinition;
     private PipelineDefinition secondPipelineDefinition;
     private PipelineDefinition thirdPipelineDefinition;
