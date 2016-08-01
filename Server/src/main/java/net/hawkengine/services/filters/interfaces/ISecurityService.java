@@ -23,5 +23,5 @@ public interface ISecurityService {
 
     ServiceResult removeUserFromGroup(WsContractDto contract, List<Permission> permissions);
 
-    ServiceResult getAllUserGroupDTOs(WsContractDto contract, List<Permission> permissions);
+    ServiceResult getAllUserGroups(WsContractDto contract, List<Permission> permissions);
 }
