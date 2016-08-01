@@ -144,7 +144,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(expectedResult, actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test

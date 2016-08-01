@@ -98,7 +98,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
