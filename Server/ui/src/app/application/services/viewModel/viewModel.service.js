@@ -9,6 +9,10 @@ angular
 
         viewModel.allPipelines = [];
 
+        viewModel.assignedPipelines = [];
+
+        viewModel.unassignedPipelines = [];
+
         viewModel.allMaterials = [];
 
         viewModel.allMaterialDefinitions = [];
