@@ -24,6 +24,7 @@ angular
         vm.materials = {};
         vm.newMaterial = {};
 
+        vm.allPermissions = [];
         vm.allPipelineRuns = [];
         vm.allPipelines = [];
         vm.allJobs = viewModel.allJobs;
@@ -74,13 +75,28 @@ angular
         //     console.log(vm.allPipelines.materials);
         // });
 
+        $scope.$watchCollection(function() { return viewModel.allPermissions }, function(newVal, oldVal) {
+            vm.allPermissions = viewModel.allPermissions;
+            console.log(vm.allPermissions);
+        });
+
         $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
-            vm.allPipelines.forEach(function (currentPipeline, index, array) {
+            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                 if(currentPipeline.id == vm.pipeline.id) {
                     vm.getPipelineForConfig(currentPipeline.name);
                     //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
                 }
+                //TODO: Implement this when backend implementation is complete
+                // currentPipeline.role = 'ADMIN';
+
+                viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
+                    if(currentPipeline.id == currentPermission.permittedEntityId) {
+                        currentPipeline.role = currentPermission.permissionType;
+
+                    }
+                });
+                vm.allPipelines[0].role = 'ADMIN';
             });
             console.log(vm.allPipelines);
         });

@@ -19,7 +19,7 @@
         <td> {{job.runType}} </td>
         <td> to do </td>
         <td>
-          <button class="btn red" data-target="#removeJob" data-toggle="modal" 
+          <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#removeJob" data-toggle="modal"
                   ng-click="pipeConfig.getJob(job)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions.length > 1">Delete</button>
         </td>
       </tr>
@@ -28,7 +28,7 @@
       </tbody>
     </table>
   </div>
-  <button class="btn green" data-target="#addJob" data-toggle="modal">Add Job</button>
+  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#addJob" data-toggle="modal">Add Job</button>
 </div>
 
 <div ng-include src="'app/pipelines/views/partials/config/stage-options/_add-job.html'"></div>
