@@ -36,6 +36,8 @@ public class SecurityServiceInvoker {
                 return this.securityService.addUserToGroup(contract, permissions);
             case "removeUserFromGroup":
                 return this.securityService.removeUserFromGroup(contract, permissions);
+            case "getAllUserGroupDtos":
+                return this.securityService.getAllUserGroupDTOs(contract, permissions);
             default:
                 return null;
         }

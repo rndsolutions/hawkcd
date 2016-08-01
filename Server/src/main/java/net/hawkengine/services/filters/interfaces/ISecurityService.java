@@ -22,4 +22,6 @@ public interface ISecurityService {
     ServiceResult addUserToGroup(WsContractDto contract, List<Permission> permissions);
 
     ServiceResult removeUserFromGroup(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult getAllUserGroupDTOs(WsContractDto contract, List<Permission> permissions);
 }

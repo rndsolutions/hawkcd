@@ -4,23 +4,24 @@ import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
 import net.hawkengine.model.UserGroup;
+import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.services.interfaces.IUserService;
 
-import javax.jws.soap.SOAPBinding;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class UserGroupService extends CrudService<UserGroup> implements IUserGroupService{
+public class UserGroupService extends CrudService<UserGroup> implements IUserGroupService {
     private IUserService userService;
 
-    public UserGroupService(){
+    public UserGroupService() {
         super.setRepository(new RedisRepository(UserGroup.class));
         this.userService = new UserService();
         super.setObjectType("UserGroup");
     }
 
-    public UserGroupService(RedisRepository redisRepository, IUserService userService){
+    public UserGroupService(RedisRepository redisRepository, IUserService userService) {
         super.setRepository(redisRepository);
         this.userService = userService;
         super.setObjectType("UserGroup");
@@ -50,19 +51,19 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     public ServiceResult delete(String id) {
         List<User> users = (List<User>) this.userService.getAll().getObject();
 
-        for (User user: users) {
+        for (User user : users) {
             List<String> userGroupIds = user.getUserGroupIds();
 
-            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ){
+            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
                 String currentUserGroupId = iter.next();
-                if (currentUserGroupId.equals(id)){
+                if (currentUserGroupId.equals(id)) {
                     iter.remove();
                 }
             }
 
             user.setUserGroupIds(userGroupIds);
             ServiceResult removeGroupFromAllUsers = this.userService.update(user);
-            if (removeGroupFromAllUsers.hasError()){
+            if (removeGroupFromAllUsers.hasError()) {
                 return removeGroupFromAllUsers;
             }
         }
@@ -99,9 +100,9 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         User user = (User) this.userService.getById(userId).getObject();
         List<String> userGroupIds = user.getUserGroupIds();
 
-        for(Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ){
+        for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
             String currentUserGroupId = iter.next();
-            if (currentUserGroupId.equals(groupId)){
+            if (currentUserGroupId.equals(groupId)) {
                 iter.remove();
             }
         }
@@ -110,11 +111,37 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
         ServiceResult updateUserServiceResult = this.userService.update(user);
 
-        if (updateUserServiceResult.hasError()){
+        if (updateUserServiceResult.hasError()) {
             return updateUserServiceResult;
         }
 
         return this.update(userGroup);
+    }
+
+    @Override
+    public ServiceResult getAllUserGroups() {
+        List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getObject();
+        UserGroupDto userGroupDto = new UserGroupDto();
+        List<UserGroupDto> userGroupDtos = new ArrayList<>();
+
+        for (UserGroup userGroup : userGroups) {
+            List<String> userIds = userGroup.getUserIds();
+            userGroupDto.setId(userGroup.getId());
+            userGroupDto.setUserGroupName(userGroup.getName());
+
+            for (String userId : userIds) {
+                User currentUser = (User) this.userService.getById(userId).getObject();
+                userGroupDto.getUsers().add(currentUser);
+            }
+
+            userGroupDtos.add(userGroupDto);
+        }
+        ServiceResult userGroupDtosServiceResult = new ServiceResult();
+        userGroupDtosServiceResult.setError(false);
+        userGroupDtosServiceResult.setMessage("User Groups retrieved successfully.");
+        userGroupDtosServiceResult.setObject(userGroupDtos);
+
+        return userGroupDtosServiceResult;
     }
 
 }

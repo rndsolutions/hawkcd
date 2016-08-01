@@ -216,4 +216,19 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
         return this.result;
     }
+
+    @Override
+    public ServiceResult getAllUserGroupDTOs(WsContractDto contract, List<Permission> permissions) {
+        try {
+            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            List<T> entitiesToFilter = (List<T>) this.result.getObject();
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
+            this.result.setObject(filteredEntities);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return this.result;
+    }
 }

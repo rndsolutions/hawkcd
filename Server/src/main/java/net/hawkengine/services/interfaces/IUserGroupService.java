@@ -8,4 +8,6 @@ public interface IUserGroupService extends ICrudService<UserGroup>{
     ServiceResult addUserToGroup(String userId, String groupId);
 
     ServiceResult removeUserFromGroup(String userId, String groupId);
+
+    ServiceResult getAllUserGroups();
 }
