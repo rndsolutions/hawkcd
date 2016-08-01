@@ -113,7 +113,7 @@ public class PipelineAuthorizationServiceTests {
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
 
-        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionService");
+        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineAuthorizationService");
         this.mockedPipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedPipelineDefinitionRepository);
         this.mockedPipelineRepository = new RedisRepository(Pipeline.class, mockedPool);
