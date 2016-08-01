@@ -63,7 +63,7 @@ public class PipelineControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -91,6 +91,7 @@ public class PipelineControllerTests extends JerseyTest {
         this.prepearePipeline();
         this.serviceResult.setObject(this.pipeline);
         Mockito.when(this.pipelineService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        Pipeline expectedResult = this.pipeline;
 
         //Act
         Response response = target("/pipelines/" + this.pipeline.getId()).request().get();
@@ -98,7 +99,7 @@ public class PipelineControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.pipeline.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -126,6 +127,7 @@ public class PipelineControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.pipeline);
         Mockito.when(this.pipelineService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipeline, "application/json");
+        Pipeline expectedResult = this.pipeline;
 
         //Act
         Response response = target("/pipelines").request().post(entity);
@@ -134,7 +136,7 @@ public class PipelineControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.pipeline.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     private void prepearePipeline() {

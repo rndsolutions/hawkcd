@@ -62,7 +62,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     @Test
     public void getTaksDefinitions_nonExistingObjects_emptyList() {
         //Arrange
-        List<PipelineDefinition> expectedResult = new ArrayList<>();
+        List<TaskDefinition> expectedResult = new ArrayList<>();
         this.serviceResult.setObject(expectedResult);
         Mockito.when(this.taskDefinitionService.getAll()).thenReturn(this.serviceResult);
 
@@ -72,7 +72,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
 
     }
 
@@ -101,6 +101,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         this.taskDefinition = new ExecTask();
         this.serviceResult.setObject(this.taskDefinition);
         Mockito.when(this.taskDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        TaskDefinition expectedResult = this.taskDefinition;
 
         //Act
         Response response = target("/task-definitions/" + this.taskDefinition.getId()).request().get();
@@ -108,7 +109,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.taskDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -136,6 +137,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.taskDefinition);
         Mockito.when(this.taskDefinitionService.addTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
+        TaskDefinition expectedResult = this.taskDefinition;
 
         //Act
         Response response = target("/task-definitions").request().post(entity);
@@ -143,7 +145,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.taskDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -217,6 +219,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         this.taskDefinition.setName("name-updated");
         Mockito.when(this.taskDefinitionService.updateTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
+        TaskDefinition expectedResult = this.taskDefinition;
 
         //Act
         Response response = target("task-definitions/").request().put(entity);
@@ -224,7 +227,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.taskDefinition.getName(), actualResult.getName());
+        assertEquals(expectedResult.getName(), actualResult.getName());
     }
 
     @Test

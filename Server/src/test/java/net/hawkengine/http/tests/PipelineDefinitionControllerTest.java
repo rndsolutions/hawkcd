@@ -72,7 +72,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -100,6 +100,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         this.preparePipelineDefinition();
         this.serviceResult.setObject(this.pipelineDefinition);
         Mockito.when(this.pipelineDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        PipelineDefinition expectedResult = this.pipelineDefinition;
 
         //Act
         Response response = target("/pipeline-definitions/" + this.pipelineDefinition.getId()).request().get();
@@ -107,7 +108,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.pipelineDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -135,6 +136,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         this.serviceResult.setObject(this.pipelineDefinition);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
+        PipelineDefinition expectedResult = this.pipelineDefinition;
 
         //Act
         Response response = target("/pipeline-definitions").request().post(entity);
@@ -142,7 +144,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.pipelineDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult, actualResult.getId());
     }
 
     @Test
@@ -218,6 +220,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         this.pipelineDefinition.setName("name-updated");
         Mockito.when(this.pipelineDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
+        PipelineDefinition expectedResult = this.pipelineDefinition;
 
         //Act
         Response response = target("pipeline-definitions/").request().put(entity);
@@ -225,7 +228,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.pipelineDefinition.getName(), actualResult.getName());
+        assertEquals(expectedResult.getName(), actualResult.getName());
     }
 
     @Test
@@ -339,7 +342,6 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         execTask.setName("execTask");
         execTask.setCommand("command");
         String arguments = new String("argument");
-        ;
         execTask.setArguments(arguments);
         execTask.setRunIfCondition(RunIf.PASSED);
         execTask.setType(TaskType.EXEC);

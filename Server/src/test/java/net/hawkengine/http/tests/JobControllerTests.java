@@ -62,7 +62,7 @@ public class JobControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -90,6 +90,7 @@ public class JobControllerTests extends JerseyTest {
         this.job = new Job();
         this.serviceResult.setObject(this.job);
         Mockito.when(this.jobService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        Job expectedResult = this.job;
 
         //Act
         Response response = target("/jobs/" + this.job.getId()).request().get();
@@ -97,7 +98,7 @@ public class JobControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.job.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test

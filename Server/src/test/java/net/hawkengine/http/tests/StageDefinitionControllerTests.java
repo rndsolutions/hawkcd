@@ -72,7 +72,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/stage-definitions").request().get();
-        List<PipelineDefinition> actualResult = response.readEntity(List.class);
+        List<StageDefinition> actualResult = response.readEntity(List.class);
 
         //Assert
         assertEquals(200, response.getStatus());
@@ -100,6 +100,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         this.stageDefinition = new StageDefinition();
         this.serviceResult.setObject(this.stageDefinition);
         Mockito.when(this.stageDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        StageDefinition expectedResult = this.stageDefinition;
 
         //Act
         Response response = target("/stage-definitions/" + this.stageDefinition.getId()).request().get();
@@ -107,7 +108,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.stageDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -135,6 +136,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.stageDefinition);
         Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
+        StageDefinition expectedResult = this.stageDefinition;
 
         //Act
         Response response = target("/stage-definitions").request().post(entity);
@@ -142,7 +144,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.stageDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -215,6 +217,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         this.stageDefinition.setName("name-updated");
         Mockito.when(this.stageDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
+        StageDefinition expectedResult = this.stageDefinition;
 
         //Act
         Response response = target("stage-definitions/").request().put(entity);
@@ -222,7 +225,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.stageDefinition.getName(), actualResult.getName());
+        assertEquals(expectedResult.getName(), actualResult.getName());
     }
 
     @Test

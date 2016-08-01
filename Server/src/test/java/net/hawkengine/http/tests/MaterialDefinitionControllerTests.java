@@ -3,10 +3,8 @@ package net.hawkengine.http.tests;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.MaterialDefinitionController;
 import net.hawkengine.model.GitMaterial;
-import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 
@@ -61,11 +59,11 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/materials").request().get();
-        List<JobDefinition> actualResult = response.readEntity(List.class);
+        List<MaterialDefinition> actualResult = response.readEntity(List.class);
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -79,7 +77,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/materials").request().get();
-        List<StageDefinition> actualResult = response.readEntity(List.class);
+        List<MaterialDefinition> actualResult = response.readEntity(List.class);
 
         //Assert
         assertEquals(200, response.getStatus());
@@ -92,6 +90,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         this.materialDefinition = new GitMaterial();
         this.serviceResult.setObject(this.materialDefinition);
         Mockito.when(this.materialDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        MaterialDefinition expectedResult = this.materialDefinition;
 
         //Act
         Response response = target("/materials/" + this.materialDefinition.getId()).request().get();
@@ -99,7 +98,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.materialDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult, actualResult.getId());
     }
 
     @Test
@@ -127,6 +126,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.materialDefinition);
         Mockito.when(this.materialDefinitionService.addMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
+        MaterialDefinition expectedResult = this.materialDefinition;
 
         //Act
         Response response = target("/materials").request().post(entity);
@@ -134,7 +134,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.materialDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -208,6 +208,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         this.materialDefinition.setName("name-updated");
         Mockito.when(this.materialDefinitionService.updateMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
+        MaterialDefinition expectedResult = this.materialDefinition;
 
         //Act
         Response response = target("/materials").request().put(entity);
@@ -215,7 +216,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.materialDefinition.getName(), actualResult.getName());
+        assertEquals(expectedResult.getName(), actualResult.getName());
     }
 
     @Test
@@ -230,10 +231,11 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/materials").request().put(entity);
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, response.readEntity(String.class));
+        assertEquals(expectedMessage, actualResult);
     }
 
     @Test

@@ -71,7 +71,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/job-definitions").request().get();
-        List<StageDefinition> actualResult = response.readEntity(List.class);
+        List<JobDefinition> actualResult = response.readEntity(List.class);
 
         //Assert
         assertEquals(200, response.getStatus());
@@ -99,6 +99,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.jobDefinition = new JobDefinition();
         this.serviceResult.setObject(this.jobDefinition);
         Mockito.when(this.jobDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        JobDefinition expectedResult = this.jobDefinition;
 
         //Act
         Response response = target("/job-definitions/" + this.jobDefinition.getId()).request().get();
@@ -106,7 +107,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.jobDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -120,10 +121,11 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/job-definitions/wrongId").request().get();
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(404, response.getStatus());
-        assertEquals(expectedResult, response.readEntity(String.class));
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -133,6 +135,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.jobDefinition);
         Mockito.when(this.jobDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
+        JobDefinition expectedResult = this.jobDefinition;
 
         //Act
         Response response = target("/job-definitions").request().post(entity);
@@ -140,7 +143,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.jobDefinition.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -216,6 +219,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.jobDefinition.setName("name-updated");
         Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
+        JobDefinition expectedResult = this.jobDefinition;
 
         //Act
         Response response = target("job-definitions/").request().put(entity);
@@ -223,7 +227,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.jobDefinition.getName(), actualResult.getName());
+        assertEquals(expectedResult.getName(), actualResult.getName());
     }
 
 
@@ -239,29 +243,30 @@ public class JobDefinitionControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/job-definitions").request().put(entity);
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, response.readEntity(String.class));
+        assertEquals(expectedMessage, actualResult);
     }
 
     @Test
     public void updateJobDefinition_withSameName_properErrorMessage() {
         //Arrange
         this.prepareJobDefinition();
-        String expectedMessage = "JobDefinition with the same name exists.";
+        String expectedResult = "JobDefinition with the same name exists.";
         this.serviceResult.setError(true);
-        this.serviceResult.setMessage(expectedMessage);
+        this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
 
         //Act
         Response response = target("/job-definitions").request().put(entity);
-        String actualMessage = response.readEntity(String.class);
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test

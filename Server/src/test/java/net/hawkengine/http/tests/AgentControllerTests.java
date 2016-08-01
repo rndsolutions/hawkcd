@@ -63,7 +63,7 @@ public class AgentControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -90,6 +90,7 @@ public class AgentControllerTests extends JerseyTest {
         this.prepareAgent();
         this.serviceResult.setObject(this.agent);
         Mockito.when(this.agentService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        Agent expectedResult = this.agent;
 
         //Act
         Response response = target("/agents/" + this.agent.getId()).request().get();
@@ -97,7 +98,7 @@ public class AgentControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.agent.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -144,6 +145,7 @@ public class AgentControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.agent);
         Mockito.when(this.agentService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, MediaType.APPLICATION_JSON);
+        Agent expectedResult = this.agent;
 
         //Act
         Response response = target("/agents").request().post(entity);
@@ -151,7 +153,7 @@ public class AgentControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.agent.getId(), actualAgent.getId());
+        assertEquals(expectedResult.getId(), actualAgent.getId());
     }
 
     @Test
@@ -166,10 +168,11 @@ public class AgentControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/agents").request().post(entity);
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedResult, response.readEntity(String.class));
+        assertEquals(expectedResult, actualResult);
     }
 
     /*
@@ -223,6 +226,7 @@ public class AgentControllerTests extends JerseyTest {
         this.agent.setName("updatedAgent");
         Mockito.when(this.agentService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, "application/json");
+        Agent expectedResult = this.agent;
 
         //Act
         Response response = target("/agents/").request().put(entity);
@@ -230,7 +234,7 @@ public class AgentControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.agent.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -265,10 +269,11 @@ public class AgentControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/agents").request().put(entity);
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(400, response.getStatus());
-        assertEquals(expectedResult, response.readEntity(String.class));
+        assertEquals(expectedResult, actualResult);
     }
 
 

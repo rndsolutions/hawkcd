@@ -3,7 +3,6 @@ package net.hawkengine.http.tests;
 
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.PipelineGroupController;
-import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.PipelineGroupService;
@@ -60,11 +59,11 @@ public class PipelineGroupControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/pipeline-groups").request().get();
-        List<JobDefinition> actualResult = response.readEntity(List.class);
+        List<PipelineGroup> actualResult = response.readEntity(List.class);
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -92,6 +91,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         this.pipelineGroup = new PipelineGroup();
         this.serviceResult.setObject(this.pipelineGroup);
         Mockito.when(this.pipelineGroupService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        PipelineGroup expectedResult = this.pipelineGroup;
 
         //Act
         Response response = target("/pipeline-groups/" + this.pipelineGroup.getId()).request().get();
@@ -99,7 +99,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.pipelineGroup.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -113,10 +113,11 @@ public class PipelineGroupControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/pipeline-groups/wrongId").request().get();
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(404, response.getStatus());
-        assertEquals(expectedResult, response.readEntity(String.class));
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -126,6 +127,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.pipelineGroup);
         Mockito.when(this.pipelineGroupService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineGroup, "application/json");
+        PipelineGroup expectedResult = this.pipelineGroup;
 
         //Act
         Response response = target("/pipeline-groups").request().post(entity);
@@ -133,7 +135,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.pipelineGroup.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -209,6 +211,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         this.pipelineGroup.setName("name-updated");
         Mockito.when(this.pipelineGroupService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineGroup, "application/json");
+        PipelineGroup expectedResult = this.pipelineGroup;
 
         //Act
         Response response = target("/pipeline-groups").request().put(entity);
@@ -216,7 +219,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.pipelineGroup.getName(), actualResult.getName());
+        assertEquals(expectedResult.getName(), actualResult.getName());
     }
 
     @Test

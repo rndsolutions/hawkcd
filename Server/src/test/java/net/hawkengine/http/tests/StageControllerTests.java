@@ -64,7 +64,7 @@ public class StageControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult.size(), actualResult.size());
     }
 
     @Test
@@ -92,6 +92,7 @@ public class StageControllerTests extends JerseyTest {
         this.stage = new Stage();
         this.serviceResult.setObject(this.stage);
         Mockito.when(this.stageService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
+        Stage expectedResult = this.stage;
 
         //Act
         Response response = target("/stages/" + this.stage.getId()).request().get();
@@ -99,7 +100,7 @@ public class StageControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(200, response.getStatus());
-        assertEquals(this.stage.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     @Test
@@ -113,10 +114,11 @@ public class StageControllerTests extends JerseyTest {
 
         //Act
         Response response = target("/stages/wrongId").request().get();
+        String actualResult = response.readEntity(String.class);
 
         //Assert
         assertEquals(404, response.getStatus());
-        assertEquals(expectedResult, response.readEntity(String.class));
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
@@ -126,6 +128,7 @@ public class StageControllerTests extends JerseyTest {
         this.serviceResult.setObject(this.stage);
         Mockito.when(this.stageService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stage, "application/json");
+        Stage expectedResult = this.stage;
 
         //Act
         Response response = target("/stages").request().post(entity);
@@ -133,7 +136,7 @@ public class StageControllerTests extends JerseyTest {
 
         //Assert
         assertEquals(201, response.getStatus());
-        assertEquals(this.stage.getId(), actualResult.getId());
+        assertEquals(expectedResult.getId(), actualResult.getId());
     }
 
     private void prepareStage() {
