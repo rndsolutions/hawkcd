@@ -4,17 +4,25 @@ import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.services.StageDefinitionService;
+import net.hawkengine.services.interfaces.IStageDefinitionService;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 @Consumes("application/json")
 @Produces("application/json")
-@Path("/pipeline-definitions/{pipelineDefinitionId}/stage-definitions")
+@Path("/stage-definitions")
 public class StageDefinitionController {
-    private StageDefinitionService stageDefinitionService;
+    private IStageDefinitionService stageDefinitionService;
     private SchemaValidator schemaValidator;
 
     public StageDefinitionController() {
@@ -22,9 +30,14 @@ public class StageDefinitionController {
         this.schemaValidator = new SchemaValidator();
     }
 
+    public StageDefinitionController(IStageDefinitionService stageDefinitionService) {
+        this.stageDefinitionService = stageDefinitionService;
+        this.schemaValidator = new SchemaValidator();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStageDefinitions() {
+    public Response getAllStageDefinitions() {
         ServiceResult result = this.stageDefinitionService.getAll();
         return Response.status(Status.OK)
                 .entity(result.getObject())
@@ -33,6 +46,7 @@ public class StageDefinitionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{stageDefinitionId}")
     public Response getStageDefinitionById(@PathParam("stageDefinitionId")
                                                    String stageDefinitionId) {
@@ -42,11 +56,10 @@ public class StageDefinitionController {
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
-        } else {
-            return Response.status(Status.OK)
-                    .entity(result.getObject())
-                    .build();
         }
+        return Response.status(Status.OK)
+                .entity(result.getObject())
+                .build();
     }
 
     @POST
@@ -60,11 +73,10 @@ public class StageDefinitionController {
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
-            } else {
-                return Response.status(Status.CREATED)
-                        .entity(result.getObject())
-                        .build();
             }
+            return Response.status(Status.CREATED)
+                    .entity(result.getObject())
+                    .build();
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
@@ -84,11 +96,10 @@ public class StageDefinitionController {
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
-            } else {
-                return Response.status(Status.OK)
-                        .entity(result.getObject())
-                        .build();
             }
+            return Response.status(Status.OK)
+                    .entity(result.getObject())
+                    .build();
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
@@ -98,20 +109,18 @@ public class StageDefinitionController {
     }
 
     @DELETE
-    @Consumes
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{stageDefinitionId}")
-    public Response deletePipeline(@PathParam("stageDefinitionId") String stageDefinitionId) {
+    public Response deleteStage(@PathParam("stageDefinitionId") String stageDefinitionId) {
         ServiceResult result = this.stageDefinitionService.delete(stageDefinitionId);
         if (result.hasError()) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
-        } else {
-            return Response.status(Status.NO_CONTENT)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
         }
+        return Response.status(Status.NO_CONTENT)
+                .entity(result.getMessage())
+                .build();
     }
 }
