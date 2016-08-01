@@ -99,6 +99,7 @@ dependencies {
 
     compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.9.1'
 
+
     // Jedis
 
     compile 'redis.clients:jedis:2.8.0'

@@ -15,4 +15,6 @@ public interface IMaterialDefinitionService extends ICrudService<MaterialDefinit
     ServiceResult update(NugetMaterial nugetMaterial);
 
     ServiceResult updateMaterialDefinition(MaterialDefinition materialDefinition);
+
+    ServiceResult addMaterialDefinition(MaterialDefinition materialDefinition);
 }
