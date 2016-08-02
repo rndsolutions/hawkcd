@@ -1,9 +1,13 @@
-package net.hawkengine.http;
+package net.hawkengine.http.tests;
 
 import net.hawkengine.core.ServerConfiguration;
+import net.hawkengine.db.redis.RedisManager;
+import net.hawkengine.http.UserGroupController;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.User;
 import net.hawkengine.model.UserGroup;
 import net.hawkengine.services.UserGroupService;
+import net.hawkengine.services.UserService;
 import net.hawkengine.services.interfaces.IUserGroupService;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -11,6 +15,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.omg.IOP.ENCODING_CDR_ENCAPS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -237,6 +242,74 @@ public class UserGroupControllerTests extends JerseyTest {
         //Assert
         assertEquals(404, response.getStatus());
         assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    public void addUserToUserGroup_existingObject_success(){
+        //Arrange
+        this.prepareUserGroup();
+        User user = new User();
+        this.userGroupService.addUserToGroup(user.getId(),this.userGroup.getId());
+        this.serviceResult.setError(false);
+        this.serviceResult.setObject(this.userGroup);
+        Entity entity = Entity.entity(user.getId(),"application/json");
+        Mockito.when(this.userGroupService.addUserToGroup(Mockito.anyString(),Mockito.anyString())).thenReturn(this.serviceResult);
+
+        //Act
+        Response response = target("/user-groups/assign-user/"+this.userGroup.getId()).request().post(entity);
+
+        //Assert
+        assertEquals(200,response.getStatus());
+    }
+
+    @Test
+    public void addUserToUserGroup_nonExistingObject_errorMessage(){
+        //Arrange
+        this.prepareUserGroup();
+        User user = new User();
+        this.serviceResult.setError(true);
+        Entity entity = Entity.entity(user.getId(),"application/json");
+        Mockito.when(this.userGroupService.addUserToGroup(Mockito.anyString(),Mockito.anyString())).thenReturn(this.serviceResult);
+
+        //Act
+        Response response = target("/user-groups/assign-user/"+this.userGroup.getId()).request().post(entity);
+
+        //Assert
+        assertEquals(400,response.getStatus());
+    }
+
+
+    @Test
+    public void removeUserFromUserGroup_existingObject_success(){
+        //Arrange
+        this.prepareUserGroup();
+        User user = new User();
+        this.userGroupService.addUserToGroup(user.getId(),this.userGroup.getId());
+        this.serviceResult.setError(false);
+        this.serviceResult.setObject(this.userGroup);
+        Mockito.when(this.userGroupService.removeUserFromGroup(Mockito.anyString(),Mockito.anyString())).thenReturn(this.serviceResult);
+
+        //Act
+        Response response = target("/user-groups/"+this.userGroup.getId()+"/"+user.getId()).request().delete();
+
+        //Assert
+        assertEquals(204,response.getStatus());
+    }
+
+    @Test
+    public void removeUserFromUserGroup_nonExistingObject_badRequest(){
+        //Arrange
+        this.prepareUserGroup();
+        User user = new User();
+        this.serviceResult.setError(true);
+        this.serviceResult.setObject(null);
+        Mockito.when(this.userGroupService.removeUserFromGroup(Mockito.anyString(),Mockito.anyString())).thenReturn(this.serviceResult);
+
+        //Act
+        Response response = target("/user-groups/"+this.userGroup.getId()+"/"+user.getId()).request().delete();
+
+        //Assert
+        assertEquals(400,response.getStatus());
     }
 
     private void prepareUserGroup() {
