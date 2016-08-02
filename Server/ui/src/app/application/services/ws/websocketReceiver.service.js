@@ -28,6 +28,28 @@ angular
                         viewModelUpdater.getUser(object.result);
                     }
                 },
+                UserService: {
+                    getAll: function (object) {
+                        viewModelUpdater.getUsers(object.result);
+                    },
+                    add: function (object) {
+                        viewModelUpdater.addUser(object.result);
+                    },
+                    update: function (object) {
+                        viewModelUpdater.updateUser(object.result);
+                    }
+                },
+                UserGroupService: {
+                    getAll: function (object) {
+                        viewModelUpdater.getUserGroups(object.result);
+                    },
+                    getAllUserGroups: function (object) {
+                        viewModelUpdater.getUserGroupDTOs(object.result);
+                    },
+                    add: function (object) {
+                        viewModelUpdater.addUserGroup(object.result);
+                    }
+                },
                 AuthorizationService: {
                     getAll: function (object) {
                         viewModelUpdater.getPermissions(object.result);

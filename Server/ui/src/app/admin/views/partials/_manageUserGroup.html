@@ -10,15 +10,38 @@
                     <form role="form" name="manageUserGroup">
                         <div class="form-group form-md-line-input text-right">
                             <div class="form-control-focus custom-focus">
-                                <table>
-                                    
-                                </table>
+                                <input type="text" ng-model="admin.selectedUserGroup.userGroupName" class="form-control" placeholder="{{admin.defaultText.addNewUserGroup.input}}" ng-pattern="/^([\w-]+)$/" required>
                             </div>
+                            <br>
+                            <br>
+                            <table id="userGroupPermissionTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>Permission Scope</th>
+                                    <th>Permission Type</th>
+                                    <th>Permission Entity</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="permission in admin.selectedUserGroup.permissions">
+                                    <td>
+                                        {{permission.permissionScope}}
+                                    </td>
+                                    <td>
+                                        {{permission.permissionEntityId}}
+                                    </td>
+                                    <td>
+                                        {{permission.permissionType}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <br>
                         <br>
-                        <button class="btn green" ng-click="admin.addNewPipelineGroup()" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.addNewPipelineGroup.submit}}</button>
-                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.newPipelineGroup.Name=''">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
+                        <button class="btn green" ng-click="admin.updateUserGroup()" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.addNewPipelineGroup.submit}}</button>
+                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.selectedUserGroup.name=''">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
                     </form>
                 </div>
             </div>
