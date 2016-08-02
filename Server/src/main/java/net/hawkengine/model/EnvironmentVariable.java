@@ -3,16 +3,24 @@ package net.hawkengine.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EnvironmentVariable {
-    private String name;
+    private String key;
     private String value;
     private boolean isSecured;
 
-    public String getName() {
-        return this.name;
+    public EnvironmentVariable() {
     }
 
-    public void setName(String value) {
-        this.name = value;
+    public EnvironmentVariable(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public void setKey(String value) {
+        this.key = value;
     }
 
     public String getValue() {
