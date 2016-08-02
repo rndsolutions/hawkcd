@@ -34,12 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserGroupAuthorizationServiceTests {
-    UserGroup firstUserGroup;
-    UserGroup secondUserGroup;
+    private UserGroup firstUserGroup;
+    private UserGroup secondUserGroup;
 
-    IAuthorizationService authorizationService;
+    private IAuthorizationService authorizationService;
 
-    Gson jsonConverter;
+    private Gson jsonConverter;
 
     private IDbRepository<UserGroup> mockedUserGroupRepository;
     private IUserGroupService mockedUserGroupService;
