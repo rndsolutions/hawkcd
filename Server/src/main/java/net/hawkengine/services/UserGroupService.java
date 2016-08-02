@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
@@ -21,7 +22,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         super.setObjectType("UserGroup");
     }
 
-    public UserGroupService(RedisRepository redisRepository, IUserService userService) {
+    public UserGroupService(IDbRepository redisRepository, IUserService userService) {
         super.setRepository(redisRepository);
         this.userService = userService;
         super.setObjectType("UserGroup");

@@ -34,6 +34,16 @@ public class PipelineAuthorizationService implements IAuthorizationService {
                 .create();
     }
 
+    public PipelineAuthorizationService(IPipelineService pipelineService, IPipelineDefinitionService pipelineDefinitionService){
+        this.pipelineService = pipelineService;
+        this.pipelineDefinitionService = pipelineDefinitionService;
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
+    }
+
     @Override
     public List getAll(List permissions, List pipelines) {
         List<DbEntry> result = new ArrayList<>();
@@ -47,7 +57,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        Pipeline pipeline = (Pipeline) this.pipelineDefinitionService.getById(entityId).getObject();
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getObject();
 
         return this.hasPermissionToRead(permissions, pipeline);
     }

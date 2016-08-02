@@ -16,9 +16,11 @@ import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.filters.PipelineDefinitionAuthorizationService;
+import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.filters.PipelineAuthorizationService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PipelineDefinitionAuthorizationServiceTests {
+public class PipelineAuthorizationServiceTests {
     private PipelineDefinition firstPipelineDefinition;
     private PipelineDefinition secondPipelineDefinition;
     private PipelineDefinition thirdPipelineDefinition;
@@ -38,6 +40,11 @@ public class PipelineDefinitionAuthorizationServiceTests {
     private PipelineDefinition sixthPipelineDefinition;
 
     private Pipeline firstPipeline;
+    private Pipeline secondPipeline;
+    private Pipeline thirdPipeline;
+    private Pipeline fourthPipeline;
+    private Pipeline fifthPipeline;
+    private Pipeline sixthPipeline;
 
     private PipelineGroup firstPipelineGroup;
     private PipelineGroup secondPipelineGroup;
@@ -47,8 +54,11 @@ public class PipelineDefinitionAuthorizationServiceTests {
 
     private Gson jsonConverter;
 
-    private IDbRepository<PipelineDefinition> mockedRepository;
+    private IDbRepository<PipelineDefinition> mockedPipelineDefinitionRepository;
     private IPipelineDefinitionService mockedPipeLineDefinitionService;
+
+    private IDbRepository<Pipeline> mockedPipelineRepository;
+    private IPipelineService mockedPipelineService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -82,15 +92,32 @@ public class PipelineDefinitionAuthorizationServiceTests {
         this.firstPipeline = new Pipeline();
         this.firstPipeline.setPipelineDefinitionId(this.firstPipelineDefinition.getId());
 
+        this.secondPipeline = new Pipeline();
+        this.secondPipeline.setPipelineDefinitionId(this.secondPipelineDefinition.getId());
+
+        this.thirdPipeline = new Pipeline();
+        this.thirdPipeline.setPipelineDefinitionId(this.thirdPipelineDefinition.getId());
+
+        this.fourthPipeline = new Pipeline();
+        this.fourthPipeline.setPipelineDefinitionId(this.fourthPipelineDefinition.getId());
+
+        this.fifthPipeline = new Pipeline();
+        this.fifthPipeline.setPipelineDefinitionId(this.fifthPilineDefinition.getId());
+
+        this.sixthPipeline = new Pipeline();
+        this.sixthPipeline.setPipelineDefinitionId(this.sixthPipelineDefinition.getId());
+
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
 
-        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionAuthorizationService");
-        this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository);
+        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineAuthorizationService");
+        this.mockedPipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedPipelineDefinitionRepository);
+        this.mockedPipelineRepository = new RedisRepository(Pipeline.class, mockedPool);
+        this.mockedPipelineService = new PipelineService(this.mockedPipelineRepository, this.mockedPipeLineDefinitionService);
 
         this.mockedPipeLineDefinitionService.add(this.firstPipelineDefinition);
         this.mockedPipeLineDefinitionService.add(this.secondPipelineDefinition);
@@ -99,7 +126,14 @@ public class PipelineDefinitionAuthorizationServiceTests {
         this.mockedPipeLineDefinitionService.add(this.fifthPilineDefinition);
         this.mockedPipeLineDefinitionService.add(this.sixthPipelineDefinition);
 
-        this.authorizationService = new PipelineDefinitionAuthorizationService(this.mockedPipeLineDefinitionService);
+        this.mockedPipelineService.add(this.firstPipeline);
+        this.mockedPipelineService.add(this.secondPipeline);
+        this.mockedPipelineService.add(this.thirdPipeline);
+        this.mockedPipelineService.add(this.fourthPipeline);
+        this.mockedPipelineService.add(this.fifthPipeline);
+        this.mockedPipelineService.add(this.sixthPipeline);
+
+        this.authorizationService = new PipelineAuthorizationService(this.mockedPipelineService, this.mockedPipeLineDefinitionService);
     }
 
     @Test
@@ -107,13 +141,13 @@ public class PipelineDefinitionAuthorizationServiceTests {
         //Arrange
         List<Permission> permissions = this.createPermissions();
 
-        List<PipelineDefinition> entitiesToFilter = new ArrayList<>();
-        entitiesToFilter.add(this.firstPipelineDefinition);
-        entitiesToFilter.add(this.secondPipelineDefinition);
-        entitiesToFilter.add(this.thirdPipelineDefinition);
-        entitiesToFilter.add(this.fourthPipelineDefinition);
-        entitiesToFilter.add(this.fifthPilineDefinition);
-        entitiesToFilter.add(this.sixthPipelineDefinition);
+        List<Pipeline> entitiesToFilter = new ArrayList<>();
+        entitiesToFilter.add(this.firstPipeline);
+        entitiesToFilter.add(this.secondPipeline);
+        entitiesToFilter.add(this.thirdPipeline);
+        entitiesToFilter.add(this.firstPipeline);
+        entitiesToFilter.add(this.fifthPipeline);
+        entitiesToFilter.add(this.sixthPipeline);
 
         //Act
         List<PipelineDefinition> actualResult = this.authorizationService.getAll(permissions, entitiesToFilter);
@@ -128,7 +162,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
-        boolean hasPermission = this.authorizationService.getById(this.firstPipelineDefinition.getId(), permissions);
+        boolean hasPermission = this.authorizationService.getById(this.firstPipeline.getId(), permissions);
 
         //Assert
         Assert.assertTrue(hasPermission);
@@ -140,7 +174,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
-        boolean hasPermission = this.authorizationService.getById(this.secondPipelineDefinition.getId(), permissions);
+        boolean hasPermission = this.authorizationService.getById(this.secondPipeline.getId(), permissions);
 
         //Assert
         Assert.assertFalse(hasPermission);
@@ -149,11 +183,11 @@ public class PipelineDefinitionAuthorizationServiceTests {
     @Test
     public void add_withPersmissionToAdd_true() {
         //Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setPipelineGroupId(this.secondPipelineGroup.getId());
+        Pipeline pipeline = new Pipeline();
+        pipeline.setPipelineDefinitionId(this.firstPipelineDefinition.getId());
 
         List<Permission> permissions = this.createPermissions();
-        String entityToAdd = this.jsonConverter.toJson(pipelineDefinition);
+        String entityToAdd = this.jsonConverter.toJson(pipeline);
 
         //Act
         boolean hasPermission = this.authorizationService.add(entityToAdd, permissions);
@@ -165,11 +199,11 @@ public class PipelineDefinitionAuthorizationServiceTests {
     @Test
     public void add_withoutPermissionToAdd_false() {
         //Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setPipelineGroupId(this.firstPipelineGroup.getId());
+        Pipeline pipeline = new Pipeline();
+        pipeline.setPipelineDefinitionId(this.secondPipelineDefinition.getId());
 
         List<Permission> permissions = this.createPermissions();
-        String entityToAdd = this.jsonConverter.toJson(pipelineDefinition);
+        String entityToAdd = this.jsonConverter.toJson(pipeline);
 
         //Act
         boolean hasPermission = this.authorizationService.add(entityToAdd, permissions);
@@ -182,7 +216,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     public void update_withPermissionToUpdate_true() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
-        String entityToUpdate = this.jsonConverter.toJson(this.fourthPipelineDefinition);
+        String entityToUpdate = this.jsonConverter.toJson(this.fourthPipeline);
 
         //Act
         boolean hasPermission = this.authorizationService.update(entityToUpdate, permissions);
@@ -195,7 +229,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     public void update_withoutPermissionToUpdate_false() {
         //Arrange
         List<Permission> permissions = this.createPermissions();
-        String entityToUpdate = this.jsonConverter.toJson(this.thirdPipelineDefinition);
+        String entityToUpdate = this.jsonConverter.toJson(this.thirdPipeline);
 
         //Act
         boolean hasPermission = this.authorizationService.update(entityToUpdate, permissions);
@@ -210,7 +244,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
-        boolean hasPermission = this.authorizationService.delete(this.fifthPilineDefinition.getId(), permissions);
+        boolean hasPermission = this.authorizationService.delete(this.fifthPipeline.getId(), permissions);
 
         //Assert
         Assert.assertTrue(hasPermission);
@@ -222,7 +256,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
-        boolean hasPermission = this.authorizationService.delete(this.firstPipelineDefinition.getId(), permissions);
+        boolean hasPermission = this.authorizationService.delete(this.thirdPipeline.getId(), permissions);
 
         //Assert
         Assert.assertFalse(hasPermission);
@@ -231,7 +265,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
     @Test
     public void initialize_validConstructor_notNull() {
         //Act
-        this.authorizationService = new PipelineDefinitionAuthorizationService();
+        this.authorizationService = new PipelineAuthorizationService();
 
         //Assert
         Assert.assertNotNull(this.authorizationService);
@@ -261,7 +295,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
         secondPipelineGroupPermission.setPermittedEntityId(this.secondPipelineGroup.getId());
 
         Permission firstPipelineDefinitionPermission = new Permission();
-        firstPipelineDefinitionPermission.setPermissionType(PermissionType.VIEWER);
+        firstPipelineDefinitionPermission.setPermissionType(PermissionType.OPERATOR);
         firstPipelineDefinitionPermission.setPermissionScope(PermissionScope.PIPELINE);
         firstPipelineDefinitionPermission.setPermittedEntityId(this.firstPipelineDefinition.getId());
 

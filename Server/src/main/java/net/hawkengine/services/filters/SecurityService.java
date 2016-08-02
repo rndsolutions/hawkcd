@@ -8,10 +8,12 @@ import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
+import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.UserGroupService;
 import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.ws.WsEndpoint;
 import net.hawkengine.ws.WsObjectProcessor;
@@ -28,11 +30,31 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     private AuthorizationServiceFactory authorizationServiceFactory;
     private IUserGroupService userGroupService;
     private Gson jsonConverter;
+    private IPipelineDefinitionService pipelineDefinitionService;
 
     public SecurityService() {
         this.wsObjectProcessor = new WsObjectProcessor();
         this.authorizationServiceFactory = new AuthorizationServiceFactory();
         this.userGroupService = new UserGroupService();
+        this.pipelineDefinitionService = new PipelineDefinitionService();
+
+        this.result = new ServiceResult();
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
+
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
+    }
+
+    public SecurityService(WsObjectProcessor wsObjectProcessor, IPipelineDefinitionService pipelineDefinitionService, IUserGroupService userGroupService){
+        this.wsObjectProcessor = wsObjectProcessor;
+        this.authorizationServiceFactory = new AuthorizationServiceFactory();
+        this.userGroupService = userGroupService;
+        this.pipelineDefinitionService = pipelineDefinitionService;
 
         this.result = new ServiceResult();
         this.result.setError(true);
@@ -64,26 +86,27 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult getPipelineDTOs(WsContractDto contract, List<Permission> permissions) {
         try {
-            ServiceResult pipelineDefinitionsServiceResult = this.result;
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-            List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionsServiceResult.getObject();
+            List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
             List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.result.getObject();
 
             this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             //TODO: REFACTOR THIS PART
             List<T> filteredEntities = (List<T>) this.authorizationService.getAll(permissions, pipelineGroups);
-            for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                PipelineGroup entityToAdd = pipelineGroups.stream().filter(g -> g.getId().equals(pipelineDefinition.getPipelineGroupId())).findFirst().orElse(null);
-                boolean isFiltered = false;
-                for (T filteredEntity : filteredEntities) {
-                    if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
-                        isFiltered = true;
+            if (filteredEntities.size() != 0){
+                for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
+                    PipelineGroup entityToAdd = pipelineGroups.stream().filter(g -> g.getId().equals(pipelineDefinition.getPipelineGroupId())).findFirst().orElse(null);
+                    boolean isFiltered = false;
+                    for (T filteredEntity : filteredEntities) {
+                        if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
+                            isFiltered = true;
+                        }
                     }
-                }
-                if (!isFiltered && !pipelineDefinition.getPipelineGroupId().isEmpty() && entityToAdd.getId().equals(pipelineDefinition.getPipelineGroupId())) {
-                    entityToAdd.setPipelines(new ArrayList<>());
-                    entityToAdd.getPipelines().add(pipelineDefinition);
-                    filteredEntities.add((T) entityToAdd);
+                    if (!isFiltered && !pipelineDefinition.getPipelineGroupId().isEmpty() && entityToAdd.getId().equals(pipelineDefinition.getPipelineGroupId())) {
+                        entityToAdd.setPipelines(new ArrayList<>());
+                        entityToAdd.getPipelines().add(pipelineDefinition);
+                        filteredEntities.add((T) entityToAdd);
+                    }
                 }
             }
             this.result.setObject(filteredEntities);

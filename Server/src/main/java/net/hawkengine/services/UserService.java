@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
@@ -16,7 +17,7 @@ public class UserService extends CrudService<User> implements IUserService {
         super.setObjectType("User");
     }
 
-    public UserService(RedisRepository redisRepository) {
+    public UserService(IDbRepository redisRepository) {
         super.setRepository(redisRepository);
         super.setObjectType("User");
     }
