@@ -256,7 +256,7 @@ public class UserGroupControllerTests extends JerseyTest {
         Mockito.when(this.userGroupService.addUserToGroup(Mockito.anyString(),Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
-        Response response = target("/user-groups/assign-user/"+this.userGroup.getId()).request().post(entity);
+        Response response = target("/user-groups/"+this.userGroup.getId()).request().post(entity);
 
         //Assert
         assertEquals(200,response.getStatus());
@@ -272,7 +272,7 @@ public class UserGroupControllerTests extends JerseyTest {
         Mockito.when(this.userGroupService.addUserToGroup(Mockito.anyString(),Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
-        Response response = target("/user-groups/assign-user/"+this.userGroup.getId()).request().post(entity);
+        Response response = target("/user-groups/"+this.userGroup.getId()).request().post(entity);
 
         //Assert
         assertEquals(400,response.getStatus());
