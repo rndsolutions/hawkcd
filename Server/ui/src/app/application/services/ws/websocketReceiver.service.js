@@ -142,6 +142,16 @@ angular
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
+                    },
+                    assignPipelineToGroup: function (object) {
+                        viewModelUpdater.updatePipelineDefinition(object.result);
+                        pipeConfigService.getAllPipelineGroupDTOs();
+                        pipeConfigService.getAllPipelineDefinitions();
+                    },
+                    unassignPipelineFromGroup: function (object) {
+                        viewModelUpdater.updatePipelineDefinition(object.result);
+                        pipeConfigService.getAllPipelineGroupDTOs();
+                        pipeConfigService.getAllPipelineDefinitions();
                     }
                 },
                 PipelineService: {

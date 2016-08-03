@@ -71,7 +71,7 @@ angular
 
         pipeConfigService.assignPipelineDefinition = function (pipelineDefinition, pipelineGroupId) {
             var methodName = "assignPipelineToGroup";
-            var className = "SecurityService";
+            var className = "PipelineDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}, " +
@@ -84,7 +84,7 @@ angular
 
         pipeConfigService.unassignPipelineDefinition = function (pipelineDefinition) {
             var methodName = "unassignPipelineFromGroup";
-            var className = "SecurityService";
+            var className = "PipelineDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
