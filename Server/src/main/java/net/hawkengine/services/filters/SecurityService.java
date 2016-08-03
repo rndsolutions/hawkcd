@@ -6,14 +6,17 @@ import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
+import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.UserGroupService;
 import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineGroupService;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.ws.WsEndpoint;
 import net.hawkengine.ws.WsObjectProcessor;
@@ -31,12 +34,14 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     private IUserGroupService userGroupService;
     private Gson jsonConverter;
     private IPipelineDefinitionService pipelineDefinitionService;
+    private IPipelineGroupService pipelineGroupService;
 
     public SecurityService() {
         this.wsObjectProcessor = new WsObjectProcessor();
         this.authorizationServiceFactory = new AuthorizationServiceFactory();
         this.userGroupService = new UserGroupService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
+        this.pipelineGroupService = new PipelineGroupService();
 
         this.result = new ServiceResult();
         this.result.setError(true);
@@ -260,12 +265,21 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     public ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions) {
         this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
         String entity = contract.getArgs()[0].getObject();
+        PipelineDefinition pipelineDefinitionToUpdate = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
         boolean hasPermission = this.authorizationService.update(entity, permissions);
         if (hasPermission) {
-            entity = contract.getArgs()[1].getObject();
+            entity = contract.getArgs()[1].getObject().substring(1, contract.getArgs()[1].getObject().length() - 1);
             this.authorizationService = this.authorizationServiceFactory.create("PipelineGroupService");
             hasPermission = this.authorizationService.delete(entity, permissions);
             if (hasPermission) {
+                PipelineGroup pipelineGroup = (PipelineGroup) this.pipelineGroupService.getById(entity).getObject();
+                pipelineDefinitionToUpdate.setPipelineGroupId(pipelineGroup.getId());
+                pipelineDefinitionToUpdate.setGroupName(pipelineGroup.getName());
+                entity = this.jsonConverter.toJson(pipelineDefinitionToUpdate);
+                ConversionObject conversionObject = new ConversionObject();
+                contract.setArgs(new ConversionObject[]{conversionObject});
+                contract.getArgs()[0].setObject(entity);
+                contract.getArgs()[0].setPackageName("net.hawkengine.model.PipelineDefinition");
                 return this.update(contract, permissions);
             }
         }
