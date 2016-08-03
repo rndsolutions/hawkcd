@@ -1,4 +1,6 @@
 package net.hawkengine.model;
+import net.hawkengine.model.payload.Permission;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.payload.Permission;
+
 import java.util.ArrayList;
 import java.util.List;
 
