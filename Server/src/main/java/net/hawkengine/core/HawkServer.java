@@ -4,6 +4,7 @@ import net.hawkengine.core.materialhandler.MaterialTracker;
 import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.EndpointFinder;
+import net.hawkengine.core.utilities.FilterRegistrar;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.ws.WsServlet;
 import org.eclipse.jetty.server.Handler;
@@ -49,7 +50,7 @@ public class HawkServer {
 //        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
-
+        new FilterRegistrar();
         ServletHolder restServlet = context.addServlet(ServletContainer.class, "/*");
         restServlet.setInitOrder(0);
 

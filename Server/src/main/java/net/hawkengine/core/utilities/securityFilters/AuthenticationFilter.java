@@ -1,18 +1,29 @@
-package net.hawkengine.core.utilities;
+package net.hawkengine.core.utilities.securityFilters;
 
 import java.io.IOException;
 
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 public class AuthenticationFilter implements ContainerRequestFilter {
 
+    private ResourceInfo resourceInfo;
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
+        String resourceClass = this.resourceInfo.getResourceClass().getName();
+        String methodName = this.resourceInfo.getResourceMethod().getName();
+        System.out.println("REST invocation bound to resource class: " + resourceClass);
+        System.out.println("REST invocation bound to resource method: " + methodName);
+
+    }
+}
+    /*
         // Get the HTTP Authorization header from the request
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
@@ -43,3 +54,4 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // Throw an Exception if the token is invalid
     }
 }
+*/
