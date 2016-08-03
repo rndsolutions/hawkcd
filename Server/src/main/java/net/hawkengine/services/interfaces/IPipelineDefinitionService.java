@@ -11,4 +11,6 @@ public interface IPipelineDefinitionService extends ICrudService<PipelineDefinit
     ServiceResult getAllAutomaticallyScheduledPipelines();
 
     ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition);
+
+    ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition);
 }

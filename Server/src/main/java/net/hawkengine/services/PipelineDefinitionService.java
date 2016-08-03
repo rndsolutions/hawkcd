@@ -83,5 +83,10 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         return this.update(pipelineDefinition);
     }
 
+    @Override
+    public ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition) {
+        return this.update(pipelineDefinition);
+    }
+
 
 }
