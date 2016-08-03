@@ -256,4 +256,30 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
         return this.result;
     }
+
+    @Override
+    public ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions) {
+        return this.update(contract, permissions);
+    }
+
+    @Override
+    public ServiceResult unassignPipelienFromGroup(WsContractDto contract, List<Permission> permissions) {
+        try {
+            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            String entity = contract.getArgs()[0].getObject();
+            boolean hasPermission = this.authorizationService.update(entity, permissions);
+            if (hasPermission) {
+                PipelineDefinition pipelineDefinitionToUpdate = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
+                pipelineDefinitionToUpdate.setPipelineGroupId("");
+                pipelineDefinitionToUpdate.setGroupName("");
+                entity = this.jsonConverter.toJson(pipelineDefinitionToUpdate);
+                contract.getArgs()[0].setObject(entity);
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return this.result;
+    }
 }

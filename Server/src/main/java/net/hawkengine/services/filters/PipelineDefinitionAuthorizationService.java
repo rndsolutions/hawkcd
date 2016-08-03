@@ -81,6 +81,8 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
         return this.hasPermissionToAdd(permissions, pipelineDefinition);
     }
 
+
+
     private boolean hasPermissionToRead(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         boolean hasPermission = false;
         for (Permission permission : permissions) {
