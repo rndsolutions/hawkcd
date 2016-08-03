@@ -89,32 +89,29 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
             List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
             List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.result.getObject();
-
+            List<PipelineGroup> filteredPipelineGroups = new ArrayList<>();
+            List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
             this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             //TODO: REFACTOR THIS PART
-            List<T> filteredEntities = (List<T>) this.authorizationService.getAll(permissions, pipelineGroups);
+            List<PipelineGroup> filteredEntities = (List<PipelineGroup>) this.authorizationService.getAll(permissions, pipelineGroups);
             this.authorizationService = this.authorizationServiceFactory.create("PipelineDefinitionService");
             List<T> filteredPipelineDefintions = (List<T>) this.authorizationService.getAll(permissions, pipelineDefinitions);
-            if (filteredEntities.size() != 0){
-                for (PipelineDefinition pipelineDefinition : (List<PipelineDefinition>)filteredPipelineDefintions) {
-                    PipelineGroup entityToAdd = pipelineGroups.stream().filter(g -> g.getId().equals(pipelineDefinition.getPipelineGroupId())).findFirst().orElse(null);
-                    boolean isFiltered = false;
-                    for (T filteredEntity : filteredEntities) {
-                        if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
-                            isFiltered = true;
+
+            for (PipelineGroup filteredEntity:filteredEntities) {
+
+                List<PipelineDefinition> pipelineDefinitionsWithinFilteredGroup = filteredEntity.getPipelines();
+                for (PipelineDefinition pipelineDefinitionWithinFilteredGroup: pipelineDefinitionsWithinFilteredGroup) {
+                    for (PipelineDefinition filteredPipelineDefintion:(List<PipelineDefinition>)filteredPipelineDefintions){
+                        if (filteredPipelineDefintion.getId().equals(pipelineDefinitionWithinFilteredGroup.getId()) && filteredPipelineDefintion.getPipelineGroupId().equals(filteredEntity.getId())){
+                            pipelineDefinitionsToAdd.add(filteredPipelineDefintion);
                         }
-                        else{
-                            entityToAdd.setPipelines(new ArrayList<>());
-                        }
-                    }
-                    if (!isFiltered && !pipelineDefinition.getPipelineGroupId().isEmpty() && entityToAdd.getId().equals(pipelineDefinition.getPipelineGroupId())) {
-                        entityToAdd.setPipelines(new ArrayList<>());
-                        entityToAdd.getPipelines().add(pipelineDefinition);
-                        filteredEntities.add((T) entityToAdd);
                     }
                 }
+                filteredEntity.setPipelines(pipelineDefinitionsToAdd);
+                filteredPipelineGroups.add(filteredEntity);
+                pipelineDefinitionsToAdd = new ArrayList<>();
             }
-            this.result.setObject(filteredEntities);
+            this.result.setObject(filteredPipelineGroups);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
