@@ -93,13 +93,18 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             //TODO: REFACTOR THIS PART
             List<T> filteredEntities = (List<T>) this.authorizationService.getAll(permissions, pipelineGroups);
+            this.authorizationService = this.authorizationServiceFactory.create("PipelineDefinitionService");
+            List<T> filteredPipelineDefintions = (List<T>) this.authorizationService.getAll(permissions, pipelineDefinitions);
             if (filteredEntities.size() != 0){
-                for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
+                for (PipelineDefinition pipelineDefinition : (List<PipelineDefinition>)filteredPipelineDefintions) {
                     PipelineGroup entityToAdd = pipelineGroups.stream().filter(g -> g.getId().equals(pipelineDefinition.getPipelineGroupId())).findFirst().orElse(null);
                     boolean isFiltered = false;
                     for (T filteredEntity : filteredEntities) {
                         if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
                             isFiltered = true;
+                        }
+                        else{
+                            entityToAdd.setPipelines(new ArrayList<>());
                         }
                     }
                     if (!isFiltered && !pipelineDefinition.getPipelineGroupId().isEmpty() && entityToAdd.getId().equals(pipelineDefinition.getPipelineGroupId())) {
