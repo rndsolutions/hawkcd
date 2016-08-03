@@ -77,4 +77,11 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         result = super.createServiceResultArray(scheduledPipelines, false, "retrieved successfully");
         return result;
     }
+
+    @Override
+    public ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition) {
+        return this.update(pipelineDefinition);
+    }
+
+
 }

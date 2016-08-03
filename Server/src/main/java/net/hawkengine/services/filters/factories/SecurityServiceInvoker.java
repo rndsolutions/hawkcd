@@ -41,7 +41,7 @@ public class SecurityServiceInvoker {
             case "assignPipeleineToGroup":
                 return this.securityService.assignPipelineToGroup(contract, permissions);
             case "unassignPipelineFromGroup":
-                return this.securityService.unassignPipelienFromGroup(contract, permissions);
+                return this.securityService.unassignPipelineFromGroup(contract, permissions);
             default:
                 return null;
         }

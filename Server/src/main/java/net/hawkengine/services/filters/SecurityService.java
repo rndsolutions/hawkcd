@@ -253,17 +253,30 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
-
         return this.result;
     }
 
     @Override
     public ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions) {
-        return this.update(contract, permissions);
+        this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+        String entity = contract.getArgs()[0].getObject();
+        boolean hasPermission = this.authorizationService.update(entity, permissions);
+        if (hasPermission) {
+            entity = contract.getArgs()[1].getObject();
+            this.authorizationService = this.authorizationServiceFactory.create("PipelineGroupService");
+            hasPermission = this.authorizationService.delete(entity, permissions);
+            if (hasPermission) {
+                return this.update(contract, permissions);
+            }
+        }
+        this.result.setError(true);
+        this.result.setObject(null);
+        this.result.setMessage("Unauthorized");
+        return this.result;
     }
 
     @Override
-    public ServiceResult unassignPipelienFromGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();

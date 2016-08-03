@@ -27,5 +27,5 @@ public interface ISecurityService {
 
     ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions);
 
-    ServiceResult unassignPipelienFromGroup(WsContractDto contract, List<Permission> permissions);
+    ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions);
 }
