@@ -8,6 +8,7 @@ import java.util.List;
 public class EnvironmentVariableService {
     public List<EnvironmentVariable> getOverriddenVariables(
             List<EnvironmentVariable> jobVariables, List<EnvironmentVariable> stageVariables, List<EnvironmentVariable> pipelineVariables) {
+
         List<EnvironmentVariable> overriddenVariables = new ArrayList<>();
         for (EnvironmentVariable variable : jobVariables) {
             boolean variableExists = overriddenVariables.stream().anyMatch(v -> v.getKey().equals(variable.getKey()));
@@ -33,9 +34,8 @@ public class EnvironmentVariableService {
         return overriddenVariables;
     }
 
-    public String replaceVariablesInArguments(String arguments, List<EnvironmentVariable> variables) {
+    public String replaceVariablesInArguments(List<EnvironmentVariable> variables, String arguments) {
         String result = arguments;
-
         int startIndex = arguments.indexOf('%');
         int endIndex = arguments.indexOf('%', startIndex + 1);
         while (startIndex >= 0 && endIndex > startIndex) {

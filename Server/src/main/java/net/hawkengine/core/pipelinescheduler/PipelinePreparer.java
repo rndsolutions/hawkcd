@@ -98,7 +98,7 @@ public class PipelinePreparer implements Runnable {
                 for (Task task : job.getTasks()) {
                     if (task.getTaskDefinition().getType() == TaskType.EXEC) {
                         ExecTask execTask = (ExecTask) task.getTaskDefinition();
-                        String arguments = this.environmentVariableService.replaceVariablesInArguments(execTask.getArguments(), overridenVariables);
+                        String arguments = this.environmentVariableService.replaceVariablesInArguments(overridenVariables, execTask.getArguments());
                         execTask.setArguments(arguments);
                         task.setTaskDefinition(execTask);
                     }
