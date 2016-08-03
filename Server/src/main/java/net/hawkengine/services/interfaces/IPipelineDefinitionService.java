@@ -9,4 +9,6 @@ import net.hawkengine.model.ServiceResult;
 
 public interface IPipelineDefinitionService extends ICrudService<PipelineDefinition> {
     ServiceResult getAllAutomaticallyScheduledPipelines();
+
+    ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition);
 }
