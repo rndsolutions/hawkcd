@@ -1,10 +1,10 @@
 package net.hawkengine.http;
 
 import net.hawkengine.core.utilities.SchemaValidator;
-import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.PipelineGroupService;
+import net.hawkengine.services.interfaces.IPipelineGroupService;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,39 +18,37 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+
 @Consumes("application/json")
 @Produces("application/json")
-@Path("/pipeline-definitions")
-public class PipelineDefinitionController {
-    private IPipelineDefinitionService pipelineDefinitionService;
+@Path("/pipeline-groups")
+public class PipelineGroupController {
+    private IPipelineGroupService pipelineGroupService;
     private SchemaValidator schemaValidator;
 
-    public PipelineDefinitionController() {
-        this.pipelineDefinitionService = new PipelineDefinitionService();
+    public PipelineGroupController() {
+        this.pipelineGroupService = new PipelineGroupService();
         this.schemaValidator = new SchemaValidator();
     }
 
-    public PipelineDefinitionController(IPipelineDefinitionService pipelineDefinitionService) {
-        this.pipelineDefinitionService = pipelineDefinitionService;
+    public PipelineGroupController(IPipelineGroupService pipelineGroupService) {
+        this.pipelineGroupService = pipelineGroupService;
         this.schemaValidator = new SchemaValidator();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllPipelineDefinitions() {
-        ServiceResult result = this.pipelineDefinitionService.getAll();
-        return Response.status(Status.OK)
-                .entity(result.getObject())
-                .build();
+    public Response getAllPipelineGroups() {
+        ServiceResult result = this.pipelineGroupService.getAll();
+        return Response.status(Status.OK).entity(result.getObject()).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{pipelineDefinitionId}")
-    public Response getPipelineDefinitionById(@PathParam("pipelineDefinitionId")
-                                                      String pipelineDefinitionId) {
-        ServiceResult result = this.pipelineDefinitionService.getById(pipelineDefinitionId);
+    @Path("/{pipelineGroupId}")
+    public Response getPipelineGroupById(@PathParam("pipelineGroupId") String pipelineGroupId) {
+        ServiceResult result = this.pipelineGroupService.getById(pipelineGroupId);
         if (result.hasError()) {
             return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
@@ -63,20 +61,20 @@ public class PipelineDefinitionController {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addNewPipeline(PipelineDefinition pipelineDefinition) {
-        String isValid = this.schemaValidator.validate(pipelineDefinition);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addPipelineGroup(PipelineGroup pipelineGroup) {
+        String isValid = this.schemaValidator.validate(pipelineGroup);
         if (isValid.equals("OK")) {
-            ServiceResult result = this.pipelineDefinitionService.add(pipelineDefinition);
+            ServiceResult result = this.pipelineGroupService.add(pipelineGroup);
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
             }
-            return Response.status(Status.CREATED)
-                    .entity(result.getObject())
-                    .build();
+
+            return Response.status(Status.CREATED).entity(result.getObject()).build();
+
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity(isValid)
@@ -86,20 +84,19 @@ public class PipelineDefinitionController {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePipeline(PipelineDefinition pipelineDefinition) {
-        String isValid = this.schemaValidator.validate(pipelineDefinition);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updatePipelineGroup(PipelineGroup pipelineGroup) {
+        String isValid = this.schemaValidator.validate(pipelineGroup);
         if (isValid.equals("OK")) {
-            ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
+            ServiceResult result = this.pipelineGroupService.update(pipelineGroup);
             if (result.hasError()) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
                         .build();
             }
-            return Response.status(Status.OK)
-                    .entity(result.getObject())
-                    .build();
+
+            return Response.status(Status.OK).entity(result.getObject()).build();
 
         } else {
             return Response.status(Status.BAD_REQUEST)
@@ -112,16 +109,16 @@ public class PipelineDefinitionController {
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{pipelineDefinitionId}")
-    public Response deletePipeline(@PathParam("pipelineDefinitionId")
-                                           String pipelineDefinitionId) {
-        ServiceResult result = this.pipelineDefinitionService.delete(pipelineDefinitionId);
+    public Response deleteTaskDefinition(@PathParam("pipelineGroupId") String pipelineGroupId) {
+        ServiceResult result = this.pipelineGroupService.delete(pipelineGroupId);
         if (result.hasError()) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
-
-        return Response.status(Status.NO_CONTENT).build();
+        return Response.status(Status.NO_CONTENT)
+                .entity(result.getMessage())
+                .build();
     }
 }
