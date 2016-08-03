@@ -93,7 +93,7 @@ public class PipelinePreparer implements Runnable {
 
             for (Job job : stage.getJobs()) {
                 List<EnvironmentVariable> jobVariables = job.getEnvironmentVariables();
-                List<EnvironmentVariable> overridenVariables = this.environmentVariableService.getOverridenVariables(jobVariables, stageVariables, pipelineVariables);
+                List<EnvironmentVariable> overridenVariables = this.environmentVariableService.getOverriddenVariables(jobVariables, stageVariables, pipelineVariables);
 
                 for (Task task : job.getTasks()) {
                     if (task.getTaskDefinition().getType() == TaskType.EXEC) {

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnvironmentVariableService {
-    public List<EnvironmentVariable> getOverridenVariables(
+    public List<EnvironmentVariable> getOverriddenVariables(
             List<EnvironmentVariable> jobVariables, List<EnvironmentVariable> stageVariables, List<EnvironmentVariable> pipelineVariables) {
         List<EnvironmentVariable> overriddenVariables = new ArrayList<>();
         for (EnvironmentVariable variable : jobVariables) {
