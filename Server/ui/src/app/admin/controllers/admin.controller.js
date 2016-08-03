@@ -225,16 +225,13 @@ angular
 
             vm.assignPipeline = function(pipeline) {
                 var updatedPipeline = angular.copy(pipeline);
-                updatedPipeline.pipelineGroupId = vm.pipelineGroupToAssign.id;
-                updatedPipeline.groupName = vm.pipelineGroupToAssign.name;
-                pipeConfigService.updatePipelineDefinition(updatedPipeline);
+                var pipelineGroupId = vm.pipelineGroupToAssign.id;
+                pipeConfigService.assignPipelineDefinition(updatedPipeline, pipelineGroupId);
             };
 
             vm.unassignPipeline = function() {
                 var updatedPipeline = angular.copy(vm.pipelineToUnassign);
-                updatedPipeline.pipelineGroupId = '';
-                updatedPipeline.groupName = '';
-                pipeConfigService.updatePipelineDefinition(updatedPipeline);
+                pipeConfigService.unassignPipelineDefinition(updatedPipeline);
             };
 
             vm.setPipelineGroupToAssign = function(pipelineGroup) {

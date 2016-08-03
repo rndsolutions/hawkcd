@@ -33,20 +33,19 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="center-margin">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href="javascript:;" ng-click="prevPage()">« Prev</a>
-                        </li>
-                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                        </li>
-                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                            <a href="javascript:;" ng-click="nextPage()">Next »</a>
-                        </li>
-                    </ul>
-                </div>
-
+            </div>
+            <div class="center-margin">
+                <ul class="pagination">
+                    <li ng-class="{disabled: currentPage == 0}">
+                        <a href="javascript:;" ng-click="prevPage()">« Prev</a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage()">Next »</a>
+                    </li>
+                </ul>
             </div>
             </br>
             <div class="modal-footer">
