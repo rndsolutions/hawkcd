@@ -2,8 +2,21 @@
 
 angular
     .module('hawk')
-    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', '$rootScope', function (viewModel, toaster, adminGroupService, $rootScope) {
+    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', function (viewModel, toaster, adminGroupService) {
         var viewModelUpdater = this;
+
+        viewModelUpdater.getUser = function (user) {
+            viewModel.user = user;
+            console.log(user);
+        };
+
+        viewModelUpdater.getPermissions = function (permissions) {
+            viewModel.allPermissions = permissions;
+        };
+
+        viewModelUpdater.updatePermissions = function (permission) {
+            //TODO: Implement this
+        };
 
         viewModelUpdater.updateAgents = function (agents) {
             viewModel.allAgents = agents;
@@ -257,7 +270,7 @@ angular
 
         viewModelUpdater.addPipeline = function (pipeline) {
             viewModel.allPipelineRuns.push(pipeline);
-            toaster.pop('success', "Notification", "Pipeline run started successfully!")
+            //toaster.pop('success', "Notification", "Pipeline run started successfully!")
         };
 
         viewModelUpdater.updatePipeline = function (pipeline) {

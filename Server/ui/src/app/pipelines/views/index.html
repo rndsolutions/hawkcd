@@ -17,7 +17,7 @@
                     <span class="g-name">{{pipegroup.name}}</span>
                 </a>
                 <a class="pull-right" data-target="#pipeWizard" data-toggle="modal" ng-click="pipes.getGroupName(pipegroup)">
-                    <span class="btn btn-circle btn-default"><i class="fa fa-plus"></i> Add</span>
+                    <span ng-if="pipegroup.role=='ADMIN'" class="btn btn-circle btn-default"><i class="fa fa-plus"></i> Add</span>
                 </a>
             </div>
         </div>

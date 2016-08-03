@@ -3,17 +3,20 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.TokenAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.*;
+import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
-
+import net.hawkengine.model.payload.Permission;
+import net.hawkengine.model.payload.TokenInfo;
+import net.hawkengine.services.UserGroupService;
+import net.hawkengine.services.filters.factories.SecurityServiceInvoker;
+import net.hawkengine.services.interfaces.IUserGroupService;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -23,11 +26,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class WsEndpoint extends WebSocketAdapter {
     static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
     private Gson jsonConverter;
     private UUID id;
+    private SecurityServiceInvoker securityServiceInvoker;
+    private User loggedUser;
+    private IUserGroupService userGroupService;
 
     public WsEndpoint() {
         this.id = UUID.randomUUID();
@@ -36,6 +43,8 @@ public class WsEndpoint extends WebSocketAdapter {
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
+        this.securityServiceInvoker = new SecurityServiceInvoker();
+        this.userGroupService = new UserGroupService();
     }
 
     public UUID getId() {
@@ -51,12 +60,32 @@ public class WsEndpoint extends WebSocketAdapter {
         super.onWebSocketConnect(session);
         System.out.println("Socket Connected: " + session);
         EndpointConnector.setWsEndpoint(this);
+
+        String tokenQuery = session.getUpgradeRequest().getQueryString();
+
+        if (!tokenQuery.equals("token=null")) {
+            String token = tokenQuery.substring(6);
+
+            TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
+            this.loggedUser = tokenInfo.getUser();
+
+            UserDto userDto = new UserDto();
+            userDto.setUsername(tokenInfo.getUser().getEmail());
+            userDto.setPermissions(tokenInfo.getUser().getPermissions());
+
+            ServiceResult serviceResult = new ServiceResult();
+            serviceResult.setError(false);
+            serviceResult.setMessage("User details retrieved successfully");
+            serviceResult.setObject(userDto);
+
+            EndpointConnector.passResultToEndpoint("UserInfo", "getUser", serviceResult);
+        }
+
     }
 
     @Override
     public void onWebSocketText(String message) {
         WsContractDto contract = null;
-        Gson serializer = new Gson();
         RemoteEndpoint remoteEndpoint = null;
 
         try {
@@ -66,7 +95,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 contract = new WsContractDto();
                 contract.setError(true);
                 contract.setErrorMessage("Invalid Json was provided");
-                remoteEndpoint.sendString(serializer.toJson(contract));
+                remoteEndpoint.sendString(this.jsonConverter.toJson(contract));
                 return;
             }
 
@@ -83,20 +112,24 @@ public class WsEndpoint extends WebSocketAdapter {
 //                    return;
 //                }
 //            }
+            this.loggedUser.getPermissions().addAll(this.getUniqueUserGroupPermissions(this.loggedUser));
 
-            ServiceResult result = (ServiceResult) this.call(contract);
+            List<Permission> orderedPermissions = this.loggedUser.getPermissions().stream()
+                    .sorted((p1, p2) -> p1.getPermissionScope().compareTo(p2.getPermissionScope())).collect(Collectors.toList());
+
+            ServiceResult result = this.securityServiceInvoker.process(contract, orderedPermissions);
             contract.setResult(result.getObject());
             contract.setError(result.hasError());
             contract.setErrorMessage(result.getMessage());
 
-            String jsonResult = serializer.toJson(contract);
+            String jsonResult = this.jsonConverter.toJson(contract);
             remoteEndpoint.sendStringByFuture(jsonResult);
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
         } catch (RuntimeException e) {
             LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
             e.printStackTrace();
-            this.errorDetails(contract, serializer, e, remoteEndpoint);
+            this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -133,22 +166,6 @@ public class WsEndpoint extends WebSocketAdapter {
         remoteEndpoint.sendStringByFuture(jsonResult);
     }
 
-    public Object call(WsContractDto contract) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        String fullPackageName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
-        Object service = Class.forName(fullPackageName).newInstance();
-        List<Object> methodArgs = new ArrayList<>();
-        int contractArgsLength = contract.getArgs().length;
-        for (int i = 0; i < contractArgsLength; i++) {
-            if (contract.getArgs()[i] != null) {
-                Class objectClass = Class.forName(contract.getArgs()[i].getPackageName());
-                Object object = this.jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);
-                methodArgs.add(object);
-            }
-        }
-
-        Command command = new Command(service, contract.getMethodName(), methodArgs);
-        return command.execute();
-    }
 
     private void errorDetails(WsContractDto contract, Gson serializer, Exception e, RemoteEndpoint endPoint) {
         contract.setError(true);
@@ -159,5 +176,45 @@ public class WsEndpoint extends WebSocketAdapter {
         } catch (IOException | RuntimeException e1) {
             e1.printStackTrace();
         }
+    }
+
+    private List<Permission> getUniqueUserGroupPermissions(User user) {
+        List<Permission> userGroupPermissions = new ArrayList<>();
+        String userId = user.getId();
+        List<String> userGroupIds = user.getUserGroupIds();
+
+        for (String userGroupId : userGroupIds) {
+            UserGroup userGroup = (UserGroup) this.userGroupService.getById(userGroupId).getObject();
+            List<String> userIds = userGroup.getUserIds();
+            boolean isPresent = false;
+
+            for (String userWithinGroupId : userIds) {
+                if (userWithinGroupId.equals(userId)) {
+                    isPresent = true;
+                    break;
+                }
+            }
+            if (isPresent) {
+                List<Permission> userGroupPermissionsFromDb = userGroup.getPermissions();
+
+                for (Permission userGroupPermissionFromDb: userGroupPermissionsFromDb) {
+                    boolean isPermissionPresent = false;
+                    for (Permission userPersmission:user.getPermissions()){
+                        if (userGroupPermissionFromDb.getPermissionScope() == userPersmission.getPermissionScope() &&
+                                userGroupPermissionFromDb.getPermittedEntityId().equals(userPersmission.getPermittedEntityId()) &&
+                                userGroupPermissionFromDb.getPermissionType() == userPersmission.getPermissionType()){
+                            isPermissionPresent = true;
+                            break;
+                        }
+                    }
+                    if (!isPermissionPresent){
+                        userGroupPermissions.add(userGroupPermissionFromDb);
+                    }
+                }
+            }
+        }
+
+
+        return userGroupPermissions;
     }
 }

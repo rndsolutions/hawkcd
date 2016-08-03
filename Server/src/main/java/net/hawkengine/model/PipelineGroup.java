@@ -7,6 +7,10 @@ public class PipelineGroup extends DbEntry {
     private String name;
     private List<PipelineDefinition> pipelines;
 
+    public PipelineGroup(){
+        this.setPipelines(new ArrayList<>());
+    }
+
     public String getName() {
         return this.name;
     }
