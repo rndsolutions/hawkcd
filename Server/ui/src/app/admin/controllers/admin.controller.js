@@ -53,6 +53,12 @@ angular
                     delete: 'Confirm',
                     cancel: 'Cancel'
                 },
+                deleteUserModal:{
+                    header: 'Delete User',
+                    confirm: 'Are you sure you want to delete User: ',
+                    delete: 'Confirm',
+                    cancel: 'Cancel'
+                },
                 deleteGroupModal: {
                     header: 'Delete Pipeline Group',
                     confirm: 'Are you sure you want to delete Group: '
@@ -101,12 +107,6 @@ angular
             vm.state = $state;
             console.log($state.current);
 
-            vm.newUser = {};
-
-            vm.close = function() {
-                vm.newUser = {};
-            };
-
             vm.currentPipelineGroups = [];
 
             vm.currentMaterials = [];
@@ -136,6 +136,8 @@ angular
             vm.userGroups = [];
 
             vm.users = [];
+
+            vm.newUser = {};
 
             vm.allPipelines = [];
 
@@ -223,6 +225,14 @@ angular
                 vm.pipelineToUnassign = angular.copy(pipeline);
             };
 
+            vm.addUser = function() {
+                adminService.addUser(vm.newUser);
+            };
+
+            vm.removeUser = function() {
+                adminService.deleteUser(vm.selectedUser.id);
+            };
+
             vm.assignPipeline = function(pipeline) {
                 var updatedPipeline = angular.copy(pipeline);
                 var pipelineGroupId = vm.pipelineGroupToAssign.id;
@@ -252,6 +262,7 @@ angular
                 vm.toggleUnassignedPipeline = null;
                 vm.selectedUserGroup = null;
                 vm.selectedUser = null;
+                vm.newUser = {};
                 vm.clearSelection();
             };
 

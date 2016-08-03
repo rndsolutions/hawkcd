@@ -295,4 +295,24 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
         return this.result;
     }
+
+    @Override
+    public ServiceResult addUserWithoutProvider(WsContractDto contract, List<Permission> permissions) {
+        try {
+        this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+        String entity = contract.getArgs()[0].getObject();
+        boolean hasPermission = this.authorizationService.add(entity, permissions);
+        if(hasPermission) {
+            User userToAdd = this.jsonConverter.fromJson(entity, User.class);
+            entity = this.jsonConverter.toJson(userToAdd);
+            contract.getArgs()[0].setObject(entity);
+
+            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+        }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return this.result;
+    }
 }

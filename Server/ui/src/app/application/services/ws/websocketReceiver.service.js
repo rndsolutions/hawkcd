@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'pipeConfigService',
-        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, pipeConfigService) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService',
+        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function (data) {
@@ -32,11 +32,19 @@ angular
                     getAll: function (object) {
                         viewModelUpdater.getUsers(object.result);
                     },
-                    add: function (object) {
+                    addUserWithoutProvider: function (object) {
                         viewModelUpdater.addUser(object.result);
                     },
                     update: function (object) {
                         viewModelUpdater.updateUser(object.result);
+                    },
+                    delete: function (object) {
+                        if (object.error == false) {
+                            adminService.getAllUsers();
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
                     }
                 },
                 UserGroupService: {

@@ -10,6 +10,10 @@ angular
             console.log(user);
         };
 
+        viewModelUpdater.addUser = function (user) {
+            viewModel.users.push(user);
+        };
+
         viewModelUpdater.updateUser = function (user) {
             viewModel.users.forEach(function (currentUser, userIndex, userArray) {
                 if(currentUser.id == user.id){

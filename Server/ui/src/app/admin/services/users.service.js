@@ -41,6 +41,18 @@ angular
             console.log(json);
         };
 
+        adminService.addUser = function(user) {
+            var methodName = "addUserWithoutProvider";
+            var className = "UserService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         adminService.addUserGroup = function (userGroup) {
             var methodName = "add";
             var className = "UserGroupService";
@@ -59,6 +71,18 @@ angular
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminService.deleteUser = function (id) {
+            var methodName = "delete";
+            var className = "UserService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

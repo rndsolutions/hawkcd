@@ -30,7 +30,7 @@
                     <a data-target="#manageUser" data-toggle="modal" class="btn btn-default" ng-click="admin.selectUser($index)"> Manage </a>
                 </td>
                 <td>
-
+                    <a data-target="#removeUser" data-toggle="modal" class="btn btn-danger" ng-click="admin.selectUser($index)"> Remove </a>
                 </td>
             </tr>
             </tbody>
@@ -42,4 +42,4 @@
 <div ng-include src="'app/admin/views/partials/_assignUsers.html'"></div>
 <div ng-include src="'app/admin/views/partials/_add-userGroup.html'"></div>
 <div ng-include src="'app/admin/views/partials/_manageUser.html'"></div>
-<div ng-include src="'app/admin/views/partials/_delete-user.html'"></div>
+<div ng-include src="'app/admin/views/partials/_removeUser.html'"></div>

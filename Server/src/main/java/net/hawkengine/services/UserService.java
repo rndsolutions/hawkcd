@@ -75,6 +75,8 @@ public class UserService extends CrudService<User> implements IUserService {
                 .findFirst()
                 .orElse(null);
 
+        user.setPassword(user.getPassword());
+
         if (userFromDb == null) {
             this.add(user);
             return super.createServiceResult(user, false, "created successfully");
