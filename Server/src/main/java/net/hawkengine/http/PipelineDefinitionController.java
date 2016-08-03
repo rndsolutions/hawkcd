@@ -5,6 +5,7 @@ import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.Security.Secured;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,9 +15,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 @Consumes("application/json")
 @Produces("application/json")
@@ -24,6 +27,9 @@ import javax.ws.rs.core.Response.Status;
 public class PipelineDefinitionController {
     private IPipelineDefinitionService pipelineDefinitionService;
     private SchemaValidator schemaValidator;
+
+    @Context
+    SecurityContext securityContext;
 
     public PipelineDefinitionController() {
         this.pipelineDefinitionService = new PipelineDefinitionService();
@@ -35,6 +41,7 @@ public class PipelineDefinitionController {
         this.schemaValidator = new SchemaValidator();
     }
 
+    @Secured
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPipelineDefinitions() {
