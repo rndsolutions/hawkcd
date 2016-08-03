@@ -43,9 +43,8 @@ angular
                 return;
             }
             var result = {};
-            var runDate = pipelineRun.endTime.date;
-            var runEndTime = pipelineRun.endTime.time;
-            var delta = moment([runDate.year, (runDate.month - 1), runDate.day, runEndTime.hour, runEndTime.minute, runEndTime.second]);
+            var runEndTime = pipelineRun.endTime;
+            var delta = moment(runEndTime);
             var now = moment();
             var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
             result.output = diff + " ago";
