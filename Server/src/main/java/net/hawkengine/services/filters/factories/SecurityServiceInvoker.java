@@ -32,10 +32,10 @@ public class SecurityServiceInvoker {
                 return this.securityService.update(contract, permissions);
             case "delete":
                 return this.securityService.delete(contract, permissions);
-            case "assignUsersToGroup":
-                return this.securityService.assignUsersToGroup(contract, permissions);
-            case "unassignUsersFromGroup":
-                return this.securityService.unassignUsersFromGroup(contract, permissions);
+            case "assignUserToGroup":
+                return this.securityService.assignUserToGroup(contract, permissions);
+            case "unassignUserFromGroup":
+                return this.securityService.unassignUserFromGroup(contract, permissions);
             case "getAllUserGroups":
                 return this.securityService.getAllUserGroups(contract, permissions);
             case "assignPipeleineToGroup":
