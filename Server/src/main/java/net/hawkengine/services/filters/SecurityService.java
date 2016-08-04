@@ -191,7 +191,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult addUserToGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult assignUsersToGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
@@ -218,7 +218,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult removeUserFromGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult unassignUsersFromGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
