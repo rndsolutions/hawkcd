@@ -22,6 +22,7 @@ import net.hawkengine.ws.WsEndpoint;
 import net.hawkengine.ws.WsObjectProcessor;
 import org.apache.log4j.Logger;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -191,21 +192,14 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult assignUsersToGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult assignUserToGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
-
-
-            //TODO: See why there are aditional quotes
-            String groupId = group.substring(1, group.length() - 1);
-
-            boolean hasPermission = this.authorizationService.getById(groupId, permissions);
+            UserGroup userGroup = this.jsonConverter.fromJson(group, UserGroup.class);
+            boolean hasPermission = this.authorizationService.getById(userGroup.getId(), permissions);
             if (hasPermission){
-                UserGroup userGroup = (UserGroup)this.userGroupService.getById(groupId).getObject();
-                String userGroupAsString = jsonConverter.toJson(userGroup);
-
-                hasPermission = this.authorizationService.update(userGroupAsString, permissions);
+                hasPermission = this.authorizationService.update(group, permissions);
                 if (hasPermission) {
                     this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
                 }
@@ -218,21 +212,14 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult unassignUsersFromGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult unassignUserFromGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
-
-
-            //TODO: See why there are aditional quotes
-            String groupId = group.substring(1, group.length() - 1);
-
-            boolean hasPermission = this.authorizationService.getById(groupId, permissions);
+            UserGroup userGroup = this.jsonConverter.fromJson(group, UserGroup.class);
+            boolean hasPermission = this.authorizationService.getById(userGroup.getId(), permissions);
             if (hasPermission) {
-                UserGroup userGroup = (UserGroup) this.userGroupService.getById(groupId).getObject();
-                String userGroupAsString = jsonConverter.toJson(userGroup);
-
-                hasPermission = this.authorizationService.update(userGroupAsString, permissions);
+                hasPermission = this.authorizationService.update(group, permissions);
                 if (hasPermission) {
                     this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
                 }
