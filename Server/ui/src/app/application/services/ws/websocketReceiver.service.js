@@ -101,6 +101,8 @@ angular
                     },
                     update: function (object) {
                         viewModelUpdater.updatePipelineDefinition(object.result);
+                        pipeConfigService.getAllPipelineGroupDTOs();
+                        pipeConfigService.getAllPipelineDefinitions();
                     },
                     delete: function (object) {
                         if (object.error == false) {

@@ -67,6 +67,45 @@ angular
 
         viewModelUpdater.getAllPipelineDefinitions = function (pipelineDefinitions){
             viewModel.allPipelines = pipelineDefinitions;
+            var isFound = false;
+            viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                if(currentPipeline.pipelineGroupId == ''){
+                    viewModel.unassignedPipelines.forEach(function (currentUnassignedPipeline, unassignedPipelineIndex, unassignedPipelineArray) {
+                        if(currentPipeline.id == currentUnassignedPipeline.id) {
+                            viewModel.unassignedPipelines[unassignedPipelineIndex] = currentPipeline;
+                            isFound = true;
+                        }
+                    });
+                    if(!isFound) {
+                        viewModel.unassignedPipelines.push(currentPipeline);
+                        isFound = false;
+                    }
+                    viewModel.assignedPipelines.forEach(function (currentAssignedPipeline, assignedPipelineIndex, assignedPipelineArray) {
+                        if(currentPipeline.id == currentAssignedPipeline.id) {
+                            viewModel.assignedPipelines.splice(assignedPipelineIndex);
+                        }
+                    });
+                    isFound = false;
+                } else {
+                    viewModel.assignedPipelines.forEach(function (currentAssignedPipeline, assignedPipelineIndex, assignedPipelineArray) {
+                        if(currentPipeline.id == currentAssignedPipeline.id) {
+                            viewModel.assignedPipelines[assignedPipelineIndex] = currentPipeline;
+                            isFound = true;
+                        }
+                    });
+                    if(!isFound){
+                        viewModel.assignedPipelines.push(currentPipeline);
+                        isFound = false;
+                    }
+                    viewModel.unassignedPipelines.forEach(function (currentUnassignedPipeline, unAssignedPipelineIndex, unAssignedPipelineArray) {
+                        if(currentPipeline.id == currentUnassignedPipeline.id) {
+                            viewModel.unassignedPipelines.splice(unAssignedPipelineIndex);
+                        }
+                    });
+                    isFound = false;
+                }
+            });
+            isFound = false;
             toaster.pop('success', "Notification", "Pipelines updated!");
         };
 
@@ -80,8 +119,10 @@ angular
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroupDTO, index, array) {
                 if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId){
                     array[index].pipelines.push(pipelineDefinition);
-                    viewModel.allPipelines.push(pipelineDefinition);
+                    viewModel.assignedPipelines.push(pipelineDefinition);
                     toaster.pop('success', "Notification", "Pipeline Definition " + pipelineDefinition.name + " added!")
+                } else if (pipelineDefinition.pipelineGroupId == '') {
+                    viewModel.unassignedPipelines.push(pipelineDefinition);
                 }
             });
         };
@@ -102,19 +143,13 @@ angular
                         }
                     });
                 }
+
             });
         };
 
         viewModelUpdater.getAllMaterialDefinitions = function (materialDefinitions) {
             //viewModel.allMaterials = materialDefinitions;
-            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
-                materialDefinitions.forEach(function (currentMaterial, materialIndex, materialArray) {
-                    if(currentPipeline.id == currentMaterial.pipelineDefinitionId){
-                        viewModel.allPipelines[index].materialDefinitions = materialDefinitions;
-                    }
-                });
-            });
-            //viewModel.allMaterialDefinitions = materialDefinitions;
+            viewModel.allMaterialDefinitions = materialDefinitions;
             toaster.pop('success', "Notification", "Materials updated!");
         };
 

@@ -11,7 +11,11 @@ angular
 
         viewModel.allPipelines = [];
 
-        //viewModel.allMaterials = [];
+        viewModel.assignedPipelines = [];
+
+        viewModel.unassignedPipelines = [];
+
+        viewModel.allMaterials = [];
 
         viewModel.allMaterialDefinitions = [];
 

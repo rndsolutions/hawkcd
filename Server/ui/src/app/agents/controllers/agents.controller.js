@@ -3,7 +3,7 @@
 angular
     .module('hawk.agentsManagement')
     // add DTOptionsBuilder, DTColumnDefBuilder to func
-    .controller('AgentsController', function($rootScope, $scope, $interval, pipeStats, pipeExec, pipeConfig, agentService, websocketReceiverService, authDataService, viewModel) {
+    .controller('AgentsController', function ($rootScope, $scope, $interval, pipeStats, pipeExec, pipeConfig, agentService, websocketReceiverService, authDataService, viewModel) {
         var vm = this;
         vm.agentToDelete = {};
 
@@ -40,76 +40,57 @@ angular
             resource: "Edit Resources"
         };
 
-        vm.popOverOptions = {
-            popOverTitles: {
-                agent: 'Agent Name',
-                sandbox:'The Install location of the agent on the server',
-                os: 'The Operation System the agent is running on',
-                ipAddress: 'The Server IP',
-                resources: 'The resource tags used by the server to distribute jobs',
-                actions: 'Actions'
-            },
-          placements:{
-            top:'top'
-          },
-          triggers:{
-            click:'click'
-          }
-        };
-
         vm.currentAgents = [];
 
         vm.currentAgents = viewModel.allAgents;
 
-        $scope.$watchCollection(function() {
-            return viewModel.allAgents
-        }, function(newVal, oldVal) {
+        $scope.$watchCollection(function () { return viewModel.allAgents }, function (newVal, oldVal) {
             vm.currentAgents = viewModel.allAgents;
-            vm.currentAgents.forEach(function(currentAgent, agentIndex, agentArray) {
-                if (currentAgent.isRunning == false) {
+            vm.currentAgents.forEach(function (currentAgent, agentIndex, agentArray) {
+                if(currentAgent.isRunning == false){
                     vm.currentAgents[agentIndex].status = "Idle";
-                } else if (currentAgent.isRunning == true) {
+                } else if(currentAgent.isRunning == true) {
                     vm.currentAgents[agentIndex].status = "Running";
                 }
             });
             console.log(vm.currentAgents);
         });
 
-        vm.setAgentToDelete = function(agent) {
+        vm.setAgentToDelete = function (agent) {
             vm.agentToDelete = agent;
         };
 
-        vm.setAgentToAddResource = function(agent) {
+        vm.setAgentToAddResource = function (agent) {
             vm.currentAgentResources = [];
-            agent.resources.forEach(function(currentResource, index, array) {
+            agent.resources.forEach(function (currentResource, index, array) {
                 vm.currentAgentResources.push(currentResource);
             });
 
             vm.agentToAddResource = angular.copy(agent);
         };
 
-        vm.addInputResource = function() {
+        vm.addInputResource = function () {
             vm.agentToAddResource.resources = vm.currentAgentResources;
             agentService.update(vm.agentToAddResource)
         };
 
-        vm.removeLastResource = function() {
+        vm.removeLastResource = function () {
             vm.currentAgentResources.pop();
         };
 
-        vm.delete = function(id) {
+        vm.delete = function (id) {
             agentService.deleteAgent(id);
         };
 
-        vm.addResourceInput = function() {
+        vm.addResourceInput = function () {
             vm.currentAgentResources.push("Resource " + (vm.currentAgentResources.length + 1));
         };
 
-        vm.discardResources = function() {
+        vm.discardResources = function () {
             vm.currentAgentResources = vm.agentToAddResource.resources;
         };
 
-        vm.changeAgentStatus = function(agent) {
+        vm.changeAgentStatus = function (agent) {
             var newAgent;
             if (agent.isEnabled == false) {
                 newAgent = JSON.parse(JSON.stringify(agent));
@@ -314,11 +295,11 @@ angular
         // });
 
         //Reloads the data at a given interval. Parameter is false, because it is not the initial loading
-        var intervalAgents = $interval(function() {
+        var intervalAgents = $interval(function () {
             //vm.getAllAgents();
         }, 4000);
 
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
             $interval.cancel(intervalAgents);
             intervalAgents = undefined;
         });
