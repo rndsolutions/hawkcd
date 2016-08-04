@@ -26,11 +26,21 @@
                 <td>
                     {{user.registeredOn}}
                 </td>
-                <td>
-                    <a data-target="#manageUser" data-toggle="modal" class="btn btn-default" ng-click="admin.selectUser($index)"> Manage </a>
+                <td class="text-center">
+                    <a data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
                 </td>
-                <td>
-                    <a data-target="#removeUser" data-toggle="modal" class="btn btn-danger" ng-click="admin.selectUser($index)"> Remove </a>
+                <td class="text-center">
+                    <!--<span class="custom-hover">-->
+                    <!--<i data-target="#removeUser" data-toggle="modal" class="fa fa-trash" ng-click="admin.selectUser($index)"></i>-->
+                    <!--</span>-->
+                    <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate">
+                        <div class="bootstrap-switch-container">
+                            <span class="bootstrap-switch-handle-on bootstrap-switch-primary">Enabled</span>
+                            <span class="bootstrap-switch-label"></span>
+                            <span class="bootstrap-switch-handle-off bootstrap-switch-default">Disabled</span>
+                            <input type="checkbox" id="user-checkbox" class="make-switch" data-on-text="Enabled" data-off-text="Disabled">
+                        </div>
+                    </div>
                 </td>
             </tr>
             </tbody>

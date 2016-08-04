@@ -22,6 +22,16 @@ angular
             });
         };
 
+        viewModelUpdater.updateUsers = function (users) {
+            viewModel.users.forEach(function (currentUser, userIndex, userArray) {
+                users.forEach(function (currentUpdatedUser, updatedUserIndex, updatedUserArray) {
+                    if(currentUser.id == currentUpdatedUser.id) {
+                        viewModel.users[userIndex] = users[updatedUserIndex];
+                    }
+                });
+            });
+        };
+
         viewModelUpdater.getPermissions = function (permissions) {
             viewModel.allPermissions = permissions;
         };

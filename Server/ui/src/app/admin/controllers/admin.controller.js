@@ -135,7 +135,7 @@ angular
 
             vm.userGroups = [];
 
-            vm.users = [];
+            vm.users = viewModel.users;
 
             vm.newUser = {};
 
@@ -244,6 +244,18 @@ angular
                 pipeConfigService.unassignPipelineDefinition(updatedPipeline);
             };
 
+            vm.assignUsers = function() {
+                var usersToAssign = [];
+                vm.users.forEach(function (currentUser, userIndex, userArray) {
+                    if(currentUser.isAssigned){
+                        usersToAssign.push(currentUser);
+                    }
+                });
+                debugger;
+                adminService.assignUsers(usersToAssign, vm.selectedUserGroup);
+                vm.close();
+            };
+
             vm.setPipelineGroupToAssign = function(pipelineGroup) {
                 vm.pipelineGroupToAssign = pipelineGroup;
             };
@@ -268,7 +280,7 @@ angular
 
             vm.currentPipelineGroups = viewModel.allPipelineGroups;
 
-            $scope.sortingOrder = 'name';
+            $scope.sortingOrder = 'email';
             $scope.pageSizes = [5,10,25,50];
             $scope.reverse = false;
             $scope.filteredItems = [];
@@ -277,7 +289,7 @@ angular
             $scope.pagedItems = [];
             $scope.currentPage = 0;
             vm.query = "";
-            $scope.items = vm.currentPipelineGroups;
+            $scope.items = vm.users;
 
 
             $(document).ready(function() {
@@ -321,6 +333,14 @@ angular
                 vm.selectedUser = null;
             };
 
+            $(window).load(function () {
+                $('#user-checkbox').bootstrapSwitch();
+            });
+
+            $('#user-checkbox').on('switchChange.bootstrapSwitch', function (event, state) {
+                console.log(state);
+            });
+
             var searchMatch = function (haystack, needle) {
                 if (!needle) {
                     return true;
@@ -331,7 +351,7 @@ angular
 
             $scope.search = function () {
                 $scope.filteredItems = $filter('filter')($scope.items, function (item) {
-                    if (searchMatch(item["name"], vm.query))
+                    if (searchMatch(item["email"], vm.query))
                     {
                         return true;
                     }

@@ -19,12 +19,12 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="item in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                        <td>{{item.name}}</td>
+                        <td>{{item.email}}</td>
                         <td>
                             <div class="md-checkbox text-center">
-                                <input type="checkbox" id="assign" class="md-check"
+                                <input type="checkbox" id="assign{{$index}}" class="md-check"
                                        ng-model="item.isAssigned">
-                                <label for="assign">
+                                <label for="assign{{$index}}">
                                     <span></span>
                                     <span class="check"></span>
                                     <span class="box"></span></label>

@@ -89,6 +89,19 @@ angular
             console.log(json);
         };
 
+        adminService.assignUsers = function (users, groupId) {
+            var methodName = "assignUsersToGroup";
+            var className = "UserService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(users) + "}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": " + groupId + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         // var usersEndPoint = CONSTANTS.BASE_URL + CONSTANTS.ACCOUNT + CONSTANTS.USERS + '/';
         // var registerEndPoint = CONSTANTS.BASE_URL + CONSTANTS.ACCOUNT + '/Register';
         //
