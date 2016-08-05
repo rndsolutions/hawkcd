@@ -9,6 +9,7 @@ import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.services.interfaces.IUserService;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,8 +74,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public ServiceResult assignUsersToGroup(List<User> users, UserGroup userGroup) {
-        for (User user:users) {
+    public ServiceResult assignUserToGroup(User user, UserGroup userGroup) {
             userGroup.getUserIds().add(user.getId());
 
             user.getUserGroupIds().add(userGroup.getId());
@@ -84,15 +84,14 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
                 return updateUserServiceResult;
             }
-        }
 
         return this.update(userGroup);
     }
 
     @Override
-    public ServiceResult unassignUsersFromGroup(List<User> users, UserGroup userGroup) {
+    public ServiceResult unassignUserFromGroup(User user, UserGroup userGroup) {
         List<String> userIds = userGroup.getUserIds();
-        for (User user:users) {
+
             for (Iterator<String> iter = userIds.listIterator(); iter.hasNext(); ) {
                 String currentUserId = iter.next();
                 if (currentUserId.equals(user.getId())) {
@@ -116,7 +115,6 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
                 return updateUserServiceResult;
             }
 
-        }
 
         userGroup.setUserIds(userIds);
 

@@ -650,7 +650,7 @@ public class SecurityServiceTests {
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserGroupService");
         contract.setPackageName("net.hawkengine.services");
-        contract.setMethodName("assignUsersToGroup");
+        contract.setMethodName("assignUserToGroup");
         contract.setResult("");
         contract.setError(false);
         contract.setErrorMessage("");
@@ -672,7 +672,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.assignUsersToGroup(contract, this.createPermissions());
+        ServiceResult actualServiceResult = this.securityService.assignUserToGroup(contract, this.createPermissions());
 
         //Assert
         Assert.assertFalse(actualServiceResult.hasError());
@@ -700,7 +700,7 @@ public class SecurityServiceTests {
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserGroupService");
         contract.setPackageName("net.hawkengine.services");
-        contract.setMethodName("assignUsersToGroup");
+        contract.setMethodName("assignUserToGroup");
         contract.setResult("");
         contract.setError(false);
         contract.setErrorMessage("");
@@ -724,7 +724,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.assignUsersToGroup(contract, permissions);
+        ServiceResult actualServiceResult = this.securityService.assignUserToGroup(contract, permissions);
 
         //Assert
         Assert.assertTrue(actualServiceResult.hasError());
@@ -777,7 +777,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.unassignUsersFromGroup(contract, this.createPermissions());
+        ServiceResult actualServiceResult = this.securityService.unassignUserFromGroup(contract, this.createPermissions());
 
         //Assert
         Assert.assertFalse(actualServiceResult.hasError());
@@ -832,7 +832,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.unassignUsersFromGroup(contract, permissions);
+        ServiceResult actualServiceResult = this.securityService.unassignUserFromGroup(contract, permissions);
 
         //Assert
         Assert.assertTrue(actualServiceResult.hasError());

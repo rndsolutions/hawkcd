@@ -22,6 +22,7 @@ import net.hawkengine.ws.WsEndpoint;
 import net.hawkengine.ws.WsObjectProcessor;
 import org.apache.log4j.Logger;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -191,21 +192,14 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult assignUsersToGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult assignUserToGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
-
-
-            //TODO: See why there are aditional quotes
-            String groupId = group.substring(1, group.length() - 1);
-
-            boolean hasPermission = this.authorizationService.getById(groupId, permissions);
+            UserGroup userGroup = this.jsonConverter.fromJson(group, UserGroup.class);
+            boolean hasPermission = this.authorizationService.getById(userGroup.getId(), permissions);
             if (hasPermission){
-                UserGroup userGroup = (UserGroup)this.userGroupService.getById(groupId).getObject();
-                String userGroupAsString = jsonConverter.toJson(userGroup);
-
-                hasPermission = this.authorizationService.update(userGroupAsString, permissions);
+                hasPermission = this.authorizationService.update(group, permissions);
                 if (hasPermission) {
                     this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
                 }
@@ -218,21 +212,14 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult unassignUsersFromGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult unassignUserFromGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
-
-
-            //TODO: See why there are aditional quotes
-            String groupId = group.substring(1, group.length() - 1);
-
-            boolean hasPermission = this.authorizationService.getById(groupId, permissions);
+            UserGroup userGroup = this.jsonConverter.fromJson(group, UserGroup.class);
+            boolean hasPermission = this.authorizationService.getById(userGroup.getId(), permissions);
             if (hasPermission) {
-                UserGroup userGroup = (UserGroup) this.userGroupService.getById(groupId).getObject();
-                String userGroupAsString = jsonConverter.toJson(userGroup);
-
-                hasPermission = this.authorizationService.update(userGroupAsString, permissions);
+                hasPermission = this.authorizationService.update(group, permissions);
                 if (hasPermission) {
                     this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
                 }
@@ -260,29 +247,27 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     @Override
     public ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions) {
-        this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
-        String entity = contract.getArgs()[0].getObject();
-        PipelineDefinition pipelineDefinitionToUpdate = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
-        boolean hasPermission = this.authorizationService.update(entity, permissions);
-        if (hasPermission) {
-            entity = contract.getArgs()[1].getObject().substring(1, contract.getArgs()[1].getObject().length() - 1);
-            this.authorizationService = AuthorizationServiceFactory.create("PipelineGroupService");
-            hasPermission = this.authorizationService.delete(entity, permissions);
+        try {
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
+            String pipelineDefinitionAsString = contract.getArgs()[0].getObject();
+            boolean hasPermission = this.authorizationService.update(pipelineDefinitionAsString, permissions);
             if (hasPermission) {
-                PipelineGroup pipelineGroup = (PipelineGroup) this.pipelineGroupService.getById(entity).getObject();
-                pipelineDefinitionToUpdate.setPipelineGroupId(pipelineGroup.getId());
-                pipelineDefinitionToUpdate.setGroupName(pipelineGroup.getName());
-                entity = this.jsonConverter.toJson(pipelineDefinitionToUpdate);
-                ConversionObject conversionObject = new ConversionObject();
-                contract.setArgs(new ConversionObject[]{conversionObject});
-                contract.getArgs()[0].setObject(entity);
-                contract.getArgs()[0].setPackageName("net.hawkengine.model.PipelineDefinition");
-                return this.update(contract, permissions);
+                String pipelineGroupAsString = contract.getArgs()[1].getObject();
+                this.authorizationService = AuthorizationServiceFactory.create("PipelineGroupService");
+                hasPermission = this.authorizationService.update(pipelineGroupAsString, permissions);
+                if (hasPermission) {
+                    this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                    return this.result;
+                }
             }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            LOGGER.error(e.getMessage());
         }
         this.result.setError(true);
         this.result.setObject(null);
         this.result.setMessage("Unauthorized");
+
         return this.result;
     }
 
@@ -290,19 +275,19 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     public ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
-            String entity = contract.getArgs()[0].getObject();
-            boolean hasPermission = this.authorizationService.update(entity, permissions);
+            String pipelineGroupAsString = contract.getArgs()[0].getObject();
+            boolean hasPermission = this.authorizationService.update(pipelineGroupAsString, permissions);
             if (hasPermission) {
-                PipelineDefinition pipelineDefinitionToUpdate = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
-                pipelineDefinitionToUpdate.setPipelineGroupId("");
-                pipelineDefinitionToUpdate.setGroupName("");
-                entity = this.jsonConverter.toJson(pipelineDefinitionToUpdate);
-                contract.getArgs()[0].setObject(entity);
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                return this.result;
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setObject(null);
+        this.result.setMessage("Unauthorized");
 
         return this.result;
     }

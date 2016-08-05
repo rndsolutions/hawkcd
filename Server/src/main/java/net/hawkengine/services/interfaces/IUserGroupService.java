@@ -7,9 +7,9 @@ import net.hawkengine.model.UserGroup;
 import java.util.List;
 
 public interface IUserGroupService extends ICrudService<UserGroup>{
-    ServiceResult assignUsersToGroup(List<User> users, UserGroup userGroup);
+    ServiceResult assignUserToGroup(User user, UserGroup userGroup);
 
-    ServiceResult unassignUsersFromGroup(List<User> users, UserGroup userGroup);
+    ServiceResult unassignUserFromGroup(User user, UserGroup userGroup);
 
     ServiceResult getAllUserGroups();
 }

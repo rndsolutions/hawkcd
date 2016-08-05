@@ -80,11 +80,17 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition) {
+        pipelineDefinition.setPipelineGroupId("");
+        pipelineDefinition.setGroupName("");
+
         return this.update(pipelineDefinition);
     }
 
     @Override
-    public ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition) {
+    public ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition, PipelineGroup pipelineGroup) {
+        pipelineDefinition.setPipelineGroupId(pipelineGroup.getId());
+        pipelineDefinition.setGroupName(pipelineGroup.getName());
+
         return this.update(pipelineDefinition);
     }
 
