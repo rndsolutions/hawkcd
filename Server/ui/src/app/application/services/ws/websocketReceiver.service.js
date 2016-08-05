@@ -46,7 +46,7 @@ angular
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    assignUsersToGroup: function (object) {
+                    assignUserToGroup: function (object) {
                         viewModelUpdater.updateUsers(object.result);
                         adminService.getAllUserGroupDTOs();
                     }

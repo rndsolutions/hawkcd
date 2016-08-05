@@ -623,3 +623,26 @@ p {
 .custom-footer {
     border-style: none!important;
 }
+
+.custom-hover :hover{
+    cursor:pointer!important;
+}
+
+.custom-hover {
+    display:inline;
+}
+
+.custom-vertical-align {
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    height:35px;
+}
+
+.width-70 {
+    width: 70%;
+}
+
+.td-content {
+    height:20px;
+}

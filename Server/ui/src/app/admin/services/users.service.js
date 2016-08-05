@@ -89,12 +89,12 @@ angular
             console.log(json);
         };
 
-        adminService.assignUsers = function (users, groupId) {
-            var methodName = "assignUsersToGroup";
+        adminService.assignUser = function (user, groupId) {
+            var methodName = "assignUserToGroup";
             var className = "UserService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(users) + "}, " +
+            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
             "{\"packageName\": \"java.lang.String\", \"object\": " + groupId + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);

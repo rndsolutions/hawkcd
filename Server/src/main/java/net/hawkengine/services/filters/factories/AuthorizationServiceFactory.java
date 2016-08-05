@@ -4,29 +4,29 @@ import net.hawkengine.services.filters.*;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 
 public class AuthorizationServiceFactory {
-    private IAuthorizationService authorizationService;
+    private static IAuthorizationService authorizationService;
 
-    public IAuthorizationService create(String service) {
+    public static IAuthorizationService create(String service) {
         switch (service) {
             case "PipelineDefinitionService":
                 //TODO: REFACTOR
-                this.authorizationService = new PipelineDefinitionAuthorizationService();
-                return this.authorizationService;
+                authorizationService = new PipelineDefinitionAuthorizationService();
+                return authorizationService;
             case "AgentService":
-                this.authorizationService = new AgentAuthorizationService();
-                return this.authorizationService;
+                authorizationService = new AgentAuthorizationService();
+                return authorizationService;
             case "PipelineService":
-                this.authorizationService = new PipelineAuthorizationService();
-                return this.authorizationService;
+                authorizationService = new PipelineAuthorizationService();
+                return authorizationService;
             case "PipelineGroupService":
-                this.authorizationService = new PipelineGroupAuthorizationService();
-                return this.authorizationService;
+                authorizationService = new PipelineGroupAuthorizationService();
+                return authorizationService;
             case "UserGroupService":
-                this.authorizationService = new UserGroupAuthorizationService();
-                return this.authorizationService;
+                authorizationService = new UserGroupAuthorizationService();
+                return authorizationService;
             case "UserService":
-                this.authorizationService = new UserAuthorizationService();
-                return this.authorizationService;
+                authorizationService = new UserAuthorizationService();
+                return authorizationService;
             default:
                 return null;
         }

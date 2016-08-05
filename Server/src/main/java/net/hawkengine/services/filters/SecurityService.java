@@ -30,7 +30,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     private WsObjectProcessor wsObjectProcessor;
     private ServiceResult result;
     private IAuthorizationService authorizationService;
-    private AuthorizationServiceFactory authorizationServiceFactory;
     private IUserGroupService userGroupService;
     private Gson jsonConverter;
     private IPipelineDefinitionService pipelineDefinitionService;
@@ -38,7 +37,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     public SecurityService() {
         this.wsObjectProcessor = new WsObjectProcessor();
-        this.authorizationServiceFactory = new AuthorizationServiceFactory();
         this.userGroupService = new UserGroupService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
         this.pipelineGroupService = new PipelineGroupService();
@@ -57,7 +55,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     public SecurityService(WsObjectProcessor wsObjectProcessor, IPipelineDefinitionService pipelineDefinitionService, IUserGroupService userGroupService){
         this.wsObjectProcessor = wsObjectProcessor;
-        this.authorizationServiceFactory = new AuthorizationServiceFactory();
         this.userGroupService = userGroupService;
         this.pipelineDefinitionService = pipelineDefinitionService;
 
@@ -78,7 +75,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         try {
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
             List<T> entitiesToFilter = (List<T>) this.result.getObject();
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
             this.result.setObject(filteredEntities);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -96,10 +93,10 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.result.getObject();
             List<PipelineGroup> filteredPipelineGroups = new ArrayList<>();
             List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             //TODO: REFACTOR THIS PART
             List<PipelineGroup> filteredEntities = (List<PipelineGroup>) this.authorizationService.getAll(permissions, pipelineGroups);
-            this.authorizationService = this.authorizationServiceFactory.create("PipelineDefinitionService");
+            this.authorizationService = AuthorizationServiceFactory.create("PipelineDefinitionService");
             List<T> filteredPipelineDefintions = (List<T>) this.authorizationService.getAll(permissions, pipelineDefinitions);
 
             for (PipelineGroup filteredEntity:filteredEntities) {
@@ -126,7 +123,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult getById(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
 
             //TODO: See why there are aditional quotes
@@ -145,7 +142,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult add(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
             boolean hasPermission = this.authorizationService.add(entity, permissions);
             if (hasPermission) {
@@ -161,7 +158,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult update(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
             boolean hasPermission = this.authorizationService.update(entity, permissions);
             if (hasPermission) {
@@ -177,7 +174,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult delete(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
 
             //TODO: See why there are aditional quotes
@@ -194,9 +191,9 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult addUserToGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult assignUsersToGroup(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
 
 
@@ -221,9 +218,9 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public ServiceResult removeUserFromGroup(WsContractDto contract, List<Permission> permissions) {
+    public ServiceResult unassignUsersFromGroup(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
 
 
@@ -252,7 +249,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         try {
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
             List<T> entitiesToFilter = (List<T>) this.result.getObject();
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
             this.result.setObject(filteredEntities);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -263,13 +260,13 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     @Override
     public ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions) {
-        this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+        this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
         String entity = contract.getArgs()[0].getObject();
         PipelineDefinition pipelineDefinitionToUpdate = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
         boolean hasPermission = this.authorizationService.update(entity, permissions);
         if (hasPermission) {
             entity = contract.getArgs()[1].getObject().substring(1, contract.getArgs()[1].getObject().length() - 1);
-            this.authorizationService = this.authorizationServiceFactory.create("PipelineGroupService");
+            this.authorizationService = AuthorizationServiceFactory.create("PipelineGroupService");
             hasPermission = this.authorizationService.delete(entity, permissions);
             if (hasPermission) {
                 PipelineGroup pipelineGroup = (PipelineGroup) this.pipelineGroupService.getById(entity).getObject();
@@ -292,7 +289,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions) {
         try {
-            this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String entity = contract.getArgs()[0].getObject();
             boolean hasPermission = this.authorizationService.update(entity, permissions);
             if (hasPermission) {
@@ -313,7 +310,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult addUserWithoutProvider(WsContractDto contract, List<Permission> permissions) {
         try {
-        this.authorizationService = this.authorizationServiceFactory.create(contract.getClassName());
+        this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
         String entity = contract.getArgs()[0].getObject();
         boolean hasPermission = this.authorizationService.add(entity, permissions);
         if(hasPermission) {
