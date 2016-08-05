@@ -31,7 +31,7 @@
                 </div>
                 </br>
                 <div class="pull-right">
-                    <button type="button" class="btn btn-xs green" data-target="#assignUser" data-toggle="modal" ng-click="admin.setPipelineGroupToAssign(pipeGroup)">Assign users <i class="fa fa-plus"></i></button>
+                    <button type="button" class="btn btn-xs green" data-target="#assignUser" data-toggle="modal" ng-click="admin.selectUserGroup(admin.userGroups.indexOf(userGroup))">Assign users <i class="fa fa-plus"></i></button>
                     <button type="button" class="btn btn-xs" data-target="#unassignPipeline" data-toggle="modal" ng-class="{'disabled': admin.togglePipeline == null, 'red': admin.togglePipeline != null}" ng-click="admin.selectAssignedPipelineToUnassign(pipeGroup.pipelines[admin.togglePipeline])">
                         Unassign users <i class="fa fa-times"></i>  </button>
                 </div>

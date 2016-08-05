@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <div class="input-group input-group-lg add-on custom-search">
-                <input type="text" class="form-control search-query custom-line-height" ng-model="admin.query" ng-change="search()" placeholder="Search">
+                <input type="text" class="form-control search-query custom-line-height" ng-model="admin.query" ng-change="admin.search()" placeholder="Search">
                     </div>
                 <table id="users" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
@@ -18,12 +18,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="item in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                    <tr ng-repeat="item in admin.pagedItems[admin.currentPage] | orderBy:admin.sortingOrder:reverse">
                         <td>{{item.email}}</td>
                         <td>
                             <div class="md-checkbox text-center">
-                                <input type="checkbox" id="assign{{$index}}" class="md-check"
-                                       ng-model="item.isAssigned">
+                                <input type="checkbox" id="assign{{$index}}" class="md-check" ng-model="item.isAssigned">
                                 <label for="assign{{$index}}">
                                     <span></span>
                                     <span class="check"></span>
