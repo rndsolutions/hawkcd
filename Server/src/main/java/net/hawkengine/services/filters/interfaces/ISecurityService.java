@@ -28,4 +28,6 @@ public interface ISecurityService {
     ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions);
 
     ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult addUserWithoutProvider(WsContractDto contract, List<Permission> permissions);
 }

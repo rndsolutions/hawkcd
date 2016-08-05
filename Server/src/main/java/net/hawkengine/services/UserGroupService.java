@@ -124,11 +124,11 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     public ServiceResult getAllUserGroups() {
         List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getObject();
-        UserGroupDto userGroupDto = new UserGroupDto();
         List<UserGroupDto> userGroupDtos = new ArrayList<>();
 
         for (UserGroup userGroup : userGroups) {
             List<String> userIds = userGroup.getUserIds();
+            UserGroupDto userGroupDto = new UserGroupDto();
             userGroupDto.setId(userGroup.getId());
             userGroupDto.setUserGroupName(userGroup.getName());
 

@@ -1,0 +1,25 @@
+<div id="addNewUserGroup" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.newUserGroup.name=''"></button>
+                <h4 class="modal-title">{{admin.defaultText.addNewUserGroup.newGroup}}</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form role="form" name="addUserGroupForm">
+                        <div class="form-group form-md-line-input text-right">
+                            <div class="form-control-focus custom-focus">
+                                <input type="text" ng-model="admin.newUserGroup.name" class="form-control" placeholder="{{admin.defaultText.addNewUserGroup.input}}" ng-pattern="/^([\w-]+)$/" required>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <button class="btn green" ng-click="admin.addUserGroup()" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.addNewUserGroup.submit}}</button>
+                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.newUserGroup.name=''">{{admin.defaultText.addNewUserGroup.cancel}}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

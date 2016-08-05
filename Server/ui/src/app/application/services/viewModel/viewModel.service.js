@@ -17,6 +17,10 @@ angular
 
         viewModel.allMaterials = [];
 
+        viewModel.userGroups = [];
+
+        viewModel.users = [];
+
         viewModel.allMaterialDefinitions = [];
 
         viewModel.allPipelineGroups = [];
