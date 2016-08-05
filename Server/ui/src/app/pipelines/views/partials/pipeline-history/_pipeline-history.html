@@ -1,4 +1,4 @@
-<div class="portlet light">
+<div class="portlet light portlet-fit">
     <div class="portlet-title">
         <div class="caption">
             <i class=" icon-layers font-green"></i>
@@ -7,92 +7,16 @@
     </div>
     <div class="portlet-body" style="min-height: 508px;">
 
+      <div class="hidden-sm hidden-md hidden-lg" ng-include src="'app/pipelines/views/partials/pipeline-history/_small-devices.html'">
 
-        <div id="row-container" ng-repeat="run in pipesHistory.currentPipelineRuns">
-            <!-- <div class="" style="border:1px solid red;display:inline;margin-left:0;height:20px;">
+      </div>
 
-          </div>
-            <div class="row">
-                <div class="inline-block col-xs-3" style="border: 1px solid black">
+      <div class="hidden-xs hidden-lg" ng-include src="'app/pipelines/views/partials/pipeline-history/_medium-devices.html'">
 
-                    <div class="" style="display:inline;">
-                        #{{run.executionId}} {{run.pipelineDefinitionName}}
-                    </div>
-                </div>
+      </div>
 
-                <div class="inline-block col-xs-6" style="border: 1px solid black">
-                    sadads
-                </div>
+      <div class="hidden-xs hidden-sm hidden-md" ng-include src="'app/pipelines/views/partials/pipeline-history/_large-devices.html'">
 
-                <div class="inline-block col-xs-3" style="border: 1px solid black">
-                    asddsa
-                </div>
-
-            </div> -->
-            <div class="row">
-
-                <div id="first-cell" class="col-xs-3 col-lg-2">
-                    <div class="status-bar" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS'}"></div>
-                    <div class="display-inline">
-                        <h4 id="first-cell-text">#{{run.executionId}} {{run.pipelineDefinitionName}}</h4>
-                    </div>
-
-                </div>
-
-                <div id="second-cell" class="col-xs-6 col-lg-7">
-                    <div class="vertical-line">
-                    </div>
-
-                    <div class="display-inline">
-                        <div class="display-inline">
-                            <span id="history-git-icon">
-                              <i class="fa fa-github-square"></i>
-                            </span>
-                            <span ng-repeat="stage in run.stages">
-                              <div ng-class="{'btn green-jungle':stage.status == 'PASSED','btn red-thunderbird':stage.status == 'FAILED',
-                                              'btn white':stage.status=='NOT_RUN','btn yellow-saffron':stage.status=='IN_PROGRESS','stages-size':true}">{{stage.stageDefinitionName}}</div><div ng-if="$index !== run.stages.length - 1" class="horizontal-line"></div>
-                            </span>
-                        </div>
-
-                        <div id="materials-block" class="">
-                            <span ng-repeat="material in run.materials">
-                          <i class="fa fa-gg"></i>
-                          <a display="block" target="_blank" href="{{material.gitLink}}" class="green-jungle">
-                            <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
-                            <span> {{material.materialDefinition.comments}}</span>
-                            <br/>
-                            </span>
-                        </div>
-                    </div>
-
-
-                </div>
-
-                <div id="third-cell" class="col-xs-3">
-                    <div class="vertical-line">
-                    </div>
-                    <div id="third-cell-container">
-                        <div id="icons" class="display-inline">
-                            <div>
-                                <div class="display-inline"><i class="fa fa-user fa-1x"></i> {{run.materials[0].materialDefinition.authorName}}</div>
-                                <div class="display-inline pull-right"><i class="fa fa-refresh working-icon-right" ng-class="{'fa-spin': run.status == 'IN_PROGRESS'}"></i></div>
-                            </div>
-
-                            <br/>
-                            <div class="display-inline">
-                                <div class="display-inline" ng-model="run.lastPipelineAction.output"><i class="fa fa-calendar fa-1x"></i> {{run.lastPipelineAction.output}}</div>
-                                <div ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId, groupName: run.groupName})" class="fa-item pull-right display-inline">
-                                    <i class="fa fa-list list-icon-right"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-
-        </div>
-
+      </div>
 
     </div>

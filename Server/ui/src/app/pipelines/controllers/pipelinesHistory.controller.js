@@ -34,6 +34,8 @@ angular
 
         vm.allPipelineRuns = viewModel.allPipelineRuns;
 
+        vm.spinIcon = false;
+
         vm.updateClock = function(pipelineRun) {
 
         }
@@ -51,10 +53,10 @@ angular
             return result;
         }
 
-        vm.truncateGitFromUrl = function(repoUrl,commitId) {
+        vm.truncateGitFromUrl = function(repoUrl, commitId) {
             var pattern = '.git';
             var patternLength = pattern.length;
-            var buffer = repoUrl.substr(0,repoUrl.indexOf(pattern));
+            var buffer = repoUrl.substr(0, repoUrl.indexOf(pattern));
             var result = buffer + '/' + 'commit' + '/' + commitId;
             return result;
         }
@@ -68,9 +70,9 @@ angular
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
                     var result = vm.getLastRunAction(currentPipelineRun);
                     currentPipelineRun.lastPipelineAction = result;
-                    currentPipelineRun.materials.forEach(function(currentMaterial,index,array){
-                      var definition = currentMaterial.materialDefinition;
-                        currentMaterial.gitLink = vm.truncateGitFromUrl(definition.repositoryUrl,definition.commitId);
+                    currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {
+                        var definition = currentMaterial.materialDefinition;
+                        currentMaterial.gitLink = vm.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
                     });
 
                     if (currentPipelineRun.triggerReason == null) {

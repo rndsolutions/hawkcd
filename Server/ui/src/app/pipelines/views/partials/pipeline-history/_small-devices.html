@@ -1,0 +1,52 @@
+<div id="runs-container-small" ng-repeat="run in pipesHistory.currentPipelineRuns">
+    <div class="mt-element-list">
+        <div class="mt-list-container list-simple ext-1 group">
+            <a class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded>
+                <div id="header-container" class="list-toggle done">
+                    <div id="header-main" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS'}">
+                        <div id="left-header-container">
+                            <div>
+                                #{{run.executionId}} {{run.pipelineDefinitionName}}
+                            </div>
+                        </div>
+                        <div id="right-header-container">
+                            <div class="user-cell">
+                              <div class="user-info-cell">
+                                <div class="display-inline"><i class="fa fa-user fa-1x"></i> {{run.materials[0].materialDefinition.authorName}}</div>
+                                <div class="display-inline"><i class="fa fa-refresh pull-right" ng-class="{'fa-spin fa-fw': run.status === 'IN_PROGRESS'}"></i></div>
+
+                              </div>
+                                <div class="display-inline">
+                                    <div class="display-inline" ng-model="run.lastPipelineAction.output"><i class="fa fa-calendar fa-1x"></i> {{run.lastPipelineAction.output}}</div>
+                                    <div ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId, groupName: run.groupName})" class="fa-item pull-right list-icon-style">
+                                        <i class="fa fa-list"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+            <div class="panel-collapse collapse in" id="list{{$index}}" aria-expanded>
+                <ul>
+                    <li class="mt-list-item done" style="border:none;">
+                        <span ng-repeat="material in run.materials">
+                        <i class="fa fa-gg"></i>
+                        <a display="block" target="_blank" href="{{material.gitLink}}" class="green-jungle">
+                          <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
+                        <span> {{material.materialDefinition.comments}}</span>
+                        <br/>
+                        </span>
+                    </li>
+                    <li class="mt-list-item done" ng-repeat="stage in run.stages" style="border:none;display:block;margin-top:5px;border-radius:10px;" ng-class="{'btn green-jungle':stage.status == 'PASSED','btn red-thunderbird':stage.status == 'FAILED',
+                                  'btn white':stage.status=='NOT_RUN','btn yellow-saffron':stage.status=='IN_PROGRESS','stages-size':true}">{{stage.stageDefinitionName}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+
+</div>
