@@ -87,16 +87,6 @@ angular
                     vm.getPipelineForConfig(currentPipeline.name);
                     //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
                 }
-                //TODO: Implement this when backend implementation is complete
-                // currentPipeline.role = 'ADMIN';
-
-                viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                    if(currentPipeline.id == currentPermission.permittedEntityId) {
-                        currentPipeline.role = currentPermission.permissionType;
-
-                    }
-                });
-                vm.allPipelines[0].role = 'ADMIN';
             });
             console.log(vm.allPipelines);
         });
@@ -750,7 +740,17 @@ angular
             return vm.currentStageRuns;
         };
 
+        vm.sortableOptions = {
+            cursor: "move",
+            update: function (e, ui) {
 
+            },
+            stop: function () {
+                var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+
+                pipeConfigService.updateJobDefinition(newJob);
+            }
+        };
 
         // function getAllPipelines () {
         //     var tokenIsValid = authDataService.checkTokenExpiration();
@@ -1585,17 +1585,6 @@ angular
         //     }
         // };
         //
-        vm.sortableOptions = {
-            cursor: "move",
-            update: function (e, ui) {
-
-            },
-            stop: function () {
-                var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
-
-                pipeConfigService.updateJobDefinition(newJob);
-            }
-        };
         //
         // vm.editJob = function(newJob) {
         //     if (vm.job != null) {
