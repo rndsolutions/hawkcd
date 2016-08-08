@@ -741,6 +741,8 @@ angular
         };
 
         vm.sortableOptions = {
+            cancel: ".unsortable",
+            items: "tr:not(.unsortable)",
             cursor: "move",
             update: function (e, ui) {
 

@@ -30,7 +30,7 @@
       </tbody>
     </table>
   </div>
-  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#addMaterials" data-toggle="modal">Add Material</button>
+  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#addMaterials" data-toggle="modal">Add Material</button>
 </div>
 
 <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_add-materials.html'"></div>
