@@ -221,7 +221,6 @@ public class WsEndpoint extends WebSocketAdapter {
             }
         }
 
-
         return userGroupPermissions;
     }
 }

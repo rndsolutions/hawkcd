@@ -49,12 +49,14 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     public boolean getById(String entitId, List permissions) {
         PipelineGroup pipelineGroup = (PipelineGroup)this.pipelineGroupService.getById(entitId).getObject();
         pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
+        
         return this.hasPermissionToRead(permissions, pipelineGroup);
     }
 
     @Override
     public boolean add(String entity, List permissions) {
         PipelineGroup pipelineGroup = this.jsonConverter.fromJson(entity, PipelineGroup.class);
+        pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
 
         return this.hasPermissionToAdd(permissions, pipelineGroup.getId());
     }
@@ -62,6 +64,7 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     @Override
     public boolean update(String entity, List permissions) {
         PipelineGroup pipelineGroup = this.jsonConverter.fromJson(entity, PipelineGroup.class);
+        pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipelineGroup.getId());
     }
