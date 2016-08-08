@@ -59,7 +59,7 @@ public class UserService extends CrudService<User> implements IUserService {
                 .orElse(null);
 
         if (user == null) {
-            return super.createServiceResult(user, true, "not found");
+            return super.createServiceResult(user, true, "'s email and password doesn't match");
         } else {
             return super.createServiceResult(user, false, "retrieved successfully");
         }
