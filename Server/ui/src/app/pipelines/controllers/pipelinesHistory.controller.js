@@ -49,7 +49,12 @@ angular
             var delta = moment(runEndTime);
             var now = moment();
             var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
-            result.output = diff + " ago";
+            if(diff == 'a few seconds'){
+              diff = 'few seconds ago';
+              result.output = diff;
+            } else {
+              result.output = diff + " ago";
+            }
             return result;
         }
 
