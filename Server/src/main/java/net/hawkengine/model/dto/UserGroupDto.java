@@ -7,7 +7,7 @@ import java.util.List;
 
 public class UserGroupDto {
     private String id;
-    private String userGroupName;
+    private String name;
     private List<User> users;
 
     public UserGroupDto() {
@@ -22,12 +22,12 @@ public class UserGroupDto {
         this.id = id;
     }
 
-    public String getUserGroupName() {
-        return this.userGroupName;
+    public String getName() {
+        return this.name;
     }
 
-    public void setUserGroupName(String userGroupName) {
-        this.userGroupName = userGroupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<User> getUsers() {

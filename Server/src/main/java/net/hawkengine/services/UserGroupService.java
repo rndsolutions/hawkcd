@@ -9,7 +9,6 @@ import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.services.interfaces.IUserService;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -130,7 +129,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             List<String> userIds = userGroup.getUserIds();
             UserGroupDto userGroupDto = new UserGroupDto();
             userGroupDto.setId(userGroup.getId());
-            userGroupDto.setUserGroupName(userGroup.getName());
+            userGroupDto.setName(userGroup.getName());
 
             for (String userId : userIds) {
                 User currentUser = (User) this.userService.getById(userId).getObject();
