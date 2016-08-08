@@ -29,7 +29,7 @@ public class EntityPermissionTypeService {
         return pipelineGroup;
     }
 
-    public static PipelineDefinition serPermissionTypeToPipelineDefinition(List<Permission> permissions, PipelineDefinition pipelineDefinition){
+    public static PipelineDefinition setPermissionTypeToPipelineDefinition(List<Permission> permissions, PipelineDefinition pipelineDefinition){
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 pipelineDefinition.setPermissionType(permission.getPermissionType());

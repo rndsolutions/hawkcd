@@ -47,7 +47,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
         List<DbEntry> result = new ArrayList<>();
         for (PipelineDefinition pipelineDefinition : (List<PipelineDefinition>) pipelineDefinitions) {
             if (this.hasPermissionToRead(permissions, pipelineDefinition)) {
-                pipelineDefinition = EntityPermissionTypeService.serPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
+                pipelineDefinition = EntityPermissionTypeService.setPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
                 result.add(pipelineDefinition);
             }
         }
@@ -57,7 +57,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     @Override
     public boolean getById(String entityId, List permissions) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(entityId).getObject();
-        pipelineDefinition = EntityPermissionTypeService.serPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
+        pipelineDefinition = EntityPermissionTypeService.setPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
         return this.hasPermissionToRead(permissions, pipelineDefinition);
     }
 
@@ -71,7 +71,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     @Override
     public boolean update(String entity, List permissions) {
         PipelineDefinition pipelineDefinition = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
-        pipelineDefinition = EntityPermissionTypeService.serPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
+        pipelineDefinition = EntityPermissionTypeService.setPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipelineDefinition);
     }
@@ -79,7 +79,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     @Override
     public boolean add(String entity, List permissions) {
         PipelineDefinition pipelineDefinition = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
-        pipelineDefinition = EntityPermissionTypeService.serPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
+        pipelineDefinition = EntityPermissionTypeService.setPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
 
         return this.hasPermissionToAdd(permissions, pipelineDefinition);
     }

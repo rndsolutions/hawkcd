@@ -225,10 +225,38 @@ public class WsEndpoint extends WebSocketAdapter {
     }
 
     private List<Permission> sortPermissions(List<Permission> permissions){
-        Comparator<Permission> comparator = Comparator.comparing(permission -> permission.getPermissionScope());
-        comparator = comparator.thenComparing(Comparator.comparing(permission -> permission.getPermittedEntityId()));
+        List<Permission> sortedPermissions = new ArrayList<>();
 
-        List<Permission> sortedPermissions = permissions.stream().sorted(comparator).collect(Collectors.toList());
+        List<Permission> adminPermissions = permissions
+                .stream()
+                .filter(permission -> permission.getPermissionScope() == PermissionScope.SERVER)
+                .collect(Collectors.toList());
+        List<Permission> pipelineGroupGlobalPermissions = permissions
+                .stream()
+                .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE_GROUP)
+                .filter(permission -> permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString()))
+                .collect(Collectors.toList());
+        List<Permission> pipelineGlobalPermissions = permissions
+                .stream()
+                .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE)
+                .filter(permission -> permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()))
+                .collect(Collectors.toList());
+        List<Permission> pipelineGroupPermissions = permissions
+                .stream()
+                .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE_GROUP)
+                .filter(permission -> !permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString()))
+                .collect(Collectors.toList());
+        List<Permission> pipelinePermissions = permissions
+                .stream()
+                .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE)
+                .filter(permission -> !permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()))
+                .collect(Collectors.toList());
+
+        sortedPermissions.addAll(adminPermissions);
+        sortedPermissions.addAll(pipelineGroupGlobalPermissions);
+        sortedPermissions.addAll(pipelineGlobalPermissions);
+        sortedPermissions.addAll(pipelineGroupPermissions);
+        sortedPermissions.addAll(pipelinePermissions);
 
         return sortedPermissions;
     }
