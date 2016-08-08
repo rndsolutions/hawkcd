@@ -592,13 +592,13 @@ p {
     margin-bottom: 30px!important;
 }
 
-.md-checkbox label {
-    padding-left: 0px!important;
-}
+/*.md-checkbox label {*/
+    /*padding-left: 0px!important;*/
+/*}*/
 
-.md-checkbox label > span {
-    left: 45%!important;
-}
+/*.md-checkbox label > span {*/
+    /*left: 45%!important;*/
+/*}*/
 
 .center-container {
     margin-left: 5px!important;

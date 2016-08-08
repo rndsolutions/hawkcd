@@ -34,17 +34,6 @@ angular
 
         $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
-            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
-                //TODO: Finish implementation once backend implementation is done
-                //currentPipeline.role = 'ADMIN';
-
-                viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                    if(currentPipeline.id == currentPermission.permittedEntityId) {
-                        currentPipeline.role = currentPermission.permissionType;
-                        console.log(currentPermission.role);
-                    }
-                });
-            });
             console.log(vm.allPipelines);
         });
 
@@ -89,17 +78,6 @@ angular
 
         $scope.$watchCollection(function() { return viewModel.allPipelineGroups }, function(newVal, oldVal) {
             vm.allPipelineGroups = viewModel.allPipelineGroups;
-            vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                //TODO: Finish implementation once backend implementation is done
-                //currentPipelineGroup.role = 'ADMIN';
-
-                viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                    if(currentPipelineGroup.id == currentPermission.permittedEntityId) {
-                        currentPipelineGroup.role = currentPermission.permissionType;
-                        console.log(currentPermission.role);
-                    }
-                });
-            });
             console.log(vm.allPipelineGroups);
         });
 

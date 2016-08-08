@@ -2,7 +2,7 @@
     <div class="panel panel-info p-box-inner">
         <div class="p-link">
             <div class="panel-heading p-head-box">
-                <span ng-if="pipe.role == 'ADMIN'" aria-hidden="true" class="icon-close font-lg ico" data-target="#removePipe" data-toggle="modal" ng-click="pipes.getPipeName(pipe)"></span>
+                <span ng-if="pipe.permissionType != 'VIEWER' && pipe.permissionType != 'OPERATOR' && pipe.permissionType != ''" aria-hidden="true" class="icon-close font-lg ico" data-target="#removePipe" data-toggle="modal" ng-click="pipes.getPipeName(pipe)"></span>
                 <span aria-hidden="true" class="icon-settings font-lg ico" ui-sref="index.pipelineConfig.pipeline.general({groupName:pipegroup.name,pipelineName:pipe.name})" ></span>
                 <span ng-hide="pipe.ExecutionID==0" aria-hidden="true" class="icon-info font-lg ico" ui-sref="index.pipelineHistory.history({groupName:pipegroup.name,pipelineName:pipe.name})"></span>
                 <div>
@@ -45,18 +45,18 @@
 
         </div>
         <div class="controls">
-            <button class="btn btn-default" id="startbtn" ng-click="pipes.play(pipe)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}" id="startbtn" ng-click="pipes.play(pipe)">
                 <span class="glyphicon glyphicon-play control"></span>
             </button>
-            <button class="btn btn-default">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}">
                 <span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>
             </button>
 
-            <button class="btn btn-default">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}">
                 <span class="glyphicon glyphicon-pause control"></span>
             </button>
 
-            <button class="btn btn-default" ng-click="pipes.stop(pipe.id)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}" ng-click="pipes.stop(pipe.id)">
                 <span class="glyphicon glyphicon-stop control"></span>
             </button>
         </div>
