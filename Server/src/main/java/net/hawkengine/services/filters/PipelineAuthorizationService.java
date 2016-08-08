@@ -60,6 +60,8 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     @Override
     public boolean getById(String entityId, List permissions) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        pipeline = EntityPermissionTypeService.setPermissionTypeToPipeline(permissions, pipeline, pipelineDefinition);
 
         return this.hasPermissionToRead(permissions, pipeline);
     }
@@ -76,6 +78,8 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     @Override
     public boolean update(String entity, List permissions) {
         Pipeline pipeline = this.jsonConverter.fromJson(entity, Pipeline.class);
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        pipeline = EntityPermissionTypeService.setPermissionTypeToPipeline(permissions, pipeline, pipelineDefinition);
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipeline);
     }

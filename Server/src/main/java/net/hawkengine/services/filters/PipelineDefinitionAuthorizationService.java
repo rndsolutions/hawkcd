@@ -71,6 +71,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     @Override
     public boolean update(String entity, List permissions) {
         PipelineDefinition pipelineDefinition = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
+        pipelineDefinition = EntityPermissionTypeService.serPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipelineDefinition);
     }
@@ -78,6 +79,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     @Override
     public boolean add(String entity, List permissions) {
         PipelineDefinition pipelineDefinition = this.jsonConverter.fromJson(entity, PipelineDefinition.class);
+        pipelineDefinition = EntityPermissionTypeService.serPermissionTypeToPipelineDefinition(permissions, pipelineDefinition);
 
         return this.hasPermissionToAdd(permissions, pipelineDefinition);
     }
