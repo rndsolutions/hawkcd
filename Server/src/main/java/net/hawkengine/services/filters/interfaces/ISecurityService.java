@@ -19,9 +19,15 @@ public interface ISecurityService {
 
     ServiceResult delete(WsContractDto contract, List<Permission> permissions);
 
-    ServiceResult addUserToGroup(WsContractDto contract, List<Permission> permissions);
+    ServiceResult assignUserToGroup(WsContractDto contract, List<Permission> permissions);
 
-    ServiceResult removeUserFromGroup(WsContractDto contract, List<Permission> permissions);
+    ServiceResult unassignUserFromGroup(WsContractDto contract, List<Permission> permissions);
 
     ServiceResult getAllUserGroups(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult addUserWithoutProvider(WsContractDto contract, List<Permission> permissions);
 }

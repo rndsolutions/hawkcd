@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="actions pull-left">
+            <a data-target="#addNewUserGroup" data-toggle="modal" class="btn btn-default">
+                <i class="fa fa-plus"></i> Add </a>
+        </div>
+    </div>
+</div>
+</br>
+<div class="row">
+    <div class="col-sm-12">
+        <uib-accordion close-others="true">
+            <div uib-accordion-group class="panel-default"
+                 is-open="status.isFirstOpen"
+                 is-disabled="status.isFirstDisabled"
+                 ng-repeat="userGroup in admin.userGroups">
+                <!-- pipelines container-->
+                <uib-accordion-heading>
+                    <span ng-show="false"> <i class="fa fa-edit pull-right"></i> </span>
+                    <span data-target="#removePipelineGroupAdmin"
+                          ng-if="userGroup.users.length==0"
+                          data-toggle="modal"
+                          ng-click="admin.setPipelineGroupToDelete(userGroup)">
+                <i class="fa fa-trash pull-right"></i>
+              </span>
+                    <i class="fa fa-cog pull-right" aria-hidden="true" data-target="#manageUserGroup" data-toggle="modal" ng-click="admin.selectUserGroup($index)"></i>
+                    <h5 ng-click="admin.clearSelection()"> {{userGroup.userGroupName}} <span class="badge badge-default custom-admin-badge-color"> {{userGroup.users.length}} </span></h5>
+                </uib-accordion-heading>
+                <div class="custom-admin-pipeline-padding" ng-repeat="user in userGroup.users">
+                    <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{user.email}}</span>
+                </div>
+                </br>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-xs green" data-target="#assignUser" data-toggle="modal" ng-click="admin.setPipelineGroupToAssign(pipeGroup)">Assign users <i class="fa fa-plus"></i></button>
+                    <button type="button" class="btn btn-xs" data-target="#unassignPipeline" data-toggle="modal" ng-class="{'disabled': admin.togglePipeline == null, 'red': admin.togglePipeline != null}" ng-click="admin.selectAssignedPipelineToUnassign(pipeGroup.pipelines[admin.togglePipeline])">
+                        Unassign users <i class="fa fa-times"></i>  </button>
+                </div>
+            </div>
+        </uib-accordion>
+
+    </div>
+</div>
+<div ng-include src="'app/admin/views/partials/_add-user.html'"></div>
+<div ng-include src="'app/admin/views/partials/_assignUsers.html'"></div>
+<div ng-include src="'app/admin/views/partials/_add-userGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_manageUserGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_delete-user.html'"></div>

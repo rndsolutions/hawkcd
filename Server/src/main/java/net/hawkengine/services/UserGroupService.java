@@ -9,6 +9,7 @@ import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.services.interfaces.IUserService;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,48 +74,49 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public ServiceResult addUserToGroup(String userId, String groupId) {
-        UserGroup userGroup = (UserGroup) this.getById(groupId).getObject();
-        userGroup.getUserIds().add(userId);
+    public ServiceResult assignUserToGroup(User user, UserGroup userGroup) {
+            userGroup.getUserIds().add(user.getId());
 
-        User user = (User) this.userService.getById(userId).getObject();
-        user.getUserGroupIds().add(groupId);
-        this.userService.update(user);
+            user.getUserGroupIds().add(userGroup.getId());
+            ServiceResult updateUserServiceResult = this.userService.update(user);
+
+            if (updateUserServiceResult.hasError()) {
+
+                return updateUserServiceResult;
+            }
 
         return this.update(userGroup);
     }
 
     @Override
-    public ServiceResult removeUserFromGroup(String userId, String groupId) {
-        UserGroup userGroup = (UserGroup) this.getById(groupId).getObject();
+    public ServiceResult unassignUserFromGroup(User user, UserGroup userGroup) {
         List<String> userIds = userGroup.getUserIds();
 
-        for (Iterator<String> iter = userIds.listIterator(); iter.hasNext(); ) {
-            String currentUserId = iter.next();
-            if (currentUserId.equals(userId)) {
-                iter.remove();
+            for (Iterator<String> iter = userIds.listIterator(); iter.hasNext(); ) {
+                String currentUserId = iter.next();
+                if (currentUserId.equals(user.getId())) {
+                    iter.remove();
+                }
             }
-        }
+            List<String> userGroupIds = user.getUserGroupIds();
+
+            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
+                String currentUserGroupId = iter.next();
+                if (currentUserGroupId.equals(userGroup.getId())) {
+                    iter.remove();
+                }
+            }
+
+            user.setUserGroupIds(userGroupIds);
+
+            ServiceResult updateUserServiceResult = this.userService.update(user);
+
+            if (updateUserServiceResult.hasError()) {
+                return updateUserServiceResult;
+            }
+
 
         userGroup.setUserIds(userIds);
-
-        User user = (User) this.userService.getById(userId).getObject();
-        List<String> userGroupIds = user.getUserGroupIds();
-
-        for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
-            String currentUserGroupId = iter.next();
-            if (currentUserGroupId.equals(groupId)) {
-                iter.remove();
-            }
-        }
-
-        user.setUserGroupIds(userGroupIds);
-
-        ServiceResult updateUserServiceResult = this.userService.update(user);
-
-        if (updateUserServiceResult.hasError()) {
-            return updateUserServiceResult;
-        }
 
         return this.update(userGroup);
     }
@@ -122,11 +124,11 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     public ServiceResult getAllUserGroups() {
         List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getObject();
-        UserGroupDto userGroupDto = new UserGroupDto();
         List<UserGroupDto> userGroupDtos = new ArrayList<>();
 
         for (UserGroup userGroup : userGroups) {
             List<String> userIds = userGroup.getUserIds();
+            UserGroupDto userGroupDto = new UserGroupDto();
             userGroupDto.setId(userGroup.getId());
             userGroupDto.setUserGroupName(userGroup.getName());
 

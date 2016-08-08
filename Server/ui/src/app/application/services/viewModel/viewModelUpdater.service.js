@@ -10,12 +10,52 @@ angular
             console.log(user);
         };
 
+        viewModelUpdater.addUser = function (user) {
+            viewModel.users.push(user);
+        };
+
+        viewModelUpdater.updateUser = function (user) {
+            viewModel.users.forEach(function (currentUser, userIndex, userArray) {
+                if(currentUser.id == user.id){
+                    viewModel.users[userIndex] = user;
+                }
+            });
+        };
+
+        viewModelUpdater.updateUsers = function (users) {
+            viewModel.users.forEach(function (currentUser, userIndex, userArray) {
+                users.forEach(function (currentUpdatedUser, updatedUserIndex, updatedUserArray) {
+                    if(currentUser.id == currentUpdatedUser.id) {
+                        viewModel.users[userIndex] = users[updatedUserIndex];
+                    }
+                });
+            });
+        };
+
         viewModelUpdater.getPermissions = function (permissions) {
             viewModel.allPermissions = permissions;
         };
 
         viewModelUpdater.updatePermissions = function (permission) {
             //TODO: Implement this
+        };
+
+        viewModelUpdater.getUserGroups = function (userGroups) {
+            viewModel.userGroups = userGroups;
+            // debugger;
+        };
+
+        viewModelUpdater.getUserGroupDTOs = function (userGroups) {
+            viewModel.userGroups = userGroups;
+        };
+
+        viewModelUpdater.getUsers = function (users) {
+            viewModel.users = users;
+        };
+
+        viewModelUpdater.addUserGroup = function (userGroup) {
+            viewModel.userGroups.push(userGroup);
+            debugger;
         };
 
         viewModelUpdater.updateAgents = function (agents) {

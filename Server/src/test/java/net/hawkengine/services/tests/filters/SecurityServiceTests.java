@@ -20,7 +20,6 @@ import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.UserGroupService;
 import net.hawkengine.services.UserService;
-import net.hawkengine.services.filters.PipelineAuthorizationService;
 import net.hawkengine.services.filters.SecurityService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -651,7 +650,7 @@ public class SecurityServiceTests {
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserGroupService");
         contract.setPackageName("net.hawkengine.services");
-        contract.setMethodName("addUserToGroup");
+        contract.setMethodName("assignUserToGroup");
         contract.setResult("");
         contract.setError(false);
         contract.setErrorMessage("");
@@ -673,7 +672,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.addUserToGroup(contract, this.createPermissions());
+        ServiceResult actualServiceResult = this.securityService.assignUserToGroup(contract, this.createPermissions());
 
         //Assert
         Assert.assertFalse(actualServiceResult.hasError());
@@ -701,7 +700,7 @@ public class SecurityServiceTests {
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserGroupService");
         contract.setPackageName("net.hawkengine.services");
-        contract.setMethodName("addUserToGroup");
+        contract.setMethodName("assignUserToGroup");
         contract.setResult("");
         contract.setError(false);
         contract.setErrorMessage("");
@@ -725,7 +724,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.addUserToGroup(contract, permissions);
+        ServiceResult actualServiceResult = this.securityService.assignUserToGroup(contract, permissions);
 
         //Assert
         Assert.assertTrue(actualServiceResult.hasError());
@@ -778,7 +777,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.removeUserFromGroup(contract, this.createPermissions());
+        ServiceResult actualServiceResult = this.securityService.unassignUserFromGroup(contract, this.createPermissions());
 
         //Assert
         Assert.assertFalse(actualServiceResult.hasError());
@@ -833,7 +832,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        ServiceResult actualServiceResult = this.securityService.removeUserFromGroup(contract, permissions);
+        ServiceResult actualServiceResult = this.securityService.unassignUserFromGroup(contract, permissions);
 
         //Assert
         Assert.assertTrue(actualServiceResult.hasError());

@@ -12,21 +12,24 @@ import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.enums.PermissionScope;
+import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserGroupService;
+import net.hawkengine.services.UserService;
 import net.hawkengine.services.filters.factories.SecurityServiceInvoker;
 import net.hawkengine.services.interfaces.IUserGroupService;
+import net.hawkengine.services.interfaces.IUserService;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class WsEndpoint extends WebSocketAdapter {
     static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
@@ -35,6 +38,7 @@ public class WsEndpoint extends WebSocketAdapter {
     private SecurityServiceInvoker securityServiceInvoker;
     private User loggedUser;
     private IUserGroupService userGroupService;
+    private IUserService userService;
 
     public WsEndpoint() {
         this.id = UUID.randomUUID();
@@ -45,6 +49,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 .create();
         this.securityServiceInvoker = new SecurityServiceInvoker();
         this.userGroupService = new UserGroupService();
+        this.userService = new UserService();
     }
 
     public UUID getId() {
@@ -112,10 +117,12 @@ public class WsEndpoint extends WebSocketAdapter {
 //                    return;
 //                }
 //            }
+            User currentUser = (User)this.userService.getById(this.loggedUser.getId()).getObject();
+            
+            this.loggedUser = currentUser;
             this.loggedUser.getPermissions().addAll(this.getUniqueUserGroupPermissions(this.loggedUser));
 
-            List<Permission> orderedPermissions = this.loggedUser.getPermissions().stream()
-                    .sorted((p1, p2) -> p1.getPermissionScope().compareTo(p2.getPermissionScope())).collect(Collectors.toList());
+            List<Permission> orderedPermissions = this.sortPermissions(this.loggedUser.getPermissions());
 
             ServiceResult result = this.securityServiceInvoker.process(contract, orderedPermissions);
             contract.setResult(result.getObject());
@@ -214,7 +221,15 @@ public class WsEndpoint extends WebSocketAdapter {
             }
         }
 
-
         return userGroupPermissions;
+    }
+
+    private List<Permission> sortPermissions(List<Permission> permissions){
+        Comparator<Permission> comparator = Comparator.comparing(permission -> permission.getPermissionScope());
+        comparator = comparator.thenComparing(Comparator.comparing(permission -> permission.getPermittedEntityId()));
+
+        List<Permission> sortedPermissions = permissions.stream().sorted(comparator).collect(Collectors.toList());
+
+        return sortedPermissions;
     }
 }

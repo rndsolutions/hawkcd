@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'pipeConfigService',
-        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, pipeConfigService) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService',
+        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function (data) {
@@ -26,6 +26,40 @@ angular
                 UserInfo: {
                     getUser: function (object) {
                         viewModelUpdater.getUser(object.result);
+                    }
+                },
+                UserService: {
+                    getAll: function (object) {
+                        viewModelUpdater.getUsers(object.result);
+                    },
+                    addUserWithoutProvider: function (object) {
+                        viewModelUpdater.addUser(object.result);
+                    },
+                    update: function (object) {
+                        viewModelUpdater.updateUser(object.result);
+                    },
+                    delete: function (object) {
+                        if (object.error == false) {
+                            adminService.getAllUsers();
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
+                    },
+                    assignUserToGroup: function (object) {
+                        viewModelUpdater.updateUsers(object.result);
+                        adminService.getAllUserGroupDTOs();
+                    }
+                },
+                UserGroupService: {
+                    getAll: function (object) {
+                        viewModelUpdater.getUserGroups(object.result);
+                    },
+                    getAllUserGroups: function (object) {
+                        viewModelUpdater.getUserGroupDTOs(object.result);
+                    },
+                    add: function (object) {
+                        viewModelUpdater.addUserGroup(object.result);
                     }
                 },
                 AuthorizationService: {
@@ -112,6 +146,16 @@ angular
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
+                    },
+                    assignPipelineToGroup: function (object) {
+                        viewModelUpdater.updatePipelineDefinition(object.result);
+                        pipeConfigService.getAllPipelineGroupDTOs();
+                        pipeConfigService.getAllPipelineDefinitions();
+                    },
+                    unassignPipelineFromGroup: function (object) {
+                        viewModelUpdater.updatePipelineDefinition(object.result);
+                        pipeConfigService.getAllPipelineGroupDTOs();
+                        pipeConfigService.getAllPipelineDefinitions();
                     }
                 },
                 PipelineService: {

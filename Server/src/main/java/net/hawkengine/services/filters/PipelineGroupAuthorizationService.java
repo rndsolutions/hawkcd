@@ -12,13 +12,16 @@ import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
+import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
+import net.hawkengine.services.interfaces.IPipelineGroupService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PipelineGroupAuthorizationService implements IAuthorizationService {
     private Gson jsonConverter;
+    private IPipelineGroupService pipelineGroupService;
 
     public PipelineGroupAuthorizationService() {
         this.jsonConverter = new GsonBuilder()
@@ -26,6 +29,7 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
+        this.pipelineGroupService = new PipelineGroupService();
     }
 
 
@@ -34,7 +38,8 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     public List getAll(List permissions, List pipelineGroups) {
         List<PipelineGroup> result = new ArrayList<>();
         for (PipelineGroup pipelineGroup : (List<PipelineGroup>) pipelineGroups) {
-            if (this.hasPermissionToRead(permissions, pipelineGroup.getId()))
+            if (this.hasPermissionToRead(permissions, pipelineGroup))
+                pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
                 result.add(pipelineGroup);
         }
         return result;
@@ -42,12 +47,16 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
 
     @Override
     public boolean getById(String entitId, List permissions) {
-        return this.hasPermissionToRead(permissions, entitId);
+        PipelineGroup pipelineGroup = (PipelineGroup)this.pipelineGroupService.getById(entitId).getObject();
+        pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
+
+        return this.hasPermissionToRead(permissions, pipelineGroup);
     }
 
     @Override
     public boolean add(String entity, List permissions) {
         PipelineGroup pipelineGroup = this.jsonConverter.fromJson(entity, PipelineGroup.class);
+        pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
 
         return this.hasPermissionToAdd(permissions, pipelineGroup.getId());
     }
@@ -55,6 +64,7 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     @Override
     public boolean update(String entity, List permissions) {
         PipelineGroup pipelineGroup = this.jsonConverter.fromJson(entity, PipelineGroup.class);
+        pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipelineGroup.getId());
     }
@@ -65,7 +75,8 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
         return this.hasPermissionToUpdateAndDelete(permissions, entity);
     }
 
-    private boolean hasPermissionToRead(List<Permission> permissions, String pipelineGroupId) {
+    private boolean hasPermissionToRead(List<Permission> permissions, PipelineGroup pipelineGroup) {
+        String pipelineGroupId = pipelineGroup.getId();
         boolean hasPermission = false;
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {

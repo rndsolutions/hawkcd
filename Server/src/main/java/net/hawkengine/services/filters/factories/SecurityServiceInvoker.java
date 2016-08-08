@@ -32,12 +32,18 @@ public class SecurityServiceInvoker {
                 return this.securityService.update(contract, permissions);
             case "delete":
                 return this.securityService.delete(contract, permissions);
-            case "addUserToGroup":
-                return this.securityService.addUserToGroup(contract, permissions);
-            case "removeUserFromGroup":
-                return this.securityService.removeUserFromGroup(contract, permissions);
+            case "assignUserToGroup":
+                return this.securityService.assignUserToGroup(contract, permissions);
+            case "unassignUserFromGroup":
+                return this.securityService.unassignUserFromGroup(contract, permissions);
             case "getAllUserGroups":
                 return this.securityService.getAllUserGroups(contract, permissions);
+            case "assignPipelineToGroup":
+                return this.securityService.assignPipelineToGroup(contract, permissions);
+            case "unassignPipelineFromGroup":
+                return this.securityService.unassignPipelineFromGroup(contract, permissions);
+            case "addUserWithoutProvider":
+                return this.securityService.addUserWithoutProvider(contract, permissions);
             default:
                 return null;
         }

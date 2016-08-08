@@ -106,7 +106,7 @@ public class AuthController {
 
         ServiceResult serviceResult = this.userService.getByEmailAndPassword(login.getEmail(), hashedPassword);
         if (serviceResult.hasError()){
-            return Response.status(Response.Status.NOT_FOUND)
+            return Response.status(Response.Status.BAD_REQUEST)
                     .entity(serviceResult)
                     .build();
         }
