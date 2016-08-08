@@ -47,7 +47,7 @@ angular
                         }
                     },
                     assignUserToGroup: function (object) {
-                        viewModelUpdater.updateUsers(object.result);
+                        viewModelUpdater.updateUser(object.result);
                         adminService.getAllUserGroupDTOs();
                     }
                 },
