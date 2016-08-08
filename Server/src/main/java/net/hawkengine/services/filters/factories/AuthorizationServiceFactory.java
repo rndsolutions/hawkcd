@@ -9,22 +9,21 @@ public class AuthorizationServiceFactory {
     public static IAuthorizationService create(String service) {
         switch (service) {
             case "PipelineDefinitionService":
-                //TODO: REFACTOR
+            case "StageDefinitionService":
+            case "JobDefinitionService":
+            case "TaskDefinitionService":
                 authorizationService = new PipelineDefinitionAuthorizationService();
                 return authorizationService;
             case "AgentService":
                 authorizationService = new AgentAuthorizationService();
                 return authorizationService;
             case "PipelineService":
-                authorizationService = new PipelineAuthorizationService();
             case "StageService":
             case "JobService":
+                authorizationService = new PipelineAuthorizationService();
                 return authorizationService;
             case "PipelineGroupService":
                 authorizationService = new PipelineGroupAuthorizationService();
-            case "StageDefinitionService":
-            case "JobDefinitionService":
-            case "TaskDefinitionService":
                 return authorizationService;
             case "UserGroupService":
                 authorizationService = new UserGroupAuthorizationService();
