@@ -15,14 +15,14 @@
                     <td> {{jobVar.IsSecured ? '******' : jobVar.Value}} </td>
                     <td> {{jobVar.IsSecured ? 'Yes' : 'No'}} </td>
                     <td>
-                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#editJobVar" data-toggle="modal" ng-click="pipeConfig.getJobVar(jobVar.Name)">Edit</button>
-                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].role != 'ADMIN'" data-target="#removeJobVar" data-toggle="modal" ng-click="pipeConfig.variableDeleteButton = true;pipeConfig.getJobVar(jobVar.Name)" ng-class="{'disabled': pipeConfig.variableDeleteButton}">Delete</button>
+                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editJobVar" data-toggle="modal" ng-click="pipeConfig.getJobVar(jobVar.Name)">Edit</button>
+                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJobVar" data-toggle="modal" ng-click="pipeConfig.variableDeleteButton = true;pipeConfig.getJobVar(jobVar.Name)" ng-class="{'disabled': pipeConfig.variableDeleteButton}">Delete</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <button class="btn green" data-target="#addJobVar" data-toggle="modal">Add Environment Variable</button>
+    <button class="btn green" data-target="#addJobVar" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal">Add Environment Variable</button>
 </div>
 <div ng-include src="'app/pipelines/views/partials/config/job-options/_add-variable.html'"></div>
 <div ng-include src="'app/pipelines/views/partials/config/job-options/_edit-variable.html'"></div>
