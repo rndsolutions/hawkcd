@@ -74,15 +74,30 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
     @Override
     public ServiceResult assignUserToGroup(User user, UserGroup userGroup) {
-            userGroup.getUserIds().add(user.getId());
+        userGroup = (UserGroup) this.getById(userGroup.getId()).getObject();
+        userGroup.getUserIds().add(user.getId());
 
-            user.getUserGroupIds().add(userGroup.getId());
-            ServiceResult updateUserServiceResult = this.userService.update(user);
+        String userGroupId = userGroup.getId();
+        List<String> userGroupIds = user.getUserGroupIds();
 
-            if (updateUserServiceResult.hasError()) {
+        String exists = userGroupIds.stream().filter(u -> u.equals(userGroupId)).findAny().orElse(null);
 
-                return updateUserServiceResult;
-            }
+        if (exists != null) {
+            ServiceResult result = new ServiceResult();
+            result.setError(true);
+            result.setMessage("User is already in this User Group.");
+            result.setObject(null);
+
+            return result;
+        }
+
+        user.getUserGroupIds().add(userGroup.getId());
+        ServiceResult updateUserServiceResult = this.userService.update(user);
+
+        if (updateUserServiceResult.hasError()) {
+
+            return updateUserServiceResult;
+        }
 
         return this.update(userGroup);
     }
@@ -91,28 +106,28 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     public ServiceResult unassignUserFromGroup(User user, UserGroup userGroup) {
         List<String> userIds = userGroup.getUserIds();
 
-            for (Iterator<String> iter = userIds.listIterator(); iter.hasNext(); ) {
-                String currentUserId = iter.next();
-                if (currentUserId.equals(user.getId())) {
-                    iter.remove();
-                }
+        for (Iterator<String> iter = userIds.listIterator(); iter.hasNext(); ) {
+            String currentUserId = iter.next();
+            if (currentUserId.equals(user.getId())) {
+                iter.remove();
             }
-            List<String> userGroupIds = user.getUserGroupIds();
+        }
+        List<String> userGroupIds = user.getUserGroupIds();
 
-            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
-                String currentUserGroupId = iter.next();
-                if (currentUserGroupId.equals(userGroup.getId())) {
-                    iter.remove();
-                }
+        for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
+            String currentUserGroupId = iter.next();
+            if (currentUserGroupId.equals(userGroup.getId())) {
+                iter.remove();
             }
+        }
 
-            user.setUserGroupIds(userGroupIds);
+        user.setUserGroupIds(userGroupIds);
 
-            ServiceResult updateUserServiceResult = this.userService.update(user);
+        ServiceResult updateUserServiceResult = this.userService.update(user);
 
-            if (updateUserServiceResult.hasError()) {
-                return updateUserServiceResult;
-            }
+        if (updateUserServiceResult.hasError()) {
+            return updateUserServiceResult;
+        }
 
 
         userGroup.setUserIds(userIds);
