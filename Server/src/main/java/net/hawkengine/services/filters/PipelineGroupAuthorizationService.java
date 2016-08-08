@@ -49,7 +49,7 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     public boolean getById(String entitId, List permissions) {
         PipelineGroup pipelineGroup = (PipelineGroup)this.pipelineGroupService.getById(entitId).getObject();
         pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
-        
+
         return this.hasPermissionToRead(permissions, pipelineGroup);
     }
 
