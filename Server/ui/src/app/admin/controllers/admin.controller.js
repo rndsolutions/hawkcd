@@ -195,14 +195,34 @@ angular
 
             vm.selectUserGroup = function (index) {
                 var userToAdd = null;
+                var isFound = false;
                 vm.selectedUserGroup = vm.userGroups[index];
-                vm.selectedUserGroup.users.forEach(function (currentUser, userIndex, userArray) {
-                    userToAdd = angular.copy(currentUser);
-                    userToAdd.isAssigned = true;
-                    vm.selectedUserGroup.users[userIndex] = userToAdd;
-                    userToAdd = null;
+                vm.selectedUserGroup.newUsers = [];
+                // vm.selectedUserGroup.users.forEach(function (currentUser, userIndex, userArray) {
+                //     userToAdd = angular.copy(currentUser);
+                //     userToAdd.isAssigned = true;
+                //     vm.selectedUserGroup.newUsers.push(userToAdd);
+                //     userToAdd = null;
+                // });
+                vm.users.forEach(function (currentUser, userIndex, userArray) {
+                    isFound = false;
+                    vm.selectedUserGroup.users.forEach(function (currentUserFromGroup, userFromGroupIndex, userFromGroupArray) {
+                        if(currentUserFromGroup.id == currentUser.id){
+                            isFound = true;
+                            userToAdd = angular.copy(currentUser);
+                            userToAdd.isAssigned = true;
+                            vm.selectedUserGroup.newUsers.push(userToAdd);
+                            userToAdd = null;
+                        }
+                    });
+                    if(!isFound){
+                        userToAdd = angular.copy(currentUser);
+                        vm.selectedUserGroup.newUsers.push(userToAdd);
+                        userToAdd = null;
+                    }
                 });
                 vm.search();
+
             };
 
             vm.selectUser = function (index) {
@@ -258,7 +278,7 @@ angular
             });
 
             vm.assignUsers = function() {
-                vm.users.forEach(function (currentUser, userIndex, userArray) {
+                vm.selectedUserGroup.newUsers.forEach(function (currentUser, userIndex, userArray) {
                     if(currentUser.isAssigned){
                         adminService.assignUser(angular.copy(currentUser), vm.selectedUserGroup);
                     }
