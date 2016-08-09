@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
@@ -79,64 +80,65 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     public ServiceResult assignUserToGroup(User user, UserGroup userGroup) {
         userGroup = (UserGroup) this.getById(userGroup.getId()).getObject();
-        userGroup.getUserIds().add(user.getId());
 
-        String userGroupId = userGroup.getId();
-        List<String> userGroupIds = user.getUserGroupIds();
+        boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
+        boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
 
-        String exists = userGroupIds.stream().filter(u -> u.equals(userGroupId)).findAny().orElse(null);
+        ServiceResult userGroupResult = new ServiceResult();
+        if (userHasGroupId && !groupHasUserId) {
+            userGroup.getUserIds().add(user.getId());
+            this.userService.update(user);
+            this.update(userGroup);
+            UserGroupDto userGroupDto = this.getUserGroupDto(userGroup);
 
-        if (exists != null) {
-            ServiceResult result = new ServiceResult();
-            result.setError(true);
-            result.setMessage("User is already in this User Group.");
-            result.setObject(null);
+            ServiceResult userResult = new ServiceResult();
+            userResult.setError(false);
+            userResult.setMessage("User assigned successfully.");
+            userResult.setObject(user);
+            EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
 
-            return result;
+            userGroupResult.setError(false);
+            userGroupResult.setMessage("UserGroup updated successfully.");
+            userGroupResult.setObject(userGroupDto);
+        } else {
+            userGroupResult.setError(true);
+            userGroupResult.setMessage("User already assigned to User Group.");
+            userGroupResult.setObject(null);
         }
 
-        user.getUserGroupIds().add(userGroup.getId());
-        ServiceResult updateUserServiceResult = this.userService.update(user);
-
-        if (updateUserServiceResult.hasError()) {
-
-            return updateUserServiceResult;
-        }
-
-        return this.update(userGroup);
+        return userGroupResult;
     }
 
     @Override
     public ServiceResult unassignUserFromGroup(User user, UserGroup userGroup) {
-        List<String> userIds = userGroup.getUserIds();
+        userGroup = (UserGroup) this.getById(userGroup.getId()).getObject();
 
-        for (Iterator<String> iter = userIds.listIterator(); iter.hasNext(); ) {
-            String currentUserId = iter.next();
-            if (currentUserId.equals(user.getId())) {
-                iter.remove();
-            }
+        boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
+        boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
+
+        ServiceResult userGroupResult = new ServiceResult();
+        if (!userHasGroupId && groupHasUserId) {
+            userGroup.getUserIds().remove(user.getId());
+            this.userService.update(user);
+            this.update(userGroup);
+            UserGroupDto userGroupDto = this.getUserGroupDto(userGroup);
+
+            ServiceResult userResult = new ServiceResult();
+            userResult.setError(false);
+            userResult.setMessage("User unassigned successfully.");
+            userResult.setObject(user);
+            EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
+
+            userGroupResult.setError(false);
+            userGroupResult.setMessage("UserGroup updated successfully.");
+            userGroupResult.setObject(userGroupDto);
+        } else {
+            userGroupResult.setError(true);
+            userGroupResult.setMessage("User already unassigned from User Group.");
+            userGroupResult.setObject(null);
         }
-        List<String> userGroupIds = user.getUserGroupIds();
 
-        for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
-            String currentUserGroupId = iter.next();
-            if (currentUserGroupId.equals(userGroup.getId())) {
-                iter.remove();
-            }
-        }
-
-        user.setUserGroupIds(userGroupIds);
-
-        ServiceResult updateUserServiceResult = this.userService.update(user);
-
-        if (updateUserServiceResult.hasError()) {
-            return updateUserServiceResult;
-        }
-
-
-        userGroup.setUserIds(userIds);
-
-        return this.update(userGroup);
+        return userGroupResult;
     }
 
     @Override
@@ -164,5 +166,18 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
         return userGroupDtosServiceResult;
     }
+    
+    private UserGroupDto getUserGroupDto(UserGroup userGroup) {
+        UserGroupDto userGroupDto = new UserGroupDto();
+        userGroupDto.setId(userGroup.getId());
+        userGroupDto.setName(userGroup.getName());
+        userGroupDto.setUsers(new ArrayList<>());
+        List<String> userIds = userGroup.getUserIds();
+        for (String userId : userIds) {
+            User user = (User) this.userService.getById(userId).getObject();
+            userGroupDto.getUsers().add(user);
+        }
 
+        return userGroupDto;
+    }
 }
