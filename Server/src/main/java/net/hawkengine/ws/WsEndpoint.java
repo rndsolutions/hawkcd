@@ -215,13 +215,36 @@ public class WsEndpoint extends WebSocketAdapter {
                         }
                     }
                     if (!isPermissionPresent){
-                        userGroupPermissions.add(userGroupPermissionFromDb);
+                        userGroupPermissions = this.addPermissionToList(userGroupPermissions, userGroupPermissionFromDb);
                     }
                 }
             }
         }
 
         return userGroupPermissions;
+    }
+
+    private List<Permission> addPermissionToList(List<Permission> permissions, Permission permissionToAdd){
+        List<Permission> equalPermissions = new ArrayList<>();
+        equalPermissions.add(permissionToAdd);
+        int index = 0;
+
+        for (int i = 0; i < permissions.size(); i++){
+            Permission permission = permissions.get(i);
+            if (permission.getPermittedEntityId().equals(permissionToAdd.getPermittedEntityId())){
+                equalPermissions.add(permission);
+                index = i;
+            }
+        }
+        if (equalPermissions.size() > 1){
+            Permission permissionWithPrioriy = equalPermissions.stream().sorted((p1, p2) -> p1.getPermissionType().compareTo(p2.getPermissionType())).findFirst().orElse(null);
+            permissions.set(index, permissionWithPrioriy);
+
+            return permissions;
+        }
+        permissions.add(permissionToAdd);
+
+        return permissions;
     }
 
     private List<Permission> sortPermissions(List<Permission> permissions){
