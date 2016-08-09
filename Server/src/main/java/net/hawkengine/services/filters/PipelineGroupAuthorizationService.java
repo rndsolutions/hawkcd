@@ -32,15 +32,24 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
         this.pipelineGroupService = new PipelineGroupService();
     }
 
+    public PipelineGroupAuthorizationService(IPipelineGroupService pipelineGroupService){
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
+        this.pipelineGroupService = pipelineGroupService;
+    }
 
 
     @Override
     public List getAll(List permissions, List pipelineGroups) {
         List<PipelineGroup> result = new ArrayList<>();
         for (PipelineGroup pipelineGroup : (List<PipelineGroup>) pipelineGroups) {
-            if (this.hasPermissionToRead(permissions, pipelineGroup))
+            if (this.hasPermissionToRead(permissions, pipelineGroup)) {
                 pipelineGroup = EntityPermissionTypeService.setPermissionTypeToPipelineGroup(permissions, pipelineGroup);
                 result.add(pipelineGroup);
+            }
         }
         return result;
     }

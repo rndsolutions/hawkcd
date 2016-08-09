@@ -52,10 +52,11 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 .create();
     }
 
-    public SecurityService(WsObjectProcessor wsObjectProcessor, IPipelineDefinitionService pipelineDefinitionService, IUserGroupService userGroupService) {
+    public SecurityService(WsObjectProcessor wsObjectProcessor, IPipelineDefinitionService pipelineDefinitionService, IUserGroupService userGroupService, IPipelineGroupService pipelineGroupService) {
         this.wsObjectProcessor = wsObjectProcessor;
         this.userGroupService = userGroupService;
         this.pipelineDefinitionService = pipelineDefinitionService;
+        this.pipelineGroupService = pipelineGroupService;
 
         this.result = new ServiceResult();
         this.result.setError(true);

@@ -90,7 +90,7 @@ public class SecurityServiceTests {
         this.mockedPipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipelineDefinitionService = new PipelineDefinitionService(this.mockedPipelineDefinitionRepository);
 
-        this.securityService = new SecurityService(this.mockedWsObjectProcessor, this.mockedPipelineDefinitionService, this.mockedUserGroupService);
+        this.securityService = new SecurityService(this.mockedWsObjectProcessor, this.mockedPipelineDefinitionService, this.mockedUserGroupService, this.mockedPipelineGroupService);
     }
 
     @Test
@@ -638,13 +638,16 @@ public class SecurityServiceTests {
         User userToAdd = new User();
         this.mockedUserService.add(userToAdd);
 
+        String userToAddAsString = this.jsonConverter.toJson(userToAdd);
+        String firstUserGoupAsString = this.jsonConverter.toJson(this.firstUserGroup);
+
         ConversionObject firstConversionObject = new ConversionObject();
-        firstConversionObject.setPackageName("java.lang.String");
-        firstConversionObject.setObject(this.firstUserGroup.getId());
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(userToAddAsString);
 
         ConversionObject secondConversionObject = new ConversionObject();
-        secondConversionObject.setPackageName("java.lang.String");
-        secondConversionObject.setObject(userToAdd.getId());
+        secondConversionObject.setPackageName("net.hawkserver.models");
+        secondConversionObject.setObject(firstUserGoupAsString);
 
 
         WsContractDto contract = new WsContractDto();
@@ -688,13 +691,16 @@ public class SecurityServiceTests {
         User userToAdd = new User();
         this.mockedUserService.add(userToAdd);
 
+        String userToAddAsString = this.jsonConverter.toJson(userToAdd);
+        String firstUserGoupAsString = this.jsonConverter.toJson(this.firstUserGroup);
+
         ConversionObject firstConversionObject = new ConversionObject();
-        firstConversionObject.setPackageName("java.lang.String");
-        firstConversionObject.setObject(this.firstUserGroup.getId());
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(userToAddAsString);
 
         ConversionObject secondConversionObject = new ConversionObject();
-        secondConversionObject.setPackageName("java.lang.String");
-        secondConversionObject.setObject(userToAdd.getId());
+        secondConversionObject.setPackageName("net.hawkserver.models");
+        secondConversionObject.setObject(firstUserGoupAsString);
 
 
         WsContractDto contract = new WsContractDto();
@@ -743,13 +749,16 @@ public class SecurityServiceTests {
         this.mockedUserService.add(userToAdd);
         this.mockedUserGroupService.update(this.firstUserGroup);
 
+        String userToAddAsString = this.jsonConverter.toJson(userToAdd);
+        String firstUserGoupAsString = this.jsonConverter.toJson(this.firstUserGroup);
+
         ConversionObject firstConversionObject = new ConversionObject();
-        firstConversionObject.setPackageName("java.lang.String");
-        firstConversionObject.setObject(this.firstUserGroup.getId());
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(userToAddAsString);
 
         ConversionObject secondConversionObject = new ConversionObject();
-        secondConversionObject.setPackageName("java.lang.String");
-        secondConversionObject.setObject(userToAdd.getId());
+        secondConversionObject.setPackageName("net.hawkserver.models");
+        secondConversionObject.setObject(firstUserGoupAsString);
 
 
         WsContractDto contract = new WsContractDto();
@@ -796,13 +805,16 @@ public class SecurityServiceTests {
         this.mockedUserService.add(userToAdd);
         this.mockedUserGroupService.update(this.firstUserGroup);
 
+        String userToAddAsString = this.jsonConverter.toJson(userToAdd);
+        String firstUserGoupAsString = this.jsonConverter.toJson(this.firstUserGroup);
+
         ConversionObject firstConversionObject = new ConversionObject();
-        firstConversionObject.setPackageName("java.lang.String");
-        firstConversionObject.setObject(this.firstUserGroup.getId());
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(userToAddAsString);
 
         ConversionObject secondConversionObject = new ConversionObject();
-        secondConversionObject.setPackageName("java.lang.String");
-        secondConversionObject.setObject(userToAdd.getId());
+        secondConversionObject.setPackageName("net.hawkserver.models");
+        secondConversionObject.setObject(firstUserGoupAsString);
 
 
         WsContractDto contract = new WsContractDto();
