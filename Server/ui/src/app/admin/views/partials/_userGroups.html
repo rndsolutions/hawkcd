@@ -17,10 +17,10 @@
                 <!-- pipelines container-->
                 <uib-accordion-heading>
                     <span ng-show="false"> <i class="fa fa-edit pull-right"></i> </span>
-                    <span data-target="#removePipelineGroupAdmin"
+                    <span data-target="#removeUserGroup"
                           ng-if="userGroup.users.length==0"
                           data-toggle="modal"
-                          ng-click="admin.setPipelineGroupToDelete(userGroup)">
+                          ng-click="admin.setUserGroupToDelete(userGroup)">
                 <i class="fa fa-trash pull-right"></i>
               </span>
                     <i class="fa fa-cog pull-right" aria-hidden="true" data-target="#manageUserGroup" data-toggle="modal" ng-click="admin.selectUserGroup($index)"></i>
@@ -42,4 +42,5 @@
 <div ng-include src="'app/admin/views/partials/_assignUsers.html'"></div>
 <div ng-include src="'app/admin/views/partials/_add-userGroup.html'"></div>
 <div ng-include src="'app/admin/views/partials/_manageUserGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_removeUserGroup.html'"></div>
 <div ng-include src="'app/admin/views/partials/_delete-user.html'"></div>

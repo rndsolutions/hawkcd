@@ -69,6 +69,14 @@ angular
                     },
                     unassignUserFromGroup: function (object) {
                         viewModelUpdater.updateUserGroup(object.result);
+                    },
+                    delete: function (object) {
+                        if (object.error == false) {
+                            adminService.getAllUserGroupDTOs();
+                        }
+                        else{
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
                     }
                 },
                 AuthorizationService: {
