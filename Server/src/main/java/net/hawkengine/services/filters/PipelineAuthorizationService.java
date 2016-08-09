@@ -145,7 +145,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
                 }
             } else if (pipelineDefinition.getPipelineGroupId() != null) {
                 if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
-                    if (permission.getPermissionType() == PermissionType.ADMIN) {
+                    if ((permission.getPermissionType() == PermissionType.ADMIN) || (permission.getPermissionType() == PermissionType.OPERATOR)) {
                         hasPermission = true;
                     } else {
                         hasPermission = false;
