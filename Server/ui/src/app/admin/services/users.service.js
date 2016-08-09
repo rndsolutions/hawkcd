@@ -89,13 +89,13 @@ angular
             console.log(json);
         };
 
-        adminService.assignUser = function (user, groupId) {
+        adminService.assignUser = function (user, group) {
             var methodName = "assignUserToGroup";
-            var className = "UserService";
+            var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
-            "{\"packageName\": \"java.lang.String\", \"object\": " + groupId + "}"];
+            "{\"packageName\": \"net.hawkengine.model.UserGroup\", \"object\": " + JSON.stringify(group) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
