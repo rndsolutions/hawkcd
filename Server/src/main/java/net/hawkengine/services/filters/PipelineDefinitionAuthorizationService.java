@@ -89,7 +89,7 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     private boolean hasPermissionToRead(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         boolean hasPermission = false;
         for (Permission permission : permissions) {
-            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
                 hasPermission = true;
             } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()) || permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
                 if ((permission.getPermissionType() != PermissionType.NONE)) {
