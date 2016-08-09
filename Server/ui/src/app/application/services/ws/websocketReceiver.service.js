@@ -60,6 +60,15 @@ angular
                     },
                     add: function (object) {
                         viewModelUpdater.addUserGroup(object.result);
+                    },
+                    updateUserGroupDto: function (object) {
+                        viewModelUpdater.updateUserGroup(object.result);
+                    },
+                    assignUserToGroup: function (object) {
+                        viewModelUpdater.updateUserGroup(object.result);
+                    },
+                    unassignUserFromGroup: function (object) {
+                        viewModelUpdater.updateUserGroup(object.result);
                     }
                 },
                 AuthorizationService: {

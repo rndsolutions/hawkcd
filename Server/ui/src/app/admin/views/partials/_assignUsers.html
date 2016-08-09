@@ -22,7 +22,7 @@
                         <td>{{item.email}}</td>
                         <td>
                             <div class="md-checkbox text-center">
-                                <input type="checkbox" id="assign{{$index}}" class="md-check" ng-model="item.isAssigned">
+                                <input type="checkbox" id="assign{{$index}}" class="md-check" ng-change="admin.toggleClicked(item)" ng-model="item.isAssigned">
                                 <label for="assign{{$index}}">
                                     <span></span>
                                     <span class="check"></span>
