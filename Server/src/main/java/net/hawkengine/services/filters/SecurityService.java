@@ -79,9 +79,14 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
             this.result.setObject(filteredEntities);
+
+            return this.result;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
 
         return this.result;
     }
@@ -115,9 +120,15 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 pipelineDefinitionsToAdd = new ArrayList<>();
             }
             this.result.setObject(filteredPipelineGroups);
+
+            return this.result;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
+
         return this.result;
     }
 
@@ -132,11 +143,17 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             boolean hasPermisssion = this.authorizationService.getById(entityId, permissions);
             if (hasPermisssion) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                return this.result;
             }
 
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
+
         return this.result;
     }
 
@@ -148,10 +165,15 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             boolean hasPermission = this.authorizationService.add(entity, permissions);
             if (hasPermission) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                return this.result;
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
 
         return this.result;
     }
@@ -164,10 +186,15 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             boolean hasPermission = this.authorizationService.update(entity, permissions);
             if (hasPermission) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                return this.result;
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
 
         return this.result;
     }
@@ -183,10 +210,15 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             boolean hasPermisssion = this.authorizationService.delete(entityId, permissions);
             if (hasPermisssion) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                return this.result;
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
 
         return this.result;
     }
@@ -202,11 +234,16 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 hasPermission = this.authorizationService.update(group, permissions);
                 if (hasPermission) {
                     this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                    return this.result;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
 
         return this.result;
     }
@@ -222,11 +259,16 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 hasPermission = this.authorizationService.update(group, permissions);
                 if (hasPermission) {
                     this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                    return this.result;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
 
         return this.result;
     }
@@ -239,9 +281,15 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
             this.result.setObject(filteredEntities);
+
+            return this.result;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             LOGGER.error(e.getMessage());
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
+
         return this.result;
     }
 
@@ -302,12 +350,16 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             User userToAdd = this.jsonConverter.fromJson(entity, User.class);
             entity = this.jsonConverter.toJson(userToAdd);
             contract.getArgs()[0].setObject(entity);
-
             this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+            return this.result;
         }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
 
         return this.result;
     }
