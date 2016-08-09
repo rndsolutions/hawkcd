@@ -166,13 +166,15 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
         return userGroupDtosServiceResult;
     }
-    
+
     private UserGroupDto getUserGroupDto(UserGroup userGroup) {
         UserGroupDto userGroupDto = new UserGroupDto();
         userGroupDto.setId(userGroup.getId());
         userGroupDto.setName(userGroup.getName());
+        userGroupDto.setUserIds(userGroup.getUserIds());
+        userGroupDto.setPermissions(userGroup.getPermissions());
         userGroupDto.setUsers(new ArrayList<>());
-        List<String> userIds = userGroup.getUserIds();
+        List<String> userIds = userGroupDto.getUserIds();
         for (String userId : userIds) {
             User user = (User) this.userService.getById(userId).getObject();
             userGroupDto.getUsers().add(user);
