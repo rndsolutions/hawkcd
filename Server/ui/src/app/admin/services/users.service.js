@@ -41,6 +41,18 @@ angular
             console.log(json);
         };
 
+        adminService.deleteUserGroup = function (id) {
+            var methodName = "delete";
+            var className = "UserGroupService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         adminService.getAllUsers = function() {
             var methodName = "getAll";
             var className = "UserService";

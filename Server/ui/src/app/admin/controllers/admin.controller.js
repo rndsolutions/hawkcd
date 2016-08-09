@@ -510,10 +510,16 @@ angular
                 vm.pipelineToDeleteName = pipelineName;
             };
 
-            vm.pipelineGroupToDelete;
+            vm.setUserGroupToDelete = function (userGroup) {
+                vm.userGroupToDelete = userGroup;
+            };
 
             vm.setPipelineGroupToDelete = function(pipelineGroup) {
                 vm.pipelineGroupToDelete = pipelineGroup;
+            };
+
+            vm.deleteUserGroup = function () {
+                adminService.deleteUserGroup(vm.userGroupToDelete.id);
             };
 
             vm.deletePipelineGroup = function() {

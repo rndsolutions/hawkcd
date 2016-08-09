@@ -42,6 +42,7 @@
                                     <td class="text-center">
                                         <label for="pipelineGroupSelect">
                                         <select name="pipelineGroupSelect" class="form-control" id="pipelineGroupSelect" ng-if="permission.permissionScope == 'PIPELINE_GROUP'" ng-model="permission.permittedEntityId">
+                                            <option value="PIPELINE_GROUP">All Pipeline Groups</option>
                                             <option ng-repeat="pipelineGroup in admin.currentPipelineGroups" value="{{pipelineGroup.id}}">
                                                 {{pipelineGroup.name}}
                                             </option>
@@ -49,6 +50,7 @@
                                         </label>
                                         <label for="pipelineSelect">
                                         <select name="pipelineSelect" class="form-control" id="pipelineSelect" ng-if="permission.permissionScope == 'PIPELINE'" ng-model="permission.permittedEntityId">
+                                            <option value="PIPELINE">All Pipelines</option>
                                             <option ng-repeat="pipeline in admin.allPipelines" value="{{pipeline.id}}">
                                                 {{pipeline.name}}
                                             </option>
