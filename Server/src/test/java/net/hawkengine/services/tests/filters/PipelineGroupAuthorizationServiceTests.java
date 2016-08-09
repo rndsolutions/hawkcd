@@ -1,5 +1,6 @@
 package net.hawkengine.services.tests.filters;
 
+import com.fiftyonred.mock_jedis.MockJedisPool;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.hawkengine.core.ServerConfiguration;
@@ -7,6 +8,8 @@ import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
+import net.hawkengine.db.IDbRepository;
+import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.TaskDefinition;
@@ -14,12 +17,15 @@ import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
+import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.filters.PipelineGroupAuthorizationService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
+import net.hawkengine.services.interfaces.IPipelineGroupService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +37,8 @@ public class PipelineGroupAuthorizationServiceTests {
     private PipelineGroup thirdPipelineGroup;
 
     private IAuthorizationService authorizationService;
+    private IDbRepository<PipelineGroup> mockedRepository;
+    private IPipelineGroupService mockedPipelineGroupService;
 
     private Gson jsonConverter;
 
@@ -51,7 +59,15 @@ public class PipelineGroupAuthorizationServiceTests {
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
 
-        this.authorizationService = new PipelineGroupAuthorizationService();
+        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineGroupAuthorizationService");
+        this.mockedRepository = new RedisRepository(PipelineGroup.class, mockedPool);
+        this.mockedPipelineGroupService = new PipelineGroupService(this.mockedRepository);
+
+        this.mockedPipelineGroupService.add(this.firstPipelineGroup);
+        this.mockedPipelineGroupService.add(this.secondPipelineGroup);
+        this.mockedPipelineGroupService.add(this.thirdPipelineGroup);
+
+        this.authorizationService = new PipelineGroupAuthorizationService(this.mockedPipelineGroupService);
     }
 
     @Test
