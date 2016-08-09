@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.ServiceResult;
@@ -14,18 +15,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public class UserGroupService extends CrudService<UserGroup> implements IUserGroupService {
+    private static final Class CLASS_TYPE = UserGroup.class;
+
     private IUserService userService;
 
     public UserGroupService() {
-        super.setRepository(new RedisRepository(UserGroup.class));
+        IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
+        super.setRepository(repository);
         this.userService = new UserService();
-        super.setObjectType("UserGroup");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
-    public UserGroupService(IDbRepository redisRepository, IUserService userService) {
-        super.setRepository(redisRepository);
+    public UserGroupService(IDbRepository repository, IUserService userService) {
+        super.setRepository(repository);
         this.userService = userService;
-        super.setObjectType("UserGroup");
+        super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     @Override
