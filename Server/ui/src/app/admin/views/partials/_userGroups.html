@@ -24,7 +24,7 @@
                 <i class="fa fa-trash pull-right"></i>
               </span>
                     <i class="fa fa-cog pull-right" aria-hidden="true" data-target="#manageUserGroup" data-toggle="modal" ng-click="admin.selectUserGroup($index)"></i>
-                    <h5 ng-click="admin.clearSelection()"> {{userGroup.userGroupName}} <span class="badge badge-default custom-admin-badge-color"> {{userGroup.users.length}} </span></h5>
+                    <h5 ng-click="admin.clearSelection()"> {{userGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{userGroup.users.length}} </span></h5>
                 </uib-accordion-heading>
                 <div class="custom-admin-pipeline-padding" ng-repeat="user in userGroup.users">
                     <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{user.email}}</span>

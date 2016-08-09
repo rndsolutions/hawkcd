@@ -29,6 +29,18 @@ angular
             console.log(json);
         };
 
+        adminService.updateUserGroupDTO = function (userGroup) {
+            var methodName = "updateUserGroupDto";
+            var className = "UserGroupService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(userGroup) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         adminService.getAllUsers = function() {
             var methodName = "getAll";
             var className = "UserService";
@@ -91,6 +103,19 @@ angular
 
         adminService.assignUser = function (user, group) {
             var methodName = "assignUserToGroup";
+            var className = "UserGroupService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
+            "{\"packageName\": \"net.hawkengine.model.UserGroup\", \"object\": " + JSON.stringify(group) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminService.unassignUser = function (user, group) {
+            var methodName = "unassignUserFromGroup";
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
             var result = "";
