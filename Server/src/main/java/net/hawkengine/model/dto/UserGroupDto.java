@@ -9,7 +9,6 @@ import java.util.List;
 public class UserGroupDto {
     private String id;
     private String name;
-    private List<String> userIds;
     private List<User> users;
     private List<String> userIds;
     private List<Permission> permissions;
@@ -32,14 +31,6 @@ public class UserGroupDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<String> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(List<String> userIds) {
-        this.userIds = userIds;
     }
 
     public List<User> getUsers() {

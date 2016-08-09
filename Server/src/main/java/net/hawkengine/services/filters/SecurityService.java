@@ -6,7 +6,6 @@ import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
-import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -227,7 +226,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[0].getObject();
-            UserGroupDto userGroupDto = this.jsonConverter.fromJson(group, UserGroupDto.class);
             boolean hasPermission = this.authorizationService.update(group, permissions);
             if (hasPermission) {
                 this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
