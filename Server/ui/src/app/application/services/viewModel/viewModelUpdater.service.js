@@ -49,13 +49,20 @@ angular
             viewModel.userGroups = userGroups;
         };
 
+        viewModelUpdater.updateUserGroup = function (userGroup) {
+            viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
+                if(currentUserGroup.id == userGroup.id){
+                    viewModel.userGroups[userGroupIndex] = userGroup;
+                }
+            });
+        };
+
         viewModelUpdater.getUsers = function (users) {
             viewModel.users = users;
         };
 
         viewModelUpdater.addUserGroup = function (userGroup) {
             viewModel.userGroups.push(userGroup);
-            debugger;
         };
 
         viewModelUpdater.updateAgents = function (agents) {
