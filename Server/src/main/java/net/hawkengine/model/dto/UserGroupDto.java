@@ -11,6 +11,7 @@ public class UserGroupDto {
     private String name;
     private List<String> userIds;
     private List<User> users;
+    private List<String> userIds;
     private List<Permission> permissions;
 
     public UserGroupDto() {
@@ -49,8 +50,16 @@ public class UserGroupDto {
         this.users = users;
     }
 
+    public List<String> getUserIds() {
+        return this.userIds;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
+    }
+
     public List<Permission> getPermissions() {
-        return permissions;
+        return this.permissions;
     }
 
     public void setPermissions(List<Permission> permissions) {
