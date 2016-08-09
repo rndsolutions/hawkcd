@@ -12,7 +12,6 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.interfaces.IUserService;
 import net.hawkengine.ws.WsServlet;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -23,52 +22,33 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import redis.embedded.RedisServer;
-
-import javax.jws.soap.SOAPBinding;
-
-
 public class HawkServer {
-
-    //TODO: pull this from the config
-    private static final int PORT = 8080;
-
     private Server server;
+    private IUserService userService;
     private Thread pipelinePreparer;
     private Thread jobAssigner;
     private Thread materialTracker;
     private EndpointFinder endpointFinder;
-    private RedisServer redisServer;
-    private IUserService userService;
 
-    public HawkServer() throws IOException, URISyntaxException {
-
-        //TODO:  move this to the config file
-//        RedisManager.initializeEmbededDb(6379);
-//
-//        RedisManager.startEmbededDb();
-
-        //TODO:  move this to the config file
+    public HawkServer() {
         RedisManager.connect();
-        // RedisManager.connect("localhost");
+
         this.server = new Server();
+        this.userService = new UserService();
         this.pipelinePreparer = new Thread(new PipelinePreparer());
         this.jobAssigner = new Thread(new JobAssigner());
         this.materialTracker = new Thread(new MaterialTracker());
         this.endpointFinder = new EndpointFinder();
-
-        this.userService = new UserService();
     }
 
     public void configureJetty() {
         // HTTP connector
         ServerConnector connector = new ServerConnector(this.server);
-        connector.setPort(PORT);
+        int port = ServerConfiguration.getConfiguration().getServerPort();
+        connector.setPort(port);
         this.server.addConnector(connector);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -77,7 +57,6 @@ public class HawkServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{"index.html"});
-        //resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 //        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
@@ -110,12 +89,11 @@ public class HawkServer {
         this.server.join();
     }
 
-    public void stop() throws InterruptedException {
-        RedisManager.release();
-//        RedisManager.stopEmbededDb();
+    public void stop() {
+        RedisManager.disconnect();
     }
 
-    private void addAdminUser(){
+    private void addAdminUser() {
         User adminUser = new User();
         adminUser.setEmail("admin@admin.com");
         adminUser.setPassword("admin");
@@ -131,12 +109,12 @@ public class HawkServer {
         List<User> users = (List<User>) this.userService.getAll().getObject();
         boolean isPresent = false;
 
-        for (User user: users) {
-            if(user.getEmail().equals(adminUser.getEmail())){
+        for (User user : users) {
+            if (user.getEmail().equals(adminUser.getEmail())) {
                 isPresent = true;
             }
         }
-        if (!isPresent){
+        if (!isPresent) {
             this.userService.add(adminUser);
         }
     }

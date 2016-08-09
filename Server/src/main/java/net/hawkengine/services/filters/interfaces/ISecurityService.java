@@ -19,6 +19,8 @@ public interface ISecurityService {
 
     ServiceResult delete(WsContractDto contract, List<Permission> permissions);
 
+    ServiceResult updateUserGroupDto(WsContractDto contract, List<Permission> permissions);
+
     ServiceResult assignUserToGroup(WsContractDto contract, List<Permission> permissions);
 
     ServiceResult unassignUserFromGroup(WsContractDto contract, List<Permission> permissions);

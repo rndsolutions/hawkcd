@@ -6,7 +6,7 @@ import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
-import net.hawkengine.model.dto.ConversionObject;
+import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -22,7 +22,6 @@ import net.hawkengine.ws.WsEndpoint;
 import net.hawkengine.ws.WsObjectProcessor;
 import org.apache.log4j.Logger;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 .create();
     }
 
-    public SecurityService(WsObjectProcessor wsObjectProcessor, IPipelineDefinitionService pipelineDefinitionService, IUserGroupService userGroupService){
+    public SecurityService(WsObjectProcessor wsObjectProcessor, IPipelineDefinitionService pipelineDefinitionService, IUserGroupService userGroupService) {
         this.wsObjectProcessor = wsObjectProcessor;
         this.userGroupService = userGroupService;
         this.pipelineDefinitionService = pipelineDefinitionService;
@@ -105,12 +104,12 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             this.authorizationService = AuthorizationServiceFactory.create("PipelineDefinitionService");
             List<T> filteredPipelineDefintions = (List<T>) this.authorizationService.getAll(permissions, pipelineDefinitions);
 
-            for (PipelineGroup filteredEntity:filteredEntities) {
+            for (PipelineGroup filteredEntity : filteredEntities) {
 
                 List<PipelineDefinition> pipelineDefinitionsWithinFilteredGroup = filteredEntity.getPipelines();
-                for (PipelineDefinition pipelineDefinitionWithinFilteredGroup: pipelineDefinitionsWithinFilteredGroup) {
-                    for (PipelineDefinition filteredPipelineDefintion:(List<PipelineDefinition>)filteredPipelineDefintions){
-                        if (filteredPipelineDefintion.getId().equals(pipelineDefinitionWithinFilteredGroup.getId()) && filteredPipelineDefintion.getPipelineGroupId().equals(filteredEntity.getId())){
+                for (PipelineDefinition pipelineDefinitionWithinFilteredGroup : pipelineDefinitionsWithinFilteredGroup) {
+                    for (PipelineDefinition filteredPipelineDefintion : (List<PipelineDefinition>) filteredPipelineDefintions) {
+                        if (filteredPipelineDefintion.getId().equals(pipelineDefinitionWithinFilteredGroup.getId()) && filteredPipelineDefintion.getPipelineGroupId().equals(filteredEntity.getId())) {
                             pipelineDefinitionsToAdd.add(filteredPipelineDefintion);
                         }
                     }
@@ -224,13 +223,36 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
+    public ServiceResult updateUserGroupDto(WsContractDto contract, List<Permission> permissions) {
+        try {
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
+            String group = contract.getArgs()[0].getObject();
+            UserGroupDto userGroupDto = this.jsonConverter.fromJson(group, UserGroupDto.class);
+            boolean hasPermission = this.authorizationService.update(group, permissions);
+            if (hasPermission) {
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+                return this.result;
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        this.result.setError(true);
+        this.result.setMessage("Unauthorized");
+        this.result.setObject(null);
+
+        return this.result;
+    }
+
+    @Override
     public ServiceResult assignUserToGroup(WsContractDto contract, List<Permission> permissions) {
         try {
             this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
             String group = contract.getArgs()[1].getObject();
             UserGroup userGroup = this.jsonConverter.fromJson(group, UserGroup.class);
             boolean hasPermission = this.authorizationService.getById(userGroup.getId(), permissions);
-            if (hasPermission){
+            if (hasPermission) {
                 hasPermission = this.authorizationService.update(group, permissions);
                 if (hasPermission) {
                     this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
@@ -343,17 +365,17 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     @Override
     public ServiceResult addUserWithoutProvider(WsContractDto contract, List<Permission> permissions) {
         try {
-        this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
-        String entity = contract.getArgs()[0].getObject();
-        boolean hasPermission = this.authorizationService.add(entity, permissions);
-        if(hasPermission) {
-            User userToAdd = this.jsonConverter.fromJson(entity, User.class);
-            entity = this.jsonConverter.toJson(userToAdd);
-            contract.getArgs()[0].setObject(entity);
-            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+            this.authorizationService = AuthorizationServiceFactory.create(contract.getClassName());
+            String entity = contract.getArgs()[0].getObject();
+            boolean hasPermission = this.authorizationService.add(entity, permissions);
+            if (hasPermission) {
+                User userToAdd = this.jsonConverter.fromJson(entity, User.class);
+                entity = this.jsonConverter.toJson(userToAdd);
+                contract.getArgs()[0].setObject(entity);
+                this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
 
-            return this.result;
-        }
+                return this.result;
+            }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
