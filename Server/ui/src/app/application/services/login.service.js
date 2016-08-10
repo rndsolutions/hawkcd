@@ -42,7 +42,8 @@ angular
                     deferred.reject(err);
                 });
             return deferred.promise;
-        }
+        };
+
         this.logout = function (username) {
             $http.post('http://localhost:8080/auth/logout', username, {
                 headers: {
@@ -62,7 +63,7 @@ angular
 
 
             //Api for logout?
-        }
+        };
 
 
 
