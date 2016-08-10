@@ -16,7 +16,7 @@ public class EntityPermissionTypeService {
         String pipelineGroupId = pipelineGroup.getId();
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
-                pipelineGroup.setPermissionType(PermissionType.ADMIN);
+                pipelineGroup.setPermissionType(permission.getPermissionType());
             } else if (permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString())) {
                 pipelineGroup.setPermissionType(permission.getPermissionType());
             } else if (permission.getPermittedEntityId().equals(pipelineGroupId)) {
