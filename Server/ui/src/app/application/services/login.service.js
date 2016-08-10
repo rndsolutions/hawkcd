@@ -2,7 +2,7 @@
 
 angular
     .module('hawk')
-    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'authenticationService', 'authDataService', '$state', function ($http, $q, CONSTANTS, authenticationService, authDataService, $state) {
+    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'authenticationService', 'authDataService', '$state', '$auth', function ($http, $q, CONSTANTS, authenticationService, authDataService, $state, $auth) {
         var loginService = this;
         var tokenEndPoint = '/Token';
 
@@ -50,9 +50,7 @@ angular
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).success(function (response) {
-                authenticationService.removeToken();
-                authDataService.authenticationData.IsAuthenticated = false;
-                authDataService.authenticationData.userName = "";
+                $auth.removeToken();
                 $state.go('auth');
                 deferred.resolve(null);
 
