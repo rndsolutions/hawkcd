@@ -35,14 +35,14 @@
             </div>
             <div class="center-margin">
                 <ul class="pagination">
-                    <li ng-class="{disabled: currentPage == 0}">
-                        <a href="javascript:;" ng-click="prevPage()">« Prev</a>
+                    <li ng-class="{disabled: admin.currentPage == 0}">
+                        <a href="javascript:;" ng-click="admin.prevPage()">« Prev</a>
                     </li>
-                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                    <li ng-repeat="n in admin.range(admin.pagedItems.length)" ng-class="{active: n == admin.currentPage}" ng-click="admin.setPage(n)">
                         <a href="javascript:;" ng-bind="n + 1">1</a>
                     </li>
-                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                        <a href="javascript:;" ng-click="nextPage()">Next »</a>
+                    <li ng-class="{disabled: admin.currentPage == admin.pagedItems.length - 1}">
+                        <a href="javascript:;" ng-click="admin.nextPage()">Next »</a>
                     </li>
                 </ul>
             </div>

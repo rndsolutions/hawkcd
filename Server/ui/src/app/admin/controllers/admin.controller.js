@@ -16,7 +16,7 @@ angular
                 breadCrumb: 'Admin',
                 userGroup: 'User Groups',
                 user: 'Users',
-                group: 'Groups',
+                group: 'Pipeline Groups',
                 server: 'Environments',
                 materials: 'Materials',
                 tableHeaders: {
@@ -276,11 +276,6 @@ angular
                 pipeConfigService.unassignPipelineDefinition(updatedPipeline);
             };
 
-            $('#checkbox').change(function(e) {
-                console.log(e);
-                debugger;
-            });
-
             vm.assignUsers = function() {
                 vm.selectedUserGroup.users = angular.copy(vm.selectedUserGroup.newUsers);
                 // vm.selectedUserGroup.users.forEach(function (currentUser, userIndex, userArray) {
@@ -471,8 +466,8 @@ angular
                 }
             };
 
-            vm.setPage = function () {
-                vm.currentPage = this.n;
+            vm.setPage = function (index) {
+                vm.currentPage = index;
             };
 
             // vm.deleteItem = function (idx) {
