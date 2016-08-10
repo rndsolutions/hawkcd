@@ -1,9 +1,11 @@
 <div class="run-item" ng-repeat="run in pipesHistory.currentPipelineRuns">
     <div class="run-item-container" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS'}">
         <div class="run-info-cell run-cell">
+          <div class="buffer"></div>
             <div class="run-info-container">
               #{{run.executionId}} {{run.pipelineDefinitionName}}
             </div>
+            <div class="buffer"></div>
         </div>
 
         <div class="material-stages-cell run-cell">
@@ -12,19 +14,20 @@
             </div>
              <div class="material-stages-container ">
 
-                <div class="stages-cell">
+                <div class="stages-cell" ng-class="">
                     <div class="stage-cell" ng-repeat="stage in run.stages">
                         <div class="stage-content" style="border-radius:10px;" ng-class="{'label label-sm stage-success':stage.status == 'PASSED','label label-sm stage-fail':stage.status == 'FAILED',
                             'label label-sm stage-not-run':stage.status=='NOT_RUN','label label-sm stage-working':stage.status=='IN_PROGRESS'}">
-                            <div ng-if="stage.stageDefinitionName.length > 7">
-                                {{stage.stageDefinitionName.substring(0,8)}}...
+                            <div class="stage-text" ng-if="stage.stageDefinitionName.length > 7">
+                                {{stage.stageDefinitionName.substring(0,7)}}..
                             </div>
-                            <div ng-if="stage.stageDefinitionName.length <= 7">
+                            <div class="stage-text" ng-if="stage.stageDefinitionName.length <= 7">
                               {{stage.stageDefinitionName}}
                             </div>
 
                         </div>
-                        <div ng-class="{'horizontal-line':$index !== run.stages.length - 1}">
+                        <div ng-if="$index !== run.stages.length - 1" class="horizontal-line" ng-class="">
+
                         </div>
                     </div>
 
@@ -37,19 +40,17 @@
                     <span> {{material.materialDefinition.comments}}</span>
                     <br/>
                     </span>
-
                 </div>
-
             </div>
         </div>
 
         <div class="user-time-cell run-cell">
-            <div>
+            <div class="user-info">
                 <div class="display-inline"><i class="fa fa-user fa-1x"></i> {{run.materials[0].materialDefinition.authorName}}</div>
                 <div class="display-inline pull-right"><i class="fa fa-refresh working-icon-right" ng-class="{'fa-spin fa-fw': run.status === 'IN_PROGRESS'}"></i></div>
             </div>
             <div class="additional-info">
-                <div ng-model="run.lastPipelineAction.output" class="display-inline"><i class="fa fa-calendar fa-1x "></i> {{run.lastPipelineAction.output}}</div>
+                <div id="time-interval" ng-model="run.lastPipelineAction.output" class="display-inline"><i class="fa fa-calendar fa-1x "></i> {{run.lastPipelineAction.output}}</div>
                 <div id="link-button" class="fa-item pull-right" ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId, groupName: run.groupName})">
                     <i class="fa fa-list pull-right"></i>
                 </div>
