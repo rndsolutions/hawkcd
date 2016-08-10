@@ -6,9 +6,9 @@ import net.hawkengine.model.UserGroup;
 import net.hawkengine.model.dto.UserGroupDto;
 
 public interface IUserGroupService extends ICrudService<UserGroup>{
-    ServiceResult assignUserToGroup(User user, UserGroup userGroup);
+    ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto);
 
-    ServiceResult unassignUserFromGroup(User user, UserGroup userGroup);
+    ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto);
 
     ServiceResult getAllUserGroups();
 

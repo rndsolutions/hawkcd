@@ -49,10 +49,8 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
     @Override
     public ServiceResult addUserGroupDto(UserGroupDto userGroupDto) {
-        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
+        UserGroup userGroup = new UserGroup();
         userGroup.setName(userGroupDto.getName());
-        userGroup.setUserIds(userGroupDto.getUserIds());
-        userGroup.setPermissions(userGroupDto.getPermissions());
 
         this.add(userGroup);
 
@@ -113,8 +111,8 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public ServiceResult assignUserToGroup(User user, UserGroup userGroup) {
-        userGroup = (UserGroup) this.getById(userGroup.getId()).getObject();
+    public ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto) {
+        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
 
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
@@ -124,7 +122,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             userGroup.getUserIds().add(user.getId());
             this.userService.update(user);
             this.update(userGroup);
-            UserGroupDto userGroupDto = this.getUserGroupDto(userGroup);
+            UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
             ServiceResult userResult = new ServiceResult();
             userResult.setError(false);
@@ -134,7 +132,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             userGroupResult.setError(false);
             userGroupResult.setMessage("UserGroup updated successfully.");
-            userGroupResult.setObject(userGroupDto);
+            userGroupResult.setObject(userGroupDtoResult);
         } else {
             userGroupResult.setError(true);
             userGroupResult.setMessage("User already assigned to User Group.");
@@ -145,8 +143,8 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public ServiceResult unassignUserFromGroup(User user, UserGroup userGroup) {
-        userGroup = (UserGroup) this.getById(userGroup.getId()).getObject();
+    public ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto) {
+        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
 
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
@@ -156,7 +154,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             userGroup.getUserIds().remove(user.getId());
             this.userService.update(user);
             this.update(userGroup);
-            UserGroupDto userGroupDto = this.getUserGroupDto(userGroup);
+            UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
             ServiceResult userResult = new ServiceResult();
             userResult.setError(false);
@@ -166,7 +164,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             userGroupResult.setError(false);
             userGroupResult.setMessage("UserGroup updated successfully.");
-            userGroupResult.setObject(userGroupDto);
+            userGroupResult.setObject(userGroupDtoResult);
         } else {
             userGroupResult.setError(true);
             userGroupResult.setMessage("User already unassigned from User Group.");
