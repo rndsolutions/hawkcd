@@ -60,11 +60,18 @@ public class WsEndpoint extends WebSocketAdapter {
         this.id = id;
     }
 
+    public User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public void setLoggedUser(User loggedUser) {
+        this.loggedUser = loggedUser;
+    }
+
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
-        System.out.println("Socket Connected: " + session);
-        EndpointConnector.setWsEndpoint(this);
+        LOGGER.info("Socket Connected: " + session);
 
         String tokenQuery = session.getUpgradeRequest().getQueryString();
 
@@ -72,7 +79,8 @@ public class WsEndpoint extends WebSocketAdapter {
             String token = tokenQuery.substring(6);
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
-            this.loggedUser = tokenInfo.getUser();
+            this.setLoggedUser(tokenInfo.getUser());
+            WsEndpointPool.getInstance().add(this);
 
             UserDto userDto = new UserDto();
             userDto.setUsername(tokenInfo.getUser().getEmail());
@@ -85,7 +93,6 @@ public class WsEndpoint extends WebSocketAdapter {
 
             EndpointConnector.passResultToEndpoint("UserInfo", "getUser", serviceResult);
         }
-
     }
 
     @Override
@@ -117,9 +124,9 @@ public class WsEndpoint extends WebSocketAdapter {
 //                    return;
 //                }
 //            }
-            User currentUser = (User)this.userService.getById(this.loggedUser.getId()).getObject();
-            
-            this.loggedUser = currentUser;
+            User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
+
+            this.setLoggedUser(currentUser);
             this.loggedUser.getPermissions().addAll(this.getUniqueUserGroupPermissions(this.loggedUser));
 
             List<Permission> orderedPermissions = this.sortPermissions(this.loggedUser.getPermissions());
@@ -143,7 +150,8 @@ public class WsEndpoint extends WebSocketAdapter {
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
-        System.out.println("Socket Closed: [" + statusCode + "] " + reason);
+        LOGGER.info("Socket Closed: [" + statusCode + "] " + reason);
+        WsEndpointPool.getInstance().remove(this);
     }
 
     @Override
@@ -204,17 +212,17 @@ public class WsEndpoint extends WebSocketAdapter {
             if (isPresent) {
                 List<Permission> userGroupPermissionsFromDb = userGroup.getPermissions();
 
-                for (Permission userGroupPermissionFromDb: userGroupPermissionsFromDb) {
+                for (Permission userGroupPermissionFromDb : userGroupPermissionsFromDb) {
                     boolean isPermissionPresent = false;
-                    for (Permission userPersmission:user.getPermissions()){
+                    for (Permission userPersmission : user.getPermissions()) {
                         if (userGroupPermissionFromDb.getPermissionScope() == userPersmission.getPermissionScope() &&
                                 userGroupPermissionFromDb.getPermittedEntityId().equals(userPersmission.getPermittedEntityId()) &&
-                                userGroupPermissionFromDb.getPermissionType() == userPersmission.getPermissionType()){
+                                userGroupPermissionFromDb.getPermissionType() == userPersmission.getPermissionType()) {
                             isPermissionPresent = true;
                             break;
                         }
                     }
-                    if (!isPermissionPresent){
+                    if (!isPermissionPresent) {
                         userGroupPermissions = this.addPermissionToList(userGroupPermissions, userGroupPermissionFromDb);
                     }
                 }
@@ -224,19 +232,19 @@ public class WsEndpoint extends WebSocketAdapter {
         return userGroupPermissions;
     }
 
-    private List<Permission> addPermissionToList(List<Permission> permissions, Permission permissionToAdd){
+    private List<Permission> addPermissionToList(List<Permission> permissions, Permission permissionToAdd) {
         List<Permission> equalPermissions = new ArrayList<>();
         equalPermissions.add(permissionToAdd);
         int index = 0;
 
-        for (int i = 0; i < permissions.size(); i++){
+        for (int i = 0; i < permissions.size(); i++) {
             Permission permission = permissions.get(i);
-            if (permission.getPermittedEntityId().equals(permissionToAdd.getPermittedEntityId())){
+            if (permission.getPermittedEntityId().equals(permissionToAdd.getPermittedEntityId())) {
                 equalPermissions.add(permission);
                 index = i;
             }
         }
-        if (equalPermissions.size() > 1){
+        if (equalPermissions.size() > 1) {
             Permission permissionWithPriority = equalPermissions.stream().sorted((p1, p2) -> p1.getPermissionType().compareTo(p2.getPermissionType())).findFirst().orElse(null);
             permissions.set(index, permissionWithPriority);
 
@@ -247,7 +255,7 @@ public class WsEndpoint extends WebSocketAdapter {
         return permissions;
     }
 
-    private List<Permission> sortPermissions(List<Permission> permissions){
+    private List<Permission> sortPermissions(List<Permission> permissions) {
         List<Permission> sortedPermissions = new ArrayList<>();
 
         List<Permission> adminPermissions = permissions
