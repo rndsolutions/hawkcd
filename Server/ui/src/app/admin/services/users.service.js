@@ -82,7 +82,7 @@ angular
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.UserGroup\", \"object\": " + JSON.stringify(userGroup) + "}"];
+            var args = ["{\"packageName\": \"net.hawkengine.model.UserGroupDto\", \"object\": " + JSON.stringify(userGroup) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
