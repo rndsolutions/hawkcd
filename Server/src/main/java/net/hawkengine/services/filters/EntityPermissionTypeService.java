@@ -21,8 +21,6 @@ public class EntityPermissionTypeService {
                 pipelineGroup.setPermissionType(permission.getPermissionType());
             } else if (permission.getPermittedEntityId().equals(pipelineGroupId)) {
                 pipelineGroup.setPermissionType(permission.getPermissionType());
-
-                return pipelineGroup;
             }
         }
 
@@ -40,8 +38,6 @@ public class EntityPermissionTypeService {
             }
             if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())) {
                 pipelineDefinition.setPermissionType(permission.getPermissionType());
-
-                return pipelineDefinition;
             }
         }
 
@@ -61,8 +57,6 @@ public class EntityPermissionTypeService {
             }
             if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())){
                 pipeline.setPermissionType(permission.getPermissionType());
-
-                return pipeline;
             }
         }
 

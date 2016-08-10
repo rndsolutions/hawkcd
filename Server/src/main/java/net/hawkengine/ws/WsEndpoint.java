@@ -13,7 +13,6 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionScope;
-import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserGroupService;
@@ -27,9 +26,10 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class WsEndpoint extends WebSocketAdapter {
     static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
@@ -237,8 +237,8 @@ public class WsEndpoint extends WebSocketAdapter {
             }
         }
         if (equalPermissions.size() > 1){
-            Permission permissionWithPrioriy = equalPermissions.stream().sorted((p1, p2) -> p1.getPermissionType().compareTo(p2.getPermissionType())).findFirst().orElse(null);
-            permissions.set(index, permissionWithPrioriy);
+            Permission permissionWithPriority = equalPermissions.stream().sorted((p1, p2) -> p1.getPermissionType().compareTo(p2.getPermissionType())).findFirst().orElse(null);
+            permissions.set(index, permissionWithPriority);
 
             return permissions;
         }
@@ -253,26 +253,31 @@ public class WsEndpoint extends WebSocketAdapter {
         List<Permission> adminPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getPermissionScope() == PermissionScope.SERVER)
+                .sorted((p1, p2) -> p2.getPermissionType().compareTo(p1.getPermissionType()))
                 .collect(Collectors.toList());
         List<Permission> pipelineGroupGlobalPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE_GROUP)
                 .filter(permission -> permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString()))
+                .sorted((p1, p2) -> p2.getPermissionType().compareTo(p1.getPermissionType()))
                 .collect(Collectors.toList());
         List<Permission> pipelineGlobalPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE)
                 .filter(permission -> permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()))
+                .sorted((p1, p2) -> p2.getPermissionType().compareTo(p1.getPermissionType()))
                 .collect(Collectors.toList());
         List<Permission> pipelineGroupPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE_GROUP)
                 .filter(permission -> !permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString()))
+                .sorted((p1, p2) -> p2.getPermissionType().compareTo(p1.getPermissionType()))
                 .collect(Collectors.toList());
         List<Permission> pipelinePermissions = permissions
                 .stream()
                 .filter(permission -> permission.getPermissionScope() == PermissionScope.PIPELINE)
                 .filter(permission -> !permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()))
+                .sorted((p1, p2) -> p2.getPermissionType().compareTo(p1.getPermissionType()))
                 .collect(Collectors.toList());
 
         sortedPermissions.addAll(adminPermissions);
