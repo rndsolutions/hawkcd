@@ -82,7 +82,7 @@ public class HawkServer {
 
     public void start() throws Exception {
         this.server.start();
-        this.addAdminUser();
+        this.userService.addAdminServerUser();
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();
@@ -91,31 +91,5 @@ public class HawkServer {
 
     public void stop() {
         RedisManager.disconnect();
-    }
-
-    private void addAdminUser() {
-        User adminUser = new User();
-        adminUser.setEmail("admin@admin.com");
-        adminUser.setPassword("admin");
-        Permission adminUserPermission = new Permission();
-        adminUserPermission.setPermittedEntityId("server");
-        adminUserPermission.setPermissionType(PermissionType.ADMIN);
-        adminUserPermission.setPermissionScope(PermissionScope.SERVER);
-        List<Permission> permissions = new ArrayList<>();
-        permissions.add(adminUserPermission);
-
-        adminUser.setPermissions(permissions);
-
-        List<User> users = (List<User>) this.userService.getAll().getObject();
-        boolean isPresent = false;
-
-        for (User user : users) {
-            if (user.getEmail().equals(adminUser.getEmail())) {
-                isPresent = true;
-            }
-        }
-        if (!isPresent) {
-            this.userService.add(adminUser);
-        }
     }
 }
