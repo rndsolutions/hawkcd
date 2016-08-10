@@ -1,0 +1,48 @@
+.display-inline{
+  display:inline;
+}
+
+.display-inline-block{
+  display:inline-block;
+}
+
+.list-icon-style {
+  margin-top:5px;
+  margin-right:-5px;
+  padding:0px!important;
+}
+
+#left-header-container {
+  display:inline-block;
+  vertical-align: top;
+  text-align: center;
+  margin-top:10px;
+  width:37%;
+}
+
+#right-header-container {
+  display:inline-block;
+  border-left:2px solid gray;
+  vertical-align: top;
+  width:61%;
+}
+
+.user-cell {
+  padding-left:3px;
+}
+
+.time-info-cell {
+  padding-right:5px;
+}
+
+#header-main {
+  border-left:2px solid  #2ab4c0 ;
+}
+
+#header-container {
+  background-color: #E1E5EC!important;
+  padding-right:0px;
+  padding-left:8px;
+  color: black;
+  font-weight: 500;
+}

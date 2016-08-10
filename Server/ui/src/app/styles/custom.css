@@ -580,88 +580,6 @@ p {
   margin: 0 auto!important;
 }
 
-/*#row-container {
-  border: 1px solid gray;
-  margin:1% 0 1% 0;
-}
-
-.display-inline{
-  display:inline;
-}
-
-.status-working{
-  border-left:2px solid #F1C40F!important;
-}
-
-.status-idle{
-  border-left:2px solid #36c6d3!important;
-}
-.status-failed{
-  border-left:2px solid #D91E18!important;
-}
-
-.status-bar{
-  border-left:2px solid #36c6d3;
-}
-
-.vertical-line{
-  border-left:2px solid gray;
-  border-right:2px solid gray;
-}
-
-.horizontal-line{
-  border-top:1px solid gray;
-  width: 1.4em;
-  height: 5px;
-  margin-right:-5px;
-  margin-left:-4px;
-  display:inline-flex;
-}
-
-#first-cell {
-  margin-top:25px;
-  min-width: 150px;
-  min-height: 50px;
-}
-
-#first-cell-text{
-  display:inline;
-  margin-left:15%;
-}
-
-#second-cell{
-}
-
-#second-cell-container{
-  margin-top:10px;
-  padding-left:5px;
-}
-
-#materials-block{
-  margin-left:20px;
-}
-
-#third-cell{
-  margin:0;
-  padding:0;
-  margin-top:5px;
-  padding-top:25px;
-}
-
-#third-cell-container{
-  margin-left:10px;
-  margin-top:-40px;
-}
-
-.list-icon-right{
-  margin-right:7px;
-}
-
-.working-icon-right{
-  margin-right: 22px;
-}*/
-
-
 .status-working{
   border-left:2px solid #F1C40F!important;
 }
@@ -674,71 +592,11 @@ p {
 }
 
 @media screen and (max-width: 767px) {
-    /*@import "history-screen/small-devices.css";*/
-
-    .display-inline{
-      display:inline;
-    }
-
-    .display-inline-block{
-      display:inline-block;
-    }
-
-    .list-icon-style {
-      margin-top:5px;
-      margin-right:-5px;
-      padding:0px!important;
-    }
-
-    #left-header-container {
-      display:inline-block;
-      vertical-align: top;
-      text-align: center;
-      margin-top:10px;
-      width:37%;
-    }
-
-    #right-header-container {
-      display:inline-block;
-      border-left:2px solid gray;
-      vertical-align: top;
-      width:61%;
-    }
-
-    .user-cell {
-      padding-left:3px;
-    }
-
-    .time-info-cell {
-      padding-right:5px;
-    }
-
-    #header-main {
-      border-left:2px solid blue;
-    }
-
-    #header-container {
-      background-color: #E1E5EC!important;
-      padding-right:0px;
-      padding-left:8px;
-      color: black;
-      font-weight: 500;
-    }
+    @import "history-screen/_small-devices.css";
 }
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
-  /*@import "history-screen/medium-devices.css";*/
-
-    /*#runs-container-small{
-      display:none;
-    }
-
-    .vertical-line{
-        border-left:5px solid gray!important;
-        padding:15px!important;
-        padding-right:5px!important;
-        display:inline!important;
-    }*/
+    @import "history-screen/_medium-devices.css";
 }
 
 @media screen and (min-width: 991px) {

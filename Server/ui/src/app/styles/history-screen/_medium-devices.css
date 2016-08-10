@@ -1,0 +1,119 @@
+.run-item {
+    border: 1px solid #E5E5E5;
+    background-color:#E1E5EC;
+    margin-top:10px;
+    padding: 10px;
+}
+.run-item-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border-left: 2px solid #2ab4c0;
+
+}
+.run-cell {
+}
+
+/*first cell*/
+
+.run-info-cell {
+  display:inline-block;
+  width:11%;
+}
+
+.run-info-container{
+  margin:auto;
+  text-align: center;
+  vertical-align: top;
+}
+
+/*first cell*/
+
+
+/*second cell*/
+
+.material-stages-cell {
+  border-left:1px solid gray;
+  display:inline-block;
+  width: 70%;
+}
+.material-stages-container {
+  display:inline;
+}
+
+/*stages*/
+
+.stages-cell {
+  display:flex;
+}
+
+/*stage*/
+
+.stage-cell {
+  display: inline-block;
+}
+.stage-content {
+  display:inline-block;
+  width:90px;
+  height: 35px;
+  color:black;
+}
+
+.horizontal-line {
+  border-top:1px solid black;
+  display:inline-block;
+  width:20%;
+}
+.stage-working {
+    background-color: #F4D03F;
+}
+.stage-not-run {
+    background-color: #ffffff;
+    color: #000000;
+}
+.stage-success {
+    background-color: #26C281;
+}
+.stage-fail {
+    background-color: #D91E18;
+}
+
+/*materials*/
+
+.materials-block {}
+.material-icon{
+  display:inline-block;
+  vertical-align: top;
+}
+
+/*second cell*/
+
+
+/*third-cell*/
+
+.user-time-cell {
+  border-left:1px solid gray;
+  display:inline-block;
+  padding-left:3px;
+  width: 15%;
+  vertical-align: top;
+}
+
+/*third-cell*/
+
+.additional-info {
+}
+#link-button {
+  margin:0;
+  padding:0;
+  margin-top:5px;
+  display:inline-block;
+}
+#link-button> i.fa-list {
+
+}
+
+.working-icon-right{
+  margin-right: 5px;
+}
