@@ -4,8 +4,12 @@ import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
+import net.hawkengine.model.enums.PermissionScope;
+import net.hawkengine.model.enums.PermissionType;
+import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.interfaces.IUserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,6 +40,10 @@ public class UserService extends CrudService<User> implements IUserService {
 
     @Override
     public ServiceResult add(User object) {
+        ServiceResult result = this.getByEmail(object.getEmail());
+        if (result.hasError()){
+            return result;
+        }
         return super.add(object);
     }
 
@@ -68,22 +76,41 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult addUserWithoutProvider(User user) {
+    public ServiceResult getByEmail(String email) {
         List<User> users = (List<User>) this.getAll().getObject();
 
-        User userFromDb = users
+        User user = users
                 .stream()
-                .filter(u -> u.getEmail().equals(user.getEmail()))
+                .filter(u -> u.getEmail().equals(email))
                 .findFirst()
                 .orElse(null);
 
-        user.setPassword(user.getPassword());
-
-        if (userFromDb == null) {
-            this.add(user);
-            return super.createServiceResult(user, false, "created successfully");
+        if (user != null) {
+            return super.createServiceResult(user, true, "with this email already exists");
         } else {
-            return super.createServiceResult(user, true, "already present");
+            return super.createServiceResult(user, false, "does not exist");
         }
+    }
+
+    @Override
+    public ServiceResult addAdminServerUser() {
+        User adminUser = new User();
+        adminUser.setEmail("admin@admin.com");
+        adminUser.setPassword("admin");
+        Permission adminUserPermission = new Permission();
+        adminUserPermission.setPermittedEntityId("SERVER");
+        adminUserPermission.setPermissionType(PermissionType.ADMIN);
+        adminUserPermission.setPermissionScope(PermissionScope.SERVER);
+        List<Permission> permissions = new ArrayList<>();
+        permissions.add(adminUserPermission);
+
+        adminUser.setPermissions(permissions);
+
+        return this.add(adminUser);
+    }
+
+    @Override
+    public ServiceResult addUserWithoutProvider(User user) {
+        return  this.add(user);
     }
 }
