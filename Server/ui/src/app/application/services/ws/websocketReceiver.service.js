@@ -88,7 +88,7 @@ angular
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    add: function (object) {
+                    addUserGroupDto: function (object) {
                         if(object.error == false) {
                             viewModelUpdater.addUserGroup(object.result);
                         }

@@ -78,7 +78,7 @@ angular
         };
 
         adminService.addUserGroup = function (userGroup) {
-            var methodName = "add";
+            var methodName = "addUserGroupDto";
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
             var result = "";
