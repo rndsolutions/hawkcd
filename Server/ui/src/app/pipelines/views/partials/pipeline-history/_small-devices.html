@@ -1,7 +1,7 @@
 <div id="runs-container-small" ng-repeat="run in pipesHistory.currentPipelineRuns">
     <div class="mt-element-list">
-        <div class="mt-list-container list-simple ext-1 group">
-            <a class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false">
+        <div class="mt-list-container list-simple ext-1 group" >
+            <a class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false" >
                 <div id="header-container" class="list-toggle done">
                     <div id="header-main" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS'}">
                         <div id="left-header-container">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </a>
-            <div class="panel-collapse collapse" id="list{{$index}}" aria-expanded="false">
+            <div class="panel-collapse collapse" id="list{{$index}}" aria-expanded="false" ng-class="{'in':run.status == 'IN_PROGRESS'}">
                 <ul>
                     <li class="mt-list-item done" style="border:none;">
                         <span ng-repeat="material in run.materials">
@@ -47,6 +47,4 @@
         </div>
     </div>
     <br/>
-
-
 </div>
