@@ -48,6 +48,24 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
+    public ServiceResult addUserGroupDto(UserGroupDto userGroupDto) {
+        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
+        userGroup.setName(userGroupDto.getName());
+        userGroup.setUserIds(userGroupDto.getUserIds());
+        userGroup.setPermissions(userGroupDto.getPermissions());
+
+        this.add(userGroup);
+
+        UserGroupDto updatedUserGroupDto = this.getUserGroupDto(userGroup);
+        ServiceResult result = new ServiceResult();
+        result.setError(false);
+        result.setMessage("UserGroup created successfully.");
+        result.setObject(updatedUserGroupDto);
+
+        return result;
+    }
+
+    @Override
     public ServiceResult update(UserGroup userGroup) {
         return super.update(userGroup);
     }

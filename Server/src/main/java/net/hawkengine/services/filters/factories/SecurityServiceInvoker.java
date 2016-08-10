@@ -44,6 +44,8 @@ public class SecurityServiceInvoker {
                 return this.securityService.unassignPipelineFromGroup(contract, permissions);
             case "addUserWithoutProvider":
                 return this.securityService.addUserWithoutProvider(contract, permissions);
+            case "addUserGroupDto":
+                return this.securityService.addUserGroupDto(contract, permissions);
             case "updateUserGroupDto":
                 return this.securityService.updateUserGroupDto(contract, permissions);
             default:

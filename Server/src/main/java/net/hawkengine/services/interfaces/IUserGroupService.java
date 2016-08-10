@@ -12,5 +12,7 @@ public interface IUserGroupService extends ICrudService<UserGroup>{
 
     ServiceResult getAllUserGroups();
 
+    ServiceResult addUserGroupDto(UserGroupDto userGroupDto);
+
     ServiceResult updateUserGroupDto(UserGroupDto userGroupDto);
 }
