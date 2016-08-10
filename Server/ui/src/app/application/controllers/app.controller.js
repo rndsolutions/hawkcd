@@ -49,9 +49,16 @@ angular
         }
 
         $scope.logoutUser = function () {
-            $auth.logout();
-            localStorage.clear();
-            $location.path("/authenticate");
+            loginService.logout($scope.username)
+                .then(function (res) {
+                    $auth.logout();
+                    localStorage.clear();
+                    $location.path("/authenticate");
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                });
+
         }
 
         $scope.me = {};

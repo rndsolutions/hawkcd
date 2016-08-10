@@ -43,11 +43,23 @@ angular
                 });
             return deferred.promise;
         }
-        this.logOut = function () {
-            authenticationService.removeToken();
-            authDataService.authenticationData.IsAuthenticated = false;
-            authDataService.authenticationData.userName = "";
-            $state.go('auth');
+        this.logout = function (username) {
+            $http.post('http://localhost:8080/auth/logout', username, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).success(function (response) {
+                authenticationService.removeToken();
+                authDataService.authenticationData.IsAuthenticated = false;
+                authDataService.authenticationData.userName = "";
+                $state.go('auth');
+                deferred.resolve(null);
+
+            })
+                .error(function (err, status) {
+                    deferred.reject(err);
+                });
+
 
             //Api for logout?
         }
