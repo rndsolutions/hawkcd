@@ -581,14 +581,14 @@ p {
 }
 
 .status-working{
-  border-left:2px solid #F1C40F!important;
+  border-left:4px solid #F1C40F!important;
 }
 
 .status-idle{
-  border-left:2px solid #36c6d3!important;
+  border-left:4px solid #36c6d3!important;
 }
 .status-failed{
-  border-left:2px solid #D91E18!important;
+  border-left:4px solid #D91E18!important;
 }
 
 @media screen and (max-width: 767px) {
@@ -597,19 +597,4 @@ p {
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
     @import "history-screen/_medium-devices.css";
-}
-
-@media screen and (min-width: 991px) {
-  /*@import "history-screen/medium-devices.css";*/
-
-    /*#runs-container-small{
-      display:none;
-    }
-
-    .vertical-line{
-        border-left:5px solid gray!important;
-        padding:15px!important;
-        padding-right:5px!important;
-        display:inline!important;
-    }*/
 }

@@ -14,7 +14,7 @@
 @media screen and (min-width: 1440px) {
 
   .stage-content{
-    width:130px!important;
+    width:110px!important;
   }
 
   .stage-text{
@@ -45,7 +45,7 @@
     height: 100%;
     margin: 0;
     padding: 0;
-    border-left: 2px solid #2ab4c0;
+    border-left: 4px solid #2ab4c0;
     display: flex;
 }
 .run-cell {}
@@ -96,7 +96,6 @@
 .stage-cell {
     margin: 0;
     padding: 0;
-    float: inherit;
     display: flex;
     flex-flow: row;
 }
