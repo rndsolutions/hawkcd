@@ -105,9 +105,11 @@
     width: 70px;
     height: 35px;
     color: white;
+    border-radius:10px!important;
+    margin:0 auto!important;
 }
 .stage-text {
-    margin-top: 7px;
+    margin-top: 7px!important;
 }
 .horizontal-line {
     order: 2;
