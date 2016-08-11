@@ -16,7 +16,7 @@
                 <a href="">
                     <span class="g-name">{{pipegroup.name}}</span>
                 </a>
-                <a class="pull-right" data-target="#pipeWizard" data-toggle="modal" ng-click="pipes.getGroupName(pipegroup)">
+                <a class="pull-right" data-target="#pipeWizard" ng-if="pipegroup.permissionType != 'VIEWER' && pipegroup.permissionType != 'OPERATOR' && pipegroup.permissionType != ''" data-toggle="modal" ng-click="pipes.getGroupName(pipegroup)">
                     <span class="btn btn-circle btn-default"><i class="fa fa-plus"></i> Add</span>
                 </a>
             </div>

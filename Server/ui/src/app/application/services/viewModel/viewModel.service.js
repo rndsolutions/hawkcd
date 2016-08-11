@@ -7,6 +7,8 @@ angular
 
         viewModel.allAgents = [];
 
+        viewModel.user = {};
+
         viewModel.allPipelines = [];
 
         viewModel.assignedPipelines = [];
@@ -14,6 +16,10 @@ angular
         viewModel.unassignedPipelines = [];
 
         viewModel.allMaterials = [];
+
+        viewModel.userGroups = [];
+
+        viewModel.users = [];
 
         viewModel.allMaterialDefinitions = [];
 

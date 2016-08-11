@@ -62,7 +62,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
         for (PipelineGroup pipelineGroup : pipelineGroups) {
             List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                if (pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
+                if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
                     pipelineDefinitionsToAdd.add(pipelineDefinition);
                 }
             }

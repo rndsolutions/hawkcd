@@ -18,7 +18,8 @@ angular
         //"oc.lazyLoad",
         //"ngSanitize",
         'luegg.directives',
-        'toaster'
+        'toaster',
+        'satellizer'
         //'ngAnimate'
         //'flow'
     ])
@@ -87,16 +88,21 @@ angular
     }])
 
     /* Setup Routing For All Pages */
-    .config(['$stateProvider', '$urlRouterProvider', '$animateProvider', function ($stateProvider, $urlRouterProvider, $animateProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', '$animateProvider','$authProvider',
+            function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider) {
+
+             // used for debugging
+             $authProvider.baseUrl = "http://localhost:8080";
+             $authProvider.github({
+                  clientId: '2d3dbbf586d2260cbd68',
+                  scope: ['user:email','repo']
+                });
+
+
         // Redirect any unmatched url
         $urlRouterProvider.otherwise("/");
-
-        $urlRouterProvider.when('/', '/pipelines');
-
         //$animateProvider.classNameFilter(/angular-animate/);
-
         $stateProvider
-
             .state('auth', {
                 url: "/authenticate",
                 templateUrl: "app/auth.html",
@@ -117,7 +123,20 @@ angular
                 url: "/",
                 templateUrl: "app/main.html",
                 resolve: {
-                    auth: function (authDataService, pipeStatsService, agentService, $location) {
+                    auth: function (authDataService, pipeStatsService, agentService, $location,
+                    $auth, $rootScope, $timeout) {
+
+                        console.log("isAuthenticated: "+ $auth.isAuthenticated());
+
+                        if(!$auth.isAuthenticated()){
+                            $timeout(function(){
+                                 $location.path('/authenticate');
+                                 $rootScope.$apply();
+                            }, 100);
+                        }
+
+                        //$auth.authenticate('github');
+
                         if (!authDataService.authenticationData.IsAuthenticated) {
                             //pipeStatsService.getAgentById();
                             //$location.path('/authenticate');
@@ -129,7 +148,7 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminMaterialService", "pipeConfigService", "pipeExecService", "toaster", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminMaterialService, pipeConfigService, pipeExecService, toaster) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
@@ -138,8 +157,11 @@ angular
 
         var timerID=0;
 
-        function start(wsServerLocation){
-            $rootScope.socket = new WebSocket(wsServerLocation);
+
+        //TODO: Replace localStorage with $auth.isAuthenitcated()
+        $rootScope.startWebsocket = function start(wsServerLocation){
+            $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
+
             $rootScope.socket.onmessage = function (event) {
                 console.log(event.data);
                 websocketReceiverService.processEvent(JSON.parse(event.data));
@@ -157,15 +179,24 @@ angular
                 // pipeConfigService.getAllStageDefinitions();
                 //pipeStatsService.getAgentById();
 
-                adminGroupService.getAllPipelineGroups();
-                pipeConfigService.getAllPipelineGroupDTOs();
+                //adminGroupService.getAllPipelineGroups();
                 pipeConfigService.getAllPipelineDefinitions();
+                pipeConfigService.getAllPipelineGroupDTOs();
                 agentService.getAllAgents();
                 pipeExecService.getAllPipelines();
-                adminMaterialService.getAllMaterialDefinitions();
+                adminService.getAllUserGroupDTOs();
+                adminService.getAllUsers();
+                //adminMaterialService.getAllMaterialDefinitions();
             };
 
             $rootScope.socket.onclose = function (event) {
+                if(!$auth.isAuthenticated()){
+                    $auth.logout();
+                    $location.path('/authenticate');
+                    toaster.pop('error', "Notification", "Authentication failed. Please try again.");
+                    $rootScope.$apply();
+                    return;
+                }
                 if(!window.timerID){
                     window.timerID=setInterval(function(){start(wsServerLocation)}, 5000);
                 }
@@ -174,8 +205,12 @@ angular
                 toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
                 $rootScope.$apply();
             }
+        };
+        //debugger;
+        if($auth.isAuthenticated()){
+            $rootScope.startWebsocket(wsServerLocation);
+            console.log($auth.getToken());
         }
-        start(wsServerLocation);
 
     }]);
 

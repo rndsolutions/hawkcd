@@ -1,28 +1,55 @@
-<div class="portlet-body">
-    <table class="table table-striped table-bordered table-hover table-checkable order-column" datatable="ng">
-        <thead>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="actions pull-left">
+            <a data-target="#addNewUser" data-toggle="modal" class="btn btn-default">
+                <i class="fa fa-plus"></i> Add </a>
+        </div>
+    </div>
+</div>
+</br>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
             <tr>
-                <th class="custom-datatable-btns-admin">{{admin.defaultText.tableHeaders.action}}</th>
-                <th>{{admin.defaultText.tableHeaders.user}}</th>
-                <th>{{admin.defaultText.tableHeaders.permissions}}</th>
+                <th>Username</th>
+                <th>Registered On</th>
+                <th>Permissions</th>
+                <th>Action</th>
             </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="user in admin.allUsers">
-                <td class="custom-datatable-btns-admin">
-                    <button class="btn btn-default">{{admin.defaultText.status.enable}}
-                    </button>
-                    <button ng-hide="user.Id == admin.currentUserId" class="btn btn-danger" data-target="#deleteUser" data-toggle='modal' 
-                    ng-click="admin.getUser(user.Id)">{{admin.defaultText.status.delete}}</button>
-                </td>
-                <td>{{user.Email}}</td>
+            </thead>
+            <tbody id="usersTable">
+            <tr ng-repeat="user in admin.users">
                 <td>
-                    <button class="btn green">View</button>
+                    {{user.email}}
+                </td>
+                <td>
+                    {{user.registeredOn}}
+                </td>
+                <td class="text-center">
+                    <a data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
+                </td>
+                <td class="text-center">
+                    <!--<span class="custom-hover">-->
+                    <!--<i data-target="#removeUser" data-toggle="modal" class="fa fa-trash" ng-click="admin.selectUser($index)"></i>-->
+                    <!--</span>-->
+                    <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate">
+                        <div class="bootstrap-switch-container">
+                            <span class="bootstrap-switch-handle-on bootstrap-switch-primary">Enabled</span>
+                            <span class="bootstrap-switch-label"></span>
+                            <span class="bootstrap-switch-handle-off bootstrap-switch-default">Disabled</span>
+                            <input type="checkbox" id="user-checkbox" class="make-switch" data-on-text="Enabled" data-off-text="Disabled">
+                        </div>
+                    </div>
                 </td>
             </tr>
-        </tbody>
-    </table>
-    <button class="btn green" data-target="#addUser" data-toggle="modal">Add User</button>
+            </tbody>
+        </table>
+
+    </div>
 </div>
 <div ng-include src="'app/admin/views/partials/_add-user.html'"></div>
-<div ng-include src="'app/admin/views/partials/_delete-user.html'"></div>
+<div ng-include src="'app/admin/views/partials/_assignUsers.html'"></div>
+<div ng-include src="'app/admin/views/partials/_add-userGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_manageUser.html'"></div>
+<div ng-include src="'app/admin/views/partials/_removeUser.html'"></div>

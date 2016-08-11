@@ -24,6 +24,7 @@ angular
         vm.materials = {};
         vm.newMaterial = {};
 
+        vm.allPermissions = [];
         vm.allPipelineRuns = [];
         vm.allPipelines = [];
         vm.allJobs = viewModel.allJobs;
@@ -74,9 +75,14 @@ angular
         //     console.log(vm.allPipelines.materials);
         // });
 
+        $scope.$watchCollection(function() { return viewModel.allPermissions }, function(newVal, oldVal) {
+            vm.allPermissions = viewModel.allPermissions;
+            console.log(vm.allPermissions);
+        });
+
         $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = viewModel.allPipelines;
-            vm.allPipelines.forEach(function (currentPipeline, index, array) {
+            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                 if(currentPipeline.id == vm.pipeline.id) {
                     vm.getPipelineForConfig(currentPipeline.name);
                     //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
@@ -734,7 +740,19 @@ angular
             return vm.currentStageRuns;
         };
 
+        vm.sortableOptions = {
+            cancel: ".unsortable",
+            items: "tr:not(.unsortable)",
+            cursor: "move",
+            update: function (e, ui) {
 
+            },
+            stop: function () {
+                var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+
+                pipeConfigService.updateJobDefinition(newJob);
+            }
+        };
 
         // function getAllPipelines () {
         //     var tokenIsValid = authDataService.checkTokenExpiration();
@@ -1569,17 +1587,6 @@ angular
         //     }
         // };
         //
-        vm.sortableOptions = {
-            cursor: "move",
-            update: function (e, ui) {
-
-            },
-            stop: function () {
-                var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
-
-                pipeConfigService.updateJobDefinition(newJob);
-            }
-        };
         //
         // vm.editJob = function(newJob) {
         //     if (vm.job != null) {

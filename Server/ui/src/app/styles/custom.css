@@ -591,3 +591,58 @@ p {
     margin-left: 30px!important;
     margin-bottom: 30px!important;
 }
+
+/*.md-checkbox label {*/
+    /*padding-left: 0px!important;*/
+/*}*/
+
+/*.md-checkbox label > span {*/
+    /*left: 45%!important;*/
+/*}*/
+
+.center-container {
+    margin-left: 5px!important;
+}
+
+.center-margin {
+    margin: auto!important;
+    text-align: center!important;
+}
+
+.custom-search {
+    margin: auto!important;
+    padding-bottom: 15px!important;
+    width: 60%!important;
+}
+
+.custom-line-height {
+    max-height: 30px !important;
+    font-size: 100%!important;
+}
+
+.custom-footer {
+    border-style: none!important;
+}
+
+.custom-hover :hover{
+    cursor:pointer!important;
+}
+
+.custom-hover {
+    display:inline;
+}
+
+.custom-vertical-align {
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    height:35px;
+}
+
+.width-70 {
+    width: 70%;
+}
+
+.td-content {
+    height:20px;
+}

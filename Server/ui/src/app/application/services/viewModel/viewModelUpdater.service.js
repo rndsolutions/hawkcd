@@ -2,8 +2,68 @@
 
 angular
     .module('hawk')
-    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', '$rootScope', function (viewModel, toaster, adminGroupService, $rootScope) {
+    .factory('viewModelUpdater', ['viewModel', 'toaster', 'adminGroupService', function (viewModel, toaster, adminGroupService) {
         var viewModelUpdater = this;
+
+        viewModelUpdater.getUser = function (user) {
+            viewModel.user = user;
+            console.log(user);
+        };
+
+        viewModelUpdater.addUser = function (user) {
+            viewModel.users.push(user);
+        };
+
+        viewModelUpdater.updateUser = function (user) {
+            viewModel.users.forEach(function (currentUser, userIndex, userArray) {
+                if(currentUser.id == user.id){
+                    viewModel.users[userIndex] = user;
+                }
+            });
+        };
+
+        viewModelUpdater.updateUsers = function (users) {
+            viewModel.users.forEach(function (currentUser, userIndex, userArray) {
+                users.forEach(function (currentUpdatedUser, updatedUserIndex, updatedUserArray) {
+                    if(currentUser.id == currentUpdatedUser.id) {
+                        viewModel.users[userIndex] = users[updatedUserIndex];
+                    }
+                });
+            });
+        };
+
+        viewModelUpdater.getPermissions = function (permissions) {
+            viewModel.allPermissions = permissions;
+        };
+
+        viewModelUpdater.updatePermissions = function (permission) {
+            //TODO: Implement this
+        };
+
+        viewModelUpdater.getUserGroups = function (userGroups) {
+            viewModel.userGroups = userGroups;
+            // debugger;
+        };
+
+        viewModelUpdater.getUserGroupDTOs = function (userGroups) {
+            viewModel.userGroups = userGroups;
+        };
+
+        viewModelUpdater.updateUserGroup = function (userGroup) {
+            viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
+                if(currentUserGroup.id == userGroup.id){
+                    viewModel.userGroups[userGroupIndex] = userGroup;
+                }
+            });
+        };
+
+        viewModelUpdater.getUsers = function (users) {
+            viewModel.users = users;
+        };
+
+        viewModelUpdater.addUserGroup = function (userGroup) {
+            viewModel.userGroups.push(userGroup);
+        };
 
         viewModelUpdater.updateAgents = function (agents) {
             viewModel.allAgents = agents;
@@ -257,7 +317,7 @@ angular
 
         viewModelUpdater.addPipeline = function (pipeline) {
             viewModel.allPipelineRuns.push(pipeline);
-            toaster.pop('success', "Notification", "Pipeline run started successfully!")
+            //toaster.pop('success', "Notification", "Pipeline run started successfully!")
         };
 
         viewModelUpdater.updatePipeline = function (pipeline) {
