@@ -2,20 +2,32 @@
 
 angular
     .module('hawk')
-    .factory('authenticationService', ['$http', '$q', 'CONSTANTS', function($http, $q, CONSTANTS) {
+    .factory('authenticationService', ['jsonHandlerService', 'websocketSenderService', function(jsonHandlerService, websocketSenderService) {
         var authenticationService = this;
-        var tokenInfo = {};
 
-        authenticationService.setTokenInfo = function(data) {
-            tokenInfo = data;
-            window.localStorage["refreshToken"] = tokenInfo.refreshToken;
-            window.localStorage["accessToken"] = tokenInfo.accessToken;
-            window.localStorage["expires"] = tokenInfo.expires;
-            window.localStorage["issued"] = tokenInfo.issued;
-            window.localStorage["email"] = tokenInfo.username;
-            window.localStorage["username"] = tokenInfo.username;
-            window.localStorage["IsAuthenticated"] = true;
-        }
+        authenticationService.getAllPermissions = function () {
+            var methodName = "getAll";
+            var className = "AuthorizationService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+        // var tokenInfo = {};
+        //
+        // authenticationService.setTokenInfo = function(data) {
+        //     tokenInfo = data;
+        //     window.localStorage["refreshToken"] = tokenInfo.refreshToken;
+        //     window.localStorage["accessToken"] = tokenInfo.accessToken;
+        //     window.localStorage["expires"] = tokenInfo.expires;
+        //     window.localStorage["issued"] = tokenInfo.issued;
+        //     window.localStorage["email"] = tokenInfo.username;
+        //     window.localStorage["username"] = tokenInfo.username;
+        //     window.localStorage["IsAuthenticated"] = true;
+        // }
 
         // authenticationService.getTokenInfo = function() {
         //     return tokenInfo;
