@@ -83,7 +83,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
-            WsEndpointPool.getInstance().add(this);
+            SessionPool.getInstance().add(this);
 
             UserDto userDto = new UserDto();
             userDto.setUsername(tokenInfo.getUser().getEmail());
@@ -177,7 +177,7 @@ public class WsEndpoint extends WebSocketAdapter {
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
         LOGGER.info("Socket Closed: [" + statusCode + "] " + reason);
-        WsEndpointPool.getInstance().remove(this);
+        SessionPool.getInstance().remove(this);
     }
 
     @Override
