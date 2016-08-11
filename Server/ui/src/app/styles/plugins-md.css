@@ -912,6 +912,7 @@ Datatables general customization
   max-width: 10px !important;
   border-right: hidden !important;
   border-bottom: hidden !important;
+  border-top: hidden !important;
 }
 
 .labelEnabled {

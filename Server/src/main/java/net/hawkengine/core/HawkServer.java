@@ -5,13 +5,10 @@ import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
-import net.hawkengine.model.User;
-import net.hawkengine.model.enums.PermissionScope;
-import net.hawkengine.model.enums.PermissionType;
-import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.interfaces.IUserService;
 import net.hawkengine.ws.WsServlet;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -21,9 +18,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HawkServer {
     private Server server;
@@ -57,7 +51,7 @@ public class HawkServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{"index.html"});
-//        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
+        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
 
