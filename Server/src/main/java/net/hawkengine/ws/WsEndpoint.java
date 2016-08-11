@@ -3,6 +3,7 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.mongodb.client.ListDatabasesIterable;
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
@@ -39,6 +40,7 @@ public class WsEndpoint extends WebSocketAdapter {
     private User loggedUser;
     private IUserGroupService userGroupService;
     private IUserService userService;
+    private WsObjectProcessor wsObjectProcessor;
 
     public WsEndpoint() {
         this.id = UUID.randomUUID();
@@ -50,6 +52,7 @@ public class WsEndpoint extends WebSocketAdapter {
         this.securityServiceInvoker = new SecurityServiceInvoker();
         this.userGroupService = new UserGroupService();
         this.userService = new UserService();
+        this.wsObjectProcessor = new WsObjectProcessor();
     }
 
     public UUID getId() {
@@ -131,7 +134,24 @@ public class WsEndpoint extends WebSocketAdapter {
 
             List<Permission> orderedPermissions = this.sortPermissions(this.loggedUser.getPermissions());
 
-            ServiceResult result = this.securityServiceInvoker.process(contract, orderedPermissions);
+            ServiceResult result = new ServiceResult();
+
+            if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs") || contract.getMethodName().equals("getAllUserGroups")){
+                    result = (ServiceResult)this.wsObjectProcessor.call(contract);
+                    List<?> filteredEntities = this.securityServiceInvoker.processList((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+                    result.setObject(filteredEntities);
+            } else{
+                boolean hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+
+                if (hasPermission){
+                    result = (ServiceResult)this.wsObjectProcessor.call(contract);
+                }
+                else{
+                    result.setError(true);
+                    result.setObject(null);
+                    result.setMessage("Unauthorized");
+                }
+            }
             contract.setResult(result.getObject());
             contract.setError(result.hasError());
             contract.setErrorMessage(result.getMessage());
@@ -143,6 +163,12 @@ public class WsEndpoint extends WebSocketAdapter {
             e.printStackTrace();
             this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

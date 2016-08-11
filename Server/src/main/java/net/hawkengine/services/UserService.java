@@ -44,6 +44,8 @@ public class UserService extends CrudService<User> implements IUserService {
         if (result.hasError()){
             return result;
         }
+        String password = object.getPassword();
+        object.setPassword(password);
         return super.add(object);
     }
 

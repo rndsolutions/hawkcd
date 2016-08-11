@@ -1,14 +1,18 @@
 package net.hawkengine.services.filters.factories;
 
+import net.hawkengine.model.DbEntry;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.dto.SecurityServiceDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.SecurityService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 
+import javax.jws.Oneway;
+import java.io.ObjectStreamClass;
 import java.util.List;
 
-public class SecurityServiceInvoker {
+public class SecurityServiceInvoker<T extends DbEntry> {
     private ISecurityService securityService;
 
     public SecurityServiceInvoker(){
@@ -18,38 +22,46 @@ public class SecurityServiceInvoker {
     public SecurityServiceInvoker(ISecurityService securityService){
         this.securityService = securityService;
     }
-    public ServiceResult process(WsContractDto contract, List<Permission> permissions) {
-        switch (contract.getMethodName()) {
-            case "getAll":
-                return this.securityService.getAll(contract, permissions);
-            case "getAllPipelineGroupDTOs":
-                return this.securityService.getPipelineDTOs(contract, permissions);
+    public boolean process(String entity, String className, List<Permission> permissions, String methodName) {
+        switch (methodName) {
             case "getById":
-                return this.securityService.getById(contract, permissions);
+                return this.securityService.getById(entity, className, permissions);
             case "add":
-                return this.securityService.add(contract, permissions);
+                return this.securityService.add(entity, className, permissions);
             case "update":
-                return this.securityService.update(contract, permissions);
+                return this.securityService.update(entity, className, permissions);
             case "delete":
-                return this.securityService.delete(contract, permissions);
+                return this.securityService.delete(entity, className, permissions);
             case "assignUserToGroup":
-                return this.securityService.assignUserToGroup(contract, permissions);
+                return this.securityService.assignUserToGroup(entity, className, permissions);
             case "unassignUserFromGroup":
-                return this.securityService.unassignUserFromGroup(contract, permissions);
-            case "getAllUserGroups":
-                return this.securityService.getAllUserGroups(contract, permissions);
+                return this.securityService.unassignUserFromGroup(entity, className, permissions);
             case "assignPipelineToGroup":
-                return this.securityService.assignPipelineToGroup(contract, permissions);
+                return this.securityService.assignPipelineToGroup(entity, className, permissions);
             case "unassignPipelineFromGroup":
-                return this.securityService.unassignPipelineFromGroup(contract, permissions);
+                return this.securityService.unassignPipelineFromGroup(entity, className, permissions);
             case "addUserWithoutProvider":
-                return this.securityService.addUserWithoutProvider(contract, permissions);
+                return this.securityService.addUserWithoutProvider(entity, className, permissions);
             case "addUserGroupDto":
-                return this.securityService.addUserGroupDto(contract, permissions);
+                return this.securityService.addUserGroupDto(entity, className, permissions);
             case "updateUserGroupDto":
-                return this.securityService.updateUserGroupDto(contract, permissions);
+                return this.securityService.updateUserGroupDto(entity, className, permissions);
+            default:
+                return false;
+        }
+    }
+
+    public List<T> processList(List<T> entitiesToFilter, String className, List<Permission> permissions, String methodName) {
+        switch (methodName) {
+            case "getAll":
+                return this.securityService.getAll(entitiesToFilter, className, permissions);
+            case "getAllPipelineGroupDTOs":
+                return this.securityService.getPipelineDTOs(entitiesToFilter, className, permissions);
+            case "getAllUserGroups":
+                return this.securityService.getAllUserGroups(entitiesToFilter, className, permissions);
             default:
                 return null;
+
         }
     }
 }

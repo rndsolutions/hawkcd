@@ -1,37 +1,37 @@
 package net.hawkengine.services.filters.interfaces;
 
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.DbEntry;
+import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.payload.Permission;
 
 import java.util.List;
 
-public interface ISecurityService {
-    ServiceResult getAll(WsContractDto contract, List<Permission> permissions);
+public interface ISecurityService<T extends DbEntry> {
+    List<T> getAll(List<T> entitiesToFilter, String className, List<Permission> permissions);
 
-    ServiceResult getPipelineDTOs(WsContractDto contract, List<Permission> permissions);
+    List<PipelineGroup> getPipelineDTOs(List<T> entitiesToFilter, String className, List<Permission> permissions);
 
-    ServiceResult getById(WsContractDto contract, List<Permission> permissions);
+    boolean getById(String entity, String className, List<Permission> permissions);
 
-    ServiceResult add(WsContractDto contract, List<Permission> permissions);
+    boolean add(String entity, String className, List<Permission> permissions);
 
-    ServiceResult update(WsContractDto contract, List<Permission> permissions);
+    boolean update(String entity, String className, List<Permission> permissions);
 
-    ServiceResult delete(WsContractDto contract, List<Permission> permissions);
+    boolean delete(String entity, String className, List<Permission> permissions);
 
-    ServiceResult addUserGroupDto(WsContractDto contract, List<Permission> permissions);
+    boolean addUserGroupDto(String entity, String className, List<Permission> permissions);
 
-    ServiceResult updateUserGroupDto(WsContractDto contract, List<Permission> permissions);
+    boolean updateUserGroupDto(String entity, String className, List<Permission> permissions);
 
-    ServiceResult assignUserToGroup(WsContractDto contract, List<Permission> permissions);
+    boolean assignUserToGroup(String entity, String className, List<Permission> permissions);
 
-    ServiceResult unassignUserFromGroup(WsContractDto contract, List<Permission> permissions);
+    boolean unassignUserFromGroup(String entity, String className, List<Permission> permissions);
 
-    ServiceResult getAllUserGroups(WsContractDto contract, List<Permission> permissions);
+    List<T> getAllUserGroups(List<T> entitiesToFilter, String className, List<Permission> permissions);
 
-    ServiceResult assignPipelineToGroup(WsContractDto contract, List<Permission> permissions);
+    boolean assignPipelineToGroup(String pipelineGroup, String className, List<Permission> permissions);
 
-    ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions);
+    boolean unassignPipelineFromGroup(String pipelineGroup, String className, List<Permission> permissions);
 
-    ServiceResult addUserWithoutProvider(WsContractDto contract, List<Permission> permissions);
+    boolean addUserWithoutProvider(String entity, String className, List<Permission> permissions);
 }
