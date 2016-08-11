@@ -8,9 +8,14 @@ import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
+
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class StatusUpdaterService {
     private static final Logger LOGGER = Logger.getLogger(StatusUpdaterService.class.getName());
@@ -104,9 +109,13 @@ public class StatusUpdaterService {
 
         if (stageStatuses.contains(StageStatus.FAILED)) {
             pipeline.setStatus(Status.FAILED);
+            Date endTime = new Date();
+            pipeline.setEndTime(endTime);
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.FAILED));
         } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
+            Date endTime = new Date();
+            pipeline.setEndTime(endTime);
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.PASSED));
         }
     }

@@ -2,51 +2,84 @@
   <small>agents &amp; statistics</small>
 </h3>
 <div class="page-bar">
-  <ul class="page-breadcrumb">
-    <li>
-      <i class="icon-home"></i>
-      <a ui-sref="index.agents"> <span>{{agents.defaultText.breadCrumb}}</span></a>
-    </li>
-  </ul>
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a ui-sref="index.agents"> <span>{{agents.defaultText.breadCrumb}}</span></a>
+        </li>
+    </ul>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <div class="portlet light">
-      <div class="portlet-title right">
-        <div class="caption">
-          <i class="fa fa-cogs"></i>{{agents.defaultText.agents}}
-        </div>
-        <div class="tools right">
-          <a href="javascript:;" class="collapse"> </a>
-        </div>
-      </div>
-      <div class="portlet-body">
-      <div class="table-scrollable">
-        <table class="table table-hover">
-          <thead>
-          <tr>
-            <th class="statusHeader"></th>
-            <th><h4 title="Agent Name">{{agents.defaultText.tableHeaders.agentName}} <span class="badge badge-default">?</span> </h4></th>
-            <th><h4 title="The Install location of the agent on the server">{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default">?</span></h4></th>
-            <th><h4 title="The Operation System the agent is running on"> {{agents.defaultText.tableHeaders.os}} <span class="badge badge-default">?</span></h4></th>
-            <th><H4 title="The server IP">{{agents.defaultText.tableHeaders.ip}} <span class="badge badge-default">?</span></H4></th>
-            <!--<th><h4 titile="The free space of the disk the agent is running on">{{agents.defaultText.tableHeaders.freeSpace}} <span class="badge badge-default">?</span> </h4> </th>-->
-            <th><h4 title="The resource tags used by the server to distribute jobs">{{agents.defaultText.tableHeaders.resources}} <span class="badge badge-default">?</span></h4></th>
-            <th class="custom-datatable-btns"> <h4>  {{agents.defaultText.tableHeaders.action}} <span class="badge badge-default">?</span> </h4></th>
-          </tr>
-          </thead>
-          <tbody>
-
-          <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
-            <td class="statusLabel" ng-class="{'labelEnabled' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'labelDisabled' : !agent.isEnabled && agent.isConnected, 'labelRunning' : agent.isRunning && agent.isConnected, 'labelDisconnected' : !agent.isConnected}"></td>
-            <td><h5> {{agent.hostName + "-" +  agent.id.substr(0,8)}}</h5></td>
-            <td><h5>{{agent.rootPath}} </h5></td>
-            <td><h5>{{agent.operatingSystem}}</h5></td>
-            <td><h5>{{agent.ipAddress}}</h5></td>
-            <!--<td><h5>{{agent.freeSpace}}</h5></td>-->
-            <td><h5>{{agent.resources}}</h5></td>
-            <td><h5>
+    <div class="col-md-12">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>{{agents.defaultText.agents}}
+                </div>
+                <div class="tools right">
+                    <a href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-hover table-advance">
+                        <thead>
+                            <tr>
+                                <th class="statusHeader"></th>
+                                <th>
+                                    <h4>{{agents.defaultText.tableHeaders.agentName}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.agent}}"
+                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
+                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
+                                                                                                    popover-animation="true">?</span></h4></th>
+                                <th>
+                                    <h4>{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.sandbox}}"
+                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
+                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
+                                                                                                    popover-animation="true">?</span></h4></th>
+                                <th>
+                                    <h4> {{agents.defaultText.tableHeaders.os}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.os}}"
+                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
+                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
+                                                                                                    popover-animation="true">?</span></h4></th>
+                                <th>
+                                    <h4>{{agents.defaultText.tableHeaders.ip}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.ipAddress}}"
+                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
+                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
+                                                                                                    popover-animation="true">?</span></h4></th>
+                                </th>
+                                <!--<th><h4 titile="The free space of the disk the agent is running on">{{agents.defaultText.tableHeaders.freeSpace}} <span class="badge badge-default">?</span> </h4> </th>-->
+                                <th>
+                                    <h4>{{agents.defaultText.tableHeaders.resources}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.resources}}"
+                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
+                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
+                                                                                                    popover-animation="true">?</span></h4></th>
+                                <th class="custom-datatable-btns">
+                                    <h4>{{agents.defaultText.tableHeaders.action}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.actions}}"
+                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
+                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
+                                                                                                    popover-animation="true">?</span></h4></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
+                                <td class="highlight">
+                                    <div ng-class="{'status-position':true,'success' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'danger' : !agent.isEnabled && agent.isConnected || !agent.isConnected, 'warning' : agent.isRunning }">
+                                    </div>
+                                </td>
+                                <td>
+                                    <h5> {{agent.hostName + "-" +  agent.id.substr(0,8)}}</h5></td>
+                                <td>
+                                    <h5>{{agent.rootPath}} </h5></td>
+                                <td>
+                                    <h5>{{agent.operatingSystem}}</h5></td>
+                                <td>
+                                    <h5>{{agent.ipAddress}}</h5></td>
+                                <!--<td><h5>{{agent.freeSpace}}</h5></td>-->
+                                <td>
+                                    <h5>{{agent.resources}}</h5></td>
+                                <td>
+                                    <h5>
               <div class="btn-group btn-group-xs btn-group-solid">
                 <button class="btn btn-danger" data-target="#removeAgent" data-toggle="modal" ng-click="agents.setAgentToDelete(agent)">{{agents.status.delete}}
                 </button>
@@ -64,15 +97,15 @@
                 </button>
               </div>
             </h5>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      </div>
-    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-  </div>
+    </div>
 </div>
 
 <div ng-include src="'app/agents/views/_removeAgent.html'"></div>

@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController', function ($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel) {
+    .controller('PipelinesHistoryController', function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment) {
         var vm = this;
 
         vm.labels = {
@@ -34,21 +34,62 @@ angular
 
         vm.allPipelineRuns = viewModel.allPipelineRuns;
 
-        $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
+        vm.spinIcon = false;
+
+        vm.updateClock = function(pipelineRun) {
+
+        }
+
+        vm.getLastRunAction = function(pipelineRun) {
+            if (pipelineRun.endTime == undefined) {
+                return;
+            }
+            var result = {};
+            var runEndTime = pipelineRun.endTime;
+            var delta = moment(runEndTime);
+            var now = moment();
+            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
+            if(diff == 'a few seconds'){
+              diff = 'few seconds ago';
+              result.output = diff;
+            } else {
+              result.output = diff + " ago";
+            }
+            return result;
+        }
+
+        vm.truncateGitFromUrl = function(repoUrl, commitId) {
+            var pattern = '.git';
+            var patternLength = pattern.length;
+            var buffer = repoUrl.substr(0, repoUrl.indexOf(pattern));
+            var result = buffer + '/' + 'commit' + '/' + commitId;
+            return result;
+        }
+
+        $scope.$watchCollection(function() {
+            return viewModel.allPipelineRuns
+        }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             vm.currentPipelineRuns = [];
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+            vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
-                    if(currentPipelineRun.triggerReason == null){
+                    var result = vm.getLastRunAction(currentPipelineRun);
+                    currentPipelineRun.lastPipelineAction = result;
+                    currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {
+                        var definition = currentMaterial.materialDefinition;
+                        currentMaterial.gitLink = vm.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
+                    });
+
+                    if (currentPipelineRun.triggerReason == null) {
                         currentPipelineRun.triggerReason = "User";
                     }
                     vm.currentPipelineRuns.push(currentPipelineRun);
                 }
             });
-            vm.currentPipelineRuns.sort(function (a, b) {
-                return b.executionId-a.executionId;
+            vm.currentPipelineRuns.sort(function(a, b) {
+                return b.executionId - a.executionId;
             });
-            if(vm.currentPipelineRuns.length > 0){
+            if (vm.currentPipelineRuns.length > 0) {
                 vm.currentJob = vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs[vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs.length - 1];
             }
             console.log(vm.allPipelineRuns);

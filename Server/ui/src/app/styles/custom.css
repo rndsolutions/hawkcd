@@ -575,21 +575,28 @@ p {
 
 .status-position{
   position:relative!important;
-  padding-top:0px!important;
-  padding-bottom: 0px!important;
-  margin-top:0px!important;
-  margin-bottom:0px!important;
-  height:40px!important;
+  height:100%!important;
+  overflow-y: hidden;
+  margin: 0 auto!important;
 }
 
-.custom-unassigned-pipeline-title-padding {
-    margin-left: 20px!important;
+.status-working{
+  border-left:4px solid #F1C40F!important;
 }
 
-.custom-unassigned-pipeline-padding {
-    padding-bottom: 20px!important;
-    margin-left: 30px!important;
-    margin-bottom: 30px!important;
+.status-idle{
+  border-left:4px solid #36c6d3!important;
+}
+.status-failed{
+  border-left:4px solid #D91E18!important;
+}
+
+@media screen and (max-width: 767px) {
+    @import "history-screen/_small-devices.css";
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    @import "history-screen/_medium-devices.css";
 }
 
 /*.md-checkbox label {*/
