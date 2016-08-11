@@ -19,7 +19,7 @@ angular
         //"ngSanitize",
         'luegg.directives',
         'toaster',
-        'momentjs'
+        'momentjs',
         'satellizer'
         //'ngAnimate'
         //'flow'
