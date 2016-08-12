@@ -61,6 +61,17 @@ public class SessionPool {
         }
     }
 
+    public void logoutUserFromAllSessions(User user){
+        List<WsEndpoint> userSessions = sessions
+                .stream()
+                .filter(e -> e.getLoggedUser().getId().equals(user.getId()))
+                .collect(Collectors.toList());
+        for (WsEndpoint userSession : userSessions) {
+            userSession.getSession().close();
+
+        }
+    }
+
 //    public void placeholder(WsContractDto contractDto, User user) {
 //        if (contractDto.isError()) {
 //            List<WsEndpoint> userSessions = sessions

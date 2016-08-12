@@ -16,6 +16,7 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.github.GitHubService;
+import net.hawkengine.ws.SessionPool;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
@@ -120,6 +121,19 @@ public class AuthController {
         String jsonToken = gson.toJson(token);
 
         return Response.ok(jsonToken).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces("application/json")
+    @Path("/logout")
+    public Response login(String email) throws IOException {
+        User userToBeLoggedOut = (User)this.userService.getByEmail(email).getObject();
+
+        SessionPool sessionPool = SessionPool.getInstance();
+        sessionPool.logoutUserFromAllSessions(userToBeLoggedOut);
+
+        return Response.ok().build();
     }
 
 

@@ -8,6 +8,7 @@ import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.interfaces.IUserService;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,8 @@ public class UserService extends CrudService<User> implements IUserService {
             return result;
         }
         String password = object.getPassword();
-        object.setPassword(password);
+        String hashedPassword = DigestUtils.sha256Hex(password);
+        object.setPassword(hashedPassword);
         return super.add(object);
     }
 
