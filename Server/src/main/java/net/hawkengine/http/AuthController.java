@@ -127,7 +127,7 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces("application/json")
     @Path("/logout")
-    public Response login(String email) throws IOException {
+    public Response logout(String email) throws IOException {
         User userToBeLoggedOut = (User)this.userService.getByEmail(email).getObject();
 
         SessionPool sessionPool = SessionPool.getInstance();
