@@ -6,13 +6,19 @@ import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
+import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
 import java.util.List;
 
 public class EntityPermissionTypeService {
+    private static IPipelineDefinitionService pipelineDefinitionService = new PipelineDefinitionService();
 
-    public static PipelineGroup setPermissionTypeToPipelineGroup(List<Permission> permissions, PipelineGroup pipelineGroup){
+    public EntityPermissionTypeService(IPipelineDefinitionService pipelineDefinitionService) {
+        EntityPermissionTypeService.pipelineDefinitionService = pipelineDefinitionService;
+    }
 
+    public static PipelineGroup setPermissionTypeToObject(List<Permission> permissions, PipelineGroup pipelineGroup){
         String pipelineGroupId = pipelineGroup.getId();
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
@@ -27,7 +33,7 @@ public class EntityPermissionTypeService {
         return pipelineGroup;
     }
 
-    public static PipelineDefinition setPermissionTypeToPipelineDefinition(List<Permission> permissions, PipelineDefinition pipelineDefinition){
+    public static PipelineDefinition setPermissionTypeToObject(List<Permission> permissions, PipelineDefinition pipelineDefinition){
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
                 pipelineDefinition.setPermissionType(permission.getPermissionType());
@@ -44,7 +50,12 @@ public class EntityPermissionTypeService {
         return pipelineDefinition;
     }
 
-    public static Pipeline setPermissionTypeToPipeline(List<Permission> permissions, Pipeline pipeline, PipelineDefinition pipelineDefinition){
+    public static Pipeline setPermissionTypeToObject(List<Permission> permissions, Pipeline pipeline){
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        if (pipelineDefinition == null) {
+            return pipeline;
+        }
+
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)){
                 pipeline.setPermissionType(permission.getPermissionType());
