@@ -3,7 +3,6 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.mongodb.client.ListDatabasesIterable;
 import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
@@ -134,41 +133,38 @@ public class WsEndpoint extends WebSocketAdapter {
 
             List<Permission> orderedPermissions = this.sortPermissions(this.loggedUser.getPermissions());
 
-            ServiceResult result = new ServiceResult();
+            ServiceResult result;
 
-            if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs") || contract.getMethodName().equals("getAllUserGroups")){
-                    result = (ServiceResult)this.wsObjectProcessor.call(contract);
-                    List<?> filteredEntities = this.securityServiceInvoker.processList((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-                    result.setObject(filteredEntities);
-            } else{
+            if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs") || contract.getMethodName().equals("getAllUserGroups")) {
+                result = (ServiceResult) this.wsObjectProcessor.call(contract);
+                List<?> filteredEntities = this.securityServiceInvoker.processList((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+                result.setObject(filteredEntities);
+                contract.setResult(result.getObject());
+                contract.setError(result.hasError());
+                contract.setErrorMessage(result.getMessage());
+                SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+
+            } else {
                 boolean hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
 
-                if (hasPermission){
-                    result = (ServiceResult)this.wsObjectProcessor.call(contract);
-                }
-                else{
-                    result.setError(true);
-                    result.setObject(null);
-                    result.setMessage("Unauthorized");
+                if (hasPermission) {
+                    result = (ServiceResult) this.wsObjectProcessor.call(contract);
+                    contract.setResult(result.getObject());
+                    contract.setError(result.hasError());
+                    contract.setErrorMessage(result.getMessage());
+                    SessionPool.getInstance().sendToAuthorizedSessions(contract);
+                } else {
+                    contract.setResult(null);
+                    contract.setError(true);
+                    contract.setErrorMessage("Unauthorized");
+                    SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
                 }
             }
-            contract.setResult(result.getObject());
-            contract.setError(result.hasError());
-            contract.setErrorMessage(result.getMessage());
-
-            String jsonResult = this.jsonConverter.toJson(contract);
-            remoteEndpoint.sendStringByFuture(jsonResult);
         } catch (RuntimeException e) {
             LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
             e.printStackTrace();
             this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
