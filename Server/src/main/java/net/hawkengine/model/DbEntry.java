@@ -10,7 +10,6 @@ public class DbEntry {
 
     public DbEntry() {
         this.id = UUID.randomUUID().toString();
-        this.permissionType = PermissionType.NONE;
     }
 
     public String getId() {

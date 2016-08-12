@@ -1,7 +1,7 @@
 package net.hawkengine.core.pipelinescheduler;
 
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;

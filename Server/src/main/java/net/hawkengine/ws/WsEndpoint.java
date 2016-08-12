@@ -3,7 +3,6 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import net.hawkengine.core.utilities.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
@@ -93,7 +92,13 @@ public class WsEndpoint extends WebSocketAdapter {
             serviceResult.setMessage("User details retrieved successfully");
             serviceResult.setObject(userDto);
 
-            EndpointConnector.passResultToEndpoint("UserInfo", "getUser", serviceResult);
+            WsContractDto contract = new WsContractDto();
+            contract.setClassName("UserInfo");
+            contract.setMethodName("getUser");
+            contract.setResult(userDto);
+            contract.setError(false);
+            contract.setErrorMessage("User details retrieved successfully");
+            SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
         }
     }
 

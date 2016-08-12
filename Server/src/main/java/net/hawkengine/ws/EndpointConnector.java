@@ -1,16 +1,9 @@
-package net.hawkengine.core.utilities;
+package net.hawkengine.ws;
 
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.dto.WsContractDto;
-import net.hawkengine.ws.WsEndpoint;
 
 public class EndpointConnector {
-    private static WsEndpoint wsEndpoint = new WsEndpoint();
-
-    public static void setWsEndpoint(WsEndpoint wsEndpoint) {
-        EndpointConnector.wsEndpoint = wsEndpoint;
-    }
-
     public static void passResultToEndpoint(String className, String methodName, ServiceResult serviceResult) {
         WsContractDto contract = new WsContractDto();
         contract.setClassName(className);
@@ -19,6 +12,6 @@ public class EndpointConnector {
         contract.setError(serviceResult.hasError());
         contract.setErrorMessage(serviceResult.getMessage());
 
-        wsEndpoint.send(contract);
+        SessionPool.getInstance().sendToAuthorizedSessions(contract);
     }
 }
