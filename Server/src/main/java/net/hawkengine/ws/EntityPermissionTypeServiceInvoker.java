@@ -9,8 +9,8 @@ import net.hawkengine.services.filters.EntityPermissionTypeService;
 
 import java.util.List;
 
-public class WsService {
-    public static DbEntry invokeEntityPermissionTypeService(Class objectClass, List<Permission> permissions, DbEntry object) {
+public class EntityPermissionTypeServiceInvoker {
+    public static DbEntry invoke(Class objectClass, List<Permission> permissions, DbEntry object) {
         if (objectClass == PipelineGroup.class) {
             return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (PipelineGroup) object);
         } else if (objectClass == PipelineDefinition.class) {

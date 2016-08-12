@@ -53,7 +53,7 @@ public class SessionPool {
         Class objectClass = contractDto.getResult().getClass();
         for (WsEndpoint session : sessions) {
             List<Permission> permissions = session.getLoggedUser().getPermissions();
-            DbEntry result = WsService.invokeEntityPermissionTypeService(objectClass, permissions, (DbEntry) contractDto.getResult());
+            DbEntry result = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (DbEntry) contractDto.getResult());
             if (result.getPermissionType() != PermissionType.NONE) {
                 contractDto.setResult(result);
                 session.send(contractDto);
@@ -80,7 +80,7 @@ public class SessionPool {
 //                        List<Permission> permissions = session.getLoggedUser().getPermissions();
 //                        List<Object> result = new ArrayList<>();
 //                        for (Object object : resultAsList) {
-//                            DbEntry updatedObject = WsService.invokeEntityPermissionTypeService(objectClass, permissions, (DbEntry) object);
+//                            DbEntry updatedObject = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (DbEntry) object);
 //                            if (updatedObject.getPermissionType() != PermissionType.NONE) {
 //                                result.add(updatedObject);
 //                            }
@@ -97,7 +97,7 @@ public class SessionPool {
 //            } else {
 //                for (WsEndpoint session : sessions) {
 //                    List<Permission> permissions = session.getLoggedUser().getPermissions();
-//                    DbEntry result = WsService.invokeEntityPermissionTypeService(objectClass, permissions, (DbEntry) contractDto.getResult());
+//                    DbEntry result = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (DbEntry) contractDto.getResult());
 //                    if (result.getPermissionType() != PermissionType.NONE) {
 //                        contractDto.setResult(result);
 //                        session.send(contractDto);
