@@ -311,17 +311,17 @@
                                                 <div class="tab-pane active" ng-if="pipes.bar == 3">
 
                                                     <div class="form-group form-md-line-input">
-                                                        <label class="col-md-4 control-label">Pipeline Name</label>
+                                                        <label class="col-md-4 control-label summary-header">Pipeline Name</label>
                                                         <div class="col-md-6">
-                                                            <div class="form-control form-control-static">
-                                                                <strong>{{pipes.formData.pipeline.name}}</strong>
+                                                            <div class="form-control form-control-static summary-info">
+                                                                <p>{{pipes.formData.pipeline.name}}</p>
                                                             </div>
                                                             <div class="form-control-focus"> </div>
                                                         </div>
-                                                        <label class="col-md-4 control-label">Automatic Scheduling</label>
+                                                        <label class="col-md-4 control-label summary-header">Automatic Scheduling</label>
                                                         <div class="col-md-6">
-                                                            <div class="form-control form-control-static">
-                                                                <strong>{{pipes.formData.pipeline.autoSchedule ? 'Yes' : 'No'}}</strong>
+                                                            <div class="form-control form-control-static summary-info">
+                                                                <p>{{pipes.formData.pipeline.autoSchedule ? 'Yes' : 'No'}}</p>
                                                             </div>
                                                             <div class="form-control-focus"> </div>
                                                         </div>
@@ -329,38 +329,38 @@
 
                                                     <div ng-if="pipes.materialType == 'git'">
                                                         <div class="form-group form-md-line-input">
-                                                            <label class="col-md-4 control-label">Material Name</label>
+                                                            <label class="col-md-4 control-label summary-header">Material Name</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.formData.material.git.name}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.formData.material.git.name}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Git Url</label>
+                                                            <label class="col-md-4 control-label summary-header">Git Url</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.formData.material.git.url}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.formData.material.git.url}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Branch</label>
+                                                            <label class="col-md-4 control-label summary-header">Branch</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.formData.material.git.branch ? pipes.formData.material.git.branch : 'master'}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.formData.material.git.branch ? pipes.formData.material.git.branch : 'master'}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Poll for changes</label>
+                                                            <label class="col-md-4 control-label summary-header">Poll for changes</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.formData.material.git.poll ? 'Yes' : 'No'}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.formData.material.git.poll ? 'Yes' : 'No'}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Credentials</label>
+                                                            <label class="col-md-4 control-label summary-header">Credentials</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.formData.material.git.credentials ? 'Yes' : 'No'}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.formData.material.git.credentials ? 'Yes' : 'No'}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
@@ -368,38 +368,38 @@
                                                     </div>
                                                     <div ng-if="pipes.materialType == 'existing'">
                                                         <div class="form-group form-md-line-input">
-                                                            <label class="col-md-4 control-label">Material Name</label>
+                                                            <label class="col-md-4 control-label summary-header">Material Name</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.materialObject.name}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.materialObject.name}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Git Url</label>
+                                                            <label class="col-md-4 control-label summary-header">Git Url</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong class="text-fit">{{pipes.materialObject.repositoryUrl}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p class="text-fit">{{pipes.materialObject.repositoryUrl}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Branch</label>
+                                                            <label class="col-md-4 control-label summary-header">Branch</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.materialObject.branch ? pipes.materialObject.branch : 'master'}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.materialObject.branch ? pipes.materialObject.branch : 'master'}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Poll for changes</label>
+                                                            <label class="col-md-4 control-label summary-header">Poll for changes</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{pipes.materialObject.isPollingForChanges == true ? 'Yes' : 'No'}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{pipes.materialObject.isPollingForChanges == true ? 'Yes' : 'No'}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>
-                                                            <label class="col-md-4 control-label">Credentials</label>
+                                                            <label class="col-md-4 control-label summary-header">Credentials</label>
                                                             <div class="col-md-6">
-                                                                <div class="form-control form-control-static">
-                                                                    <strong>{{(pipes.materialObject.username && pipes.materialObject.password)  ? 'Yes' : 'No'}}</strong>
+                                                                <div class="form-control form-control-static summary-info">
+                                                                    <p>{{(pipes.materialObject.username && pipes.materialObject.password)  ? 'Yes' : 'No'}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>

@@ -89,6 +89,16 @@
   margin-right:41px;
 }
 
+.summary-header {
+  font-weight: 300!important;
+  font-size:18px!important;
+}
+
+.summary-info {
+  font-weight: 100!important;
+  font-size:14px!important;
+}
+
 [class~=fa-close]{
   color:#91A3B0!important;
 }
