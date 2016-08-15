@@ -14,4 +14,12 @@ public class EndpointConnector {
 
         SessionPool.getInstance().sendToAuthorizedSessions(contract);
     }
+
+    public static void passResultToEndpoint(String className, String methodName) {
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName(className);
+        contract.setMethodName(methodName);
+
+        SessionPool.getInstance().sendToAuthorizedSessions(contract);
+    }
 }

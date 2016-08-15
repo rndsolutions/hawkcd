@@ -61,13 +61,19 @@ public class SessionPool {
         }
     }
 
-    public void logoutUserFromAllSessions(User user){
+    public void logoutUserFromAllSessions(String email){
+
         List<WsEndpoint> userSessions = sessions
                 .stream()
-                .filter(e -> e.getLoggedUser().getId().equals(user.getId()))
+                .filter(e -> e.getLoggedUser().getEmail().equals(email))
                 .collect(Collectors.toList());
+
         for (WsEndpoint userSession : userSessions) {
-            userSession.getSession().close();
+            WsContractDto contract = new WsContractDto();
+            contract.setClassName("UserService");
+            contract.setMethodName("logout");
+            userSession.send(contract);
+            userSession.getSession().close(1000, "User logged out successfully.");
 
         }
     }

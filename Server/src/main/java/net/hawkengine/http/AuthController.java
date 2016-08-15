@@ -27,10 +27,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -124,14 +121,11 @@ public class AuthController {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     @Path("/logout")
     public Response logout(String email) throws IOException {
-        User userToBeLoggedOut = (User)this.userService.getByEmail(email).getObject();
-
-        SessionPool sessionPool = SessionPool.getInstance();
-        sessionPool.logoutUserFromAllSessions(userToBeLoggedOut);
+        SessionPool.getInstance().logoutUserFromAllSessions(email);
 
         return Response.ok().build();
     }
