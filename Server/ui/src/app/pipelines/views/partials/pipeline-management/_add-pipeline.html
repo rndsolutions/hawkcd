@@ -1,85 +1,85 @@
 <div id="pipeWizard" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog m-box">
-    <div class="form">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="pipes.close()"></button>
-          <h4 class="modal-title">Create Pipeline</h4>
-        </div>
+    <div class="modal-dialog m-box modal-dialog-fixed ">
+        <div class="form form-fixed">
+            <div class="modal-content modal-content-fixed">
+                <div class="modal-header">
+                    <div class="pull-right">
+                        <i class="fa fa-close" type="button" class="close" data-dismiss="modal" ng-click="pipes.close()"></i>
+                        <!-- <button ></button> -->
+                    </div>
+                    <h4 class="modal-title">Create Pipeline</h4>
+                </div>
 
-        <form class="form-horizontal" name="pipelineCreateForm">
+                <form class="form-horizontal" name="pipelineCreateForm">
 
-          <div class="modal-body">
-            <div class="portlet light portlet-wrap">
-              <div class="portlet-body form">
-                  <div class="form-wizard">
-                    <div class="form-body">
-                      <ul class="nav nav-pills nav-justified steps">
-                        <li ng-class="{'active': pipes.bar == 1,'done': pipes.bar == 2 || pipes.bar == 3}">
-                          <a class="step">
-                            <span class="number"> 1 </span>
-                            <span class="desc"><i class="fa fa-check"></i>
+                    <div class="modal-body">
+                        <div class="portlet light portlet-wrap">
+                            <div class="portlet-body form">
+                                <div class="form-wizard">
+                                    <div class="form-body">
+                                        <ul class="nav nav-pills nav-justified steps form-step">
+                                            <li ng-class="{'active': pipes.bar == 1,'setup-step':true }">
+                                                <a class="step">
+                                                    <span class="number"> 1 </span>
+                                                    <span class="desc"><i class="fa fa-check"></i>
                               {{pipes.wizardInfo.steps.first}}
                             </span>
-                          </a>
-                        </li>
-                        <li ng-class="{'active': pipes.bar == 2,'done': pipes.bar == 3}">
-                          <a class="step">
-                            <span class="number"> 2 </span>
-                            <span class="desc"><i class="fa fa-check"></i>
+                                                </a>
+                                            </li>
+                                            <li ng-class="{'active': pipes.bar == 2,'setup-step':true }">
+                                                <a class="step">
+                                                    <span class="number"> 2 </span>
+                                                    <span class="desc"><i class="fa fa-check"></i>
                               {{pipes.wizardInfo.steps.second}}
                             </span>
-                          </a>
-                        </li>
-                        <li ng-class="{'active': pipes.bar == 3}">
-                          <a class="step">
-                            <span class="number"> 3 </span>
-                            <span class="desc"><i class="fa fa-check"></i>
+                                                </a>
+                                            </li>
+                                            <li ng-class="{'active': pipes.bar == 3,'setup-step':true}">
+                                                <a class="step">
+                                                    <span class="number"> 3 </span>
+                                                    <span class="desc"><i class="fa fa-check"></i>
                               {{pipes.wizardInfo.steps.third}}    
                             </span>
-                          </a>
-                        </li>
-                      </ul>
-                      <div id="bar" class="progress progress-striped active" role="progressbar">
-                        <div class="progress-bar progress-bar-success" ng-class="{'p-bar1': pipes.bar == 1, 'p-bar2': pipes.bar == 2, 'p-bar3': pipes.bar == 3}"></div>
-                      </div>
-                      <div class="tab-content tab-content-custom">
-                        <div class="alert alert-danger display-none">
-                          <button class="close" data-dismiss="alert"></button>
-                          {{pipes.wizardInfo.validationMsg.error}}
-                        </div>
-                        <div class="alert alert-success display-none">
-                          <button class="close" data-dismiss="alert"></button>
-                          {{pipes.wizardInfo.validationMsg.success}}
-                        </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div id="bar" class="progress progress-striped active" role="progressbar">
+                                            <div class="progress-bar progress-bar-warning" ng-class="{'p-bar1': pipes.bar == 1, 'p-bar2': pipes.bar == 2, 'p-bar3': pipes.bar == 3}"></div>
+                                        </div>
+                                        <div class="tab-content tab-content-custom">
+                                            <div class="alert alert-danger display-none">
+                                                <button class="close" data-dismiss="alert"></button>
+                                                {{pipes.wizardInfo.validationMsg.error}}
+                                            </div>
+                                            <div class="alert alert-success display-none">
+                                                <button class="close" data-dismiss="alert"></button>
+                                                {{pipes.wizardInfo.validationMsg.success}}
+                                            </div>
 
-                        <form>
-                          <!-- ng-class="{'active': pipes.bar == 1}" -->
-                          <div class="tab-pane active" ng-if="pipes.bar == 1">
-                            <div class="form-group form-md-line-input">
-                              <label class="control-label col-md-3">{{pipes.wizardInfo.labels.pipelineName}}
-                                <span class="required"> * </span>
-                              </label>
-                              <div class="col-md-5">
-                                <input ng-model="pipes.formData.pipeline.name" id="pipelineName" type="text"
-                                       class="form-control"
-                                       placeholder="{{pipes.wizardInfo.placeholders.pipelineName}}" ng-pattern="/^([\w-]+)$/" required/>
-                                <div class="form-control-focus"></div>
-                              </div>
-                            </div>
-                            <div class="form-group form-md-checkboxes trigger-container">
-                              <div class="md-checkbox-list">
-                                <div class="md-checkbox">
-                                  <input type="checkbox" id="pipeTrigger" class="md-check"
-                                         ng-model="pipes.formData.pipeline.autoSchedule">
-                                  <label for="pipeTrigger">
-                                    <span></span>
-                                    <span class="check"></span>
-                                    <span class="box"></span> Automatic Pipeline scheduling </label>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="form-group form-md-line-input">
+                                            <form>
+                                                <!-- ng-class="{'active': pipes.bar == 1}" -->
+                                                <div class="tab-pane active" ng-if="pipes.bar == 1">
+                                                    <div class="form-group form-md-line-input">
+                                                        <label class="control-label col-md-3">{{pipes.wizardInfo.labels.pipelineName}}
+                                                            <span class="required"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            <input ng-model="pipes.formData.pipeline.name" id="pipelineName" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.pipelineName}}" ng-pattern="/^([\w-]+)$/" required/>
+                                                            <div class="form-control-focus"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group form-md-checkboxes trigger-container">
+                                                        <div class="md-checkbox-list">
+                                                            <div class="md-checkbox">
+                                                                <input type="checkbox" id="pipeTrigger" class="md-check" ng-model="pipes.formData.pipeline.autoSchedule">
+                                                                <label for="pipeTrigger">
+                                                                    <span></span>
+                                                                    <span class="check"></span>
+                                                                    <span class="box"></span> Automatic Pipeline scheduling </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="form-group form-md-line-input">
                               <label class="control-label col-md-3">{{pipes.wizardInfo.labels.stageName}}
                                 <span class="required"> * </span>
                               </label>
@@ -90,9 +90,9 @@
                                 <div class="form-control-focus"></div>
                               </div>
 
-                            </div>
+                            </div> -->
 
-                            <div class="form-group form-md-radios trigger-container">
+                                                    <!-- <div class="form-group form-md-radios trigger-container">
                               <label>Trigger Option
                                 <span class="required"> * </span>
                               </label>
@@ -114,136 +114,149 @@
                                     <span class="box"></span> On Success </label>
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            </div>-->
+                                                </div>
 
-                          <div class="tab-pane active" ng-if="pipes.bar == 2">
+                                                <div class="tab-pane active" ng-if="pipes.bar == 2">
 
-                            <div class="form-group form-md-radios" style="float: none;margin: 0 auto;text-align: center;">
-                              <div class="md-radio-inline">
-                                  <div class="md-radio">
-                                      <input type="radio" id="gitType" name="material-type" class="md-radiobtn" checked
-                                      ng-model="pipes.materialType" value="git">
-                                      <label for="gitType">
-                                          <span class="inc"></span>
-                                          <span class="check"></span>
-                                          <span class="box"></span> Git </label>
-                                  </div>
-                                  <div class="md-radio" ng-hide="true">
+                                                    <div class="form-group form-md-radios" style="float: none;margin: 0 auto;text-align: center;margin-top:5px;">
+                                                        <div class="md-radio-inline">
+                                                            <div class="md-radio">
+                                                                <input type="radio" id="existing" name="material-type" class="md-radiobtn" ng-model="pipes.materialType" value="existing" ng-click="pipes.getMaterial()">
+                                                                <label for="existing">
+                                                                    <span></span>
+                                                                    <span class="check"></span>
+                                                                    <span class="box"></span> Existing Material </label>
+                                                            </div>
+
+
+                                                            <div class="md-radio" id="new-mat-checkbox">
+                                                                <input type="radio" id="gitType" name="material-type" class="md-radiobtn" checked ng-model="pipes.materialType" value="git">
+                                                                <label for="gitType">
+                                                                    <span class="inc"></span>
+                                                                    <span class="check"></span>
+                                                                    <span class="box"></span> New Material </label>
+                                                            </div>
+
+                                                            <!-- <div class="md-radio" ng-hide="true">
                                       <input type="radio" id="tfsType" name="material-type" class="md-radiobtn"
                                       ng-model="pipes.materialType" value="tfs">
                                       <label for="tfsType">
                                           <span class="inc"></span>
                                           <span class="check"></span>
                                           <span class="box"></span> TFS </label>
-                                  </div>
-                                  <div class="md-radio">
+                                  </div> -->
+                                                            <!-- <div class="md-radio">
                                       <input type="radio" id="nugetType" name="material-type" class="md-radiobtn"
                                       ng-model="pipes.materialType" value="nuget">
                                       <label for="nugetType">
                                           <span></span>
                                           <span class="check"></span>
                                           <span class="box"></span> NuGet </label>
-                                  </div>
-                              </div>
-                            </div>
+                                  </div> -->
+                                                        </div>
+                                                    </div>
 
-                            <div class="clearfix"> </div>
+                                                    <div class="clearfix"> </div>
 
-                            <div ng-if="pipes.materialType == 'git'">
+                                                    <div ng-if="pipes.materialType == 'git'">
+                                                        <form role="form">
+
+                                                            <div class="form-group form-md-line-input">
+                                                                <label class="control-label col-md-3">Material Name
+                                                                    <span class="required"> * </span>
+                                                                </label>
+                                                                <div class="col-md-6">
+                                                                    <input ng-model="pipes.formData.material.git.name" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.materialName}}" ng-pattern="/^([\w-]+)$/" required/>
+                                                                    <div class="form-control-focus"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input">
+                                                                <label class="control-label col-md-3">Git Url
+                                                                    <span class="required"> * </span>
+                                                                </label>
+                                                                <div class="col-md-6">
+                                                                    <input ng-model="pipes.formData.material.git.url" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitUrl}}" ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
+                                                                    <div class="form-control-focus"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input">
+                                                                <label class="control-label col-md-3">Git Branch</label>
+                                                                <div class="col-md-6">
+                                                                    <input ng-model="pipes.formData.material.git.branch" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitBranch}}" />
+                                                                    <div class="form-control-focus"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-checkboxes trigger-container">
+                                                                <div class="md-checkbox-list">
+                                                                    <div class="md-checkbox">
+                                                                        <input type="checkbox" id="gitPoll" class="md-check" ng-model="pipes.formData.material.git.poll">
+                                                                        <label for="gitPoll">
+                                                                            <span></span>
+                                                                            <span class="check"></span>
+                                                                            <span class="box"></span> Poll for changes </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-checkboxes trigger-container">
+                                                                <div class="md-checkbox-list">
+                                                                    <div class="md-checkbox">
+                                                                        <input type="checkbox" id="gitCredentials" class="md-check" ng-model="pipes.formData.material.git.credentials">
+                                                                        <label for="gitCredentials">
+                                                                            <span></span>
+                                                                            <span class="check"></span>
+                                                                            <span class="box"></span> Credentials </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div ng-if="pipes.formData.material.git.credentials">
+                                                                <div class="form-group form-md-line-input">
+                                                                    <label class="control-label col-md-3">Username
+                                                                        <span class="required"> * </span>
+                                                                    </label>
+                                                                    <div class="col-md-6">
+                                                                        <input ng-model="pipes.formData.material.git.username" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitUsername}}" required/>
+                                                                        <div class="form-control-focus"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-md-line-input">
+                                                                    <label class="control-label col-md-3">Password
+                                                                        <span class="required"> * </span>
+                                                                    </label>
+                                                                    <div class="col-md-6">
+                                                                        <input ng-model="pipes.formData.material.git.password" type="password" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitPassword}}" required/>
+                                                                        <div class="form-control-focus"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+
+                                                    <div ng-if="pipes.materialType == 'existing'">
+                                                        <div class="row">
+                                                            <div class="col-xs-10" id="dropdown-materials">
+                                                                <label for="span_small" class="control-label">Materials</label>
+                                                                <select id="span_small" ng-model="pipes.selectedMaterial" class="form-control select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                                                    <optgroup label="Your materials">
+                                                                      <option class="drop-down-fixed" value="{{material}}" ng-repeat="material in pipes.currentMaterials">{{material.name}}</option>
+                                                                    </optgroup>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <!-- <div ng-if="pipes.materialType == 'nuget'">
                               <form role="form">
 
                                 <div class="form-group form-md-line-input">
                                   <label class="control-label col-md-3">Material Name
-                                    <span class="required"> * </span>
-                                  </label>
-                                  <div class="col-md-6">
-                                    <input ng-model="pipes.formData.material.git.name" type="text" class="form-control"
-                                           placeholder="{{pipes.wizardInfo.placeholders.materialName}}" ng-pattern="/^([\w-]+)$/" required/>
-                                    <div class="form-control-focus"></div>
-                                  </div>
-                                </div>
-                                <div class="form-group form-md-line-input">
-                                  <label class="control-label col-md-3">Git Url
-                                    <span class="required"> * </span>
-                                  </label>
-                                  <div class="col-md-6">
-                                    <input ng-model="pipes.formData.material.git.url" type="text" class="form-control"
-                                           placeholder="{{pipes.wizardInfo.placeholders.gitUrl}}"
-                                           ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
-                                    <div class="form-control-focus"></div>
-                                  </div>
-                                </div>
-                                <div class="form-group form-md-line-input">
-                                  <label class="control-label col-md-3">Git Branch</label>
-                                  <div class="col-md-6">
-                                    <input ng-model="pipes.formData.material.git.branch" type="text" class="form-control"
-                                           placeholder="{{pipes.wizardInfo.placeholders.gitBranch}}"/>
-                                    <div class="form-control-focus"></div>
-                                  </div>
-                                </div>
-                                <div class="form-group form-md-checkboxes trigger-container">
-                                  <div class="md-checkbox-list">
-                                    <div class="md-checkbox">
-                                      <input type="checkbox" id="gitPoll" class="md-check"
-                                             ng-model="pipes.formData.material.git.poll">
-                                      <label for="gitPoll">
-                                        <span></span>
-                                        <span class="check"></span>
-                                        <span class="box"></span> Poll for changes </label>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="form-group form-md-checkboxes trigger-container">
-                                  <div class="md-checkbox-list">
-                                    <div class="md-checkbox">
-                                      <input type="checkbox" id="gitCredentials" class="md-check"
-                                             ng-model="pipes.formData.material.git.credentials">
-                                      <label for="gitCredentials">
-                                        <span></span>
-                                        <span class="check"></span>
-                                        <span class="box"></span> Credentials </label>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div ng-if="pipes.formData.material.git.credentials">
-                                  <div class="form-group form-md-line-input">
-                                    <label class="control-label col-md-3">Username
-                                      <span class="required"> * </span>
-                                    </label>
-                                    <div class="col-md-6">
-                                      <input ng-model="pipes.formData.material.git.username" type="text" class="form-control"
-                                             placeholder="{{pipes.wizardInfo.placeholders.gitUsername}}" required/>
-                                      <div class="form-control-focus"></div>
-                                    </div>
-                                  </div>
-                                  <div class="form-group form-md-line-input">
-                                    <label class="control-label col-md-3">Password
-                                      <span class="required"> * </span>
-                                    </label>
-                                    <div class="col-md-6">
-                                      <input ng-model="pipes.formData.material.git.password" type="password" class="form-control"
-                                             placeholder="{{pipes.wizardInfo.placeholders.gitPassword}}" required/>
-                                      <div class="form-control-focus"></div>
-                                    </div>
-                                  </div>
-                                </div>
-
-                              </form>
-                            </div>
-
-                            <!-- TODO tfs panel -->
-
-                            <div ng-if="pipes.materialType == 'nuget'">
-                              <form role="form">
-
-                                <div class="form-group form-md-line-input">
-                                  <label class="control-label col-md-3">Material Name
-                                    <span class="required"> * </span>
-                                  </label>
-                                  <div class="col-md-6">
-                                    <input ng-model="pipes.formData.material.nuget.name" type="text" class="form-control"
-                                           placeholder="{{pipes.wizardInfo.placeholders.materialName}}" ng-pattern="/^([\w-]+)$/" required/>
+                                    <span class="required"> * </span></label>
+<div class="col-md-6">
+    <input ng-model="pipes.formData.material.nuget.name" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.materialName}}" ng-pattern="/^([\w-]+)$/" required/>
                                     <div class="form-control-focus"></div>
                                   </div>
                                 </div>
@@ -293,157 +306,179 @@
                                 </div>
 
                               </form>
+                            </div> -->
+
+                                                <div class="tab-pane active" ng-if="pipes.bar == 3">
+
+                                                    <div class="form-group form-md-line-input">
+                                                        <label class="col-md-4 control-label">Pipeline Name</label>
+                                                        <div class="col-md-6">
+                                                            <div class="form-control form-control-static">
+                                                                <strong>{{pipes.formData.pipeline.name}}</strong>
+                                                            </div>
+                                                            <div class="form-control-focus"> </div>
+                                                        </div>
+                                                        <label class="col-md-4 control-label">Automatic Scheduling</label>
+                                                        <div class="col-md-6">
+                                                            <div class="form-control form-control-static">
+                                                                <strong>{{pipes.formData.pipeline.autoSchedule ? 'Yes' : 'No'}}</strong>
+                                                            </div>
+                                                            <div class="form-control-focus"> </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div ng-if="pipes.materialType == 'git'">
+                                                        <div class="form-group form-md-line-input">
+                                                            <label class="col-md-4 control-label">Material Name</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.git.name}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Git Url</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.git.url}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Branch</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.git.branch ? pipes.formData.material.git.branch : 'master'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Poll for changes</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.git.poll ? 'Yes' : 'No'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Credentials</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.git.credentials ? 'Yes' : 'No'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div ng-if="pipes.materialType == 'existing'">
+                                                        <div class="form-group form-md-line-input">
+                                                            <label class="col-md-4 control-label">Material Name</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.materialObject.name}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Git Url</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong class="text-fit">{{pipes.materialObject.repositoryUrl}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Branch</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.materialObject.branch ? pipes.materialObject.branch : 'master'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Poll for changes</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.materialObject.isPollingForChanges == true ? 'Yes' : 'No'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Credentials</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{(pipes.materialObject.username && pipes.materialObject.password)  ? 'Yes' : 'No'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div ng-if="pipes.materialType == 'nuget'">
+                                                        <div class="form-group form-md-line-input">
+                                                            <label class="col-md-4 control-label">Material Name</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.nuget.name}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">NuGet Url</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.nuget.url}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">NuGet Package</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.nuget.packageId}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Poll for changes</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.nuget.poll ? 'Yes' : 'No'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <label class="col-md-4 control-label">Include Pre-Release</label>
+                                                            <div class="col-md-6">
+                                                                <div class="form-control form-control-static">
+                                                                    <strong>{{pipes.formData.material.nuget.includePrerelease ? 'Yes' : 'No'}}</strong>
+                                                                </div>
+                                                                <div class="form-control-focus"> </div>
+                                                            </div>
+                                                            <div ng-hide="true">
+                                                                <label class="col-md-4 control-label">Credentials</label>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-control form-control-static">
+                                                                        <strong>{{pipes.formData.material.git.credentials ? 'Yes' : 'No'}}</strong>
+                                                                    </div>
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                                <br>
+                                                <hr>
+                                                <div id="buttons-row" class="row">
+                                                    <button class="btn green button-previous pull-left" ng-hide="pipes.bar == 1" ng-click="pipes.back()">
+                                                        <i class="fa fa-angle-left"></i> {{pipes.wizardInfo.buttons.back}}</button>
+                                                    <button class="btn green button-next pull-right" ng-disabled="pipelineCreateForm.$invalid || (pipes.bar == 2 && pipes.materialType === 'hidden')" ng-hide="pipes.bar == 3" ng-click="pipes.next()">{{pipes.wizardInfo.buttons.continue}}
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </button>
+                                                    <button class="btn green button-submit pull-right" type="submit" data-dismiss="modal" ng-hide="pipes.bar != 3" ng-click="pipes.addPipeline(pipes.formData); pipes.close()">
+                                                        {{pipes.wizardInfo.buttons.submit}}
+                                                        <i class="fa fa-check"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-
-                          <div class="tab-pane active" ng-if="pipes.bar == 3">
-
-                            <div class="form-group form-md-line-input">
-                                <label class="col-md-4 control-label">Pipeline Name</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.pipeline.name}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Automatic Scheduling</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.pipeline.autoSchedule ? 'Yes' : 'No'}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Stage Name</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.stage.name}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Stage Type</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.stage.trigger}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                            </div>
-
-                            <div ng-if="pipes.materialType == 'git'">
-                              <div class="form-group form-md-line-input">
-                                <label class="col-md-4 control-label">Material Name</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.git.name}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Git Url</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.git.url}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Branch</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.git.branch ? pipes.formData.material.git.branch : 'master'}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Poll for changes</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.git.poll ? 'Yes' : 'No'}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Credentials</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.git.credentials ? 'Yes' : 'No'}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div ng-if="pipes.materialType == 'nuget'">
-                              <div class="form-group form-md-line-input">
-                                <label class="col-md-4 control-label">Material Name</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.nuget.name}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">NuGet Url</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.nuget.url}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">NuGet Package</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.nuget.packageId}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Poll for changes</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.nuget.poll ? 'Yes' : 'No'}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <label class="col-md-4 control-label">Include Pre-Release</label>
-                                <div class="col-md-6">
-                                    <div class="form-control form-control-static">
-                                      <strong>{{pipes.formData.material.nuget.includePrerelease ? 'Yes' : 'No'}}</strong>
-                                    </div>
-                                    <div class="form-control-focus"> </div>
-                                </div>
-                                <div ng-hide="true">
-                                  <label class="col-md-4 control-label">Credentials</label>
-                                  <div class="col-md-6">
-                                      <div class="form-control form-control-static">
-                                        <strong>{{pipes.formData.material.git.credentials ? 'Yes' : 'No'}}</strong>
-                                      </div>
-                                      <div class="form-control-focus"> </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <br>
-                          <hr>
-                          <div class="row">
-                            <button class="btn green button-previous pull-left" ng-hide="pipes.bar == 1" ng-click="pipes.back()">
-                              <i class="fa fa-angle-left"></i> {{pipes.wizardInfo.buttons.back}}</button>
-                            <button class="btn green button-next pull-right" ng-disabled="pipelineCreateForm.$invalid" ng-hide="pipes.bar == 3" ng-click="pipes.next()">{{pipes.wizardInfo.buttons.continue}}
-                              <i class="fa fa-angle-right"></i>
-                            </button>
-                            <button class="btn green button-submit pull-right" type="submit" data-dismiss="modal"
-                                    ng-hide="pipes.bar != 3" ng-click="pipes.addPipeline(pipes.formData); pipes.close()">
-                              {{pipes.wizardInfo.buttons.submit}}
-                              <i class="fa fa-check"></i>
-                            </button>
-                          </div>
-                        </form>
-
-                      </div>
+                        </div>
                     </div>
-                  </div>
-              </div>
+
+                </form>
+
             </div>
-          </div>
-
-        </form>
-
-      </div>
+        </div>
     </div>
-  </div>
 </div>
