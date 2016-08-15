@@ -1,6 +1,6 @@
 package net.hawkengine.ws;
 
-import net.hawkengine.model.DbEntry;
+import net.hawkengine.model.PermissionObject;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionType;
@@ -53,7 +53,7 @@ public class SessionPool {
         Class objectClass = contractDto.getResult().getClass();
         for (WsEndpoint session : sessions) {
             List<Permission> permissions = session.getLoggedUser().getPermissions();
-            DbEntry result = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (DbEntry) contractDto.getResult());
+            PermissionObject result = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
             if (result.getPermissionType() != PermissionType.NONE) {
                 contractDto.setResult(result);
                 session.send(contractDto);

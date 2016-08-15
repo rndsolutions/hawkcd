@@ -1,8 +1,8 @@
 package net.hawkengine.services.filters;
 
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.*;
+import net.hawkengine.model.dto.UserDto;
+import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
@@ -72,5 +72,65 @@ public class EntityPermissionTypeService {
         }
 
         return pipeline;
+    }
+
+    public static StageDefinition setPermissionTypeToObject(List<Permission> permissions, StageDefinition stageDefinition){
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getObject();
+        if (pipelineDefinition == null) {
+            return stageDefinition;
+        }
+
+        PipelineDefinition updatedPipelineDefinition = setPermissionTypeToObject(permissions, pipelineDefinition);
+        stageDefinition.setPermissionType(updatedPipelineDefinition.getPermissionType());
+
+        return stageDefinition;
+    }
+
+    public static JobDefinition setPermissionTypeToObject(List<Permission> permissions, JobDefinition jobDefinition){
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getObject();
+        if (pipelineDefinition == null) {
+            return jobDefinition;
+        }
+
+        PipelineDefinition updatedPipelineDefinition = setPermissionTypeToObject(permissions, pipelineDefinition);
+        jobDefinition.setPermissionType(updatedPipelineDefinition.getPermissionType());
+
+        return jobDefinition;
+    }
+
+    public static TaskDefinition setPermissionTypeToObject(List<Permission> permissions, TaskDefinition taskDefinition){
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getObject();
+        if (pipelineDefinition == null) {
+            return taskDefinition;
+        }
+
+        PipelineDefinition updatedPipelineDefinition = setPermissionTypeToObject(permissions, pipelineDefinition);
+        taskDefinition.setPermissionType(updatedPipelineDefinition.getPermissionType());
+
+        return taskDefinition;
+    }
+
+    public static UserDto setPermissionTypeToObject(List<Permission> permissions, UserDto userDto){
+        userDto.setPermissionType(PermissionType.NONE);
+
+        for (Permission permission : permissions) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
+                userDto.setPermissionType(PermissionType.ADMIN);
+            }
+        }
+
+        return userDto;
+    }
+
+    public static UserGroupDto setPermissionTypeToObject(List<Permission> permissions, UserGroupDto userGroupDto){
+        userGroupDto.setPermissionType(PermissionType.NONE);
+
+        for (Permission permission : permissions) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
+                userGroupDto.setPermissionType(PermissionType.ADMIN);
+            }
+        }
+
+        return userGroupDto;
     }
 }

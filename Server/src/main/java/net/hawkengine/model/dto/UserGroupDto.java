@@ -1,12 +1,13 @@
 package net.hawkengine.model.dto;
 
+import net.hawkengine.model.PermissionObject;
 import net.hawkengine.model.User;
 import net.hawkengine.model.payload.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserGroupDto {
+public class UserGroupDto extends PermissionObject {
     private String id;
     private String name;
     private List<User> users;
@@ -18,7 +19,7 @@ public class UserGroupDto {
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(String id) {

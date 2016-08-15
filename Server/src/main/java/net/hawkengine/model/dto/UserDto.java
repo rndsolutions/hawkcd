@@ -1,10 +1,11 @@
 package net.hawkengine.model.dto;
 
+import net.hawkengine.model.PermissionObject;
 import net.hawkengine.model.payload.Permission;
 
 import java.util.List;
 
-public class UserDto {
+public class UserDto extends PermissionObject {
     private String username;
     private List<Permission> permissions;
 
