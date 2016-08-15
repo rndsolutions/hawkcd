@@ -1,11 +1,12 @@
 package net.hawkengine.services.tests;
 
-import com.fiftyonred.mock_jedis.MockJedisPool;
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.core.utilities.constants.TestsConstants;
+import net.hawkengine.core.utilities.constants.ServerMessages;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.*;
+import net.hawkengine.model.GitMaterial;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -14,14 +15,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import redis.clients.jedis.JedisPoolConfig;
+import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class MaterialDefinitionServiceTests {
-    private IPipelineDefinitionService pipelineDefinitionService;
     private IMaterialDefinitionService materialDefinitionService;
+    private IPipelineDefinitionService mockedPipelineDefinitionService;
+    private IDbRepository mockedRepository;
+
 
     @BeforeClass
     public static void setUpClass() {
@@ -29,301 +33,263 @@ public class MaterialDefinitionServiceTests {
     }
 
     @Before
-    public void setUp(){
-        MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testMaterialDefinitionService");
-        IDbRepository pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo);
-        this.materialDefinitionService = new MaterialDefinitionService(this.pipelineDefinitionService);
+    public void setUp() {
+        this.mockedPipelineDefinitionService = Mockito.mock(PipelineDefinitionService.class);
+        this.mockedRepository = Mockito.mock(IDbRepository.class);
+        this.materialDefinitionService = new MaterialDefinitionService(this.mockedRepository, this.mockedPipelineDefinitionService);
     }
 
     @Test
-    public void getById_existingObject_correctObject() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial expectedMaterialDefinition = new GitMaterial();
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(expectedMaterialDefinition);
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + expectedMaterialDefinition.getId() + " retrieved successfully.";
+    public void materialDefinitionService_instantiated_notNull() {
+        // Act
+        MaterialDefinitionService materialDefinitionService = new MaterialDefinitionService();
 
-        //Act
+        // Assert
+        Assert.assertNotNull(materialDefinitionService);
+    }
+
+    @Test
+    public void getById_withValidId_correctObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
+
+        // Act
         ServiceResult actualResult = this.materialDefinitionService.getById(expectedMaterialDefinition.getId());
-        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
 
-        //Assert
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(expectedMaterialDefinition.getId(), actualResultObject.getId());
     }
 
     @Test
-    public void getById_nonExistingObject_correctErrorMessage() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial expectedMaterialDefinition = new GitMaterial();
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " not found.";
+    public void getById_withInvalidId_null() {
+        // Arrange
+        String wrongId = UUID.randomUUID().toString();
 
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.getById(expectedMaterialDefinition.getId());
+        Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(null);
 
-        //Assert
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.getById(wrongId);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
         Assert.assertTrue(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertNull(actualResult.getObject());
     }
 
     @Test
-    public void getAll_withExistingObjects_allObjects() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial firstExpectedMaterialDefinition = new GitMaterial();
-        GitMaterial secondExpectedMaterialDefinition = new GitMaterial();
-        firstExpectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        firstExpectedMaterialDefinition.setName("firstMaterialDefinition");
-        secondExpectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        secondExpectedMaterialDefinition.setName("secondMaterialDefinition");
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(firstExpectedMaterialDefinition);
-        this.materialDefinitionService.add(secondExpectedMaterialDefinition);
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + "s retrieved successfully.";
+    public void getAll_withOneId_oneObject() {
+        // Arrange
+        List<MaterialDefinition> expectedMaterialDefinitions = new ArrayList<>();
+        MaterialDefinition materialDefinition = new GitMaterial();
+        expectedMaterialDefinitions.add(materialDefinition);
 
-        //Act
+        Mockito.when(this.mockedRepository.getAll()).thenReturn(expectedMaterialDefinitions);
+
+        // Act
         ServiceResult actualResult = this.materialDefinitionService.getAll();
-        List<MaterialDefinition> actualResultObject = (List<MaterialDefinition>) actualResult.getObject();
-        MaterialDefinition firstActualMaterialDefinition = actualResultObject
-                .stream()
-                .filter(p -> p.getId().equals(firstExpectedMaterialDefinition.getId()))
-                .collect(Collectors.toList())
-                .get(0);
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
 
-        MaterialDefinition secondActualMaterialDefinition = actualResultObject
-                .stream()
-                .filter(p -> p.getId().equals(secondExpectedMaterialDefinition.getId()))
-                .collect(Collectors.toList())
-                .get(0);
-
-        //Assert
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
+        Assert.assertEquals(expectedMaterialDefinitions.get(0).getId(), actualMaterialDefinitions.get(0).getId());
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(firstExpectedMaterialDefinition.getId(), firstActualMaterialDefinition.getId());
-        Assert.assertEquals(secondExpectedMaterialDefinition.getId(), secondActualMaterialDefinition.getId());
-        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualResultObject.size());
     }
 
     @Test
-    public void add_nonExistingGitObject_correctObject() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial expectedMaterialDefinition = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + expectedMaterialDefinition.getId() + " added successfully.";
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
+    public void getAll_withNoId_noObjects() {
+        // Arrange
+        List<MaterialDefinition> expectedMaterialDefinitions = new ArrayList<>();
 
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
-        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
+        Mockito.when(this.mockedRepository.getAll()).thenReturn(expectedMaterialDefinitions);
 
-        //Assert
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.getAll();
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(expectedMaterialDefinition.getId(), actualResultObject.getId());
-        Assert.assertNotNull(actualResultObject);
     }
 
     @Test
-    public void add_nonExistingNugetObject_correctObject() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        NugetMaterial expectedMaterialDefinition = new NugetMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + expectedMaterialDefinition.getId() + " added successfully.";
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
+    public void getAllFromPipelineDefinition_withOneId_oneObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
 
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
-        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
-
-        //Assert
-        Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(expectedMaterialDefinition.getId(), actualResultObject.getId());
-        Assert.assertNotNull(actualResultObject);
-    }
-
-    @Test
-    public void add_existingObject_correctErrorMessage() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial expectedMaterialDefinition = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " already exists.";
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(expectedMaterialDefinition);
-
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
-
-        //Assert
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertNull(actualResult.getObject());
-    }
-
-    @Test
-    public void add_nonExistingObjectWithSameName_correctErrorMessage() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial firstMaterialDefinition = new GitMaterial();
-        GitMaterial secondMaterialDefinition = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " with the same name exists.";
-        firstMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        firstMaterialDefinition.setName("expectedMaterial");
-        secondMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        secondMaterialDefinition.setName(firstMaterialDefinition.getName());
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(firstMaterialDefinition);
-
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.add(secondMaterialDefinition);
-        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
-
-        //Assert
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(firstMaterialDefinition.getName(), actualResultObject.getName());
-    }
-
-    @Test
-    public void update_existingGitObject_updatedObject() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial expectedMaterialDefinition = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + expectedMaterialDefinition.getId() + " updated successfully.";
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        expectedMaterialDefinition.setName("nameBeforeUpdate");
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(expectedMaterialDefinition);
-
-        //Act
-        String expectedName = "nameAfterUpdate";
-        expectedMaterialDefinition.setName(expectedName);
-        ServiceResult actualResult = this.materialDefinitionService.update(expectedMaterialDefinition);
-        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
-
-        //Assert
-        Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(expectedName, actualResultObject.getName());
-    }
-
-    @Test
-    public void update_existingNugetObject_updatedObject() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        NugetMaterial expectedMaterialDefinition = new NugetMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + expectedMaterialDefinition.getId() + " updated successfully.";
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        expectedMaterialDefinition.setName("nameBeforeUpdate");
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(expectedMaterialDefinition);
-
-        //Act
-        String expectedName = "nameAfterUpdate";
-        expectedMaterialDefinition.setName(expectedName);
-        ServiceResult actualResult = this.materialDefinitionService.update(expectedMaterialDefinition);
-        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
-
-        //Assert
-        Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(expectedName, actualResultObject.getName());
-    }
-
-    @Test
-    public void update_existingObjectWithSameName_updatedObject(){
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial firstMaterialDefinition = new GitMaterial();
-        GitMaterial secondMaterialDefinition = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " with the same name exists.";
-        firstMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        secondMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        firstMaterialDefinition.setName("firstMaterial");
-        secondMaterialDefinition.setName("secondMaterial");
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-        this.materialDefinitionService.add(firstMaterialDefinition);
-        this.materialDefinitionService.add(secondMaterialDefinition);
-
-        //Act
-        secondMaterialDefinition.setName("firstMaterial");
-        ServiceResult actualResult = this.materialDefinitionService.update(secondMaterialDefinition);
-        MaterialDefinition actualResultObject = (MaterialDefinition) actualResult.getObject();
-
-        //Assert
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertEquals(secondMaterialDefinition.getId(), actualResultObject.getId());
-    }
-
-    @Test
-    public void update_nonExistingObject_correctErrorMessage() {
-        //Arrange
-        PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
-        GitMaterial expectedMaterialDefinition = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " not found.";
-        expectedMaterialDefinition.setPipelineDefinitionId(expectedPipelineDefinition.getId());
-        expectedMaterialDefinition.setName("nameBeforeUpdate");
-        this.pipelineDefinitionService.add(expectedPipelineDefinition);
-
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.update(expectedMaterialDefinition);
-
-        //Assert
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertNull(actualResult.getObject());
-    }
-
-    @Test
-    public void delete_existingObject_false() {
-        //Arrange
+        ServiceResult pipelineDefinitionById = new ServiceResult();
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        GitMaterial materialDefinitionToDelete = new GitMaterial();
-        GitMaterial secondMaterialDefinition = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " deleted successfully.";
-        materialDefinitionToDelete.setPipelineDefinitionId(pipelineDefinition.getId());
-        materialDefinitionToDelete.setName("expectedMaterialDefinition");
-        secondMaterialDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
-        secondMaterialDefinition.setName("secondMaterialDefinition");
-        this.pipelineDefinitionService.add(pipelineDefinition);
-        this.materialDefinitionService.add(materialDefinitionToDelete);
-        this.materialDefinitionService.add(secondMaterialDefinition);
+        List<String> materialDefinitionIds = new ArrayList<>();
+        materialDefinitionIds.add(expectedMaterialDefinition.getId());
+        pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
+        pipelineDefinitionById.setObject(pipelineDefinition);
 
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.delete(materialDefinitionToDelete.getId());
+        Mockito.when(this.mockedPipelineDefinitionService.getById(Mockito.anyString())).thenReturn(pipelineDefinitionById);
+        Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
 
-        //Assert
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId());
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(1, actualMaterialDefinitions.size());
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinitions.get(0).getId());
         Assert.assertFalse(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertNull(actualResult.getObject());
     }
 
     @Test
-    public void delete_nonExistingObject_true() {
-        //Arrange
+    public void getAllFromPipelineDefinition_withNoIds_noObjects() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        ServiceResult pipelineDefinitionById = new ServiceResult();
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        GitMaterial materialDefinitionToDelete = new GitMaterial();
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " does not exist.";
-        materialDefinitionToDelete.setPipelineDefinitionId(pipelineDefinition.getId());
-        this.pipelineDefinitionService.add(pipelineDefinition);
+        pipelineDefinitionById.setObject(pipelineDefinition);
 
-        //Act
-        ServiceResult actualResult = this.materialDefinitionService.delete(materialDefinitionToDelete.getId());
+        Mockito.when(this.mockedPipelineDefinitionService.getById(Mockito.anyString())).thenReturn(pipelineDefinitionById);
+        Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
 
-        //Assert
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId());
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(0, actualMaterialDefinitions.size());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void add_nonExistingObject_correctObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.add(Mockito.any(MaterialDefinition.class))).thenReturn(expectedMaterialDefinition);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void add_existingObject_null() {
+        // Arrange
+        MaterialDefinition materialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.add(Mockito.any(MaterialDefinition.class))).thenReturn(null);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.add(materialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
         Assert.assertTrue(actualResult.hasError());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-        Assert.assertNull(actualResult.getObject());
+    }
+
+    @Test
+    public void update_existingObject_correctObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.update(Mockito.any(MaterialDefinition.class))).thenReturn(expectedMaterialDefinition);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.update(expectedMaterialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void update_existingObject_null() {
+        // Arrange
+        MaterialDefinition materialDefinition = new GitMaterial();
+
+        Mockito.when(this.mockedRepository.update(Mockito.any(MaterialDefinition.class))).thenReturn(null);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.update(materialDefinition);
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
+        Assert.assertTrue(actualResult.hasError());
+    }
+
+    @Test
+    public void delete_withValidId_deletedObject() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        ServiceResult allPipelineDefinitions = new ServiceResult();
+        List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        pipelineDefinitions.add(pipelineDefinition);
+        allPipelineDefinitions.setObject(pipelineDefinitions);
+        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
+        Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
+        Assert.assertFalse(actualResult.hasError());
+    }
+
+    @Test
+    public void delete_withInvalidId_null() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        ServiceResult allPipelineDefinitions = new ServiceResult();
+        allPipelineDefinitions.setObject(new ArrayList<PipelineDefinition>());
+        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
+        Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(null);
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
+        Assert.assertTrue(actualResult.hasError());
+    }
+
+    @Test
+    public void delete_assignedToOnePipeline_correctMessage() {
+        // Arrange
+        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+
+        ServiceResult allPipelineDefinitions = new ServiceResult();
+        List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        List<String> materialDefinitionIds = new ArrayList<>();
+        materialDefinitionIds.add(expectedMaterialDefinition.getId());
+        pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
+        pipelineDefinitions.add(pipelineDefinition);
+        allPipelineDefinitions.setObject(pipelineDefinitions);
+        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
+
+        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(ServerMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
+
+        // Act
+        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+
+        // Assert
+        Assert.assertNull(actualMaterialDefinition);
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(actualResult.getMessage(), expectedMessage);
     }
 }
