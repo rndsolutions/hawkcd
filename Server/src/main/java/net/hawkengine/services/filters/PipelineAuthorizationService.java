@@ -85,8 +85,8 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     }
 
     @Override
-    public boolean delete(String entity, List permissions) {
-        Pipeline pipeline = (Pipeline) this.pipelineService.getById(entity).getObject();
+    public boolean delete(String entityId, List permissions) {
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getObject();
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipeline);
     }

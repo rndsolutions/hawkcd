@@ -79,9 +79,9 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
     }
 
     @Override
-    public boolean delete(String entity, List permissions) {
+    public boolean delete(String entityId, List permissions) {
 
-        return this.hasPermissionToUpdateAndDelete(permissions, entity);
+        return this.hasPermissionToUpdateAndDelete(permissions, entityId);
     }
 
     private boolean hasPermissionToRead(List<Permission> permissions, PipelineGroup pipelineGroup) {
