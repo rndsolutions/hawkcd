@@ -21,6 +21,15 @@ angular
             return result;
         }
 
+        validationService.dispatcherFlow = function(object,solveFunction){
+          if(object.error == false) {
+              solveFunction(object.result);
+          }
+          else{
+              toaster.pop('error', "Notification", object.errorMessage);
+          }
+        }
+
         return validationService;
 
     }]);

@@ -187,7 +187,7 @@ angular
                 pipeExecService.getAllPipelines();
                 adminService.getAllUserGroupDTOs();
                 adminService.getAllUsers();
-                //adminMaterialService.getAllMaterialDefinitions();
+                adminMaterialService.getAllMaterialDefinitions();
             };
 
             $rootScope.socket.onclose = function (event) {

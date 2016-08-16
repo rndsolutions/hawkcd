@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService) {
+    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService, adminMaterialService) {
         var vm = this;
         vm.toggleLogo = 1;
 
@@ -97,12 +97,10 @@ angular
         vm.materialObject = {};
 
         vm.getMaterial = function() {
-            viewModel.allPipelines.forEach(function(pipeline, index, array) {
-                pipeline.materialDefinitions.forEach(function(material, index, array) {
-                  if(vm.currentMaterials.indexOf(material) === -1){
+            viewModel.allMaterialDefinitions.forEach(function(material, index, array) {
+                if (vm.currentMaterials.indexOf(material) === -1) {
                     vm.currentMaterials.push(material);
-                  }
-                });
+                }
             });
         };
 
@@ -146,7 +144,7 @@ angular
         };
         vm.next = function() {
             vm.bar++;
-            if (vm.bar === 3) {
+            if (vm.bar === 3 && vm.materialType === 'existing') {
                 vm.materialObject = JSON.parse(vm.selectedMaterial);
             }
         };
@@ -324,36 +322,53 @@ angular
         vm.addPipeline = function(formData) {
             vm.formData = formData;
             var material = {};
-            if (vm.materialType == 'git') {
-                material = {
-                    "pipelineDefinitionName": vm.formData.pipeline.name,
-                    "name": vm.formData.material.git.name,
-                    "type": 'GIT',
-                    "repositoryUrl": vm.formData.material.git.url,
-                    "isPollingForChanges": vm.formData.material.git.poll,
-                    "destination": vm.formData.material.git.name,
-                    "branch": vm.formData.material.git.branch || 'master'
-                };
-                if (formData.material.git.credentials) {
-                    material.username = formData.material.git.username;
-                    material.password = formData.material.git.password;
+            var materialId = {};
+            var addPipelineDTO = {};
+
+            addPipelineDTO = {
+                pipelineDefinition: {
+                    "name": vm.formData.pipeline.name,
+                    "pipelineGroupId": vm.groupId,
+                    "groupName": vm.groupName,
+                    "materialDefinitions": [],
+                    "environmentVariables": [],
+                    "parameters": [],
+                    "environment": {},
+                    "stageDefinitions": [{
+                        "name": "Default",
+                        "jobDefinitions": [{
+                            "name": "defaultJob",
+                            "taskDefinitions": [{
+                                "command": "cmd",
+                                "arguments": "/c",
+                                "runIfCondition": 'PASSED',
+                                "type": 'EXEC'
+                            }],
+                            "environmentVariables": []
+                        }],
+                        "environmentVariables": [],
+                        "neverCleanArtifacts": false,
+                        "cleanWorkingDirectory": false,
+                        "stageType": ''
+                    }],
+                    "autoScheduling": vm.formData.pipeline.autoSchedule
                 }
+            };
+
+            if (vm.materialType == 'git') {
+                vm.formData.material.git.type = 'GIT';
+                addPipelineDTO.materialDefinition = vm.formData.material.git;
             }
             if (vm.materialType == 'existing') {
-                material = {
-                    "pipelineDefinitionName": vm.formData.pipeline.name,
-                    "name": vm.materialObject.name,
-                    "type": vm.materialObject.type,
-                    "repositoryUrl": vm.materialObject.repositoryUrl,
-                    "isPollingForChanges": vm.materialObject.isPollingForChanges,
-                    "destination": vm.materialObject.name,
-                    "branch": vm.materialObject.branch || 'master'
-                };
-                if (vm.materialObject.username && vm.materialObject.password) {
-                    material.username = vm.materialObject.username;
-                    material.password = vm.materialObject.password;
-                }
+                addPipelineDTO.materialDefinition = vm.materialObject.id;
             }
+
+
+            pipeConfigService.addPipelineDefinition(addPipelineDTO);
+            vm.selectedMaterial = {};
+            vm.materialObject = {};
+            vm.materialType = 'hidden';
+
             //TODO
             // if (vm.formData.material.tfs) {
             //     var tfs = {
@@ -386,38 +401,8 @@ angular
             //     };
             // }
 
-            var pipeline = {
-                "name": vm.formData.pipeline.name,
-                "pipelineGroupId": vm.groupId,
-                "groupName": vm.groupName,
-                "materialDefinitions": [material],
-                "environmentVariables": [],
-                "parameters": [],
-                "environment": {},
-                "stageDefinitions": [{
-                    "name": "Default",
-                    "jobDefinitions": [{
-                        "name": "defaultJob",
-                        "taskDefinitions": [{
-                            "command": "cmd",
-                            "arguments": "/c",
-                            "runIfCondition": 'PASSED',
-                            "type": 'EXEC'
-                        }],
-                        "environmentVariables": []
-                    }],
-                    "environmentVariables": [],
-                    "neverCleanArtifacts": false,
-                    "cleanWorkingDirectory": false,
-                    "stageType": ''
-                }],
-                "autoScheduling": vm.formData.pipeline.autoSchedule
-            };
 
-            pipeConfigService.addPipelineDefinition(pipeline);
-            vm.selectedMaterial = {};
-            vm.materialObject = {};
-            vm.materialType = 'hidden';
+
             // var tokenIsValid = authDataService.checkTokenExpiration();
             // if (tokenIsValid) {
             //     var token = window.localStorage.getItem("accessToken");
