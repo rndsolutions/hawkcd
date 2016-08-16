@@ -3,6 +3,7 @@ package net.hawkengine.services;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
     private static final Class CLASS_TYPE = PipelineDefinition.class;
 
-    private MaterialDefinitionService materialDefinitionService;
+    private IMaterialDefinitionService materialDefinitionService;
 
     public PipelineDefinitionService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
@@ -22,6 +23,12 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     public PipelineDefinitionService(IDbRepository repository) {
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
+    }
+
+    public PipelineDefinitionService(IDbRepository repository, IMaterialDefinitionService materialDefinitionService) {
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
+        this.materialDefinitionService = materialDefinitionService;
     }
 
     @Override
@@ -59,7 +66,10 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
-        this.materialDefinitionService = new MaterialDefinitionService();
+        if (this.materialDefinitionService == null) {
+            this.materialDefinitionService = new MaterialDefinitionService();
+        }
+
         ServiceResult serviceResult = this.materialDefinitionService.add(materialDefinition);
         // TODO: Return response to UI
         if (serviceResult.hasError()) {
@@ -73,6 +83,10 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
+        if (this.materialDefinitionService == null) {
+            this.materialDefinitionService = new MaterialDefinitionService();
+        }
+
         this.materialDefinitionService = new MaterialDefinitionService();
         ServiceResult serviceResult = this.materialDefinitionService.getById(materialDefinitionId);
         if (serviceResult.hasError()) {
