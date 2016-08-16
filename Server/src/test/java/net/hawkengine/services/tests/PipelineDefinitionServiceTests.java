@@ -7,7 +7,9 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,6 +25,8 @@ public class PipelineDefinitionServiceTests {
 
     private IDbRepository<PipelineDefinition> mockedRepository;
     private IPipelineDefinitionService mockedPipeLineDefinitionService;
+    private IPipelineService mockedPipelineService;
+    private IDbRepository<Pipeline> pipelineRepo;
 
     @BeforeClass
     public static void setUpClass() {
@@ -34,6 +38,10 @@ public class PipelineDefinitionServiceTests {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionService");
         this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository);
+
+        this.pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
+        this.mockedPipelineService = new PipelineService(this.pipelineRepo, this.mockedPipeLineDefinitionService);
+        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository, this.mockedPipelineService);
     }
 
     @Test
