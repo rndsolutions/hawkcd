@@ -48,6 +48,8 @@ public class SecurityServiceInvoker {
                 return this.securityService.addUserGroupDto(contract, permissions);
             case "updateUserGroupDto":
                 return this.securityService.updateUserGroupDto(contract, permissions);
+            case "addWithMaterialDefinition":
+                return this.securityService.addWithMaterialDefinition(contract, permissions);
             default:
                 return null;
         }

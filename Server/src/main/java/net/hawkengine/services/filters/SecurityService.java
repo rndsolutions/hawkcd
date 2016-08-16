@@ -406,4 +406,17 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
         return this.result;
     }
+
+    @Override
+    public ServiceResult addWithMaterialDefinition(WsContractDto contract, List<Permission> permissions) {
+        try {
+            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+
 }

@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('validationService', [function () {
+    .factory('validationService', ['toaster',function (toaster) {
         var validationService = this;
 
         validationService.isValid = function (obj) {

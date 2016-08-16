@@ -34,4 +34,6 @@ public interface ISecurityService {
     ServiceResult unassignPipelineFromGroup(WsContractDto contract, List<Permission> permissions);
 
     ServiceResult addUserWithoutProvider(WsContractDto contract, List<Permission> permissions);
+
+    ServiceResult addWithMaterialDefinition(WsContractDto contract, List<Permission> permissions);
 }

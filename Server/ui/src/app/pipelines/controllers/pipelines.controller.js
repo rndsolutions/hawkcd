@@ -324,7 +324,7 @@ angular
             var material = {};
             var materialId = {};
             var addPipelineDTO = {};
-
+            
             addPipelineDTO = {
                 pipelineDefinition: {
                     "name": vm.formData.pipeline.name,
@@ -349,22 +349,34 @@ angular
                         "environmentVariables": [],
                         "neverCleanArtifacts": false,
                         "cleanWorkingDirectory": false,
-                        "stageType": ''
+                        "stageType": 'false'
                     }],
                     "autoScheduling": vm.formData.pipeline.autoSchedule
                 }
             };
 
             if (vm.materialType == 'git') {
-                vm.formData.material.git.type = 'GIT';
-                addPipelineDTO.materialDefinition = vm.formData.material.git;
+                var material = {
+                    "pipelineDefinitionName": vm.formData.pipeline.name,
+                    "name": vm.formData.material.git.name,
+                    "type": 'GIT',
+                    "repositoryUrl": vm.formData.material.git.url,
+                    "isPollingForChanges": vm.formData.material.git.poll,
+                    "destination": vm.formData.material.git.name,
+                    "branch": vm.formData.material.git.branch || 'master'
+                };
+                if (formData.material.git.credentials) {
+                    material.username = formData.material.git.username;
+                    material.password = formData.material.git.password;
+                }
+                addPipelineDTO.materialDefinition = material;
             }
             if (vm.materialType == 'existing') {
                 addPipelineDTO.materialDefinition = vm.materialObject.id;
             }
 
 
-            pipeConfigService.addPipelineDefinition(addPipelineDTO);
+            pipeConfigService.addPipelineDefinitionWithMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
             vm.selectedMaterial = {};
             vm.materialObject = {};
             vm.materialType = 'hidden';

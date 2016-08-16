@@ -2,7 +2,14 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.model.*;
+import net.hawkengine.model.GitMaterial;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
 import java.util.List;
@@ -58,7 +65,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
+    public ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
         this.materialDefinitionService = new MaterialDefinitionService();
         ServiceResult serviceResult = this.materialDefinitionService.add(materialDefinition);
         // TODO: Return response to UI
@@ -69,6 +76,11 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
 
         return super.add(pipelineDefinition);
+    }
+
+    @Override
+    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, GitMaterial materialDefinition) {
+        return this.add(pipelineDefinition, materialDefinition);
     }
 
     @Override
