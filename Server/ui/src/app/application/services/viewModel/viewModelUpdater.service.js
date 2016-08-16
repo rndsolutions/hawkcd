@@ -172,6 +172,8 @@ angular
                     viewModel.unassignedPipelines.push(pipelineDefinition);
                 }
             });
+
+            viewModel.allPipelines.push(pipelineDefinition);
         };
 
         viewModelUpdater.updatePipelineDefinition = function (pipelineDefinition) {

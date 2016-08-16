@@ -264,8 +264,8 @@ angular
                     },
                     delete: function (object) {
                         if (object.error == false) {
-                            pipeConfigService.getAllPipelineDefinitions();
                             pipeConfigService.getAllPipelineGroupDTOs();
+                            pipeConfigService.getAllPipelineDefinitions();
                         }
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);
