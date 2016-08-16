@@ -2,12 +2,17 @@ package net.hawkengine.services.filters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
-import net.hawkengine.model.*;
+import net.hawkengine.model.DbEntry;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.UserGroup;
 import net.hawkengine.model.dto.WsContractDto;
-import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
@@ -210,16 +215,9 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         return false;
     }
 
+
     @Override
-    public ServiceResult addWithMaterialDefinition(WsContractDto contract, List<Permission> permissions) {
-        try {
-            this.result = (ServiceResult) this.wsObjectProcessor.call(contract);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+    public boolean addWithMaterialDefinition(String entity, String className, List list) {
+        return true;
     }
-
-
 }

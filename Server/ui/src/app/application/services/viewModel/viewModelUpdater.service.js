@@ -207,11 +207,7 @@ angular
         };
 
         viewModelUpdater.addMaterialDefinition = function (materialDefinition) {
-            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
-                if(currentPipeline.id == materialDefinition.pipelineDefinitionId) {
-                    viewModel.allPipelines[index].materialDefinitions.push(materialDefinition);
-                }
-            });
+            viewModel.allMaterialDefinitions.push(materialDefinition);
         };
 
         viewModelUpdater.updateMaterialDefinition = function (materialDefinition) {

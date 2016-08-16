@@ -2,10 +2,19 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.model.*;
+import net.hawkengine.model.GitMaterial;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
+import net.hawkengine.ws.EndpointConnector;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,17 +82,17 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
+    public ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
         }
 
         ServiceResult serviceResult = this.materialDefinitionService.add(materialDefinition);
-        // TODO: Return response to UI
         if (serviceResult.hasError()) {
             return super.createServiceResult(null, true, "could not be created");
         }
 
+        EndpointConnector.passResultToEndpoint("MaterialDefinitionService","add",serviceResult);
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
 
         return super.add(pipelineDefinition);
