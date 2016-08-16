@@ -4,12 +4,14 @@ import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
     private static final Class CLASS_TYPE = PipelineDefinition.class;
+    private IPipelineService pipelineService;
 
     public PipelineDefinitionService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
@@ -20,6 +22,12 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     public PipelineDefinitionService(IDbRepository repository) {
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
+    }
+
+    public PipelineDefinitionService(IDbRepository repository, IPipelineService pipelineService){
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
+        this.pipelineService = pipelineService;
     }
 
     @Override
@@ -66,6 +74,19 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult delete(String pipelineDefinitionId) {
+        if (this.pipelineService == null){
+            this.pipelineService = new PipelineService();
+        }
+        List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getObject();
+
+        List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb.stream().filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId)).collect(Collectors.toList());
+        for (Pipeline pipeline: pipelineWithinThePipelineDefinition) {
+            ServiceResult result = this.pipelineService.delete(pipeline.getId());
+
+            if (result.hasError()){
+                return result;
+            }
+        }
         return super.delete(pipelineDefinitionId);
     }
 
