@@ -1,5 +1,7 @@
 package net.hawkengine.services.tests.filters.factories;
 
+import net.hawkengine.core.ServerConfiguration;
+import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
@@ -35,25 +37,23 @@ public class SecurityServiceInvokerTests {
         this.mockedAuthorizationService = Mockito.mock(PipelineAuthorizationService.class);
 
         this.securityServiceInvoker = new SecurityServiceInvoker(this.mockedSecurityService);
+
+        ServerConfiguration.configure();
     }
 
     @Test
     public void passedMethodName_getAll_correctServiceResult() throws Exception {
         //Assert
-        ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
-        expectedServiceResult.setObject(null);
-        expectedServiceResult.setMessage("Get All Service Result");
+        List expectedServiceResult = new ArrayList<>();
 
-        Mockito.when(this.mockedSecurityService.getAll(this.contract, this.permissions)).thenReturn(expectedServiceResult);
+        Mockito.when(this.mockedSecurityService.getAll(new ArrayList<>(), this.contract.getClassName(), this.permissions)).thenReturn(expectedServiceResult);
 
         //Act
         this.contract.setMethodName("getAll");
-        ServiceResult actualServiceResult = this.securityServiceInvoker.process(contract, permissions);
+        List actualServiceResult = this.securityServiceInvoker.processList(expectedServiceResult, contract.getClassName(), permissions, "getAll");
 
         //Assert
-        Assert.assertEquals(expectedServiceResult.getMessage(), actualServiceResult.getMessage());
-        Assert.assertFalse(actualServiceResult.hasError());
+        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS, actualServiceResult.size());
     }
 
     @Test
@@ -64,15 +64,14 @@ public class SecurityServiceInvokerTests {
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("GET BY ID Service Result");
 
-        Mockito.when(this.mockedSecurityService.getById(this.contract, this.permissions)).thenReturn(expectedServiceResult);
+        Mockito.when(this.mockedSecurityService.getById("entity", this.contract.getClassName(), this.permissions)).thenReturn(true);
 
         //Act
         this.contract.setMethodName("getById");
-        ServiceResult actualServiceResult = this.securityServiceInvoker.process(contract, permissions);
+        boolean actualServiceResult = this.securityServiceInvoker.process("entity", this.contract.getClassName(), permissions, "getById");
 
         //Assert
-        Assert.assertEquals(expectedServiceResult.getMessage(), actualServiceResult.getMessage());
-        Assert.assertFalse(actualServiceResult.hasError());
+        Assert.assertTrue(actualServiceResult);
     }
 
     @Test
@@ -83,15 +82,14 @@ public class SecurityServiceInvokerTests {
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("ADD Service Result");
 
-        Mockito.when(this.mockedSecurityService.add(this.contract, this.permissions)).thenReturn(expectedServiceResult);
+        Mockito.when(this.mockedSecurityService.add("entity", this.contract.getClassName(), this.permissions)).thenReturn(true);
 
         //Act
         this.contract.setMethodName("add");
-        ServiceResult actualServiceResult = this.securityServiceInvoker.process(contract, permissions);
+        boolean actualServiceResult = this.securityServiceInvoker.process("entity", contract.getClassName(), permissions, "add");
 
         //Assert
-        Assert.assertEquals(expectedServiceResult.getMessage(), actualServiceResult.getMessage());
-        Assert.assertFalse(actualServiceResult.hasError());
+        Assert.assertTrue(actualServiceResult);
     }
 
     @Test
@@ -102,15 +100,14 @@ public class SecurityServiceInvokerTests {
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("Update Service Result");
 
-        Mockito.when(this.mockedSecurityService.update(this.contract, this.permissions)).thenReturn(expectedServiceResult);
+        Mockito.when(this.mockedSecurityService.update("entity", this.contract.getClassName(), this.permissions)).thenReturn(true);
 
         //Act
         this.contract.setMethodName("update");
-        ServiceResult actualServiceResult = this.securityServiceInvoker.process(contract, permissions);
+        boolean actualServiceResult = this.securityServiceInvoker.process("entity", contract.getClassName(), permissions, "update");
 
         //Assert
-        Assert.assertEquals(expectedServiceResult.getMessage(), actualServiceResult.getMessage());
-        Assert.assertFalse(actualServiceResult.hasError());
+        Assert.assertTrue(actualServiceResult);
     }
 
     @Test
@@ -121,15 +118,14 @@ public class SecurityServiceInvokerTests {
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("DELETE Service Result");
 
-        Mockito.when(this.mockedSecurityService.delete(this.contract, this.permissions)).thenReturn(expectedServiceResult);
+        Mockito.when(this.mockedSecurityService.delete("entityId", this.contract.getClassName(), this.permissions)).thenReturn(true);
 
         //Act
         this.contract.setMethodName("delete");
-        ServiceResult actualServiceResult = this.securityServiceInvoker.process(contract, permissions);
+        boolean actualServiceResult = this.securityServiceInvoker.process("entityId", contract.getClassName(), permissions, "delete");
 
         //Assert
-        Assert.assertEquals(expectedServiceResult.getMessage(), actualServiceResult.getMessage());
-        Assert.assertFalse(actualServiceResult.hasError());
+        Assert.assertTrue(actualServiceResult);
     }
 
     @Test
@@ -137,10 +133,10 @@ public class SecurityServiceInvokerTests {
 
         //Act
         this.contract.setMethodName("invalidName");
-        ServiceResult actualServiceResult = this.securityServiceInvoker.process(contract, permissions);
+        boolean actualServiceResult = this.securityServiceInvoker.process("entity", contract.getClassName(), permissions, "invalidName");
 
         //Assert
-        Assert.assertNull(actualServiceResult);
+        Assert.assertFalse(actualServiceResult);
     }
 
     @Test
