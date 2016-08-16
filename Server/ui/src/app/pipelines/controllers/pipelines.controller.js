@@ -324,7 +324,7 @@ angular
             var material = {};
             var materialId = {};
             var addPipelineDTO = {};
-            
+
             addPipelineDTO = {
                 pipelineDefinition: {
                     "name": vm.formData.pipeline.name,
@@ -370,13 +370,14 @@ angular
                     material.password = formData.material.git.password;
                 }
                 addPipelineDTO.materialDefinition = material;
+                pipeConfigService.addPipelineDefinitionWithMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
             }
             if (vm.materialType == 'existing') {
+                debugger;
                 addPipelineDTO.materialDefinition = vm.materialObject.id;
+                pipeConfigService.addPipelineDefinitionWithExistingMaterial(addPipelineDTO.pipelineDefinition,addPipelineDTO.materialDefinition);
             }
-
-
-            pipeConfigService.addPipelineDefinitionWithMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
+            
             vm.selectedMaterial = {};
             vm.materialObject = {};
             vm.materialType = 'hidden';
