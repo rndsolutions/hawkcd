@@ -11,10 +11,13 @@ import java.util.stream.Collectors;
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
     private static final Class CLASS_TYPE = PipelineDefinition.class;
 
+    private MaterialDefinitionService materialDefinitionService;
+
     public PipelineDefinitionService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
+        this.materialDefinitionService = new MaterialDefinitionService();
     }
 
     public PipelineDefinitionService(IDbRepository repository) {
@@ -51,6 +54,31 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
                 }
             }
         }
+
+        return super.add(pipelineDefinition);
+    }
+
+    @Override
+    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
+        ServiceResult serviceResult = this.materialDefinitionService.add(materialDefinition);
+        // TODO: Return response to UI
+        if (serviceResult.hasError()) {
+            return super.createServiceResult(null, true, "could not be created");
+        }
+
+        pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
+
+        return super.add(pipelineDefinition);
+    }
+
+    @Override
+    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
+        ServiceResult serviceResult = this.materialDefinitionService.getById(materialDefinitionId);
+        if (serviceResult.hasError()) {
+            return super.createServiceResult(null, true, "could not be created");
+        }
+
+        pipelineDefinition.getMaterialDefinitionIds().add(materialDefinitionId);
 
         return super.add(pipelineDefinition);
     }
