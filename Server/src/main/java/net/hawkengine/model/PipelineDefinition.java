@@ -4,14 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.enums.PermissionType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PipelineDefinition extends DbEntry {
     private String name;
     private String pipelineGroupId;
     private String groupName;
     private String labelTemplate;
-    private List<String> materialDefinitionIds;
+    private Set<String> materialDefinitionIds;
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
     private List<StageDefinition> stageDefinitions;
@@ -22,7 +24,7 @@ public class PipelineDefinition extends DbEntry {
     public PipelineDefinition() {
         this.setLabelTemplate("%COUNT%");
         this.setEnvironmentVariables(new ArrayList<>());
-        this.setMaterialDefinitionIds(new ArrayList<>());
+        this.setMaterialDefinitionIds(new HashSet<>());
         this.setEnvironments(new ArrayList<>());
         this.setStageDefinitions(new ArrayList<>());
     }
@@ -51,11 +53,11 @@ public class PipelineDefinition extends DbEntry {
         this.labelTemplate = labelTemplate;
     }
 
-    public List<String> getMaterialDefinitionIds() {
+    public Set<String> getMaterialDefinitionIds() {
         return materialDefinitionIds;
     }
 
-    public void setMaterialDefinitionIds(List<String> materialDefinitionIds) {
+    public void setMaterialDefinitionIds(Set<String> materialDefinitionIds) {
         this.materialDefinitionIds = materialDefinitionIds;
     }
 
