@@ -9,25 +9,26 @@ import net.hawkengine.services.filters.EntityPermissionTypeService;
 import java.util.List;
 
 public class EntityPermissionTypeServiceInvoker {
-    public static PermissionObject invoke(Class objectClass, List<Permission> permissions, PermissionObject object) {
+    EntityPermissionTypeService entityPermissionTypeService = new EntityPermissionTypeService();
+    public PermissionObject invoke(Class objectClass, List<Permission> permissions, PermissionObject object) {
         if (objectClass == PipelineGroup.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (PipelineGroup) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (PipelineGroup) object);
         } else if (objectClass == PipelineDefinition.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (PipelineDefinition) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (PipelineDefinition) object);
         } else if (objectClass == Pipeline.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (Pipeline) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (Pipeline) object);
         } else if (objectClass == StageDefinition.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (StageDefinition) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (StageDefinition) object);
         } else if (objectClass == JobDefinition.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (JobDefinition) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (JobDefinition) object);
         } else if (objectClass == TaskDefinition.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (TaskDefinition) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (TaskDefinition) object);
         } else if (objectClass == UserDto.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (UserDto) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (UserDto) object);
         } else if (objectClass == UserGroupDto.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (UserGroupDto) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (UserGroupDto) object);
         } else if (objectClass == User.class) {
-            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (User) object);
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (User) object);
         } else {
             return object;
         }

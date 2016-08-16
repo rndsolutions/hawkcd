@@ -7,6 +7,7 @@ import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.*;
+import net.hawkengine.services.filters.EntityPermissionTypeService;
 import net.hawkengine.services.filters.PermissionService;
 import net.hawkengine.services.filters.factories.SecurityServiceInvoker;
 
@@ -26,6 +27,7 @@ public class SessionPool {
     private PipelineService pipelineService;
     private UserService userService;
     private UserGroupService userGroupService;
+    private EntityPermissionTypeServiceInvoker entityPermissionTypeServiceInvoker;
 
     private SessionPool() {
         this.sessions = new ArrayList<>();
@@ -38,6 +40,7 @@ public class SessionPool {
         this.pipelineService = new PipelineService();
         this.userService = new UserService();
         this.userGroupService = new UserGroupService();
+        this.entityPermissionTypeServiceInvoker = new EntityPermissionTypeServiceInvoker();
     }
 
     public static synchronized SessionPool getInstance() {
@@ -76,7 +79,7 @@ public class SessionPool {
             User loggedUser = session.getLoggedUser();
             loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
             List<Permission> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
-            PermissionObject result = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
+            PermissionObject result = this.entityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
             if (result.getPermissionType() != PermissionType.NONE) {
                 contractDto.setResult(result);
                 session.send(contractDto);

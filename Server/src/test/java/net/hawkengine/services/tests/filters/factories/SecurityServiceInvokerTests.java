@@ -50,7 +50,7 @@ public class SecurityServiceInvokerTests {
 
         //Act
         this.contract.setMethodName("getAll");
-        List actualServiceResult = this.securityServiceInvoker.processList(expectedServiceResult, contract.getClassName(), permissions, "getAll");
+        List actualServiceResult = this.securityServiceInvoker.filterEntities(expectedServiceResult, contract.getClassName(), permissions, "getAll");
 
         //Assert
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS, actualServiceResult.size());
