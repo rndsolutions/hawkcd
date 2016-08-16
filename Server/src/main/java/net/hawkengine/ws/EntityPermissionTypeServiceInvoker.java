@@ -26,6 +26,8 @@ public class EntityPermissionTypeServiceInvoker {
             return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (UserDto) object);
         } else if (objectClass == UserGroupDto.class) {
             return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (UserGroupDto) object);
+        } else if (objectClass == User.class) {
+            return EntityPermissionTypeService.setPermissionTypeToObject(permissions, (User) object);
         } else {
             return object;
         }

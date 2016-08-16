@@ -2,14 +2,10 @@ package net.hawkengine.services.filters.factories;
 
 import net.hawkengine.model.DbEntry;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.dto.SecurityServiceDto;
-import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.SecurityService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 
-import javax.jws.Oneway;
-import java.io.ObjectStreamClass;
 import java.util.List;
 
 public class SecurityServiceInvoker<T extends DbEntry> {
@@ -51,7 +47,8 @@ public class SecurityServiceInvoker<T extends DbEntry> {
         }
     }
 
-    public List<T> processList(List<T> entitiesToFilter, String className, List<Permission> permissions, String methodName) {
+    public List<T> filterEntities(List<T> entitiesToFilter, String className, List<Permission> permissions, String methodName) {
+        ServiceResult serviceResult = new ServiceResult();
         switch (methodName) {
             case "getAll":
                 return this.securityService.getAll(entitiesToFilter, className, permissions);
@@ -61,7 +58,6 @@ public class SecurityServiceInvoker<T extends DbEntry> {
                 return this.securityService.getAllUserGroups(entitiesToFilter, className, permissions);
             default:
                 return null;
-
         }
     }
 }
