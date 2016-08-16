@@ -8,6 +8,8 @@ import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.interfaces.IUserService;
+import net.hawkengine.ws.SessionPool;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,8 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult getById(String id) {
-        return super.getById(id);
+    public ServiceResult getById(String userId) {
+        return super.getById(userId);
     }
 
     @Override
@@ -39,22 +41,27 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult add(User object) {
-        ServiceResult result = this.getByEmail(object.getEmail());
+    public ServiceResult add(User user) {
+        ServiceResult result = this.getByEmail(user.getEmail());
         if (result.hasError()){
             return result;
         }
-        return super.add(object);
+        String password = user.getPassword();
+        String hashedPassword = DigestUtils.sha256Hex(password);
+        user.setPassword(hashedPassword);
+        return super.add(user);
     }
 
     @Override
-    public ServiceResult update(User object) {
-        return super.update(object);
+    public ServiceResult update(User user) {
+        ServiceResult serviceResult = super.update(user);
+        SessionPool.getInstance().updateUserObjects(user.getId());
+        return serviceResult;
     }
 
     @Override
-    public ServiceResult delete(String id) {
-        return super.delete(id);
+    public ServiceResult delete(String userId) {
+        return super.delete(userId);
     }
 
     @Override

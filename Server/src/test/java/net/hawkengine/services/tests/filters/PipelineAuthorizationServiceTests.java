@@ -17,6 +17,7 @@ import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.filters.EntityPermissionTypeService;
 import net.hawkengine.services.filters.PipelineAuthorizationService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -59,6 +60,7 @@ public class PipelineAuthorizationServiceTests {
 
     private IDbRepository<Pipeline> mockedPipelineRepository;
     private IPipelineService mockedPipelineService;
+    private EntityPermissionTypeService mockedEntityPermissionTypeService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -134,6 +136,7 @@ public class PipelineAuthorizationServiceTests {
         this.mockedPipelineService.add(this.sixthPipeline);
 
         this.authorizationService = new PipelineAuthorizationService(this.mockedPipelineService, this.mockedPipeLineDefinitionService);
+        this.mockedEntityPermissionTypeService = new EntityPermissionTypeService(this.mockedPipeLineDefinitionService);
     }
 
     @Test

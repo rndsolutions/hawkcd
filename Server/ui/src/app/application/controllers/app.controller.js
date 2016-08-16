@@ -49,16 +49,7 @@ angular
         }
 
         $scope.logoutUser = function () {
-            loginService.logout(viewModel.user.username)
-                .then(function (res) {
-                    $auth.logout();
-                    localStorage.clear();
-                    $location.path("/authenticate");
-                    console.log(res);
-                }, function (err) {
-                    console.log(err);
-                });
-
+            loginService.logoutUser(viewModel.user.username);
         }
 
         $scope.me = {};
@@ -155,7 +146,7 @@ angular
                 // Handle errors here, such as displaying a notification
                 // for invalid email and/or password.
               });
-        }
+        };
 
         $scope.register = function(user){
 

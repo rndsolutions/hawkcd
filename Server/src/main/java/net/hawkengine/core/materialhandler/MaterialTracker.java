@@ -1,7 +1,7 @@
 package net.hawkengine.core.materialhandler;
 
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Material;
 import net.hawkengine.model.Pipeline;

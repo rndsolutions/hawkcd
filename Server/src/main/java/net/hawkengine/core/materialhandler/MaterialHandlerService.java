@@ -2,7 +2,7 @@ package net.hawkengine.core.materialhandler;
 
 import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
-import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.model.Material;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.PipelineDefinition;

@@ -16,5 +16,5 @@ public interface IAuthorizationService<T extends DbEntry> {
 
     boolean update(String entity, List<Permission> permissions);
 
-    boolean delete(String entity, List<Permission> permissions);
+    boolean delete(String entityId, List<Permission> permissions);
 }

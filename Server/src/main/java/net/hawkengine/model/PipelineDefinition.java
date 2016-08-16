@@ -1,7 +1,6 @@
 package net.hawkengine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.hawkengine.model.enums.PermissionType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +18,6 @@ public class PipelineDefinition extends DbEntry {
     private List<StageDefinition> stageDefinitions;
     private boolean isAutoSchedulingEnabled;
     private boolean isLocked;
-    private PermissionType permissionType;
 
     public PipelineDefinition() {
         this.setLabelTemplate("%COUNT%");
@@ -109,14 +107,6 @@ public class PipelineDefinition extends DbEntry {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
-    }
-
-    public PermissionType getPermissionType() {
-        return this.permissionType;
-    }
-
-    public void setPermissionType(PermissionType permissionType) {
-        this.permissionType = permissionType;
     }
 }
 
