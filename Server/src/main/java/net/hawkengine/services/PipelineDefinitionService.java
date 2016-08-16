@@ -17,7 +17,6 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
-        this.materialDefinitionService = new MaterialDefinitionService();
     }
 
     public PipelineDefinitionService(IDbRepository repository) {
@@ -60,6 +59,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
+        this.materialDefinitionService = new MaterialDefinitionService();
         ServiceResult serviceResult = this.materialDefinitionService.add(materialDefinition);
         // TODO: Return response to UI
         if (serviceResult.hasError()) {
@@ -73,6 +73,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
+        this.materialDefinitionService = new MaterialDefinitionService();
         ServiceResult serviceResult = this.materialDefinitionService.getById(materialDefinitionId);
         if (serviceResult.hasError()) {
             return super.createServiceResult(null, true, "could not be created");
