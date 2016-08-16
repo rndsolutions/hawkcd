@@ -23,6 +23,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     private IPipelineDefinitionService pipelineDefinitionService;
     private IPipelineService pipelineService;
     private Gson jsonConverter;
+    private EntityPermissionTypeService entityPermissionTypeService;
 
     public PipelineAuthorizationService(){
         this.pipelineDefinitionService = new PipelineDefinitionService();
@@ -32,6 +33,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
+        this.entityPermissionTypeService = new EntityPermissionTypeService();
     }
 
     public PipelineAuthorizationService(IPipelineService pipelineService, IPipelineDefinitionService pipelineDefinitionService){
@@ -42,6 +44,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
+        this.entityPermissionTypeService = new EntityPermissionTypeService(this.pipelineDefinitionService);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
         for (Pipeline pipeline : (List<Pipeline>) pipelines) {
             if (this.hasPermissionToRead(permissions, pipeline)) {
 //                PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
-                pipeline = EntityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
+                pipeline = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
                 result.add(pipeline);
             }
         }
@@ -61,7 +64,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     public boolean getById(String entityId, List permissions) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getObject();
 //        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
-        pipeline = EntityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
+        pipeline = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
 
         return this.hasPermissionToRead(permissions, pipeline);
     }
@@ -70,7 +73,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     public boolean add(String entity, List permissions) {
         Pipeline pipeline = this.jsonConverter.fromJson(entity, Pipeline.class);
 //        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
-        pipeline = EntityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
+        pipeline = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
 
         return this.hasPermissionToAdd(permissions, pipeline);
     }
@@ -79,7 +82,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     public boolean update(String entity, List permissions) {
         Pipeline pipeline = this.jsonConverter.fromJson(entity, Pipeline.class);
 //        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
-        pipeline = EntityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
+        pipeline = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipeline);
     }

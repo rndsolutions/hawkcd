@@ -12,13 +12,17 @@ import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import java.util.List;
 
 public class EntityPermissionTypeService {
-    private static IPipelineDefinitionService pipelineDefinitionService = new PipelineDefinitionService();
+    private IPipelineDefinitionService pipelineDefinitionService;
 
     public EntityPermissionTypeService(IPipelineDefinitionService pipelineDefinitionService) {
-        EntityPermissionTypeService.pipelineDefinitionService = pipelineDefinitionService;
+        this.pipelineDefinitionService = pipelineDefinitionService;
     }
 
-    public static PipelineGroup setPermissionTypeToObject(List<Permission> permissions, PipelineGroup pipelineGroup){
+    public EntityPermissionTypeService(){
+        this.pipelineDefinitionService = new PipelineDefinitionService();
+    }
+
+    public PipelineGroup setPermissionTypeToObject(List<Permission> permissions, PipelineGroup pipelineGroup){
         pipelineGroup.setPermissionType(PermissionType.NONE);
         String pipelineGroupId = pipelineGroup.getId();
         for (Permission permission : permissions) {
@@ -34,7 +38,7 @@ public class EntityPermissionTypeService {
         return pipelineGroup;
     }
 
-    public static PipelineDefinition setPermissionTypeToObject(List<Permission> permissions, PipelineDefinition pipelineDefinition){
+    public PipelineDefinition setPermissionTypeToObject(List<Permission> permissions, PipelineDefinition pipelineDefinition){
         pipelineDefinition.setPermissionType(PermissionType.NONE);
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
@@ -52,9 +56,9 @@ public class EntityPermissionTypeService {
         return pipelineDefinition;
     }
 
-    public static Pipeline setPermissionTypeToObject(List<Permission> permissions, Pipeline pipeline){
+    public Pipeline setPermissionTypeToObject(List<Permission> permissions, Pipeline pipeline){
         pipeline.setPermissionType(PermissionType.NONE);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         if (pipelineDefinition == null) {
             return pipeline;
         }
@@ -77,7 +81,7 @@ public class EntityPermissionTypeService {
         return pipeline;
     }
 
-    public static StageDefinition setPermissionTypeToObject(List<Permission> permissions, StageDefinition stageDefinition){
+    public StageDefinition setPermissionTypeToObject(List<Permission> permissions, StageDefinition stageDefinition){
         stageDefinition.setPermissionType(PermissionType.NONE);
         PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getObject();
         if (pipelineDefinition == null) {
@@ -90,7 +94,7 @@ public class EntityPermissionTypeService {
         return stageDefinition;
     }
 
-    public static JobDefinition setPermissionTypeToObject(List<Permission> permissions, JobDefinition jobDefinition){
+    public JobDefinition setPermissionTypeToObject(List<Permission> permissions, JobDefinition jobDefinition){
         jobDefinition.setPermissionType(PermissionType.NONE);
         PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getObject();
         if (pipelineDefinition == null) {
@@ -103,7 +107,7 @@ public class EntityPermissionTypeService {
         return jobDefinition;
     }
 
-    public static TaskDefinition setPermissionTypeToObject(List<Permission> permissions, TaskDefinition taskDefinition){
+    public TaskDefinition setPermissionTypeToObject(List<Permission> permissions, TaskDefinition taskDefinition){
         taskDefinition.setPermissionType(PermissionType.NONE);
         PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getObject();
         if (pipelineDefinition == null) {
@@ -116,7 +120,7 @@ public class EntityPermissionTypeService {
         return taskDefinition;
     }
 
-    public static UserDto setPermissionTypeToObject(List<Permission> permissions, UserDto userDto){
+    public UserDto setPermissionTypeToObject(List<Permission> permissions, UserDto userDto){
         userDto.setPermissionType(PermissionType.NONE);
 
         for (Permission permission : permissions) {
@@ -128,7 +132,7 @@ public class EntityPermissionTypeService {
         return userDto;
     }
 
-    public static UserGroupDto setPermissionTypeToObject(List<Permission> permissions, UserGroupDto userGroupDto){
+    public UserGroupDto setPermissionTypeToObject(List<Permission> permissions, UserGroupDto userGroupDto){
         userGroupDto.setPermissionType(PermissionType.NONE);
 
         for (Permission permission : permissions) {
@@ -140,7 +144,7 @@ public class EntityPermissionTypeService {
         return userGroupDto;
     }
 
-    public static User setPermissionTypeToObject(List<Permission> permissions, User user){
+    public User setPermissionTypeToObject(List<Permission> permissions, User user){
         user.setPermissionType(PermissionType.NONE);
 
         for (Permission permission : permissions) {
