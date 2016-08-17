@@ -3,9 +3,6 @@
       <div class="caption">
         <i class="fa fa-cogs"></i>Materials
       </div>
-      <div class="tools right">
-        <a href="javascript:;" class="collapse"> </a>
-      </div>
     </div>
     <div class="caption custom-caption" style="width:100%;">
         <div style="display:inline-block; float:left; height:100px; width:15%;">
@@ -18,19 +15,30 @@
         </div>
       <div style="display:inline-block; height:100px; width:40%; float:left;">
         <div style="border-left:2px solid lightgrey; float:left; height:70%; position:relative; top:50%; transform:translateY(-50%); margin:auto;"></div>
-        <div style="padding-left:5%; position:relative; top:50%; transform:translateY(-50%);">
-          Materials:
-        <div style="padding-top:5%;" ng-repeat="material in pipesRunManagement.currentPipelineRun.materials">
-          {{material.materialDefinition.commitId.substring(0, 7)}} {{material.materialDefinition.comments}}
-        </div>
+        <div style="position:relative; top:50%; transform:translateY(-50%);">
+          <div style="padding-left:5%;">
+            Materials:
+            <div style="padding-top:1%; width:100%;" ng-repeat="material in pipesRunManagement.currentPipelineRun.materials">
+              <i class="fa fa-github"></i>
+              <div style="margin-left:1%; display:inline-block;">
+                {{material.materialDefinition.commitId.substring(0, 7)}} - {{material.materialDefinition.comments}}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div style="display:inline-block; height:100px; width: 19%">
         <div style="border-left:2px solid lightgrey; float:left; width:100%; height:70%; position:relative; top:50%; transform:translateY(-50%); margin:auto;">
           <div style="padding-left:5%; position:relative; top:50%; transform:translateY(-50%); width:100%;">
-          Duration: 24h 23m 22s
+          Duration: <i class="fa fa-clock-o"></i>
+            <div style="margin-left:1%; display:inline-block;">
+              24h 23m 22s
+            </div>
           <div style="padding-top:5%;">
-            Last Run: {{pipesRunManagement.currentPipelineRun.lastPipelineAction.output}}
+            Last Run: <i class="fa fa-calendar"></i>
+            <div style="margin-left:1%; display:inline-block;">
+              {{pipesRunManagement.currentPipelineRun.lastPipelineAction.output}}
+            </div>
           </div>
             </div>
         </div>
@@ -38,9 +46,15 @@
       <div style="display:inline-block; height:100px; width: 19%">
         <div style="border-left:2px solid lightgrey; float:left; width:100%; height:70%; position:relative; top:50%; transform:translateY(-50%);  margin:auto;">
           <div style="padding-left:5%; position:relative; top:50%; transform:translateY(-50%); width:100%;">
-            Trigger Reason: {{pipesRunManagement.currentPipelineRun.triggerReason}}
+            Trigger Reason: <i class="fa fa-user"></i>
+            <div style="margin-left:1%; display:inline-block;">
+              {{pipesRunManagement.currentPipelineRun.triggerReason}}
+            </div>
             <div style="padding-top:5%;">
-                Commit Author: {{pipesRunManagement.currentPipelineRun.materials.slice(-1)[0].materialDefinition.authorName}}
+                Commit Author: <i class="fa fa-user"></i>
+              <div style="margin-left:1%; display:inline-block;">
+                {{pipesRunManagement.currentPipelineRun.materials.slice(-1)[0].materialDefinition.authorName}}
+                </div>
             </div>
           </div>
         </div>
