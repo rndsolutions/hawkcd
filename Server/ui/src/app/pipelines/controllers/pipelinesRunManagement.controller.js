@@ -140,11 +140,11 @@ angular
 
         //vm.ansi_up = require('ansi_up');
 
-        vm.randomText = ansi_up.ansi_to_html('\x1b[30mblack\x1b[37mwhite');
+        vm.randomText = ansi_up.ansi_to_html("\x1b[33mJob with name NewPipeline started.\nInvalid Arguments");
 
         // vm.randomText = $.parseHTML(vm.randomText);
         vm.randomText = $sce.trustAsHtml(vm.randomText);
-        console.log(vm.randomText);
+//        console.log(vm.randomText);
 
         $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
@@ -169,6 +169,13 @@ angular
                                 vm.temporaryStages = [];
                             });
                         }
+                    });
+                    currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                        currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
+                            currentJob.report = ansi_up.ansi_to_html(currentJob.report);
+                            currentJob.report = $sce.trustAsHtml(currentJob.report);
+
+                        });
                     });
                 }
             });
