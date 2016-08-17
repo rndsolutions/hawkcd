@@ -3,7 +3,7 @@
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope) {
+        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
 
@@ -40,6 +40,27 @@ angular
                     submit: 'Submit',
                     cancel: 'Cancel'
                 },
+                addNewMaterial: {
+                    newMaterial: 'Add New Material',
+                    input: 'Name of the new group',
+                    submit: 'Add Material',
+                    cancel: 'Cancel',
+                    gitUserName: 'Enter Git username',
+                    gitPassword: 'Enter Git password'
+                },
+                editMaterial: {
+                    header: 'Edit Material',
+                    submit: 'Edit Material',
+                    cancel: 'Cancel',
+                    gitUserName: 'Enter Git username',
+                    gitPassword: 'Enter Git password'
+                },
+                deleteMaterial: {
+                    header: 'Delete Material',
+                    confirm: 'Are you sure you want to delete Material: ',
+                    delete: 'Confirm',
+                    cancel: 'Cancel'
+                },
                 addNewUserGroup: {
                     newGroup: 'Add New User Group',
                     groupName: 'Group Name',
@@ -53,7 +74,7 @@ angular
                     delete: 'Confirm',
                     cancel: 'Cancel'
                 },
-                deleteUserModal:{
+                deleteUserModal: {
                     header: 'Delete User',
                     confirm: 'Are you sure you want to delete User: ',
                     delete: 'Confirm',
@@ -77,18 +98,18 @@ angular
                     branch: 'Branch',
                     actions: 'Actions'
                 },
-                popOverTitles:{
-                  name:'Name of the material',
-                  type:'Type of the material',
-                  url:'URL location of the material',
-                  branch:'Current branch of the material',
-                  actions:'Actions that can be performed on the material'
+                popOverTitles: {
+                    name: 'Name of the material',
+                    type: 'Type of the material',
+                    url: 'URL location of the material',
+                    branch: 'Current branch of the material',
+                    actions: 'Actions that can be performed on the material'
                 },
-                placements:{
-                  top:'top'
+                placements: {
+                    top: 'top'
                 },
-                triggers:{
-                  click:'click'
+                triggers: {
+                    click: 'click'
                 }
             }
 
@@ -143,48 +164,98 @@ angular
 
             vm.data = {
                 model: null,
-                scopeOptions: [
-                    {value: 'PIPELINE', name: 'Pipeline'},
-                    {value: 'PIPELINE_GROUP', name: 'Pipeline Group'},
-                    {value: 'SERVER', name: 'Server'}
-                ],
-                typeOptions: [
-                    {value: 'NONE', name: 'None'},
-                    {value: 'ADMIN', name: 'Admin'},
-                    {value: 'OPERATOR', name: 'Operator'},
-                    {value: 'VIEWER', name: 'Viewer'}
-                ]
+                scopeOptions: [{
+                    value: 'PIPELINE',
+                    name: 'Pipeline'
+                }, {
+                    value: 'PIPELINE_GROUP',
+                    name: 'Pipeline Group'
+                }, {
+                    value: 'SERVER',
+                    name: 'Server'
+                }],
+                typeOptions: [{
+                    value: 'NONE',
+                    name: 'None'
+                }, {
+                    value: 'ADMIN',
+                    name: 'Admin'
+                }, {
+                    value: 'OPERATOR',
+                    name: 'Operator'
+                }, {
+                    value: 'VIEWER',
+                    name: 'Viewer'
+                }]
             };
 
-            $scope.$watchCollection(function () { return viewModel.userGroups }, function (newVal, oldVal) {
+            vm.materialType = 'hidden';
+            vm.formData = {};
+
+            vm.addMaterial = function(formData) {
+                debugger;
+                var material = {};
+                vm.formData = formData;
+                if (vm.materialType == 'git') {
+                    material = {
+                        "name": vm.formData.material.git.name,
+                        "type": 'GIT',
+                        "repositoryUrl": vm.formData.material.git.url,
+                        "isPollingForChanges": vm.formData.material.git.poll,
+                        "destination": vm.formData.material.git.name,
+                        "branch": vm.formData.material.git.branch || 'master'
+                    };
+                    if (formData.material.git.credentials) {
+                        material.username = formData.material.git.username;
+                        material.password = formData.material.git.password;
+                    }
+                    adminMaterialService.addGitMaterialDefinition(material);
+                }
+
+                vm.materialType = 'hidden';
+                vm.formData = {};
+                vm.closeModal();
+            };
+
+            vm.editMaterial = function(formData) {
+              adminMaterialService.updateGitMaterialDefinition(formData.material);
+              vm.formData = {};
+              vm.closeModal();
+            };
+
+            $scope.$watchCollection(function() {
+                return viewModel.userGroups
+            }, function(newVal, oldVal) {
                 vm.userGroups = viewModel.userGroups;
             });
 
-            $scope.$watchCollection(function () { return viewModel.allPipelines }, function (newVal, oldVal) {
+            $scope.$watchCollection(function() {
+                return viewModel.allPipelines
+            }, function(newVal, oldVal) {
                 vm.allPipelines = viewModel.allPipelines;
             });
 
-            $scope.$watchCollection(function () { return viewModel.users }, function (newVal, oldVal) {
+            $scope.$watchCollection(function() {
+                return viewModel.users
+            }, function(newVal, oldVal) {
                 vm.users = viewModel.users;
-                if(vm.users != null){
-                    vm.users.forEach(function (currentUser, userIndex, userArray) {
-                        if(currentUser.permissions != null){
-                            currentUser.permissions.forEach(function (currentPermission, userIndex, userArray) {
-                                if(currentPermission.permissionScope == 'PIPELINE'){
-                                    vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
-                                        if(currentPipeline.id == currentPermission.permittedEntityId){
+                if (vm.users != null) {
+                    vm.users.forEach(function(currentUser, userIndex, userArray) {
+                        if (currentUser.permissions != null) {
+                            currentUser.permissions.forEach(function(currentPermission, userIndex, userArray) {
+                                if (currentPermission.permissionScope == 'PIPELINE') {
+                                    vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+                                        if (currentPipeline.id == currentPermission.permittedEntityId) {
                                             currentPermission.permittedEntityName = currentPipeline.name;
                                         }
                                     });
-                                }
-                                else if(currentPermission.permissionScope == 'PIPELINE_GROUP') {
-                                    vm.currentPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                                        if(currentPipelineGroup.id == currentPermission.permittedEntityId) {
+                                } else if (currentPermission.permissionScope == 'PIPELINE_GROUP') {
+                                    vm.currentPipelineGroups.forEach(function(currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
+                                        if (currentPipelineGroup.id == currentPermission.permittedEntityId) {
                                             currentPermission.permittedEntityName = currentPipelineGroup.name;
                                         }
                                     });
-                                }
-                                else if(currentPermission.permissionScope == 'SERVER') {
+                                } else if (currentPermission.permissionScope == 'SERVER') {
                                     currentPermission.permittedEntityName = 'SERVER';
                                 }
                             });
@@ -193,7 +264,7 @@ angular
                 }
             });
 
-            vm.selectUserGroup = function (index) {
+            vm.selectUserGroup = function(index) {
                 var userToAdd = null;
                 var isFound = false;
                 vm.selectedUserGroup = angular.copy(vm.userGroups[index]);
@@ -204,10 +275,10 @@ angular
                 //     vm.selectedUserGroup.newUsers.push(userToAdd);
                 //     userToAdd = null;
                 // });
-                vm.users.forEach(function (currentUser, userIndex, userArray) {
+                vm.users.forEach(function(currentUser, userIndex, userArray) {
                     isFound = false;
-                    vm.selectedUserGroup.users.forEach(function (currentUserFromGroup, userFromGroupIndex, userFromGroupArray) {
-                        if(currentUserFromGroup.id == currentUser.id){
+                    vm.selectedUserGroup.users.forEach(function(currentUserFromGroup, userFromGroupIndex, userFromGroupArray) {
+                        if (currentUserFromGroup.id == currentUser.id) {
                             isFound = true;
                             userToAdd = angular.copy(currentUser);
                             userToAdd.isAssigned = true;
@@ -215,7 +286,7 @@ angular
                             userToAdd = null;
                         }
                     });
-                    if(!isFound){
+                    if (!isFound) {
                         userToAdd = angular.copy(currentUser);
                         vm.selectedUserGroup.newUsers.push(userToAdd);
                         userToAdd = null;
@@ -225,11 +296,11 @@ angular
 
             };
 
-            vm.toggleClicked = function (user) {
+            vm.toggleClicked = function(user) {
                 user.isClicked = true;
             };
 
-            vm.selectUser = function (index) {
+            vm.selectUser = function(index) {
                 vm.selectedUser = angular.copy(vm.users[index]);
             };
 
@@ -237,7 +308,7 @@ angular
                 vm.togglePipeline = index;
             };
 
-            vm.addUserGroup = function () {
+            vm.addUserGroup = function() {
                 adminService.addUserGroup(vm.newUserGroup);
             };
 
@@ -284,28 +355,28 @@ angular
                 //     }
                 // });
 
-                vm.selectedUserGroup.users.forEach(function (currentUser, userIndex, userArray) {
+                vm.selectedUserGroup.users.forEach(function(currentUser, userIndex, userArray) {
                     var isFound = false;
-                    if(currentUser.isClicked){
-                        if(currentUser.isAssigned){
-                            currentUser.userGroupIds.forEach(function (currentUserGroupId, userGroupIdIndex, userGroupIdArray) {
-                                if(currentUserGroupId == vm.selectedUserGroup.id) {
+                    if (currentUser.isClicked) {
+                        if (currentUser.isAssigned) {
+                            currentUser.userGroupIds.forEach(function(currentUserGroupId, userGroupIdIndex, userGroupIdArray) {
+                                if (currentUserGroupId == vm.selectedUserGroup.id) {
                                     isFound = true;
                                 }
                             });
-                            if(!isFound){
+                            if (!isFound) {
                                 var updatedUser = angular.copy(currentUser);
                                 updatedUser.userGroupIds.push(vm.selectedUserGroup.id);
                                 adminService.assignUser(updatedUser, vm.selectedUserGroup);
                             }
                             isFound = false;
                         } else {
-                            currentUser.userGroupIds.forEach(function (currentUserGroupId, userGroupIdIndex, userGroupIdArray) {
-                                if(currentUserGroupId == vm.selectedUserGroup.id) {
+                            currentUser.userGroupIds.forEach(function(currentUserGroupId, userGroupIdIndex, userGroupIdArray) {
+                                if (currentUserGroupId == vm.selectedUserGroup.id) {
                                     isFound = true;
                                 }
                             });
-                            if(isFound){
+                            if (isFound) {
                                 var index = currentUser.userGroupIds.indexOf(vm.selectedUserGroup.id);
                                 var updatedUser = angular.copy(currentUser);
                                 updatedUser.userGroupIds.splice(index, 1);
@@ -340,10 +411,15 @@ angular
                 vm.clearSelection();
             };
 
+            vm.closeModal = function() {
+                vm.formData = {};
+                vm.materialType = 'hidden';
+            }
+
             vm.currentPipelineGroups = viewModel.allPipelineGroups;
 
             vm.sortingOrder = 'email';
-            vm.pageSizes = [5,10,25,50];
+            vm.pageSizes = [5, 10, 25, 50];
             vm.reverse = false;
             vm.filteredItems = [];
             vm.groupedItems = [];
@@ -355,7 +431,7 @@ angular
 
             $(document).ready(function() {
                 $('#userGroups').DataTable();
-            } );
+            });
 
             vm.getEntities = function() {
 
@@ -427,15 +503,15 @@ angular
                 vm.selectedUserGroup = null;
             };
 
-            $(window).load(function () {
+            $(window).load(function() {
                 $('#user-checkbox').bootstrapSwitch();
             });
 
-            $('#user-checkbox').on('switchChange.bootstrapSwitch', function (event, state) {
+            $('#user-checkbox').on('switchChange.bootstrapSwitch', function(event, state) {
                 console.log(state);
             });
 
-            vm.range = function (start, end) {
+            vm.range = function(start, end) {
                 var ret = [];
                 if (!end) {
                     end = start;
@@ -454,19 +530,19 @@ angular
                 vm.pagedItems = filterUsers.groupToPages(vm.filteredItems, vm.itemsPerPage);
             };
 
-            vm.prevPage = function () {
+            vm.prevPage = function() {
                 if (vm.currentPage > 0) {
                     vm.currentPage--;
                 }
             };
 
-            vm.nextPage = function () {
+            vm.nextPage = function() {
                 if (vm.currentPage < vm.pagedItems.length - 1) {
                     vm.currentPage++;
                 }
             };
 
-            vm.setPage = function (index) {
+            vm.setPage = function(index) {
                 vm.currentPage = index;
             };
 
@@ -479,7 +555,9 @@ angular
             //     return false;
             // };
 
-            $scope.$watchCollection(function () { return viewModel.unassignedPipelines }, function(newVal, oldVal) {
+            $scope.$watchCollection(function() {
+                return viewModel.unassignedPipelines
+            }, function(newVal, oldVal) {
                 vm.unassignedPipelines = viewModel.unassignedPipelines;
             });
 
@@ -505,7 +583,12 @@ angular
                 vm.pipelineToDeleteName = pipelineName;
             };
 
-            vm.setUserGroupToDelete = function (userGroup) {
+            vm.setMaterialForDelete = function(materialName, materialId) {
+                vm.materialToDeleteName = materialName;
+                vm.materialToDeleteId = materialId;
+            };
+
+            vm.setUserGroupToDelete = function(userGroup) {
                 vm.userGroupToDelete = userGroup;
             };
 
@@ -513,7 +596,7 @@ angular
                 vm.pipelineGroupToDelete = pipelineGroup;
             };
 
-            vm.deleteUserGroup = function () {
+            vm.deleteUserGroup = function() {
                 adminService.deleteUserGroup(vm.userGroupToDelete.id);
             };
 
@@ -521,7 +604,18 @@ angular
                 adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete.id);
             };
 
-            vm.setUserGroupToManage = function (userGroup) {
+            vm.deleteMaterial = function(materialId) {
+                adminMaterialService.deleteMaterialDefinition(materialId);
+            };
+
+            vm.setMaterialForEdit = function(material) {
+                vm.formData.material = material;
+                if(material.username){
+                  vm.formData.material.credentials = true;
+                }
+            };
+
+            vm.setUserGroupToManage = function(userGroup) {
                 vm.userGroupToManage = userGroup;
             };
 

@@ -161,7 +161,12 @@ public class WsEndpoint extends WebSocketAdapter {
                     contract.setResult(result.getObject());
                     contract.setError(result.hasError());
                     contract.setErrorMessage(result.getMessage());
-                    SessionPool.getInstance().sendToAuthorizedSessions(contract);
+                    if(result.getObject() == null){
+                        SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+                    } else {
+                        SessionPool.getInstance().sendToAuthorizedSessions(contract);
+                    }
+
                 } else {
                     contract.setResult(null);
                     contract.setError(true);
