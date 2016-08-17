@@ -134,18 +134,6 @@ angular
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);
 
-        // vm.convert = new Convert();
-        //
-        // vm.randomText = convert.toHtml('\x1b[30mblack\x1b[37mwhite');
-
-        //vm.ansi_up = require('ansi_up');
-
-        vm.randomText = ansi_up.ansi_to_html('\x1b[30mblack\x1b[37mwhite');
-
-        // vm.randomText = $.parseHTML(vm.randomText);
-        vm.randomText = $sce.trustAsHtml(vm.randomText);
-        console.log(vm.randomText);
-
         $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             viewModel.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
