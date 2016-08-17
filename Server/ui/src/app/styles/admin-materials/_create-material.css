@@ -1,0 +1,29 @@
+@media screen and (max-width: 767px){
+  #addNewMaterial {
+    margin-top:15%!important;
+  }
+
+  .btn-container{ 
+  }
+
+}
+
+@media screen and (max-width: 991px){
+  #addNewMaterial{
+    margin-top:5%!important;
+  }
+}
+
+
+
+#addNewMaterial div#buttons-row {
+  margin:5%!important;
+}
+
+.btn-container{
+  margin-left: 36%!important;
+}
+
+.required-fixed {
+  padding-right:0px!important;
+}

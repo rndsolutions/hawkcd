@@ -604,11 +604,11 @@ p {
 }
 
 @media screen and (max-width: 767px) {
-  @import "admin-material/_create-material.css";
+  @import "admin-materials/_create-material.css";
 }
 
 @media screen and (max-width: 767px) {
-  @import "admin-material/_edit-material.css";
+  @import "admin-materials/_edit-material.css";
 }
 
 /*.md-checkbox label {*/
