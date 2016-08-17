@@ -1,0 +1,96 @@
+<div id="editMaterial" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-fixed">
+    <div class="modal-content modal-content-fixed">
+      <div class="modal-header">
+        <div class="pull-right">
+            <i class="fa fa-close" type="button" class="close" data-dismiss="modal" ng-click="admin.closeModal()"></i>
+            <!-- <button ></button> -->
+        </div>
+        <h4 class="modal-title text-center">{{admin.defaultText.editMaterial.header}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="tab-pane active">
+            <div>
+                <form role="form" name="editMaterialForm">
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label col-md-3 required-fixed">Material Name
+                            <span class="required"> * </span>
+                        </label>
+                        <div class="col-md-6">
+                            <input ng-model="admin.formData.material.name" type="text" class="form-control" ng-pattern="/^([\w-]+)$/" required/>
+                            <div class="form-control-focus"></div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label col-md-3">Git Url
+                            <span class="required"> * </span>
+                        </label>
+                        <div id="urlContainer" class="col-md-6">
+                            <input ng-model="admin.formData.material.repositoryUrl" type="text" class="form-control" ng-pattern="/^(https:\/\/*.+\.git)$/" required />
+                            <div class="form-control-focus"></div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label col-md-3">Git Branch</label>
+                        <div class="col-md-6">
+                            <input ng-model="admin.formData.material.branch" type="text" class="form-control" />
+                            <div class="form-control-focus"></div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-checkboxes trigger-container">
+                        <div class="md-checkbox-list">
+                            <div class="md-checkbox">
+                                <input type="checkbox" id="gitPoll" class="md-check" ng-model="admin.formData.material.isPollingForChanges">
+                                <label for="gitPoll">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> Poll for changes </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-md-checkboxes trigger-container">
+                        <div class="md-checkbox-list">
+                            <div class="md-checkbox">
+                                <input type="checkbox" id="gitCredentials" class="md-check" ng-model="admin.formData.material.credentials">
+                                <label for="gitCredentials">
+                                    <span class=""></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> Credentials </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="admin.formData.material.credentials">
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3">Username
+                                <span class="required"> * </span>
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-model="admin.formData.material.username" type="text" class="form-control" required/>
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3">Password
+                                <span class="required"> * </span>
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-model="admin.formData.material.password" type="password" class="form-control" required/>
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="buttons-row" class="row">
+                      <div class="btn-container">
+                        <button class="btn green button-next" ng-click="admin.editMaterial(admin.formData)" data-dismiss="modal" type="submit">{{admin.defaultText.editMaterial.submit}}
+                        </button>
+                      </div>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div id="removeMaterial" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">{{admin.defaultText.deleteMaterial.header}}</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          {{admin.defaultText.deleteMaterial.confirm}}<strong>{{admin.materialToDeleteName}} </strong>
+          <br>
+          <hr>
+          <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.deleteMaterial(admin.materialToDeleteId)">{{admin.defaultText.deleteMaterial.delete}}</button>
+          <button class="btn" data-dismiss="modal">{{admin.defaultText.deleteMaterial.cancel}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
