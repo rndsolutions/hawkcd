@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService',
-        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService', 'pipeExecService',
+        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService, pipeExecService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function (data) {
@@ -160,8 +160,9 @@ angular
                     },
                     delete: function (object) {
                         if (object.error == false) {
-                            pipeConfigService.getAllPipelineGroupDTOs();
                             pipeConfigService.getAllPipelineDefinitions();
+                            pipeConfigService.getAllPipelineGroupDTOs();
+                            pipeExecService.getAllPipelines();
                         }
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);
