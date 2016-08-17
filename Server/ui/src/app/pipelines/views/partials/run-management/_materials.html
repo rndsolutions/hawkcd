@@ -1,17 +1,52 @@
 <div class="portlet light custom-portlet">
-  <div class="portlet-title custom-title">
-    <div class="caption custom-caption">
-      {{pipesRunManagement.defaultHeaders.materialsTitle}} :
-      <div class="text-height-custom">
-      <br/>Repository: {{pipesRunManagement.currentPipelineRun.materials[0].materialDefinition.repositoryUrl}}
-      <br/>Branch: {{pipesRunManagement.currentPipelineRun.materials[0].materialDefinition.branch}}
-      <br/>Commit: {{pipesRunManagement.currentPipelineRun.materials[0].materialDefinition.commitId}}
+    <div class="portlet-title">
+      <div class="caption">
+        <i class="fa fa-cogs"></i>Materials
+      </div>
+      <div class="tools right">
+        <a href="javascript:;" class="collapse"> </a>
       </div>
     </div>
-    <div class="tools right">
-      <a href="javascript:;" class="expand"> </a>
+    <div class="caption custom-caption" style="width:100%;">
+        <div style="display:inline-block; float:left; height:100px; width:15%;">
+      <div class="run-item-container status-passed" style="float:left;" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS'}">
+        </div>
+        <div style="position:static; top:50%; transform:translateY(-50%); text-align: center">
+            #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName}}
+
+        </div>
+        </div>
+      <div style="display:inline-block; height:100px; width:40%; float:left;">
+        <div style="border-left:2px solid lightgrey; float:left; height:70%; position:relative; top:50%; transform:translateY(-50%); margin:auto;"></div>
+        <div style="padding-left:5%; position:relative; top:50%; transform:translateY(-50%);">
+          Materials:
+        <div style="padding-top:5%;" ng-repeat="material in pipesRunManagement.currentPipelineRun.materials">
+          {{material.materialDefinition.commitId.substring(0, 7)}} {{material.materialDefinition.comments}}
+        </div>
+        </div>
+      </div>
+      <div style="display:inline-block; height:100px; width: 19%">
+        <div style="border-left:2px solid lightgrey; float:left; width:100%; height:70%; position:relative; top:50%; transform:translateY(-50%); margin:auto;">
+          <div style="padding-left:5%; position:relative; top:50%; transform:translateY(-50%); width:100%;">
+          Duration: 24h 23m 22s
+          <div style="padding-top:5%;">
+            Last Run: {{pipesRunManagement.currentPipelineRun.lastPipelineAction.output}}
+          </div>
+            </div>
+        </div>
+      </div>
+      <div style="display:inline-block; height:100px; width: 19%">
+        <div style="border-left:2px solid lightgrey; float:left; width:100%; height:70%; position:relative; top:50%; transform:translateY(-50%);  margin:auto;">
+          <div style="padding-left:5%; position:relative; top:50%; transform:translateY(-50%); width:100%;">
+            Trigger Reason: {{pipesRunManagement.currentPipelineRun.triggerReason}}
+            <div style="padding-top:5%;">
+                Commit Author: {{pipesRunManagement.currentPipelineRun.materials.slice(-1)[0].materialDefinition.authorName}}
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-  </div>
   <div class="portlet-body path-materials">
     <!--<div class="row ">-->
       <!--{{pipesRunManagement.defaultHeaders.commitId}} {{pipesRunManagement.allMaterials[0].ExecutionMaterials[0].MaterialSpecificDetails['commit-id']}}-->
