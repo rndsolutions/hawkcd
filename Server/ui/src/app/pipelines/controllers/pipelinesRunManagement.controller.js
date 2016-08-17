@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesRunManagement', function ($state, $scope, $stateParams, $interval, pipeStats, runManagementService, pipeExec, pipeConfig, authDataService, viewModel) {
+    .controller('PipelinesRunManagement', function ($state, $scope, $stateParams, $interval, pipeStats, runManagementService, pipeExec, pipeConfig, authDataService, viewModel, moment, ansi_up, $sce) {
         var vm = this;
 
         $scope.$on("$destroy", function () {
@@ -112,15 +112,50 @@ angular
 
         vm.temporaryStages = [];
 
+        vm.getLastRunAction = function(pipelineRun) {
+            if (pipelineRun.endTime == undefined) {
+                return;
+            }
+            var result = {};
+            var runEndTime = pipelineRun.endTime;
+            var delta = moment(runEndTime);
+            var now = moment();
+            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
+            if(diff == 'a few seconds'){
+                diff = 'few seconds ago';
+                result.output = diff;
+            } else {
+                result.output = diff + " ago";
+            }
+            return result;
+        };
+
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);
+
+        // vm.convert = new Convert();
+        //
+        // vm.randomText = convert.toHtml('\x1b[30mblack\x1b[37mwhite');
+
+        //vm.ansi_up = require('ansi_up');
+
+        vm.randomText = ansi_up.ansi_to_html('\x1b[30mblack\x1b[37mwhite');
+
+        // vm.randomText = $.parseHTML(vm.randomText);
+        vm.randomText = $sce.trustAsHtml(vm.randomText);
+        console.log(vm.randomText);
 
         $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             viewModel.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 if(currentPipelineRun.pipelineDefinitionName == vm.pipelineName && currentPipelineRun.executionId == vm.pipelineExecutionID){
                     vm.currentPipelineRun = currentPipelineRun;
+                    var result = vm.getLastRunAction(currentPipelineRun);
+                    vm.currentPipelineRun.lastPipelineAction = result;
+                    if (currentPipelineRun.triggerReason == null) {
+                        vm.currentPipelineRun.triggerReason = viewModel.user.username;
+                    }
                     viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                         if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
                             vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
