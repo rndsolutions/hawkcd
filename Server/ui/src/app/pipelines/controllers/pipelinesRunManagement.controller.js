@@ -445,7 +445,7 @@ angular
         //Change the class of selected stage - needed for the initialization
         vm.toggleRun = 0;
 
-        vm.selectStage = function (stage, index) {
+        vm.selectStage = function (index) {
             //Needed for class change
             vm.toggleRun = index;
 
@@ -496,7 +496,8 @@ angular
         //  $('#tree_1').jstree();
         //});
 
-        vm.selectJob = function (jobIndex) {
+        vm.selectJob = function (stageIndex, jobIndex) {
+            vm.selectStage(stageIndex);
             var selectedRunIndex = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected] - 1;
 
             vm.selectedJob = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[jobIndex];
