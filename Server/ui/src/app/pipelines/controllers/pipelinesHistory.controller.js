@@ -81,7 +81,7 @@ angular
                     });
 
                     if (currentPipelineRun.triggerReason == null) {
-                        currentPipelineRun.triggerReason = "User";
+                        currentPipelineRun.triggerReason = viewModel.user.username;
                     }
                     vm.currentPipelineRuns.push(currentPipelineRun);
                 }
