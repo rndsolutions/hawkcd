@@ -2,7 +2,6 @@ package net.hawkengine.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.enums.Status;
 
 import java.time.Duration;
@@ -25,7 +24,6 @@ public class Pipeline extends DbEntry {
     private String triggerReason;
     private boolean areMaterialsUpdated;
     private boolean isPrepared;
-    private PermissionType permissionType;
 
     public Pipeline() {
         this.startTime = new Date();
@@ -154,13 +152,5 @@ public class Pipeline extends DbEntry {
     @JsonProperty("isPrepared")
     public void setPrepared(boolean prepared) {
         this.isPrepared = prepared;
-    }
-
-    public PermissionType getPermissionType() {
-        return this.permissionType;
-    }
-
-    public void setPermissionType(PermissionType permissionType) {
-        this.permissionType = permissionType;
     }
 }

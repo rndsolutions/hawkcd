@@ -32,7 +32,7 @@ public class UserGroupAuthorizationService implements IAuthorizationService {
     }
 
     @Override
-    public boolean delete(String entity, List permissions) {
+    public boolean delete(String entityId, List permissions) {
         return this.hasPermission(permissions);
     }
 

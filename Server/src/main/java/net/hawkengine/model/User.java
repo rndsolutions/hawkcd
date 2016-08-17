@@ -33,8 +33,7 @@ public class User extends DbEntry {
     }
 
     public void setPassword(String password){
-        String hashedPassword = DigestUtils.sha256Hex(password);
-        this.password = hashedPassword;
+        this.password = password;
     }
 
     public String getGhAuthCode() {

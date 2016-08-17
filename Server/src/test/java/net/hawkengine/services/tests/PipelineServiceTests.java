@@ -216,16 +216,6 @@ public class PipelineServiceTests {
     }
 
     @Test
-    public void update_nonexistentObject_noObject() {
-        Pipeline expectedPipeline = new Pipeline();
-
-        ServiceResult actualResult = this.pipelineService.update(expectedPipeline);
-
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertNull(actualResult.getObject());
-    }
-
-    @Test
     public void delete_existingObject_true() {
         Pipeline pipelineToAdd = new Pipeline();
         pipelineToAdd.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());

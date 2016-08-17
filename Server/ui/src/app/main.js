@@ -194,7 +194,8 @@ angular
                 if(!$auth.isAuthenticated()){
                     $auth.logout();
                     $location.path('/authenticate');
-                    toaster.pop('error', "Notification", "Authentication failed. Please try again.");
+                    console.log(event);
+                    toaster.pop('error', "Notification", event.reason);
                     $rootScope.$apply();
                     return;
                 }

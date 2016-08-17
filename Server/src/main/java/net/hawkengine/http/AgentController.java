@@ -1,6 +1,6 @@
 package net.hawkengine.http;
 
-import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
