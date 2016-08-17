@@ -20,7 +20,8 @@ angular
         'luegg.directives',
         'toaster',
         'momentjs',
-        'satellizer'
+        'satellizer',
+        'ansi_up'
         //'ngAnimate'
         //'flow'
     ])
