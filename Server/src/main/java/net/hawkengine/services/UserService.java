@@ -16,7 +16,6 @@ import java.util.List;
 
 
 public class UserService extends CrudService<User> implements IUserService {
-
     private static final Class CLASS_TYPE = User.class;
 
     public UserService() {
@@ -43,7 +42,7 @@ public class UserService extends CrudService<User> implements IUserService {
     @Override
     public ServiceResult add(User user) {
         ServiceResult result = this.getByEmail(user.getEmail());
-        if (result.hasError()){
+        if (result.hasError()) {
             return result;
         }
         String password = user.getPassword();
@@ -54,6 +53,10 @@ public class UserService extends CrudService<User> implements IUserService {
 
     @Override
     public ServiceResult update(User user) {
+
+        String password = user.getPassword();
+        String hashedPassword = DigestUtils.sha256Hex(password);
+        user.setPassword(hashedPassword);
         ServiceResult serviceResult = super.update(user);
         SessionPool.getInstance().updateUserObjects(user.getId());
         return serviceResult;
@@ -118,6 +121,19 @@ public class UserService extends CrudService<User> implements IUserService {
 
     @Override
     public ServiceResult addUserWithoutProvider(User user) {
-        return  this.add(user);
+        return this.add(user);
+    }
+
+    @Override
+    public ServiceResult changeUserPassword(User user, String newPasword) {
+        ServiceResult result = this.getByEmailAndPassword(user.getEmail(), user.getPassword());
+
+        if (result.hasError()) {
+            return result;
+        }
+        User userToUpdate = (User) result.getObject();
+        userToUpdate.setPassword(newPasword);
+
+        return this.update(userToUpdate);
     }
 }

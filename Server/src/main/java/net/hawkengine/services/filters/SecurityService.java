@@ -77,6 +77,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             filteredPipelineGroups.add(filteredEntity);
             pipelineDefinitionsToAdd = new ArrayList<>();
         }
+
         return filteredPipelineGroups;
     }
 
@@ -98,6 +99,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -108,6 +110,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -119,6 +122,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermisssion) {
             return true;
         }
+
         return false;
     }
 
@@ -129,6 +133,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -139,6 +144,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -153,6 +159,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -167,6 +174,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -189,24 +197,44 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 return true;
             }
         }
+
         return false;
     }
 
     @Override
     public boolean unassignPipelineFromGroup(String pipelineGroup, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
         boolean hasPermission = this.authorizationService.update(pipelineGroup, permissions);
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
     @Override
     public boolean addUserWithoutProvider(String entity, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
         boolean hasPermission = this.authorizationService.add(entity, permissions);
         if (hasPermission) {
             return true;
         }
+
+        return false;
+    }
+
+    @Override
+    public boolean changeUserPassword(String loggedUserEmail, String entity, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
+        User userToUpdate = this.jsonConverter.fromJson(entity, User.class);
+        if (userToUpdate.getEmail().equals(loggedUserEmail)){
+            return true;
+        }
+        boolean hasPermission = this.authorizationService.update(entity, permissions);
+        if (hasPermission) {
+            return true;
+        }
+
         return false;
     }
 }
