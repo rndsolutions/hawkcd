@@ -9,7 +9,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import net.hawkengine.agent.components.jobexecutor.IJobExecutor;
 import net.hawkengine.agent.components.jobexecutor.JobExecutor;
-import net.hawkengine.agent.constants.LoggerMessages;
+import net.hawkengine.agent.constants.MessageConstants;
 import net.hawkengine.agent.enums.JobStatus;
 import net.hawkengine.agent.interfaces.IAgent;
 import net.hawkengine.agent.models.TaskDefinition;
@@ -68,11 +68,11 @@ public class Agent implements IAgent {
             String jobAsString = this.jsonConverter.toJson(this.jobExecutor.getCurrentJob());
             response = webResource.type("application/json").put(ClientResponse.class, jobAsString);
         } catch (Exception e) {
-            this.logger.info(LoggerMessages.AGENT_COULD_NOT_CONNECT);
+            this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
         }
 
         if ((response != null) && (response.getStatus() == Status.OK.getStatusCode())) {
-            this.logger.info(LoggerMessages.JOB_REPORT_SENT);
+            this.logger.info(MessageConstants.JOB_REPORT_SENT);
 
             if ((this.jobExecutor.getCurrentJob() != null) && ((this.jobExecutor.getCurrentJob().getStatus() == JobStatus.PASSED) || (this.jobExecutor.getCurrentJob().getStatus() == JobStatus.FAILED))) {
                 try {
@@ -80,11 +80,11 @@ public class Agent implements IAgent {
                     String jobAsString = this.jsonConverter.toJson(this.jobExecutor.getCurrentJob());
                     response = webResource.type("application/json").put(ClientResponse.class, jobAsString);
                 } catch (Exception e) {
-                    this.logger.info(LoggerMessages.AGENT_COULD_NOT_CONNECT);
+                    this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
                 }
 
                 if ((response != null) && (response.getStatus() == Status.OK.getStatusCode())) {
-                    this.logger.info(LoggerMessages.JOB_REPORT_SENT);
+                    this.logger.info(MessageConstants.JOB_REPORT_SENT);
                     AgentConfiguration.getAgentInfo().setRunning(false);
                     this.jobExecutor.setCurrentJob(null);
                 }
@@ -99,16 +99,16 @@ public class Agent implements IAgent {
 
         try {
             String agentAsString = this.jsonConverter.toJson(AgentConfiguration.getAgentInfo());
-            this.logger.info(LoggerMessages.AGENT_REPORT_SENT);
+            this.logger.info(MessageConstants.AGENT_REPORT_SENT);
             response = webResource.type("application/json").put(ClientResponse.class, agentAsString);
         } catch (Exception e) {
-            this.logger.info(LoggerMessages.AGENT_COULD_NOT_CONNECT);
+            this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
         }
     }
 
     @Override
     public void checkForWork() {
-        this.logger.info(LoggerMessages.AGENT_CHECKING_FOR_WORK);
+        this.logger.info(MessageConstants.AGENT_CHECKING_FOR_WORK);
         boolean isRunning = AgentConfiguration.getAgentInfo().isRunning();
         if (!isRunning) {
             WebResource webResource = this.restClient.resource(AgentConfiguration.getInstallInfo().getCheckForWorkApiAddress());
@@ -117,7 +117,7 @@ public class Agent implements IAgent {
             try {
                 response = webResource.accept("application/json").get(ClientResponse.class);
             } catch (Exception e) {
-                this.logger.info(LoggerMessages.AGENT_COULD_NOT_CONNECT);
+                this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
             }
 
             WorkInfo workInfo = null;
@@ -131,7 +131,7 @@ public class Agent implements IAgent {
 
             if (workInfo != null) {
                 AgentConfiguration.getAgentInfo().setRunning(true);
-                this.logger.info(LoggerMessages.AGENT_WORK_FOUND);
+                this.logger.info(MessageConstants.AGENT_WORK_FOUND);
                 this.jobExecutor.initJobExecutionInfo(workInfo);
                 this.jobExecutor.executeJob(workInfo);
             }
@@ -143,7 +143,7 @@ public class Agent implements IAgent {
         this.startReportJobTimer();
         this.startReportAgentTimer();
         this.startCheckForWorkTimer();
-        this.logger.info(LoggerMessages.AGENT_STARTED);
+        this.logger.info(MessageConstants.AGENT_STARTED);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class Agent implements IAgent {
         this.stopReportJobTimer();
         this.stopReportAgentTimer();
         this.stopCheckForWorkTimer();
-        this.logger.info(LoggerMessages.AGENT_STOPPED);
+        this.logger.info(MessageConstants.AGENT_STOPPED);
     }
 
     private void startReportJobTimer() {

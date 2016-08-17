@@ -3,7 +3,8 @@ package net.hawkengine.agent.components.jobexecutor;
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.components.taskexecutor.ITaskExecutor;
 import net.hawkengine.agent.components.taskexecutor.factories.TaskExecutorFactory;
-import net.hawkengine.agent.constants.LoggerMessages;
+import net.hawkengine.agent.constants.ConfigConstants;
+import net.hawkengine.agent.constants.MessageConstants;
 import net.hawkengine.agent.enums.JobStatus;
 import net.hawkengine.agent.enums.RunIf;
 import net.hawkengine.agent.enums.TaskStatus;
@@ -20,9 +21,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class JobExecutor implements IJobExecutor {
+    private static final Logger LOGGER = LogManager.getLogger(JobExecutor.class);
+
     private ITaskExecutor taskExecutor;
     private Job currentJob;
-    private static final Logger LOGGER = LogManager.getLogger(JobExecutor.class);
 
     @Override
     public Job getCurrentJob() {
@@ -36,12 +38,16 @@ public class JobExecutor implements IJobExecutor {
 
     @Override
     public void executeJob(WorkInfo workInfo) {
+        currentJob = workInfo.getJob();
+        String jobStarted = String.format(MessageConstants.JOB_STARTED_ON_AGENT, workInfo.getPipelineDefinitionName());
+        LOGGER.info(jobStarted);
+        jobStarted = ConfigConstants.CONSOLE_YELLOW + jobStarted;
+        this.currentJob.getReport().append(jobStarted + "\n");
 
-        this.LOGGER.info(String.format(LoggerMessages.JOB_STARTED, workInfo.getPipelineDefinitionName()));
 
         //this.printEnvironmentVariables(workInfo.getEnvironmentVariables());
 
-        currentJob = workInfo.getJob();
+
 
 //        this.currentJob.appendToJobResult(String.format("Start to prepare %s/%s/%s/%s/%s on %s %s",
 //                this.getCurrentJob().getPipelineDefinitionName(),
@@ -51,7 +57,7 @@ public class JobExecutor implements IJobExecutor {
 //                this.getCurrentJob().getJobName(),
 //                AgentConfiguration.getAgentInfo().getName(),
 //                AgentConfiguration.getInstallInfo().getAgentPipelinesDir()), true);
-//        this.currentJob.appendToJobResult(String.format(LoggerMessages.JOB_STARTED, workInfo.getJob().getName()), true);
+//        this.currentJob.appendToJobResult(String.format(MessageConstants.JOB_STARTED_ON_AGENT, workInfo.getJob().getName()), true);
 //        this.currentJob.appendToJobResult(String.format("Current job status: %s", this.currentJob.getStatus()), true);
 
         this.createPipelineDirs(workInfo);
@@ -69,27 +75,27 @@ public class JobExecutor implements IJobExecutor {
             if (this.currentJob.getStatus() == JobStatus.RUNNING) {
                 if ((currentTask.getRunIfCondition() == RunIf.PASSED) || (currentTask.getRunIfCondition() == RunIf.ANY) || isFirstTask) {
 
-//                    this.currentJob.appendToJobResult(String.format(LoggerMessages.TASK_STARTED, currentTask.getType(), currentTask.getId()), true);
+//                    this.currentJob.appendToJobResult(String.format(MessageConstants.TASK_STARTED, currentTask.getType(), currentTask.getId()), true);
 
-                    LOGGER.info(String.format(LoggerMessages.TASK_STARTED, currentTask.getType(), i));
+                    LOGGER.info(String.format(MessageConstants.TASK_STARTED, currentTask.getType(), i));
 
                     this.taskExecutor = TaskExecutorFactory.create(currentTask.getTaskDefinition());
                     Task currentInfo = this.taskExecutor.executeTask(currentTask, this.currentJob.getReport(), workInfo);
 
 //                    this.currentJob.getTaskExecutionInfo().add(currentInfo);
-                    LOGGER.info(String.format(LoggerMessages.TASK_COMPLETED, currentTask.getType(), i, currentInfo.getStatus()));
+                    LOGGER.info(String.format(MessageConstants.TASK_COMPLETED, currentTask.getType(), i, currentInfo.getStatus()));
                 }
             } else {
                 if ((currentTask.getRunIfCondition() == RunIf.FAILED) || (currentTask.getRunIfCondition() == RunIf.ANY)) {
 
-//                    this.currentJob.appendToJobResult(String.format(LoggerMessages.TASK_STARTED, currentTask.getType(), currentTask.getId()), true);
-                    LOGGER.info(String.format(LoggerMessages.TASK_STARTED, currentTask.getType(), i));
+//                    this.currentJob.appendToJobResult(String.format(MessageConstants.TASK_STARTED, currentTask.getType(), currentTask.getId()), true);
+                    LOGGER.info(String.format(MessageConstants.TASK_STARTED, currentTask.getType(), i));
 
                     this.taskExecutor = TaskExecutorFactory.create(currentTask.getTaskDefinition());
                     Task currentInfo = this.taskExecutor.executeTask(currentTask, this.currentJob.getReport(),workInfo);
 
 //                    this.currentJob.getTaskExecutionInfo().add(currentInfo);
-                    LOGGER.info(String.format(LoggerMessages.TASK_COMPLETED, currentTask.getType(), i, currentInfo.getStatus()));
+                    LOGGER.info(String.format(MessageConstants.TASK_COMPLETED, currentTask.getType(), i, currentInfo.getStatus()));
                 }
             }
 
@@ -109,7 +115,7 @@ public class JobExecutor implements IJobExecutor {
 //        this.currentJob.setState(ExecutionState.COMPLETED);
         //this.currentJob.setEndTime(LocalDateTime.now());
 
-//        this.LOGGER.info(String.format(LoggerMessages.JOB_COMPLETED, workInfo.getJob().getName(), this.currentJob.getStatus()));
+//        this.LOGGER.info(String.format(MessageConstants.JOB_COMPLETED, workInfo.getJob().getName(), this.currentJob.getStatus()));
 //        this.currentJob.appendToJobResult(String.format("Current job status: %s", this.currentJob.getStatus()), true);
     }
 

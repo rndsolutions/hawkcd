@@ -2,7 +2,7 @@ package net.hawkengine.agent.components.taskexecutor.executors;
 
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
-import net.hawkengine.agent.constants.LoggerMessages;
+import net.hawkengine.agent.constants.MessageConstants;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.ExecTask;
 import net.hawkengine.agent.models.Task;
@@ -16,10 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ExecTaskExecutor extends TaskExecutor {
 
@@ -64,7 +62,7 @@ public class ExecTaskExecutor extends TaskExecutor {
             }
 
         } catch (IOException e) {
-            LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, "22", e.getMessage()));
+            LOGGER.error(String.format(MessageConstants.TASK_THROWS_EXCEPTION, "22", e.getMessage()));
             report.append(String.format("%s true \n", e.getMessage()));
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
         }
