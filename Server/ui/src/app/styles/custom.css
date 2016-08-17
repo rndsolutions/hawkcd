@@ -137,14 +137,38 @@ p {
     background: #26344B;
 }
 
+.custom-p-head-box,
+.custom-s-head-box {
+    background: #26344B;
+    color:black;
+}
+
+.p-head {
+    background-color: #26344B!important;
+}
+
 .s-head-box:hover {
-    background: #E55E09;
+    /*background: #17C4BB;*/
 }
 
 .selected-stage {
-    background-color: #E55E09 !important;
-    color: #26344B;
+    background-color: #EBEBEB !important;
+    color: black;
     text-underline: none;
+}
+
+.custom-panel-heading {
+    background-color: #26344B !important;
+    color:#A5B1C8!important;
+    border-bottom:none!important;
+}
+
+.custom-panel-body {
+    background-color: #EBEBEB !important;
+}
+
+.custom-nth-color {
+    background-color: #ebebeb !important;
 }
 
 .admin-selected-pipeline {
@@ -591,6 +615,10 @@ p {
   border-left:4px solid #D91E18!important;
 }
 
+.status-awaiting {
+    border-left:4px solid #EEF1F5!important;
+}
+
 @media screen and (max-width: 767px) {
     @import "history-screen/_small-devices.css";
 }
@@ -652,4 +680,19 @@ p {
 
 .td-content {
     height:20px;
+}
+
+.custom-run-management-text {
+    font-size:16px;
+    overflow:hidden;
+}
+
+.jobSelected {
+    background-color: #B3E5FC;
+}
+
+.vertical-center-icon {
+    position:relative;
+    top:50%;
+    /*transform:translateY(-50%);*/
 }
