@@ -7,9 +7,6 @@
                 <a href="javascript:;" class="collapse"> </a>
             </div>
         </div>
-        <div class="tools right" aria-hidden="false">
-            <a href="javascript:;" class="collapse"> </a>
-        </div>
 
         <!--</div> <div class="tools right custom-tools">-->
       <!--<div class="form-group form-md-line-input custom-drop">-->
@@ -28,10 +25,10 @@
         <!--</div>-->
 
     <div class="portlet-body custom-body">
-        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRunStages">
+        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRun.stages">
             <div style="display:inline-block" ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
             <div style="height:150px; display:inline-block">
-            <img ng-if="$index != pipesRunManagement.currentPipelineRunStages.length-1" class="arrow-right" style="position:relative; transform:translateY(-75%);" src="../../../../../assets/images/right-arrow.png">
+            <img ng-if="$index != pipesRunManagement.currentPipelineRun.stages.length-1" class="arrow-right" style="position:relative; transform:translateY(-75%);" src="../../../../../assets/images/right-arrow.png">
             </div>
 
 
