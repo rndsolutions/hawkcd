@@ -6,6 +6,7 @@ import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
+import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -224,10 +225,10 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public boolean changeUserPassword(String loggedUserId, String entity, String className, List permissions) {
+    public boolean changeUserPassword(String loggedUserEmail, String entity, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
-        User userToUpdate = this.jsonConverter.fromJson(entity, User.class);
-        if (userToUpdate.getId().equals(loggedUserId)){
+        UserDto userToUpdate = this.jsonConverter.fromJson(entity, UserDto.class);
+        if (userToUpdate.getUsername().equals(loggedUserEmail)){
             return true;
         }
         boolean hasPermission = this.authorizationService.update(entity, permissions);

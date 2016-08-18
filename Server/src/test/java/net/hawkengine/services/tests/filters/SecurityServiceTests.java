@@ -12,6 +12,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.ConversionObject;
+import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionScope;
@@ -1401,17 +1402,24 @@ public class SecurityServiceTests {
         User user = new User();
         user.setEmail("test@test.com");
         user.setPassword("test");
-        String userAsString = this.jsonConverter.toJson(user);
 
         this.mockedUserService.add(user);
 
+        UserDto userDto = new UserDto();
+        userDto.setUsername("test@test.com");
+        String userDtoAsString = this.jsonConverter.toJson(userDto);
+
         ConversionObject firstConversionObject = new ConversionObject();
-        firstConversionObject.setObject(userAsString);
+        firstConversionObject.setObject(userDtoAsString);
         firstConversionObject.setPackageName("net.hawkserver.models");
 
         ConversionObject secondConversionObject = new ConversionObject();
         secondConversionObject.setPackageName("java.lang.String");
         secondConversionObject.setObject("changedPassword");
+
+        ConversionObject thirdConversionObject = new ConversionObject();
+        secondConversionObject.setPackageName("java.lang.String");
+        secondConversionObject.setObject("test");
 
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserService");
@@ -1420,7 +1428,7 @@ public class SecurityServiceTests {
         contract.setResult("");
         contract.setError(false);
         contract.setErrorMessage("");
-        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
+        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject, thirdConversionObject});
 
         ServiceResult expectedServiceResult = this.mockedUserService.getByEmail("test@test.com");
 
@@ -1437,7 +1445,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        boolean actualServiceResult = this.securityService.changeUserPassword("test@test.com", userAsString, contract.getClassName(), permissions);
+        boolean actualServiceResult = this.securityService.changeUserPassword("test@test.com", userDtoAsString, contract.getClassName(), permissions);
 
         //Assert
         Assert.assertTrue(actualServiceResult);
@@ -1449,17 +1457,24 @@ public class SecurityServiceTests {
         User user = new User();
         user.setEmail("test@test.com");
         user.setPassword("test");
-        String userAsString = this.jsonConverter.toJson(user);
 
         this.mockedUserService.add(user);
 
+        UserDto userDto = new UserDto();
+        userDto.setUsername("test@test.com");
+        String userDtoAsString = this.jsonConverter.toJson(userDto);
+
         ConversionObject firstConversionObject = new ConversionObject();
-        firstConversionObject.setObject(userAsString);
+        firstConversionObject.setObject(userDtoAsString);
         firstConversionObject.setPackageName("net.hawkserver.models");
 
         ConversionObject secondConversionObject = new ConversionObject();
         secondConversionObject.setPackageName("java.lang.String");
         secondConversionObject.setObject("changedPassword");
+
+        ConversionObject thirdConversionObject = new ConversionObject();
+        secondConversionObject.setPackageName("java.lang.String");
+        secondConversionObject.setObject("test");
 
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserService");
@@ -1468,7 +1483,7 @@ public class SecurityServiceTests {
         contract.setResult("");
         contract.setError(false);
         contract.setErrorMessage("");
-        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
+        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject, thirdConversionObject});
 
         ServiceResult expectedServiceResult = this.mockedUserService.getByEmail("test@test.com");
 
@@ -1485,7 +1500,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        boolean actualServiceResult = this.securityService.changeUserPassword("invalid@test.com", userAsString, contract.getClassName(), permissions);
+        boolean actualServiceResult = this.securityService.changeUserPassword("invalid@test.com", userDtoAsString, contract.getClassName(), permissions);
 
         //Assert
         Assert.assertFalse(actualServiceResult);

@@ -4,6 +4,7 @@ import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
+import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
@@ -125,8 +126,8 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult changeUserPassword(User user, String newPasword) {
-        ServiceResult result = this.getByEmailAndPassword(user.getEmail(), user.getPassword());
+    public ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
+        ServiceResult result = this.getByEmailAndPassword(user.getUsername(), oldPassword);
 
         if (result.hasError()) {
             return result;
