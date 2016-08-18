@@ -1418,8 +1418,8 @@ public class SecurityServiceTests {
         secondConversionObject.setObject("changedPassword");
 
         ConversionObject thirdConversionObject = new ConversionObject();
-        secondConversionObject.setPackageName("java.lang.String");
-        secondConversionObject.setObject("test");
+        thirdConversionObject.setPackageName("java.lang.String");
+        thirdConversionObject.setObject("test");
 
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserService");

@@ -79,12 +79,13 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         }
         List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getObject();
 
-        List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb.stream().filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId)).collect(Collectors.toList());
-        for (Pipeline pipeline: pipelineWithinThePipelineDefinition) {
-            ServiceResult result = this.pipelineService.delete(pipeline.getId());
-
-            if (result.hasError()){
-                return result;
+        if (pipelinesFromDb != null) {
+            List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb.stream().filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId)).collect(Collectors.toList());
+            for (Pipeline pipeline : pipelineWithinThePipelineDefinition) {
+                ServiceResult result = this.pipelineService.delete(pipeline.getId());
+                if (result.hasError()) {
+                    return result;
+                }
             }
         }
         return super.delete(pipelineDefinitionId);
