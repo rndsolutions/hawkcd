@@ -2,13 +2,13 @@ package net.hawkengine.services.filters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
-import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
