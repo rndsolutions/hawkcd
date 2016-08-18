@@ -1,4 +1,4 @@
-<div class="stage" ng-click="pipesRunManagement.selectStage(stage,$index);pipesRunManagement.toggleRun=$index">
+<div class="stage" ng-click="pipesRunManagement.selectStage($index);pipesRunManagement.toggleRun=$index">
     <div class="panel panel-info p-box-inner">
         <!--<a class="p-link">-->
         <div class="p-link">
@@ -54,11 +54,11 @@
                 <!--<p><strong>{{pipesRunManagement.stageDefaultText.trigger}}</strong> TEMP </p>-->
                 <div style="overflow-y:auto; height:150px; background-color: white;">
                 <div ng-repeat="job in stage[0].jobs" ng-class-even="'custom-nth-color'" style="height:50px;">
-                    <div class="run-item-container"  style="display:inline-block; width:100%; float:left;" ng-class="{'status-passed': job.status == 'PASSED', 'status-failed' : job.status == 'FAILED', 'status-working' : job.status == 'RUNNING', 'status-awaiting' : job.status == 'AWAITING' || (job.status != 'PASSED' && job.status != 'FAILED' && job.status != 'RUNNING'), 'jobSelected' : pipesRunManagement.jobIndex == $index && pipesRunManagement.toggleRun == $parent.$index}">
+                    <div class="run-item-container"  style="display:inline-block; width:100%; float:left;" ng-class="{'status-passed': job.status == 'PASSED', 'status-failed' : job.status == 'FAILED', 'status-working' : job.status == 'RUNNING', 'status-awaiting' : job.status == 'AWAITING' || (job.status != 'PASSED' && job.status != 'FAILED' && job.status != 'RUNNING'), 'jobSelected' : pipesRunManagement.selectedJob.id == job.id}">
                         <div style="position:relative; top:50%; transform:translateY(-50%); display:inline-block; width:100%; float:left; padding-left:5%;">
                         {{job.jobDefinitionName}}
                         </div>
-                        <span class="pull-right" aria-hidden="true" ng-click="pipesRunManagement.selectJob($index)" style="position:relative; z-index:1; cursor: pointer;">
+                        <span class="pull-right" aria-hidden="true" ng-click="pipesRunManagement.selectJob($parent.$index,$index)" style="position:relative; z-index:1; cursor: pointer;">
                             <i class="fa fa-list"></i>
                         </span>
                     </div>

@@ -134,18 +134,6 @@ angular
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);
 
-        // vm.convert = new Convert();
-        //
-        // vm.randomText = convert.toHtml('\x1b[30mblack\x1b[37mwhite');
-
-        //vm.ansi_up = require('ansi_up');
-
-        vm.randomText = ansi_up.ansi_to_html("\x1b[33mJob with name NewPipeline started.\nInvalid Arguments");
-
-        // vm.randomText = $.parseHTML(vm.randomText);
-        vm.randomText = $sce.trustAsHtml(vm.randomText);
-//        console.log(vm.randomText);
-
         $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
             vm.allPipelineRuns = viewModel.allPipelineRuns;
             viewModel.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
@@ -452,7 +440,7 @@ angular
         //Change the class of selected stage - needed for the initialization
         vm.toggleRun = 0;
 
-        vm.selectStage = function (stage, index) {
+        vm.selectStage = function (index) {
             //Needed for class change
             vm.toggleRun = index;
 
@@ -503,7 +491,8 @@ angular
         //  $('#tree_1').jstree();
         //});
 
-        vm.selectJob = function (jobIndex) {
+        vm.selectJob = function (stageIndex, jobIndex) {
+            vm.selectStage(stageIndex);
             var selectedRunIndex = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected] - 1;
 
             vm.selectedJob = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[jobIndex];

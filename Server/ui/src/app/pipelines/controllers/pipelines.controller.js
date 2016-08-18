@@ -46,7 +46,7 @@ angular
                 viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
                     if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
                         if(currentPipelineRun.triggerReason == null) {
-                            currentPipelineRun.triggerReason = "User";
+                            currentPipelineRun.triggerReason = viewModel.user.username;
                         }
                         viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
                         viewModel.allPipelines[pipelineIndex].lastRun = currentPipelineRun;

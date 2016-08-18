@@ -30,8 +30,8 @@
     <div class="portlet-body custom-body">
         <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRunStages">
             <div style="display:inline-block" ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
-            <div style="height:300px; display:inline-block">
-            <img ng-if="$index != pipesRunManagement.currentPipelineRunStages.length-1" class="arrow-right" style="position:relative; top:50%; transform:translateY(-50%);" src="../../../../../assets/images/right-arrow.png">
+            <div style="height:150px; display:inline-block">
+            <img ng-if="$index != pipesRunManagement.currentPipelineRunStages.length-1" class="arrow-right" style="position:relative; transform:translateY(-75%);" src="../../../../../assets/images/right-arrow.png">
             </div>
 
 
