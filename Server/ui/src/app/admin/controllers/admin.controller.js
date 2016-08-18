@@ -193,24 +193,21 @@ angular
             vm.formData = {};
 
             vm.addMaterial = function(formData) {
-                debugger;
                 var material = {};
                 vm.formData = formData;
-                if (vm.materialType == 'git') {
-                    material = {
-                        "name": vm.formData.material.git.name,
-                        "type": 'GIT',
-                        "repositoryUrl": vm.formData.material.git.url,
-                        "isPollingForChanges": vm.formData.material.git.poll,
-                        "destination": vm.formData.material.git.name,
-                        "branch": vm.formData.material.git.branch || 'master'
-                    };
-                    if (formData.material.git.credentials) {
-                        material.username = formData.material.git.username;
-                        material.password = formData.material.git.password;
-                    }
-                    adminMaterialService.addGitMaterialDefinition(material);
+                material = {
+                    "name": vm.formData.material.git.name,
+                    "type": 'GIT',
+                    "repositoryUrl": vm.formData.material.git.url,
+                    "isPollingForChanges": vm.formData.material.git.poll,
+                    "destination": vm.formData.material.git.name,
+                    "branch": vm.formData.material.git.branch || 'master'
+                };
+                if (formData.material.git.credentials) {
+                    material.username = formData.material.git.username;
+                    material.password = formData.material.git.password;
                 }
+                adminMaterialService.addGitMaterialDefinition(material);
 
                 vm.materialType = 'hidden';
                 vm.formData = {};
@@ -218,9 +215,9 @@ angular
             };
 
             vm.editMaterial = function(formData) {
-              adminMaterialService.updateGitMaterialDefinition(formData.material);
-              vm.formData = {};
-              vm.closeModal();
+                adminMaterialService.updateGitMaterialDefinition(formData.material);
+                vm.formData = {};
+                vm.closeModal();
             };
 
             $scope.$watchCollection(function() {
@@ -610,8 +607,8 @@ angular
 
             vm.setMaterialForEdit = function(material) {
                 vm.formData.material = material;
-                if(material.username){
-                  vm.formData.material.credentials = true;
+                if (material.username) {
+                    vm.formData.material.credentials = true;
                 }
             };
 
