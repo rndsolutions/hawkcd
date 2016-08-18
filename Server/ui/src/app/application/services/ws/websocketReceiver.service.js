@@ -42,6 +42,7 @@ angular
                         } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
+                    },
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updateUser);
                     },
