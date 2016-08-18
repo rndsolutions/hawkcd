@@ -28,7 +28,6 @@ public class FetchMaterialExecutorTest {
     private Task incorrectFetchMaterialTask;
     private Task secondIncorrectFetchMaterialTask;
     private WorkInfo workInfo;
-    private String successReportMessage = "Fetching material...Material fetched at Pipelines" + File.separator + "%s";
     private String correctDirectoryPath = "Pipelines" + File.separator + "MyPipe";
     private String wrongDirectoryPath = "Pipelines" + File.separator + "Wrong" + File.separator + "Wrong";
 
@@ -60,14 +59,12 @@ public class FetchMaterialExecutorTest {
         // Arrange
         StringBuilder report = new StringBuilder();
         TaskStatus expectedStatus = TaskStatus.PASSED;
-        String expectedMessage = String.format(this.successReportMessage, "MyPipe");
 
         // Act
         Task actualResult = this.fetchMaterialExecutor.executeTask(this.correctFetchMaterialTask, report, this.workInfo);
 
         // Assert
         Assert.assertEquals(actualResult.getStatus(), expectedStatus);
-        Assert.assertEquals(expectedMessage, report.toString());
         Mockito.verify(this.mockedGitService, Mockito.times(1)).fetchMaterial((FetchMaterialTask) this.correctFetchMaterialTask.getTaskDefinition());
         Mockito.verify(this.mockedFileManagementService, Mockito.times(1)).deleteDirectoryRecursively(this.correctDirectoryPath);
     }
@@ -105,6 +102,7 @@ public class FetchMaterialExecutorTest {
         this.correctFetchMaterialTask.setType(TaskType.FETCH_MATERIAL);
         GitMaterial correctMaterialDefinition = new GitMaterial();
         FetchMaterialTask fetchMaterialTaskDefinition = new FetchMaterialTask();
+        fetchMaterialTaskDefinition.setMaterialName("TestMaterial");
         fetchMaterialTaskDefinition.setMaterialDefinition(correctMaterialDefinition);
         fetchMaterialTaskDefinition.setType(TaskType.FETCH_MATERIAL);
         fetchMaterialTaskDefinition.setPipelineName("MyPipe");

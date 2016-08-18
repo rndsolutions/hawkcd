@@ -12,6 +12,7 @@ import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
+import net.hawkengine.agent.utilities.ReportAppender;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -38,13 +39,15 @@ public class FetchArtifactExecutor extends TaskExecutor {
         FetchArtifactTask taskDefinition = (FetchArtifactTask) task.getTaskDefinition();
         super.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
-        report.append(String.format("%s pipeline=%s stage=%s job=%s source=%s destination=%s",
+        String fetchingMessage = String.format("%s pipeline=%s stage=%s job=%s source=%s destination=%s",
                 taskDefinition.getType(),
                 taskDefinition.getPipeline(),
                 taskDefinition.getStage(),
                 taskDefinition.getJob(),
                 taskDefinition.getSource(),
-                taskDefinition.getDestination()));
+                taskDefinition.getDestination());
+        LOGGER.debug(fetchingMessage);
+        ReportAppender.appendInfoMessage(fetchingMessage, report);
 
         String folderPath = String.format(ConfigConstants.SERVER_CREATE_ARTIFACT_API_ADDRESS, workInfo.getPipelineDefinitionName(), workInfo.getStageDefinitionName(), workInfo.getJobDefinitionName());
         AgentConfiguration.getInstallInfo().setCreateArtifactApiAddress(String.format("%s/%s", AgentConfiguration.getInstallInfo().getServerAddress(), folderPath));
@@ -84,9 +87,11 @@ public class FetchArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, "Error occurred in deleting files!");
         }
 
-        report.append(File.separator);
-        report.append(String.format("Saved artifact to %s after verifying the integrity of its contents.", destination));
         super.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+
+        String fetchedMessage = String.format("Saved artifact to %s after verifying the integrity of its contents.", destination);
+        LOGGER.debug(fetchedMessage);
+        ReportAppender.appendInfoMessage(fetchedMessage, report);
 
         return task;
     }

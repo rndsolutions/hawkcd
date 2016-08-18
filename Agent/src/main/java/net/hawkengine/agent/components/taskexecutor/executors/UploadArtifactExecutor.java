@@ -13,6 +13,7 @@ import net.hawkengine.agent.models.UploadArtifactTask;
 import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
+import net.hawkengine.agent.utilities.ReportAppender;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -36,8 +37,11 @@ public class UploadArtifactExecutor extends TaskExecutor {
     public Task executeTask(Task task, StringBuilder report, WorkInfo workInfo) {
         UploadArtifactTask taskDefinition = (UploadArtifactTask) task.getTaskDefinition();
 
-        report.append(String.format("Start uploading artifact source: %s destination: %s", taskDefinition.getSource(), taskDefinition.getDestination()));
         this.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
+
+        String uploadingMessage = String.format("Start uploading artifact source: %s destination: %s", taskDefinition.getSource(), taskDefinition.getDestination());
+        LOGGER.debug(uploadingMessage);
+        ReportAppender.appendInfoMessage(uploadingMessage, report);
 
         String fullPath = this.fileManagementService.pathCombine(taskDefinition.getSource());
         String rootPath = this.fileManagementService.getRootPath(fullPath);

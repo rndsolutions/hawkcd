@@ -44,10 +44,10 @@ public class ExecTaskExecutor extends TaskExecutor {
             builder = this.constructProcessBuilder(command, execTask, true);
         }
 
-        String commandMessage = MessageConstants.CONSOLE_WHITE + "Command: " + execTask.getCommand();
+        String commandMessage = String.format("Command: %s", execTask.getCommand());
         LOGGER.debug(commandMessage);
         ReportAppender.appendInfoMessage(commandMessage, report);
-        String argumentsMessage = MessageConstants.CONSOLE_WHITE + "Arguments: " + execTask.getArguments();
+        String argumentsMessage = String.format("Arguments: %s", execTask.getArguments());
         LOGGER.debug(argumentsMessage);
         ReportAppender.appendInfoMessage(argumentsMessage, report);
 
