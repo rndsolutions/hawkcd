@@ -1,6 +1,6 @@
 <div id="editMaterial" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-dialog-fixed">
-    <div class="modal-content modal-content-fixed">
+  <div class="modal-dialog modal-dialog-fixed ">
+    <div class="modal-content modal-content-fixed modal-dialog-size">
       <div class="modal-header">
         <div class="pull-right">
             <i class="fa fa-close" type="button" class="close" data-dismiss="modal" ng-click="admin.closeModal()"></i>
@@ -8,10 +8,10 @@
         </div>
         <h4 class="modal-title text-center">{{admin.defaultText.editMaterial.header}}</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body modal-body-size">
         <div class="tab-pane active">
             <div>
-                <form role="form" name="editMaterialForm">
+                <form role="form" name="editMaterialForm" class="form-fixed-size">
                     <div class="form-group form-md-line-input">
                         <label class="control-label col-md-3 required-fixed">Material Name
                             <span class="required"> * </span>
@@ -81,7 +81,7 @@
                     </div>
                     <div id="buttons-row" class="row">
                       <div class="btn-container">
-                        <button class="btn green button-next" ng-click="admin.editMaterial(admin.formData)" data-dismiss="modal" type="submit">{{admin.defaultText.editMaterial.submit}}
+                        <button class="btn green button-next" ng-click="admin.editMaterial(admin.formData)" data-dismiss="modal">{{admin.defaultText.editMaterial.submit}}
                         </button>
                       </div>
                     </div>
