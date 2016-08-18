@@ -47,6 +47,15 @@ public class SecurityServiceInvoker<T extends DbEntry> {
         }
     }
 
+    public boolean changeUserPasswrod(String loggedUserEmail, String entity, String className, List<Permission> permissions, String methodName) {
+        switch (methodName) {
+            case "changeUserPassword":
+                return this.securityService.changeUserPassword(loggedUserEmail, entity, className, permissions);
+            default:
+                return false;
+        }
+    }
+
     public List<T> filterEntities(List<T> entitiesToFilter, String className, List<Permission> permissions, String methodName) {
         ServiceResult serviceResult = new ServiceResult();
         switch (methodName) {

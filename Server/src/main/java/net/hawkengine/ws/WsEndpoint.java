@@ -154,15 +154,29 @@ public class WsEndpoint extends WebSocketAdapter {
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
 
             } else {
-                boolean hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+                boolean hasPermission;
+                if (contract.getMethodName().equals("changeUserPassword")){
+                    hasPermission = this.securityServiceInvoker.changeUserPasswrod(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
 
-                if (hasPermission) {
-                    result = (ServiceResult) this.wsObjectProcessor.call(contract);
-                    contract.setResult(result.getObject());
-                    contract.setError(result.hasError());
-                    contract.setErrorMessage(result.getMessage());
-                    SessionPool.getInstance().sendToAuthorizedSessions(contract);
+                    if (hasPermission) {
+                        result = (ServiceResult) this.wsObjectProcessor.call(contract);
+                        contract.setResult(result.getObject());
+                        contract.setError(result.hasError());
+                        contract.setErrorMessage(result.getMessage());
+                        SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+                    }
                 } else {
+                    hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+
+                    if (hasPermission) {
+                        result = (ServiceResult) this.wsObjectProcessor.call(contract);
+                        contract.setResult(result.getObject());
+                        contract.setError(result.hasError());
+                        contract.setErrorMessage(result.getMessage());
+                        SessionPool.getInstance().sendToAuthorizedSessions(contract);
+                    }
+                }
+                 if (!hasPermission){
                     contract.setResult(null);
                     contract.setError(true);
                     contract.setErrorMessage("Unauthorized");
