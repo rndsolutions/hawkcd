@@ -37,6 +37,7 @@ angular
                     },
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updateUser);
+                    },
                     changeUserPassword: function(object) {
                         if (object.error == false) {
                             viewModelUpdater.updateUser(object.result);
