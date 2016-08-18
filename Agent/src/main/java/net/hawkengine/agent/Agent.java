@@ -13,8 +13,8 @@ import net.hawkengine.agent.constants.MessageConstants;
 import net.hawkengine.agent.enums.JobStatus;
 import net.hawkengine.agent.interfaces.IAgent;
 import net.hawkengine.agent.models.TaskDefinition;
-import net.hawkengine.agent.utils.jsonconverter.MaterialDefinitionAdapter;
-import net.hawkengine.agent.utils.jsonconverter.TaskDefinitionAdapter;
+import net.hawkengine.agent.utilities.deserializers.MaterialDefinitionAdapter;
+import net.hawkengine.agent.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.agent.models.payload.WorkInfo;
 
