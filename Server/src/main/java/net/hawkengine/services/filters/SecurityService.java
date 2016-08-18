@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
+import net.hawkengine.model.*;
+import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.DbEntry;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.PipelineDefinition;
@@ -82,6 +84,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             filteredPipelineGroups.add(filteredEntity);
             pipelineDefinitionsToAdd = new ArrayList<>();
         }
+
         return filteredPipelineGroups;
     }
 
@@ -103,6 +106,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -113,6 +117,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -124,6 +129,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermisssion) {
             return true;
         }
+
         return false;
     }
 
@@ -134,6 +140,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -144,6 +151,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
@@ -158,6 +166,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -172,6 +181,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -194,24 +204,44 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 return true;
             }
         }
+
         return false;
     }
 
     @Override
     public boolean unassignPipelineFromGroup(String pipelineGroup, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
         boolean hasPermission = this.authorizationService.update(pipelineGroup, permissions);
         if (hasPermission) {
             return true;
         }
+
         return false;
     }
 
     @Override
     public boolean addUserWithoutProvider(String entity, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
         boolean hasPermission = this.authorizationService.add(entity, permissions);
         if (hasPermission) {
             return true;
         }
+
+        return false;
+    }
+
+    @Override
+    public boolean changeUserPassword(String loggedUserEmail, String entity, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
+        UserDto userToUpdate = this.jsonConverter.fromJson(entity, UserDto.class);
+        if (userToUpdate.getUsername().equals(loggedUserEmail)){
+            return true;
+        }
+        boolean hasPermission = this.authorizationService.update(entity, permissions);
+        if (hasPermission) {
+            return true;
+        }
+
         return false;
     }
 
