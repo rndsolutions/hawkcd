@@ -3,15 +3,14 @@ package net.hawkengine.core.pipelinescheduler;
 import com.fiftyonred.mock_jedis.MockJedisPool;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.Stage;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
@@ -26,6 +25,7 @@ public class StatusUpdaterTests {
     private IPipelineService pipelineService;
     private StatusUpdaterService statusUpdaterService;
     private IPipelineDefinitionService pipelineDefinitionService;
+    private IMaterialDefinitionService materialDefinitionService;
     private PipelineDefinition expectedPipelineDefinition;
     private PipelinePreparer pipelinePreparer;
 
@@ -34,8 +34,10 @@ public class StatusUpdaterTests {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testStatusUpdater");
         IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
         IDbRepository pipelineDefintionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
+        IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockedPool);
         this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefintionRepo);
-        this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService);
+        this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
+        this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.pipelinePreparer = new PipelinePreparer(this.pipelineService, this.pipelineDefinitionService);
         this.statusUpdaterService = new StatusUpdaterService(this.pipelineService);
         this.expectedPipelineDefinition = new PipelineDefinition();

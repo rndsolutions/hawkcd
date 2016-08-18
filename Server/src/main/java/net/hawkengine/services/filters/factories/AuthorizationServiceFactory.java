@@ -37,6 +37,9 @@ public class AuthorizationServiceFactory {
             case "UserService":
                 authorizationService = new UserAuthorizationService();
                 return authorizationService;
+            case "MaterialDefinitionService":
+                authorizationService = new MaterialAuthorizationService();
+                return authorizationService;
             default:
                 return null;
         }

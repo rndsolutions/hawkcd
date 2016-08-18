@@ -3,15 +3,21 @@ package net.hawkengine.agent.models;
 import net.hawkengine.agent.enums.MaterialType;
 import net.hawkengine.model.MaterialDefinition;
 
-import java.util.Map;
-
 public class FetchMaterialTask extends TaskDefinition {
+    private String materialDefinitionId;
     private String materialName;
     private String pipelineName;
     private MaterialType materialType;
-    private String source;
     private String destination;
     private MaterialDefinition materialDefinition;
+
+    public String getMaterialDefinitionId() {
+        return materialDefinitionId;
+    }
+
+    public void setMaterialDefinitionId(String materialDefinitionId) {
+        this.materialDefinitionId = materialDefinitionId;
+    }
 
     public String getMaterialName() {
         return materialName;
@@ -35,14 +41,6 @@ public class FetchMaterialTask extends TaskDefinition {
 
     public void setMaterialType(MaterialType materialType) {
         this.materialType = materialType;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public String getDestination() {

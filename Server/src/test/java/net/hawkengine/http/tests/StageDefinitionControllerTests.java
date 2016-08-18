@@ -2,33 +2,23 @@ package net.hawkengine.http.tests;
 
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.StageDefinitionController;
-import net.hawkengine.model.ExecTask;
-import net.hawkengine.model.GitMaterial;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.enums.MaterialType;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.StageDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
-
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -362,13 +352,6 @@ public class StageDefinitionControllerTests extends JerseyTest {
         List<StageDefinition> stageDefinitions = new ArrayList<>();
         stageDefinitions.add(stageDefinition);
         pipelineDefinition.setStageDefinitions(stageDefinitions);
-        List<MaterialDefinition> materialDefinitions = new ArrayList<>();
-        MaterialDefinition materialDefinition = new GitMaterial();
-        materialDefinition.setType(MaterialType.GIT);
-        materialDefinitions.add(materialDefinition);
-        materialDefinition.setName("gitName");
-        materialDefinitions.add(materialDefinition);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
         stageDefinitionService.add(stageDefinition);
     }
 }

@@ -1,6 +1,14 @@
 package net.hawkengine.ws;
 
-import net.hawkengine.model.*;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.PermissionObject;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.User;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.model.payload.Permission;
@@ -10,6 +18,7 @@ import java.util.List;
 
 public class EntityPermissionTypeServiceInvoker {
     EntityPermissionTypeService entityPermissionTypeService = new EntityPermissionTypeService();
+
     public PermissionObject invoke(Class objectClass, List<Permission> permissions, PermissionObject object) {
         if (objectClass == PipelineGroup.class) {
             return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (PipelineGroup) object);
@@ -29,6 +38,8 @@ public class EntityPermissionTypeServiceInvoker {
             return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (UserGroupDto) object);
         } else if (objectClass == User.class) {
             return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (User) object);
+        } else if (objectClass == MaterialDefinition.class) {
+            return this.entityPermissionTypeService.setPermissionTypeToObject(permissions, (MaterialDefinition) object);
         } else {
             return object;
         }

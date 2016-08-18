@@ -238,4 +238,10 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
         return false;
     }
+
+
+    @Override
+    public boolean addWithMaterialDefinition(String entity, String className, List list) {
+        return true;
+    }
 }
