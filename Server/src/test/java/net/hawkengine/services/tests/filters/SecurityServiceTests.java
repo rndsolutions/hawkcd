@@ -12,6 +12,8 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.ConversionObject;
+import net.hawkengine.model.dto.UserDto;
+import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
@@ -272,7 +274,6 @@ public class SecurityServiceTests {
         conversionObject.setPackageName("java.lang.String");
         conversionObject.setObject(this.firstUserGroup.getId());
 
-
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserGroupService");
         contract.setPackageName("net.hawkengine.services");
@@ -350,6 +351,52 @@ public class SecurityServiceTests {
     }
 
     @Test
+    public void add_withPermission_true() {
+        //Arrange
+        List<UserGroup> expectedUserGroups = new ArrayList<>();
+        expectedUserGroups.add(this.firstUserGroup);
+        expectedUserGroups.add(this.secondUserGroup);
+        UserGroup userGroupToAdd = new UserGroup();
+
+        String userGroupToAddAsString = this.jsonConverter.toJson(userGroupToAdd);
+
+        ConversionObject conversionObject = new ConversionObject();
+        conversionObject.setPackageName("net.hawkserver.models");
+        conversionObject.setObject(userGroupToAddAsString);
+
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserGroupService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("add");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{conversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("User Group updated successfully");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.add(userGroupToAddAsString, contract.getClassName(), this.createPermissions());
+
+        //Assert
+        Assert.assertTrue(actualServiceResult);
+    }
+
+    @Test
     public void add_withoutPermission_fasle() {
         //Arrange
         List<UserGroup> expectedUserGroups = new ArrayList<>();
@@ -396,52 +443,6 @@ public class SecurityServiceTests {
 
         //Assert
         Assert.assertFalse(actualServiceResult);
-    }
-
-    @Test
-    public void add_withPermission_true() {
-        //Arrange
-        List<UserGroup> expectedUserGroups = new ArrayList<>();
-        expectedUserGroups.add(this.firstUserGroup);
-        expectedUserGroups.add(this.secondUserGroup);
-        UserGroup userGroupToAdd = new UserGroup();
-
-        String userGroupToAddAsString = this.jsonConverter.toJson(userGroupToAdd);
-
-        ConversionObject conversionObject = new ConversionObject();
-        conversionObject.setPackageName("net.hawkserver.models");
-        conversionObject.setObject(userGroupToAddAsString);
-
-
-        WsContractDto contract = new WsContractDto();
-        contract.setClassName("UserGroupService");
-        contract.setPackageName("net.hawkengine.services");
-        contract.setMethodName("add");
-        contract.setResult("");
-        contract.setError(false);
-        contract.setErrorMessage("");
-        contract.setArgs(new ConversionObject[]{conversionObject});
-
-        ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
-        expectedServiceResult.setMessage("User Group updated successfully");
-        expectedServiceResult.setObject(null);
-
-        try {
-            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        //Act
-        boolean actualServiceResult = this.securityService.add(userGroupToAddAsString, contract.getClassName(), this.createPermissions());
-
-        //Assert
-        Assert.assertTrue(actualServiceResult);
     }
 
     @Test
@@ -627,6 +628,101 @@ public class SecurityServiceTests {
     }
 
     @Test
+    public void addUserGroupDto_withPermission_true() {
+        //Arrange
+        List<UserGroup> expectedUserGroups = new ArrayList<>();
+        expectedUserGroups.add(this.firstUserGroup);
+        expectedUserGroups.add(this.secondUserGroup);
+        UserGroupDto userGroupToAdd = new UserGroupDto();
+
+        String userGroupToAddAsString = this.jsonConverter.toJson(userGroupToAdd);
+
+        ConversionObject conversionObject = new ConversionObject();
+        conversionObject.setPackageName("net.hawkserver.models");
+        conversionObject.setObject(userGroupToAddAsString);
+
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserGroupService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("addUserGroupDto");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{conversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("User Group added successfully");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.addUserGroupDto(userGroupToAddAsString, contract.getClassName(), this.createPermissions());
+
+        //Assert
+        Assert.assertTrue(actualServiceResult);
+    }
+
+    @Test
+    public void addUserGroupDto_withoutPermission_fasle() {
+        //Arrange
+        List<UserGroup> expectedUserGroups = new ArrayList<>();
+        expectedUserGroups.add(this.firstUserGroup);
+        expectedUserGroups.add(this.secondUserGroup);
+
+        UserGroupDto userGroupToAdd = new UserGroupDto();
+
+        String userGroupToAddAsString = this.jsonConverter.toJson(userGroupToAdd);
+
+        ConversionObject conversionObject = new ConversionObject();
+        conversionObject.setPackageName("net.hawkserver.models");
+        conversionObject.setObject(userGroupToAddAsString);
+
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserGroupService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("addUserGroupDto");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{conversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(true);
+        expectedServiceResult.setMessage("User Group cannot be added");
+        expectedServiceResult.setObject(expectedUserGroups);
+
+        List<Permission> permissions = new ArrayList<>();
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.add(userGroupToAddAsString, contract.getClassName(), permissions);
+
+        //Assert
+        Assert.assertFalse(actualServiceResult);
+    }
+
+    @Test
     public void addUserToGroup_withPermission_true() {
         //Arrange
         List<UserGroup> expectedUserGroups = new ArrayList<>();
@@ -731,6 +827,100 @@ public class SecurityServiceTests {
 
         //Act
         boolean actualServiceResult = this.securityService.assignUserToGroup(firstUserGoupAsString, contract.getClassName(), permissions);
+
+        //Assert
+        Assert.assertFalse(actualServiceResult);
+    }
+
+    @Test
+    public void updateUserGroupDto_withPermission_true() {
+        //Arrange
+        UserGroupDto userGroupDto = new UserGroupDto();
+        userGroupDto.setName("testName");
+        this.mockedUserGroupService.addUserGroupDto(userGroupDto);
+
+        userGroupDto.setName("changedName");
+
+        String userGroupDtoAsString = this.jsonConverter.toJson(userGroupDto);
+
+        ConversionObject conversionObject = new ConversionObject();
+        conversionObject.setPackageName("net.hawkserver.models");
+        conversionObject.setObject(userGroupDtoAsString);
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserGroupService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("updateUserGroupDto");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{conversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("User Group Dto updated successfully");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.updateUserGroupDto(userGroupDtoAsString, contract.getClassName(), this.createPermissions());
+
+        //Assert
+        Assert.assertTrue(actualServiceResult);
+    }
+
+    @Test
+    public void updateUserGroupDto_withoutPermission_false() {
+        //Arrange
+        UserGroupDto userGroupDto = new UserGroupDto();
+        userGroupDto.setName("testName");
+        this.mockedUserGroupService.addUserGroupDto(userGroupDto);
+
+        userGroupDto.setName("changedName");
+
+        String userGroupDtoAsString = this.jsonConverter.toJson(userGroupDto);
+
+        ConversionObject conversionObject = new ConversionObject();
+        conversionObject.setPackageName("net.hawkserver.models");
+        conversionObject.setObject(userGroupDtoAsString);
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserGroupService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("update");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{conversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(true);
+        expectedServiceResult.setMessage("User Group cannot be deleted");
+        expectedServiceResult.setObject(userGroupDto);
+
+        List<Permission> permissions = new ArrayList<>();
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.updateUserGroupDto(userGroupDtoAsString, contract.getClassName(), permissions);
 
         //Assert
         Assert.assertFalse(actualServiceResult);
@@ -851,6 +1041,93 @@ public class SecurityServiceTests {
         //Assert
         Assert.assertFalse(actualServiceResult);
     }
+    @Test
+    public void addUserWithoutProvider_withPermission_true() {
+        //Arrange
+        User user = new User();
+
+        String userAsString = this.jsonConverter.toJson(user);
+
+        ConversionObject conversionObject = new ConversionObject();
+        conversionObject.setPackageName("net.hawkserver.models");
+        conversionObject.setObject(userAsString);
+
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("addUserWithoutProvider");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{conversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("User added successfully");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.addUserWithoutProvider(userAsString, contract.getClassName(), this.createPermissions());
+
+        //Assert
+        Assert.assertTrue(actualServiceResult);
+    }
+
+    @Test
+    public void addUserWithoutProvider_withoutPermission_fasle() {
+        //Arrange
+        User user = new User();
+
+        String userAsString = this.jsonConverter.toJson(user);
+
+        ConversionObject conversionObject = new ConversionObject();
+        conversionObject.setPackageName("net.hawkserver.models");
+        conversionObject.setObject(userAsString);
+
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("addUserWithoutProvider");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{conversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(true);
+        expectedServiceResult.setMessage("User cannot be added");
+        expectedServiceResult.setObject(user);
+
+        List<Permission> permissions = new ArrayList<>();
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.add(userAsString, contract.getClassName(), permissions);
+
+        //Assert
+        Assert.assertFalse(actualServiceResult);
+    }
 
     @Test
     public void getAllUserGroups_withPermissionForTwoObjects_twoEntities() {
@@ -928,6 +1205,305 @@ public class SecurityServiceTests {
 
         //Assert
         Assert.assertNull(actualServiceResult);
+    }
+
+    @Test
+    public void assignPipelineToGroup_withPermission_true() {
+        //Arrange
+        this.createPipelineDefinitionsAndPipelineGroups();
+        List<PipelineDefinition> expectedUserGroups = new ArrayList<>();
+        expectedUserGroups.add(this.firstPipelineDefinition);
+
+        String pipeleineDefinitionAsString = this.jsonConverter.toJson(this.firstPipelineDefinition);
+        String firstPipelineGroupAsString = this.jsonConverter.toJson(this.firstPipelineGroup);
+
+        ConversionObject firstConversionObject = new ConversionObject();
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(pipeleineDefinitionAsString);
+
+        ConversionObject secondConversionObject = new ConversionObject();
+        secondConversionObject.setPackageName("net.hawkserver.models");
+        secondConversionObject.setObject(firstPipelineGroupAsString);
+
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("PipelineDefinitionService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("assignPipelineToGroup");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("Pipeline assigned successfully to group");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.assignPipelineToGroup(firstPipelineGroupAsString, contract.getClassName(), this.createPermissions());
+
+        //Assert
+        Assert.assertTrue(actualServiceResult);
+    }
+
+    @Test
+    public void assignPipelineToGroup_withoutPermission_false() {
+        //Arrange
+        this.createPipelineDefinitionsAndPipelineGroups();
+        List<PipelineDefinition> expectedUserGroups = new ArrayList<>();
+        expectedUserGroups.add(this.firstPipelineDefinition);
+
+        String pipeleineDefinitionAsString = this.jsonConverter.toJson(this.firstPipelineDefinition);
+        String firstPipelineGroupAsString = this.jsonConverter.toJson(this.firstPipelineGroup);
+
+        ConversionObject firstConversionObject = new ConversionObject();
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(pipeleineDefinitionAsString);
+
+        ConversionObject secondConversionObject = new ConversionObject();
+        secondConversionObject.setPackageName("net.hawkserver.models");
+        secondConversionObject.setObject(firstPipelineGroupAsString);
+
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("PipelineDefinitionService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("assignPipelineToGroup");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("Pipeline assigned successfully to group");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        List<Permission> permissions = new ArrayList<>();
+
+        //Act
+        boolean actualServiceResult = this.securityService.assignPipelineToGroup(pipeleineDefinitionAsString, contract.getClassName(), permissions);
+
+        //Assert
+        Assert.assertFalse(actualServiceResult);
+    }
+
+    @Test
+    public void unAssignPipelineFromGroup_withPermission_true() {
+        //Arrange
+        this.createPipelineDefinitionsAndPipelineGroups();
+        this.firstPipelineDefinition.setPipelineGroupId(this.firstPipelineGroup.getId());
+        String pipeleineDefinitionAsString = this.jsonConverter.toJson(this.firstPipelineDefinition);
+
+
+        ConversionObject firstConversionObject = new ConversionObject();
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(pipeleineDefinitionAsString);
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("PipelineDefinitionService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("unAssignPipelineFromGroup");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{firstConversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("Pipeline unassigned successfully from group");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.unassignPipelineFromGroup(pipeleineDefinitionAsString, contract.getClassName(), this.createPermissions());
+
+        //Assert
+        Assert.assertTrue(actualServiceResult);
+    }
+
+    @Test
+    public void unAssignPipelineFromGroup_withoutPermission_false() {
+        //Arrange
+        this.createPipelineDefinitionsAndPipelineGroups();
+        this.firstPipelineDefinition.setPipelineGroupId(this.firstPipelineGroup.getId());
+        String pipeleineDefinitionAsString = this.jsonConverter.toJson(this.firstPipelineDefinition);
+
+
+        ConversionObject firstConversionObject = new ConversionObject();
+        firstConversionObject.setPackageName("net.hawkserver.models");
+        firstConversionObject.setObject(pipeleineDefinitionAsString);
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("PipelineDefinitionService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("unAssignPipelineFromGroup");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{firstConversionObject});
+
+        ServiceResult expectedServiceResult = new ServiceResult();
+        expectedServiceResult.setError(false);
+        expectedServiceResult.setMessage("Pipeline unassigned successfully from group");
+        expectedServiceResult.setObject(null);
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        List<Permission> permissions = new ArrayList<>();
+
+        //Act
+        boolean actualServiceResult = this.securityService.unassignPipelineFromGroup(pipeleineDefinitionAsString, contract.getClassName(), permissions);
+
+        //Assert
+        Assert.assertFalse(actualServiceResult);
+    }
+
+    @Test
+    public void changeUserPassword_withPermission_true() {
+        //Arrange
+        User user = new User();
+        user.setEmail("test@test.com");
+        user.setPassword("test");
+
+        this.mockedUserService.add(user);
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername("test@test.com");
+        String userDtoAsString = this.jsonConverter.toJson(userDto);
+
+        ConversionObject firstConversionObject = new ConversionObject();
+        firstConversionObject.setObject(userDtoAsString);
+        firstConversionObject.setPackageName("net.hawkserver.models");
+
+        ConversionObject secondConversionObject = new ConversionObject();
+        secondConversionObject.setPackageName("java.lang.String");
+        secondConversionObject.setObject("changedPassword");
+
+        ConversionObject thirdConversionObject = new ConversionObject();
+        thirdConversionObject.setPackageName("java.lang.String");
+        thirdConversionObject.setObject("test");
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("changeUserPassword");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject, thirdConversionObject});
+
+        ServiceResult expectedServiceResult = this.mockedUserService.getByEmail("test@test.com");
+
+        List<Permission> permissions = new ArrayList<>();
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.changeUserPassword("test@test.com", userDtoAsString, contract.getClassName(), permissions);
+
+        //Assert
+        Assert.assertTrue(actualServiceResult);
+    }
+
+    @Test
+    public void changeUserPassword_withoutPermission_false() {
+        //Arrange
+        User user = new User();
+        user.setEmail("test@test.com");
+        user.setPassword("test");
+
+        this.mockedUserService.add(user);
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername("test@test.com");
+        String userDtoAsString = this.jsonConverter.toJson(userDto);
+
+        ConversionObject firstConversionObject = new ConversionObject();
+        firstConversionObject.setObject(userDtoAsString);
+        firstConversionObject.setPackageName("net.hawkserver.models");
+
+        ConversionObject secondConversionObject = new ConversionObject();
+        secondConversionObject.setPackageName("java.lang.String");
+        secondConversionObject.setObject("changedPassword");
+
+        ConversionObject thirdConversionObject = new ConversionObject();
+        secondConversionObject.setPackageName("java.lang.String");
+        secondConversionObject.setObject("test");
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserService");
+        contract.setPackageName("net.hawkengine.services");
+        contract.setMethodName("changeUserPassword");
+        contract.setResult("");
+        contract.setError(false);
+        contract.setErrorMessage("");
+        contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject, thirdConversionObject});
+
+        ServiceResult expectedServiceResult = this.mockedUserService.getByEmail("test@test.com");
+
+        List<Permission> permissions = new ArrayList<>();
+
+        try {
+            Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        //Act
+        boolean actualServiceResult = this.securityService.changeUserPassword("invalid@test.com", userDtoAsString, contract.getClassName(), permissions);
+
+        //Assert
+        Assert.assertFalse(actualServiceResult);
     }
 
     @Test
