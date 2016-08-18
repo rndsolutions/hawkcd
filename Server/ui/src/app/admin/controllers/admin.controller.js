@@ -193,7 +193,6 @@ angular
             vm.formData = {};
 
             vm.addMaterial = function(formData) {
-                debugger;
                 var material = {};
                 vm.formData = formData;
                 if (vm.materialType == 'git') {
