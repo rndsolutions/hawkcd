@@ -4,6 +4,7 @@ import net.hawkengine.agent.constants.MessageConstants;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.WorkInfo;
+import net.hawkengine.agent.utilities.ReportAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -26,14 +27,8 @@ public abstract class TaskExecutor implements ITaskExecutor {
     @Override
     public Task nullProcessing(StringBuilder report, Task task, String errorMessage) {
         this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
-//        report.append(File.separator);
-        report.append(errorMessage);
-        LOGGER.error(String.format(MessageConstants.TASK_THROWS_EXCEPTION, task.getTaskDefinition().getId(), errorMessage));
+        LOGGER.error(String.format(MessageConstants.TASK_THROWS_EXCEPTION, errorMessage));
+        ReportAppender.appendInfoMessage(errorMessage, report);
         return task;
     }
-
-
-
-
-
 }

@@ -10,14 +10,16 @@ public final class MessageConstants {
 
     public static final String JOB_STARTED_ON_AGENT = "Job %s started on Agent %s";
     public static final String JOB_REPORT_SENT = "Job sent to server.";
-    public static final String JOB_COMPLETED = "Job with name %s completed with status %s.";
+    public static final String JOB_COMPLETED_WITH_STATUS = "Job %s completed with status %s.";
 
-    public static final String TASK_STARTED = "%s task with id %s started.";
-    public static final String TASK_COMPLETED = "%s task with id %s completed with status %s.";
-    public static final String TASK_THROWS_EXCEPTION = "Task with ID %s throws Exception with message: %s.";
+    public static final String TASK_STARTED = "Task %s started. Type: %s";
+    public static final String TASK_COMPLETED = "Task %s completed with status %s.";
+    public static final String TASK_THROWS_EXCEPTION = "Task threw Exception with message: %s.";
 
     public static final String CONSOLE_RED = (char)27 + "[1;31m";
-    public static final String CONSOLE_GREEN = (char)27 + "[1;32m";
+    public static final String CONSOLE_GREEN = (char)27 + "[32m";
     public static final String CONSOLE_YELLOW = (char)27 + "[1;33m";
-    public static final String CONSOLE_WHITE = (char)27 + "[37m";
+    public static final String CONSOLE_WHITE = (char)27 + "[m";
+    public static final String CONSOLE_THICK_LINE = "=====================================================";
+    public static final String CONSOLE_THIN_LINE = "-----------------------------------------------------";
 }
