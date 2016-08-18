@@ -127,7 +127,8 @@ public class UserService extends CrudService<User> implements IUserService {
 
     @Override
     public ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
-        ServiceResult result = this.getByEmailAndPassword(user.getUsername(), oldPassword);
+        String hashedPassword = DigestUtils.sha256Hex(oldPassword);
+        ServiceResult result = this.getByEmailAndPassword(user.getUsername(), hashedPassword);
 
         if (result.hasError()) {
             return result;
