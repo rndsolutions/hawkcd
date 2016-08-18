@@ -144,27 +144,27 @@ angular
                     if (currentPipelineRun.triggerReason == null) {
                         vm.currentPipelineRun.triggerReason = viewModel.user.username;
                     }
-                    // vm.currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
-                    //     currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
-                    //         // currentJob.report = ansi_up.ansi_to_html(currentJob.report);
-                    //         // currentJob.report = $sce.trustAsHtml(currentJob.report);
-                    //         console.log(vm.currentPipelineRun);
-                    //     });
-                    // });
-                    // viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
-                    //     if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
-                    //         vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
-                    //         vm.currentPipelineRunStages.forEach(function (currentStageDefinition, stageDefinitionIndex, stageDefinitionArray) {
-                    //             vm.currentPipelineRun.stages.forEach(function (currentStageRun, stageRunIndex, stageRunarray) {
-                    //                 if(currentStageDefinition.id == currentStageRun.stageDefinitionId) {
-                    //                     vm.temporaryStages.push(currentStageRun);
-                    //                 }
-                    //             });
-                    //             vm.currentPipelineRunStages[stageDefinitionIndex] = vm.temporaryStages;
-                    //             vm.temporaryStages = [];
-                    //         });
-                    //     }
-                    // });
+                    viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                        if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                            vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
+                            vm.currentPipelineRunStages.forEach(function (currentStageDefinition, stageDefinitionIndex, stageDefinitionArray) {
+                                vm.currentPipelineRun.stages.forEach(function (currentStageRun, stageRunIndex, stageRunarray) {
+                                    if(currentStageDefinition.id == currentStageRun.stageDefinitionId) {
+                                        vm.temporaryStages.push(currentStageRun);
+                                    }
+                                });
+                                vm.currentPipelineRunStages[stageDefinitionIndex] = vm.temporaryStages;
+                                vm.temporaryStages = [];
+                            });
+                        }
+                    });
+                    currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                        currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
+                            currentJob.report = ansi_up.ansi_to_html(currentJob.report);
+                            currentJob.report = $sce.trustAsHtml(currentJob.report);
+
+                        });
+                    });
                 }
 
             });
