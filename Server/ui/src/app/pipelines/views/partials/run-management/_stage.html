@@ -3,10 +3,10 @@
         <!--<a class="p-link">-->
         <div class="p-link">
             <div class="panel-heading p-head-box">
-                    <div style="display:inline-block; width:100%">
+                    <div class="display-inline-block width-100">
                         {{stage.stageDefinitionName}}
                         <!--<span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage[0].stageDefinitionName})" class="icon-settings font-lg ico"></span>-->
-                        <div class="pull-right" style="display:inline-block;">
+                        <div class="pull-right display-inline-block">
                             <i ng-class="{'fa fa-check text-success vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN'}"></i>
                         </div>
                 </div>
@@ -52,13 +52,13 @@
                 <!--</p>-->
 
                 <!--<p><strong>{{pipesRunManagement.stageDefaultText.trigger}}</strong> TEMP </p>-->
-                <div style="overflow-y:auto; height:150px; background-color: white;">
-                <div ng-repeat="job in stage.jobs" ng-class-even="'custom-nth-color'" style="height:50px;">
-                    <div class="run-item-container"  style="display:inline-block; width:100%; float:left; cursor: pointer;" ng-class="{'status-passed': job.status == 'PASSED', 'status-failed' : job.status == 'FAILED', 'status-working' : job.status == 'RUNNING', 'status-awaiting' : job.status == 'AWAITING' || (job.status != 'PASSED' && job.status != 'FAILED' && job.status != 'RUNNING'), 'jobSelected' : pipesRunManagement.selectedJob.id == job.id}" ng-click="pipesRunManagement.selectJob($parent.$index,$index)">
-                        <div style="position:relative; top:50%; transform:translateY(-50%); display:inline-block; width:100%; float:left; padding-left:5%;">
+                <div class="job-list">
+                <div class="height-50px" ng-repeat="job in stage.jobs" ng-class-even="'custom-nth-color'">
+                    <div class="run-item-container display-inline-block width-100 pull-left pointer" ng-class="{'status-passed': job.status == 'PASSED', 'status-failed' : job.status == 'FAILED', 'status-working' : job.status == 'RUNNING', 'status-awaiting' : job.status == 'AWAITING' || (job.status != 'PASSED' && job.status != 'FAILED' && job.status != 'RUNNING'), 'jobSelected' : pipesRunManagement.selectedJob.id == job.id}" ng-click="pipesRunManagement.selectJob($parent.$index,$index)">
+                        <div class="vertical-center display-inline-block width-100 pull-left padding-left-5">
                         {{job.jobDefinitionName}}
                         </div>
-                        <span class="pull-right" aria-hidden="true" style="position:relative; z-index:1;">
+                        <span class="pull-right position-relative" aria-hidden="true">
                             <i class="fa fa-list"></i>
                         </span>
                     </div>

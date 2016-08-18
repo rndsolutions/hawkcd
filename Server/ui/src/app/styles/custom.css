@@ -704,6 +704,10 @@ p {
     position: static;
 }
 
+.position-relative {
+    position: relative;
+}
+
 .vertical-center {
     position: relative;
     top: 50%;
@@ -722,6 +726,14 @@ p {
 
 .height-100px {
     height: 100px;
+}
+
+.height-50px {
+    height: 50px;
+}
+
+.height-150px {
+    height: 150px;
 }
 
 .width-15px {
@@ -786,4 +798,19 @@ p {
 
 .margin-top-1 {
     margin-top: 1%;
+}
+
+.image-vertical-center {
+    position:relative;
+    transform:translateY(-75%);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.job-list {
+    overflow-y:auto;
+    height:150px;
+    background-color: white;
 }
