@@ -8,7 +8,7 @@ import net.hawkengine.agent.models.Job;
 public class ReportAppender {
     public static StringBuilder appendStartedMessage(String message, StringBuilder report, Class classType) {
         message = MessageConstants.CONSOLE_YELLOW + message;
-        report.append(message).append(System.getProperty("line.separator"));
+        report.append(message).append(System.lineSeparator());
         String line;
         if (classType == Job.class) {
             line = MessageConstants.CONSOLE_WHITE + MessageConstants.CONSOLE_THICK_LINE;
@@ -16,31 +16,31 @@ public class ReportAppender {
             line = MessageConstants.CONSOLE_WHITE + MessageConstants.CONSOLE_THIN_LINE;
         }
 
-        report.append(line).append(System.getProperty("line.separator"));
+        report.append(line).append(System.lineSeparator());
 
         return report;
     }
 
-    public static StringBuilder appendCompletedMessage(String message, StringBuilder report, JobStatus jobStatus) {
-        if (jobStatus == JobStatus.PASSED) {
+    public static StringBuilder appendCompletedMessage(String message, StringBuilder report, JobStatus status) {
+        if (status == JobStatus.PASSED) {
             message = MessageConstants.CONSOLE_GREEN + message;
         } else {
             message = MessageConstants.CONSOLE_RED + message;
         }
 
-        report.append(message).append(System.getProperty("line.separator"));
+        report.append(message).append(System.lineSeparator());
 
         return report;
     }
 
-    public static StringBuilder appendCompletedMessage(String message, StringBuilder report, TaskStatus taskStatus) {
-        if (taskStatus == TaskStatus.PASSED) {
+    public static StringBuilder appendCompletedMessage(String message, StringBuilder report, TaskStatus status) {
+        if (status == TaskStatus.PASSED) {
             message = MessageConstants.CONSOLE_GREEN + message;
         } else {
             message = MessageConstants.CONSOLE_RED + message;
         }
 
-        report.append(message).append(System.getProperty("line.separator"));
+        report.append(message).append(System.lineSeparator());
 
         return report;
     }
@@ -48,7 +48,7 @@ public class ReportAppender {
 
     public static StringBuilder appendInfoMessage(String message, StringBuilder report) {
         message = MessageConstants.CONSOLE_WHITE + message;
-        report.append(message).append(System.getProperty("line.separator"));
+        report.append(message).append(System.lineSeparator());
 
         return report;
     }
