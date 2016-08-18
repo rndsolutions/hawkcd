@@ -29,7 +29,7 @@ angular
             console.log(json);
         };
 
-        adminService.updateUserGroupDTO = function (userGroup) {
+        adminService.updateUserGroupDTO = function(userGroup) {
             var methodName = "updateUserGroupDto";
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
@@ -41,7 +41,7 @@ angular
             console.log(json);
         };
 
-        adminService.deleteUserGroup = function (id) {
+        adminService.deleteUserGroup = function(id) {
             var methodName = "delete";
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
@@ -77,7 +77,7 @@ angular
             console.log(json);
         };
 
-        adminService.addUserGroup = function (userGroup) {
+        adminService.addUserGroup = function(userGroup) {
             var methodName = "addUserGroupDto";
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
@@ -89,7 +89,7 @@ angular
             console.log(json);
         };
 
-        adminService.updateUser = function (user) {
+        adminService.updateUser = function(user) {
             var methodName = "update";
             var className = "UserService";
             var packageName = "net.hawkengine.services";
@@ -101,7 +101,22 @@ angular
             console.log(json);
         };
 
-        adminService.deleteUser = function (id) {
+        adminService.updateUserPassword = function(user, newUserPassword,oldPassword) {
+            var methodName = "changeUserPassword";
+            var className = "UserService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.dto.UserDto\", \"object\": " + JSON.stringify(user) + "}, " +
+                "{\"packageName\": \"java.lang.String\", \"object\": \"" + newUserPassword + "\"}, " +
+                "{\"packageName\": \"java.lang.String\", \"object\": \"" + oldPassword + "\"}"
+            ];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminService.deleteUser = function(id) {
             var methodName = "delete";
             var className = "UserService";
             var packageName = "net.hawkengine.services";
@@ -113,26 +128,28 @@ angular
             console.log(json);
         };
 
-        adminService.assignUser = function (user, group) {
+        adminService.assignUser = function(user, group) {
             var methodName = "assignUserToGroup";
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
-            "{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"];
+                "{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
+            ];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
             console.log(json);
         };
 
-        adminService.unassignUser = function (user, group) {
+        adminService.unassignUser = function(user, group) {
             var methodName = "unassignUserFromGroup";
             var className = "UserGroupService";
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
-            "{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"];
+                "{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
+            ];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
