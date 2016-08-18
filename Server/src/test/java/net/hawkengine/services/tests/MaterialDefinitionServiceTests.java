@@ -17,9 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class MaterialDefinitionServiceTests {
     private IMaterialDefinitionService materialDefinitionService;
@@ -122,7 +120,7 @@ public class MaterialDefinitionServiceTests {
 
         ServiceResult pipelineDefinitionById = new ServiceResult();
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        List<String> materialDefinitionIds = new ArrayList<>();
+        Set<String> materialDefinitionIds = new HashSet<>();
         materialDefinitionIds.add(expectedMaterialDefinition.getId());
         pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
         pipelineDefinitionById.setObject(pipelineDefinition);
@@ -274,7 +272,7 @@ public class MaterialDefinitionServiceTests {
         ServiceResult allPipelineDefinitions = new ServiceResult();
         List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        List<String> materialDefinitionIds = new ArrayList<>();
+        Set<String> materialDefinitionIds = new HashSet<>();
         materialDefinitionIds.add(expectedMaterialDefinition.getId());
         pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
         pipelineDefinitions.add(pipelineDefinition);
