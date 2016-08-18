@@ -31,9 +31,9 @@
             <!--<div class="tab-content">-->
                 <!--console-->
                 <div id="console" class="tab-pane fade in active">
-                    <pre class="console">{{pipesRunManagement.selectedJob.report}}</pre>
+                    <pre class="console" scroll-glue>{{pipesRunManagement.currentPipelineRun.stages[pipesRunManagement.toggleRun].jobs[pipesRunManagement.jobIndex].report}}</pre>
                     <!--<pre class="console" ng-bind-html="pipesRunManagement.randomText" scroll-glue>-->
-                    </pre>
+                    <!--</pre>-->
 
                 </div>
 
