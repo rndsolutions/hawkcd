@@ -6,7 +6,7 @@ angular
         function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService, pipeExecService) {
             var webSocketReceiverService = this;
 
-            webSocketReceiverService.processEvent = function (data) {
+            webSocketReceiverService.processEvent = function(data) {
                 if (!validationService.isValid(data)) {
                     toaster.error('Invalid JSON format!');
                     return;
@@ -16,7 +16,7 @@ angular
                 $rootScope.$apply();
             };
 
-            var invoker = function (obj, dispatcher) {
+            var invoker = function(obj, dispatcher) {
                 var className = obj['className'];
                 var methodName = obj['methodName'];
                 dispatcher[className][methodName](obj);
@@ -35,24 +35,30 @@ angular
                     addUserWithoutProvider: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addUser);
                     },
+                    changeUserPassword: function(object) {
+                        if (object.error == false) {
+                            viewModelUpdater.updateUser(object.result);
+                            toaster.pop('success', "Notification", "User updated!");
+                        } else {
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updateUser);
                     },
-                    delete: function (object) {
+                    delete: function(object) {
                         if (object.error == false) {
                             adminService.getAllUsers();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    assignUserToGroup: function (object) {
+                    assignUserToGroup: function(object) {
                         viewModelUpdater.updateUser(object.result);
                         adminService.getAllUserGroupDTOs();
                     },
-                    logout: function (object) {
-                       loginService.logoutUser();
-                   }
+                    logout: function(object) {           
+                        loginService.logoutUser();          
+                    }
                 },
                 UserGroupService: {
                     getAll: function (object) {
@@ -73,11 +79,10 @@ angular
                     unassignUserFromGroup: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updateUserGroup);
                     },
-                    delete: function (object) {
+                    delete: function(object) {
                         if (object.error == false) {
                             adminService.getAllUserGroupDTOs();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
@@ -103,24 +108,23 @@ angular
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updateAgent);
                     },
-                    delete: function (object) {
+                    delete: function(object) {
                         if (object.error == false) {
                             agentService.getAllAgents();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 },
                 PipelineGroupService: {
-                    getAll: function (object) {
+                    getAll: function(object) {
                         //viewModelUpdater.getAllPipelineGroups(pipelineGroups);
                         //viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
                     },
                     getAllPipelineGroupDTOs: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updatePipelineGroupDTOs);
                     },
-                    getById: function (object) {
+                    getById: function(object) {
 
                     },
                     add: function (object) {
@@ -129,11 +133,10 @@ angular
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updatePipelineGroup);
                     },
-                    delete: function (object) {
+                    delete: function(object) {
                         if (object.error == false) {
                             pipeConfigService.getAllPipelineGroupDTOs();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
@@ -142,23 +145,22 @@ angular
                     getAll: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.getAllPipelineDefinitions);
                     },
-                    getById: function (object) {
+                    getById: function(object) {
 
                     },
                     add: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addPipelineDefinition);
                     },
-                    update: function (object) {
-                        if(object.error == false) {
+                    update: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.updatePipelineDefinition(object.result);
                             pipeConfigService.getAllPipelineGroupDTOs();
                             pipeConfigService.getAllPipelineDefinitions();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    delete: function (object) {
+                    delete: function(object) {
                         if (object.error == false) {
                             pipeConfigService.getAllPipelineDefinitions();
                             pipeConfigService.getAllPipelineGroupDTOs();
@@ -168,23 +170,21 @@ angular
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    assignPipelineToGroup: function (object) {
-                        if(object.error == false) {
+                    assignPipelineToGroup: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.updatePipelineDefinition(object.result);
                             pipeConfigService.getAllPipelineGroupDTOs();
                             pipeConfigService.getAllPipelineDefinitions();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    unassignPipelineFromGroup: function (object) {
-                        if(object.error == false) {
+                    unassignPipelineFromGroup: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.updatePipelineDefinition(object.result);
                             pipeConfigService.getAllPipelineGroupDTOs();
                             pipeConfigService.getAllPipelineDefinitions();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
@@ -196,26 +196,24 @@ angular
                     getAll: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.getAllPipelines);
                     },
-                    getById: function (object) {
+                    getById: function(object) {
 
                     },
-                    add: function (object) {
-                        if(object.error == false) {
+                    add: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.addPipeline(object.result);
                             toaster.pop('success', "Notification", object.errorMessage);
-                        }
-                        else {
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updatePipeline);
                     },
-                    delete: function (object) {
+                    delete: function(object) {
                         if (object.error == false) {
 
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
@@ -224,135 +222,122 @@ angular
                     getAll: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.getAllMaterialDefinitions);
                     },
-                    getById: function (object) {
+                    getById: function(object) {
 
                     },
                     add: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addMaterialDefinition);
                     },
-                    update: function (object) {
-                        if(object.error == false) {
+                    update: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.updateMaterialDefinition(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    delete: function (object) {
-                        if(object.error == false) {
+                    delete: function(object) {
+                        if (object.error == false) {
                             pipeConfigService.getAllPipelineDefinitions();
                             pipeConfigService.getAllPipelineGroupDTOs();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 },
                 StageDefinitionService: {
-                    getAll: function (object) {
-                        if(object.error == false) {
+                    getAll: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.getAllStageDefinitions(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    getById: function (object) {
+                    getById: function(object) {
 
                     },
-                    add: function (object) {
-                        if(object.error == false) {
+                    add: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.addStageDefinition(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    update: function (object) {
-                        if(object.error == false) {
+                    update: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.updateStageDefinition(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    delete: function (object) {
-                        if(object.error == false) {
+                    delete: function(object) {
+                        if (object.error == false) {
                             pipeConfigService.getAllPipelineDefinitions();
                             pipeConfigService.getAllPipelineGroupDTOs();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 },
                 JobDefinitionService: {
-                    getAll: function (object) {
-                        if(object.error == false) {
+                    getAll: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.getAllJobDefinitions(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    getById: function (object) {
+                    getById: function(object) {
 
                     },
-                    add: function (object) {
-                        if(object.error == false) {
+                    add: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.addJobDefinition(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    update: function (object) {
-                        if(object.error == false) {
+                    update: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.updateJobDefinition(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    delete: function (object) {
-                        if(object.error == false) {
+                    delete: function(object) {
+                        if (object.error == false) {
                             pipeConfigService.getAllPipelineDefinitions();
                             pipeConfigService.getAllPipelineGroupDTOs();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
                 },
                 TaskDefinitionService: {
-                    getAll: function (object) {
+                    getAll: function(object) {
                         //viewModelUpdater.getAllTaskDefinitions(object.result);
                     },
-                    getById: function (object) {
+                    getById: function(object) {
 
                     },
-                    add: function (object) {
-                        if(object.error == false) {
+                    add: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.addTaskDefinition(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    update: function (object) {
-                        if(object.error == false) {
+                    update: function(object) {
+                        if (object.error == false) {
                             viewModelUpdater.updateTaskDefinition(object.result);
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
-                    delete: function (object) {
-                        if(object.error == false) {
+                    delete: function(object) {
+                        if (object.error == false) {
                             pipeConfigService.getAllPipelineDefinitions();
                             pipeConfigService.getAllPipelineGroupDTOs();
-                        }
-                        else{
+                        } else {
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
@@ -361,4 +346,5 @@ angular
 
             return webSocketReceiverService;
 
-        }]);
+        }
+    ]);
