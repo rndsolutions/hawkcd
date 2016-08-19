@@ -30,6 +30,15 @@ angular
           }
         }
 
+        validationService.flowNoParameters = function(object,solveFunction){
+          if(object.error == false) {
+              solveFunction();
+          }
+          else{
+              toaster.pop('error', "Notification", object.errorMessage);
+          }
+        }
+
         return validationService;
 
     }]);

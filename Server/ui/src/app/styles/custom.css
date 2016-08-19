@@ -603,6 +603,14 @@ p {
     @import "create-pipeline/_create-pipeline.css";
 }
 
+@media screen and (max-width: 767px) {
+  @import "admin-materials/_create-material.css";
+}
+
+@media screen and (max-width: 767px) {
+  @import "admin-materials/_edit-material.css";
+}
+
 /*.md-checkbox label {*/
     /*padding-left: 0px!important;*/
 /*}*/

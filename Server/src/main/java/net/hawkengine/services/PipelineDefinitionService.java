@@ -95,7 +95,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         EndpointConnector.passResultToEndpoint("MaterialDefinitionService","add",serviceResult);
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
 
-        return super.add(pipelineDefinition);
+        return this.add(pipelineDefinition);
     }
 
     @Override

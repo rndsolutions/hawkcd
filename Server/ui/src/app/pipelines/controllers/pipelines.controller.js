@@ -351,7 +351,7 @@ angular
                         "cleanWorkingDirectory": false,
                         "stageType": 'false'
                     }],
-                    "autoScheduling": vm.formData.pipeline.autoSchedule
+                    "isAutoSchedulingEnabled": vm.formData.pipeline.autoSchedule
                 }
             };
 
@@ -377,7 +377,7 @@ angular
                 addPipelineDTO.materialDefinition = vm.materialObject.id;
                 pipeConfigService.addPipelineDefinitionWithExistingMaterial(addPipelineDTO.pipelineDefinition,addPipelineDTO.materialDefinition);
             }
-            
+
             vm.selectedMaterial = {};
             vm.materialObject = {};
             vm.materialType = 'hidden';

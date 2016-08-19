@@ -33,7 +33,7 @@ angular
                     material.username = newMaterial.username;
                     material.password = newMaterial.password;
                 }
-                pipeConfigService.addGitMaterialDefinition(material);
+                adminMaterialService.addGitMaterialDefinition(material);
             }
 
             // if (materialType == 'NUGET') {
@@ -73,6 +73,91 @@ angular
             // }
             //
         };
+
+        adminMaterialService.getAllMaterialDefinitions = function () {
+            var methodName = "getAll";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminMaterialService.getMaterialDefinitionById = function (id) {
+            var methodName = "getById";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminMaterialService.addGitMaterialDefinition = function (materialDefinition) {
+            var methodName = "add";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.GitMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminMaterialService.addNugetMaterialDefinition = function (materialDefinition) {
+            var methodName = "add";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.NugetMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminMaterialService.updateGitMaterialDefinition = function (materialDefinition) {
+            var methodName = "update";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.GitMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        adminMaterialService.updateNugetMaterialDefinition = function (materialDefinition) {
+            var methodName = "update";
+            var className = "MaterialDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.NugetMaterial\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+
+        adminMaterialService.deleteMaterialDefinition = function(id){
+          var methodName = "delete";
+          var className = "MaterialDefinitionService";
+          var packageName = "net.hawkengine.services";
+          var result = "";
+          var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+          var error = "";
+          var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+          websocketSenderService.call(json);
+          console.log(json);
+        }
 
         return adminMaterialService;
     }]);
