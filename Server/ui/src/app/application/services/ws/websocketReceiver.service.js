@@ -207,7 +207,6 @@ angular
                             pipeConfigService.getAllMaterialDefinitions();
                         }
                         else{
-                          debugger;
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     }
