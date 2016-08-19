@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService',
-        function($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService', 'pipeExecService',
+        function ($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService, pipeExecService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
@@ -34,6 +34,14 @@ angular
                     },
                     addUserWithoutProvider: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addUser);
+                    },
+                    changeUserPassword: function(object) {
+                        if (object.error == false) {
+                            viewModelUpdater.updateUser(object.result);
+                            toaster.pop('success', "Notification", "User updated!");
+                        } else {
+                            toaster.pop('error', "Notification", object.errorMessage);
+                        }
                     },
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updateUser);
@@ -110,6 +118,9 @@ angular
                     getAllPipelineGroupDTOs: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updatePipelineGroupDTOs);
                     },
+                    getById: function(object) {
+
+                    },
                     add: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addPipelineGroup);
                     },
@@ -123,6 +134,9 @@ angular
                 PipelineDefinitionService: {
                     getAll: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.getAllPipelineDefinitions);
+                    },
+                    getById: function(object) {
+
                     },
                     add: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addPipelineDefinition);
@@ -138,9 +152,11 @@ angular
                     },
                     delete: function(object) {
                         if (object.error == false) {
-                            pipeConfigService.getAllPipelineGroupDTOs();
                             pipeConfigService.getAllPipelineDefinitions();
-                        } else {
+                            pipeConfigService.getAllPipelineGroupDTOs();
+                            pipeExecService.getAllPipelines();
+                        }
+                        else{
                             toaster.pop('error', "Notification", object.errorMessage);
                         }
                     },
@@ -192,6 +208,9 @@ angular
                 MaterialDefinitionService: {
                     getAll: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.getAllMaterialDefinitions);
+                    },
+                    getById: function(object) {
+
                     },
                     add: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addMaterialDefinition);

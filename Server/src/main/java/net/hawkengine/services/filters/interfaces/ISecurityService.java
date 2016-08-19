@@ -33,7 +33,7 @@ public interface ISecurityService<T extends DbEntry> {
 
     boolean unassignPipelineFromGroup(String pipelineGroup, String className, List<Permission> permissions);
 
-    boolean addUserWithoutProvider(String entity, String className, List permissions);
+    boolean addUserWithoutProvider(String entity, String className, List<Permission> permissions);
 
     boolean changeUserPassword(String loggedUserEmail, String entity, String className, List<Permission> permissions);
 
