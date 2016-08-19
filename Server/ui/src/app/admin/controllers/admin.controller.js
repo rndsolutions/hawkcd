@@ -215,6 +215,10 @@ angular
             };
 
             vm.editMaterial = function(formData) {
+                if (!formData.material.credentials) {
+                    formData.material.username = undefined;
+                    formData.material.password = undefined;
+                }
                 adminMaterialService.updateGitMaterialDefinition(formData.material);
                 vm.formData = {};
                 vm.closeModal();
