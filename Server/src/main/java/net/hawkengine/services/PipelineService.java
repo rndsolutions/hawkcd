@@ -136,6 +136,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Material> materials = new ArrayList<>();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
             Material material = new Material();
+            material.setPipelineDefinitionId(pipeline.getPipelineDefinitionId());
             material.setMaterialDefinition(materialDefinition);
             materials.add(material);
         }

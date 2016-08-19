@@ -47,8 +47,10 @@ public class JobAssigner implements Runnable {
                             for (Job job : stage.getJobs()) {
                                 if(agents.size() != 0){
                                     Agent agent = this.jobAssignerService.assignAgentToJob(job, agents);
-                                    ServiceResult result = this.agentService.update(agent);
-                                    EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+                                    if (agent != null) {
+                                        ServiceResult result = this.agentService.update(agent);
+                                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+                                    }
                                 }
                             }
                         }

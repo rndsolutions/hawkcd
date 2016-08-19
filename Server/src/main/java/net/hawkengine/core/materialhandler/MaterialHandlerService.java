@@ -54,7 +54,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
                     continue;
                 }
 
-                Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId()).getObject();
+                Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId(), pipelineDefinition.getId()).getObject();
 
                 boolean areTheSame = false;
                 if (dbLatestVersion != null) {
@@ -71,10 +71,10 @@ public class MaterialHandlerService implements IMaterialHandlerService {
     }
 
     @Override
-    public Material updateMaterial(Material material, String pipelineName) {
+    public Material updateMaterial(Material material, Pipeline pipeline) {
         this.materialUpdater = MaterialUpdaterFactory.create(material.getMaterialDefinition().getType());
         String oldError = material.getMaterialDefinition().getErrorMessage();
-        setDestinationOfGitMaterial(material.getMaterialDefinition(), pipelineName);
+        setDestinationOfGitMaterial(material.getMaterialDefinition(), pipeline.getPipelineDefinitionName());
         MaterialDefinition latestVersion = this.materialUpdater.getLatestMaterialVersion(material.getMaterialDefinition());
         String newError = material.getMaterialDefinition().getErrorMessage();
         if (!oldError.equals(newError)) {
@@ -86,7 +86,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
             return null;
         }
 
-        Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId()).getObject();
+        Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId(), pipeline.getPipelineDefinitionId()).getObject();
 
         boolean areTheSame = false;
         if (dbLatestVersion != null) {

@@ -56,7 +56,7 @@ public class MaterialTracker implements Runnable {
                 for (Pipeline pipeline : pipelines) {
                     boolean isPipelineUpdated = true;
                     for (Material material : pipeline.getMaterials()) {
-                        this.materialHandlerService.updateMaterial(material, pipeline.getPipelineDefinitionName());
+                        this.materialHandlerService.updateMaterial(material, pipeline);
                         if (material == null) {
                             isPipelineUpdated = false;
                             ServiceResult result = this.pipelineService.delete(pipeline.getId());
