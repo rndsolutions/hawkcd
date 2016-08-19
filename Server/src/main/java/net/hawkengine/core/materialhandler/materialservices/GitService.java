@@ -23,7 +23,7 @@ public class GitService implements IGitService {
     @Override
     public boolean repositoryExists(GitMaterial gitMaterial) {
         try {
-            Repository repository = Git.open(new File(MATERIALS_FOLDER + File.separator + gitMaterial.getName())).getRepository();
+            Repository repository = Git.open(new File(gitMaterial.getDestination())).getRepository();
             Config config = repository.getConfig();
             String repositoryUrl = config.getString("remote", "origin", "url");
             if (!repositoryUrl.equals(gitMaterial.getRepositoryUrl())) {
@@ -43,7 +43,7 @@ public class GitService implements IGitService {
             Git.cloneRepository()
                     .setURI(gitMaterial.getRepositoryUrl())
                     .setCredentialsProvider(credentials)
-                    .setDirectory(new File(MATERIALS_FOLDER + File.separator + gitMaterial.getName()))
+                    .setDirectory(new File(gitMaterial.getDestination()))
                     .setCloneSubmodules(true)
                     .call();
 
@@ -59,7 +59,7 @@ public class GitService implements IGitService {
     @Override
     public GitMaterial fetchLatestCommit(GitMaterial gitMaterial) {
         try {
-            Git git = Git.open(new File(MATERIALS_FOLDER + File.separator +  gitMaterial.getName() + File.separator + ".git"));
+            Git git = Git.open(new File(gitMaterial.getDestination() + File.separator + ".git"));
             CredentialsProvider credentials = this.handleCredentials(gitMaterial);
             git.fetch()
                     .setCredentialsProvider(credentials)
