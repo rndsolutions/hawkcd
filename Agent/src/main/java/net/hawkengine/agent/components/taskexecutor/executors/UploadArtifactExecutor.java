@@ -48,10 +48,10 @@ public class UploadArtifactExecutor extends TaskExecutor {
         String wildCardPattern = this.fileManagementService.getPattern(rootPath, fullPath);
 
         if (rootPath.isEmpty()) {
-            return this.nullProcessing(report, task, String.format("%s is Nonexistent source.", taskDefinition.getSource()));
+            return this.nullProcessing(report, task, String.format("%s is Non-existent source.", taskDefinition.getSource()));
         }
         if (rootPath.equals(fullPath)){
-            return this.nullProcessing(report, task, String.format("%s is not unique file source.", taskDefinition.getSource()));
+            return this.nullProcessing(report, task, String.format("%s is not a unique file source.", taskDefinition.getSource()));
         }
 
         List<File> files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
