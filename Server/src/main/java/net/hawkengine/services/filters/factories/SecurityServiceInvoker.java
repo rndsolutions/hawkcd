@@ -11,13 +11,14 @@ import java.util.List;
 public class SecurityServiceInvoker<T extends DbEntry> {
     private ISecurityService securityService;
 
-    public SecurityServiceInvoker(){
+    public SecurityServiceInvoker() {
         this.securityService = new SecurityService();
     }
 
-    public SecurityServiceInvoker(ISecurityService securityService){
+    public SecurityServiceInvoker(ISecurityService securityService) {
         this.securityService = securityService;
     }
+
     public boolean process(String entity, String className, List<Permission> permissions, String methodName) {
         switch (methodName) {
             case "getById":
@@ -42,6 +43,8 @@ public class SecurityServiceInvoker<T extends DbEntry> {
                 return this.securityService.addUserGroupDto(entity, className, permissions);
             case "updateUserGroupDto":
                 return this.securityService.updateUserGroupDto(entity, className, permissions);
+            case "addWithMaterialDefinition":
+                return this.securityService.addWithMaterialDefinition(entity, className, permissions);
             default:
                 return false;
         }

@@ -4,11 +4,11 @@ angular
     .module('hawk.pipelinesManagement')
     .factory('pipeConfigService', ['jsonHandlerService', 'websocketSenderService', function (jsonHandlerService, websocketSenderService) {
         var pipeConfigService = this;
-        
+
         //region Senders
-        
+
         //region /pipeline
-        
+
         pipeConfigService.getAllPipelineDefinitions = function () {
             var methodName = "getAll";
             var className = "PipelineDefinitionService";
@@ -51,6 +51,30 @@ angular
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.addPipelineDefinitionWithMaterial = function (pipelineDefinition,materialDefinition) {
+            var methodName = "addWithMaterialDefinition";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}," + "{\"packageName\": \"net.hawkengine.model.MaterialDefinition\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
+        pipeConfigService.addPipelineDefinitionWithExistingMaterial = function (pipelineDefinition,materialDefinition) {
+            var methodName = "addWithMaterialDefinition";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}," + "{\"packageName\": \"java.lang.String\", \"object\": \"" + materialDefinition + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -520,7 +544,7 @@ angular
         pipeConfigService.getLatestCommit = function (token) {
 
         };
-        
+
         //endregion
 
         return pipeConfigService;

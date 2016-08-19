@@ -77,7 +77,11 @@ public class MaterialHandlerServiceTest {
         gitMaterial.setName(MATERIAL_ONE);
         gitMaterial.setPollingForChanges(true);
         materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult.setObject(materialDefinitions);
+
+        Mockito.when(this.mockedMaterialDefinitionService.getAllFromPipelineDefinition(Mockito.anyString())).thenReturn(serviceResult);
+
         String expectedResult = MATERIAL_ONE;
 
         // Act
@@ -96,8 +100,10 @@ public class MaterialHandlerServiceTest {
         gitMaterial.setName(MATERIAL_ONE);
         gitMaterial.setPollingForChanges(true);
         materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult.setObject(materialDefinitions);
 
+        Mockito.when(this.mockedMaterialDefinitionService.getAllFromPipelineDefinition(Mockito.anyString())).thenReturn(serviceResult);
         Mockito.when(this.mockedMaterialUpdater.areMaterialsSameVersion(Mockito.any(MaterialDefinition.class), Mockito.any(MaterialDefinition.class)))
                 .thenReturn(true);
 
@@ -117,7 +123,10 @@ public class MaterialHandlerServiceTest {
         gitMaterial.setName(MATERIAL_ONE);
         gitMaterial.setPollingForChanges(false);
         materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult.setObject(materialDefinitions);
+
+        Mockito.when(this.mockedMaterialDefinitionService.getAllFromPipelineDefinition(Mockito.anyString())).thenReturn(serviceResult);
 
         // Act
         String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
@@ -140,13 +149,14 @@ public class MaterialHandlerServiceTest {
         updatedMaterialDefinition.setError(false);
         updatedMaterialDefinition.setObject(gitMaterial);
 
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult.setObject(materialDefinitions);
+
         Mockito.when(gitMaterial.getErrorMessage()).thenReturn("first").thenReturn("second");
-        Mockito.when(this.mockedMaterialDefinitionService.updateMaterialDefinition(Mockito.any(MaterialDefinition.class))).thenReturn(updatedMaterialDefinition);
+        Mockito.when(this.mockedMaterialDefinitionService.getAllFromPipelineDefinition(Mockito.anyString())).thenReturn(serviceResult);
+        Mockito.when(this.mockedMaterialDefinitionService.update(Mockito.any(MaterialDefinition.class))).thenReturn(updatedMaterialDefinition);
         Mockito.when(this.mockedMaterialUpdater.getLatestMaterialVersion(Mockito.any(MaterialDefinition.class))).thenReturn(latestGitMaterial);
         Mockito.when(gitMaterial.isPollingForChanges()).thenReturn(true);
-
-        materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
 
         // Act
         String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
@@ -164,12 +174,16 @@ public class MaterialHandlerServiceTest {
         gitMaterial.setName(MATERIAL_ONE);
         gitMaterial.setPollingForChanges(true);
         materialDefinitions.add(gitMaterial);
-        pipelineDefinition.setMaterialDefinitions(materialDefinitions);
-        String expectedResult = MATERIAL_ONE;
+
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult.setObject(materialDefinitions);
+        Mockito.when(this.mockedMaterialDefinitionService.getAllFromPipelineDefinition(Mockito.anyString())).thenReturn(serviceResult);
 
         ServiceResult latestMaterialServiceResult = new ServiceResult();
         latestMaterialServiceResult.setObject(null);
         Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.any(String.class))).thenReturn(latestMaterialServiceResult);
+
+        String expectedResult = MATERIAL_ONE;
 
         // Act
         String actualResult = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);

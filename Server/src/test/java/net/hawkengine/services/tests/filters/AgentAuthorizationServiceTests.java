@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -40,11 +41,6 @@ public class AgentAuthorizationServiceTests {
     Gson jsonConverter;
 
     private IDbRepository<Agent> mockedAgentRepository;
-    private IAgentService mockedAgentService;
-    private IDbRepository<Pipeline> mockedPipelineRepository;
-    private IPipelineService mockedPipelineService;
-    private IDbRepository<PipelineDefinition> mockedPipelineDefinitionRepository;
-    private IPipelineDefinitionService mockedPipelineDefinitionService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -64,13 +60,6 @@ public class AgentAuthorizationServiceTests {
 
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testAgentAuthorizationService");
         this.mockedAgentRepository = new RedisRepository(Agent.class, mockedPool);
-        this.mockedPipelineRepository = new RedisRepository(Pipeline.class, mockedPool);
-        this.mockedPipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
-
-        this.mockedPipelineDefinitionService = new PipelineDefinitionService(this.mockedPipelineDefinitionRepository);
-        this.mockedPipelineService = new PipelineService(mockedPipelineRepository, this.mockedPipelineDefinitionService);
-        this.mockedAgentService = new AgentService(this.mockedAgentRepository, this.mockedPipelineService);
-
         this.authorizationService = new AgentAuthorizationService();
     }
 

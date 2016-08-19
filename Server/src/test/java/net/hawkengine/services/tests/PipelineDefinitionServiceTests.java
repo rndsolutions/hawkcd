@@ -210,6 +210,7 @@ public class PipelineDefinitionServiceTests {
 
     @Test
     public void delete_nonexistentObject_false() {
+        //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " not found.";
 
@@ -220,8 +221,10 @@ public class PipelineDefinitionServiceTests {
 
         Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
 
+        //Act
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
 
+        //Assert
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
