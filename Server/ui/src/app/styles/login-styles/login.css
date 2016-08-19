@@ -1,12 +1,12 @@
-@media screen and (min-width: 320px) and (max-width:992px){
-    body {
-      background-color:white!important;
-    }
-}
-
 @media screen and (max-width: 2560px){
 
+  .content-custom {
+    max-width: 600px;
+    margin:0 auto!important;
+  }
+
   .logo-custom {
+    min-width:170px;
       max-width: 270px;
       margin:auto!important;
   }
@@ -16,7 +16,7 @@
   }
 
   .login-form-custom {
-      min-width:370px;
+      min-width:320px;
       background-color: #ECEEF1!important;
       border-radius: 0px 0px 0px 0px;
   }
@@ -25,9 +25,6 @@
     background-color:#DDE3EC!important;
   }
 
-  .login-body {
-    margin: 2% 0 0 34%;
-  }
 
   .create-acc-custom {
     background-color: #6C7A8D!important;
@@ -115,8 +112,6 @@
     border:none!important;
   }
 }
-
-
 
 body {
     background-color: #364150!important;
