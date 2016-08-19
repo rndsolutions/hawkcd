@@ -72,9 +72,9 @@ public class TaskDefinitionDeserializerTests {
         String jsonAsString = "{\n" +
                 "\"type\": \"FETCH_ARTIFACT\",\n" +
                 "\"name\": \"fetchArtifact\",\n" +
-                "\"pipeline\": \"testPipe\",\n" +
-                "\"stage\": \"one\",\n" +
-                "\"job\": \"first\",\n" +
+                "\"pipelineDefinitionName\": \"testPipe\",\n" +
+                "\"stageDefinitionName\": \"one\",\n" +
+                "\"jobDefinitionName\": \"first\",\n" +
                 "\"source\": \"mySource\",\n" +
                 "\"destination\": \"dist\"\n" +
                 "}";
