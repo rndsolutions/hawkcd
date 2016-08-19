@@ -53,12 +53,18 @@ public class ArtifactController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response zipFile(String directory) {
-        String rootPath = this.fileManagementService.getRootPath(directory);
+        String fullPath = this.fileManagementService.pathCombine(directory);
+        String rootPath = this.fileManagementService.getRootPath(fullPath);
         String wildCardPattern = this.fileManagementService.getPattern(rootPath, directory);
 
         if (rootPath.isEmpty()) {
 
             return Response.status(Response.Status.NOT_FOUND)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
+        }
+        if (rootPath.equals(fullPath)){
+            return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
