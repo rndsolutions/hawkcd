@@ -36,7 +36,8 @@ public class MaterialHandlerService implements IMaterialHandlerService {
     @Override
     public String checkPipelineForTriggerMaterials(PipelineDefinition pipelineDefinition) {
         List<String> triggerMaterials = new ArrayList<>();
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
+        List<MaterialDefinition> materialDefinitions =
+                (List<MaterialDefinition>) this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId()).getObject();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
             if (materialDefinition.isPollingForChanges()) {
                 this.materialUpdater = MaterialUpdaterFactory.create(materialDefinition.getType());
@@ -44,7 +45,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
                 MaterialDefinition latestVersion = materialUpdater.getLatestMaterialVersion(materialDefinition);
                 String newError = materialDefinition.getErrorMessage();
                 if (!oldError.equals(newError)) {
-                    ServiceResult result = this.materialDefinitionService.updateMaterialDefinition(latestVersion);
+                    ServiceResult result = this.materialDefinitionService.update(latestVersion);
                     EndpointConnector.passResultToEndpoint(MaterialDefinitionService.class.getSimpleName(), "update", result);
                 }
 

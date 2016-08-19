@@ -3,49 +3,49 @@ package net.hawkengine.services.tests;
 import com.fiftyonred.mock_jedis.MockJedisPool;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.StageStatus;
+import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.StageService;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 import org.junit.Before;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import redis.clients.jedis.JedisPoolConfig;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class StageServiceTests {
     private IPipelineService pipelineService;
     private IStageService stageService;
     private IPipelineDefinitionService pipelineDefinitionService;
+    private IMaterialDefinitionService materialDefinitionService;
     private Pipeline pipeline;
     private PipelineDefinition pipelineDefinition;
     private Stage stage;
 
     @Before
-    public void setUp(){
-        MockJedisPool mockJedisPool = new MockJedisPool(new JedisPoolConfig(),"testStageService");
-        IDbRepository pipelineRepo = new RedisRepository(Pipeline.class,mockJedisPool);
-        IDbRepository pipelinDefeRepo = new RedisRepository(PipelineDefinition.class,mockJedisPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelinDefeRepo);
-        this.pipelineService = new PipelineService(pipelineRepo, pipelineDefinitionService);
+    public void setUp() {
+        MockJedisPool mockJedisPool = new MockJedisPool(new JedisPoolConfig(), "testStageService");
+        IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockJedisPool);
+        IDbRepository pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockJedisPool);
+        IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockJedisPool);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo);
+        this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
+        this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.stageService = new StageService(this.pipelineService);
     }
 
     @Test
-    public void getAll_receiveEmptyList(){
+    public void getAll_receiveEmptyList() {
         //Arrange
         final String expectedMessage = "Stages retrieved successfully.";
         List<Stage> stageList = new ArrayList<>();
@@ -61,7 +61,7 @@ public class StageServiceTests {
     }
 
     @Test
-    public void getAll_setOneObject_getOneObject(){
+    public void getAll_setOneObject_getOneObject() {
         //Arrange
         final String expectedMessage = "Stages retrieved successfully.";
         List<Stage> stageList = new ArrayList<>();
@@ -71,7 +71,7 @@ public class StageServiceTests {
 
         //Act
         ServiceResult actualResult = this.stageService.getAll();
-        List<Stage> resultList = (List<Stage>)actualResult.getObject();
+        List<Stage> resultList = (List<Stage>) actualResult.getObject();
         Stage actualObject = resultList.stream().findFirst().get();
 
         //Assert
@@ -79,11 +79,11 @@ public class StageServiceTests {
         assertNotNull(actualResult.getObject());
         assertEquals(actualResult.getMessage(), expectedMessage);
         assertEquals(1, resultList.size());
-        assertEquals(this.stage.getId(),actualObject.getId());
+        assertEquals(this.stage.getId(), actualObject.getId());
     }
 
     @Test
-    public void getById_returnsOneObject(){
+    public void getById_returnsOneObject() {
         //Arrange
         this.insertIntoDb();
         this.stageService.add(this.stage);
@@ -91,18 +91,18 @@ public class StageServiceTests {
 
         //Act
         ServiceResult actualResult = this.stageService.getById(this.stage.getId());
-        Stage actualStage = (Stage)actualResult.getObject();
+        Stage actualStage = (Stage) actualResult.getObject();
 
 
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedMessage,actualResult.getMessage());
-        assertEquals(this.stage.getId(),((Stage) actualResult.getObject()).getId());
+        assertEquals(expectedMessage, actualResult.getMessage());
+        assertEquals(this.stage.getId(), ((Stage) actualResult.getObject()).getId());
     }
 
     @Test
-    public void getById_wrongId_returnsError(){
+    public void getById_wrongId_returnsError() {
         //Arrange
         UUID randomId = UUID.randomUUID();
         String expectedMessage = "Stage not found.";
@@ -113,30 +113,30 @@ public class StageServiceTests {
         //Assert
         assertFalse(!actualResult.hasError());
         assertNull(actualResult.getObject());
-        assertEquals(expectedMessage,actualResult.getMessage());
+        assertEquals(expectedMessage, actualResult.getMessage());
     }
 
     @Test
-    public void addOneObject_returnsSuccessResult(){
+    public void addOneObject_returnsSuccessResult() {
         //Arrange
         this.insertIntoDb();
 
         //Act
         ServiceResult actualResult = this.stageService.add(this.stage);
-        Stage actualStatus = (Stage)actualResult.getObject();
+        Stage actualStatus = (Stage) actualResult.getObject();
         String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
-                " "  + actualStatus.getId() + " created successfully.";
+                " " + actualStatus.getId() + " created successfully.";
 
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedMessage,actualResult.getMessage());
-        assertEquals(this.stage.getId(),((Stage) actualResult.getObject()).getId());
+        assertEquals(expectedMessage, actualResult.getMessage());
+        assertEquals(this.stage.getId(), ((Stage) actualResult.getObject()).getId());
 
     }
 
     @Test
-    public void updateSingleObject_returnsSuccessResult(){
+    public void updateSingleObject_returnsSuccessResult() {
         //Arrange
         this.insertIntoDb();
         this.stageService.add(this.stage);
@@ -144,19 +144,19 @@ public class StageServiceTests {
         //Act
         this.stage.setStatus(StageStatus.PASSED);
         ServiceResult actualResult = this.stageService.update(this.stage);
-        Stage actualStatus = (Stage)actualResult.getObject();
+        Stage actualStatus = (Stage) actualResult.getObject();
         String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
                 " " + actualStatus.getId() + " updated successfully.";
 
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedMessage,actualResult.getMessage());
-        assertEquals(StageStatus.PASSED,actualStatus.getStatus());
+        assertEquals(expectedMessage, actualResult.getMessage());
+        assertEquals(StageStatus.PASSED, actualStatus.getStatus());
     }
 
     @Test
-    public void delete_oneStage_successMessage(){
+    public void delete_oneStage_successMessage() {
         //Arrange
         this.insertIntoDb();
         Stage stageTwo = new Stage();
@@ -171,10 +171,10 @@ public class StageServiceTests {
         //Assert
         assertFalse(actualResult.hasError());
         assertNotNull(actualResult.getObject());
-        assertEquals(expectedMessage,actualResult.getMessage());
+        assertEquals(expectedMessage, actualResult.getMessage());
     }
 
-    private void  insertIntoDb(){
+    private void insertIntoDb() {
         this.pipelineDefinition = new PipelineDefinition();
         this.pipelineDefinition.setName("pipelinedefinition");
         this.pipelineDefinitionService.add(this.pipelineDefinition);

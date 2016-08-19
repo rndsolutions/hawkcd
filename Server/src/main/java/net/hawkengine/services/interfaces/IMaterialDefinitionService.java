@@ -6,6 +6,8 @@ import net.hawkengine.model.NugetMaterial;
 import net.hawkengine.model.ServiceResult;
 
 public interface IMaterialDefinitionService extends ICrudService<MaterialDefinition> {
+    ServiceResult getAllFromPipelineDefinition(String pipelineDefinitionId);
+
     ServiceResult add(GitMaterial gitMaterial);
 
     ServiceResult add(NugetMaterial nugetMaterial);
@@ -13,8 +15,4 @@ public interface IMaterialDefinitionService extends ICrudService<MaterialDefinit
     ServiceResult update(GitMaterial gitMaterial);
 
     ServiceResult update(NugetMaterial nugetMaterial);
-
-    ServiceResult updateMaterialDefinition(MaterialDefinition materialDefinition);
-
-    ServiceResult addMaterialDefinition(MaterialDefinition materialDefinition);
 }

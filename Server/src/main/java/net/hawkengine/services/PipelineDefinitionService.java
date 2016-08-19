@@ -2,9 +2,19 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.model.*;
+import net.hawkengine.model.GitMaterial;
+import net.hawkengine.model.JobDefinition;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
+import net.hawkengine.model.PipelineGroup;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
+import net.hawkengine.ws.EndpointConnector;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +22,8 @@ import java.util.stream.Collectors;
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
     private static final Class CLASS_TYPE = PipelineDefinition.class;
     private IPipelineService pipelineService;
+
+    private IMaterialDefinitionService materialDefinitionService;
 
     public PipelineDefinitionService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
@@ -22,6 +34,12 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     public PipelineDefinitionService(IDbRepository repository) {
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
+    }
+
+    public PipelineDefinitionService(IDbRepository repository, IMaterialDefinitionService materialDefinitionService) {
+        super.setRepository(repository);
+        super.setObjectType(CLASS_TYPE.getSimpleName());
+        this.materialDefinitionService = materialDefinitionService;
     }
 
     public PipelineDefinitionService(IDbRepository repository, IPipelineService pipelineService){
@@ -42,10 +60,6 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
-        for (MaterialDefinition materialDefinition : materialDefinitions) {
-            materialDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
-        }
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
         for (StageDefinition stageDefinition : stageDefinitions) {
             stageDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
@@ -68,6 +82,45 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
+    public ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
+        if (this.materialDefinitionService == null) {
+            this.materialDefinitionService = new MaterialDefinitionService();
+        }
+
+        ServiceResult serviceResult = this.materialDefinitionService.add(materialDefinition);
+        if (serviceResult.hasError()) {
+            return super.createServiceResult(null, true, "could not be created");
+        }
+
+        EndpointConnector.passResultToEndpoint("MaterialDefinitionService","add",serviceResult);
+        pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
+
+        return this.add(pipelineDefinition);
+    }
+
+    @Override
+    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, GitMaterial materialDefinition) {
+        return this.add(pipelineDefinition, materialDefinition);
+    }
+
+    @Override
+    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
+        if (this.materialDefinitionService == null) {
+            this.materialDefinitionService = new MaterialDefinitionService();
+        }
+
+        this.materialDefinitionService = new MaterialDefinitionService();
+        ServiceResult serviceResult = this.materialDefinitionService.getById(materialDefinitionId);
+        if (serviceResult.hasError()) {
+            return super.createServiceResult(null, true, "could not be created");
+        }
+
+        pipelineDefinition.getMaterialDefinitionIds().add(materialDefinitionId);
+
+        return super.add(pipelineDefinition);
+    }
+
+    @Override
     public ServiceResult update(PipelineDefinition pipelineDefinition) {
         return super.update(pipelineDefinition);
     }
@@ -79,12 +132,13 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         }
         List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getObject();
 
-        List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb.stream().filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId)).collect(Collectors.toList());
-        for (Pipeline pipeline: pipelineWithinThePipelineDefinition) {
-            ServiceResult result = this.pipelineService.delete(pipeline.getId());
-
-            if (result.hasError()){
-                return result;
+        if (pipelinesFromDb != null) {
+            List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb.stream().filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId)).collect(Collectors.toList());
+            for (Pipeline pipeline : pipelineWithinThePipelineDefinition) {
+                ServiceResult result = this.pipelineService.delete(pipeline.getId());
+                if (result.hasError()) {
+                    return result;
+                }
             }
         }
         return super.delete(pipelineDefinitionId);

@@ -160,7 +160,7 @@ p {
 }
 
 .m-box {
-    width: 35%;
+    width: 35%!important;
 }
 
 .l-small {
@@ -597,6 +597,18 @@ p {
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
     @import "history-screen/_medium-devices.css";
+}
+
+@media screen and (max-width: 767px) {
+    @import "create-pipeline/_create-pipeline.css";
+}
+
+@media screen and (max-width: 767px) {
+  @import "admin-materials/_create-material.css";
+}
+
+@media screen and (max-width: 767px) {
+  @import "admin-materials/_edit-material.css";
 }
 
 /*.md-checkbox label {*/
