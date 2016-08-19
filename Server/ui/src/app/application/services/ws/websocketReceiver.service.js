@@ -35,14 +35,6 @@ angular
                     addUserWithoutProvider: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.addUser);
                     },
-                    changeUserPassword: function(object) {
-                        if (object.error == false) {
-                            viewModelUpdater.updateUser(object.result);
-                            toaster.pop('success', "Notification", "User updated!");
-                        } else {
-                            toaster.pop('error', "Notification", object.errorMessage);
-                        }
-                    },
                     update: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.updateUser);
                     },
