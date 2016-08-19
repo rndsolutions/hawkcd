@@ -66,22 +66,12 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
-    public ServiceResult add(NugetMaterial materialDefinition) {
-        return super.add(materialDefinition);
-    }
-
-    @Override
     public ServiceResult update(MaterialDefinition materialDefinition) {
         return super.update(materialDefinition);
     }
 
     @Override
     public ServiceResult update(GitMaterial materialDefinition) {
-        return super.update(materialDefinition);
-    }
-
-    @Override
-    public ServiceResult update(NugetMaterial materialDefinition) {
         return super.update(materialDefinition);
     }
 
