@@ -653,3 +653,7 @@ p {
 .td-content {
     height:20px;
 }
+
+@media and screen (max-width: 2560px){
+  @import "login-styles/login.css"
+}
