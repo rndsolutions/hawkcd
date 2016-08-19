@@ -1,7 +1,13 @@
+@media screen and (max-width: 992px){
+  .login-body{
+    padding:10px;
+  }
+}
+
 @media screen and (max-width: 2560px){
 
   .content-custom {
-    max-width: 600px;
+    max-width: 650px;
     margin:0 auto!important;
   }
 
@@ -16,7 +22,7 @@
   }
 
   .login-form-custom {
-      min-width:320px;
+      min-width:300px;
       background-color: #ECEEF1!important;
       border-radius: 0px 0px 0px 0px;
   }
