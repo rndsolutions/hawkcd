@@ -155,4 +155,9 @@ public class EntityPermissionTypeService {
 
         return user;
     }
+
+    public MaterialDefinition setPermissionTypeToObject(List<Permission> permissions, MaterialDefinition materialDefinition){
+        materialDefinition.setPermissionType(PermissionType.ADMIN);
+        return materialDefinition;
+    }
 }

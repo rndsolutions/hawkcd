@@ -1,0 +1,9 @@
+.modal-body-size {
+    min-width: 300px!important;
+    max-width: 800px!important;
+}
+
+@media and screen(max-width:1440px){
+  .modal-dialog-size {
+  }
+}

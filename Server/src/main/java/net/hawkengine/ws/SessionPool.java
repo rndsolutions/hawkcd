@@ -6,8 +6,12 @@ import net.hawkengine.model.User;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
-import net.hawkengine.services.*;
-import net.hawkengine.services.filters.EntityPermissionTypeService;
+import net.hawkengine.services.AgentService;
+import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.PipelineGroupService;
+import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.UserGroupService;
+import net.hawkengine.services.UserService;
 import net.hawkengine.services.filters.PermissionService;
 import net.hawkengine.services.filters.factories.SecurityServiceInvoker;
 

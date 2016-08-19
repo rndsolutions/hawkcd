@@ -1,5 +1,5 @@
 <div id="materials">
-    <button class="btn btn-default" data-target="#addMaterials" data-toggle="modal">
+    <button class="btn btn-default" data-target="#addNewMaterial" data-toggle="modal">
         <i class="fa fa-plus"></i> Add</button>
     <div class="table-scrollable table-responsive">
         <table class="table table-hover table-advance">
@@ -53,8 +53,8 @@
                     <td><h5> {{material.repositoryUrl}} </h5></td>
                     <td><h5> {{material.branch}} </h5></td>
                     <td><h5><div class="btn-group btn-group-xs btn-group-solid">
-                        <button class="btn btn-info" data-target="#editMaterial" data-toggle="modal" ng-click="pipeConfig.getMaterial(material)">Edit</button>
-                        <button class="btn btn-danger" data-target="#removeMaterial" data-toggle="modal" ng-if="true" ng-click="pipeConfig.getMaterial(material)">Delete</button>
+                        <button class="btn btn-info" data-target="#editMaterial" data-toggle="modal" ng-click="admin.setMaterialForEdit(material)">Edit</button>
+                        <button class="btn btn-danger" data-target="#removeMaterial" data-toggle="modal" ng-if="true" ng-click="admin.setMaterialForDelete(material.name,material.id)">Delete</button>
                     </div></h5></td>
                 </tr>
                 <!--end ng-repeat-->
@@ -62,4 +62,12 @@
             </tbody>
         </table>
     </div>
+</div>
+
+
+<div ng-include src="'app/admin/views/partials/_add-material.html'">
+</div>
+<div ng-include src="'app/admin/views/partials/_remove-material.html'">
+</div>
+<div ng-include src="'app/admin/views/partials/_edit-material.html'">
 </div>

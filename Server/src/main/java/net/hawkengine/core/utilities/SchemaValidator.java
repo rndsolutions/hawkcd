@@ -82,14 +82,6 @@ public class SchemaValidator {
                 return this.message = "ERROR: PIPELINE DEFINITION NAME IS INVALID.";
             }
 
-            int pipelineMaterial = pipelineDefinition.getMaterialDefinitions().size();
-            if (pipelineMaterial == 0) {
-                return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
-            } else {
-                List<MaterialDefinition> materials = pipelineDefinition.getMaterialDefinitions();
-                materials.forEach(this::validate);
-            }
-
             int stageDefinitionSize = pipelineDefinition.getStageDefinitions().size();
             if (stageDefinitionSize == 0) {
                 return this.message = "ERROR: STAGE NOT ADDED.";
@@ -262,10 +254,10 @@ public class SchemaValidator {
                 return this.message = "ERROR: FETCH MATERIAL PIPELINE NAME IS NULL.";
             }
 
-            String source = fetchMaterialTask.getSource();
-            if (source == null) {
-                return this.message = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
-            }
+//            String source = fetchMaterialTask.getSource();
+//            if (source == null) {
+//                return this.message = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
+//            }
 
             String destination = fetchMaterialTask.getDestination();
             if (destination == null) {
