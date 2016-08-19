@@ -22,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MaterialUpdaterFactory.class})
@@ -56,7 +57,7 @@ public class MaterialHandlerServiceTest {
 
         ServiceResult latestMaterialServiceResult = new ServiceResult();
         latestMaterialServiceResult.setObject(new Material());
-        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.any(String.class))).thenReturn(latestMaterialServiceResult);
+        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.anyString(), Mockito.anyString())).thenReturn(latestMaterialServiceResult);
     }
 
     @Test
@@ -181,7 +182,7 @@ public class MaterialHandlerServiceTest {
 
         ServiceResult latestMaterialServiceResult = new ServiceResult();
         latestMaterialServiceResult.setObject(null);
-        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.any(String.class))).thenReturn(latestMaterialServiceResult);
+        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.anyString(), Mockito.anyString())).thenReturn(latestMaterialServiceResult);
 
         String expectedResult = MATERIAL_ONE;
 
@@ -199,8 +200,12 @@ public class MaterialHandlerServiceTest {
         GitMaterial gitMaterial = new GitMaterial();
         material.setMaterialDefinition(gitMaterial);
 
+        Pipeline pipeline = new Pipeline();
+        pipeline.setPipelineDefinitionId(UUID.randomUUID().toString());
+        pipeline.setPipelineDefinitionName("testName");
+
         // Act
-        Material actualResult = this.materialHandlerService.updateMaterial(material);
+        Material actualResult = this.materialHandlerService.updateMaterial(material, pipeline);
 
         // Assert
         Assert.assertNotNull(actualResult.getChangeDate());
@@ -214,11 +219,15 @@ public class MaterialHandlerServiceTest {
         GitMaterial gitMaterial = new GitMaterial();
         material.setMaterialDefinition(gitMaterial);
 
+        Pipeline pipeline = new Pipeline();
+        pipeline.setPipelineDefinitionId(UUID.randomUUID().toString());
+        pipeline.setPipelineDefinitionName("testName");
+
         Mockito.when(this.mockedMaterialUpdater.areMaterialsSameVersion(Mockito.any(MaterialDefinition.class), Mockito.any(MaterialDefinition.class)))
                 .thenReturn(true);
 
         // Act
-        Material actualResult = this.materialHandlerService.updateMaterial(material);
+        Material actualResult = this.materialHandlerService.updateMaterial(material, pipeline);
 
         // Assert
         Assert.assertFalse(actualResult.isUpdated());
@@ -229,6 +238,11 @@ public class MaterialHandlerServiceTest {
         // Arrange
         Material material = new Material();
         GitMaterial gitMaterial = Mockito.mock(GitMaterial.class);
+
+        Pipeline pipeline = new Pipeline();
+        pipeline.setPipelineDefinitionId(UUID.randomUUID().toString());
+        pipeline.setPipelineDefinitionName("testName");
+
         material.setMaterialDefinition(gitMaterial);
         ServiceResult updatedServiceResult = new ServiceResult();
         updatedServiceResult.setError(true);
@@ -240,7 +254,7 @@ public class MaterialHandlerServiceTest {
         Mockito.when(this.mockedMaterialDefinitionService.update(Mockito.any(MaterialDefinition.class))).thenReturn(updatedServiceResult);
 
         // Act
-        Material actualResult = this.materialHandlerService.updateMaterial(material);
+        Material actualResult = this.materialHandlerService.updateMaterial(material, pipeline);
 
         // Assert
         Assert.assertNull(actualResult);
@@ -253,12 +267,16 @@ public class MaterialHandlerServiceTest {
         GitMaterial gitMaterial = new GitMaterial();
         material.setMaterialDefinition(gitMaterial);
 
+        Pipeline pipeline = new Pipeline();
+        pipeline.setPipelineDefinitionId(UUID.randomUUID().toString());
+        pipeline.setPipelineDefinitionName("testName");
+
         ServiceResult latestMaterialServiceResult = new ServiceResult();
         latestMaterialServiceResult.setObject(null);
-        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.any(String.class))).thenReturn(latestMaterialServiceResult);
+        Mockito.when(this.mockedMaterialService.getLatestMaterial(Mockito.anyString(), Mockito.anyString())).thenReturn(latestMaterialServiceResult);
 
         // Act
-        Material actualResult = this.materialHandlerService.updateMaterial(material);
+        Material actualResult = this.materialHandlerService.updateMaterial(material, pipeline);
 
         // Assert
         Assert.assertNotNull(actualResult.getChangeDate());
