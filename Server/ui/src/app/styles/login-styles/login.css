@@ -110,7 +110,7 @@
     color:#8C91AA;
   }
 
-  .form-control{
+  div.login-body input.form-control{
     height:40px!important;
     border:none!important;
   }
