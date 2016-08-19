@@ -39,11 +39,21 @@ public class FetchArtifactExecutor extends TaskExecutor {
         FetchArtifactTask taskDefinition = (FetchArtifactTask) task.getTaskDefinition();
         super.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
+        if (((taskDefinition.getJobDefinitionName() == null) || taskDefinition.getJobDefinitionName().isEmpty())){
+            return this.nullProcessing(report, task, "Error occurred in getting job name!");
+        }
+        if ((taskDefinition.getStageDefinitionName() == null) || (taskDefinition.getPipelineDefinitionName().isEmpty())){
+            return this.nullProcessing(report, task, "Error occurred in getting stage name!");
+        }
+        if ((taskDefinition.getPipelineDefinitionName() == null) || (taskDefinition.getPipelineDefinitionName().isEmpty())){
+            return this.nullProcessing(report, task, "Error occurred in getting pipeline name!");
+        }
+
         String fetchingMessage = String.format("%s pipeline=%s stage=%s job=%s source=%s destination=%s",
                 taskDefinition.getType(),
-                taskDefinition.getPipeline(),
-                taskDefinition.getStage(),
-                taskDefinition.getJob(),
+                taskDefinition.getPipelineDefinitionName(),
+                taskDefinition.getStageDefinitionName(),
+                taskDefinition.getJobDefinitionName(),
                 taskDefinition.getSource(),
                 taskDefinition.getDestination());
         LOGGER.debug(fetchingMessage);
@@ -73,8 +83,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
         if (errorMessage != null) {
             return this.nullProcessing(report, task, "Error occurred in creating the artifact!");
         }
-
-        String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentArtifactsDirectoryPath(), taskDefinition.getPipeline(), taskDefinition.getStage(), taskDefinition.getJob()).toString();
+        String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentArtifactsDirectoryPath(), taskDefinition.getPipelineDefinitionName(), taskDefinition.getStageDefinitionName(), taskDefinition.getJobDefinitionName()).toString();
         errorMessage = this.fileManagementService.unzipFile(filePath, destination);
         filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath()).toString();
         String deleteMessage = this.fileManagementService.deleteFilesInDirectory(filePath);

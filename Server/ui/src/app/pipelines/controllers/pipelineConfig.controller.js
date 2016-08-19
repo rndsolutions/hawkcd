@@ -301,9 +301,9 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     taskDefinitions: [{
                         type: newStage.jobDefinitions.taskDefinitions.type,
-                        pipelineDefinition: newStage.jobDefinitions.taskDefinitions.pipeline,
-                        stageDefinition: newStage.jobDefinitions.taskDefinitions.stage,
-                        jobDefinition: newStage.jobDefinition.taskDefinitions.jobDefinition,
+                        pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
+                        stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
+                        jobDefinitionName:vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
                         source: newStage.jobDefinition.taskDefinitions.source,
                         destination: newStage.jobDefinition.taskDefinitions.destination,
                         runIfCondition: newStage.jobDefinition.taskDefinitions.runIfCondition
@@ -314,6 +314,7 @@ angular
         if (newStage.jobDefinitions.taskDefinitions.type == 'FETCH_MATERIAL') {
             var stage = {
                 name: newStage.name,
+                pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
                     pipelineName: vm.allPipelines[vm.pipelineIndex].name,
@@ -329,6 +330,7 @@ angular
         if (newStage.jobDefinitions.taskDefinitions.type == 'UPLOAD_ARTIFACT') {
             var stage = {
                 name: newStage.name,
+                pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                 jobDefinitions: [{
                     name: newStage.jobDefinitions.name,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
@@ -405,9 +407,9 @@ angular
                             type: newJob.taskDefinitions.type,
                             pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                             stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                            pipelineDefinition: newJob.taskDefinitions.pipelineDefinition,
-                            stageDefinition: newJob.taskDefinitions.stageDefinition,
-                            jobDefinition: newJob.taskDefinitions.jobDefinition,
+                            pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
+                            stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
+                            jobDefinitionName: newJob.name,
                             source: newJob.taskDefinitions.source,
                             destination: newJob.taskDefinitions.destination,
                             runIfCondition: newJob.taskDefinitions.runIfCondition
@@ -637,6 +639,9 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
+                    stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
+                    jobDefinitionName:vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
                     type: newTask.type,
                     source: newTask.source,
                     destination: newTask.destination,
@@ -696,6 +701,9 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId :vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
+                    pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
+                    stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
+                    jobDefinitionName:vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
                     type: newTask.type,
                     source: newTask.source,
                     destination: newTask.destination,

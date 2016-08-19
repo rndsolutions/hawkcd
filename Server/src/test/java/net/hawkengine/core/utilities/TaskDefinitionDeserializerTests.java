@@ -19,8 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.HashMap;
-
 public class TaskDefinitionDeserializerTests {
 
     private static TaskDefinitionAdapter mockedDeserializer;
@@ -91,9 +89,9 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertNotNull(actualResult);
         Assert.assertEquals(TaskType.FETCH_ARTIFACT, actualResult.getType());
         Assert.assertEquals("fetchArtifact", actualResult.getName());
-        Assert.assertEquals("testPipe",actualResult.getPipeline());
-        Assert.assertEquals("one",actualResult.getStage());
-        Assert.assertEquals("first",actualResult.getJob());
+        Assert.assertEquals("testPipe",actualResult.getPipelineDefinitionName());
+        Assert.assertEquals("one",actualResult.getStageDefinitionName());
+        Assert.assertEquals("first",actualResult.getJobDefinitionName());
         Assert.assertEquals("mySource",actualResult.getSource());
     }
 

@@ -53,7 +53,7 @@ public class JobExecutor implements IJobExecutor {
 //                this.getCurrentJob().getJobName(),
 //                AgentConfiguration.getAgentInfo().getName(),
 //                AgentConfiguration.getInstallInfo().getAgentPipelinesDir()), true);
-//        this.currentJob.appendToJobResult(String.format(MessageConstants.JOB_STARTED_ON_AGENT, workInfo.getJob().getName()), true);
+//        this.currentJob.appendToJobResult(String.format(MessageConstants.JOB_STARTED_ON_AGENT, workInfo.getJobDefinitionName().getName()), true);
 //        this.currentJob.appendToJobResult(String.format("Current job status: %s", this.currentJob.getStatus()), true);
 
         this.createPipelineDirs(workInfo);
@@ -119,8 +119,8 @@ public class JobExecutor implements IJobExecutor {
 //        this.currentJob.setStageDefinitionName(workInfo.getStageDefinitionName());
 //        this.currentJob.setStageId(workInfo.getStageId());
 //        this.currentJob.setStageExecutionId(workInfo.getStageExecutionID());
-//        this.currentJob.setJobName(workInfo.getJob().getName());
-//        this.currentJob.setJobId(workInfo.getJob().getId());
+//        this.currentJob.setJobName(workInfo.getJobDefinitionName().getName());
+//        this.currentJob.setJobId(workInfo.getJobDefinitionName().getId());
 //
 //        this.currentJob.setStatus(ExecutionStatus.PASSED);
 //        this.currentJob.setState(ExecutionState.RUNNING);
