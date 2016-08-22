@@ -236,8 +236,7 @@ angular
 
             vm.updatedPipeline.name = vm.pipeline.name;
             vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
-            vm.updatedPipeline.autoScheduling = vm.pipeline.autoScheduling;
-
+            vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
             vm.currentPipeline = pipeName;
         };
 
@@ -265,10 +264,13 @@ angular
         vm.editPipeline = function(pipeline) {
             var newPipeline = angular.copy(vm.allPipelines[vm.pipelineIndex]);
             newPipeline.name = pipeline.name;
+            newPipeline.isAutoSchedulingEnabled = pipeline.autoScheduling;
             $state.go('index.pipelineConfig.pipeline.general', {
                 groupName: vm.pipeline.groupName,
-                pipelineName: pipeline.name
+                pipelineName: pipeline.name,
+                autoScheduling: pipeline.isAutoSchedulingEnabled
             });
+
             pipeConfigService.updatePipelineDefinition(newPipeline);
         };
 
