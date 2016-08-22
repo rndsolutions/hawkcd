@@ -1,4 +1,4 @@
-package net.hawkengine.agent.utils.jsonconverter;
+package net.hawkengine.agent.utilities.deserializers;
 
 import com.google.gson.*;
 import net.hawkengine.agent.enums.TaskType;

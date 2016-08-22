@@ -137,14 +137,38 @@ p {
     background: #26344B;
 }
 
+.custom-p-head-box,
+.custom-s-head-box {
+    background: #26344B;
+    color:black;
+}
+
+.p-head {
+    background-color: #26344B!important;
+}
+
 .s-head-box:hover {
-    background: #E55E09;
+    /*background: #17C4BB;*/
 }
 
 .selected-stage {
-    background-color: #E55E09 !important;
-    color: #26344B;
+    background-color: #EBEBEB !important;
+    color: black;
     text-underline: none;
+}
+
+.custom-panel-heading {
+    background-color: #26344B !important;
+    color:#A5B1C8!important;
+    border-bottom:none!important;
+}
+
+.custom-panel-body {
+    background-color: #EBEBEB !important;
+}
+
+.custom-nth-color {
+    background-color: #ebebeb !important;
 }
 
 .admin-selected-pipeline {
@@ -277,7 +301,7 @@ p {
 }
 
 .console {
-    height: auto;
+    height: 600px;
     max-height: 600px;
     overflow: auto;
     background-color: #333;
@@ -307,7 +331,6 @@ p {
 }
 
 .custom-caption {
-    font-size: 18px !important;
     margin-top: 4px;
 }
 
@@ -591,6 +614,10 @@ p {
   border-left:4px solid #D91E18!important;
 }
 
+.status-awaiting {
+    border-left:4px solid #EEF1F5!important;
+}
+
 @media screen and (max-width: 767px) {
     @import "history-screen/_small-devices.css";
 }
@@ -666,6 +693,139 @@ p {
     height:20px;
 }
 
+.custom-run-management-text {
+    font-size:16px;
+    overflow:hidden;
+}
+
+.jobSelected {
+    background-color: #B3E5FC;
+}
+
+.vertical-center-icon {
+    position:relative;
+    top:50%;
+    /*transform:translateY(-50%);*/
+}
+
+.width-100 {
+    width:100%;
+}
+
+.position-static {
+    position: static;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.vertical-center {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.vertical-center-static {
+    position: static;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.display-inline-block {
+    display:inline-block;
+}
+
+.height-100px {
+    height: 100px;
+}
+
+.height-50px {
+    height: 50px;
+}
+
+.height-150px {
+    height: 150px;
+}
+
+.width-15px {
+    width: 15px;
+}
+
+.width-40px {
+    width: 40px;
+}
+
+.width-40 {
+    width: 40%;
+}
+
+.width-20 {
+    width: 20%;
+}
+
+.width-15 {
+    width: 15%;
+}
+
+.height-70px {
+    height: 70px;
+}
+
+.height-70 {
+    height: 70%;
+}
+
+.border-left-grey {
+    border-left:2px solid lightgrey;
+}
+
+.padding-left-5 {
+    padding-left: 5%;
+}
+
+.padding-left-1 {
+    padding-left: 1%;
+}
+
+.padding-top-5 {
+    padding-top: 5%;
+}
+
+.padding-top-1 {
+    padding-top: 1%;
+}
+
+.margin-left-5 {
+    margin-left: 5%;
+}
+
+.margin-left-1 {
+    margin-left: 1%;
+}
+
+.margin-top-5 {
+    margin-top: 5%;
+}
+
+.margin-top-1 {
+    margin-top: 1%;
+}
+
+.image-vertical-center {
+    position:relative;
+    transform:translateY(-75%);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.job-list {
+    overflow-y:auto;
+    height:150px;
+    background-color: white;
+}
 @media and screen (max-width: 2560px){
   @import "login-styles/login.css"
 }

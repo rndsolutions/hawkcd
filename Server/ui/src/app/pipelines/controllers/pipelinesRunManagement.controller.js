@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesRunManagement', function ($state, $scope, $stateParams, $interval, pipeStats, runManagementService, pipeExec, pipeConfig, authDataService, viewModel) {
+    .controller('PipelinesRunManagement', function ($state, $scope, $stateParams, $interval, pipeStats, runManagementService, pipeExec, pipeConfig, authDataService, viewModel, moment, ansi_up, $sce) {
         var vm = this;
 
         $scope.$on("$destroy", function () {
@@ -112,6 +112,24 @@ angular
 
         vm.temporaryStages = [];
 
+        vm.getLastRunAction = function(pipelineRun) {
+            if (pipelineRun.endTime == undefined) {
+                return;
+            }
+            var result = {};
+            var runEndTime = pipelineRun.endTime;
+            var delta = moment(runEndTime);
+            var now = moment();
+            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
+            if(diff == 'a few seconds'){
+                diff = 'few seconds ago';
+                result.output = diff;
+            } else {
+                result.output = diff + " ago";
+            }
+            return result;
+        };
+
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);
@@ -121,6 +139,11 @@ angular
             viewModel.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 if(currentPipelineRun.pipelineDefinitionName == vm.pipelineName && currentPipelineRun.executionId == vm.pipelineExecutionID){
                     vm.currentPipelineRun = currentPipelineRun;
+                    var result = vm.getLastRunAction(currentPipelineRun);
+                    vm.currentPipelineRun.lastPipelineAction = result;
+                    if (currentPipelineRun.triggerReason == null) {
+                        vm.currentPipelineRun.triggerReason = viewModel.user.username;
+                    }
                     viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                         if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
                             vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
@@ -135,13 +158,21 @@ angular
                             });
                         }
                     });
+                    currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                        currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
+                            currentJob.report = ansi_up.ansi_to_html(currentJob.report);
+                            currentJob.report = $sce.trustAsHtml(currentJob.report);
+
+                        });
+                    });
                 }
+
             });
-            if(vm.currentPipelineRunStages.length > 1){
-                if(vm.selectedJob == null && vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs != null){
-                    vm.selectedJob = vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs[vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs.length - 1];
-                }
-            }
+            // if(vm.currentPipelineRunStages.length > 1){
+            //     if(vm.selectedJob == null && vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs != null){
+            //         vm.selectedJob = vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs[vm.currentPipelineRunStages[0][vm.currentPipelineRunStages[0].length - 1].jobs.length - 1];
+            //     }
+            // }
         });
 
         // vm.getAll = function () {
@@ -410,14 +441,14 @@ angular
         //Change the class of selected stage - needed for the initialization
         vm.toggleRun = 0;
 
-        vm.selectStage = function (stage, index) {
+        vm.selectStage = function (index) {
             //Needed for class change
             vm.toggleRun = index;
 
             vm.selectedStageIndexInMainDB = index;
 
             // //  Get the selected stage - with LastRun + all Runs
-            vm.selectedStage = vm.currentPipelineRunStages[index];
+            vm.selectedStage = vm.currentPipelineRun.stages[index];
             // nameOfStage = vm.selectedStage.Runs[0].Name;
             //
             // //Need this variable, so the runs are displayed in the modal for re run stage
@@ -461,100 +492,101 @@ angular
         //  $('#tree_1').jstree();
         //});
 
-        vm.selectJob = function (jobIndex) {
-            var selectedRunIndex = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected] - 1;
+        vm.selectJob = function (stageIndex, jobIndex) {
+            vm.selectStage(stageIndex);
+            var selectedRunIndex = vm.currentPipelineRun.stages[vm.toggleRun] - 1;
 
-            vm.selectedJob = vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[jobIndex];
+            vm.selectedJob = vm.currentPipelineRun.stages[vm.toggleRun].jobs[jobIndex];
             vm.selectedRunIndex = selectedRunIndex;
             vm.jobIndex = jobIndex;
         };
 
         //Get all job results numbers to populate the list left from the console
-        vm.getJobResults = function () {
-            var allJobs = {
-                skippedJobs: 0,
-                scheduledJobs: 0,
-                inProgress: 0,
-                passedJobs: 0,
-                failedJobs: 0
-            };
-
-            //Prevents initial console errors
-            //if (vm.selectedStage != undefined && vm.selectedStage.LastRunSelected >= 1 && vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1] != undefined) {
-            if(vm.currentPipelineRunStages.length > 0 ) {
-                for (var i = 0; i < vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs.length; i += 1) {
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'AWAITING') {
-                        allJobs.skippedJobs += 1;
-                    }
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'SCHEDULED') {
-                        allJobs.scheduledJobs += 1;
-                    }
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'RUNNING') {
-                        allJobs.inProgress += 1;
-                    }
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'PASSED') {
-                        allJobs.passedJobs += 1;
-                    }
-                    if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'FAILED') {
-                        allJobs.failedJobs += 1;
-                    }
-                }
-                console.log(vm.lastRunSelected);
-                //}
-            }
-            return allJobs;
-        };
+        // vm.getJobResults = function () {
+        //     var allJobs = {
+        //         skippedJobs: 0,
+        //         scheduledJobs: 0,
+        //         inProgress: 0,
+        //         passedJobs: 0,
+        //         failedJobs: 0
+        //     };
+        //
+        //     //Prevents initial console errors
+        //     //if (vm.selectedStage != undefined && vm.selectedStage.LastRunSelected >= 1 && vm.selectedStage.Runs[vm.selectedStage.LastRunSelected - 1] != undefined) {
+        //     if(vm.currentPipelineRunStages.length > 0 ) {
+        //         for (var i = 0; i < vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs.length; i += 1) {
+        //             if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'AWAITING') {
+        //                 allJobs.skippedJobs += 1;
+        //             }
+        //             if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'SCHEDULED') {
+        //                 allJobs.scheduledJobs += 1;
+        //             }
+        //             if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'RUNNING') {
+        //                 allJobs.inProgress += 1;
+        //             }
+        //             if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'PASSED') {
+        //                 allJobs.passedJobs += 1;
+        //             }
+        //             if (vm.currentPipelineRunStages[vm.toggleRun][vm.lastRunSelected - 1].jobs[i].status == 'FAILED') {
+        //                 allJobs.failedJobs += 1;
+        //             }
+        //         }
+        //         console.log(vm.lastRunSelected);
+        //         //}
+        //     }
+        //     return allJobs;
+        // };
 
 
         //Selects all input job checkboxes
-        vm.selectAll = function () {
-            var checkboxes = document.getElementsByName('jobCheck');
-            for (var i = 0, n = checkboxes.length; i < n; i++) {
-                if (checkboxes[i].checked == false) {
-                    //Makes all checkboxes checked
-                    checkboxes[i].checked = true;
-                    var jobNameToPush = checkboxes[i].value;
-
-                    //Adds a job name for a stage re-run
-                    vm.selectedJobsForReRun.push(jobNameToPush);
-                }
-            }
-
-        };
-
-        vm.getSelectedJobsForReRun = function () {
-            var checkboxes = document.getElementsByName('jobCheck');
-            for (var i = 0, n = checkboxes.length; i < n; i++) {
-                if (checkboxes[i].checked == true) {
-                    //Gets all checked boxes
-                    var jobNameToPush = checkboxes[i].value;
-
-                    //Adds a job name for a stage re-run
-                    vm.selectedJobsForReRun.push(jobNameToPush);
-                }
-            }
-
-        };
-
-        //Deselects all input job checkboxes
-        vm.deSelectAll = function () {
-            var checkboxes = document.getElementsByName('jobCheck');
-            for (var i = 0, n = checkboxes.length; i < n; i++) {
-                if (checkboxes[i].checked == true) {
-                    checkboxes[i].checked = false;
-                }
-            }
-        };
-
-        vm.setSelectedStageForReRun = function (stage) {
-            vm.selectedStage = stage;
-        };
-
-        vm.selectAlllJobs = function (stage) {
-            for (var i = 0; i < stage.Runs[stage.Runs.length - 1].Jobs.length; i++) {
-                vm.selectedJobsForReRun.push(stage.Runs[stage.Runs.length - 1].Jobs[i].Name);
-            }
-        };
+        // vm.selectAll = function () {
+        //     var checkboxes = document.getElementsByName('jobCheck');
+        //     for (var i = 0, n = checkboxes.length; i < n; i++) {
+        //         if (checkboxes[i].checked == false) {
+        //             //Makes all checkboxes checked
+        //             checkboxes[i].checked = true;
+        //             var jobNameToPush = checkboxes[i].value;
+        //
+        //             //Adds a job name for a stage re-run
+        //             vm.selectedJobsForReRun.push(jobNameToPush);
+        //         }
+        //     }
+        //
+        // };
+        //
+        // vm.getSelectedJobsForReRun = function () {
+        //     var checkboxes = document.getElementsByName('jobCheck');
+        //     for (var i = 0, n = checkboxes.length; i < n; i++) {
+        //         if (checkboxes[i].checked == true) {
+        //             //Gets all checked boxes
+        //             var jobNameToPush = checkboxes[i].value;
+        //
+        //             //Adds a job name for a stage re-run
+        //             vm.selectedJobsForReRun.push(jobNameToPush);
+        //         }
+        //     }
+        //
+        // };
+        //
+        // //Deselects all input job checkboxes
+        // vm.deSelectAll = function () {
+        //     var checkboxes = document.getElementsByName('jobCheck');
+        //     for (var i = 0, n = checkboxes.length; i < n; i++) {
+        //         if (checkboxes[i].checked == true) {
+        //             checkboxes[i].checked = false;
+        //         }
+        //     }
+        // };
+        //
+        // vm.setSelectedStageForReRun = function (stage) {
+        //     vm.selectedStage = stage;
+        // };
+        //
+        // vm.selectAlllJobs = function (stage) {
+        //     for (var i = 0; i < stage.Runs[stage.Runs.length - 1].Jobs.length; i++) {
+        //         vm.selectedJobsForReRun.push(stage.Runs[stage.Runs.length - 1].Jobs[i].Name);
+        //     }
+        // };
 
         //Initialize the controller
         // vm.getAll(true);

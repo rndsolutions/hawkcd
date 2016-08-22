@@ -64,24 +64,29 @@
                     </div>
                     <div ng-if="pipeConfig.task.type == 'FETCH_ARTIFACT'">
                         <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.pipeline" required>
-                            <label>Pipeline</label>
+                            <select class="form-control" name="pipelineSelect" id="pipelineSelectUpdate"
+                                    ng-model="pipeConfig.updatedTask.pipelineDefinitionName" ng-change="pipeConfig.getPipelineForTaskById(pipeConfig.updatedTask.pipelineDefinitionId)" required>
+                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.name}}" >{{pipeline.name}}</option>
+                            </select>
+                            <label for="pipelineSelect">Pipeline</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.stage" required>
-                            <label>Stage</label>
+                            <select class="form-control" name="stageSelect" id="stageSelectUpdate"
+                                    ng-model="pipeConfig.updatedTask.stageDefinitionName" ng-change="pipeConfig.getStageForTaskById(pipeConfig.newTask.stageDefinitionId)" required>
+                                <option ng-repeat="stage in pipeConfig.selectedPipelineStages"
+                                        value="{{stage.name}}">{{stage.name}}</option>
+                            </select>
+                            <label for="stageSelect">Stage</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.job" required>
-                            <label>Job</label>
+                            <select class="form-control" name="jobSelect" id="jobSelectUpdate" ng-model="pipeConfig.updatedTask.jobDefinitionName" required>
+                                <option ng-repeat="job in pipeConfig.selectedStageJobs" value="{{job.name}}">{{job.name}}</option>
+                            </select>
+                            <label for="jobSelect">Job</label>
                         </div>
                         <div class="form-group form-md-line-input">
                             <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.source" required>
                             <label>Source</label>
-                        </div>
-                        <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.destination" required>
-                            <label>Destination</label>
                         </div>
                         <div class="form-group form-md-radios">
                             <label>Run If Condition</label>
@@ -154,10 +159,6 @@
                         <div class="form-group form-md-line-input">
                             <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.source" required>
                             <label>Source</label>
-                        </div>
-                        <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.destination" required>
-                            <label>Destination</label>
                         </div>
                         <div class="form-group form-md-radios">
                             <label>Run If Condition</label>

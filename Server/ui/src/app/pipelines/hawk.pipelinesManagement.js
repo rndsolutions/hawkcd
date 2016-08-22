@@ -18,7 +18,7 @@ angular
 
             .state('index.pipelineHistory', {
                 abstract: true,
-                url: 'pipelines/{groupName}/{pipelineName}',
+                url: 'pipelines/{pipelineName}',
                 templateUrl: "app/pipelines/views/history.html",
                 data: {
                     pageTitle: 'Pipeline History'
@@ -38,7 +38,7 @@ angular
             })
 
             .state('index.pipelineRunManagement', {
-                url: 'pipelines/{groupName}/{pipelineName}/{executionID}/RunManagement',
+                url: 'pipelines/{pipelineName}/{executionID}/RunManagement',
                 templateUrl: "app/pipelines/views/runs-management.html",
                 data: {
                     pageTitle: 'Pipeline Run Management'
