@@ -829,3 +829,19 @@ p {
 @media and screen (max-width: 2560px){
   @import "login-styles/login.css"
 }
+
+.padding-top-1 {
+    padding-top: 1%;
+}
+
+.pointer {
+    cursor:pointer;
+}
+
+.custom-margin-right {
+    margin-right: 100px;
+}
+
+.accordion-heading-fix {
+    color: #333!important;
+}
