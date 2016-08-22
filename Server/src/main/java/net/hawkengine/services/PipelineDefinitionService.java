@@ -16,7 +16,9 @@ import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
@@ -169,5 +171,54 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         return this.update(pipelineDefinition);
     }
 
+    @Override
+    public ServiceResult assignMaterialToPipeline(String pipelineDefinitionId, String materialDefinitionId) {
+        ServiceResult result = this.materialDefinitionService.getById(materialDefinitionId);
+        if (result.hasError()){
+            return result;
+        }
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
 
+        Set<String> materialDefinitionIds = pipelineDefinition.getMaterialDefinitionIds();
+
+        String materialDefinition = materialDefinitionIds.stream().filter(m -> m.equals(materialDefinitionId)).findFirst().orElse(null);
+
+        if (materialDefinition == null){
+            pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition);
+            return  this.update(pipelineDefinition);
+        }
+        result.setMessage("Material already assigned.");
+        result.setError(true);
+        result.setObject(null);
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult unassignMaterialFromPipeline(String pipelineDefinitionId, String materialDefinitionId) {
+        ServiceResult result = this.materialDefinitionService.getById(materialDefinitionId);
+        if (result.hasError()){
+            return result;
+        }
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
+
+        Set<String> materialDefinitionIds = pipelineDefinition.getMaterialDefinitionIds();
+
+        String materialDefinition = materialDefinitionIds.stream().filter(m -> m.equals(materialDefinitionId)).findFirst().orElse(null);
+        Set<String> materialDefinitionIdsForUpdate = new HashSet<>();
+        if (materialDefinition != null){
+            for (String materialId: materialDefinitionIds) {
+                if (!materialId.equals(materialDefinition)){
+                    materialDefinitionIdsForUpdate.add(materialId);
+                }
+            }
+            pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIdsForUpdate);
+            return  this.update(pipelineDefinition);
+        }
+        result.setMessage("Material cannot be unnassigned, since it is not initially assigned.");
+        result.setError(true);
+        result.setObject(null);
+
+        return result;
+    }
 }

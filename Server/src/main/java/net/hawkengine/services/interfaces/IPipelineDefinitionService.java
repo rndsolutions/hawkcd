@@ -18,4 +18,8 @@ public interface IPipelineDefinitionService extends ICrudService<PipelineDefinit
     ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition);
 
     ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition, PipelineGroup pipelineGroup);
+
+    ServiceResult assignMaterialToPipeline(String pipelineDefinitionId, String materialDefinitionId);
+
+    ServiceResult unassignMaterialFromPipeline(String pipelineDefinitionId, String materialDefinitionId);
 }

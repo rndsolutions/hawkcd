@@ -244,4 +244,14 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     public boolean addWithMaterialDefinition(String entity, String className, List list) {
         return true;
     }
+
+    @Override
+    public boolean assignMaterialToPipeline(String entity, String className, List permissions) {
+        return this.update(entity, className, permissions);
+    }
+
+    @Override
+    public boolean unassignMaterialFromPipeline(String entity, String className, List permissions) {
+        return this.update(entity, className, permissions);
+    }
 }
