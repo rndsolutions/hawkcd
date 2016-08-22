@@ -63,7 +63,8 @@ public class FetchArtifactExecutor extends TaskExecutor {
 
         String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/fetch-artifact";
         WebResource webResource = this.restClient.resource(requestSource);
-        ClientResponse response = webResource.type("application/json").post(ClientResponse.class, taskDefinition.getSource());
+        String source = taskDefinition.getPipelineDefinitionName() + File.separator + taskDefinition.getStageDefinitionName() + File.separator + taskDefinition.getJobDefinitionName() + File.separator + taskDefinition.getSource();
+        ClientResponse response = webResource.type("application/json").post(ClientResponse.class, source);
 
         if ((response.getStatus() != 200)) {
             return this.nullProcessing(report, task, String.format("Could not get resource. TaskStatus code %s", response.getStatus()));
