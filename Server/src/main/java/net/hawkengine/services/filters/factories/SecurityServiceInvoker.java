@@ -45,6 +45,10 @@ public class SecurityServiceInvoker<T extends DbEntry> {
                 return this.securityService.updateUserGroupDto(entity, className, permissions);
             case "addWithMaterialDefinition":
                 return this.securityService.addWithMaterialDefinition(entity, className, permissions);
+            case "assignMaterialToPipeline":
+                return this.securityService.assignMaterialToPipeline(entity, className, permissions);
+            case "unassignMaterialFromPipeline":
+                return this.securityService.unassignMaterialFromPipeline(entity, className, permissions);
             default:
                 return false;
         }
