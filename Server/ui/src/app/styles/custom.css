@@ -826,3 +826,6 @@ p {
     height:150px;
     background-color: white;
 }
+@media and screen (max-width: 2560px){
+  @import "login-styles/login.css"
+}
