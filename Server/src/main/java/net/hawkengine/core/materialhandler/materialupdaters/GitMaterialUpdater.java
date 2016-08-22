@@ -6,8 +6,6 @@ import net.hawkengine.model.GitMaterial;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
-import java.io.File;
-
 public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
     private IGitService gitService;
     private IFileManagementService fileManagementService;
@@ -26,12 +24,12 @@ public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
     public GitMaterial getLatestMaterialVersion(GitMaterial gitMaterial) {
         boolean repositoryExists = this.gitService.repositoryExists(gitMaterial);
         if (!repositoryExists) {
-            String directoryToDelete = "Materials" + File.separator + gitMaterial.getName();
-            this.fileManagementService.deleteDirectoryRecursively(directoryToDelete);
+//            String directoryToDelete = ServerConfiguration.getConfiguration().getMaterialsDestination() + File.separator + gitMaterial.getName();
+            this.fileManagementService.deleteDirectoryRecursively(gitMaterial.getDestination());
             this.gitService.cloneRepository(gitMaterial);
 
             if (!gitMaterial.getErrorMessage().isEmpty()) {
-                this.fileManagementService.deleteDirectoryRecursively(directoryToDelete);
+                this.fileManagementService.deleteDirectoryRecursively(gitMaterial.getDestination());
                 return gitMaterial;
             }
         }

@@ -10,8 +10,7 @@ import net.hawkengine.model.enums.MaterialType;
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT"),
-        @JsonSubTypes.Type(value = NugetMaterial.class, name = "NUGET")})
+        @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT")})
 public abstract class MaterialDefinition extends DbEntry {
     private String name;
     private String errorMessage;
