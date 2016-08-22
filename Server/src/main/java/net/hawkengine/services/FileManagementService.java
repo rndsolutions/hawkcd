@@ -233,4 +233,25 @@ public class FileManagementService implements IFileManagementService {
 
         return output;
     }
+
+    @Override
+    public String getAbsolutePath(String path) {
+
+        String rootPath = this.normalizePath(path);
+
+        File file = new File(rootPath);
+
+        if (file.isFile()) {
+            rootPath = file.getAbsolutePath();
+            FilenameUtils.normalizeNoEndSeparator(rootPath);
+            return rootPath;
+        }
+
+        if (file.isDirectory()) {
+            rootPath = file.getAbsolutePath();
+            return rootPath;
+        }
+
+        return "";
+    }
 }
