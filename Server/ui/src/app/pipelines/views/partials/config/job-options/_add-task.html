@@ -132,9 +132,9 @@
                     </div>
                     <div ng-if="pipeConfig.newTask.type == 'FETCH_MATERIAL'">
                         <div class="form-group form-md-line-input">
-                            <select class="form-control" name="materialSelect" id="materialSelect" ng-model="pipeConfig.newTask.materialName" required>
-                                <option ng-repeat="material in pipeConfig.allPipelines[pipeConfig.pipelineIndex].materialDefinitions" value="{{material}}">{{material.name}}</option>
-                            </select>
+                          <select class="form-control" name="materialSelect" id="materialSelect" ng-model="pipeConfig.newTask.material" required>
+                             <option ng-repeat="material in pipeConfig.filteredMaterialDefinitions" value="{{material}}">{{material.name}}</option>
+                         </select>
                             <label for="materialSelect">Material</label>
                         </div>
                         <div class="form-group form-md-radios">
