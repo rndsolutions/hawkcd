@@ -40,31 +40,32 @@
                 <div class="login-options login-opts">
                     <div class="heading-four">Or login with</div>
                     <div class="socicons icons-container pull-right">
-                      <a href="#" class="socicon-btn socicon-btn-circle socicon-sm socicon-solid bg-dark bg-hover-grey-salsa font-white bg-hover-white socicon-github tooltips" data-original-title="Github"></a>
-                      <a href="#" class="socicon-btn socicon-btn-circle socicon-sm socicon-solid bg-blue bg-hover-grey-salsa font-white bg-hover-white socicon-slideshare tooltips" data-original-title="Slideshare"></a>
+                        <a href="#" class="socicon-btn socicon-btn-circle socicon-solid bg-dark bg-hover-grey-salsa font-white bg-hover-white socicon-github" style="text-decoration:none;" data-original-title="Github"></a>
+                        <a href="#" class="socicon-btn socicon-btn-circle socicon-solid bg-red bg-hover-grey-salsa font-white bg-hover-white socicon-google" style="text-decoration:none;" data-original-title="Github"></a>
+
                     </div>
                 </div>
             </div>
             <div class="create-account create-acc-custom">
                 <p class="text-holder">
-                    <a  id="register-btn" class="uppercase" ng-click="showRegistration()">Create an account</a>
+                    <a id="register-btn" class="uppercase" ng-click="showRegistration()">Create an account</a>
                 </p>
             </div>
         </form>
         <!-- END LOGIN FORM -->
         <!-- BEGIN FORGOT PASSWORD FORM -->
-               <form class="forget-form" ng-show="showForgotPasswordForm">
-                   <h3 class="font-green">Forget Password ?</h3>
-                   <p class="font-green"> Enter your e-mail address below to reset your password. </p>
-                   <div class="form-group">
-                       <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"> </div>
-                   <div class="form-actions">
-                       <button type="button" id="back-btn" class="btn btn-default" ng-click="showLogin()">Back</button>
-                       <button type="submit" class="btn btn-success uppercase pull-right" id="submit-forgot-password">Submit</button>
-                   </div>
-               </form>
-               <!-- END FORGOT PASSWORD FORM -->
-               <!--BEGIN REGISTER FORM-->
+        <form class="forget-form" ng-show="showForgotPasswordForm">
+            <h3 class="font-green">Forget Password ?</h3>
+            <p class="font-green"> Enter your e-mail address below to reset your password. </p>
+            <div class="form-group">
+                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"> </div>
+            <div class="form-actions">
+                <button type="button" id="back-btn" class="btn btn-default" ng-click="showLogin()">Back</button>
+                <button type="submit" class="btn btn-success uppercase pull-right" id="submit-forgot-password">Submit</button>
+            </div>
+        </form>
+        <!-- END FORGOT PASSWORD FORM -->
+        <!--BEGIN REGISTER FORM-->
         <form class="login-form log-box login-form-custom" ng-show="showRegisterForm">
             <div class="form-group form-md-line-input">
                 <input type="email" class="form-control" ng-model="register_email">
