@@ -43,6 +43,7 @@ public class FetchArtifactExecutorTest extends TestBase {
     private StringBuilder report;
     private InputStream mockedInputStream;
     private Job fetchArtifactJob;
+    private String source;
 
     @Before
     public void setUp() {
@@ -85,6 +86,8 @@ public class FetchArtifactExecutorTest extends TestBase {
         this.fetchArtifactTaskDefinition.setDestination("correctDestination");
         this.correctFetchArtifactTask.setTaskDefinition(this.fetchArtifactTaskDefinition);
 
+        this.source = this.fetchArtifactTaskDefinition.getPipelineDefinitionName() + File.separator + this.fetchArtifactTaskDefinition.getStageDefinitionName() + File.separator + this.fetchArtifactTaskDefinition.getJobDefinitionName() + File.separator + this.fetchArtifactTaskDefinition.getSource();
+
         this.workInfo = new WorkInfo();
         this.workInfo.setPipelineDefinitionName("correct");
         this.workInfo.setStageDefinitionName("correct");
@@ -106,7 +109,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.fetchArtifactTaskDefinition.getSource())).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.source)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
         Mockito.when(this.mockedResponse.getEntityInputStream()).thenReturn(this.mockedInputStream);
 
@@ -131,7 +134,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.fetchArtifactTaskDefinition.getSource())).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.source)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
         Mockito.when(this.mockedResponse.getEntityInputStream()).thenReturn(this.mockedInputStream);
         Mockito.when(this.mockedFileManagementService.deleteFilesInDirectory(Mockito.anyString())).thenReturn("Error");
@@ -156,7 +159,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.fetchArtifactTaskDefinition.getSource())).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.source)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
         Mockito.when(this.mockedResponse.getEntityInputStream()).thenReturn(this.mockedInputStream);
         Mockito.when(this.mockedFileManagementService.unzipFile(Mockito.anyString(), Mockito.anyString())).thenReturn("Error");
@@ -180,7 +183,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.fetchArtifactTaskDefinition.getSource())).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.source)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
         Mockito.when(this.mockedResponse.getEntityInputStream()).thenReturn(this.mockedInputStream);
 
@@ -201,7 +204,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.fetchArtifactTaskDefinition.getSource())).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.source)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(400);
         Mockito.when(this.mockedResponse.getEntityInputStream()).thenReturn(this.mockedInputStream);
 
@@ -222,7 +225,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedClient.resource("sourceForAPI/fetch-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.fetchArtifactTaskDefinition.getSource())).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, this.source)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
         Mockito.when(this.mockedResponse.getEntityInputStream()).thenReturn(null);
 
