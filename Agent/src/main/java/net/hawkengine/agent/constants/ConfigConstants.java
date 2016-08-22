@@ -2,12 +2,12 @@ package net.hawkengine.agent.constants;
 
 import java.nio.file.Paths;
 
-public final class Constants {
+public final class ConfigConstants {
     public static final String AGENT_SANDBOX = System.getProperty("user.dir");
     public static final String AGENT_NAME = "Agent";
     public static final String AGENT_CONFIG_DIR = "Config";
     public static final String AGENT_CONFIG_FILE_NAME = "config.properties";
-    public static final String AGENT_CONFIG_FILE_LOCATION = Paths.get(Constants.AGENT_SANDBOX, Constants.AGENT_CONFIG_DIR, Constants.AGENT_CONFIG_FILE_NAME).toString();
+    public static final String AGENT_CONFIG_FILE_LOCATION = Paths.get(ConfigConstants.AGENT_SANDBOX, ConfigConstants.AGENT_CONFIG_DIR, ConfigConstants.AGENT_CONFIG_FILE_NAME).toString();
     public static final String AGENT_LOG_DIR = "Log";
     public static final String AGENT_PIPELINES_DIR = "Pipelines";
     public static final String AGENT_TEMP_DIR = "Temp";

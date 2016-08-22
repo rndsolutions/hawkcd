@@ -2,11 +2,12 @@ package net.hawkengine.agent.components.taskexecutor.executors;
 
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
-import net.hawkengine.agent.constants.LoggerMessages;
+import net.hawkengine.agent.constants.MessageConstants;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.ExecTask;
 import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.WorkInfo;
+import net.hawkengine.agent.utilities.ReportAppender;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,10 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ExecTaskExecutor extends TaskExecutor {
 
@@ -45,11 +44,16 @@ public class ExecTaskExecutor extends TaskExecutor {
             builder = this.constructProcessBuilder(command, execTask, true);
         }
 
-        report.append(String.format("Command: %s \n", command));
-        report.append(String.format("Arguments: %s \n", execTask.getArguments()));
+        String commandMessage = String.format("Command: %s", execTask.getCommand());
+        LOGGER.debug(commandMessage);
+        ReportAppender.appendInfoMessage(commandMessage, report);
+        String argumentsMessage = String.format("Arguments: %s", execTask.getArguments());
+        LOGGER.debug(argumentsMessage);
+        ReportAppender.appendInfoMessage(argumentsMessage, report);
+
         this.setProcessBuilderDirectory(builder, execTask, workInfo);
 
-        Process process = null;
+        Process process;
         try {
             Path path = builder.directory().toPath();
             if (Files.exists(path)) {
@@ -62,10 +66,9 @@ public class ExecTaskExecutor extends TaskExecutor {
             } else {
                 this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
             }
-
         } catch (IOException e) {
-            LOGGER.error(String.format(LoggerMessages.TASK_THROWS_EXCEPTION, "22", e.getMessage()));
-            report.append(String.format("%s true \n", e.getMessage()));
+            LOGGER.debug(String.format(MessageConstants.TASK_THROWS_EXCEPTION, e.getMessage()));
+            ReportAppender.appendInfoMessage(e.getMessage(), report);
             this.updateTask(task, TaskStatus.FAILED, null, LocalDateTime.now());
         }
 
@@ -75,8 +78,8 @@ public class ExecTaskExecutor extends TaskExecutor {
     private void execute(Task task, Process process, BufferedReader reader, boolean commandSwitch, StringBuilder report) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
-            LOGGER.info(line);
-            report.append(String.format("%s \n", line));
+            LOGGER.debug(line);
+            ReportAppender.appendInfoMessage(line, report);
         }
 
         try {
@@ -153,12 +156,10 @@ public class ExecTaskExecutor extends TaskExecutor {
     private void setProcessBuilderDirectory(ProcessBuilder builder, ExecTask execTask, WorkInfo workInfo) {
         if ((execTask.getWorkingDirectory() != null) && !execTask.getWorkingDirectory().isEmpty()) {
             String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName(), execTask.getWorkingDirectory()).toString();
-            LOGGER.info(workingDir);
             builder.directory(new File(workingDir));
         } else {
             String workingDir = Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir(), workInfo.getPipelineDefinitionName()).toString();
             builder.directory(new File(workingDir));
-            LOGGER.info(workingDir);
         }
     }
 }

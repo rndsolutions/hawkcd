@@ -210,17 +210,17 @@ public class SchemaValidator {
 
     private String validate(FetchArtifactTask fetchArtifactTask) {
         if (fetchArtifactTask != null) {
-            String pipelineName = fetchArtifactTask.getPipeline();
+            String pipelineName = fetchArtifactTask.getPipelineDefinitionName();
             if (pipelineName == null) {
                 return this.message = "ERROR: FETCH ARTIFACT PIPELINE NAME IS NULL.";
             }
 
-            String pipelineStage = fetchArtifactTask.getStage();
+            String pipelineStage = fetchArtifactTask.getStageDefinitionName();
             if (pipelineStage == null) {
                 return this.message = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
             }
 
-            String pipelineJob = fetchArtifactTask.getJob();
+            String pipelineJob = fetchArtifactTask.getJobDefinitionName();
             if (pipelineJob == null) {
                 return this.message = "ERROR: FETCH ARTIFACT JOB NAME IS NULL.";
             }

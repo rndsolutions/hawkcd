@@ -3,9 +3,9 @@ package net.hawkengine.agent.models;
 import net.hawkengine.agent.enums.TaskType;
 
 public class FetchArtifactTask extends TaskDefinition {
-    private String pipeline;
-    private String stage;
-    private String job;
+    private String pipelineDefinitionName;
+    private String stageDefinitionName;
+    private String jobDefinitionName;
     private String source;
     private String destination;
 
@@ -13,28 +13,28 @@ public class FetchArtifactTask extends TaskDefinition {
         this.setType(TaskType.FETCH_ARTIFACT);
     }
 
-    public String getPipeline() {
-        return pipeline;
+    public String getPipelineDefinitionName() {
+        return pipelineDefinitionName;
     }
 
-    public void setPipeline(String pipeline) {
-        this.pipeline = pipeline;
+    public void setPipelineDefinitionName(String pipelineDefinitionName) {
+        this.pipelineDefinitionName = pipelineDefinitionName;
     }
 
-    public String getStage() {
-        return stage;
+    public String getStageDefinitionName() {
+        return stageDefinitionName;
     }
 
-    public void setStage(String stage) {
-        this.stage = stage;
+    public void setStageDefinitionName(String stageDefinitionName) {
+        this.stageDefinitionName = stageDefinitionName;
     }
 
-    public String getJob() {
-        return job;
+    public String getJobDefinitionName() {
+        return jobDefinitionName;
     }
 
-    public void setJob(String job) {
-        this.job = job;
+    public void setJobDefinitionName(String jobDefinitionName) {
+        this.jobDefinitionName = jobDefinitionName;
     }
 
     public String getSource() {

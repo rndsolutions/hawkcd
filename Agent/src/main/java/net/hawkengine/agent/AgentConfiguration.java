@@ -1,7 +1,7 @@
 package net.hawkengine.agent;
 
 import com.sun.management.OperatingSystemMXBean;
-import net.hawkengine.agent.constants.Constants;
+import net.hawkengine.agent.constants.ConfigConstants;
 import net.hawkengine.agent.models.InstallInfo;
 import net.hawkengine.agent.models.payload.AgentInfo;
 import net.hawkengine.agent.models.payload.EnvironmentInfo;
@@ -48,10 +48,10 @@ public final class AgentConfiguration {
         agentInfo.setId((agentId != null && !agentId.isEmpty()) ? agentId : generateAgentId(configFileProperties));
 
         String agentName = configFileProperties.getProperty("agentName");
-        agentInfo.setName((agentName != null && !agentName.isEmpty()) ? agentName : Constants.AGENT_NAME);
+        agentInfo.setName((agentName != null && !agentName.isEmpty()) ? agentName : ConfigConstants.AGENT_NAME);
         agentInfo.setConnected(true);
         agentInfo.setEnabled(false);
-        agentInfo.setRootPath(Constants.AGENT_SANDBOX);
+        agentInfo.setRootPath(ConfigConstants.AGENT_SANDBOX);
         agentInfo.setLastReportedTime(null);
         try {
             agentInfo.setHostName(InetAddress.getLocalHost().getHostName());
@@ -65,31 +65,31 @@ public final class AgentConfiguration {
         }
 
         String agentPipelinesDir = configFileProperties.getProperty("agentPipelinesDir");
-        installInfo.setAgentPipelinesDir((agentPipelinesDir != null && !agentPipelinesDir.isEmpty()) ? agentPipelinesDir : Constants.AGENT_PIPELINES_DIR);
+        installInfo.setAgentPipelinesDir((agentPipelinesDir != null && !agentPipelinesDir.isEmpty()) ? agentPipelinesDir : ConfigConstants.AGENT_PIPELINES_DIR);
 
         String serverName = configFileProperties.getProperty("serverName");
-        installInfo.setServerName((serverName != null && !serverName.isEmpty()) ? serverName : Constants.SERVER_NAME);
+        installInfo.setServerName((serverName != null && !serverName.isEmpty()) ? serverName : ConfigConstants.SERVER_NAME);
 
         String serverPort = configFileProperties.getProperty("serverPort");
-        installInfo.setServerPort((serverPort != null && !serverPort.isEmpty()) ? Integer.parseInt(serverPort) : Constants.SERVER_PORT);
+        installInfo.setServerPort((serverPort != null && !serverPort.isEmpty()) ? Integer.parseInt(serverPort) : ConfigConstants.SERVER_PORT);
 
         installInfo.setServerAddress(String.format("http://%s:%s", installInfo.getServerName(), installInfo.getServerPort()));
 
-        installInfo.setReportJobApiAddress(String.format("%s/%s", installInfo.getServerAddress(), String.format(Constants.SERVER_REPORT_JOB_API_ADDRESS, getAgentInfo().getId())));
+        installInfo.setReportJobApiAddress(String.format("%s/%s", installInfo.getServerAddress(), String.format(ConfigConstants.SERVER_REPORT_JOB_API_ADDRESS, getAgentInfo().getId())));
 
-        installInfo.setReportAgentApiAddress(String.format("%s/%s/%s/%s", installInfo.getServerAddress(), Constants.SERVER_REPORT_AGENT_API_ADDRESS, getAgentInfo().getId(), "report"));
+        installInfo.setReportAgentApiAddress(String.format("%s/%s/%s/%s", installInfo.getServerAddress(), ConfigConstants.SERVER_REPORT_AGENT_API_ADDRESS, getAgentInfo().getId(), "report"));
 
-        installInfo.setCheckForWorkApiAddress(String.format("%s/%s", installInfo.getServerAddress(), String.format(Constants.SERVER_CHECK_FOR_WORK_API_ADDRESS, getAgentInfo().getId())));
+        installInfo.setCheckForWorkApiAddress(String.format("%s/%s", installInfo.getServerAddress(), String.format(ConfigConstants.SERVER_CHECK_FOR_WORK_API_ADDRESS, getAgentInfo().getId())));
 
-        installInfo.setCreateArtifactApiAddress(String.format("%s/%s", installInfo.getServerAddress(), Constants.SERVER_CREATE_ARTIFACT_API_ADDRESS));
+        installInfo.setCreateArtifactApiAddress(String.format("%s/%s", installInfo.getServerAddress(), ConfigConstants.SERVER_CREATE_ARTIFACT_API_ADDRESS));
 
-        installInfo.setFetchArtifactApiAddress(String.format("%s/%s", installInfo.getServerAddress(), Constants.SERVER_FETCH_ARTIFACT_API_ADDRESS));
+        installInfo.setFetchArtifactApiAddress(String.format("%s/%s", installInfo.getServerAddress(), ConfigConstants.SERVER_FETCH_ARTIFACT_API_ADDRESS));
 
-        installInfo.setAgentSandbox(Paths.get(Constants.AGENT_SANDBOX).toString());
+        installInfo.setAgentSandbox(Paths.get(ConfigConstants.AGENT_SANDBOX).toString());
 
-        installInfo.setAgentTempDirectoryPath(Paths.get(Constants.AGENT_SANDBOX, Constants.AGENT_TEMP_DIR).toString());
+        installInfo.setAgentTempDirectoryPath(Paths.get(ConfigConstants.AGENT_SANDBOX, ConfigConstants.AGENT_TEMP_DIR).toString());
 
-        installInfo.setAgentArtifactsDirectoryPath(Paths.get(Constants.AGENT_SANDBOX, Constants.ARTIFACTS_DIRECTORY).toString());
+        installInfo.setAgentArtifactsDirectoryPath(Paths.get(ConfigConstants.AGENT_SANDBOX, ConfigConstants.ARTIFACTS_DIRECTORY).toString());
     }
 
     private static void configureEnvironmentInfo() {
@@ -104,7 +104,7 @@ public final class AgentConfiguration {
     }
 
     private static Properties fetchConfigFileProperties() {
-        File configFile = new File(Constants.AGENT_CONFIG_FILE_LOCATION);
+        File configFile = new File(ConfigConstants.AGENT_CONFIG_FILE_LOCATION);
         if (!configFile.exists()) {
             createConfigFile(configFile);
         }
@@ -123,7 +123,7 @@ public final class AgentConfiguration {
 
     private static void createConfigFile(File configFile) {
         configFile.getParentFile().mkdir();
-        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(Constants.AGENT_CONFIG_FILE_NAME);
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(ConfigConstants.AGENT_CONFIG_FILE_NAME);
         try {
             FileUtils.copyInputStreamToFile(inputStream, configFile);
         } catch (IOException e) {
@@ -135,7 +135,7 @@ public final class AgentConfiguration {
         UUID agentId = UUID.randomUUID();
 
         try {
-            File configFile = new File(Constants.AGENT_CONFIG_FILE_LOCATION);
+            File configFile = new File(ConfigConstants.AGENT_CONFIG_FILE_LOCATION);
             OutputStream output = new FileOutputStream(configFile);
             properties.setProperty("agentId", agentId.toString());
             properties.store(output, null);

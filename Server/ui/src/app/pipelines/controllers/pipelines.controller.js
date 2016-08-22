@@ -46,11 +46,11 @@ angular
             vm.allPipelineRuns.sort(function(a, b) {
                 return a.executionId - b.executionId;
             });
-            vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
-                viewModel.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
-                    if (currentPipelineRun.pipelineDefinitionId == currentPipeline.id) {
-                        if (currentPipelineRun.triggerReason == null) {
-                            currentPipelineRun.triggerReason = "User";
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+                viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                    if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                        if(currentPipelineRun.triggerReason == null) {
+                            currentPipelineRun.triggerReason = viewModel.user.username;
                         }
                         viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
                         viewModel.allPipelines[pipelineIndex].lastRun = currentPipelineRun;

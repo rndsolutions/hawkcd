@@ -24,7 +24,9 @@ public interface IFileManagementService {
 
     String pathCombine(String... args);
 
-    public String normalizePath(String filePath);
+    String normalizePath(String filePath);
 
-    public String urlCombine(String... args);
+    String urlCombine(String... args);
+
+    String getAbsolutePath(String path);
 }

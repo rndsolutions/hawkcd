@@ -117,7 +117,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinitionId);
 
-        return super.add(pipelineDefinition);
+        return this.add(pipelineDefinition);
     }
 
     @Override

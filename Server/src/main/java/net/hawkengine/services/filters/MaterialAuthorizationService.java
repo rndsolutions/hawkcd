@@ -1,7 +1,5 @@
 package net.hawkengine.services.filters;
 
-import net.hawkengine.model.enums.PermissionScope;
-import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 
@@ -34,11 +32,13 @@ public class MaterialAuthorizationService implements IAuthorizationService {
     }
 
     private boolean hasPermission(List<Permission> permissions) {
-        for (Permission permission : permissions) {
-            if (permission.getPermissionScope() == PermissionScope.SERVER && permission.getPermissionType() == PermissionType.ADMIN) {
-                return true;
-            }
-        }
-        return false;
+        return true;
+
+//        for (Permission permission : permissions) {
+//            if (permission.getPermissionScope() == PermissionScope.SERVER && permission.getPermissionType() == PermissionType.ADMIN) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
 }
