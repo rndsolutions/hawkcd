@@ -1,7 +1,6 @@
 package net.hawkengine.core.materialhandler;
 
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Material;
 import net.hawkengine.model.Pipeline;
@@ -13,6 +12,7 @@ import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IMaterialService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
+import net.hawkengine.ws.EndpointConnector;
 import org.apache.log4j.Logger;
 
 import java.util.List;

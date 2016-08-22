@@ -3,7 +3,6 @@ package net.hawkengine.core.pipelinescheduler;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.enums.JobStatus;
-
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

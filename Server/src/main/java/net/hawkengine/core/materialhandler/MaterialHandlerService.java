@@ -5,12 +5,12 @@ import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
-import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.MaterialService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialService;
+import net.hawkengine.ws.EndpointConnector;
 
 import java.io.File;
 import java.time.LocalDateTime;
