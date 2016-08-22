@@ -49,8 +49,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, "Error occurred in getting pipeline name!");
         }
 
-        String fetchingMessage = String.format("%s pipeline=%s stage=%s job=%s source=%s",
-                taskDefinition.getType(),
+        String fetchingMessage = String.format("Start fetching artifact source:  %s\\%s\\%s\\%s",
                 taskDefinition.getPipelineDefinitionName(),
                 taskDefinition.getStageDefinitionName(),
                 taskDefinition.getJobDefinitionName(),
