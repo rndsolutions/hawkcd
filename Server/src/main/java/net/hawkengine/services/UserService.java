@@ -54,10 +54,6 @@ public class UserService extends CrudService<User> implements IUserService {
 
     @Override
     public ServiceResult update(User user) {
-
-        String password = user.getPassword();
-        String hashedPassword = DigestUtils.sha256Hex(password);
-        user.setPassword(hashedPassword);
         ServiceResult serviceResult = super.update(user);
         SessionPool.getInstance().updateUserObjects(user.getId());
         return serviceResult;
@@ -134,7 +130,8 @@ public class UserService extends CrudService<User> implements IUserService {
             return result;
         }
         User userToUpdate = (User) result.getObject();
-        userToUpdate.setPassword(newPasword);
+        String hashedPasswordToUpdateUser = DigestUtils.sha256Hex(newPasword);
+        userToUpdate.setPassword(hashedPasswordToUpdateUser);
 
         return this.update(userToUpdate);
     }

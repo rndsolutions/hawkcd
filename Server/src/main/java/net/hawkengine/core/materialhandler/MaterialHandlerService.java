@@ -1,18 +1,18 @@
 package net.hawkengine.core.materialhandler;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.materialhandler.materialupdaters.IMaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
-import net.hawkengine.ws.EndpointConnector;
-import net.hawkengine.model.Material;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.*;
+import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.MaterialService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialService;
+import net.hawkengine.ws.EndpointConnector;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
             if (materialDefinition.isPollingForChanges()) {
                 this.materialUpdater = MaterialUpdaterFactory.create(materialDefinition.getType());
                 String oldError = materialDefinition.getErrorMessage();
+                setDestinationOfGitMaterial(materialDefinition, pipelineDefinition.getName());
                 MaterialDefinition latestVersion = materialUpdater.getLatestMaterialVersion(materialDefinition);
                 String newError = materialDefinition.getErrorMessage();
                 if (!oldError.equals(newError)) {
@@ -53,7 +54,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
                     continue;
                 }
 
-                Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId()).getObject();
+                Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId(), pipelineDefinition.getId()).getObject();
 
                 boolean areTheSame = false;
                 if (dbLatestVersion != null) {
@@ -70,9 +71,10 @@ public class MaterialHandlerService implements IMaterialHandlerService {
     }
 
     @Override
-    public Material updateMaterial(Material material) {
+    public Material updateMaterial(Material material, Pipeline pipeline) {
         this.materialUpdater = MaterialUpdaterFactory.create(material.getMaterialDefinition().getType());
         String oldError = material.getMaterialDefinition().getErrorMessage();
+        setDestinationOfGitMaterial(material.getMaterialDefinition(), pipeline.getPipelineDefinitionName());
         MaterialDefinition latestVersion = this.materialUpdater.getLatestMaterialVersion(material.getMaterialDefinition());
         String newError = material.getMaterialDefinition().getErrorMessage();
         if (!oldError.equals(newError)) {
@@ -84,7 +86,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
             return null;
         }
 
-        Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId()).getObject();
+        Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId(), pipeline.getPipelineDefinitionId()).getObject();
 
         boolean areTheSame = false;
         if (dbLatestVersion != null) {
@@ -98,5 +100,12 @@ public class MaterialHandlerService implements IMaterialHandlerService {
         }
 
         return material;
+    }
+
+    private void setDestinationOfGitMaterial(MaterialDefinition materialDefinition, String pipelineName) {
+        if (materialDefinition.getType() == MaterialType.GIT) {
+            ((GitMaterial) materialDefinition).setDestination(
+                    ServerConfiguration.getConfiguration().getMaterialsDestination() + File.separator + pipelineName + File.separator + materialDefinition.getName());
+        }
     }
 }
