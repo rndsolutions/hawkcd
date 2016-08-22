@@ -455,16 +455,20 @@ p {
 .p-config-head:hover {
     cursor: pointer;
     cursor: hand;
-    background-color: #E55E09;
-    color: #2C3E50!important;
+    /*background-color: #B3E5FC;*/
+    /*color: #2C3E50!important;*/
 }
 
 .nav-tabs>.active {
-    /*border-top: 3px solid #E55E09!important*/;
+    border-top: 3px solid #17C4BB!important;
+}
+
+.nav-tabs.admin>.active {
+    border-top: none!important;
 }
 
 .selectedS {
-    background-color: #E55E09!important;
+    background-color: #d6dadc!important;
     color: #2C3E50!important;
 }
 
@@ -473,18 +477,18 @@ p {
     text-overflow: ellipsis;
 }
 
-.s-config:hover {
-    background-color: #E55E09!important;
-    color: #2C3E50!important;
-    /*border: 1px solid #2C3E50!important;*/
-}
+/*.s-config:hover {*/
+    /*background-color: #B3E5FC!important;*/
+    /*color: #2C3E50!important;*/
+    /*!*border: 1px solid #2C3E50!important;*!*/
+/*}*/
 
 .job-name:hover {
     color: #2C3E50!important;
 }
 
 .job-item:hover {
-    background-color: #E55E09!important;
+    background-color: #d6dadc!important;
     color: #2C3E50!important;
     cursor: pointer;
     cursor: hand;
