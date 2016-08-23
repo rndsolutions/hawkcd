@@ -6,8 +6,10 @@ import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
@@ -24,8 +26,9 @@ import java.util.stream.Collectors;
 
 public class PipelineDefinitionServiceTests {
 
+    private IPipelineDefinitionService pipeLineDefinitionService;
     private IDbRepository<PipelineDefinition> mockedRepository;
-    private IPipelineDefinitionService mockedPipeLineDefinitionService;
+    private IMaterialDefinitionService mockedMaterialDefinitionService;
     private IPipelineService mockedPipelineService;
 
     @BeforeClass
@@ -37,8 +40,9 @@ public class PipelineDefinitionServiceTests {
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionService");
         this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.mockedMaterialDefinitionService = Mockito.mock(MaterialDefinitionService.class);
         this.mockedPipelineService = Mockito.mock(PipelineService.class);
-        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository, this.mockedPipelineService);
+        this.pipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository, this.mockedMaterialDefinitionService, this.mockedPipelineService);
     }
 
     @Test
@@ -47,7 +51,7 @@ public class PipelineDefinitionServiceTests {
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + expectedPipelineDefinition.getId() + " retrieved successfully.";
         this.mockedRepository.add(expectedPipelineDefinition);
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getById(expectedPipelineDefinition.getId());
+        ServiceResult actualResult = this.pipeLineDefinitionService.getById(expectedPipelineDefinition.getId());
         PipelineDefinition actualPipelineDefinition = (PipelineDefinition) actualResult.getObject();
 
         Assert.assertNotNull(actualPipelineDefinition);
@@ -61,7 +65,7 @@ public class PipelineDefinitionServiceTests {
         UUID invalidId = UUID.randomUUID();
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + "not found.";
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getById(invalidId.toString());
+        ServiceResult actualResult = this.pipeLineDefinitionService.getById(invalidId.toString());
 
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNull(actualResult.getObject());
@@ -75,9 +79,9 @@ public class PipelineDefinitionServiceTests {
         PipelineDefinition secondExpectedPipelineDefinition = new PipelineDefinition();
         String expectedMessage = PipelineDefinition.class.getSimpleName() + "s retrieved successfully.";
 
-        this.mockedPipeLineDefinitionService.add(firstExpectedPipelineDefinition);
-        this.mockedPipeLineDefinitionService.add(secondExpectedPipelineDefinition);
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getAll();
+        this.pipeLineDefinitionService.add(firstExpectedPipelineDefinition);
+        this.pipeLineDefinitionService.add(secondExpectedPipelineDefinition);
+        ServiceResult actualResult = this.pipeLineDefinitionService.getAll();
         List<PipelineDefinition> actualResultObject = (List<PipelineDefinition>) actualResult.getObject();
         PipelineDefinition firstActualPipelineDefinition = actualResultObject
                 .stream()
@@ -102,7 +106,7 @@ public class PipelineDefinitionServiceTests {
     public void getAll_withNonexistentObjects_noObjects() {
         String expectedMessage = PipelineDefinition.class.getSimpleName() + "s retrieved successfully.";
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.getAll();
+        ServiceResult actualResult = this.pipeLineDefinitionService.getAll();
         List<PipelineDefinition> actualResultObject = (List<PipelineDefinition>) actualResult.getObject();
 
         Assert.assertFalse(actualResult.hasError());
@@ -132,7 +136,7 @@ public class PipelineDefinitionServiceTests {
 
         String expectedMessage = expectedPipelineDefinition.getClass().getSimpleName() + " " + expectedPipelineDefinition.getId() + " created successfully.";
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.add(expectedPipelineDefinition);
+        ServiceResult actualResult = this.pipeLineDefinitionService.add(expectedPipelineDefinition);
         PipelineDefinition actualPipelineDefinition = (PipelineDefinition) actualResult.getObject();
         int actualCollectionSize = this.mockedRepository.getAll().size();
 
@@ -151,8 +155,8 @@ public class PipelineDefinitionServiceTests {
         PipelineDefinition expectedPipelineDefinition = new PipelineDefinition();
         String expectedMessage = expectedPipelineDefinition.getClass().getSimpleName() + " " + "already exists.";
 
-        this.mockedPipeLineDefinitionService.add(expectedPipelineDefinition);
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.add(expectedPipelineDefinition);
+        this.pipeLineDefinitionService.add(expectedPipelineDefinition);
+        ServiceResult actualResult = this.pipeLineDefinitionService.add(expectedPipelineDefinition);
 
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNull(actualResult.getObject());
@@ -163,12 +167,12 @@ public class PipelineDefinitionServiceTests {
     public void update_existingObject_oneObject() {
         PipelineDefinition expectedResult = new PipelineDefinition();
         expectedResult.setName("BeforeUpdateName");
-        this.mockedPipeLineDefinitionService.add(expectedResult);
+        this.pipeLineDefinitionService.add(expectedResult);
         String expectedName = "AfterUpdateName";
         expectedResult.setName(expectedName);
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + expectedResult.getId() + " updated successfully.";
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.update(expectedResult);
+        ServiceResult actualResult = this.pipeLineDefinitionService.update(expectedResult);
         PipelineDefinition actualResultObject = (PipelineDefinition) actualResult.getObject();
 
         Assert.assertFalse(actualResult.hasError());
@@ -181,7 +185,7 @@ public class PipelineDefinitionServiceTests {
         PipelineDefinition expectedResult = new PipelineDefinition();
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " " + "not found.";
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.update(expectedResult);
+        ServiceResult actualResult = this.pipeLineDefinitionService.update(expectedResult);
 
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNull(actualResult.getObject());
@@ -191,7 +195,7 @@ public class PipelineDefinitionServiceTests {
     @Test
     public void delete_existingObject_true() {
         PipelineDefinition pipelineToDelete = new PipelineDefinition();
-        this.mockedPipeLineDefinitionService.add(pipelineToDelete);
+        this.pipeLineDefinitionService.add(pipelineToDelete);
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " deleted successfully.";
 
         ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
@@ -201,7 +205,7 @@ public class PipelineDefinitionServiceTests {
 
         Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
 
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
+        ServiceResult actualResult = this.pipeLineDefinitionService.delete(pipelineToDelete.getId());
 
         Assert.assertFalse(actualResult.hasError());
         Assert.assertNotNull(actualResult.getObject());
@@ -222,11 +226,123 @@ public class PipelineDefinitionServiceTests {
         Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
 
         //Act
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
+        ServiceResult actualResult = this.pipeLineDefinitionService.delete(pipelineDefinition.getId());
 
         //Assert
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
+    }
+
+    @Test
+    public void assignMaterialToPipeline_materialNotAssigned_isSuccessfullyAssigned() {
+        //Arrange
+        String materialDefinitionId = UUID.randomUUID().toString();
+        ServiceResult serviceResult = new ServiceResult();
+        Mockito.when(this.mockedMaterialDefinitionService.getById(materialDefinitionId)).thenReturn(serviceResult);
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        this.pipeLineDefinitionService.add(pipelineDefinition);
+
+        //Act
+        ServiceResult actualResult = this.pipeLineDefinitionService.assignMaterialToPipeline(pipelineDefinition.getId(), materialDefinitionId);
+        boolean isAssigned = ((PipelineDefinition) actualResult.getObject()).getMaterialDefinitionIds().contains(materialDefinitionId);
+
+        //Assert
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertTrue(isAssigned);
+    }
+
+    @Test
+    public void assignMaterialToPipeline_materialAlreadyAssigned_null() {
+        //Arrange
+        String materialDefinitionId = UUID.randomUUID().toString();
+        ServiceResult serviceResult = new ServiceResult();
+        Mockito.when(this.mockedMaterialDefinitionService.getById(materialDefinitionId)).thenReturn(serviceResult);
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        pipelineDefinition.getMaterialDefinitionIds().add(materialDefinitionId);
+        this.pipeLineDefinitionService.add(pipelineDefinition);
+
+        //Act
+        ServiceResult actualResult = this.pipeLineDefinitionService.assignMaterialToPipeline(pipelineDefinition.getId(), materialDefinitionId);
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+    }
+
+    @Test
+    public void assignMaterialToPipeline_materialDoesNotExist_null() {
+        //Arrange
+        String materialDefinitionId = UUID.randomUUID().toString();
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult.setError(true);
+        Mockito.when(this.mockedMaterialDefinitionService.getById(materialDefinitionId)).thenReturn(serviceResult);
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+
+        //Act
+        ServiceResult actualResult = this.pipeLineDefinitionService.assignMaterialToPipeline(pipelineDefinition.getId(), materialDefinitionId);
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+    }
+
+    @Test
+    public void unassignMaterialFromPipeline_materialAssigned_isSuccessfullyUnassigned() {
+        //Arrange
+        String materialDefinitionId = UUID.randomUUID().toString();
+        ServiceResult serviceResult = new ServiceResult();
+        Mockito.when(this.mockedMaterialDefinitionService.getById(materialDefinitionId)).thenReturn(serviceResult);
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        pipelineDefinition.getMaterialDefinitionIds().add(materialDefinitionId);
+        this.pipeLineDefinitionService.add(pipelineDefinition);
+
+        //Act
+        ServiceResult actualResult = this.pipeLineDefinitionService.unassignMaterialFromPipeline(pipelineDefinition.getId(), materialDefinitionId);
+        boolean isAssigned = ((PipelineDefinition) actualResult.getObject()).getMaterialDefinitionIds().contains(materialDefinitionId);
+
+        //Assert
+        Assert.assertFalse(actualResult.hasError());
+        Assert.assertFalse(isAssigned);
+    }
+
+    @Test
+    public void unassignMaterialFromPipeline_materialNotAssigned_null() {
+        //Arrange
+        String materialDefinitionId = UUID.randomUUID().toString();
+        ServiceResult serviceResult = new ServiceResult();
+        Mockito.when(this.mockedMaterialDefinitionService.getById(materialDefinitionId)).thenReturn(serviceResult);
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        this.pipeLineDefinitionService.add(pipelineDefinition);
+
+        //Act
+        ServiceResult actualResult = this.pipeLineDefinitionService.unassignMaterialFromPipeline(pipelineDefinition.getId(), materialDefinitionId);
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
+    }
+
+    @Test
+    public void unassignMaterialFromPipeline_materialDoesNotExist_null() {
+        //Arrange
+        String materialDefinitionId = UUID.randomUUID().toString();
+        ServiceResult serviceResult = new ServiceResult();
+        serviceResult.setError(true);
+        Mockito.when(this.mockedMaterialDefinitionService.getById(materialDefinitionId)).thenReturn(serviceResult);
+
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+
+        //Act
+        ServiceResult actualResult = this.pipeLineDefinitionService.unassignMaterialFromPipeline(pipelineDefinition.getId(), materialDefinitionId);
+
+        //Assert
+        Assert.assertTrue(actualResult.hasError());
+        Assert.assertNull(actualResult.getObject());
     }
 }

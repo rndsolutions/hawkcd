@@ -2,21 +2,12 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.model.GitMaterial;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.PipelineGroup;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.*;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,15 +29,10 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
-    public PipelineDefinitionService(IDbRepository repository, IMaterialDefinitionService materialDefinitionService) {
+    public PipelineDefinitionService(IDbRepository repository, IMaterialDefinitionService materialDefinitionService, IPipelineService pipelineService) {
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
         this.materialDefinitionService = materialDefinitionService;
-    }
-
-    public PipelineDefinitionService(IDbRepository repository, IPipelineService pipelineService){
-        super.setRepository(repository);
-        super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineService = pipelineService;
     }
 
@@ -94,7 +80,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
             return super.createServiceResult(null, true, "could not be created");
         }
 
-        EndpointConnector.passResultToEndpoint("MaterialDefinitionService","add",serviceResult);
+        EndpointConnector.passResultToEndpoint("MaterialDefinitionService", "add", serviceResult);
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
 
         return this.add(pipelineDefinition);
@@ -129,7 +115,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult delete(String pipelineDefinitionId) {
-        if (this.pipelineService == null){
+        if (this.pipelineService == null) {
             this.pipelineService = new PipelineService();
         }
         List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getObject();
@@ -174,19 +160,20 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     public ServiceResult assignMaterialToPipeline(String pipelineDefinitionId, String materialDefinitionId) {
         ServiceResult result = this.materialDefinitionService.getById(materialDefinitionId);
-        if (result.hasError()){
+        if (result.hasError()) {
             return result;
         }
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
 
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
         Set<String> materialDefinitionIds = pipelineDefinition.getMaterialDefinitionIds();
 
-        String materialDefinition = materialDefinitionIds.stream().filter(m -> m.equals(materialDefinitionId)).findFirst().orElse(null);
-
-        if (materialDefinition == null){
-            pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition);
-            return  this.update(pipelineDefinition);
+        boolean isAssigned = materialDefinitionIds.contains(materialDefinitionId);
+        if (!isAssigned) {
+            materialDefinitionIds.add(materialDefinitionId);
+            pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
+            return this.update(pipelineDefinition);
         }
+
         result.setMessage("Material already assigned.");
         result.setError(true);
         result.setObject(null);
@@ -197,25 +184,21 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     public ServiceResult unassignMaterialFromPipeline(String pipelineDefinitionId, String materialDefinitionId) {
         ServiceResult result = this.materialDefinitionService.getById(materialDefinitionId);
-        if (result.hasError()){
+        if (result.hasError()) {
             return result;
         }
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
 
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
         Set<String> materialDefinitionIds = pipelineDefinition.getMaterialDefinitionIds();
 
-        String materialDefinition = materialDefinitionIds.stream().filter(m -> m.equals(materialDefinitionId)).findFirst().orElse(null);
-        Set<String> materialDefinitionIdsForUpdate = new HashSet<>();
-        if (materialDefinition != null){
-            for (String materialId: materialDefinitionIds) {
-                if (!materialId.equals(materialDefinition)){
-                    materialDefinitionIdsForUpdate.add(materialId);
-                }
-            }
-            pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIdsForUpdate);
-            return  this.update(pipelineDefinition);
+        boolean isAssigned = materialDefinitionIds.contains(materialDefinitionId);
+        if (isAssigned) {
+            materialDefinitionIds.remove(materialDefinitionId);
+            pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
+            return this.update(pipelineDefinition);
         }
-        result.setMessage("Material cannot be unnassigned, since it is not initially assigned.");
+
+        result.setMessage("Material cannot be unassigned, since it is not initially assigned.");
         result.setError(true);
         result.setObject(null);
 
