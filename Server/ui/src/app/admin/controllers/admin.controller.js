@@ -135,7 +135,7 @@ angular
             };
 
             vm.currentActiveScreen = '';
-            
+
             vm.state = $state;
             console.log($state.current);
 
@@ -200,7 +200,7 @@ angular
                 }]
             };
 
-            vm.materialType = 'hidden';
+            vm.materialType = 'git';
             vm.formData = {};
 
             vm.addMaterial = function(formData) {
@@ -437,7 +437,7 @@ angular
 
             vm.closeModal = function() {
                 vm.formData = {};
-                vm.materialType = 'hidden';
+                vm.materialType = 'git';
             }
 
             vm.currentPipelineGroups = viewModel.allPipelineGroups;
@@ -633,6 +633,7 @@ angular
             };
 
             vm.setMaterialForEdit = function(material) {
+              vm.materialType = 'hidden';
                 vm.formData.material = material;
                 if (material.username) {
                     vm.formData.material.credentials = true;
