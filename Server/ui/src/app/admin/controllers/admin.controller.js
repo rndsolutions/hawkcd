@@ -135,8 +135,7 @@ angular
             };
 
             vm.currentActiveScreen = '';
-
-
+            
             vm.state = $state;
             console.log($state.current);
 
@@ -276,6 +275,18 @@ angular
                     });
                 }
             });
+
+            vm.isUserGroupOpen = [];
+
+            vm.isPipeGroupOpen = [];
+
+            vm.openAccordion = function (array, index) {
+                if(array[index] != true && array[index] != false) {
+                    array[index] = true;
+                } else {
+                    array[index] = !array[index];
+                }
+            };
 
             vm.selectUserGroup = function(index) {
                 var userToAdd = null;
