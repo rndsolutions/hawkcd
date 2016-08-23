@@ -3,37 +3,13 @@
     <div class="modal-content modal-content-fixed">
       <div class="modal-header">
         <div class="pull-right">
-            <i class="fa fa-close" type="button" class="close" data-dismiss="modal" ng-click="admin.closeModal()"></i>
             <!-- <button ></button> -->
         </div>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click=""></button>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.closeModal()"></button>
         <h4 class="modal-title text-center">{{admin.defaultText.addNewMaterial.newMaterial}}</h4>
       </div>
       <div class="modal-body">
         <div class="tab-pane active">
-
-            <div class="form-group form-md-radios" style="float: none;margin: 0 auto;text-align: center;margin-top:5px;">
-                <div class="md-radio-inline">
-                    <div class="md-radio">
-                        <input type="radio" id="existing" name="material-type" class="md-radiobtn" ng-model="admin.materialType" value="existing">
-                        <label for="existing">
-                            <span></span>
-                            <span class="check"></span>
-                            <span class="box"></span> Existing Material </label>
-                    </div>
-
-
-                    <div class="md-radio" id="new-mat-checkbox">
-                        <input type="radio" id="gitType" name="material-type" class="md-radiobtn" ng-model="admin.materialType" value="git">
-                        <label for="gitType">
-                            <span class="inc"></span>
-                            <span class="check"></span>
-                            <span class="box"></span> New Material </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="clearfix"> </div>
 
             <div ng-if="admin.materialType == 'git'">
                 <form role="form" name="addMaterialForm">

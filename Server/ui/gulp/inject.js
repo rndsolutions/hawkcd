@@ -23,7 +23,7 @@ gulp.task('inject', ['scripts'], function () {
   var injectScripts = gulp.src([
       path.join(conf.paths.src, '/app/**/*.main.js'),
       path.join(conf.paths.src, '/app/**/*.js'),
-      path.join('!' + conf.paths.src, 'app/dataTables/*.js'),
+      path.join('!' + conf.paths.src, '/app/dataTables/*.js'),
       path.join('!' + conf.paths.src, '/app/**/bootstrap.js'),
       path.join('!' + conf.paths.src, '/app/**/quick-sidebar.js'),
       path.join('!' + conf.paths.src, '/app/**/app.js'),
