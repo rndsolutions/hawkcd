@@ -1,0 +1,19 @@
+<div id="removeUser" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">{{admin.defaultText.deleteUserModal.header}}</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    {{admin.defaultText.deleteUserModal.confirm}}<strong>{{admin.selectedUser.email}} </strong>
+                    <br>
+                    <hr>
+                    <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.removeUser()">{{admin.defaultText.deleteUserModal.delete}}</button>
+                    <button class="btn" data-dismiss="modal">{{admin.defaultText.deleteUserModal.cancel}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

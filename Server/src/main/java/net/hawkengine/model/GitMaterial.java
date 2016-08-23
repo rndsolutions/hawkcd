@@ -7,6 +7,7 @@ public class GitMaterial extends MaterialDefinition {
     private String branch;
     private String username;
     private String password;
+    private String destination;
     private String commitId;
     private String authorName;
     private String authorEmail;
@@ -46,6 +47,14 @@ public class GitMaterial extends MaterialDefinition {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 
     public String getCommitId() {

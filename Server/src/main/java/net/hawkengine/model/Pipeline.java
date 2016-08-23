@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.enums.Status;
 
@@ -97,18 +98,22 @@ public class Pipeline extends DbEntry {
         this.status = status;
     }
 
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss a z")
     public Date getStartTime() {
         return this.startTime;
     }
 
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss a z")
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss a z")
     public Date getEndTime() {
         return this.endTime;
     }
 
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss a z")
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }

@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="actions pull-left">
+            <a data-target="#addNewUserGroup" data-toggle="modal" class="btn btn-default">
+                <i class="fa fa-plus"></i> Add </a>
+        </div>
+    </div>
+</div>
+</br>
+<div class="row">
+    <div class="col-sm-12">
+        <uib-accordion close-others="true" id="accordion">
+            <div uib-accordion-group class="panel-default accordion-heading-fix" id="accordionGroup{{$index}}"
+                 is-open="admin.isUserGroupOpen[$index]"
+                 is-disabled="true"
+                 ng-repeat="userGroup in admin.userGroups">
+                <!-- pipelines container-->
+                <uib-accordion-heading id="accordionHeading">
+                    <div>
+                        <span data-target="#removeUserGroup"
+                              ng-if="userGroup.users.length==0"
+                              data-toggle="modal"
+                              ng-click="admin.setUserGroupToDelete(userGroup)">
+                <i class="fa fa-trash pull-right accordion-heading-fix"></i>
+              </span>
+                </div>
+
+                    <div class="pointer">
+                        <i class="fa fa-cog pull-right accordion-heading-fix" data-target="#manageUserGroup" data-toggle="modal" ng-click="admin.selectUserGroup($index)" id="manageUserGroupIcon" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h5 class="accordion-heading-fix" ng-click="admin.openAccordion(admin.isUserGroupOpen, $index);admin.clearSelection()"> {{userGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{userGroup.users.length}} </span></h5>
+                    </div>
+
+
+                </uib-accordion-heading>
+                <div class="custom-admin-pipeline-padding" ng-repeat="user in userGroup.users">
+                    <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{user.email}}</span>
+                </div>
+                </br>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-xs green" data-target="#assignUser" data-toggle="modal" ng-click="admin.selectUserGroup(admin.userGroups.indexOf(userGroup))">Manage <i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </uib-accordion>
+
+    </div>
+</div>
+<div ng-include src="'app/admin/views/partials/_add-user.html'"></div>
+<div ng-include src="'app/admin/views/partials/_assignUsers.html'"></div>
+<div ng-include src="'app/admin/views/partials/_add-userGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_manageUserGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_removeUserGroup.html'"></div>
+<div ng-include src="'app/admin/views/partials/_delete-user.html'"></div>

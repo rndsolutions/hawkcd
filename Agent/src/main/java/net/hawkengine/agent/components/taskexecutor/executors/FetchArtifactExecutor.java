@@ -5,13 +5,14 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
-import net.hawkengine.agent.constants.Constants;
+import net.hawkengine.agent.constants.ConfigConstants;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.FetchArtifactTask;
 import net.hawkengine.agent.models.Task;
 import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
+import net.hawkengine.agent.utilities.ReportAppender;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -38,20 +39,31 @@ public class FetchArtifactExecutor extends TaskExecutor {
         FetchArtifactTask taskDefinition = (FetchArtifactTask) task.getTaskDefinition();
         super.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
-        report.append(String.format("%s pipeline=%s stage=%s job=%s source=%s destination=%s",
-                taskDefinition.getType(),
-                taskDefinition.getPipeline(),
-                taskDefinition.getStage(),
-                taskDefinition.getJob(),
-                taskDefinition.getSource(),
-                taskDefinition.getDestination()));
+        if (((taskDefinition.getJobDefinitionName() == null) || taskDefinition.getJobDefinitionName().isEmpty())){
+            return this.nullProcessing(report, task, "Error occurred in getting job name!");
+        }
+        if ((taskDefinition.getStageDefinitionName() == null) || (taskDefinition.getPipelineDefinitionName().isEmpty())){
+            return this.nullProcessing(report, task, "Error occurred in getting stage name!");
+        }
+        if ((taskDefinition.getPipelineDefinitionName() == null) || (taskDefinition.getPipelineDefinitionName().isEmpty())){
+            return this.nullProcessing(report, task, "Error occurred in getting pipeline name!");
+        }
 
-        String folderPath = String.format(Constants.SERVER_CREATE_ARTIFACT_API_ADDRESS, workInfo.getPipelineDefinitionName(), workInfo.getStageDefinitionName(), workInfo.getJobDefinitionName());
+        String fetchingMessage = String.format("Start fetching artifact source:  %s\\%s\\%s\\%s",
+                taskDefinition.getPipelineDefinitionName(),
+                taskDefinition.getStageDefinitionName(),
+                taskDefinition.getJobDefinitionName(),
+                taskDefinition.getSource());
+        LOGGER.debug(fetchingMessage);
+        ReportAppender.appendInfoMessage(fetchingMessage, report);
+
+        String folderPath = String.format(ConfigConstants.SERVER_CREATE_ARTIFACT_API_ADDRESS, workInfo.getPipelineDefinitionName(), workInfo.getStageDefinitionName(), workInfo.getJobDefinitionName());
         AgentConfiguration.getInstallInfo().setCreateArtifactApiAddress(String.format("%s/%s", AgentConfiguration.getInstallInfo().getServerAddress(), folderPath));
 
         String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/fetch-artifact";
         WebResource webResource = this.restClient.resource(requestSource);
-        ClientResponse response = webResource.type("application/json").post(ClientResponse.class, taskDefinition.getSource());
+        String source = taskDefinition.getPipelineDefinitionName() + File.separator + taskDefinition.getStageDefinitionName() + File.separator + taskDefinition.getJobDefinitionName() + File.separator + taskDefinition.getSource();
+        ClientResponse response = webResource.type("application/json").post(ClientResponse.class, source);
 
         if ((response.getStatus() != 200)) {
             return this.nullProcessing(report, task, String.format("Could not get resource. TaskStatus code %s", response.getStatus()));
@@ -70,8 +82,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
         if (errorMessage != null) {
             return this.nullProcessing(report, task, "Error occurred in creating the artifact!");
         }
-
-        String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentArtifactsDirectoryPath(), taskDefinition.getPipeline(), taskDefinition.getStage(), taskDefinition.getJob()).toString();
+        String destination = Paths.get(AgentConfiguration.getInstallInfo().getAgentArtifactsDirectoryPath(), taskDefinition.getPipelineDefinitionName(), taskDefinition.getStageDefinitionName(), taskDefinition.getJobDefinitionName()).toString();
         errorMessage = this.fileManagementService.unzipFile(filePath, destination);
         filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath()).toString();
         String deleteMessage = this.fileManagementService.deleteFilesInDirectory(filePath);
@@ -84,9 +95,11 @@ public class FetchArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, "Error occurred in deleting files!");
         }
 
-        report.append(File.separator);
-        report.append(String.format("Saved artifact to %s after verifying the integrity of its contents.", destination));
         super.updateTask(task, TaskStatus.PASSED, null, LocalDateTime.now());
+
+        String fetchedMessage = String.format("Saved artifact to %s after verifying the integrity of its contents.", destination);
+        LOGGER.debug(fetchedMessage);
+        ReportAppender.appendInfoMessage(fetchedMessage, report);
 
         return task;
     }

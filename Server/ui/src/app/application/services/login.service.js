@@ -2,7 +2,7 @@
 
 angular
     .module('hawk')
-    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'authenticationService', 'authDataService', '$state', function ($http, $q, CONSTANTS, authenticationService, authDataService, $state) {
+    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'authenticationService', 'authDataService', 'viewModel', 'viewModelUpdater', '$state', '$auth', function ($http, $q, CONSTANTS, authenticationService, authDataService, viewModel, viewModelUpdater, $state, $auth) {
         var loginService = this;
         var tokenEndPoint = '/Token';
 
@@ -42,15 +42,38 @@ angular
                     deferred.reject(err);
                 });
             return deferred.promise;
-        }
-        this.logOut = function () {
-            authenticationService.removeToken();
-            authDataService.authenticationData.IsAuthenticated = false;
-            authDataService.authenticationData.userName = "";
-            $state.go('auth');
+        };
 
-            //Api for logout?
-        }
+
+        this.logout = function () {
+
+//           $http.post('http://localhost:8080/auth/logout', viewModel.user.username, {
+//               headers: {
+//                   'Content-Type': 'application/json'
+//               }
+//           }).then(function (res){
+//            console.log(res);
+//            }).resolve(function (err){
+//            });
+
+                $http({
+                method: 'POST',
+                url: 'http://localhost:8080/auth/logout',
+                data: viewModel.user.username
+              }).then(function successCallback(response) {
+                  console.log(response);
+                }, function errorCallback(response) {
+                  console.log(response);
+               });
+
+
+           // //Api for logout?
+       };
+
+       this.logoutUser = function (username) {
+           $auth.removeToken();
+           viewModelUpdater.flushViewModel();
+       };
 
 
 

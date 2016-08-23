@@ -23,7 +23,7 @@ oAuthProviderConfigs:
     isEnabled: false
 
 ## Folder settings
-materialsDestination: Materials
+materialsDestination: Pipelines
 artifactsDestination: Artifacts
 
 # Worker settings

@@ -34,13 +34,21 @@ angular
         })
 
 
-        .state('index.admin.users', {
-            url: "/users",
+        .state('index.admin.userGroups', {
+            url: "/userGroups",
             data: {
-                pageTitle: 'User Management'
+                pageTitle: 'User Group Management'
             },
-            templateUrl: "app/admin/views/partials/_users.html"
+            templateUrl: "app/admin/views/partials/_userGroups.html"
         })
+
+            .state('index.admin.users', {
+                url: "/users",
+                data: {
+                    pageTitle: 'User Management'
+                },
+                templateUrl: "app/admin/views/partials/_users.html"
+            })
 
         .state('index.admin.materials', {
             url: "/materials",

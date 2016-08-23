@@ -11,7 +11,7 @@
         <th width="15%"> Controls </th>
       </tr>
       </thead>
-      <tbody ng-model="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions" ui-sortable="pipeConfig.sortableOptions"  class="sortable">
+      <tbody ui-sortable="pipeConfig.sortableOptions" ng-class="{'unsortable' : pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'}" class="sortable" ng-model="pipeConfig.job.taskDefinitions">
 
       <!--ng-repeat-->
       <tr ng-repeat="task in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions">
@@ -21,9 +21,9 @@
         <td> {{task.command + ' ' + task.arguments}} </td>
         <td> to do </td>
         <td>
-          <button class="btn yellow" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTask(task)">Edit</button>
-          <button class="btn red" data-toggle="modal" data-target="#removeTask"
-                  ng-click="pipeConfig.getTask(task)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions.length > 1">Delete</button>
+          <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTaskForUpdate(task)">Edit</button>
+          <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#removeTask"
+                  ng-click="pipeConfig.getTask(task)" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions.length > 1">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->
@@ -31,7 +31,7 @@
       </tbody>
     </table>
   </div>
-  <button class="btn green" data-target="#addTask" data-toggle="modal">Add Task</button>
+  <button class="btn green" data-target="#addTask" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal">Add Task</button>
 </div>
 
 <div ng-include src="'app/pipelines/views/partials/config/job-options/_add-task.html'"></div>

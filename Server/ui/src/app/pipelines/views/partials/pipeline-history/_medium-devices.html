@@ -1,0 +1,77 @@
+<div class="run-item" ng-repeat="run in pipesHistory.currentPipelineRuns">
+    <div class="run-item-container" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS'}">
+        <div class="run-info-cell run-cell">
+            <div class="buffer"></div>
+            <div class="run-info-container">
+                #{{run.executionId}} {{run.pipelineDefinitionName}}
+            </div>
+            <div class="buffer"></div>
+        </div>
+
+        <div class="material-stages-cell run-cell">
+            <div class="material-icon">
+                <i class="fa fa-github-square"></i>
+            </div>
+            <div class="material-stages-container ">
+                <!-- <div class="progress progress-striped active">
+                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60"
+                aria-valuemin="0" aria-valuemax="155" style="width: 100%;">
+                <span class="sr-only"> 60% Complete (warning) </span>
+              </div>
+             </div> -->
+                <div class="stages-cell" ng-class="">
+                    <div class="stage-cell" ng-repeat="stage in run.stages">
+
+                        <div ng-if="stage.status === 'IN_PROGRESS'" class="progress progress-striped active stage-content" style="">
+                            <div class="progress-bar progress-bar-warning stage-content" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="155" style="">
+                                <div class="stage-text" ng-if="stage.stageDefinitionName.length > 7">
+                                    {{stage.stageDefinitionName.substring(0,7)}}..
+                                </div>
+                                <div class="stage-text" ng-if="stage.stageDefinitionName.length <= 7">
+                                    {{stage.stageDefinitionName}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div ng-if="stage.status !== 'IN_PROGRESS'" class="stage-content" ng-class="{'label label-sm stage-success':stage.status == 'PASSED','label label-sm stage-fail':stage.status == 'FAILED',
+                            'label label-sm stage-not-run':stage.status=='NOT_RUN','label label-sm stage-working':stage.status=='IN_PROGRESS'}">
+                            <div class="stage-text" ng-if="stage.stageDefinitionName.length > 7">
+                                {{stage.stageDefinitionName.substring(0,7)}}..
+                            </div>
+                            <div class="stage-text" ng-if="stage.stageDefinitionName.length <= 7">
+                                {{stage.stageDefinitionName}}
+                            </div>
+
+                        </div>
+                        <div ng-if="$index !== run.stages.length - 1" class="horizontal-line" ng-class="">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="materials-block">
+                    <span ng-repeat="material in run.materials">
+                      <i class="fa fa-gg"></i>
+                      <a target="_blank" href="{{material.gitLink}}" class="green-jungle">
+                        <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
+                    <span> {{material.materialDefinition.comments}}</span>
+                    <br/>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-time-cell run-cell">
+            <div class="user-info">
+                <div class="display-inline"><i class="fa fa-user fa-1x"></i> {{run.materials[0].materialDefinition.authorName}}</div>
+                <div class="display-inline pull-right"><i class="fa fa-refresh working-icon-right" ng-class="{'fa-spin fa-fw': run.status === 'IN_PROGRESS'}"></i></div>
+            </div>
+            <div class="additional-info">
+                <div id="time-interval" ng-model="run.lastPipelineAction.output" class="display-inline"><i class="fa fa-calendar fa-1x "></i> {{run.lastPipelineAction.output}}</div>
+                <div id="link-button" class="fa-item pull-right" ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId})">
+                    <i class="fa fa-list pull-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

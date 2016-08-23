@@ -1,11 +1,12 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskType;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
@@ -17,18 +18,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     private static final Class CLASS_TYPE = Pipeline.class;
 
     private IPipelineDefinitionService pipelineDefinitionService;
+    private IMaterialDefinitionService materialDefinitionService;
 
     public PipelineService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
-        this.pipelineDefinitionService = new PipelineDefinitionService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
+        this.pipelineDefinitionService = new PipelineDefinitionService();
+        this.materialDefinitionService = new MaterialDefinitionService();
     }
 
-    public PipelineService(IDbRepository repository, IPipelineDefinitionService pipelineDefinitionService) {
+    public PipelineService(IDbRepository repository, IPipelineDefinitionService pipelineDefinitionService, IMaterialDefinitionService materialDefinitionService) {
         super.setRepository(repository);
-        this.pipelineDefinitionService = pipelineDefinitionService;
         super.setObjectType(CLASS_TYPE.getSimpleName());
+        this.pipelineDefinitionService = pipelineDefinitionService;
+        this.materialDefinitionService = materialDefinitionService;
     }
 
     @Override
@@ -126,11 +130,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     private void addMaterialsToPipeline(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
-        List<MaterialDefinition> materialDefinitions = pipelineDefinition.getMaterialDefinitions();
+        List<MaterialDefinition> materialDefinitions =
+                (List<MaterialDefinition>) this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId()).getObject();
 
         List<Material> materials = new ArrayList<>();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
             Material material = new Material();
+            material.setPipelineDefinitionId(pipeline.getPipelineDefinitionId());
             material.setMaterialDefinition(materialDefinition);
             materials.add(material);
         }
@@ -182,8 +188,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             Task task = new Task();
             if (taskDefinition.getType() == TaskType.FETCH_MATERIAL) {
                 FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinition;
-                task.setMaterialDefinition(fetchMaterialTask.getMaterialDefinition());
+                task.setTaskDefinition(fetchMaterialTask);
             }
+
             task.setJobId(job.getId());
             task.setStageId(job.getStageId());
             task.setPipelineId(job.getPipelineId());

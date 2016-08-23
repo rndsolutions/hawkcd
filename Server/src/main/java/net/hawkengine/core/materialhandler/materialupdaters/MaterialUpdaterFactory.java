@@ -7,8 +7,6 @@ public final class MaterialUpdaterFactory {
         switch (materialType) {
             case GIT:
                 return new GitMaterialUpdater();
-            case NUGET:
-                return new NuGetMaterialUpdater();
             default:
                 return null;
         }

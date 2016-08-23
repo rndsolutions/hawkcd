@@ -7,11 +7,14 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
+import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class PipelineDefinitionServiceTests {
 
     private IDbRepository<PipelineDefinition> mockedRepository;
     private IPipelineDefinitionService mockedPipeLineDefinitionService;
+    private IPipelineService mockedPipelineService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -33,7 +37,8 @@ public class PipelineDefinitionServiceTests {
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionService");
         this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository);
+        this.mockedPipelineService = Mockito.mock(PipelineService.class);
+        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository, this.mockedPipelineService);
     }
 
     @Test
@@ -189,6 +194,13 @@ public class PipelineDefinitionServiceTests {
         this.mockedPipeLineDefinitionService.add(pipelineToDelete);
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " deleted successfully.";
 
+        ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
+        mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
+        mockedGetAllPipelinesServiceResult.setError(false);
+        mockedGetAllPipelinesServiceResult.setObject(null);
+
+        Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
+
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
 
         Assert.assertFalse(actualResult.hasError());
@@ -198,11 +210,21 @@ public class PipelineDefinitionServiceTests {
 
     @Test
     public void delete_nonexistentObject_false() {
+        //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         String expectedMessage = PipelineDefinition.class.getSimpleName() + " not found.";
 
+        ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
+        mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
+        mockedGetAllPipelinesServiceResult.setError(false);
+        mockedGetAllPipelinesServiceResult.setObject(null);
+
+        Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
+
+        //Act
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
 
+        //Assert
         Assert.assertTrue(actualResult.hasError());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());

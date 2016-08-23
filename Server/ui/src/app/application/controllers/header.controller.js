@@ -3,13 +3,13 @@
 angular
     .module('hawk')
     /* Setup Layout Part - Header */
-    .controller('HeaderController', ['$scope', '$rootScope', '$state', 'profileService', function ($scope, $rootScope, $state, profileService) {
+    .controller('HeaderController', ['$scope', '$rootScope', '$state', 'profileService', 'loginService', function ($scope, $rootScope, $state, profileService, loginService) {
         $scope.$on('$includeContentLoaded', function () {
             Layout.initHeader(); // init header
         });
 
         $rootScope.logout = function () {
-            $rootScope.isLogged = false;
+            loginService.logout();
         };
         
         $scope.myProfile = 'My profile';

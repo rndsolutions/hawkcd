@@ -9,7 +9,6 @@ import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
-
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ public class PipelinePreparer implements Runnable {
     private EnvironmentVariableService environmentVariableService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private IPipelineService pipelineService;
+    private Pipeline currentPipeline;
 
     public PipelinePreparer() {
         this.environmentVariableService = new EnvironmentVariableService();
@@ -150,7 +150,6 @@ public class PipelinePreparer implements Runnable {
     public List<Task> prepareTasks(List<TaskDefinition> taskDefinitions, Job job) {
         List<Task> tasks = new ArrayList<>();
 
-
         int taskDefinitionCollectionSize = taskDefinitions.size();
 
         for (int i = 0; i < taskDefinitionCollectionSize; i++) {
@@ -161,6 +160,16 @@ public class PipelinePreparer implements Runnable {
             currentTask.setStageId(job.getStageId());
             currentTask.setPipelineId(job.getPipelineId());
             currentTask.setType(taskDefinitions.get(i).getType());
+            if (currentTask.getType() == TaskType.FETCH_MATERIAL) {
+                FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinitions.get(i);
+                for (Material material : this.currentPipeline.getMaterials()) {
+                    if (material.getMaterialDefinition().getId().equals(fetchMaterialTask.getMaterialDefinitionId())) {
+                        fetchMaterialTask.setMaterialDefinition(material.getMaterialDefinition());
+                        currentTask.setTaskDefinition(fetchMaterialTask);
+                        break;
+                    }
+                }
+            }
             currentTask.setRunIfCondition(taskDefinitions.get(i).getRunIfCondition());
             tasks.set(i, currentTask);
         }

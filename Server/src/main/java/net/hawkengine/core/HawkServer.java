@@ -5,7 +5,10 @@ import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
+import net.hawkengine.services.UserService;
+import net.hawkengine.services.interfaces.IUserService;
 import net.hawkengine.ws.WsServlet;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -18,6 +21,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
     private Server server;
+    private IUserService userService;
     private Thread pipelinePreparer;
     private Thread jobAssigner;
     private Thread materialTracker;
@@ -27,6 +31,7 @@ public class HawkServer {
         RedisManager.connect();
 
         this.server = new Server();
+        this.userService = new UserService();
         this.pipelinePreparer = new Thread(new PipelinePreparer());
         this.jobAssigner = new Thread(new JobAssigner());
         this.materialTracker = new Thread(new MaterialTracker());
@@ -46,7 +51,7 @@ public class HawkServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{"index.html"});
-//        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
+        resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
 
         // REST
 
@@ -71,6 +76,7 @@ public class HawkServer {
 
     public void start() throws Exception {
         this.server.start();
+        this.userService.addAdminServerUser();
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();

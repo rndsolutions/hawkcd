@@ -5,6 +5,7 @@ public class TestsConstants {
     public static final int TESTS_COLLECTION_SIZE_ONE_OBJECT = 1;
     public static final int TESTS_COLLECTION_SIZE_TWO_OBJECTS = 2;
     public static final int TESTS_COLLECTION_SIZE_THREE_OBJECTS = 3;
+    public static final int TESTS_OOLLECTION_SIZE_FOUR_OBJECTS = 4;
 
     public static final String EXPECTED_ENABLED_AGEND_MESSAGE = "All enabled Agents retrieved successfully.";
     public static final String EXPECTED_IDLE_AGENT_MESSAGE = "All enabled idle Agents retrieved successfully.";

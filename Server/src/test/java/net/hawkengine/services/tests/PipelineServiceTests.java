@@ -9,8 +9,10 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
@@ -25,8 +27,10 @@ import java.util.List;
 public class PipelineServiceTests {
     private IDbRepository<Pipeline> pipelineRepo;
     private IDbRepository<PipelineDefinition> pipelineDefinitionRepository;
+    private IDbRepository<MaterialDefinition> materialDefinitionIDbRepository;
     private IPipelineService pipelineService;
     private IPipelineDefinitionService pipelineDefinitionService;
+    private IMaterialDefinitionService materialDefinitionService;
     private PipelineDefinition expectedPipelineDefinition;
 
     @BeforeClass
@@ -39,8 +43,10 @@ public class PipelineServiceTests {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineService");
         this.pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
         this.pipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
+        this.materialDefinitionIDbRepository = new RedisRepository(MaterialDefinition.class, mockedPool);
         this.pipelineDefinitionService = new PipelineDefinitionService(this.pipelineDefinitionRepository);
-        this.pipelineService = new PipelineService(this.pipelineRepo, this.pipelineDefinitionService);
+        this.materialDefinitionService = new MaterialDefinitionService(this.materialDefinitionIDbRepository, this.pipelineDefinitionService);
+        this.pipelineService = new PipelineService(this.pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.expectedPipelineDefinition = new PipelineDefinition();
         this.pipelineDefinitionService.add(this.expectedPipelineDefinition);
     }
@@ -213,16 +219,6 @@ public class PipelineServiceTests {
         Assert.assertFalse(actualResult.hasError());
         Assert.assertTrue(actualPipeline.areMaterialsUpdated());
 
-    }
-
-    @Test
-    public void update_nonexistentObject_noObject() {
-        Pipeline expectedPipeline = new Pipeline();
-
-        ServiceResult actualResult = this.pipelineService.update(expectedPipeline);
-
-        Assert.assertTrue(actualResult.hasError());
-        Assert.assertNull(actualResult.getObject());
     }
 
     @Test
