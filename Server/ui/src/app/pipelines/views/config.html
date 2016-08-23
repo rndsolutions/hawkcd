@@ -32,7 +32,7 @@
 
   <div class="mt-list-head list-simple ext-1 font-white p-config-head"
        ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name})"
-       ng-class="{'selectedS': pipeConfig.isPipelineSelected()}" ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName)">
+       ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName)">
 
     <div class="list-head-title-container">
       <span class="badge badge-default pull-right bg-white font-green bold">{{pipeConfig.pipeline.stageDefinitions.length}}</span>
@@ -47,7 +47,7 @@
 
         <div class="list-toggle uppercase s-config"
              ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
-             id="{{'stage'+$index}}" ng-class="{'selectedS': pipeConfig.isStageSelected(stage.name)}" ng-click="pipeConfig.getStage(stage)">
+             id="{{'stage'+$index}}" ng-click="pipeConfig.getStage(stage)">
                 <span class="clip">{{stage.name}}</span>
           <span class="badge badge-default pull-right bg-white font-green bold"> {{stage.jobDefinitions.length}}</span>
         </div>
