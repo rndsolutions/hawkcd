@@ -215,6 +215,7 @@ angular
             viewModel.allPipelines.forEach(function(currentPipeline, index, array) {
                 if (currentPipeline.name == pipeName) {
                     vm.pipeline = array[index];
+                    vm.allPipelineVars = vm.pipeline.environmentVariables;
                     vm.pipelineIndex = index;
                 }
             });
@@ -690,8 +691,8 @@ angular
                 };
             }
             if (newTask.type == 'FETCH_MATERIAL') {
-              var selectedMaterial= JSON.parse(newTask.material);
-              debugger;
+                var selectedMaterial = JSON.parse(newTask.material);
+                debugger;
                 var task = {
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     pipelineName: vm.allPipelines[vm.pipelineIndex].name,
@@ -705,7 +706,6 @@ angular
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
-                debugger;
             }
             if (newTask.type == 'FETCH_ARTIFACT') {
                 var task = {
@@ -828,6 +828,48 @@ angular
                 var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
 
                 pipeConfigService.updateJobDefinition(newJob);
+            }
+        };
+
+        vm.environmentVariableUtils = {
+            pipelines: {
+                addVariable: function(variable) {
+                    var variableToAdd = {
+                        key: variable.name,
+                        value: variable.value,
+                        isSecured: variable.isSecured
+                    };
+                    vm.pipeline.environmentVariables.push(variableToAdd);
+                    pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                },
+                editVariable: function(variable) {
+
+                },
+                deleteVariable: function(variable) {
+
+                }
+            },
+            stages: {
+                addVariable: function(variable) {
+                    debugger;
+                },
+                editVariable: function(variable) {
+
+                },
+                deleteVariable: function(variable) {
+
+                }
+            },
+            jobs: {
+                addVariable: function(variable) {
+
+                },
+                editVariable: function(variable) {
+
+                },
+                deleteVariable: function(variable) {
+
+                }
             }
         };
 
