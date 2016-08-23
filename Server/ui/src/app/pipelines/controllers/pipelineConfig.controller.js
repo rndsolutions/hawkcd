@@ -409,6 +409,7 @@ angular
                 viewModel.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function(currentJob, index, array) {
                     if (currentJob.name == job.name) {
                         vm.job = array[index];
+                        vm.allJobVars = vm.job.environmentVariables;
                         vm.jobIndex = index;
                     }
                 });
@@ -897,15 +898,37 @@ angular
                 variableToEdit: {}
             },
             jobs: {
-                addVariable: function(variable) {
-
-                },
-                editVariable: function(variable) {
-
-                },
-                deleteVariable: function(variable) {
-
-                }
+              addVariable: function(variable) {
+                  var variableToAdd = {
+                      key: variable.name,
+                      value: variable.value,
+                      isSecured: variable.isSecured
+                  };
+                  debugger;
+                  vm.job.environmentVariables.push(variableToAdd);
+                  pipeConfigService.updateJobDefinition(vm.job);
+              },
+              editVariable: function(variable) {
+                debugger;
+                  vm.job.environmentVariables.forEach(function(current, index, array) {
+                      if (current.id == variable.id) {
+                          array[index] = variable;
+                      }
+                  });
+                  pipeConfigService.updateJobDefinition(vm.job);
+              },
+              deleteVariable: function(variable) {
+                  vm.job.environmentVariables.forEach(function(current, index, array) {
+                      if (current.id == variable.id) {
+                          array.splice(index, 1);
+                      }
+                  });
+                  pipeConfigService.updateJobDefinition(vm.job);
+              },
+              getVariableForEdit: function(variable) {
+                  vm.environmentVariableUtils.jobs.variableToEdit = variable;
+              },
+              variableToEdit: {}
             }
         };
 
