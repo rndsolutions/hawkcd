@@ -91,6 +91,18 @@ angular
             };
 
             vm.popOverOptions = {
+                userTitles:{
+                  username:'Username',
+                  dateRegistered:'Registered On',
+                  permissions:'Permissions',
+                  action:'Action'
+                },
+                userInfo:{
+                  username:'Username',
+                  dateRegistered:'Registered On',
+                  permissions:'Permissions',
+                  action:'Action'
+                },
                 tableTitles: {
                     name: 'Name',
                     type: 'Type',
