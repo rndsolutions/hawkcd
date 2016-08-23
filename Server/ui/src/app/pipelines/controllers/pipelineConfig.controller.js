@@ -279,6 +279,7 @@ angular
             viewModel.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function(currentStage, index, array) {
                 if (currentStage.name == stage.name) {
                     vm.stage = array[index];
+                    vm.allStageVars = vm.stage.environmentVariables;
                     vm.stageIndex = index;
                 }
             });
@@ -843,22 +844,57 @@ angular
                     pipeConfigService.updatePipelineDefinition(vm.pipeline);
                 },
                 editVariable: function(variable) {
-
+                    vm.pipeline.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array[index] = variable;
+                        }
+                    });
+                    pipeConfigService.updatePipelineDefinition(vm.pipeline);
                 },
                 deleteVariable: function(variable) {
-
-                }
+                    vm.pipeline.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array.splice(index, 1);
+                        }
+                    });
+                    pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                },
+                getVariableForEdit: function(variable) {
+                    vm.environmentVariableUtils.pipelines.variableToEdit = variable;
+                },
+                variableToEdit: {}
             },
             stages: {
                 addVariable: function(variable) {
-                    debugger;
+                    var variableToAdd = {
+                        key: variable.name,
+                        value: variable.value,
+                        isSecured: variable.isSecured
+                    };
+                    vm.stage.environmentVariables.push(variableToAdd);
+                    pipeConfigService.updateStageDefinition(vm.stage);
                 },
                 editVariable: function(variable) {
-
+                  debugger;
+                    vm.stage.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array[index] = variable;
+                        }
+                    });
+                    pipeConfigService.updateStageDefinition(vm.stage);
                 },
                 deleteVariable: function(variable) {
-
-                }
+                    vm.stage.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array.splice(index, 1);
+                        }
+                    });
+                    pipeConfigService.updateStageDefinition(vm.stage);
+                },
+                getVariableForEdit: function(variable) {
+                    vm.environmentVariableUtils.stages.variableToEdit = variable;
+                },
+                variableToEdit: {}
             },
             jobs: {
                 addVariable: function(variable) {

@@ -2,7 +2,7 @@ package net.hawkengine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class EnvironmentVariable {
+public class EnvironmentVariable extends DbEntry {
     private String key;
     private String value;
     private boolean isSecured;
