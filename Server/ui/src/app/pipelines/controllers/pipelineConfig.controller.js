@@ -876,7 +876,6 @@ angular
                     pipeConfigService.updateStageDefinition(vm.stage);
                 },
                 editVariable: function(variable) {
-                  debugger;
                     vm.stage.environmentVariables.forEach(function(current, index, array) {
                         if (current.id == variable.id) {
                             array[index] = variable;
@@ -904,12 +903,10 @@ angular
                       value: variable.value,
                       isSecured: variable.isSecured
                   };
-                  debugger;
                   vm.job.environmentVariables.push(variableToAdd);
                   pipeConfigService.updateJobDefinition(vm.job);
               },
               editVariable: function(variable) {
-                debugger;
                   vm.job.environmentVariables.forEach(function(current, index, array) {
                       if (current.id == variable.id) {
                           array[index] = variable;
