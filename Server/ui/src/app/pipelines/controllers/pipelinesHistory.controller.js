@@ -32,13 +32,13 @@ angular
         vm.groupName = $stateParams.groupName;
         vm.pipelineName = $stateParams.pipelineName;
 
-        vm.allPipelineRuns = viewModel.allPipelineRuns;
+        vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
 
         vm.spinIcon = false;
 
         vm.updateClock = function(pipelineRun) {
 
-        }
+        };
 
         vm.getLastRunAction = function(pipelineRun) {
             if (pipelineRun.endTime == undefined) {
@@ -69,7 +69,7 @@ angular
         $scope.$watchCollection(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
-            vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
             vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {

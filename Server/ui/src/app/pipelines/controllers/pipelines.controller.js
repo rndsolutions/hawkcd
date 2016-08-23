@@ -30,36 +30,36 @@ angular
         //     console.log(vm.allDefinitionsAndRuns);
         // });
 
-        vm.allPipelines = viewModel.allPipelines;
+        vm.allPipelines = angular.copy(viewModel.allPipelines);
 
         $scope.$watchCollection(function() {
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
-            vm.allPipelines = viewModel.allPipelines;
+            vm.allPipelines = angular.copy(viewModel.allPipelines);
             console.log(vm.allPipelines);
         });
 
         $scope.$watchCollection(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
-            vm.allPipelineRuns = viewModel.allPipelineRuns;
+            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
             vm.allPipelineRuns.sort(function(a, b) {
                 return a.executionId - b.executionId;
             });
             vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
-                viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
                     if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
                         if(currentPipelineRun.triggerReason == null) {
                             currentPipelineRun.triggerReason = viewModel.user.username;
                         }
-                        viewModel.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
-                        viewModel.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
+                        vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                        vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
                     }
                 });
             });
-            viewModel.allPipelineGroups.forEach(function(currentPipelineGroup, index, array) {
-                viewModel.allPipelineGroups[index].pipelines.forEach(function(currentPipelineFromGroup, pipelineFromGroupIndex, array) {
-                    viewModel.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
+            vm.allPipelineGroups.forEach(function(currentPipelineGroup, index, array) {
+                vm.allPipelineGroups[index].pipelines.forEach(function(currentPipelineFromGroup, pipelineFromGroupIndex, array) {
+                    vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
                         // viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
                         //     if(currentPipeline.id == currentPermission.permittedEntityId) {
                         //         currentPipeline.role = currentPermission.permissionType;
@@ -68,11 +68,11 @@ angular
                         //     }
                         // });
                         if (currentPipelineFromGroup.id == currentPipeline.id) {
-                            viewModel.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = viewModel.allPipelines[pipelineIndex];
+                            vm.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
                         }
                     });
                 });
-                viewModel.allPipelineGroups[index].pipelines.sort(function(a, b) {
+                vm.allPipelineGroups[index].pipelines.sort(function(a, b) {
                     return a.executionId - b.executionId;
                 });
             });
@@ -83,7 +83,7 @@ angular
         $scope.$watchCollection(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
-            vm.allPipelineGroups = viewModel.allPipelineGroups;
+            vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
             console.log(vm.allPipelineGroups);
         });
 
@@ -97,7 +97,7 @@ angular
         vm.materialObject = {};
 
         vm.getMaterial = function() {
-            viewModel.allMaterialDefinitions.forEach(function(material, index, array) {
+            vm.allMaterialDefinitions.forEach(function(material, index, array) {
                 if (vm.currentMaterials.indexOf(material) === -1) {
                     vm.currentMaterials.push(material);
                 }
