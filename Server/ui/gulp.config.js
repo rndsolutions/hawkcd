@@ -27,7 +27,7 @@ module.exports = function() {
       ],
     html: clientApp + '**/views/*.html',
     htmltemplates: clientApp + '**/views/*.html',
-    images: client + 'assets/images/*.*',
+    images: client + '/img/*.*',
     index: client + 'index.html',
     js: [
       client + '/assets/**/*.js',
