@@ -48,15 +48,15 @@
             <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}" id="startbtn" ng-click="pipes.play(pipe)">
                 <span class="glyphicon glyphicon-play control"></span>
             </button>
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}">
                 <span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>
             </button>
 
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}">
                 <span class="glyphicon glyphicon-pause control"></span>
             </button>
 
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}" ng-click="pipes.stop(pipe.id)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}" ng-click="pipes.stop(pipe.id)">
                 <span class="glyphicon glyphicon-stop control"></span>
             </button>
         </div>
