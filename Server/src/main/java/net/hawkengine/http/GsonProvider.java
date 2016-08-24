@@ -2,6 +2,12 @@ package net.hawkengine.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.dto.WsContractDto;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -35,7 +41,11 @@ public class GsonProvider<T> implements MessageBodyReader<T>, MessageBodyWriter<
                 .serializeNulls()
                 .enableComplexMapKeySerialization();
 
-        this.gson = builder.create();
+        this.gson = builder
+                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
         this.prettyGson = builder.setPrettyPrinting().create();
     }
 
