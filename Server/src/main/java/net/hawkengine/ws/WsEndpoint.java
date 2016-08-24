@@ -80,24 +80,31 @@ public class WsEndpoint extends WebSocketAdapter {
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
-            SessionPool.getInstance().add(this);
+            if (this.userService.getByEmail(tokenInfo.getUser().getEmail()).getObject() != null) {
+                SessionPool.getInstance().add(this);
 
-            UserDto userDto = new UserDto();
-            userDto.setUsername(tokenInfo.getUser().getEmail());
-            userDto.setPermissions(tokenInfo.getUser().getPermissions());
+                UserDto userDto = new UserDto();
+                userDto.setUsername(tokenInfo.getUser().getEmail());
+                userDto.setPermissions(tokenInfo.getUser().getPermissions());
 
-            ServiceResult serviceResult = new ServiceResult();
-            serviceResult.setError(false);
-            serviceResult.setMessage("User details retrieved successfully");
-            serviceResult.setObject(userDto);
+                ServiceResult serviceResult = new ServiceResult();
+                serviceResult.setError(false);
+                serviceResult.setMessage("User details retrieved successfully");
+                serviceResult.setObject(userDto);
 
-            WsContractDto contract = new WsContractDto();
-            contract.setClassName("UserInfo");
-            contract.setMethodName("getUser");
-            contract.setResult(userDto);
-            contract.setError(false);
-            contract.setErrorMessage("User details retrieved successfully");
-            SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+                WsContractDto contract = new WsContractDto();
+                contract.setClassName("UserInfo");
+                contract.setMethodName("getUser");
+                contract.setResult(userDto);
+                contract.setError(false);
+                contract.setErrorMessage("User details retrieved successfully");
+                SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+            }
+            else{
+                this.loggedUser = null;
+                SessionPool.getInstance().logoutUserFromAllSessions(tokenInfo.getUser().getEmail());
+
+            }
         }
     }
 
@@ -106,7 +113,7 @@ public class WsEndpoint extends WebSocketAdapter {
         WsContractDto contract = null;
         RemoteEndpoint remoteEndpoint = null;
 
-        if (this.loggedUser == null){
+        if (this.loggedUser == null) {
             this.getSession().close();
             return;
         }
@@ -155,7 +162,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
             } else {
                 boolean hasPermission;
-                if (contract.getMethodName().equals("changeUserPassword")){
+                if (contract.getMethodName().equals("changeUserPassword")) {
                     hasPermission = this.securityServiceInvoker.changeUserPasswrod(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
 
                     if (hasPermission) {
@@ -173,14 +180,14 @@ public class WsEndpoint extends WebSocketAdapter {
                         contract.setResult(result.getObject());
                         contract.setError(result.hasError());
                         contract.setErrorMessage(result.getMessage());
-                        if(result.getObject() == null){
-                            SessionPool.getInstance().sendToUserSessions(contract,this.loggedUser);
+                        if (result.getObject() == null) {
+                            SessionPool.getInstance().sendToUserSessions(contract, this.loggedUser);
                         } else {
                             SessionPool.getInstance().sendToAuthorizedSessions(contract);
                         }
                     }
                 }
-                if (!hasPermission){
+                if (!hasPermission) {
                     contract.setResult(null);
                     contract.setError(true);
                     contract.setErrorMessage("Unauthorized");
