@@ -236,6 +236,7 @@ angular
             vm.allPipelines.forEach(function(currentPipeline, index, array) {
                 if (currentPipeline.name == pipeName) {
                     vm.pipeline = array[index];
+                    vm.allPipelineVars = vm.pipeline.environmentVariables;
                     vm.pipelineIndex = index;
                 }
             });
@@ -299,6 +300,7 @@ angular
             vm.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function(currentStage, index, array) {
                 if (currentStage.name == stage.name) {
                     vm.stage = array[index];
+                    vm.allStageVars = vm.stage.environmentVariables;
                     vm.stageIndex = index;
                 }
             });
@@ -447,6 +449,7 @@ angular
                 vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function(currentJob, index, array) {
                     if (currentJob.name == job.name) {
                         vm.job = array[index];
+                        vm.allJobVars = vm.job.environmentVariables;
                         vm.jobIndex = index;
                     }
                 });
@@ -754,8 +757,8 @@ angular
                 };
             }
             if (newTask.type == 'FETCH_MATERIAL') {
-              var selectedMaterial= JSON.parse(newTask.material);
-              debugger;
+                var selectedMaterial = JSON.parse(newTask.material);
+                debugger;
                 var task = {
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     pipelineName: vm.allPipelines[vm.pipelineIndex].name,
@@ -769,7 +772,6 @@ angular
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
-                debugger;
             }
             if (newTask.type == 'FETCH_ARTIFACT') {
                 var task = {
@@ -892,6 +894,102 @@ angular
                 var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
 
                 pipeConfigService.updateJobDefinition(newJob);
+            }
+        };
+
+        vm.environmentVariableUtils = {
+            pipelines: {
+                addVariable: function(variable) {
+                    var variableToAdd = {
+                        key: variable.name,
+                        value: variable.value,
+                        isSecured: variable.isSecured
+                    };
+                    vm.pipeline.environmentVariables.push(variableToAdd);
+                    pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                },
+                editVariable: function(variable) {
+                    vm.pipeline.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array[index] = variable;
+                        }
+                    });
+                    pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                },
+                deleteVariable: function(variable) {
+                    vm.pipeline.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array.splice(index, 1);
+                        }
+                    });
+                    pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                },
+                getVariableForEdit: function(variable) {
+                    vm.environmentVariableUtils.pipelines.variableToEdit = variable;
+                },
+                variableToEdit: {}
+            },
+            stages: {
+                addVariable: function(variable) {
+                    var variableToAdd = {
+                        key: variable.name,
+                        value: variable.value,
+                        isSecured: variable.isSecured
+                    };
+                    vm.stage.environmentVariables.push(variableToAdd);
+                    pipeConfigService.updateStageDefinition(vm.stage);
+                },
+                editVariable: function(variable) {
+                    vm.stage.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array[index] = variable;
+                        }
+                    });
+                    pipeConfigService.updateStageDefinition(vm.stage);
+                },
+                deleteVariable: function(variable) {
+                    vm.stage.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array.splice(index, 1);
+                        }
+                    });
+                    pipeConfigService.updateStageDefinition(vm.stage);
+                },
+                getVariableForEdit: function(variable) {
+                    vm.environmentVariableUtils.stages.variableToEdit = variable;
+                },
+                variableToEdit: {}
+            },
+            jobs: {
+              addVariable: function(variable) {
+                  var variableToAdd = {
+                      key: variable.name,
+                      value: variable.value,
+                      isSecured: variable.isSecured
+                  };
+                  vm.job.environmentVariables.push(variableToAdd);
+                  pipeConfigService.updateJobDefinition(vm.job);
+              },
+              editVariable: function(variable) {
+                  vm.job.environmentVariables.forEach(function(current, index, array) {
+                      if (current.id == variable.id) {
+                          array[index] = variable;
+                      }
+                  });
+                  pipeConfigService.updateJobDefinition(vm.job);
+              },
+              deleteVariable: function(variable) {
+                  vm.job.environmentVariables.forEach(function(current, index, array) {
+                      if (current.id == variable.id) {
+                          array.splice(index, 1);
+                      }
+                  });
+                  pipeConfigService.updateJobDefinition(vm.job);
+              },
+              getVariableForEdit: function(variable) {
+                  vm.environmentVariableUtils.jobs.variableToEdit = variable;
+              },
+              variableToEdit: {}
             }
         };
 
