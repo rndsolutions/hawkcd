@@ -1,6 +1,7 @@
 package net.hawkengine.core.pipelinescheduler;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
@@ -15,6 +16,7 @@ import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -28,6 +30,11 @@ public class StatusUpdaterTests {
     private IMaterialDefinitionService materialDefinitionService;
     private PipelineDefinition expectedPipelineDefinition;
     private PipelinePreparer pipelinePreparer;
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Before
     public void setUp() {

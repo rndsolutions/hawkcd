@@ -2,26 +2,21 @@ package net.hawkengine.ws.tests;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.deserializers.ConversionObjectDeserializer;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
-import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.ws.WsEndpoint;
-
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings("RedundantArrayCreation")
 public class WsEndpointTest {
@@ -38,6 +33,11 @@ public class WsEndpointTest {
         Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
         method.invoke(urlClassLoader, new Object[]{u.toURL()});
+    }
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
     }
 
     @Before
