@@ -17,6 +17,8 @@ angular
 
         vm.allPipelineRuns = [];
 
+        vm.allMaterialDefinitions = [];
+
         vm.allDefinitionsAndRuns = [];
 
         vm.allPipelineGroups = [];
@@ -33,10 +35,27 @@ angular
         vm.allPipelines = angular.copy(viewModel.allPipelines);
 
         $scope.$watchCollection(function() {
+            return viewModel.allPipelineGroups
+        }, function(newVal, oldVal) {
+            vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
+            console.log(vm.allPipelineGroups);
+        });
+
+        $scope.$watchCollection(function() {
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
+            vm.allPipelines.sort(function(a, b) {
+                return a.name - b.name;
+            });
             console.log(vm.allPipelines);
+        });
+
+        $scope.$watchCollection(function() {
+            return viewModel.allMaterialDefinitions
+        }, function(newVal, oldVal) {
+            vm.allMaterialDefinitions = angular.copy(viewModel.allMaterialDefinitions);
+            console.log(vm.allMaterialDefinitions);
         });
 
         $scope.$watchCollection(function() {
@@ -78,13 +97,6 @@ angular
             });
 
             console.log(vm.allPipelineRuns);
-        });
-
-        $scope.$watchCollection(function() {
-            return viewModel.allPipelineGroups
-        }, function(newVal, oldVal) {
-            vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
-            console.log(vm.allPipelineGroups);
         });
 
         // $scope.$watchCollection(function() { return viewModel.allMaterialDefinitions }, function(newVal, oldVal) {
@@ -284,40 +296,40 @@ angular
         //     }
         // };
 
-        vm.getAll = function() {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeConfig.getAllPipelineDefs(token)
-                    .then(function(res) {
-                        vm.allDefinitionsAndRuns = [];
-                        vm.allDefinitionsAndRuns.push(res);
-                        //vm.allDefinitionsAndRuns = pipesService.arrangePipelinesByNameAndExecution(vm.allDefinitionsAndRuns);
-                        vm.allPipelines = res;
-                        console.log(vm.allPipelines);
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function(res) {
-                        var token = res.access_token;
-                        pipeConfig.getAllPipelineDefs(token)
-                            .then(function(res) {
-                                vm.allDefinitionsAndRuns = [];
-                                vm.allDefinitionsAndRuns.push(res);
-                                //vm.allDefinitionsAndRuns = pipesService.arrangePipelinesByNameAndExecution(vm.allDefinitionsAndRuns);
-                                vm.allPipelines = res;
-                                console.log(vm.allPipelines);
-                                console.log(res);
-                            }, function(err) {
-                                console.log(err);
-                            })
-                    })
-            }
-        };
+        // vm.getAll = function() {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //         var token = window.localStorage.getItem("accessToken");
+        //         pipeConfig.getAllPipelineDefs(token)
+        //             .then(function(res) {
+        //                 vm.allDefinitionsAndRuns = [];
+        //                 vm.allDefinitionsAndRuns.push(res);
+        //                 //vm.allDefinitionsAndRuns = pipesService.arrangePipelinesByNameAndExecution(vm.allDefinitionsAndRuns);
+        //                 vm.allPipelines = res;
+        //                 console.log(vm.allPipelines);
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //         authDataService.getNewToken(currentRefreshToken)
+        //             .then(function(res) {
+        //                 var token = res.access_token;
+        //                 pipeConfig.getAllPipelineDefs(token)
+        //                     .then(function(res) {
+        //                         vm.allDefinitionsAndRuns = [];
+        //                         vm.allDefinitionsAndRuns.push(res);
+        //                         //vm.allDefinitionsAndRuns = pipesService.arrangePipelinesByNameAndExecution(vm.allDefinitionsAndRuns);
+        //                         vm.allPipelines = res;
+        //                         console.log(vm.allPipelines);
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         console.log(err);
+        //                     })
+        //             })
+        //     }
+        // };
 
         vm.addPipeline = function(formData) {
             vm.formData = formData;
@@ -450,36 +462,36 @@ angular
             // }
         };
 
-        vm.removePipeline = function(pipeName) {
-            var tokenIsValid = authDataService.checkTokenExpiration();
-            if (tokenIsValid) {
-                var token = window.localStorage.getItem("accessToken");
-                pipeConfig.deletePipeline(pipeName, token)
-                    .then(function(res) {
-                        vm.getAll();
-                        console.log(res);
-                    }, function(err) {
-                        vm.getAll();
-                        console.log(err);
-                    })
-            } else {
-                var currentRefreshToken = window.localStorage.getItem("refreshToken");
-                authDataService.getNewToken(currentRefreshToken)
-                    .then(function(res) {
-                        var token = res.access_token;
-                        pipeConfig.deletePipeline(pipeName, token)
-                            .then(function(res) {
-                                vm.getAll();
-                                console.log(res);
-                            }, function(err) {
-                                vm.getAll();
-                                console.log(err);
-                            })
-                    }, function(err) {
-                        console.log(err);
-                    })
-            }
-        };
+        // vm.removePipeline = function(pipeName) {
+        //     var tokenIsValid = authDataService.checkTokenExpiration();
+        //     if (tokenIsValid) {
+        //         var token = window.localStorage.getItem("accessToken");
+        //         pipeConfig.deletePipeline(pipeName, token)
+        //             .then(function(res) {
+        //                 vm.getAll();
+        //                 console.log(res);
+        //             }, function(err) {
+        //                 vm.getAll();
+        //                 console.log(err);
+        //             })
+        //     } else {
+        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
+        //         authDataService.getNewToken(currentRefreshToken)
+        //             .then(function(res) {
+        //                 var token = res.access_token;
+        //                 pipeConfig.deletePipeline(pipeName, token)
+        //                     .then(function(res) {
+        //                         vm.getAll();
+        //                         console.log(res);
+        //                     }, function(err) {
+        //                         vm.getAll();
+        //                         console.log(err);
+        //                     })
+        //             }, function(err) {
+        //                 console.log(err);
+        //             })
+        //     }
+        // };
 
         vm.wizardInfo = {
             steps: {

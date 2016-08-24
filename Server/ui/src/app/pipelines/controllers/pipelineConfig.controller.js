@@ -26,11 +26,11 @@ angular
 
         vm.allPermissions = [];
         vm.allPipelineRuns = [];
-        vm.allPipelines = [];
+        vm.allPipelines = angular.copy(viewModel.allPipelines);
         vm.allJobs = [];
         vm.allTasks = [];
         vm.allStages = [];
-        vm.allMaterials = {};
+        vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);
         vm.allPipelineVars = {};
         vm.allStageVars = {};
         vm.allJobVars = {};
@@ -169,9 +169,30 @@ angular
 
         vm.newPipelineVar = {};
 
+        vm.otherStageExpanded = false;
+
         //region select manipulation
         vm.isExpanded = function(stageName) {
+            // vm.isOtherStageExpanded(stageName);
             return stageName == vm.currentStage;
+        };
+
+        vm.isOtherStageExpanded = function(stageName) {
+            // if($state.params.stageName == stageName) {
+            //     vm.otherStageExpanded = false;
+            // } else {
+            //     vm.otherStageExpanded = true;
+            // }
+
+            vm.pipeline.stageDefinitions.forEach(function (currentStage, stageIndex, stageArray) {
+                if(currentStage.name != stageName) {
+                    var isExpanded = vm.isExpanded(currentStage.name);
+                    if(isExpanded) {
+                        return true;
+                    }
+                }
+            });
+            return false;
         };
 
         vm.isPipelineSelected = function() {
@@ -290,7 +311,26 @@ angular
             vm.updatedStage.name = vm.stage.name;
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
-            vm.currentStage = stage;
+            vm.currentStage = stage.name;
+        };
+
+        vm.getStageByName = function(stageName) {
+            vm.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function(currentStage, index, array) {
+                if (currentStage.name == stageName) {
+                    vm.stage = array[index];
+                    vm.stageIndex = index;
+                }
+            });
+            vm.stageDeleteButton = false;
+            //vm.stage = res;
+
+            vm.newJob = {};
+            vm.newStageVariable = {};
+
+            vm.updatedStage.name = vm.stage.name;
+            vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
+
+            vm.currentStage = vm.stage.name;
         };
 
         vm.getStageForTask = function(stage) {
@@ -421,7 +461,31 @@ angular
 
                 vm.updatedJob.name = vm.job.name;
 
-                vm.currentJob = job;
+                vm.currentJob = job.name;
+
+            }
+        };
+
+        vm.getJobByName = function(jobName) {
+            if (vm.job != null) {
+                vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function(currentJob, index, array) {
+                    if (currentJob.name == jobName) {
+                        vm.job = array[index];
+                        vm.jobIndex = index;
+                    }
+                });
+
+                vm.jobDeleteButton = false;
+                //vm.job = res;
+
+                vm.newTask = {};
+                vm.newArtifact = {};
+                vm.newJobVariable = {};
+                vm.newCustomTab = {};
+
+                vm.updatedJob.name = vm.job.name;
+
+                vm.currentJob = vm.job.name;
 
             }
         };
