@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.payload.Permission;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -14,10 +15,12 @@ public class User extends DbEntry {
     private String provider;
     private List<Permission> permissions;
     private List<String> userGroupIds;
+    private boolean isEnabled;
 
     public User(){
         this.setPermissions(new ArrayList<>());
         this.setUserGroupIds(new ArrayList<>());
+        this.setEnabled(true);
     }
 
     public String getEmail(){
@@ -67,5 +70,14 @@ public class User extends DbEntry {
 
     public void setUserGroupIds(List<String> userGroupIds) {
         this.userGroupIds = userGroupIds;
+    }
+
+    public boolean isEnabled() {
+        return this.isEnabled;
+    }
+
+    @JsonProperty("isEnabled")
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
     }
 }

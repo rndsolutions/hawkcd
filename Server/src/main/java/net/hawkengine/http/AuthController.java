@@ -17,6 +17,7 @@ import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserService;
 import net.hawkengine.services.github.GitHubService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.eclipse.jetty.http.MetaData;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -112,6 +113,13 @@ public class AuthController {
         }
 
         User userFromDb = (User) serviceResult.getObject();
+
+        if (!userFromDb.isEnabled()){
+            serviceResult.setError(true);
+            serviceResult.setMessage("Cannot login");
+            serviceResult.setObject(null);
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
 
         String token = TokenAdapter.createJsonWebToken(userFromDb, 30L);
 
