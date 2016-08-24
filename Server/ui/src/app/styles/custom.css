@@ -653,11 +653,3 @@ p {
 .td-content {
     height:20px;
 }
-
-.switch-width-fixed {
-  width:90px!important;
-}
-
-#switch-box {
-  display:none!important;
-}
