@@ -10,7 +10,7 @@
                     Are you sure you want to delete Variable: <strong class="uppercase">{{pipeConfig.currentPipelineVar}}</strong>
                     <br>
                     <hr>
-                    <button class="btn btn-danger" ng-click="pipeConfig.deletePipelineVar(pipeConfig.currentPipelineVar)" data-dismiss="modal">DELETE</button>
+                    <button class="btn btn-danger" ng-click="pipeConfig.environmentVariableUtils.pipelines.deleteVariable(pipeConfig.environmentVariableUtils.pipelines.variableToEdit)" data-dismiss="modal">DELETE</button>
                     <button class="btn" data-dismiss="modal">CANCEL</button>
                 </div>
             </div>
