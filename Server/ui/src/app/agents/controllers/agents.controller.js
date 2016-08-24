@@ -59,12 +59,12 @@ angular
 
         vm.currentAgents = [];
 
-        vm.currentAgents = viewModel.allAgents;
+        vm.currentAgents = angular.copy(viewModel.allAgents);
 
         $scope.$watchCollection(function() {
             return viewModel.allAgents
         }, function(newVal, oldVal) {
-            vm.currentAgents = viewModel.allAgents;
+            vm.currentAgents = angular.copy(viewModel.allAgents);
             vm.currentAgents.forEach(function(currentAgent, agentIndex, agentArray) {
                 if (currentAgent.isRunning == false) {
                     vm.currentAgents[agentIndex].status = "Idle";

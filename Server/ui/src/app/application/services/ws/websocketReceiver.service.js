@@ -120,7 +120,7 @@ angular
                       validationService.dispatcherFlow(object,viewModelUpdater.updatePipelineGroup);
                     },
                     delete: function (object) {
-                      validationService.flowNoParameters(object,agentService.getAllPipelineGroupDTOs);
+                      validationService.flowNoParameters(object,pipeConfigService.getAllPipelineGroupDTOs);
                     }
                 },
                 PipelineDefinitionService: {

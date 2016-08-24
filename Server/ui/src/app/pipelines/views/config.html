@@ -42,8 +42,8 @@
   </div>
   <div class="mt-list-container list-simple ext-1 group">
 
-    <div ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions">
-      <a class="list-toggle-container" data-toggle="collapse" data-target="#{{stage.name}}" aria-expanded="false">
+    <div ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions" ng-init="pipeConfig.getStageByName(pipeConfig.state.params.stageName)">
+      <a class="list-toggle-container" data-target="#{{stage.name}}">
 
         <div class="list-toggle uppercase s-config"
              ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
@@ -54,11 +54,11 @@
       </a>
 
       <div class="panel-collapse collapse" id="{{stage.name}}"
-           ng-class="{'in': pipeConfig.isExpanded(stage.name) }">
+           ng-class="{'in': pipeConfig.currentStage == stage.name}">
         <ul>
           <li class="mt-list-item job-item" ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions" id="{{stage.name+'job'+$index}}" ng-class="{'selectedS': pipeConfig.isJobSelected(job.name)}"
               ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name, jobName:job.name})"
-              ng-click="pipeConfig.getJob(job)">
+              ng-click="pipeConfig.getJob(job)" ng-init="pipeConfig.getJobByName(pipeConfig.state.params.jobName)">
             <div class="list-item-content">
               <h3 class="uppercase clip">
                 <a class="job-name">{{job.name}}</a>
