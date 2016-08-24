@@ -18,7 +18,10 @@
         <td> {{$index+1}} </td>
         <td> {{task.type}} </td>
         <td> {{task.runIfCondition}} </td>
-        <td> {{task.command + ' ' + task.arguments}} </td>
+        <td ng-if="task.type == 'EXEC'"> {{task.command + ' ' + task.arguments}} </td>
+        <td ng-if="task.type == 'FETCH_MATERIAL'"> Material: {{task.materialName}} </td>
+        <td ng-if="task.type == 'FETCH_ARTIFACT'"> Pipeline: {{task.pipelineDefinitionName}}, Stage: {{task.stageDefinitionName}}, Job: {{task.jobDefinitionName}}, Source: {{task.source}}</td>
+        <td ng-if="task.type == 'UPLOAD_ARTIFACT'"> Source: {{task.source}}</td>
         <td> to do </td>
         <td>
           <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTaskForUpdate(task)">Edit</button>
