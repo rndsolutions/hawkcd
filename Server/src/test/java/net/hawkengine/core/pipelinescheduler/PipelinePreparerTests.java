@@ -378,7 +378,7 @@ public class PipelinePreparerTests {
         List<EnvironmentVariable> environmentVariables = new ArrayList<>();
 
         EnvironmentVariable environmentVariable = new EnvironmentVariable();
-        environmentVariable.setName(UUID.randomUUID().toString().replaceAll("-", ""));
+        environmentVariable.setKey(UUID.randomUUID().toString().replaceAll("-", ""));
         environmentVariable.setValue(UUID.randomUUID().toString().replaceAll("-", ""));
 
         environmentVariables.add(environmentVariable);

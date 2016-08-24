@@ -97,7 +97,7 @@ dependencies {
 
     compile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-grizzly2', version: '2.23.1'
 
-    compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.9.1'
+//    compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.9.1'
 
 
     // Jedis
@@ -139,10 +139,27 @@ dependencies {
     compile group: 'org.apache.ant', name: 'ant', version: '1.9.6'
 
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
-    compile group: 'com.google.guava', name: 'guava', version: '18.0'
+//    compile group: 'com.google.guava', name: 'guava', version: '19.0', transitive: false
 
     // https://mvnrepository.com/artifact/com.googlecode.jsontoken/jsontoken
-    compile group: 'com.googlecode.jsontoken', name: 'jsontoken', version: '1.0'
+//    compile group: 'com.googlecode.jsontoken', name: 'jsontoken', version: '1.0'
+
+    compile('com.google.guava:guava:18.0') {
+        //excluding a particular transitive dependency:
+        exclude module: 'servlet-api' //by artifact name
+//        exclude group: 'org.jmock' //by group
+//        exclude group: 'org.unwanted', module: 'iAmBuggy' //by both name and group
+    }
+
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+//    compile group: 'com.google.guava', name: 'guava', version: '18.0'
+
+    compile('com.googlecode.jsontoken:jsontoken:1.0') {
+        //excluding a particular transitive dependency:
+        exclude module: 'servlet-api' //by artifact name
+//        exclude group: 'org.jmock' //by group
+//        exclude group: 'org.unwanted', module: 'iAmBuggy' //by both name and group
+    }
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the

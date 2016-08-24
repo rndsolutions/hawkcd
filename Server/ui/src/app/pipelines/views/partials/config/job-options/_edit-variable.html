@@ -7,17 +7,17 @@
             </div>
             <div class="modal-body">
                 <div class="form-group form-md-line-input">
-                    <input type="text" class="form-control" ng-model="pipeConfig.updatedJobVar.Name" ng-pattern="/^([\w-]+)$/" required>
+                    <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.jobs.variableToEdit.key" ng-pattern="/^([\w-]+)$/" required>
                     <label>Name</label>
                 </div>
                 <div class="form-group form-md-line-input">
-                    <input type="text" class="form-control" ng-model="pipeConfig.updatedJobVar.Value" required>
+                    <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.jobs.variableToEdit.value" required>
                     <label>Value</label>
                 </div>
                 <div class="form-group form-md-checkboxes">
                     <div class="md-checkbox-list">
                         <div class="md-checkbox">
-                            <input type="checkbox" class="md-check" ng-model="pipeConfig.updatedJobVar.IsSecured" id="editJobVarSecured">
+                            <input type="checkbox" class="md-check" ng-model="pipeConfig.environmentVariableUtils.jobs.variableToEdit.isSecured" id="editJobVarSecured">
                             <label for="editJobVarSecured">
                                 <span></span>
                                 <span class="check"></span>
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.updateJobVar(pipeConfig.updatedJobVar)">Edit Value</button>
+                <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.environmentVariableUtils.jobs.editVariable(pipeConfig.environmentVariableUtils.jobs.variableToEdit)">Edit Value</button>
                 <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
             </div>
         </div>
