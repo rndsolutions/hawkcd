@@ -30,7 +30,7 @@
                         <a data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
                     </td>
                     <td class="text-center">
-                      <input type="checkbox" ng-model="mymodel.mystate" data-on-text="ENABLED" data-off-text="DISABLED" bootstrap-switch id="switch-box"/>
+                      <input type="checkbox" ng-model="user.isEnabled" data-on-text="ENABLED" data-off-text="DISABLED" bootstrap-switch id="switch-box" ng-click="scope.toggleUser()"/>
                         <!--<span class="custom-hover">-->
                         <!--<i data-target="#removeUser" data-toggle="modal" class="fa fa-trash" ng-click="admin.selectUser($index)"></i>-->
                         <!--</span>-->

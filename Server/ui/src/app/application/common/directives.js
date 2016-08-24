@@ -67,8 +67,7 @@ angular
 })
 
 //Bootstrap switch button
-.directive('bootstrapSwitch', [
-    function() {
+.directive('bootstrapSwitch', ['adminService',function(adminService) {
         return {
             restrict: 'A',
             require: '?ngModel',
@@ -79,6 +78,8 @@ angular
                     if (ngModel) {
                         scope.$apply(function() {
                             ngModel.$setViewValue(state);
+                            var buffer = scope.user;
+                            adminService.updateUser(buffer);
                         });
                     }
                 });
@@ -90,7 +91,6 @@ angular
                         element.bootstrapSwitch('state', false, true);
                     }
                 });
-
 
             }
         };
