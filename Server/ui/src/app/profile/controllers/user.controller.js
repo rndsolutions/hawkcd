@@ -40,6 +40,7 @@ angular
             if (passwordData.newPassword == passwordData.confirmNewPassword) {
                 adminService.updateUserPassword(vm.currentlyLoggedUser, passwordData.newPassword,passwordData.oldPassword);
             }
+            vm.newPasswordObject = {};
         }
 
         // vm.me = {};
