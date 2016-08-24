@@ -112,6 +112,8 @@ angular
 
         vm.temporaryStages = [];
 
+        vm.allPipelines = [];
+
         vm.getLastRunAction = function(pipelineRun) {
             if (pipelineRun.endTime == undefined) {
                 return;
@@ -134,9 +136,13 @@ angular
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);
 
+        $scope.$watchCollection(function() { return viewModel.allPipelines}, function (newVal, oldVal) {
+            vm.allPipelines = angular.copy(viewModel.allPipelines);
+        });
+
         $scope.$watchCollection(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
-            vm.allPipelineRuns = viewModel.allPipelineRuns;
-            viewModel.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 if(currentPipelineRun.pipelineDefinitionName == vm.pipelineName && currentPipelineRun.executionId == vm.pipelineExecutionID){
                     vm.currentPipelineRun = currentPipelineRun;
                     var result = vm.getLastRunAction(currentPipelineRun);
@@ -144,7 +150,7 @@ angular
                     if (currentPipelineRun.triggerReason == null) {
                         vm.currentPipelineRun.triggerReason = viewModel.user.username;
                     }
-                    viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                    vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                         if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
                             vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
                             vm.currentPipelineRunStages.forEach(function (currentStageDefinition, stageDefinitionIndex, stageDefinitionArray) {

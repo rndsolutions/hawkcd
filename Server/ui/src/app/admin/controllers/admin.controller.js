@@ -167,7 +167,7 @@ angular
 
             vm.userGroups = [];
 
-            vm.users = viewModel.users;
+            vm.users = angular.copy(viewModel.users);
 
             vm.newUser = {};
 
@@ -238,19 +238,19 @@ angular
             $scope.$watchCollection(function() {
                 return viewModel.userGroups
             }, function(newVal, oldVal) {
-                vm.userGroups = viewModel.userGroups;
+                vm.userGroups = angular.copy(viewModel.userGroups);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.allPipelines
             }, function(newVal, oldVal) {
-                vm.allPipelines = viewModel.allPipelines;
+                vm.allPipelines = angular.copy(viewModel.allPipelines);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.users
             }, function(newVal, oldVal) {
-                vm.users = viewModel.users;
+                vm.users = angular.copy(viewModel.users);
                 if (vm.users != null) {
                     vm.users.forEach(function(currentUser, userIndex, userArray) {
                         if (currentUser.permissions != null) {
@@ -440,7 +440,7 @@ angular
                 vm.materialType = 'git';
             }
 
-            vm.currentPipelineGroups = viewModel.allPipelineGroups;
+            vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
 
             vm.sortingOrder = 'email';
             vm.pageSizes = [5, 10, 25, 50];
@@ -582,20 +582,20 @@ angular
             $scope.$watchCollection(function() {
                 return viewModel.unassignedPipelines
             }, function(newVal, oldVal) {
-                vm.unassignedPipelines = viewModel.unassignedPipelines;
+                vm.unassignedPipelines = angular.copy(viewModel.unassignedPipelines);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.allPipelineGroups
             }, function(newVal, oldVal) {
-                vm.currentPipelineGroups = viewModel.allPipelineGroups;
+                vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
                 console.log(vm.currentPipelineGroups);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.allMaterialDefinitions
             }, function(newVal, oldVal) {
-                vm.currentMaterials = viewModel.allMaterialDefinitions;
+                vm.currentMaterials = angular.copy(viewModel.allMaterialDefinitions);
                 console.log(vm.currentMaterials);
             });
 
