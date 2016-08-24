@@ -59,8 +59,8 @@ public class HawkServer {
         restServlet.setInitOrder(0);
 
         // Tells the Jersey Servlet which REST service/class to load.
-        String classes = this.endpointFinder.getClasses("net.hawkengine.http");
-        restServlet.setInitParameter("jersey.config.server.provider.classnames", classes);
+//        String classes = this.endpointFinder.getClasses("net.hawkengine.http");
+        restServlet.setInitParameter("jersey.config.server.provider.packages", "net.hawkengine.http");
 
         // localhost:8080/ws/v1
 
