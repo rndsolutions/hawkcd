@@ -9,14 +9,37 @@
 </br>
 <div class="row">
     <div class="col-sm-12">
-        <table class="table table-advance" cellspacing="0" width="100%">
+        <table class="table table-hover table-advance" cellspacing="0" width="100%">
             <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Registered On</th>
-                    <th>Permissions</th>
-                    <th>Action</th>
-                </tr>
+            <tr>
+              <tr>
+                  <th>
+                      <h4>{{admin.popOverOptions.userTitles.username}} <span class="badge badge-default" uib-popover="{{admin.popOverOptions.userInfo.username}}"
+                                                                                      popover-placement="{{admin.popOverOptions.placements.top}}"
+                                                                                      popover-trigger="{{admin.popOverOptions.triggers.click}}"
+                                                                                      popover-animation="true">?</span></h4></th>
+                  <th>
+                      <h4>{{admin.popOverOptions.userTitles.dateRegistered}} <span class="badge badge-default" uib-popover="{{admin.popOverOptions.userInfo.dateRegistered}}"
+                                                                                      popover-placement="{{admin.popOverOptions.placements.top}}"
+                                                                                      popover-trigger="{{admin.popOverOptions.triggers.click}}"
+                                                                                      popover-animation="true">?</span></h4></th>
+                  <th>
+                      <h4> {{admin.popOverOptions.userTitles.permissions}} <span class="badge badge-default" uib-popover="{{admin.popOverOptions.userInfo.permissions}}"
+                                                                                      popover-placement="{{admin.popOverOptions.placements.top}}"
+                                                                                      popover-trigger="{{admin.popOverOptions.triggers.click}}"
+                                                                                      popover-animation="true">?</span></h4></th>
+                  <th>
+                      <h4>{{admin.popOverOptions.userTitles.action}} <span class="badge badge-default" uib-popover="{{admin.popOverOptions.userInfo.action}}"
+                                                                                      popover-placement="{{admin.popOverOptions.placements.top}}"
+                                                                                      popover-trigger="{{admin.popOverOptions.triggers.click}}"
+                                                                                      popover-animation="true">?</span></h4></th>
+                  </th>
+                  <!--<th><h4 titile="The free space of the disk the agent is running on">{{agents.defaultText.tableHeaders.freeSpace}} <span class="badge badge-default">?</span> </h4> </th>-->
+                <!-- <th>Username</th>
+                <th>Registered On</th>
+                <th>Permissions</th>
+                <th>Action</th>
+            </tr> -->
             </thead>
             <tbody id="usersTable">
                 <tr ng-repeat="user in admin.users">

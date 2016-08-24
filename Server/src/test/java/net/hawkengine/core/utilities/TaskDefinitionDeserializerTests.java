@@ -3,7 +3,6 @@ package net.hawkengine.core.utilities;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.model.ExecTask;
 import net.hawkengine.model.FetchArtifactTask;
@@ -12,14 +11,11 @@ import net.hawkengine.model.UploadArtifactTask;
 import net.hawkengine.model.enums.MaterialType;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.TaskType;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.HashMap;
 
 public class TaskDefinitionDeserializerTests {
 
@@ -76,9 +72,9 @@ public class TaskDefinitionDeserializerTests {
         String jsonAsString = "{\n" +
                 "\"type\": \"FETCH_ARTIFACT\",\n" +
                 "\"name\": \"fetchArtifact\",\n" +
-                "\"pipeline\": \"testPipe\",\n" +
-                "\"stage\": \"one\",\n" +
-                "\"job\": \"first\",\n" +
+                "\"pipelineDefinitionName\": \"testPipe\",\n" +
+                "\"stageDefinitionName\": \"one\",\n" +
+                "\"jobDefinitionName\": \"first\",\n" +
                 "\"source\": \"mySource\",\n" +
                 "\"destination\": \"dist\"\n" +
                 "}";
@@ -91,9 +87,9 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertNotNull(actualResult);
         Assert.assertEquals(TaskType.FETCH_ARTIFACT, actualResult.getType());
         Assert.assertEquals("fetchArtifact", actualResult.getName());
-        Assert.assertEquals("testPipe",actualResult.getPipeline());
-        Assert.assertEquals("one",actualResult.getStage());
-        Assert.assertEquals("first",actualResult.getJob());
+        Assert.assertEquals("testPipe",actualResult.getPipelineDefinitionName());
+        Assert.assertEquals("one",actualResult.getStageDefinitionName());
+        Assert.assertEquals("first",actualResult.getJobDefinitionName());
         Assert.assertEquals("mySource",actualResult.getSource());
     }
 
@@ -119,7 +115,7 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertEquals(TaskType.FETCH_MATERIAL, actualResult.getType());
         Assert.assertEquals("fetchMaterial",actualResult.getMaterialName());
         Assert.assertEquals("testPipe",actualResult.getPipelineName());
-        Assert.assertEquals("testSource",actualResult.getSource());
+//        Assert.assertEquals("testSource",actualResult.getSource());
         Assert.assertEquals("testDestination",actualResult.getDestination());
         Assert.assertEquals(MaterialType.GIT,actualResult.getMaterialType());
        // Assert.assertEquals(HashMap.class,actualResult.getMaterialSpecificDetails().getClass());

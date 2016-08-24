@@ -163,6 +163,7 @@ angular
         };
 
         viewModelUpdater.addPipelineDefinition = function (pipelineDefinition) {
+            debugger;
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroupDTO, index, array) {
                 if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId){
                     array[index].pipelines.push(pipelineDefinition);
@@ -172,6 +173,8 @@ angular
                     viewModel.unassignedPipelines.push(pipelineDefinition);
                 }
             });
+
+            viewModel.allPipelines.push(pipelineDefinition);
         };
 
         viewModelUpdater.updatePipelineDefinition = function (pipelineDefinition) {
@@ -205,11 +208,7 @@ angular
         };
 
         viewModelUpdater.addMaterialDefinition = function (materialDefinition) {
-            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
-                if(currentPipeline.id == materialDefinition.pipelineDefinitionId) {
-                    viewModel.allPipelines[index].materialDefinitions.push(materialDefinition);
-                }
-            });
+            viewModel.allMaterialDefinitions.push(materialDefinition);
         };
 
         viewModelUpdater.updateMaterialDefinition = function (materialDefinition) {
@@ -365,6 +364,20 @@ angular
                     });
                 }
             });
+        };
+
+        viewModelUpdater.flushViewModel = function () {
+            viewModel.allAgents = [];
+            viewModel.user = {};
+            viewModel.allPipelines = [];
+            viewModel.assignedPipelines = [];
+            viewModel.unassignedPipelines = [];
+            viewModel.allMaterials = [];
+            viewModel.userGroups = [];
+            viewModel.users = [];
+            viewModel.allMaterialDefinitions = [];
+            viewModel.allPipelineGroups = [];
+            viewModel.allPipelineRuns = [];
         };
 
         return viewModelUpdater;

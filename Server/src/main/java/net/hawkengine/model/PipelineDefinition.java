@@ -1,28 +1,28 @@
 package net.hawkengine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.hawkengine.model.enums.PermissionType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PipelineDefinition extends DbEntry {
     private String name;
     private String pipelineGroupId;
     private String groupName;
     private String labelTemplate;
-    private List<MaterialDefinition> materialDefinitions;
+    private Set<String> materialDefinitionIds;
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
     private List<StageDefinition> stageDefinitions;
     private boolean isAutoSchedulingEnabled;
     private boolean isLocked;
-    private PermissionType permissionType;
 
     public PipelineDefinition() {
         this.setLabelTemplate("%COUNT%");
         this.setEnvironmentVariables(new ArrayList<>());
-        this.setMaterialDefinitions(new ArrayList<>());
+        this.setMaterialDefinitionIds(new HashSet<>());
         this.setEnvironments(new ArrayList<>());
         this.setStageDefinitions(new ArrayList<>());
     }
@@ -51,12 +51,12 @@ public class PipelineDefinition extends DbEntry {
         this.labelTemplate = labelTemplate;
     }
 
-    public List<MaterialDefinition> getMaterialDefinitions() {
-        return this.materialDefinitions;
+    public Set<String> getMaterialDefinitionIds() {
+        return materialDefinitionIds;
     }
 
-    public void setMaterialDefinitions(List<MaterialDefinition> materialDefinitions) {
-        this.materialDefinitions = materialDefinitions;
+    public void setMaterialDefinitionIds(Set<String> materialDefinitionIds) {
+        this.materialDefinitionIds = materialDefinitionIds;
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {
@@ -107,14 +107,6 @@ public class PipelineDefinition extends DbEntry {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
-    }
-
-    public PermissionType getPermissionType() {
-        return this.permissionType;
-    }
-
-    public void setPermissionType(PermissionType permissionType) {
-        this.permissionType = permissionType;
     }
 }
 

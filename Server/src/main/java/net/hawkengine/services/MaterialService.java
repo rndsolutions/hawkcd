@@ -7,6 +7,7 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.interfaces.IMaterialService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MaterialService extends CrudService<Material> implements IMaterialService {
     private static final Class CLASS_TYPE = Material.class;
@@ -48,8 +49,19 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
     }
 
     @Override
-    public ServiceResult getLatestMaterial(String materialDefinitionId) {
+    public ServiceResult getAllFromPipelineDefinition(String pipelineDefinitionId) {
         List<Material> materials = (List<Material>) this.getAll().getObject();
+        materials = materials
+                .stream()
+                .filter(m -> m.getPipelineDefinitionId().equals(pipelineDefinitionId))
+                .collect(Collectors.toList());
+
+        return super.createServiceResultArray(materials, false, "retrieved successfully");
+    }
+
+    @Override
+    public ServiceResult getLatestMaterial(String materialDefinitionId, String pipelineDefinitionId) {
+        List<Material> materials = (List<Material>) this.getAllFromPipelineDefinition(pipelineDefinitionId).getObject();
         Material latestMaterial = materials
                 .stream()
                 .filter(m -> m.getMaterialDefinition().getId().equals(materialDefinitionId))

@@ -7,19 +7,17 @@ import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
-
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -124,7 +122,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareMaterialDefinition();
         this.serviceResult.setObject(this.materialDefinition);
-        Mockito.when(this.materialDefinitionService.addMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.add(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
         MaterialDefinition expectedResult = this.materialDefinition;
 
@@ -146,7 +144,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setError(true);
         this.serviceResult.setObject(this.materialDefinition);
-        Mockito.when(this.materialDefinitionService.addMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.add(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
 
         //Act
@@ -163,11 +161,10 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareMaterialDefinition();
         String expectedResult = "MaterialDefinition already exists.";
-        this.materialDefinitionService.addMaterialDefinition(this.materialDefinition);
         this.serviceResult.setError(true);
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setObject(null);
-        Mockito.when(this.materialDefinitionService.addMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.add(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
 
         //Act
@@ -183,12 +180,11 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
     public void addMaterialDefinition_withSameName_properErrorMessage() {
         //Arrange
         this.prepareMaterialDefinition();
-        this.materialDefinitionService.addMaterialDefinition(this.materialDefinition);
         this.serviceResult.setObject(null);
         this.serviceResult.setError(true);
         String expectedResult = "MaterialDefinition with the same name exists.";
         this.serviceResult.setMessage(expectedResult);
-        Mockito.when(this.materialDefinitionService.addMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.add(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
 
         //Act
@@ -206,7 +202,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         this.prepareMaterialDefinition();
         this.serviceResult.setObject(this.materialDefinition);
         this.materialDefinition.setName("name-updated");
-        Mockito.when(this.materialDefinitionService.updateMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.update(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
         MaterialDefinition expectedResult = this.materialDefinition;
 
@@ -226,7 +222,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         String expectedMessage = "MatarialDefinition not found.";
         this.serviceResult.setError(true);
         this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.materialDefinitionService.updateMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.update(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
 
         //Act
@@ -242,11 +238,10 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
     public void updateJobDefinition_withSameName_properErrorMessage() {
         //Arrange
         this.prepareMaterialDefinition();
-        this.materialDefinitionService.addMaterialDefinition(this.materialDefinition);
         String expectedMessage = "MaterialDefinition with the same name exists.";
         this.serviceResult.setError(true);
         this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.materialDefinitionService.updateMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.update(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
 
         //Act
@@ -266,7 +261,7 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setError(true);
         this.materialDefinition.setName(null);
-        Mockito.when(this.materialDefinitionService.updateMaterialDefinition(Mockito.anyObject())).thenReturn(this.serviceResult);
+        Mockito.when(this.materialDefinitionService.update(Mockito.any(MaterialDefinition.class))).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.materialDefinition, "application/json");
 
         //Act

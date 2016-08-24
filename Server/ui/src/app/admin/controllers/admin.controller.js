@@ -3,7 +3,7 @@
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope) {
+        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
 
@@ -40,6 +40,27 @@ angular
                     submit: 'Submit',
                     cancel: 'Cancel'
                 },
+                addNewMaterial: {
+                    newMaterial: 'Add New Material',
+                    input: 'Name of the new group',
+                    submit: 'Add Material',
+                    cancel: 'Cancel',
+                    gitUserName: 'Enter Git username',
+                    gitPassword: 'Enter Git password'
+                },
+                editMaterial: {
+                    header: 'Edit Material',
+                    submit: 'Edit Material',
+                    cancel: 'Cancel',
+                    gitUserName: 'Enter Git username',
+                    gitPassword: 'Enter Git password'
+                },
+                deleteMaterial: {
+                    header: 'Delete Material',
+                    confirm: 'Are you sure you want to delete Material: ',
+                    delete: 'Confirm',
+                    cancel: 'Cancel'
+                },
                 addNewUserGroup: {
                     newGroup: 'Add New User Group',
                     groupName: 'Group Name',
@@ -70,6 +91,18 @@ angular
             };
 
             vm.popOverOptions = {
+                userTitles:{
+                  username:'Username',
+                  dateRegistered:'Registered On',
+                  permissions:'Permissions',
+                  action:'Action'
+                },
+                userInfo:{
+                  username:'Username',
+                  dateRegistered:'Registered On',
+                  permissions:'Permissions',
+                  action:'Action'
+                },
                 tableTitles: {
                     name: 'Name',
                     type: 'Type',
@@ -103,7 +136,6 @@ angular
 
             vm.currentActiveScreen = '';
 
-
             vm.state = $state;
             console.log($state.current);
 
@@ -135,7 +167,7 @@ angular
 
             vm.userGroups = [];
 
-            vm.users = viewModel.users;
+            vm.users = angular.copy(viewModel.users);
 
             vm.newUser = {};
 
@@ -168,22 +200,57 @@ angular
                 }]
             };
 
+            vm.materialType = 'git';
+            vm.formData = {};
+
+            vm.addMaterial = function(formData) {
+                var material = {};
+                vm.formData = formData;
+                material = {
+                    "name": vm.formData.material.git.name,
+                    "type": 'GIT',
+                    "repositoryUrl": vm.formData.material.git.url,
+                    "isPollingForChanges": vm.formData.material.git.poll,
+                    "destination": vm.formData.material.git.name,
+                    "branch": vm.formData.material.git.branch || 'master'
+                };
+                if (formData.material.git.credentials) {
+                    material.username = formData.material.git.username;
+                    material.password = formData.material.git.password;
+                }
+                adminMaterialService.addGitMaterialDefinition(material);
+
+                vm.materialType = 'hidden';
+                vm.formData = {};
+                vm.closeModal();
+            };
+
+            vm.editMaterial = function(formData) {
+                if (!formData.material.credentials) {
+                    formData.material.username = undefined;
+                    formData.material.password = undefined;
+                }
+                adminMaterialService.updateGitMaterialDefinition(formData.material);
+                vm.formData = {};
+                vm.closeModal();
+            };
+
             $scope.$watchCollection(function() {
                 return viewModel.userGroups
             }, function(newVal, oldVal) {
-                vm.userGroups = viewModel.userGroups;
+                vm.userGroups = angular.copy(viewModel.userGroups);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.allPipelines
             }, function(newVal, oldVal) {
-                vm.allPipelines = viewModel.allPipelines;
+                vm.allPipelines = angular.copy(viewModel.allPipelines);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.users
             }, function(newVal, oldVal) {
-                vm.users = viewModel.users;
+                vm.users = angular.copy(viewModel.users);
                 if (vm.users != null) {
                     vm.users.forEach(function(currentUser, userIndex, userArray) {
                         if (currentUser.permissions != null) {
@@ -208,6 +275,18 @@ angular
                     });
                 }
             });
+
+            vm.isUserGroupOpen = [];
+
+            vm.isPipeGroupOpen = [];
+
+            vm.openAccordion = function (array, index) {
+                if(array[index] != true && array[index] != false) {
+                    array[index] = true;
+                } else {
+                    array[index] = !array[index];
+                }
+            };
 
             vm.selectUserGroup = function(index) {
                 var userToAdd = null;
@@ -356,7 +435,12 @@ angular
                 vm.clearSelection();
             };
 
-            vm.currentPipelineGroups = viewModel.allPipelineGroups;
+            vm.closeModal = function() {
+                vm.formData = {};
+                vm.materialType = 'git';
+            }
+
+            vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
 
             vm.sortingOrder = 'email';
             vm.pageSizes = [5, 10, 25, 50];
@@ -443,6 +527,13 @@ angular
                 vm.selectedUserGroup = null;
             };
 
+            $(window).load(function() {
+                $('#user-checkbox').bootstrapSwitch();
+            });
+
+            $('#user-checkbox').on('switchChange.bootstrapSwitch', function(event, state) {
+                console.log(state);
+            });
 
             vm.range = function(start, end) {
                 var ret = [];
@@ -491,20 +582,20 @@ angular
             $scope.$watchCollection(function() {
                 return viewModel.unassignedPipelines
             }, function(newVal, oldVal) {
-                vm.unassignedPipelines = viewModel.unassignedPipelines;
+                vm.unassignedPipelines = angular.copy(viewModel.unassignedPipelines);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.allPipelineGroups
             }, function(newVal, oldVal) {
-                vm.currentPipelineGroups = viewModel.allPipelineGroups;
+                vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
                 console.log(vm.currentPipelineGroups);
             });
 
             $scope.$watchCollection(function() {
                 return viewModel.allMaterialDefinitions
             }, function(newVal, oldVal) {
-                vm.currentMaterials = viewModel.allMaterialDefinitions;
+                vm.currentMaterials = angular.copy(viewModel.allMaterialDefinitions);
                 console.log(vm.currentMaterials);
             });
 
@@ -514,6 +605,11 @@ angular
 
             vm.setPipelineForDelete = function(pipelineName) {
                 vm.pipelineToDeleteName = pipelineName;
+            };
+
+            vm.setMaterialForDelete = function(materialName, materialId) {
+                vm.materialToDeleteName = materialName;
+                vm.materialToDeleteId = materialId;
             };
 
             vm.setUserGroupToDelete = function(userGroup) {
@@ -532,10 +628,21 @@ angular
                 adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete.id);
             };
 
+            vm.deleteMaterial = function(materialId) {
+                adminMaterialService.deleteMaterialDefinition(materialId);
+            };
+
+            vm.setMaterialForEdit = function(material) {
+              vm.materialType = 'hidden';
+                vm.formData.material = material;
+                if (material.username) {
+                    vm.formData.material.credentials = true;
+                }
+            };
+
             vm.setUserGroupToManage = function(userGroup) {
                 vm.userGroupToManage = userGroup;
             };
-
 
             // function getAllUsers() {
             //     var tokenIsValid = authDataService.checkTokenExpiration();
@@ -905,6 +1012,7 @@ angular
             // }, 4000);
 
             $scope.$on('$destroy', function() {});
+
 
 
         });

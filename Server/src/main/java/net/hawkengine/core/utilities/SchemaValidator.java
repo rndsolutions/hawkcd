@@ -82,14 +82,6 @@ public class SchemaValidator {
                 return this.message = "ERROR: PIPELINE DEFINITION NAME IS INVALID.";
             }
 
-            int pipelineMaterial = pipelineDefinition.getMaterialDefinitions().size();
-            if (pipelineMaterial == 0) {
-                return this.message = "ERROR: PIPELINE MATERIALS NOT ADDED.";
-            } else {
-                List<MaterialDefinition> materials = pipelineDefinition.getMaterialDefinitions();
-                materials.forEach(this::validate);
-            }
-
             int stageDefinitionSize = pipelineDefinition.getStageDefinitions().size();
             if (stageDefinitionSize == 0) {
                 return this.message = "ERROR: STAGE NOT ADDED.";
@@ -218,17 +210,17 @@ public class SchemaValidator {
 
     private String validate(FetchArtifactTask fetchArtifactTask) {
         if (fetchArtifactTask != null) {
-            String pipelineName = fetchArtifactTask.getPipeline();
+            String pipelineName = fetchArtifactTask.getPipelineDefinitionName();
             if (pipelineName == null) {
                 return this.message = "ERROR: FETCH ARTIFACT PIPELINE NAME IS NULL.";
             }
 
-            String pipelineStage = fetchArtifactTask.getStage();
+            String pipelineStage = fetchArtifactTask.getStageDefinitionName();
             if (pipelineStage == null) {
                 return this.message = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
             }
 
-            String pipelineJob = fetchArtifactTask.getJob();
+            String pipelineJob = fetchArtifactTask.getJobDefinitionName();
             if (pipelineJob == null) {
                 return this.message = "ERROR: FETCH ARTIFACT JOB NAME IS NULL.";
             }
@@ -262,10 +254,10 @@ public class SchemaValidator {
                 return this.message = "ERROR: FETCH MATERIAL PIPELINE NAME IS NULL.";
             }
 
-            String source = fetchMaterialTask.getSource();
-            if (source == null) {
-                return this.message = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
-            }
+//            String source = fetchMaterialTask.getSource();
+//            if (source == null) {
+//                return this.message = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
+//            }
 
             String destination = fetchMaterialTask.getDestination();
             if (destination == null) {

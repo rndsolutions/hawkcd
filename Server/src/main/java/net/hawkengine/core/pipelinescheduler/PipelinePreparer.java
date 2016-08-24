@@ -2,22 +2,13 @@ package net.hawkengine.core.pipelinescheduler;
 
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
-import net.hawkengine.model.Environment;
-import net.hawkengine.model.EnvironmentVariable;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.Stage;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.Task;
-import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
-
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -26,10 +17,14 @@ import java.util.stream.Collectors;
 
 public class PipelinePreparer implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(PipelinePreparer.class);
+
+    private EnvironmentVariableService environmentVariableService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private IPipelineService pipelineService;
+    private Pipeline currentPipeline;
 
     public PipelinePreparer() {
+        this.environmentVariableService = new EnvironmentVariableService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
         this.pipelineService = new PipelineService();
     }
@@ -47,9 +42,10 @@ public class PipelinePreparer implements Runnable {
                 List<Pipeline> filteredPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
 
                 for (Pipeline pipeline : filteredPipelines) {
-                    Pipeline preparedPipeline = this.preparePipeline(pipeline);
-                    this.pipelineService.update(preparedPipeline);
-                    LOGGER.info(preparedPipeline.getPipelineDefinitionName() + " prepared.");
+                    this.preparePipeline(pipeline);
+                    this.preparePipelineEnvironmentVariables(pipeline);
+                    this.pipelineService.update(pipeline);
+                    LOGGER.info(pipeline.getPipelineDefinitionName() + " prepared.");
                 }
 
                 Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
@@ -80,9 +76,6 @@ public class PipelinePreparer implements Runnable {
         List<Environment> pipelineDefinitionEnvironments = pipelineDefinition.getEnvironments();
         List<EnvironmentVariable> pipelineDefinitionEnvironmentVariables = pipelineDefinition.getEnvironmentVariables();
 
-        for (StageDefinition stage : stages) {
-            List<JobDefinition> stageJobs = stage.getJobDefinitions();
-        }
         pipelineToPrepare.setPipelineDefinitionId(pipelineDefinitionId);
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
         pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
@@ -90,6 +83,30 @@ public class PipelinePreparer implements Runnable {
         pipelineToPrepare.setPrepared(true);
 
         return pipelineToPrepare;
+    }
+
+    public Pipeline preparePipelineEnvironmentVariables(Pipeline pipeline) {
+        List<EnvironmentVariable> pipelineVariables = pipeline.getEnvironmentVariables();
+
+        for (Stage stage : pipeline.getStages()) {
+            List<EnvironmentVariable> stageVariables = stage.getEnvironmentVariables();
+
+            for (Job job : stage.getJobs()) {
+                List<EnvironmentVariable> jobVariables = job.getEnvironmentVariables();
+                List<EnvironmentVariable> overridenVariables = this.environmentVariableService.getOverriddenVariables(jobVariables, stageVariables, pipelineVariables);
+
+                for (Task task : job.getTasks()) {
+                    if (task.getTaskDefinition().getType() == TaskType.EXEC) {
+                        ExecTask execTask = (ExecTask) task.getTaskDefinition();
+                        String arguments = this.environmentVariableService.replaceVariablesInArguments(overridenVariables, execTask.getArguments());
+                        execTask.setArguments(arguments);
+                        task.setTaskDefinition(execTask);
+                    }
+                }
+            }
+        }
+
+        return pipeline;
     }
 
     public List<Stage> preparePipelineStages(List<StageDefinition> stageDefinitions, Pipeline pipeline) {
@@ -133,7 +150,6 @@ public class PipelinePreparer implements Runnable {
     public List<Task> prepareTasks(List<TaskDefinition> taskDefinitions, Job job) {
         List<Task> tasks = new ArrayList<>();
 
-
         int taskDefinitionCollectionSize = taskDefinitions.size();
 
         for (int i = 0; i < taskDefinitionCollectionSize; i++) {
@@ -144,6 +160,16 @@ public class PipelinePreparer implements Runnable {
             currentTask.setStageId(job.getStageId());
             currentTask.setPipelineId(job.getPipelineId());
             currentTask.setType(taskDefinitions.get(i).getType());
+            if (currentTask.getType() == TaskType.FETCH_MATERIAL) {
+                FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinitions.get(i);
+                for (Material material : this.currentPipeline.getMaterials()) {
+                    if (material.getMaterialDefinition().getId().equals(fetchMaterialTask.getMaterialDefinitionId())) {
+                        fetchMaterialTask.setMaterialDefinition(material.getMaterialDefinition());
+                        currentTask.setTaskDefinition(fetchMaterialTask);
+                        break;
+                    }
+                }
+            }
             currentTask.setRunIfCondition(taskDefinitions.get(i).getRunIfCondition());
             tasks.set(i, currentTask);
         }

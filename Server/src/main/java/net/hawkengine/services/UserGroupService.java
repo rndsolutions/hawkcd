@@ -1,6 +1,6 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.EndpointConnector;
+import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.ServiceResult;
@@ -9,6 +9,7 @@ import net.hawkengine.model.UserGroup;
 import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.services.interfaces.IUserService;
+import net.hawkengine.ws.SessionPool;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -83,6 +84,10 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         result.setMessage("UserGroup updated successfully.");
         result.setObject(updatedUserGroupDto);
 
+        for (String userId : userGroup.getUserIds()) {
+            SessionPool.getInstance().updateUserObjects(userId);
+        }
+
         return result;
     }
 
@@ -129,6 +134,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             userResult.setMessage("User assigned successfully.");
             userResult.setObject(user);
             EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
+            SessionPool.getInstance().updateUserObjects(user.getId());
 
             userGroupResult.setError(false);
             userGroupResult.setMessage("UserGroup updated successfully.");
@@ -161,6 +167,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             userResult.setMessage("User unassigned successfully.");
             userResult.setObject(user);
             EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
+            SessionPool.getInstance().updateUserObjects(user.getId());
 
             userGroupResult.setError(false);
             userGroupResult.setMessage("UserGroup updated successfully.");

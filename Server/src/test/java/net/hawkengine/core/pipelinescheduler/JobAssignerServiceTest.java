@@ -1,11 +1,13 @@
 package net.hawkengine.core.pipelinescheduler;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.enums.JobStatus;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -17,6 +19,11 @@ public class JobAssignerServiceTest {
     private static final int AGENT_ONE = 1;
 
     private JobAssignerService jobAssignerService = new JobAssignerService();
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Test
     public void assignAgentToJob_awaitingJobViableAgent_assigned() {

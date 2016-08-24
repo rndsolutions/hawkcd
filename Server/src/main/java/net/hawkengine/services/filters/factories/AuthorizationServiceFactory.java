@@ -9,10 +9,16 @@ public class AuthorizationServiceFactory {
     public static IAuthorizationService create(String service) {
         switch (service) {
             case "PipelineDefinitionService":
-            case "StageDefinitionService":
-            case "JobDefinitionService":
-            case "TaskDefinitionService":
                 authorizationService = new PipelineDefinitionAuthorizationService();
+                return authorizationService;
+            case "StageDefinitionService":
+                authorizationService = new StageDefinitionAuthorizationService();
+                return authorizationService;
+            case "JobDefinitionService":
+                authorizationService = new JobDefinitionAuthorizationService();
+                return authorizationService;
+            case "TaskDefinitionService":
+                authorizationService = new TaskDefinitionAuthorizationService();
                 return authorizationService;
             case "AgentService":
                 authorizationService = new AgentAuthorizationService();
@@ -30,6 +36,9 @@ public class AuthorizationServiceFactory {
                 return authorizationService;
             case "UserService":
                 authorizationService = new UserAuthorizationService();
+                return authorizationService;
+            case "MaterialDefinitionService":
+                authorizationService = new MaterialAuthorizationService();
                 return authorizationService;
             default:
                 return null;

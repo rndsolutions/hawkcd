@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('validationService', [function () {
+    .factory('validationService', ['toaster',function (toaster) {
         var validationService = this;
 
         validationService.isValid = function (obj) {
@@ -19,6 +19,24 @@ angular
         function isEmpty(str){
             var result = (!str || str.length === 0);
             return result;
+        }
+
+        validationService.dispatcherFlow = function(object,solveFunction){
+          if(object.error == false) {
+              solveFunction(object.result);
+          }
+          else{
+              toaster.pop('error', "Notification", object.errorMessage);
+          }
+        }
+
+        validationService.flowNoParameters = function(object,solveFunction){
+          if(object.error == false) {
+              solveFunction();
+          }
+          else{
+              toaster.pop('error', "Notification", object.errorMessage);
+          }
         }
 
         return validationService;

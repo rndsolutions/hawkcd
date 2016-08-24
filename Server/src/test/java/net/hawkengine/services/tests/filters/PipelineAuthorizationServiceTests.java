@@ -17,6 +17,7 @@ import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.filters.EntityPermissionTypeService;
 import net.hawkengine.services.filters.PipelineAuthorizationService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -25,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -59,6 +61,7 @@ public class PipelineAuthorizationServiceTests {
 
     private IDbRepository<Pipeline> mockedPipelineRepository;
     private IPipelineService mockedPipelineService;
+    private EntityPermissionTypeService mockedEntityPermissionTypeService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -117,7 +120,7 @@ public class PipelineAuthorizationServiceTests {
         this.mockedPipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedPipelineDefinitionRepository);
         this.mockedPipelineRepository = new RedisRepository(Pipeline.class, mockedPool);
-        this.mockedPipelineService = new PipelineService(this.mockedPipelineRepository, this.mockedPipeLineDefinitionService);
+        this.mockedPipelineService = Mockito.mock(PipelineService.class);
 
         this.mockedPipeLineDefinitionService.add(this.firstPipelineDefinition);
         this.mockedPipeLineDefinitionService.add(this.secondPipelineDefinition);
@@ -134,6 +137,7 @@ public class PipelineAuthorizationServiceTests {
         this.mockedPipelineService.add(this.sixthPipeline);
 
         this.authorizationService = new PipelineAuthorizationService(this.mockedPipelineService, this.mockedPipeLineDefinitionService);
+        this.mockedEntityPermissionTypeService = new EntityPermissionTypeService(this.mockedPipeLineDefinitionService);
     }
 
     @Test
@@ -162,6 +166,12 @@ public class PipelineAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
+        ServiceResult getByIdPipelineServiceResult = new ServiceResult();
+        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
+        getByIdPipelineServiceResult.setObject(this.firstPipeline);
+
+        Mockito.when(this.mockedPipelineService.getById(this.firstPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.getById(this.firstPipeline.getId(), permissions);
 
         //Assert
@@ -174,6 +184,12 @@ public class PipelineAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
+        ServiceResult getByIdPipelineServiceResult = new ServiceResult();
+        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
+        getByIdPipelineServiceResult.setObject(this.secondPipeline);
+
+        Mockito.when(this.mockedPipelineService.getById(this.secondPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.getById(this.secondPipeline.getId(), permissions);
 
         //Assert
@@ -244,6 +260,12 @@ public class PipelineAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
+        ServiceResult getByIdPipelineServiceResult = new ServiceResult();
+        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
+        getByIdPipelineServiceResult.setObject(this.fifthPipeline);
+
+        Mockito.when(this.mockedPipelineService.getById(this.fifthPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.delete(this.fifthPipeline.getId(), permissions);
 
         //Assert
@@ -256,6 +278,12 @@ public class PipelineAuthorizationServiceTests {
         List<Permission> permissions = this.createPermissions();
 
         //Act
+        ServiceResult getByIdPipelineServiceResult = new ServiceResult();
+        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
+        getByIdPipelineServiceResult.setObject(this.thirdPipeline);
+
+        Mockito.when(this.mockedPipelineService.getById(this.thirdPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.delete(this.thirdPipeline.getId(), permissions);
 
         //Assert

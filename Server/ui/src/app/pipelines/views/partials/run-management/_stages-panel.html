@@ -1,12 +1,11 @@
 <div class="portlet light custom-portlet">
-    <div class="portlet-title custom-title">
-        <div class="caption custom-caption">
-            <div class="caption font-green-sharp bold uppercase custom-cap">
-                {{pipesRunManagement.currentPipelineRunStages[0].stages[0].stageDefinitionName}}
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Stages
             </div>
-        </div>
-        <div class="tools right">
-            <a href="javascript:;" class="collapse"> </a>
+            <div class="tools right">
+                <a href="javascript:;" class="collapse"> </a>
+            </div>
         </div>
 
         <!--</div> <div class="tools right custom-tools">-->
@@ -25,13 +24,13 @@
             <!--<i class="glyphicon glyphicon-repeat"> </i>-->
         <!--</div>-->
 
-    </div>
-
     <div class="portlet-body custom-body">
-        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRunStages">
-            <img ng-if="$index != pipesRunManagement.currentPipelineRunStages.length-1" class="arrow-right" src="../../../../../assets/images/right-arrow.png">
+        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRun.stages">
+            <div class="display-inline-block" ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
+            <div class="height-150px display-inline-block">
+            <img class="image-vertical-center arrow-right" ng-if="$index != pipesRunManagement.currentPipelineRun.stages.length-1" src="../../../../../assets/images/right-arrow.png">
+            </div>
 
-            <div ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
 
         </div>
     </div>

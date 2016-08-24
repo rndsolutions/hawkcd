@@ -1,0 +1,120 @@
+@media screen and (max-width: 992px){
+  .login-body{
+    padding:10px;
+  }
+}
+
+@media screen and (max-width: 2560px){
+
+  .content-custom {
+    max-width: 650px;
+    margin:0 auto!important;
+  }
+
+  .logo-custom {
+    min-width:170px;
+      max-width: 270px;
+      margin:auto!important;
+  }
+
+  .logo-custom img {
+    width:260px;
+  }
+
+  .login-form-custom {
+      min-width:300px;
+      background-color: #ECEEF1!important;
+      border-radius: 0px 0px 0px 0px;
+  }
+
+  .login-form-custom input {
+    background-color:#DDE3EC!important;
+  }
+
+
+  .create-acc-custom {
+    background-color: #6C7A8D!important;
+    padding:15px;
+    border-radius: 0px 0 0px 0px;
+  }
+
+  .form-header{
+    padding:25px 25px 20px 25px;
+  }
+
+  .text-holder {
+    margin:auto!important;
+    text-align: center;
+  }
+
+  #register-btn{
+    margin:auto!important;
+    color:#B6CEDD!important;
+  }
+
+  #forget-password-container {
+    margin-top:11px!important;
+  }
+
+  #register-user {
+    margin:0 auto!important;
+    width:100px;
+  }
+
+  #submit-forgot-password {
+    background-color:#32c5d2;
+  }
+
+  .heading-four {
+    font-size:17px!important;
+    font-weight: 600!important;
+    color:#8C91AA;
+  }
+
+  .heading-three {
+    font-size:27px!important;
+    font-weight: 500!important;
+    text-align: center;
+  }
+
+  .login-remember-fix {
+    margin-left:10px;
+  }
+
+  .login-opts {
+    padding:25px 0px 0px 0px;
+  }
+
+  .login-opts > div.heading-four {
+    display:inline-block!important;
+  }
+
+  .login-opts > div.icons-container {
+    display:inline-block!important;
+  }
+
+  .forms {
+    padding:5px 25px 45px 25px;
+  }
+
+  .forms div.form-actions {
+    margin-top:40px;
+  }
+
+  .btn-login {
+    padding:10px 20px 10px 20px;
+  }
+
+  input[name="remember"] {
+    margin-top:15px;
+  }
+
+  .checker div {
+    color:#8C91AA;
+  }
+
+  div.login-body input.form-control{
+    height:40px!important;
+    border:none!important;
+  }
+}

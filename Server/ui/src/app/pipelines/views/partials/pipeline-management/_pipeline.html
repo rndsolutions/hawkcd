@@ -3,8 +3,8 @@
         <div class="p-link">
             <div class="panel-heading p-head-box">
                 <span ng-if="pipe.permissionType != 'VIEWER' && pipe.permissionType != 'OPERATOR' && pipe.permissionType != ''" aria-hidden="true" class="icon-close font-lg ico" data-target="#removePipe" data-toggle="modal" ng-click="pipes.getPipeName(pipe)"></span>
-                <span aria-hidden="true" class="icon-settings font-lg ico" ui-sref="index.pipelineConfig.pipeline.general({groupName:pipegroup.name,pipelineName:pipe.name})" ></span>
-                <span ng-hide="pipe.ExecutionID==0" aria-hidden="true" class="icon-info font-lg ico" ui-sref="index.pipelineHistory.history({groupName:pipegroup.name,pipelineName:pipe.name})"></span>
+                <span aria-hidden="true" class="icon-settings font-lg ico" ui-sref="index.pipelineConfig.pipeline.general({groupName:pipegroup.name,pipelineName:pipe.name})" ng-click=""></span>
+                <span ng-hide="pipe.ExecutionID==0" aria-hidden="true" class="icon-info font-lg ico" ui-sref="index.pipelineHistory.history({pipelineName:pipe.name})"></span>
                 <div>
                     <p class="p-name">{{pipe.name}}</p>
                 </div>
@@ -23,19 +23,19 @@
 
             <span ng-repeat="stage in pipe.stages">
           <span ng-if="stage.status=='PASSED' && $index<9">
-<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
              </span>
             <span ng-if="stage.status=='FAILED' && $index<9">
-              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'NOT_RUN' && $index<9">
-                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'IN_PROGRESS' && $index<9">
-                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'SCHEDULED' && $index<9">
-                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, groupName: pipegroup.name})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             </span>
             <span ng-if="pipe.stages == null" ng-repeat="stageDefinition in pipe.stageDefinitions">

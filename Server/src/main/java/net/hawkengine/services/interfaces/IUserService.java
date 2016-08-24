@@ -2,6 +2,7 @@ package net.hawkengine.services.interfaces;
 
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
+import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.services.Service;
 
 public interface IUserService extends ICrudService<User> {
@@ -13,4 +14,6 @@ public interface IUserService extends ICrudService<User> {
     ServiceResult addAdminServerUser();
 
     ServiceResult addUserWithoutProvider(User user);
+
+    ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword);
 }

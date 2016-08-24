@@ -11,12 +11,12 @@
             </thead>
             <tbody>
                 <tr ng-repeat="jobVar in pipeConfig.allJobVars">
-                    <td> {{jobVar.Name}} </td>
-                    <td> {{jobVar.IsSecured ? '******' : jobVar.Value}} </td>
-                    <td> {{jobVar.IsSecured ? 'Yes' : 'No'}} </td>
+                    <td> {{jobVar.key}} </td>
+                    <td> {{jobVar.isSecured ? '******' : jobVar.value}} </td>
+                    <td> {{jobVar.isSecured ? 'Yes' : 'No'}} </td>
                     <td>
-                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editJobVar" data-toggle="modal" ng-click="pipeConfig.getJobVar(jobVar.Name)">Edit</button>
-                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJobVar" data-toggle="modal" ng-click="pipeConfig.variableDeleteButton = true;pipeConfig.getJobVar(jobVar.Name)" ng-class="{'disabled': pipeConfig.variableDeleteButton}">Delete</button>
+                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editJobVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.jobs.getVariableForEdit(jobVar)">Edit</button>
+                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJobVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.jobs.getVariableForEdit(jobVar)" ng-class="{'disabled': pipeConfig.variableDeleteButton}">Delete</button>
                     </td>
                 </tr>
             </tbody>

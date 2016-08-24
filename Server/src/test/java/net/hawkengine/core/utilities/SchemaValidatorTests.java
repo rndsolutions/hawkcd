@@ -173,7 +173,6 @@ public class SchemaValidatorTests {
     public void validate_PipelineDefinitionName_Null(){
         //Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setMaterialDefinitions(material);
         pipelineDefinition.setStageDefinitions(stage);
         String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
 
@@ -198,23 +197,6 @@ public class SchemaValidatorTests {
         //Assert
         assertNotNull(actualResult);
         assertEquals(expectedResult, actualResult);
-    }
-
-    @Test
-    public void validate_PipelineDefinitionMaterials_NotAdded(){
-        //Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinition.setName("pipelineDefinition");
-        pipelineDefinition.setPipelineGroupId("pipelineGroupId");
-        pipelineDefinition.setStageDefinitions(stage);
-        String expectedResult = "ERROR: PIPELINE MATERIALS NOT ADDED.";
-
-        //Act
-        String actualResult = this.validator.validate(pipelineDefinition);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
     }
 
     // TODO: Refactor
@@ -525,9 +507,9 @@ public class SchemaValidatorTests {
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("taskDefinition");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setPipeline("pipelineName");
-        fetchArtifactTask.setStage("pipelineStage");
-        fetchArtifactTask.setJob("pipelineJob");
+        fetchArtifactTask.setPipelineDefinitionName("pipelineName");
+        fetchArtifactTask.setStageDefinitionName("pipelineStage");
+        fetchArtifactTask.setJobDefinitionName("pipelineJob");
         fetchArtifactTask.setSource("sourceFolder");
         fetchArtifactTask.setDestination("destinationFolder");
 
@@ -561,7 +543,7 @@ public class SchemaValidatorTests {
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setPipeline("pipelineName");
+        fetchArtifactTask.setPipelineDefinitionName("pipelineName");
         String expectedResult = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
 
         //Act
@@ -578,8 +560,8 @@ public class SchemaValidatorTests {
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setPipeline("pipelineName");
-        fetchArtifactTask.setStage("stageName");
+        fetchArtifactTask.setPipelineDefinitionName("pipelineName");
+        fetchArtifactTask.setStageDefinitionName("stageName");
         String expectedResult = "ERROR: FETCH ARTIFACT JOB NAME IS NULL.";
 
         //Act
@@ -596,9 +578,9 @@ public class SchemaValidatorTests {
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setPipeline("pipelineName");
-        fetchArtifactTask.setStage("stageName");
-        fetchArtifactTask.setJob("jobNae");
+        fetchArtifactTask.setPipelineDefinitionName("pipelineName");
+        fetchArtifactTask.setStageDefinitionName("stageName");
+        fetchArtifactTask.setJobDefinitionName("jobNae");
         String expectedResult = "ERROR: FETCH ARTIFACT TASK SOURCE FOLDER IS NULL.";
 
         //Act
@@ -615,9 +597,9 @@ public class SchemaValidatorTests {
         FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setPipeline("pipelineName");
-        fetchArtifactTask.setStage("stageName");
-        fetchArtifactTask.setJob("jobNae");
+        fetchArtifactTask.setPipelineDefinitionName("pipelineName");
+        fetchArtifactTask.setStageDefinitionName("stageName");
+        fetchArtifactTask.setJobDefinitionName("jobNae");
         fetchArtifactTask.setSource("sourcefolder");
         String expectedResult = "ERROR: FETCH ARTIFACT TASK DESTINATION FOLDER IS NULL.";
 
@@ -697,7 +679,7 @@ public class SchemaValidatorTests {
         fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
         fetchMaterialTask.setMaterialName("materialName");
         fetchMaterialTask.setPipelineName("pipelineName");
-        fetchMaterialTask.setSource("source");
+//        fetchMaterialTask.setSource("source");
         fetchMaterialTask.setDestination("destination");
 
         //Arrange
@@ -743,23 +725,6 @@ public class SchemaValidatorTests {
     }
 
     @Test
-    public void validate_FetchMaterialtTaskSourceFolder_Null(){
-        //Arrange
-        FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
-        fetchMaterialTask.setName("definitionName");
-        fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
-        fetchMaterialTask.setMaterialName("fetchMaterial");
-        fetchMaterialTask.setPipelineName("taskPipeline");
-        String expectedResult = "ERROR: FETCH MATERIAL TASK SOURCE FOLDER IS NULL.";
-
-        //Arrange
-        String actualResult = this.validator.validate(fetchMaterialTask);
-
-        //Assert
-        assertEquals(expectedResult,actualResult);
-    }
-
-    @Test
     public void validate_FetchMaterialtTaskDestinationFolder_Null(){
         //Arrange
         FetchMaterialTask fetchMaterialTask = new FetchMaterialTask();
@@ -767,7 +732,7 @@ public class SchemaValidatorTests {
         fetchMaterialTask.setRunIfCondition(RunIf.PASSED);
         fetchMaterialTask.setMaterialName("fetchMaterial");
         fetchMaterialTask.setPipelineName("taskPipeline");
-        fetchMaterialTask.setSource("sourceFolder");
+//        fetchMaterialTask.setSource("sourceFolder");
         String expectedResult = "ERROR: FETCH MATERIAL TASK DESTINATION FOLDER IS NULL.";
 
         //Arrange

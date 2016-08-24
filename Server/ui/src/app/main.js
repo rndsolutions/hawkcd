@@ -20,7 +20,8 @@ angular
         'luegg.directives',
         'toaster',
         'momentjs',
-        'satellizer'
+        'satellizer',
+        'ansi_up'
         //'ngAnimate'
         //'flow'
     ])
@@ -101,7 +102,7 @@ angular
 
 
         // Redirect any unmatched url
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider.when('', '/pipelines').when('/', '/pipelines').otherwise("/pipelines");
         //$animateProvider.classNameFilter(/angular-animate/);
         $stateProvider
             .state('auth', {
@@ -114,7 +115,7 @@ angular
                     auth: function (authDataService, pipeStatsService, agentService, $location) {
                         if (authDataService.authenticationData.IsAuthenticated) {
                             //pipeStatsService.getAgentById();
-                            //$location.path('/pipelines');
+                            // $location.path('/pipelines');
                         }
                     }
                 }
@@ -187,14 +188,15 @@ angular
                 pipeExecService.getAllPipelines();
                 adminService.getAllUserGroupDTOs();
                 adminService.getAllUsers();
-                //adminMaterialService.getAllMaterialDefinitions();
+                adminMaterialService.getAllMaterialDefinitions();
             };
 
             $rootScope.socket.onclose = function (event) {
                 if(!$auth.isAuthenticated()){
                     $auth.logout();
                     $location.path('/authenticate');
-                    toaster.pop('error', "Notification", "Authentication failed. Please try again.");
+                    console.log(event);
+                    toaster.pop('error', "Notification", event.reason);
                     $rootScope.$apply();
                     return;
                 }

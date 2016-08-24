@@ -1,18 +1,10 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.ExecTask;
-import net.hawkengine.model.FetchArtifactTask;
-import net.hawkengine.model.FetchMaterialTask;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.UploadArtifactTask;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.services.JobDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -22,17 +14,16 @@ import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
 import net.hawkengine.services.interfaces.ITaskDefinitionService;
-
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import redis.clients.jedis.JedisPoolConfig;
 
 
 public class TaskDefinitionServiceTests {
@@ -48,6 +39,11 @@ public class TaskDefinitionServiceTests {
     private String retrievalSuccessMessage = "TaskDefinitions retrieved successfully.";
     private String deletionSuccessMessage = "TaskDefinition deleted successfully.";
     private String notDeletedFailureMessage = "not deleted successfully";
+
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
 
     @Before
     public void setUp() {

@@ -1,42 +1,28 @@
 package net.hawkengine.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
-import net.hawkengine.services.JobService;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.StageService;
-import net.hawkengine.services.interfaces.IJobService;
-import net.hawkengine.services.interfaces.IPipelineDefinitionService;
-import net.hawkengine.services.interfaces.IPipelineService;
-import net.hawkengine.services.interfaces.IStageService;
-
+import net.hawkengine.services.*;
+import net.hawkengine.services.interfaces.*;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.List;
 import java.util.UUID;
 
-import redis.clients.jedis.JedisPoolConfig;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class JobServiceTests {
     private IPipelineService pipelineService;
     private IPipelineDefinitionService pipelineDefinitionService;
+    private IMaterialDefinitionService materialDefinitionService;
     private IStageService stageService;
     private IJobService jobService;
     private PipelineDefinition pipelineDefinition;
@@ -44,13 +30,20 @@ public class JobServiceTests {
     private Stage stage;
     private Job job;
 
+    @BeforeClass
+    public static void setUpClass() {
+        ServerConfiguration.configure();
+    }
+
     @Before
     public void setUp() {
         MockJedisPool mockJedisPool = new MockJedisPool(new JedisPoolConfig(), "testJobService");
         IDbRepository pipelineRepository = new RedisRepository(Pipeline.class, mockJedisPool);
         IDbRepository pipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockJedisPool);
+        IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockJedisPool);
         this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepository);
-        this.pipelineService = new PipelineService(pipelineRepository, pipelineDefinitionService);
+        this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
+        this.pipelineService = new PipelineService(pipelineRepository, this.pipelineDefinitionService, this.materialDefinitionService);
         this.stageService = new StageService(pipelineService);
         this.jobService = new JobService(stageService);
     }
