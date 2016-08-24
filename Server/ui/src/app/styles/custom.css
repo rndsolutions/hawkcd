@@ -761,7 +761,7 @@ p {
 }
 
 .width-40 {
-    width: 40%;
+    width: 40%!important;
 }
 
 .width-20 {
@@ -770,6 +770,10 @@ p {
 
 .width-15 {
     width: 15%;
+}
+
+.width-60 {
+    width: 60%!important;
 }
 
 .height-70px {
@@ -830,8 +834,8 @@ p {
     height:150px;
     background-color: white;
 }
-@media and screen (max-width: 2560px){
-  @import "login-styles/login.css"
+@media screen and (max-width: 2560px){
+  @import "login-styles/login.css";
 }
 
 .padding-top-1 {
