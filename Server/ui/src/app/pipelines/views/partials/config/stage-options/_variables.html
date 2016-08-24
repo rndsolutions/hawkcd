@@ -11,12 +11,12 @@
             </thead>
             <tbody>
                 <tr ng-repeat="stageVar in pipeConfig.allStageVars">
-                    <td> {{stageVar.Name}} </td>
-                    <td> {{stageVar.IsSecured ? '******' : stageVar.Value}} </td>
-                    <td> {{stageVar.IsSecured ? 'Yes' : 'No'}} </td>
+                    <td> {{stageVar.key}} </td>
+                    <td> {{stageVar.isSecured ? '******' : stageVar.value}} </td>
+                    <td> {{stageVar.isSecured ? 'Yes' : 'No'}} </td>
                     <td>
-                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editStageVar" data-toggle="modal" ng-click="pipeConfig.getStageVar(stageVar.Name)">Edit</button>
-                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeStageVar" data-toggle="modal" ng-click="pipeConfig.getStageVar(stageVar.Name)">Delete</button>
+                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editStageVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.stages.getVariableForEdit(stageVar)">Edit</button>
+                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeStageVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.stages.getVariableForEdit(stageVar)">Delete</button>
                     </td>
                 </tr>
             </tbody>

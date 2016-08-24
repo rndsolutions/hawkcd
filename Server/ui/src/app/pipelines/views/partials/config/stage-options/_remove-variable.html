@@ -10,7 +10,7 @@
                     Are you sure you want to delete Variable: <strong class="uppercase">{{pipeConfig.currentStageVar}}</strong>
                     <br>
                     <hr>
-                    <button class="btn btn-danger" ng-click="pipeConfig.deleteStageVar(pipeConfig.currentStageVar)" data-dismiss="modal">DELETE</button>
+                    <button class="btn btn-danger" ng-click="pipeConfig.environmentVariableUtils.stages.deleteVariable(pipeConfig.environmentVariableUtils.stages.variableToEdit)" data-dismiss="modal">DELETE</button>
                     <button class="btn" data-dismiss="modal">CANCEL</button>
                 </div>
             </div>
