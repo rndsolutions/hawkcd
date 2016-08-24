@@ -17,11 +17,14 @@ import java.util.stream.Collectors;
 
 public class PipelinePreparer implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(PipelinePreparer.class);
+
+    private EnvironmentVariableService environmentVariableService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private IPipelineService pipelineService;
     private Pipeline currentPipeline;
 
     public PipelinePreparer() {
+        this.environmentVariableService = new EnvironmentVariableService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
         this.pipelineService = new PipelineService();
     }
@@ -39,11 +42,10 @@ public class PipelinePreparer implements Runnable {
                 List<Pipeline> filteredPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
 
                 for (Pipeline pipeline : filteredPipelines) {
-                    this.currentPipeline = pipeline;
-                    Pipeline preparedPipeline = this.preparePipeline(pipeline);
-                    this.pipelineService.update(preparedPipeline);
-                    this.currentPipeline = null;
-                    LOGGER.info(preparedPipeline.getPipelineDefinitionName() + " prepared.");
+                    this.preparePipeline(pipeline);
+                    this.preparePipelineEnvironmentVariables(pipeline);
+                    this.pipelineService.update(pipeline);
+                    LOGGER.info(pipeline.getPipelineDefinitionName() + " prepared.");
                 }
 
                 Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
@@ -74,9 +76,6 @@ public class PipelinePreparer implements Runnable {
         List<Environment> pipelineDefinitionEnvironments = pipelineDefinition.getEnvironments();
         List<EnvironmentVariable> pipelineDefinitionEnvironmentVariables = pipelineDefinition.getEnvironmentVariables();
 
-        for (StageDefinition stage : stages) {
-            List<JobDefinition> stageJobs = stage.getJobDefinitions();
-        }
         pipelineToPrepare.setPipelineDefinitionId(pipelineDefinitionId);
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
         pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
@@ -84,6 +83,30 @@ public class PipelinePreparer implements Runnable {
         pipelineToPrepare.setPrepared(true);
 
         return pipelineToPrepare;
+    }
+
+    public Pipeline preparePipelineEnvironmentVariables(Pipeline pipeline) {
+        List<EnvironmentVariable> pipelineVariables = pipeline.getEnvironmentVariables();
+
+        for (Stage stage : pipeline.getStages()) {
+            List<EnvironmentVariable> stageVariables = stage.getEnvironmentVariables();
+
+            for (Job job : stage.getJobs()) {
+                List<EnvironmentVariable> jobVariables = job.getEnvironmentVariables();
+                List<EnvironmentVariable> overridenVariables = this.environmentVariableService.getOverriddenVariables(jobVariables, stageVariables, pipelineVariables);
+
+                for (Task task : job.getTasks()) {
+                    if (task.getTaskDefinition().getType() == TaskType.EXEC) {
+                        ExecTask execTask = (ExecTask) task.getTaskDefinition();
+                        String arguments = this.environmentVariableService.replaceVariablesInArguments(overridenVariables, execTask.getArguments());
+                        execTask.setArguments(arguments);
+                        task.setTaskDefinition(execTask);
+                    }
+                }
+            }
+        }
+
+        return pipeline;
     }
 
     public List<Stage> preparePipelineStages(List<StageDefinition> stageDefinitions, Pipeline pipeline) {

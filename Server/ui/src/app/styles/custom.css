@@ -761,7 +761,7 @@ p {
 }
 
 .width-40 {
-    width: 40%;
+    width: 40%!important;
 }
 
 .width-20 {
@@ -770,6 +770,10 @@ p {
 
 .width-15 {
     width: 15%;
+}
+
+.width-60 {
+    width: 60%!important;
 }
 
 .height-70px {
