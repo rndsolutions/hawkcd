@@ -443,16 +443,6 @@ angular
                 vm.selectedUserGroup = null;
             };
 
-            $(function(){
-              var el = $('input[bootstrapSwitch]');
-              debugger;
-            });
-
-
-            // $('#user-checkbox').on('switchChange.bootstrapSwitch', function (event, state) {
-            //     console.log(state);
-            // });
-
 
             vm.range = function(start, end) {
                 var ret = [];
