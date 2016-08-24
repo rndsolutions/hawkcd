@@ -11,6 +11,7 @@
       <div class="modal-body">
         <div class="tab-pane active">
 
+            <form name="addMaterialForm">
             <div ng-if="admin.materialType == 'git'">
                 <form role="form" name="addMaterialForm">
                     <div class="form-group form-md-line-input">
@@ -34,7 +35,7 @@
                     <div class="form-group form-md-line-input">
                         <label class="control-label col-md-3">Git Branch</label>
                         <div class="col-md-6">
-                            <input ng-model="admin.formData.material.git.branch" type="text" class="form-control" placeholder="" />
+                            <input ng-model="admin.formData.material.git.branch" type="text" class="form-control" placeholder="" ng-pattern="/^([\w-]+)$/" required/>
                             <div class="form-control-focus"></div>
                         </div>
                     </div>
@@ -83,6 +84,7 @@
 
                 </form>
             </div>
+            </form>
 
             <div ng-if="admin.materialType == 'existing'">
                 <div class="row">
