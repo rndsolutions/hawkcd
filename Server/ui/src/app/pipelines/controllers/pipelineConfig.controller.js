@@ -233,21 +233,23 @@ angular
                     vm.pipeline = array[index];
                     vm.allPipelineVars = vm.pipeline.environmentVariables;
                     vm.pipelineIndex = index;
+
+                    for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
+                        var currentDefinition = currentPipeline.materialDefinitionIds[i];
+                        for (var j = 0; j < vm.allMaterials.length; j++) {
+                            var currentMaterial = vm.allMaterials[j];
+                            if (currentDefinition === currentMaterial.id) {
+                                if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
+                                    vm.filteredMaterialDefinitions.push(currentMaterial);
+                                }
+                            }
+
+                        }
+                    }
                 }
             });
 
-            for (var i = 0; i < vm.pipeline.materialDefinitionIds.length; i++) {
-                var currentDefinition = vm.pipeline.materialDefinitionIds[i];
-                for (var j = 0; j < vm.allMaterials.length; j++) {
-                    var currentMaterial = vm.allMaterials[j];
-                    if (currentDefinition === currentMaterial.id) {
-                        if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
-                            vm.filteredMaterialDefinitions.push(currentMaterial);
-                        }
-                    }
 
-                }
-            }
 
 
             //vm.pipeline = pipeName;
@@ -580,7 +582,7 @@ angular
 
         vm.assignMaterialToPipeline = function(material){
           var buffer = JSON.parse(material);
-          
+
           debugger;
         }
 
