@@ -30,18 +30,18 @@ angular
         vm.newPasswordObject = {};
         vm.accountActiveMenu = 'Personal info';
         vm.currentlyLoggedUser = {};
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.user;
         }, function(newVal, oldVal) {
             vm.currentlyLoggedUser = viewModel.user;
-        })
+        }, true);
 
         vm.updateUserPassword = function(passwordData) {
             if (passwordData.newPassword == passwordData.confirmNewPassword) {
                 adminService.updateUserPassword(vm.currentlyLoggedUser, passwordData.newPassword,passwordData.oldPassword);
             }
             vm.newPasswordObject = {};
-        }
+        };
 
         // vm.me = {};
         // vm.updatedUser = {};

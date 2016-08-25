@@ -235,19 +235,19 @@ angular
                 vm.closeModal();
             };
 
-            $scope.$watchCollection(function() {
+            $scope.$watch(function() {
                 return viewModel.userGroups
             }, function(newVal, oldVal) {
                 vm.userGroups = angular.copy(viewModel.userGroups);
-            });
+            }, true);
 
-            $scope.$watchCollection(function() {
+            $scope.$watch(function() {
                 return viewModel.allPipelines
             }, function(newVal, oldVal) {
                 vm.allPipelines = angular.copy(viewModel.allPipelines);
-            });
+            }, true);
 
-            $scope.$watchCollection(function() {
+            $scope.$watch(function() {
                 return viewModel.users
             }, function(newVal, oldVal) {
                 vm.users = angular.copy(viewModel.users);
@@ -274,7 +274,7 @@ angular
                         }
                     });
                 }
-            });
+            }, true);
 
             vm.isUserGroupOpen = [];
 
@@ -579,25 +579,25 @@ angular
             //     return false;
             // };
 
-            $scope.$watchCollection(function() {
+            $scope.$watch(function() {
                 return viewModel.unassignedPipelines
             }, function(newVal, oldVal) {
                 vm.unassignedPipelines = angular.copy(viewModel.unassignedPipelines);
-            });
+            }, true);
 
-            $scope.$watchCollection(function() {
+            $scope.$watch(function() {
                 return viewModel.allPipelineGroups
             }, function(newVal, oldVal) {
                 vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
                 console.log(vm.currentPipelineGroups);
-            });
+            }, true);
 
-            $scope.$watchCollection(function() {
+            $scope.$watch(function() {
                 return viewModel.allMaterialDefinitions
             }, function(newVal, oldVal) {
                 vm.currentMaterials = angular.copy(viewModel.allMaterialDefinitions);
                 console.log(vm.currentMaterials);
-            });
+            }, true);
 
             vm.addNewPipelineGroup = function() {
                 adminGroupService.addNewPipelineGroup(vm.newPipelineGroup);

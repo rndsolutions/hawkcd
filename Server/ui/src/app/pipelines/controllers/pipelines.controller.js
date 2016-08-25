@@ -34,14 +34,14 @@ angular
 
         vm.allPipelines = angular.copy(viewModel.allPipelines);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
             console.log(vm.allPipelineGroups);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
@@ -49,16 +49,16 @@ angular
                 return a.name - b.name;
             });
             console.log(vm.allPipelines);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allMaterialDefinitions
         }, function(newVal, oldVal) {
             vm.allMaterialDefinitions = angular.copy(viewModel.allMaterialDefinitions);
             console.log(vm.allMaterialDefinitions);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
@@ -97,7 +97,7 @@ angular
             });
 
             console.log(vm.allPipelineRuns);
-        });
+        }, true);
 
         // $scope.$watchCollection(function() { return viewModel.allMaterialDefinitions }, function(newVal, oldVal) {
         //     vm.allMaterials = viewModel.allMaterialDefinitions;
