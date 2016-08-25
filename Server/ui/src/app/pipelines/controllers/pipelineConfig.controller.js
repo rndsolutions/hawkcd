@@ -223,6 +223,7 @@ angular
             vm.newPipelineVar = {};
             vm.newStageVar = {};
             vm.newJobVar = {};
+            vm.materialType = "";
         };
 
         vm.filteredMaterialDefinitions = [];
@@ -577,12 +578,17 @@ angular
             pipeConfigService.deleteJobDefinition(job.id);
         };
 
+        vm.assignMaterialToPipeline = function(material){
+          var buffer = JSON.parse(material);
+          
+          debugger;
+        }
+
         vm.addMaterial = function(newMaterial) {
             var material = {};
 
             if (vm.materialType == 'GIT') {
                 material = {
-                    "pipelineDefinitionId": vm.allPipelines[vm.pipelineIndex].id,
                     "name": newMaterial.name,
                     "type": 'GIT',
                     "repositoryUrl": newMaterial.repositoryUrl,

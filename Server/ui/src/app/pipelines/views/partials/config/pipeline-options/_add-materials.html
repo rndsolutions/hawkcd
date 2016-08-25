@@ -16,6 +16,13 @@
                                     <span class="check"></span>
                                     <span class="box"></span> Git </label>
                             </div>
+                            <div class="md-radio">
+                                <input type="radio" id="existing" name="material-type" class="md-radiobtn" ng-model="pipeConfig.materialType" value="existing">
+                                <label for="existing">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> Existing </label>
+                            </div>
                             <div class="md-radio" ng-hide="true">
                                 <input type="radio" id="tfsType" name="material-type" class="md-radiobtn" ng-model="pipeConfig.materialType" value="tfs">
                                 <label for="tfsType">
@@ -23,13 +30,13 @@
                                     <span class="check"></span>
                                     <span class="box"></span> TFS </label>
                             </div>
-                            <div class="md-radio">
+                            <!-- <div class="md-radio">
                                 <input type="radio" id="configNugetType" name="material-type" class="md-radiobtn" ng-model="pipeConfig.materialType" value="NUGET">
                                 <label for="configNugetType">
                                     <span></span>
                                     <span class="check"></span>
                                     <span class="box"></span> NuGet </label>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="clearfix"> </div>
@@ -49,8 +56,7 @@
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="pipeConfig.newMaterial.repositoryUrl" type="text" class="form-control" placeholder="Enter GIT url"
-                                            ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
+                                    <input ng-model="pipeConfig.newMaterial.repositoryUrl" type="text" class="form-control" placeholder="Enter GIT url" ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
                                     <div class="form-control-focus custom-focus"></div>
                                 </div>
                                 <div></div>
@@ -107,13 +113,30 @@
                             </div>
                             <br>
                             <hr>
-                            <button class="btn green" type="submit" data-dismiss="modal" ng-disabled="addGitMaterialForm.$invalid"
-                                    ng-click="pipeConfig.addMaterial(pipeConfig.newMaterial)" ng-hide="pipeConfig.materialType == 'NUGET'">Add Material</button>
+                            <button class="btn green" type="submit" data-dismiss="modal" ng-disabled="addGitMaterialForm.$invalid" ng-click="pipeConfig.addMaterial(pipeConfig.newMaterial)" ng-hide="pipeConfig.materialType == 'NUGET'">Add Material</button>
                             <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
                         </form>
                     </div>
+
+                    <div ng-if="pipeConfig.materialType == 'existing'">
+                        <div class="row">
+                            <div class="col-xs-10" id="dropdown-materials">
+                                <label for="span_small" class="control-label">Materials</label>
+                                <select id="span_small" ng-model="pipeConfig.selectedMaterial" class="form-control select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                    <optgroup label="Your materials">
+                                        <option class="drop-down-fixed" value="{{material}}" ng-repeat="material in pipeConfig.allMaterials">{{material.name}}</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                        </div>
+                        <br>
+                        <hr>
+                        <button class="btn green" type="submit" data-dismiss="modal"  ng-click="pipeConfig.assignMaterialToPipeline(pipeConfig.selectedMaterial)">Add Material</button>
+                        <button class="btn" data-dismiss="modal" ng-click="pipeConfig.closeModal()">Cancel</button>
+                    </div>
                     <!-- TODO tfs panel -->
-                    <div ng-show="pipeConfig.materialType == 'NUGET'">
+                    <!-- <div ng-show="pipeConfig.materialType == 'NUGET'">
                         <form role="form" name="addNugetMaterialForm">
                             <div class="form-group form-md-line-input text-right">
                                 <label class="control-label col-md-4">Material Name
@@ -171,7 +194,7 @@
                                     ng-click="pipeConfig.addMaterial(pipeConfig.newMaterial)" ng-hide="pipeConfig.materialType == 'git'">Add Material</button>
                             <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
                         </form>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
