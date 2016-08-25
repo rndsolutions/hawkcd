@@ -5,12 +5,7 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -47,10 +42,10 @@ public class PipelineController {
         ServiceResult response = this.pipelineService.getById(pipelineDefinitionId);
         if (response.hasError()) {
             return
-            Response.status(Status.NOT_FOUND)
-                    .entity(response.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
+                    Response.status(Status.NOT_FOUND)
+                            .entity(response.getMessage())
+                            .type(MediaType.TEXT_HTML)
+                            .build();
         } else {
             return Response.status(Status.OK).entity(response.getObject()).build();
         }
@@ -80,21 +75,32 @@ public class PipelineController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addPipeline(Pipeline pipeline){
+    public Response addPipeline(Pipeline pipeline) {
         ServiceResult response = this.pipelineService.add(pipeline);
 
-        if (response.hasError()){
+        if (response.hasError()) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(response.getMessage())
                     .type(MediaType.TEXT_HTML)
                     .build();
         } else {
-         return Response.status(Status.CREATED)
-                 .entity(response.getObject())
-                 .build();
+            return Response.status(Status.CREATED)
+                    .entity(response.getObject())
+                    .build();
         }
     }
 
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(Pipeline pipeline) {
+        ServiceResult response = this.pipelineService.update(pipeline);
+        if (response.hasError()) {
+            return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
+        } else {
+            return Response.status(Status.OK).entity(response.getObject()).build();
+        }
+    }
 
     /*
     @Consumes(MediaType.APPLICATION_JSON)
