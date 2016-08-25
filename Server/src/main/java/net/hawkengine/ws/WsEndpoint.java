@@ -61,6 +61,10 @@ public class WsEndpoint extends WebSocketAdapter {
     }
 
     public User getLoggedUser() {
+        return this.loggedUser;
+    }
+
+    public User getLoggedUserFromDatabase() {
         return (User) this.userService.getById(this.loggedUser.getId()).getObject();
     }
 
@@ -72,6 +76,7 @@ public class WsEndpoint extends WebSocketAdapter {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
         LOGGER.info("Socket Connected: " + session);
+        SessionPool.getInstance().add(this);
 
         String tokenQuery = session.getUpgradeRequest().getQueryString();
 
@@ -80,24 +85,38 @@ public class WsEndpoint extends WebSocketAdapter {
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
-            SessionPool.getInstance().add(this);
 
-            UserDto userDto = new UserDto();
-            userDto.setUsername(tokenInfo.getUser().getEmail());
-            userDto.setPermissions(tokenInfo.getUser().getPermissions());
+            if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
 
-            ServiceResult serviceResult = new ServiceResult();
-            serviceResult.setError(false);
-            serviceResult.setMessage("User details retrieved successfully");
-            serviceResult.setObject(userDto);
+                UserDto userDto = new UserDto();
+                userDto.setUsername(tokenInfo.getUser().getEmail());
+                userDto.setPermissions(tokenInfo.getUser().getPermissions());
 
-            WsContractDto contract = new WsContractDto();
-            contract.setClassName("UserInfo");
-            contract.setMethodName("getUser");
-            contract.setResult(userDto);
-            contract.setError(false);
-            contract.setErrorMessage("User details retrieved successfully");
-            SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+                ServiceResult serviceResult = new ServiceResult();
+                serviceResult.setError(false);
+                serviceResult.setMessage("User details retrieved successfully");
+                serviceResult.setObject(userDto);
+
+                WsContractDto contract = new WsContractDto();
+                contract.setClassName("UserInfo");
+                contract.setMethodName("getUser");
+                contract.setResult(userDto);
+                contract.setError(false);
+                contract.setErrorMessage("User details retrieved successfully");
+                SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+            }
+            else{
+                UserDto userDto = new UserDto();
+                userDto.setUsername(tokenInfo.getUser().getEmail());
+                userDto.setPermissions(tokenInfo.getUser().getPermissions());
+                ServiceResult result = new ServiceResult();
+                result.setError(false);
+                result.setObject(userDto);
+                result.setMessage("User does not exist.");
+                EndpointConnector.passResultToEndpoint("UserInfo", "getUser", result, this.getLoggedUser());
+                EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.getLoggedUser());
+                return;
+            }
         }
     }
 
@@ -106,7 +125,11 @@ public class WsEndpoint extends WebSocketAdapter {
         WsContractDto contract = null;
         RemoteEndpoint remoteEndpoint = null;
 
-        if (this.loggedUser == null){
+        if (this.getLoggedUserFromDatabase() == null){
+            return;
+        }
+
+        if (this.loggedUser == null) {
             this.getSession().close();
             return;
         }
@@ -155,7 +178,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
             } else {
                 boolean hasPermission;
-                if (contract.getMethodName().equals("changeUserPassword")){
+                if (contract.getMethodName().equals("changeUserPassword")) {
                     hasPermission = this.securityServiceInvoker.changeUserPasswrod(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
 
                     if (hasPermission) {
@@ -173,14 +196,14 @@ public class WsEndpoint extends WebSocketAdapter {
                         contract.setResult(result.getObject());
                         contract.setError(result.hasError());
                         contract.setErrorMessage(result.getMessage());
-                        if(result.getObject() == null){
-                            SessionPool.getInstance().sendToUserSessions(contract,this.loggedUser);
+                        if (result.getObject() == null) {
+                            SessionPool.getInstance().sendToUserSessions(contract, this.loggedUser);
                         } else {
                             SessionPool.getInstance().sendToAuthorizedSessions(contract);
                         }
                     }
                 }
-                if (!hasPermission){
+                if (!hasPermission) {
                     contract.setResult(null);
                     contract.setError(true);
                     contract.setErrorMessage("Unauthorized");
