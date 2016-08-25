@@ -61,6 +61,10 @@ public class WsEndpoint extends WebSocketAdapter {
     }
 
     public User getLoggedUser() {
+        return this.loggedUser;
+    }
+
+    public User getLoggedUserFromDatabase() {
         return (User) this.userService.getById(this.loggedUser.getId()).getObject();
     }
 
@@ -72,6 +76,7 @@ public class WsEndpoint extends WebSocketAdapter {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
         LOGGER.info("Socket Connected: " + session);
+        SessionPool.getInstance().add(this);
 
         String tokenQuery = session.getUpgradeRequest().getQueryString();
 
@@ -80,8 +85,8 @@ public class WsEndpoint extends WebSocketAdapter {
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
-            if (this.userService.getByEmail(tokenInfo.getUser().getEmail()).getObject() != null) {
-                SessionPool.getInstance().add(this);
+
+            if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
 
                 UserDto userDto = new UserDto();
                 userDto.setUsername(tokenInfo.getUser().getEmail());
@@ -101,12 +106,16 @@ public class WsEndpoint extends WebSocketAdapter {
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
             }
             else{
+                UserDto userDto = new UserDto();
+                userDto.setUsername(tokenInfo.getUser().getEmail());
+                userDto.setPermissions(tokenInfo.getUser().getPermissions());
                 ServiceResult result = new ServiceResult();
-                result.setError(true);
-                result.setObject(null);
+                result.setError(false);
+                result.setObject(userDto);
                 result.setMessage("User does not exist.");
-                EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.loggedUser);
-                this.loggedUser = null;
+                EndpointConnector.passResultToEndpoint("UserInfo", "getUser", result, this.getLoggedUser());
+                EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.getLoggedUser());
+                return;
             }
         }
     }
@@ -115,6 +124,10 @@ public class WsEndpoint extends WebSocketAdapter {
     public void onWebSocketText(String message) {
         WsContractDto contract = null;
         RemoteEndpoint remoteEndpoint = null;
+
+        if (this.getLoggedUserFromDatabase() == null){
+            return;
+        }
 
         if (this.loggedUser == null) {
             this.getSession().close();
