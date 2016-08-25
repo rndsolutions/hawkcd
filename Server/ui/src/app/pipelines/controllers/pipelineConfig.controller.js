@@ -75,6 +75,10 @@ angular
         //     console.log(vm.allPipelines.materials);
         // });
 
+        $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+            vm.allPipelines = angular.copy(viewModel.allPipelines);
+        });
+
         $scope.$watchCollection(function() {
             return viewModel.allMaterialDefinitions;
         }, function(newVal, oldVal) {
@@ -88,18 +92,12 @@ angular
             console.log(vm.allPermissions);
         });
 
-        $scope.$watchCollection(function() {
-            return viewModel.allPipelines
-        }, function(newVal, oldVal) {
-            vm.allPipelines = angular.copy(viewModel.allPipelines);
-            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
-                if (currentPipeline.id == vm.pipeline.id) {
-                    vm.getPipelineForConfig(currentPipeline.name);
-                    //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
-                }
-            });
-            console.log(vm.allPipelines);
-        });
+        // $scope.$watchCollection(function() {
+        //     return viewModel.allPipelines
+        // }, function(newVal, oldVal) {
+        //     vm.allPipelines = angular.copy(viewModel.allPipelines);
+        //     console.log(vm.allPipelines);
+        // });
 
         // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
         //     vm.allMaterials = viewModel.allMaterialDefinitions;
@@ -233,33 +231,41 @@ angular
 
         vm.filteredMaterialDefinitions = [];
         vm.getPipelineForConfig = function(pipeName) {
-            vm.allPipelines.forEach(function(currentPipeline, index, array) {
-                if (currentPipeline.name == pipeName) {
-                    vm.pipeline = array[index];
-                    vm.allPipelineVars = vm.pipeline.environmentVariables;
-                    vm.pipelineIndex = index;
-                }
-            });
+            if(vm.allPipelines != null && vm.allPipelines.length > 0) {
+                vm.allPipelines.forEach(function(currentPipeline, index, array) {
+                    if (currentPipeline.name == pipeName) {
+                        vm.pipeline = array[index];
+                        vm.allPipelineVars = vm.pipeline.environmentVariables;
+                        vm.pipelineIndex = index;
 
-            for (var i = 0; i < vm.pipeline.materialDefinitionIds.length; i++) {
-                var currentDefinition = vm.pipeline.materialDefinitionIds[i];
-                vm.allMaterials.forEach(function(definition, index, array) {
-                    if (definition.id == currentDefinition) {
-                        if (vm.filteredMaterialDefinitions.indexOf(definition) == -1) {
-                            vm.filteredMaterialDefinitions.push(array[index]);
+                        for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
+                            var currentDefinition = currentPipeline.materialDefinitionIds[i];
+                            for (var j = 0; j < vm.allMaterials.length; j++) {
+                                var currentMaterial = vm.allMaterials[j];
+                                if (currentDefinition === currentMaterial.id) {
+                                    if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
+                                        vm.filteredMaterialDefinitions.push(currentMaterial);
+                                    }
+                                }
+
+                            }
                         }
                     }
                 });
+
+
+                //vm.pipeline = pipeName;
+
+                vm.newStage = {};
+                vm.newMaterials = {};
+
+                vm.updatedPipeline.name = vm.pipeline.name;
+                vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
+                vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
+                vm.currentPipeline = pipeName;
+            } else {
+                setTimeout(function () { vm.getPipelineForConfig(pipeName); }, 500);
             }
-            //vm.pipeline = pipeName;
-
-            vm.newStage = {};
-            vm.newMaterials = {};
-
-            vm.updatedPipeline.name = vm.pipeline.name;
-            vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
-            vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
-            vm.currentPipeline = pipeName;
         };
 
         vm.getPipelineForTask = function(pipeline) {
