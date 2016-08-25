@@ -91,10 +91,10 @@ public class StatusUpdaterService {
 
         if (jobStatuses.contains(JobStatus.FAILED)) {
             stage.setStatus(StageStatus.FAILED);
-            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionId(), JobStatus.FAILED));
+            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionName(), JobStatus.FAILED));
         } else if (this.areAllPassed(jobStatuses)) {
             stage.setStatus(StageStatus.PASSED);
-            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionId(), JobStatus.PASSED));
+            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionName(), JobStatus.PASSED));
         }
     }
 
