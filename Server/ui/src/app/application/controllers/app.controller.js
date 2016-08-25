@@ -49,21 +49,9 @@ angular
             }
 
             $scope.logoutUser = function() {
-                $http({
-                        method: 'POST',
-                        url: 'http://localhost:8080/auth/logout',
-                        data: viewModel.user.username
-                    })
-                    .then(function(res) {
-                        $auth.logout();
-                        localStorage.clear();
-                        $location.path("/authenticate");
-                        console.log(res);
-                    }, function(err) {
-                        console.log(err);
-                    });
+                loginService.logout();
 
-            }
+            };
 
             $scope.me = {};
             $scope.me.UserName = localStorage.username;
