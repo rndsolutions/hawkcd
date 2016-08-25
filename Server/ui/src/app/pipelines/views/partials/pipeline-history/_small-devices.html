@@ -39,7 +39,7 @@
                         <br/>
                         </span>
                     </li>
-                    <li class="mt-list-item done" ng-repeat="stage in run.stages" style="border:none;display:block;margin-top:5px;border-radius:10px;" ng-class="{'btn green-jungle':stage.status == 'PASSED','btn red-thunderbird':stage.status == 'FAILED',
+                    <li class="mt-list-item done" ng-repeat="stage in run.stages" style="border:none;display:block;margin-top:5px;border-radius:10px;" ng-class="{'btn green-jungle':stage.status == 'PASSED','btn red-thunderbird':stage.status == 'FAILED' || stage.status == 'CANCELED',
                                   'btn white':stage.status=='NOT_RUN','btn yellow-saffron':stage.status=='IN_PROGRESS','stages-size':true}">{{stage.stageDefinitionName}}
                     </li>
                 </ul>

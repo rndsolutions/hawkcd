@@ -34,22 +34,25 @@ angular
 
         vm.allPipelines = angular.copy(viewModel.allPipelines);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
             console.log(vm.allPipelineGroups);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
+            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                currentPipeline.disabled = false;
+            });
             vm.allPipelines.sort(function(a, b) {
                 return a.name - b.name;
             });
             console.log(vm.allPipelines);
-        });
+        }, true);
 
         $scope.$watchCollection(function() {
             return viewModel.allMaterialDefinitions
@@ -58,7 +61,7 @@ angular
             console.log(vm.allMaterialDefinitions);
         });
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
@@ -86,6 +89,7 @@ angular
                         //         console.log(currentPermission.role);
                         //     }
                         // });
+                        currentPipeline.disabled = false;
                         if (currentPipelineFromGroup.id == currentPipeline.id) {
                             vm.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
                         }
@@ -97,7 +101,7 @@ angular
             });
 
             console.log(vm.allPipelineRuns);
-        });
+        }, true);
 
         // $scope.$watchCollection(function() { return viewModel.allMaterialDefinitions }, function(newVal, oldVal) {
         //     vm.allMaterials = viewModel.allMaterialDefinitions;
@@ -174,6 +178,7 @@ angular
 
         //region pipeline controls
         vm.play = function(pipelineDefinition) {
+            pipelineDefinition.disabled = true;
             var pipeline = {
                 "pipelineDefinitionId": pipelineDefinition.id,
                 "pipelineDefinitionName": pipelineDefinition.name
@@ -182,13 +187,10 @@ angular
         };
 
         //TODO Not implemented on the back-end yet
-        vm.stop = function(pipeId) {
-            pipeExec.cancelPipeline(pipeId)
-                .then(function(res) {
-                    console.log(res.Message);
-                }, function(err) {
-                    console.log(err);
-                })
+        vm.stop = function(pipelineDefinition, pipeline) {
+            pipelineDefinition.disabled = true;
+            pipeline.shouldBeCanceled = true;
+            pipeExecService.stopPipeline(pipeline);
         };
         //endregion
 
