@@ -634,7 +634,7 @@ angular
 
             vm.setMaterialForEdit = function(material) {
               vm.materialType = 'hidden';
-                vm.formData.material = material;
+                vm.formData.material = angular.copy(material);
                 if (material.username) {
                     vm.formData.material.credentials = true;
                 }

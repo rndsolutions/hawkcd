@@ -69,6 +69,7 @@ public class PipelinePreparer implements Runnable {
     }
 
     public Pipeline preparePipeline(Pipeline pipelineToPrepare) {
+        this.currentPipeline = pipelineToPrepare;
         String pipelineDefinitionId = pipelineToPrepare.getPipelineDefinitionId();
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
 
