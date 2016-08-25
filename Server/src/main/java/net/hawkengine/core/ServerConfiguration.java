@@ -52,9 +52,8 @@ public class ServerConfiguration {
 
     public static String loadConfiguration(File configFile) {
         String errorMessage = "";
-        try {
-            FileInputStream fileInputStream = new FileInputStream(configFile);
 
+        try(FileInputStream fileInputStream = new FileInputStream(configFile)) {
             Yaml yaml = new Yaml();
             configuration = yaml.loadAs(fileInputStream, Configuration.class);
         } catch (FileNotFoundException e) {
@@ -67,6 +66,8 @@ public class ServerConfiguration {
             if (matcher.find()) {
                 errorMessage = String.format(INVALID_CONFIG_PROPERTY, matcher.group(1));
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return errorMessage;
