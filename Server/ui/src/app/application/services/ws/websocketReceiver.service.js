@@ -26,6 +26,10 @@ angular
                 UserInfo: {
                     getUser: function (object) {
                       validationService.dispatcherFlow(object,viewModelUpdater.getUser);
+                    },
+                    logoutSession: function (object) {
+                        debugger;
+                        validationService.dispatcherFlow(object, loginService.logout);
                     }
                 },
                 UserService: {

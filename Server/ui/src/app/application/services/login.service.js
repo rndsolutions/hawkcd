@@ -45,30 +45,46 @@ angular
         };
 
 
+//         this.logout = function () {
+//
+// //           $http.post('http://localhost:8080/auth/logout', viewModel.user.username, {
+// //               headers: {
+// //                   'Content-Type': 'application/json'
+// //               }
+// //           }).then(function (res){
+// //            console.log(res);
+// //            }).resolve(function (err){
+// //            });
+//
+//                 $http({
+//                 method: 'POST',
+//                 url: 'http://localhost:8080/auth/logout',
+//                 data: viewModel.user.username
+//               }).then(function successCallback(response) {
+//                   console.log(response);
+//                 }, function errorCallback(response) {
+//                   console.log(response);
+//                });
+//
+//
+//            // //Api for logout?
+//        };
+
         this.logout = function () {
-
-//           $http.post('http://localhost:8080/auth/logout', viewModel.user.username, {
-//               headers: {
-//                   'Content-Type': 'application/json'
-//               }
-//           }).then(function (res){
-//            console.log(res);
-//            }).resolve(function (err){
-//            });
-
-                $http({
+            $http({
                 method: 'POST',
                 url: 'http://localhost:8080/auth/logout',
                 data: viewModel.user.username
-              }).then(function successCallback(response) {
-                  console.log(response);
-                }, function errorCallback(response) {
-                  console.log(response);
-               });
-
-
-           // //Api for logout?
-       };
+            })
+                .then(function(res) {
+                    $auth.logout();
+                    localStorage.clear();
+                    $location.path("/authenticate");
+                    console.log(res);
+                }, function(err) {
+                    console.log(err);
+                });
+        };
 
        this.logoutUser = function (username) {
            $auth.removeToken();
