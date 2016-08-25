@@ -21,7 +21,7 @@ public class JobAssignerService {
                 job.setStatus(JobStatus.AWAITING);
                 assignedAgent.setAssigned(false);
                 result = assignedAgent;
-                LOGGER.info(String.format("Job %s unassigned from Agent %s", job.getJobDefinitionId(), assignedAgent.getName()));
+                LOGGER.info(String.format("Job %s unassigned from Agent %s", job.getJobDefinitionName(), assignedAgent.getName()));
             }
         }
 
@@ -33,7 +33,7 @@ public class JobAssignerService {
                 job.setStatus(JobStatus.SCHEDULED);
                 agentForJob.setAssigned(true);
                 result = agentForJob;
-                LOGGER.info(String.format("Job %s assigned to Agent %s", job.getJobDefinitionId(), agentForJob.getName()));
+                LOGGER.info(String.format("Job %s assigned to Agent %s", job.getJobDefinitionName(), agentForJob.getName()));
             }
         }
 
