@@ -6,7 +6,7 @@ angular
         var vm = this;
 
         vm.defaultText = {
-            pageHeader: "Your profile",
+            pageHeader: "Profile Information",
             breadCrumb: "Profile",
             overview: "Overview",
             account: "Account"
