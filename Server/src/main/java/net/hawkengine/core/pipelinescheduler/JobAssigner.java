@@ -44,7 +44,7 @@ public class JobAssigner implements Runnable {
                                     Agent agent = this.jobAssignerService.assignAgentToJob(job, agents);
                                     if (agent != null) {
                                         ServiceResult result = this.agentService.update(agent);
-                                        EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+                                        EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
                                     }
                                 }
                             }
@@ -52,7 +52,7 @@ public class JobAssigner implements Runnable {
                     }
 
                     ServiceResult result = this.pipelineService.update(pipeline);
-                    EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
+                    EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
                 }
 
                 Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
