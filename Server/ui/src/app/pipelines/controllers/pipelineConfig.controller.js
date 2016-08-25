@@ -92,12 +92,6 @@ angular
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
-            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
-                if (currentPipeline.id == vm.pipeline.id) {
-                    vm.getPipelineForConfig(currentPipeline.name);
-                    //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
-                }
-            });
             console.log(vm.allPipelines);
         });
 
@@ -184,10 +178,10 @@ angular
             //     vm.otherStageExpanded = true;
             // }
 
-            vm.pipeline.stageDefinitions.forEach(function (currentStage, stageIndex, stageArray) {
-                if(currentStage.name != stageName) {
+            vm.pipeline.stageDefinitions.forEach(function(currentStage, stageIndex, stageArray) {
+                if (currentStage.name != stageName) {
                     var isExpanded = vm.isExpanded(currentStage.name);
-                    if(isExpanded) {
+                    if (isExpanded) {
                         return true;
                     }
                 }
@@ -243,16 +237,19 @@ angular
 
             for (var i = 0; i < vm.pipeline.materialDefinitionIds.length; i++) {
                 var currentDefinition = vm.pipeline.materialDefinitionIds[i];
-                vm.allMaterials.forEach(function(definition, index, array) {
-                    if (definition.id == currentDefinition) {
-                        if (vm.filteredMaterialDefinitions.indexOf(definition) == -1) {
-                            vm.filteredMaterialDefinitions.push(array[index]);
+                for (var j = 0; j < vm.allMaterials.length; j++) {
+                    var currentMaterial = vm.allMaterials[j];
+                    if (currentDefinition === currentMaterial.id) {
+                        if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
+                            vm.filteredMaterialDefinitions.push(currentMaterial);
                         }
                     }
-                });
-            }
-            //vm.pipeline = pipeName;
 
+                }
+            }
+
+
+            //vm.pipeline = pipeName;
             vm.newStage = {};
             vm.newMaterials = {};
 
@@ -961,35 +958,35 @@ angular
                 variableToEdit: {}
             },
             jobs: {
-              addVariable: function(variable) {
-                  var variableToAdd = {
-                      key: variable.name,
-                      value: variable.value,
-                      isSecured: variable.isSecured
-                  };
-                  vm.job.environmentVariables.push(variableToAdd);
-                  pipeConfigService.updateJobDefinition(vm.job);
-              },
-              editVariable: function(variable) {
-                  vm.job.environmentVariables.forEach(function(current, index, array) {
-                      if (current.id == variable.id) {
-                          array[index] = variable;
-                      }
-                  });
-                  pipeConfigService.updateJobDefinition(vm.job);
-              },
-              deleteVariable: function(variable) {
-                  vm.job.environmentVariables.forEach(function(current, index, array) {
-                      if (current.id == variable.id) {
-                          array.splice(index, 1);
-                      }
-                  });
-                  pipeConfigService.updateJobDefinition(vm.job);
-              },
-              getVariableForEdit: function(variable) {
-                  vm.environmentVariableUtils.jobs.variableToEdit = variable;
-              },
-              variableToEdit: {}
+                addVariable: function(variable) {
+                    var variableToAdd = {
+                        key: variable.name,
+                        value: variable.value,
+                        isSecured: variable.isSecured
+                    };
+                    vm.job.environmentVariables.push(variableToAdd);
+                    pipeConfigService.updateJobDefinition(vm.job);
+                },
+                editVariable: function(variable) {
+                    vm.job.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array[index] = variable;
+                        }
+                    });
+                    pipeConfigService.updateJobDefinition(vm.job);
+                },
+                deleteVariable: function(variable) {
+                    vm.job.environmentVariables.forEach(function(current, index, array) {
+                        if (current.id == variable.id) {
+                            array.splice(index, 1);
+                        }
+                    });
+                    pipeConfigService.updateJobDefinition(vm.job);
+                },
+                getVariableForEdit: function(variable) {
+                    vm.environmentVariableUtils.jobs.variableToEdit = variable;
+                },
+                variableToEdit: {}
             }
         };
 
