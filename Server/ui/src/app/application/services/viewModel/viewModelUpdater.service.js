@@ -335,7 +335,7 @@ angular
                             viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions.forEach(function (currentJob, jobIndex, array) {
                                 if(currentJob.id == taskDefinition.jobDefinitionId){
                                     viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions[jobIndex].taskDefinitions.push(taskDefinition);
-                                    toaster.pop('success', "Notification", "Task " + taskDefinition.name + " added!");
+                                    toaster.pop('success', "Notification", "Task " + taskDefinition.id + " added!");
                                 }
                             });
                         }
