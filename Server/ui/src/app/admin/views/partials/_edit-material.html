@@ -33,7 +33,7 @@
                     <div class="form-group form-md-line-input">
                         <label class="control-label col-md-3">Git Branch</label>
                         <div class="col-md-6">
-                            <input ng-model="admin.formData.material.branch" type="text" class="form-control" ng-pattern="/^([\w-]+)$/" required/>
+                            <input ng-model="admin.formData.material.branch" type="text" class="form-control" ng-pattern="/^([\w-]+)$/"/>
                             <div class="form-control-focus"></div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                     </div>
                     <div id="buttons-row" class="row">
                       <div class="btn-container">
-                        <button class="btn green button-next" ng-disabled="editMaterialForm.$invalid" ng-click="admin.editMaterial(admin.formData)" data-dismiss="modal">{{admin.defaultText.editMaterial.submit}}
+                        <button class="btn green button-next" ng-class="{'disabled':editMaterialForm.$invalid}" ng-click="admin.editMaterial(admin.formData)" data-dismiss="modal">{{admin.defaultText.editMaterial.submit}}
                         </button>
                       </div>
                     </div>
