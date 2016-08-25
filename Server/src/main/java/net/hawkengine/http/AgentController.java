@@ -13,8 +13,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.List;
 
-@Consumes("application/json")
-@Produces("application/json")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Path("/agents")
 public class AgentController {
     private AgentService agentService;
@@ -128,9 +128,11 @@ public class AgentController {
         for (int i = 0; i < lengthOfJobs; i++) {
             Job currentJob = jobs.get(i);
             if (currentJob.getId().equals(job.getId())) {
-                jobs.set(i, job);
-                stage.setJobs(jobs);
-                break;
+                if (currentJob.getStatus() != JobStatus.CANCELED) {
+                    jobs.set(i, job);
+                    stage.setJobs(jobs);
+                    break;
+                }
             }
         }
 
