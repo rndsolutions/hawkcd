@@ -6,36 +6,36 @@
 angular
     .module('hawk')
     .directive('ngSpinnerBar', ['$rootScope',
-        function ($rootScope) {
+        function($rootScope) {
             return {
-                link: function (scope, element, attrs) {
+                link: function(scope, element, attrs) {
                     // by defult hide the spinner bar
                     element.addClass('hide'); // hide spinner bar by default
 
                     // display the spinner bar whenever the route changes(the content part started loading)
-                    $rootScope.$on('$stateChangeStart', function () {
+                    $rootScope.$on('$stateChangeStart', function() {
                         element.removeClass('hide'); // show spinner bar
                     });
 
                     // hide the spinner bar on rounte change success(after the content loaded)
-                    $rootScope.$on('$stateChangeSuccess', function () {
+                    $rootScope.$on('$stateChangeSuccess', function() {
                         element.addClass('hide'); // hide spinner bar
                         $('body').removeClass('page-on-load'); // remove page loading indicator
                         Layout.setSidebarMenuActiveLink('match'); // activate selected link in the sidebar menu
 
                         // auto scorll to page top
-                        setTimeout(function () {
+                        setTimeout(function() {
                             App.scrollTop(); // scroll to the top on content load
                         }, $rootScope.settings.layout.pageAutoScrollOnLoad);
                     });
 
                     // handle errors
-                    $rootScope.$on('$stateNotFound', function () {
+                    $rootScope.$on('$stateNotFound', function() {
                         element.addClass('hide'); // hide spinner bar
                     });
 
                     // handle errors
-                    $rootScope.$on('$stateChangeError', function () {
+                    $rootScope.$on('$stateChangeError', function() {
                         element.addClass('hide'); // hide spinner bar
                     });
                 }
@@ -44,24 +44,55 @@ angular
     ])
 
 // Handle global LINK click
-    .directive('a', function () {
-        return {
-            restrict: 'E',
-            link: function (scope, elem, attrs) {
-                if (attrs.ngClick || attrs.href === '' || attrs.href === '#') {
-                    elem.on('click', function (e) {
-                        e.preventDefault(); // prevent link click for above criteria
-                    });
-                }
+.directive('a', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, elem, attrs) {
+            if (attrs.ngClick || attrs.href === '' || attrs.href === '#') {
+                elem.on('click', function(e) {
+                    e.preventDefault(); // prevent link click for above criteria
+                });
             }
-        };
-    })
+        }
+    };
+})
 
 // Handle Dropdown Hover Plugin Integration
-    .directive('dropdownMenuHover', function () {
+.directive('dropdownMenuHover', function() {
+    return {
+        link: function(scope, elem) {
+            elem.dropdownHover();
+        }
+    };
+})
+
+//Bootstrap switch button
+.directive('bootstrapSwitch', ['adminService',function(adminService) {
         return {
-            link: function (scope, elem) {
-                elem.dropdownHover();
+            restrict: 'A',
+            require: '?ngModel',
+            link: function(scope, element, attrs, ngModel) {
+                element.bootstrapSwitch();
+
+                element.on('switchChange.bootstrapSwitch', function(event, state) {
+                    if (ngModel) {
+                        scope.$apply(function() {
+                            ngModel.$setViewValue(state);
+                            var buffer = scope.user;
+                            adminService.updateUser(buffer);
+                        });
+                    }
+                });
+
+                scope.$watch(attrs.ngModel, function(newValue, oldValue) {
+                    if (newValue) {
+                        element.bootstrapSwitch('state', true, true);
+                    } else {
+                        element.bootstrapSwitch('state', false, true);
+                    }
+                });
+
             }
         };
-    });
+    }
+]);
