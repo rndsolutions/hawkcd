@@ -78,15 +78,21 @@ public class SessionPool {
     }
 
     public void sendToAuthorizedSessions(WsContractDto contractDto) {
-        Class objectClass = contractDto.getResult().getClass();
-        for (WsEndpoint session : sessions) {
-            User loggedUser = session.getLoggedUser();
-            loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
-            List<Permission> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
-            PermissionObject result = this.entityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
-            if (result.getPermissionType() != PermissionType.NONE) {
-                contractDto.setResult(result);
+        if (contractDto.getResult() == null) {
+            for (WsEndpoint session : sessions) {
                 session.send(contractDto);
+            }
+        } else {
+            Class objectClass = contractDto.getResult().getClass();
+            for (WsEndpoint session : sessions) {
+                User loggedUser = session.getLoggedUser();
+                loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
+                List<Permission> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
+                PermissionObject result = this.entityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
+                if (result.getPermissionType() != PermissionType.NONE) {
+                    contractDto.setResult(result);
+                    session.send(contractDto);
+                }
             }
         }
     }
