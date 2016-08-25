@@ -98,10 +98,10 @@ angular
                   action:'Action'
                 },
                 userInfo:{
-                  username:'Username',
-                  dateRegistered:'Registered On',
-                  permissions:'Permissions',
-                  action:'Action'
+                  username:'Name of the user',
+                  dateRegistered:'Date registered on',
+                  permissions:'Permissions of the user',
+                  action:'Available actions'
                 },
                 tableTitles: {
                     name: 'Name',
