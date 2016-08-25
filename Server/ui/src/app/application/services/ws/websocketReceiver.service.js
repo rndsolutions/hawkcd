@@ -29,7 +29,7 @@ angular
                     },
                     logoutSession: function (object) {
                         debugger;
-                        validationService.dispatcherFlow(object, loginService.logout);
+                        validationService.flowNoParameters(object, loginService.logout);
                     }
                 },
                 UserService: {

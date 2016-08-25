@@ -2,7 +2,7 @@
 
 angular
     .module('hawk')
-    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'authenticationService', 'authDataService', 'viewModel', 'viewModelUpdater', '$state', '$auth', function ($http, $q, CONSTANTS, authenticationService, authDataService, viewModel, viewModelUpdater, $state, $auth) {
+    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'authenticationService', 'authDataService', 'viewModel', 'viewModelUpdater', '$location', '$state', '$auth', function ($http, $q, CONSTANTS, authenticationService, authDataService, viewModel, viewModelUpdater, $location, $state, $auth) {
         var loginService = this;
         var tokenEndPoint = '/Token';
 
@@ -87,6 +87,7 @@ angular
         };
 
        this.logoutUser = function (username) {
+debugger;
            $auth.removeToken();
            viewModelUpdater.flushViewModel();
        };
