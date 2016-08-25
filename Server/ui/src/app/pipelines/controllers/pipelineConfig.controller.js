@@ -238,11 +238,11 @@ angular
                         var currentDefinition = currentPipeline.materialDefinitionIds[i];
                         for (var j = 0; j < vm.allMaterials.length; j++) {
                             var currentMaterial = vm.allMaterials[j];
-                            if (currentDefinition === currentMaterial.id) {
+                            // if (currentDefinition === currentMaterial.id) {
                                 if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
                                     vm.filteredMaterialDefinitions.push(currentMaterial);
                                 }
-                            }
+                            // }
 
                         }
                     }
