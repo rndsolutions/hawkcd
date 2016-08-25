@@ -4,9 +4,9 @@
 function failBuild  {
     if [ $? -eq 0 ]
         then
-            echo "Successfully created file"
+            echo "Successfully completed"
          else
-            echo "Error building agent" >&2
+            echo "Error building" >&2
            exit 1;
     fi
  }
@@ -14,6 +14,7 @@ function failBuild  {
 echo "building the agent.."
 cd Agent
 
+gradle clean
 gradle build
 failBuild
 
@@ -40,8 +41,14 @@ cp -r build/libs/* ../dist/Agent
 echo "list current dir:"
 ls -al
 
+echo "cleaning up resources folder..."
+cd ../Server/src/main/resources/
+rm -rf dist
+failBuild
+
+
 echo "building the client..."
-cd ../Server/ui
+cd  ../../../ui
 
 echo "running npm install..."
 npm install
@@ -54,7 +61,8 @@ gulp build
 failBuild
 
 cd ../
-echo "running the gradle build.."g
+echo "running the gradle build.."
+gradle clean
 gradle build
 failBuild
 gradle jacocoTestReport
