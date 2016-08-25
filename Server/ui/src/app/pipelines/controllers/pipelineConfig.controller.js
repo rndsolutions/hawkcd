@@ -26,11 +26,11 @@ angular
 
         vm.allPermissions = [];
         vm.allPipelineRuns = [];
-        vm.allPipelines = angular.copy(viewModel.allPipelines);
+        vm.allPipelines = angular.copy(viewModel.allPipelines);;
         vm.allJobs = [];
         vm.allTasks = [];
         vm.allStages = [];
-        vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);
+        vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);;
         vm.allPipelineVars = {};
         vm.allStageVars = {};
         vm.allJobVars = {};
@@ -82,14 +82,14 @@ angular
         });
 
         $scope.$watchCollection(function() {
-            return viewModel.allPermissions
+            return viewModel.allPermissions;
         }, function(newVal, oldVal) {
             vm.allPermissions = angular.copy(viewModel.allPermissions);
             console.log(vm.allPermissions);
         });
 
         $scope.$watchCollection(function() {
-            return viewModel.allPipelines
+            return viewModel.allPipelines;
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
             console.log(vm.allPipelines);
@@ -238,11 +238,11 @@ angular
                         var currentDefinition = currentPipeline.materialDefinitionIds[i];
                         for (var j = 0; j < vm.allMaterials.length; j++) {
                             var currentMaterial = vm.allMaterials[j];
-                            // if (currentDefinition === currentMaterial.id) {
+                            if (currentDefinition === currentMaterial.id) {
                                 if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
                                     vm.filteredMaterialDefinitions.push(currentMaterial);
                                 }
-                            // }
+                            }
 
                         }
                     }
@@ -723,7 +723,6 @@ angular
             }
 
             //vm.task = res;
-            debugger;
             vm.updatedTask = vm.task;
 
             //vm.taskIndex = taskIndex;
@@ -763,7 +762,6 @@ angular
             }
             if (newTask.type == 'FETCH_MATERIAL') {
                 var selectedMaterial = JSON.parse(newTask.material);
-                debugger;
                 var task = {
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     pipelineName: vm.allPipelines[vm.pipelineIndex].name,
