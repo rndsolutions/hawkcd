@@ -101,9 +101,12 @@ public class WsEndpoint extends WebSocketAdapter {
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
             }
             else{
+                ServiceResult result = new ServiceResult();
+                result.setError(true);
+                result.setObject(null);
+                result.setMessage("User does not exist.");
+                EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.loggedUser);
                 this.loggedUser = null;
-                SessionPool.getInstance().logoutUserFromAllSessions(tokenInfo.getUser().getEmail());
-
             }
         }
     }
