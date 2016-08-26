@@ -61,7 +61,7 @@ angular
 
         vm.currentAgents = angular.copy(viewModel.allAgents);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allAgents
         }, function(newVal, oldVal) {
             vm.currentAgents = angular.copy(viewModel.allAgents);
@@ -73,7 +73,7 @@ angular
                 }
             });
             console.log(vm.currentAgents);
-        });
+        }, true);
 
         vm.setAgentToDelete = function(agent) {
             vm.agentToDelete = agent;
