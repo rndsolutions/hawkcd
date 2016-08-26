@@ -847,11 +847,11 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    materialDefinition: JSON.parse(newTask.materialName),
+                    materialDefinitionId: JSON.parse(newTask.material).id,
                     type: newTask.type,
-                    materialType: JSON.parse(newTask.materialName).type,
-                    materialName: JSON.parse(newTask.materialName).name,
-                    destination: JSON.parse(newTask.materialName).name,
+                    materialType: JSON.parse(newTask.material).type,
+                    materialName: JSON.parse(newTask.material).name,
+                    destination: JSON.parse(newTask.material).name,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
