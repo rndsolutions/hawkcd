@@ -149,11 +149,13 @@ public class StatusUpdaterService {
         pipeline.setShouldBeCanceled(false);
         pipeline.setStatus(Status.CANCELED);
         for (Stage stage : pipeline.getStages()) {
-            stage.setStatus(StageStatus.CANCELED);
-            for (Job job : stage.getJobs()) {
-                job.setStatus(JobStatus.CANCELED);
-                for (Task task : job.getTasks()) {
-                    task.setStatus(TaskStatus.CANCELED);
+            if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+                stage.setStatus(StageStatus.CANCELED);
+                for (Job job : stage.getJobs()) {
+                    job.setStatus(JobStatus.CANCELED);
+                    for (Task task : job.getTasks()) {
+                        task.setStatus(TaskStatus.CANCELED);
+                    }
                 }
             }
         }
