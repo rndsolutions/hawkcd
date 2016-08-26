@@ -3,7 +3,11 @@
       <div class="caption">
         <i class="fa fa-cogs"></i>Materials
       </div>
+      <div class="tools right">
+        <a href="javascript:;" class="collapse"> </a>
+      </div>
     </div>
+  <div class="portlet-body">
     <div class="caption custom-caption width-100">
         <div class="display-inline-block pull-left height-100px width-15">
       <div class="run-item-container status-passed pull-left" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'status-canceled' : pipesRunManagement.currentPipelineRun.status == 'CANCELED'}">
@@ -61,12 +65,13 @@
 
       </div>
     </div>
-  <div class="portlet-body path-materials">
+  </div>
+  <!--<div class="portlet-body path-materials">-->
     <!--<div class="row ">-->
       <!--{{pipesRunManagement.defaultHeaders.commitId}} {{pipesRunManagement.allMaterials[0].ExecutionMaterials[0].MaterialSpecificDetails['commit-id']}}-->
     <!--</div>-->
     <!--<div class="row " ng-repeat="file in pipesRunManagement.allMaterials[0].ExecutionMaterials[0].MaterialSpecificDetails.ModifiedFiles">-->
       <!--<p>{{file.Status}}<span></span> <span>{{file.Path}}</span></p>-->
     <!--</div>-->
-  </div>
+  <!--</div>-->
 </div>
