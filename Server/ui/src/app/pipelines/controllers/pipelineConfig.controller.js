@@ -441,7 +441,6 @@ angular
                     }]
                 };
             }
-            debugger;
             pipeConfigService.addStageDefinition(stage);
         };
 
@@ -457,7 +456,6 @@ angular
         };
 
         vm.deleteStage = function(stage) {
-          debugger;
             pipeConfigService.deleteStageDefinition(stage.id);
         };
 
@@ -512,7 +510,6 @@ angular
 
 
         vm.addJob = function(newJob) {
-            debugger;
             if (newJob.taskDefinitions.type == 'EXEC') {
                 var job = {
                     name: newJob.name,
@@ -583,7 +580,6 @@ angular
                     }]
                 };
             }
-            debugger;
             pipeConfigService.addJobDefinition(job);
 
         };
