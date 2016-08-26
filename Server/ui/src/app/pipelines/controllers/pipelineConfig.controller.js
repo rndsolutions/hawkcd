@@ -75,25 +75,34 @@ angular
         //     console.log(vm.allPipelines.materials);
         // });
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allMaterialDefinitions;
         }, function(newVal, oldVal) {
             vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPermissions;
         }, function(newVal, oldVal) {
             vm.allPermissions = angular.copy(viewModel.allPermissions);
             console.log(vm.allPermissions);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
-            return viewModel.allPipelines;
-        }, function(newVal, oldVal) {
+        // $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+        //     vm.allPipelines = angular.copy(viewModel.allPipelines);
+        //     vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+        //         if (currentPipeline.id == vm.pipeline.id) {
+        //             vm.getPipelineForConfig(currentPipeline.name);
+        //             //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
+        //         }
+        //     });
+        //     console.log(vm.allPipelines);
+        // });
+
+        $scope.$watch(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
             console.log(vm.allPipelines);
-        });
+        }, true);
 
         // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
         //     vm.allMaterials = viewModel.allMaterialDefinitions;
@@ -168,7 +177,7 @@ angular
         //region select manipulation
         vm.isExpanded = function(stageName) {
             // vm.isOtherStageExpanded(stageName);
-            return stageName == vm.currentStage.name;
+            return stageName == vm.currentStage;
         };
 
         vm.isOtherStageExpanded = function(stageName) {
@@ -227,32 +236,31 @@ angular
         };
 
         vm.filteredMaterialDefinitions = [];
-        vm.getPipelineForConfig = function(pipeName) {
-            if (vm.allPipelines != null && vm.allPipelines.length > 0) {
+        vm.getPipelineForCongit fig = function(pipeName) {
+            if(vm.allPipelines != null && vm.allPipelines.length > 0) {
                 vm.allPipelines.forEach(function(currentPipeline, index, array) {
                     if (currentPipeline.name == pipeName) {
                         vm.pipeline = array[index];
                         vm.allPipelineVars = vm.pipeline.environmentVariables;
                         vm.pipelineIndex = index;
 
-                        currentPipeline.materialDefinitionIds.forEach(function(currentDefinition, definitionIndex, definitionArray) {
-                            vm.allMaterials.forEach(function(currentMaterial, materialIndex, materialArray) {
+                        for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
+                            var currentDefinition = currentPipeline.materialDefinitionIds[i];
+                            for (var j = 0; j < vm.allMaterials.length; j++) {
+                                var currentMaterial = vm.allMaterials[j];
                                 if (currentDefinition === currentMaterial.id) {
-                                    var isContained = false;
-                                    vm.filteredMaterialDefinitions.forEach(function(currentFilteredMaterial, filteredMaterialIndex, filteredMaterialArray) {
-                                        if (currentFilteredMaterial.id === currentMaterial.id) {
-                                            isContained = true;
-                                        }
-                                    });
-                                    if (!isContained) {
+                                    if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
                                         vm.filteredMaterialDefinitions.push(currentMaterial);
                                     }
                                 }
-                            });
-                        });
+
+                            }
+                        }
                     }
                 });
 
+
+                //vm.pipeline = pipeName;
 
                 vm.newStage = {};
                 vm.newMaterials = {};
@@ -260,11 +268,9 @@ angular
                 vm.updatedPipeline.name = vm.pipeline.name;
                 vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
                 vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
-                vm.currentPipeline = vm.pipeline;
+                vm.currentPipeline = pipeName;
             } else {
-                setTimeout(function() {
-                    vm.getPipelineForConfig(pipeName);
-                }, 500);
+                setTimeout(function () { vm.getPipelineForConfig(pipeName); }, 500);
             }
         };
 
@@ -319,7 +325,7 @@ angular
             vm.updatedStage.name = vm.stage.name;
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
-            vm.currentStage = stage;
+            vm.currentStage = stage.name;
         };
 
         vm.getStageByName = function(stageName) {
@@ -338,7 +344,7 @@ angular
             vm.updatedStage.name = vm.stage.name;
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
-            vm.currentStage = vm.stage;
+            vm.currentStage = vm.stage.name;
         };
 
         vm.getStageForTask = function(stage) {
@@ -361,7 +367,6 @@ angular
             });
         };
 
-        vm.newStage.selectedMaterialForNewStage = {};
         vm.addStage = function(newStage) {
             if (newStage.jobDefinitions.taskDefinitions.type == 'EXEC') {
                 var stage = {
@@ -402,7 +407,6 @@ angular
                 };
             }
             if (newStage.jobDefinitions.taskDefinitions.type == 'FETCH_MATERIAL') {
-                var selectedMaterialForJob = JSON.parse(vm.newStage.selectedMaterialForNewStage);
                 var stage = {
                     name: newStage.name,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
@@ -411,20 +415,10 @@ angular
                         pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         taskDefinitions: [{
-                            // var selectedMaterial = JSON.parse(newTask.material);
                             pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
-                            pipelineName: vm.allPipelines[vm.pipelineIndex].name,
-                            materialDefinitionId: selectedMaterialForJob.id,
                             type: newStage.jobDefinitions.taskDefinitions.type,
-                            materialType: selectedMaterialForJob.type,
-                            materialName: selectedMaterialForJob.name,
-                            destination: selectedMaterialForJob.name,
-                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition,
-                            ignoreErrors: newStage.jobDefinitions.taskDefinitions.ignoreErrors
-                                // pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
-                                // type: newStage.jobDefinitions.taskDefinitions.type,
-                                // materialName: selectedMaterialForJob.name,
-                                // runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
+                            materialName: newStage.jobDefinitions.taskDefinitions.materialName,
+                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
                         }]
                     }]
                 };
@@ -482,7 +476,8 @@ angular
 
                 vm.updatedJob.name = vm.job.name;
 
-                vm.currentJob = job;
+                vm.currentJob = job.name;
+
             }
         };
 
@@ -510,8 +505,8 @@ angular
             }
         };
 
-
         vm.addJob = function(newJob) {
+            debugger;
             if (newJob.taskDefinitions.type == 'EXEC') {
                 var job = {
                     name: newJob.name,
@@ -549,21 +544,16 @@ angular
                 };
             }
             if (newJob.taskDefinitions.type == 'FETCH_MATERIAL') {
-                var materialForJob = JSON.parse(newJob.taskDefinitions.material);
                 var job = {
                     name: newJob.name,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                    pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     taskDefinitions: [{
-                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
-                        pipelineName: vm.allPipelines[vm.pipelineIndex].name,
-                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                        materialDefinitionId: materialForJob.id,
                         type: newJob.taskDefinitions.type,
-                        runIfCondition: newJob.taskDefinitions.runIfCondition,
-                        materialName: materialForJob.name,
-                        destination: materialForJob.name,
-                        materialType: materialForJob.type
+                        pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                        stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
+                        materialName: newJob.taskDefinitions.materialName
                     }]
                 };
             }
@@ -602,10 +592,10 @@ angular
             pipeConfigService.deleteJobDefinition(job.id);
         };
 
-        vm.assignMaterialToPipeline = function(material) {
-            var buffer = JSON.parse(material);
+        vm.assignMaterialToPipeline = function(material){
+          var buffer = JSON.parse(material);
 
-            debugger;
+          debugger;
         }
 
         vm.addMaterial = function(newMaterial) {
@@ -789,7 +779,7 @@ angular
                     pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    materialDefinitionId: selectedMaterial.id,
+                    materialDefinition: selectedMaterial,
                     type: newTask.type,
                     materialType: selectedMaterial.type,
                     materialName: selectedMaterial.name,
@@ -848,11 +838,11 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    materialDefinitionId: JSON.parse(newTask.material).id,
+                    materialDefinition: JSON.parse(newTask.materialName),
                     type: newTask.type,
-                    materialType: JSON.parse(newTask.material).type,
-                    materialName: JSON.parse(newTask.material).name,
-                    destination: JSON.parse(newTask.material).name,
+                    materialType: JSON.parse(newTask.materialName).type,
+                    materialName: JSON.parse(newTask.materialName).name,
+                    destination: JSON.parse(newTask.materialName).name,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
@@ -888,7 +878,6 @@ angular
         };
 
         vm.deleteTask = function(task) {
-          debugger;
             pipeConfigService.deleteTaskDefinition(task.id);
         };
 
