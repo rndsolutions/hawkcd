@@ -11,8 +11,6 @@ public interface IUserService extends ICrudService<User> {
 
     ServiceResult getByEmail(String email);
 
-    ServiceResult addAdminServerUser();
-
     ServiceResult addUserWithoutProvider(User user);
 
     ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword);

@@ -100,23 +100,6 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult addAdminServerUser() {
-        User adminUser = new User();
-        adminUser.setEmail("admin@admin.com");
-        adminUser.setPassword("admin");
-        Permission adminUserPermission = new Permission();
-        adminUserPermission.setPermittedEntityId("SERVER");
-        adminUserPermission.setPermissionType(PermissionType.ADMIN);
-        adminUserPermission.setPermissionScope(PermissionScope.SERVER);
-        List<Permission> permissions = new ArrayList<>();
-        permissions.add(adminUserPermission);
-
-        adminUser.setPermissions(permissions);
-
-        return this.add(adminUser);
-    }
-
-    @Override
     public ServiceResult addUserWithoutProvider(User user) {
         return this.add(user);
     }
