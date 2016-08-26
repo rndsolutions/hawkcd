@@ -50,10 +50,15 @@ public class DataImporter {
     }
 
     private ServiceResult addDefualtPipelineGroup(){
-        PipelineGroup defaultPipelineGroup = new PipelineGroup();
-        defaultPipelineGroup.setName("defaultPipelineGroup");
+        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getObject();
+        if (pipelineGroups.size() == 0){
 
-        return this.pipelineGroupService.add(defaultPipelineGroup);
+            PipelineGroup defaultPipelineGroup = new PipelineGroup();
+            defaultPipelineGroup.setName("defaultPipelineGroup");
 
+            return this.pipelineGroupService.add(defaultPipelineGroup);
+        }
+
+        return null;
     }
 }
