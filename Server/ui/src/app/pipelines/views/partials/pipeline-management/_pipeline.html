@@ -25,8 +25,11 @@
           <span ng-if="stage.status=='PASSED' && $index<9">
 <button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
              </span>
-            <span ng-if="stage.status=='FAILED' || stage.status=='CANCELED' && $index<9">
+            <span ng-if="stage.status=='FAILED' && $index<9">
               <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+              </span>
+                <span ng-if="stage.status=='CANCELED' && $index<9">
+              <button type="button" class="btn btn-canceled s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'NOT_RUN' && $index<9">
                  <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>

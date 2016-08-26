@@ -1,5 +1,5 @@
 <div class="run-item" ng-repeat="run in pipesHistory.currentPipelineRuns">
-    <div class="run-item-container" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS'}">
+    <div class="run-item-container" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS', 'status-canceled' : run.status == 'CANCELED'}">
         <div class="run-info-cell run-cell">
             <div class="buffer"></div>
             <div class="run-info-container">
@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         
-                        <div ng-if="stage.status !== 'IN_PROGRESS'" class="stage-content" ng-class="{'label label-sm stage-success':stage.status == 'PASSED','label label-sm stage-fail':stage.status == 'FAILED' || stage.status == 'CANCELED',
+                        <div ng-if="stage.status !== 'IN_PROGRESS'" class="stage-content" ng-class="{'label label-sm stage-success':stage.status == 'PASSED','label label-sm stage-fail':stage.status == 'FAILED', 'label labem-sm stage-cancel' : stage.status == 'CANCELED',
                             'label label-sm stage-not-run':stage.status=='NOT_RUN','label label-sm stage-working':stage.status=='IN_PROGRESS'}">
                             <div class="stage-text" ng-if="stage.stageDefinitionName.length > 7">
                                 {{stage.stageDefinitionName.substring(0,7)}}..
