@@ -54,12 +54,12 @@ angular
             console.log(vm.allPipelines);
         }, true);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allMaterialDefinitions
         }, function(newVal, oldVal) {
             vm.allMaterialDefinitions = angular.copy(viewModel.allMaterialDefinitions);
             console.log(vm.allMaterialDefinitions);
-        });
+        }, true);
 
         $scope.$watch(function() {
             return viewModel.allPipelineRuns

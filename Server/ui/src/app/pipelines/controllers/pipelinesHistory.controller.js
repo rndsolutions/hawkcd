@@ -66,7 +66,7 @@ angular
             return result;
         }
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
@@ -94,7 +94,7 @@ angular
             }
             console.log(vm.allPipelineRuns);
             console.log(vm.currentPipelineRuns);
-        });
+        }, true);
 
 
         //Gets all executions of a pipeline by given name
