@@ -142,8 +142,8 @@
 
           <div ng-if="pipeConfig.newJob.taskDefinitions.type == 'FETCH_MATERIAL'">
             <div class="form-group form-md-line-input">
-              <select class="form-control" name="materialSelect" id="jobMaterialSelect" ng-model="pipeConfig.newJob.taskDefinitions.materialName" required>
-                <option ng-repeat="material in pipeConfig.allPipelines[pipeConfig.pipelineIndex].materials" value="{{material.name}}">{{material.name}}</option>
+              <select class="form-control" name="materialSelect" id="jobMaterialSelect" ng-model="pipeConfig.newJob.taskDefinitions.material" required>
+                <option ng-repeat="material in pipeConfig.filteredMaterialDefinitions" value="{{material}}">{{material.name}}</option>
               </select>
               <label for="jobMaterialSelect">Material</label>
             </div>
@@ -152,7 +152,7 @@
               <label>Run If Conditions</label>
               <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='Passed'">
                 <div class="md-radio">
-                  <input type="radio" id="pass" name="runIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
+                  <input type="radio" id="pass" name="runIf" value="PASSED" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
                   <label for="pass">
                     <span></span>
                     <span class="check"></span>

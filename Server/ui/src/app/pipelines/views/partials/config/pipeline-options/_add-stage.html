@@ -153,8 +153,8 @@
             <div ng-if="pipeConfig.newStage.jobDefinitions.taskDefinitions.type == 'FETCH_MATERIAL'">
               <div class="form-group form-md-line-input">
                 <select class="form-control" name="materialSelect" id="stageMaterialSelect"
-                        ng-model="pipeConfig.newStage.jobs.tasks.materialName" required>
-                  <option ng-repeat="material in pipeConfig.pipeline.materials" value="{{material.name}}">{{material.name}}</option>
+                        ng-model="pipeConfig.newStage.selectedMaterialForNewStage" required>
+                  <option ng-repeat="material in pipeConfig.filteredMaterialDefinitions" value="{{material}}">{{material.name}}</option>
                 </select>
                 <label for="stageMaterialSelect">Material</label>
               </div>
