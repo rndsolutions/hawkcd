@@ -25,7 +25,7 @@
           <span ng-if="stage.status=='PASSED' && $index<9">
 <button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
              </span>
-            <span ng-if="stage.status=='FAILED' && $index<9">
+            <span ng-if="stage.status=='FAILED' || stage.status=='CANCELED' && $index<9">
               <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'NOT_RUN' && $index<9">
@@ -45,7 +45,7 @@
 
         </div>
         <div class="controls">
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == ''}" id="startbtn" ng-click="pipes.play(pipe)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status == 'IN_PROGRESS' || pipe.disabled == true}" id="startbtn" ng-click="pipes.play(pipe)">
                 <span class="glyphicon glyphicon-play control"></span>
             </button>
             <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}">
@@ -56,7 +56,7 @@
                 <span class="glyphicon glyphicon-pause control"></span>
             </button>
 
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}" ng-click="pipes.stop(pipe.id)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' || pipe.disabled == true}" id="stopbtn" ng-click="pipes.stop(pipe, pipe.lastRun)">
                 <span class="glyphicon glyphicon-stop control"></span>
             </button>
         </div>

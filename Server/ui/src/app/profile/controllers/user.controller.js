@@ -6,7 +6,7 @@ angular
         var vm = this;
 
         vm.defaultText = {
-            pageHeader: "Your profile",
+            pageHeader: "Profile Information",
             breadCrumb: "Profile",
             overview: "Overview",
             account: "Account"
@@ -40,6 +40,7 @@ angular
             if (passwordData.newPassword == passwordData.confirmNewPassword) {
                 adminService.updateUserPassword(vm.currentlyLoggedUser, passwordData.newPassword,passwordData.oldPassword);
             }
+            vm.newPasswordObject = {};
         }
 
         // vm.me = {};

@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         
-                        <div ng-if="stage.status !== 'IN_PROGRESS'" class="stage-content" ng-class="{'label label-sm stage-success':stage.status == 'PASSED','label label-sm stage-fail':stage.status == 'FAILED',
+                        <div ng-if="stage.status !== 'IN_PROGRESS'" class="stage-content" ng-class="{'label label-sm stage-success':stage.status == 'PASSED','label label-sm stage-fail':stage.status == 'FAILED' || stage.status == 'CANCELED',
                             'label label-sm stage-not-run':stage.status=='NOT_RUN','label label-sm stage-working':stage.status=='IN_PROGRESS'}">
                             <div class="stage-text" ng-if="stage.stageDefinitionName.length > 7">
                                 {{stage.stageDefinitionName.substring(0,7)}}..

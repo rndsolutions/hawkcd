@@ -7,13 +7,17 @@
         </li>
     </ul>
 </div>
-<div class="tabbable-custom nav-justified">
-    <ul class="nav nav-tabs nav-justified">
-        <li class="active">
-            <a data-target="#profileSettings" data-toggle="tab" aria-expanded="true"> Settings </a>
-        </li>
-    </ul>
-    <div class="tab-content">
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-user"></i> {{user.defaultText.pageHeader}}
+        </div>
+        <div class="tools right">
+            <a href="javascript:;" class="collapse"> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
         <div id="profileSettings" style="padding: 0 0 10px 10px">
             <form name="editUser">
                 <div style="width: 300px">
@@ -25,10 +29,26 @@
                         <span type="text" class="form-control">{{user.currentlyLoggedUser.username}}</span>
                         <label>Email</label>
                     </div>
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label">Current Password</label>
+                        <input type="password" class="form-control" ng-model="user.newPasswordObject.oldPassword" />
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label">New Password</label>
+                        <input type="password" class="form-control" ng-model="user.newPasswordObject.newPassword" />
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        <label class="control-label">Re-type New Password</label>
+                        <input type="password" class="form-control" ng-model="user.newPasswordObject.confirmNewPassword" />
+                    </div>
+                    <div class="margin-top-10">
+                        <button class="btn green-sharp" ng-click="user.updateUserPassword(user.newPasswordObject)">Change Password</button>
+                    </div>
                 </div>
-                <button class="btn green-sharp" data-target="#changePassword" data-toggle="modal">Change Password</button>
             </form>
         </div>
     </div>
 </div>
+
+
 <div ng-include src="'app/profile/views/partials/_change-password.html'"></div>
