@@ -228,38 +228,41 @@ angular
 
         vm.filteredMaterialDefinitions = [];
         vm.getPipelineForConfig = function(pipeName) {
-            vm.allPipelines.forEach(function(currentPipeline, index, array) {
-                if (currentPipeline.name == pipeName) {
-                    vm.pipeline = array[index];
-                    vm.allPipelineVars = vm.pipeline.environmentVariables;
-                    vm.pipelineIndex = index;
+            if(vm.allPipelines != null && vm.allPipelines.length > 0) {
+                vm.allPipelines.forEach(function(currentPipeline, index, array) {
+                    if (currentPipeline.name == pipeName) {
+                        vm.pipeline = array[index];
+                        vm.allPipelineVars = vm.pipeline.environmentVariables;
+                        vm.pipelineIndex = index;
 
-                    for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
-                        var currentDefinition = currentPipeline.materialDefinitionIds[i];
-                        for (var j = 0; j < vm.allMaterials.length; j++) {
-                            var currentMaterial = vm.allMaterials[j];
-                            if (currentDefinition === currentMaterial.id) {
-                                if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
-                                    vm.filteredMaterialDefinitions.push(currentMaterial);
+                        for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
+                            var currentDefinition = currentPipeline.materialDefinitionIds[i];
+                            for (var j = 0; j < vm.allMaterials.length; j++) {
+                                var currentMaterial = vm.allMaterials[j];
+                                if (currentDefinition === currentMaterial.id) {
+                                    if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
+                                        vm.filteredMaterialDefinitions.push(currentMaterial);
+                                    }
                                 }
-                            }
 
+                            }
                         }
                     }
-                }
-            });
+                });
 
 
+                //vm.pipeline = pipeName;
 
+                vm.newStage = {};
+                vm.newMaterials = {};
 
-            //vm.pipeline = pipeName;
-            vm.newStage = {};
-            vm.newMaterials = {};
-
-            vm.updatedPipeline.name = vm.pipeline.name;
-            vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
-            vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
-            vm.currentPipeline = pipeName;
+                vm.updatedPipeline.name = vm.pipeline.name;
+                vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
+                vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
+                vm.currentPipeline = pipeName;
+            } else {
+                setTimeout(function () { vm.getPipelineForConfig(pipeName); }, 500);
+            }
         };
 
         vm.getPipelineForTask = function(pipeline) {
