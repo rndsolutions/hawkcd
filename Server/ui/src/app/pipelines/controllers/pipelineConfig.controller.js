@@ -405,10 +405,20 @@ angular
                         pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         taskDefinitions: [{
+                            // var selectedMaterial = JSON.parse(newTask.material);
                             pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                            pipelineName: vm.allPipelines[vm.pipelineIndex].name,
+                            materialDefinitionId: selectedMaterialForJob.id,
                             type: newStage.jobDefinitions.taskDefinitions.type,
+                            materialType: selectedMaterialForJob.type,
                             materialName: selectedMaterialForJob.name,
-                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
+                            destination: selectedMaterialForJob.name,
+                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition,
+                            ignoreErrors: newStage.jobDefinitions.taskDefinitions.ignoreErrors
+                                // pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
+                                // type: newStage.jobDefinitions.taskDefinitions.type,
+                                // materialName: selectedMaterialForJob.name,
+                                // runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
                         }]
                     }]
                 };
@@ -545,18 +555,13 @@ angular
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                         stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                        materialDefinition: materialForJob,
+                        materialDefinitionId: materialForJob.id,
                         type: newJob.taskDefinitions.type,
                         runIfCondition: newJob.taskDefinitions.runIfCondition,
                         materialName: materialForJob.name,
                         materialDefinitionId: materialForJob.id,
                         destination: materialForJob.name,
                         materialType: materialForJob.type
-                            //
-                            // type: newJob.taskDefinitions.type,
-                            // pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
-                            // stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                            // materialDefinition: JSON.parse(newJob.taskDefinitions.material)
                     }]
                 };
             }
@@ -783,7 +788,7 @@ angular
                     pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    materialDefinition: selectedMaterial,
+                    materialDefinitionId: selectedMaterial.id,
                     type: newTask.type,
                     materialType: selectedMaterial.type,
                     materialName: selectedMaterial.name,
