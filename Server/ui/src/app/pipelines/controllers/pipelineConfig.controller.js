@@ -70,30 +70,36 @@ angular
             }
         };
 
-        // $scope.$watch(function() { return viewModel.allPipelines.materials }, function(newVal, oldVal) {
-        //     vm.allMaterials = viewModel.allPipelines.materials;
-        //     console.log(vm.allPipelines.materials);
-        // });
-
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allMaterialDefinitions;
         }, function(newVal, oldVal) {
             vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
+        $scope.$watch(function() {
             return viewModel.allPermissions;
         }, function(newVal, oldVal) {
             vm.allPermissions = angular.copy(viewModel.allPermissions);
             console.log(vm.allPermissions);
-        });
+        }, true);
 
-        $scope.$watchCollection(function() {
-            return viewModel.allPipelines;
+        // $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
+        //     vm.allPipelines = angular.copy(viewModel.allPipelines);
+        //     vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+        //         if (currentPipeline.id == vm.pipeline.id) {
+        //             vm.getPipelineForConfig(currentPipeline.name);
+        //             //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
+        //         }
+        //     });
+        //     console.log(vm.allPipelines);
+        // });
+
+        $scope.$watch(function() {
+            return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
             console.log(vm.allPipelines);
-        });
+        }, true);
 
         // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
         //     vm.allMaterials = viewModel.allMaterialDefinitions;
@@ -253,6 +259,8 @@ angular
                     }
                 });
 
+
+                //vm.pipeline = pipeName;
 
                 vm.newStage = {};
                 vm.newMaterials = {};
@@ -888,7 +896,6 @@ angular
         };
 
         vm.deleteTask = function(task) {
-          debugger;
             pipeConfigService.deleteTaskDefinition(task.id);
         };
 
