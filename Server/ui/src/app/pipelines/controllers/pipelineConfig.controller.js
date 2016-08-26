@@ -168,7 +168,7 @@ angular
         //region select manipulation
         vm.isExpanded = function(stageName) {
             // vm.isOtherStageExpanded(stageName);
-            return stageName == vm.currentStage;
+            return stageName == vm.currentStage.name;
         };
 
         vm.isOtherStageExpanded = function(stageName) {
@@ -228,25 +228,47 @@ angular
 
         vm.filteredMaterialDefinitions = [];
         vm.getPipelineForConfig = function(pipeName) {
-            if(vm.allPipelines != null && vm.allPipelines.length > 0) {
+            if (vm.allPipelines != null && vm.allPipelines.length > 0) {
                 vm.allPipelines.forEach(function(currentPipeline, index, array) {
                     if (currentPipeline.name == pipeName) {
                         vm.pipeline = array[index];
                         vm.allPipelineVars = vm.pipeline.environmentVariables;
                         vm.pipelineIndex = index;
 
-                        for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
-                            var currentDefinition = currentPipeline.materialDefinitionIds[i];
-                            for (var j = 0; j < vm.allMaterials.length; j++) {
-                                var currentMaterial = vm.allMaterials[j];
+                        currentPipeline.materialDefinitionIds.forEach(function(currentDefinition, definitionIndex, definitionArray) {
+                            vm.allMaterials.forEach(function(currentMaterial, materialIndex, materialArray) {
                                 if (currentDefinition === currentMaterial.id) {
-                                    if (vm.filteredMaterialDefinitions.indexOf(currentMaterial) === -1) {
+                                    var isContained = false;
+                                    vm.filteredMaterialDefinitions.forEach(function(currentFilteredMaterial, filteredMaterialIndex, filteredMaterialArray) {
+                                        if (currentFilteredMaterial.id === currentMaterial.id) {
+                                            isContained = true;
+                                        }
+                                    });
+                                    if (!isContained) {
                                         vm.filteredMaterialDefinitions.push(currentMaterial);
                                     }
                                 }
+                            });
+                        });
 
-                            }
-                        }
+
+                        // for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
+                        //     var currentDefinition = currentPipeline.materialDefinitionIds[i];
+                        //     for (var j = 0; j < vm.allMaterials.length; j++) {
+                        //         var currentMaterial = vm.allMaterials[j];
+                        //         if (currentDefinition === currentMaterial.id) {
+                        //             var isContained = false;
+                        //             vm.filteredMaterialDefinitions.forEach(function(current, index, array) {
+                        //                 if (current.id === currentMaterial.id) {
+                        //                     isContained = true;
+                        //                 }
+                        //             });
+                        //             if (!isContained) {
+                        //                 vm.filteredMaterialDefinitions.push(currentMaterial);
+                        //             }
+                        //         }
+                        //     }
+                        // }
                     }
                 });
 
@@ -259,9 +281,11 @@ angular
                 vm.updatedPipeline.name = vm.pipeline.name;
                 vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
                 vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
-                vm.currentPipeline = pipeName;
+                vm.currentPipeline = vm.pipeline;
             } else {
-                setTimeout(function () { vm.getPipelineForConfig(pipeName); }, 500);
+                setTimeout(function() {
+                    vm.getPipelineForConfig(pipeName);
+                }, 500);
             }
         };
 
@@ -335,7 +359,7 @@ angular
             vm.updatedStage.name = vm.stage.name;
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
-            vm.currentStage = vm.stage.name;
+            vm.currentStage = vm.stage;
         };
 
         vm.getStageForTask = function(stage) {
@@ -480,7 +504,6 @@ angular
                 vm.updatedJob.name = vm.job.name;
 
                 vm.currentJob = job;
-
             }
         };
 
@@ -886,6 +909,7 @@ angular
         };
 
         vm.deleteTask = function(task) {
+          debugger;
             pipeConfigService.deleteTaskDefinition(task.id);
         };
 
