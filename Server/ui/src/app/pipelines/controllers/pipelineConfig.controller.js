@@ -559,7 +559,6 @@ angular
                         type: newJob.taskDefinitions.type,
                         runIfCondition: newJob.taskDefinitions.runIfCondition,
                         materialName: materialForJob.name,
-                        materialDefinitionId: materialForJob.id,
                         destination: materialForJob.name,
                         materialType: materialForJob.type
                     }]
