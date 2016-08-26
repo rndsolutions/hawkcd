@@ -138,6 +138,10 @@
     background-color: #D91E18;
 }
 
+.stage-cancel {
+    background-color: lightslategrey;
+}
+
 /*materials*/
 .materials-block{
   margin-top:8px;
