@@ -186,9 +186,9 @@
             </div>
             <div class="form-group form-md-radios">
               <label>Run If Conditions</label>
-              <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='Passed'">
+              <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='PASSED'">
                 <div class="md-radio">
-                  <input type="radio" id="pass" name="runIf" value="Passed" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition">
+                  <input type="radio" id="pass" name="runIf" value="PASSED" class="md-radiobtn" ng-checked="true" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition">
                   <label for="pass">
                     <span></span>
                     <span class="check"></span>
