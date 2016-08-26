@@ -250,30 +250,9 @@ angular
                                 }
                             });
                         });
-
-
-                        // for (var i = 0; i < currentPipeline.materialDefinitionIds.length; i++) {
-                        //     var currentDefinition = currentPipeline.materialDefinitionIds[i];
-                        //     for (var j = 0; j < vm.allMaterials.length; j++) {
-                        //         var currentMaterial = vm.allMaterials[j];
-                        //         if (currentDefinition === currentMaterial.id) {
-                        //             var isContained = false;
-                        //             vm.filteredMaterialDefinitions.forEach(function(current, index, array) {
-                        //                 if (current.id === currentMaterial.id) {
-                        //                     isContained = true;
-                        //                 }
-                        //             });
-                        //             if (!isContained) {
-                        //                 vm.filteredMaterialDefinitions.push(currentMaterial);
-                        //             }
-                        //         }
-                        //     }
-                        // }
                     }
                 });
 
-
-                //vm.pipeline = pipeName;
 
                 vm.newStage = {};
                 vm.newMaterials = {};
