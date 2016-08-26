@@ -24,6 +24,7 @@ public class Pipeline extends DbEntry {
     private String triggerReason;
     private boolean areMaterialsUpdated;
     private boolean isPrepared;
+    private boolean shouldBeCanceled;
 
     public Pipeline() {
         this.startTime = new Date();
@@ -152,5 +153,13 @@ public class Pipeline extends DbEntry {
     @JsonProperty("isPrepared")
     public void setPrepared(boolean prepared) {
         this.isPrepared = prepared;
+    }
+
+    public boolean shouldBeCanceled() {
+        return this.shouldBeCanceled;
+    }
+
+    public void setShouldBeCanceled(boolean shouldBeCanceled) {
+        this.shouldBeCanceled = shouldBeCanceled;
     }
 }

@@ -34,43 +34,29 @@
                                                                                       popover-trigger="{{admin.popOverOptions.triggers.click}}"
                                                                                       popover-animation="true">?</span></h4></th>
                   </th>
-                  <!--<th><h4 titile="The free space of the disk the agent is running on">{{agents.defaultText.tableHeaders.freeSpace}} <span class="badge badge-default">?</span> </h4> </th>-->
-                <!-- <th>Username</th>
-                <th>Registered On</th>
-                <th>Permissions</th>
-                <th>Action</th>
-            </tr> -->
+            </tr>
             </thead>
             <tbody id="usersTable">
-            <tr ng-repeat="user in admin.users">
-                <td>
-                    {{user.email}}
-                </td>
-                <td>
-                    {{user.registeredOn}}
-                </td>
-                <td class="text-center">
-                    <a data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
-                </td>
-                <td class="text-center">
-                    <!--<span class="custom-hover">-->
-                    <!--<i data-target="#removeUser" data-toggle="modal" class="fa fa-trash" ng-click="admin.selectUser($index)"></i>-->
-                    <!--</span>-->
-                    <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate">
-                        <div class="bootstrap-switch-container">
-                            <span class="bootstrap-switch-handle-on bootstrap-switch-primary">Enabled</span>
-                            <span class="bootstrap-switch-label"></span>
-                            <span class="bootstrap-switch-handle-off bootstrap-switch-default">Disabled</span>
-                            <input type="checkbox" id="user-checkbox" class="make-switch" data-on-text="Enabled" data-off-text="Disabled">
-                        </div>
-                    </div>
-                </td>
-            </tr>
+                <tr ng-repeat="user in admin.users">
+                    <td>
+                        {{user.email}}
+                    </td>
+                    <td>
+                        {{user.registeredOn}}
+                    </td>
+                    <td>
+                        <a data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
+                    </td>
+                    <td>
+                      <input type="checkbox" ng-model="user.isEnabled" data-on-text="ENABLED" data-off-text="DISABLED" bootstrap-switch id="switch-box" ng-click="scope.toggleUser()"/>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
     </div>
 </div>
+
 <div ng-include src="'app/admin/views/partials/_add-user.html'"></div>
 <div ng-include src="'app/admin/views/partials/_assignUsers.html'"></div>
 <div ng-include src="'app/admin/views/partials/_add-userGroup.html'"></div>

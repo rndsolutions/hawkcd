@@ -98,10 +98,10 @@ angular
                   action:'Action'
                 },
                 userInfo:{
-                  username:'Username',
-                  dateRegistered:'Registered On',
-                  permissions:'Permissions',
-                  action:'Action'
+                  username:'Name of the user',
+                  dateRegistered:'Date registered on',
+                  permissions:'Permissions of the user',
+                  action:'Available actions'
                 },
                 tableTitles: {
                     name: 'Name',
@@ -634,7 +634,7 @@ angular
 
             vm.setMaterialForEdit = function(material) {
               vm.materialType = 'hidden';
-                vm.formData.material = material;
+                vm.formData.material = angular.copy(material);
                 if (material.username) {
                     vm.formData.material.credentials = true;
                 }
