@@ -3,9 +3,12 @@
         <div class="caption">
             <i class="fa fa-cogs"></i>Console
         </div>
+        <div class="tools right">
+            <a href="javascript:;" class="collapse"> </a>
+        </div>
     </div>
 
-    <div class="panel-body">
+    <div class="portlet-body">
         <!--<div class="col-md-3">-->
 
             <!--<div class="mt-element-list">-->
@@ -135,9 +138,19 @@
             <!--</div>-->
         <!--</div>-->
 
-        <div class="col-md-12">
-            <div ng-include src="'app/pipelines/views/partials/run-management/_run-info.html'"></div>
-        </div>
+        <div class="portlet light custom-portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-terminal"></i>{{pipesRunManagement.selectedJob.jobDefinitionName}} Output
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="clearfix"></div>
+                <div id="console" class="tab-pane fade in active">
+                    <pre class="console" scroll-glue ng-bind-html="pipesRunManagement.currentPipelineRun.stages[pipesRunManagement.toggleRun].jobs[pipesRunManagement.jobIndex].report"></pre>
+                </div>
+
+            </div>
     </div>
 </div>
 
