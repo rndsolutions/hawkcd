@@ -1530,7 +1530,9 @@ public class SecurityServiceTests {
 
     private void createPipelineDefinitionsAndPipelineGroups() {
         this.firstPipelineGroup = new PipelineGroup();
+        this.firstPipelineGroup.setName("firstGroup");
         this.secondPipelineGroup = new PipelineGroup();
+        this.secondPipelineGroup.setName("secondPipelineGroup");
 
         this.firstPipelineDefinition = new PipelineDefinition();
         this.firstPipelineDefinition.setPipelineGroupId(this.firstPipelineGroup.getId());

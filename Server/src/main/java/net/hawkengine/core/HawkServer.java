@@ -3,10 +3,9 @@ package net.hawkengine.core;
 import net.hawkengine.core.materialhandler.MaterialTracker;
 import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
+import net.hawkengine.core.utilities.DataImporter;
 import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
-import net.hawkengine.services.UserService;
-import net.hawkengine.services.interfaces.IUserService;
 import net.hawkengine.ws.WsServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -20,21 +19,21 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
     private Server server;
-    private IUserService userService;
     private Thread pipelinePreparer;
     private Thread jobAssigner;
     private Thread materialTracker;
     private EndpointFinder endpointFinder;
+    private DataImporter dataImporter;
 
     public HawkServer() {
         RedisManager.connect();
 
         this.server = new Server();
-        this.userService = new UserService();
         this.pipelinePreparer = new Thread(new PipelinePreparer());
         this.jobAssigner = new Thread(new JobAssigner());
         this.materialTracker = new Thread(new MaterialTracker());
         this.endpointFinder = new EndpointFinder();
+        this.dataImporter = new DataImporter();
     }
 
     public void configureJetty() {
@@ -78,7 +77,7 @@ public class HawkServer {
 
     public void start() throws Exception {
         this.server.start();
-        this.userService.addAdminServerUser();
+        this.dataImporter.importDefaultEntities();
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();

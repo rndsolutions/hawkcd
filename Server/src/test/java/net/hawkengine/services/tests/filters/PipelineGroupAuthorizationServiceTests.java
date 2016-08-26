@@ -50,8 +50,11 @@ public class PipelineGroupAuthorizationServiceTests {
     @Before
     public void setUp() {
         this.firstPipelineGroup = new PipelineGroup();
+        this.firstPipelineGroup.setName("firstGroup");
         this.secondPipelineGroup = new PipelineGroup();
+        this.secondPipelineGroup.setName("secondPipelineGroup");
         this.thirdPipelineGroup = new PipelineGroup();
+        this.thirdPipelineGroup.setName("thirdPipelineGroup");
 
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
