@@ -54,7 +54,7 @@
       </a>
 
       <div class="panel-collapse collapse" id="{{stage.name}}"
-           ng-class="{'in': pipeConfig.currentStage == stage.name}">
+           ng-class="{'in': pipeConfig.currentStage.name == stage.name}">
         <ul>
           <li class="mt-list-item job-item" ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions" id="{{stage.name+'job'+$index}}" ng-class="{'selectedS': pipeConfig.isJobSelected(job.name)}"
               ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name, jobName:job.name})"
@@ -77,6 +77,3 @@
 <div ui-view>
 
 </div>
-
-
-

@@ -236,7 +236,7 @@ angular
         };
 
         vm.filteredMaterialDefinitions = [];
-        vm.getPipelineForConfig = function(pipeName) {
+        vm.getPipelineForCongit fig = function(pipeName) {
             if(vm.allPipelines != null && vm.allPipelines.length > 0) {
                 vm.allPipelines.forEach(function(currentPipeline, index, array) {
                     if (currentPipeline.name == pipeName) {
