@@ -65,7 +65,7 @@
                                 <span class="required"> * </span>
                             </label>
                             <div class="col-md-6">
-                                <input ng-model="admin.formData.material.username" type="text" class="form-control" required/>
+                                <input ng-model="admin.formData.material.username" type="text" class="form-control" ng-pattern="/^([\w-]+)$/" required/>
                                 <div class="form-control-focus"></div>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                                 <span class="required"> * </span>
                             </label>
                             <div class="col-md-6">
-                                <input ng-model="admin.formData.material.password" type="password" class="form-control" required/>
+                                <input ng-model="admin.formData.material.password" type="password" class="form-control" ng-pattern="/^[0-9A-Za-z.-]{3,32}$/" required/>
                                 <div class="form-control-focus"></div>
                             </div>
                         </div>

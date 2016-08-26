@@ -183,7 +183,7 @@
                                                             <div class="form-group form-md-line-input">
                                                                 <label class="control-label col-md-3">Git Branch</label>
                                                                 <div class="col-md-6">
-                                                                    <input ng-model="pipes.formData.material.git.branch" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitBranch}}" />
+                                                                    <input ng-model="pipes.formData.material.git.branch" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitBranch}}" ng-pattern="/^([\w-]+)$/"/>
                                                                     <div class="form-control-focus"></div>
                                                                 </div>
                                                             </div>

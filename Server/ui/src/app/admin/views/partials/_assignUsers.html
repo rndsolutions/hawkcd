@@ -7,8 +7,9 @@
                 <h4 class="modal-title">Assign Users</h4>
             </div>
             <div class="modal-body">
+                <form name="searchForm">
                 <div class="input-group input-group-lg add-on custom-search">
-                <input type="text" class="form-control search-query custom-line-height" ng-model="admin.query" ng-change="admin.search()" placeholder="Search">
+                <input type="text" class="form-control search-query custom-line-height" ng-model="admin.query" ng-change="admin.search()" ng-pattern="/^([\w-]+)$/" placeholder="Search">
                     </div>
                 <table id="users" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
@@ -32,6 +33,7 @@
                     </tr>
                     </tbody>
                 </table>
+                </form>
             </div>
             <div class="center-margin">
                 <ul class="pagination">
@@ -48,7 +50,7 @@
             </div>
             </br>
             <div class="modal-footer">
-                <button class="btn btn-primary" data-dismiss="modal" ng-click="admin.assignUsers()">Done</button>
+                <button class="btn btn-primary" data-dismiss="modal" ng-disabled="searchForm.$invalid" ng-click="admin.assignUsers()">Done</button>
                 <button class="btn" data-dismiss="modal" ng-click="admin.close()">Cancel</button>
             </div>
         </div>
