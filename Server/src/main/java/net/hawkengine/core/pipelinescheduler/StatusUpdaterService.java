@@ -1,21 +1,19 @@
 package net.hawkengine.core.pipelinescheduler;
 
+import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.Stage;
+import net.hawkengine.model.Task;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.TaskStatus;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
-
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class StatusUpdaterService {
     private static final Logger LOGGER = Logger.getLogger(StatusUpdaterService.class.getName());
@@ -32,7 +30,13 @@ public class StatusUpdaterService {
     public void updateStatuses() {
         List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelinesInProgress) {
-            this.updateAllStatuses(pipeline);
+            if (pipeline.shouldBeCanceled()) {
+                this.cancelPipeline(pipeline);
+                LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
+            } else {
+                this.updateAllStatuses(pipeline);
+            }
+
             this.pipelineService.update(pipeline);
         }
     }
@@ -68,11 +72,10 @@ public class StatusUpdaterService {
             if (currentStage.getStatus() == StageStatus.NOT_RUN) {
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
                 break;
-            }else if (currentStage.getStatus() == StageStatus.IN_PROGRESS){
+            } else if (currentStage.getStatus() == StageStatus.IN_PROGRESS) {
                 this.updateStageStatus(currentStage);
                 break;
-            }
-            else if (currentStage.getStatus() == StageStatus.PASSED) {
+            } else if (currentStage.getStatus() == StageStatus.PASSED) {
                 continue;
             } else {
                 break;
@@ -91,10 +94,10 @@ public class StatusUpdaterService {
 
         if (jobStatuses.contains(JobStatus.FAILED)) {
             stage.setStatus(StageStatus.FAILED);
-            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionId(), JobStatus.FAILED));
+            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionName(), JobStatus.FAILED));
         } else if (this.areAllPassed(jobStatuses)) {
             stage.setStatus(StageStatus.PASSED);
-            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionId(), JobStatus.PASSED));
+            LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionName(), JobStatus.PASSED));
         }
     }
 
@@ -124,7 +127,7 @@ public class StatusUpdaterService {
         String[] statusesAsString = new String[statuses.size()];
         int index = 0;
 
-        if (statuses.isEmpty()){
+        if (statuses.isEmpty()) {
             return false;
         }
 
@@ -140,5 +143,21 @@ public class StatusUpdaterService {
         }
 
         return true;
+    }
+
+    private void cancelPipeline(Pipeline pipeline) {
+        pipeline.setShouldBeCanceled(false);
+        pipeline.setStatus(Status.CANCELED);
+        for (Stage stage : pipeline.getStages()) {
+            if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+                stage.setStatus(StageStatus.CANCELED);
+                for (Job job : stage.getJobs()) {
+                    job.setStatus(JobStatus.CANCELED);
+                    for (Task task : job.getTasks()) {
+                        task.setStatus(TaskStatus.CANCELED);
+                    }
+                }
+            }
+        }
     }
 }

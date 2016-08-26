@@ -622,6 +622,18 @@ p {
     border-left:4px solid #EEF1F5!important;
 }
 
+.status-canceled {
+    border-left: 4px solid lightslategrey!important;
+}
+
+.btn-canceled {
+    background-color: lightslategrey!important;
+}
+
+.canceled {
+    color: lightslategrey!important;
+}
+
 @media screen and (max-width: 767px) {
     @import "history-screen/_small-devices.css";
 }
