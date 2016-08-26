@@ -38,6 +38,47 @@ angular
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
+            vm.allPipelineGroups.forEach(function(currentPipelineGroup, index, array) {
+                vm.allPipelineGroups[index].pipelines.forEach(function(currentPipelineFromGroup, pipelineFromGroupIndex, array) {
+                    vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
+                        // viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
+                        //     if(currentPipeline.id == currentPermission.permittedEntityId) {
+                        //         currentPipeline.role = currentPermission.permissionType;
+                        //         viewModel.allPipelines[0].role = 'ADMIN';
+                        //         console.log(currentPermission.role);
+                        //     }
+                        // });
+                        currentPipeline.disabled = false;
+                        if (currentPipelineFromGroup.id == currentPipeline.id) {
+                            vm.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
+                        }
+                    });
+                });
+                vm.allPipelineGroups[index].pipelines.sort(function(a, b) {
+                    return a.executionId - b.executionId;
+                });
+            });
+
+            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                currentPipeline.disabled = false;
+                var isContained = false;
+                vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
+                    if(currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
+                        isContained = true;
+                    }
+                });
+                if(!isContained && currentPipeline.pipelineGroupId != ''){
+                    var newGroup = {};
+                    newGroup.name = currentPipeline.groupName;
+                    newGroup.id = currentPipeline.pipelineGroupId;
+                    if(newGroup.pipelines == null){
+                        newGroup.pipelines = [];
+                    }
+                    newGroup.pipelines.push(currentPipeline);
+                    newGroup.permissionType = 'VIEWER';
+                    vm.allPipelineGroups.push(newGroup);
+                }
+            });
             console.log(vm.allPipelineGroups);
         }, true);
 
@@ -47,6 +88,23 @@ angular
             vm.allPipelines = angular.copy(viewModel.allPipelines);
             vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                 currentPipeline.disabled = false;
+                var isContained = false;
+                vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
+                    if(currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
+                        isContained = true;
+                    }
+                });
+                if(!isContained && currentPipeline.pipelineGroupId != ''){
+                    var newGroup = {};
+                    newGroup.name = currentPipeline.groupName;
+                    newGroup.id = currentPipeline.pipelineGroupId;
+                    if(newGroup.pipelines == null){
+                        newGroup.pipelines = [];
+                    }
+                    newGroup.pipelines.push(currentPipeline);
+                    newGroup.permissionType = 'VIEWER';
+                    vm.allPipelineGroups.push(newGroup);
+                }
             });
             vm.allPipelines.sort(function(a, b) {
                 return a.name - b.name;
