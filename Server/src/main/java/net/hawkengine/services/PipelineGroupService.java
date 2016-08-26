@@ -40,6 +40,16 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
 
     @Override
     public ServiceResult add(PipelineGroup pipelineGroup) {
+        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
+        PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
+        if (existingPipelineGroup != null){
+            ServiceResult result = new ServiceResult();
+            result.setObject(pipelineGroup);
+            result.setError(true);
+            result.setMessage("Pipeline Group with the same name already exists.");
+
+            return result;
+        }
         return super.add(pipelineGroup);
     }
 
