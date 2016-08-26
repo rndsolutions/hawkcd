@@ -313,7 +313,7 @@ angular
             vm.updatedStage.name = vm.stage.name;
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
-            vm.currentStage = stage.name;
+            vm.currentStage = stage;
         };
 
         vm.getStageByName = function(stageName) {
@@ -454,6 +454,7 @@ angular
         };
 
         vm.deleteStage = function(stage) {
+          debugger;
             pipeConfigService.deleteStageDefinition(stage.id);
         };
 
@@ -477,7 +478,7 @@ angular
 
                 vm.updatedJob.name = vm.job.name;
 
-                vm.currentJob = job.name;
+                vm.currentJob = job;
 
             }
         };
