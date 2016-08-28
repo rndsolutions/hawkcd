@@ -70,7 +70,6 @@ failBuild
 gradle coveralls
 failBuild
 
-#test
 
 echo "copy files server build outputs to the dist folder"
 cp -r build/libs/* ../dist/Server
