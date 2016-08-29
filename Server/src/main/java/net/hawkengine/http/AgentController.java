@@ -1,17 +1,30 @@
 package net.hawkengine.http;
 
-import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.core.utilities.SchemaValidator;
-import net.hawkengine.model.*;
+import net.hawkengine.model.Agent;
+import net.hawkengine.model.Job;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
-import javax.ws.rs.*;
+import net.hawkengine.ws.EndpointConnector;
+
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -199,6 +212,7 @@ public class AgentController {
             agentFromDb.setOperatingSystem(agent.getOperatingSystem());
             agentFromDb.setIpAddress(agent.getIpAddress());
             agentFromDb.setRootPath(agent.getRootPath());
+            agentFromDb.setRunning(agent.isRunning());
             agentFromDb.setName(agent.getName());
 
             result = this.agentService.update(agentFromDb);
