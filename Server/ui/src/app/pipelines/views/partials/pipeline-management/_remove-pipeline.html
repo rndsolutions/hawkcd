@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <div>
-          Are you sure you want to delete Pipeline: <strong class="uppercase">{{pipes.pipeName}}</strong>
+          Are you sure you want to delete Pipeline: <strong class="uppercase">{{pipes.pipeName.substring(0,27)}} <span ng-if="pipes.pipeName.length > 27">...</span></strong>
           <br>
           <hr>
           <button class="btn btn-danger" ng-click="pipes.deletePipelineDefinition(pipes.pipeId)" data-dismiss="modal">DELETE</button>
