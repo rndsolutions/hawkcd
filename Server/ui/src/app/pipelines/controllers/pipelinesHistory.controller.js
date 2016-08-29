@@ -67,13 +67,22 @@ angular
         }
 
         vm.currentPipelineObject = {};
+        vm.allJobReportsFromStages = [];
         $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
             vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
-                vm.currentPipelineObject = currentPipelineRun
+                vm.currentPipelineObject = currentPipelineRun;
+                currentPipelineRun.stages.forEach(function(currentStage, index, array) {
+                    currentStage.jobs.forEach(function(currentJob, index, array) {
+                        var buffer = ansi_up.ansi_to_html(currentJob.report);
+                        var reportToAdd = $sce.trustAsHtml(buffer);
+                        vm.allJobReportsFromStages.push(reportToAdd);
+                    });
+                });
+
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
                     var result = vm.getLastRunAction(currentPipelineRun);
                     currentPipelineRun.lastPipelineAction = result;
@@ -95,6 +104,7 @@ angular
                 vm.currentJob = vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs[vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs.length - 1];
                 vm.currentJob.report = ansi_up.ansi_to_html(vm.currentJob.report);
                 vm.currentJob.report = $sce.trustAsHtml(vm.currentJob.report);
+                
 
             }
             console.log(vm.allPipelineRuns);

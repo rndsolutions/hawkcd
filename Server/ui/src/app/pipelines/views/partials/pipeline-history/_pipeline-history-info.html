@@ -18,8 +18,11 @@
 
 <div class="portlet">
   <div class="portlet-body">
-      <div id="console" class="tab-pane fade in active">
-          <pre class="console" scroll-glue ng-bind-html="pipesHistory.currentJob.report"></pre>
+      <div id="console" class="tab-pane fade in active" style="overflow-y:hidden;">
+          <pre class="console" scroll-glue>
+          <span ng-repeat="report in pipesHistory.allJobReportsFromStages track by $index">
+          <div  ng-bind-html="report"></div></span>
+        </pre>
       </div>
   </div>
 </div>
