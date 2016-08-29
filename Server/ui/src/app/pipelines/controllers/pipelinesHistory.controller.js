@@ -2,7 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController', function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment, $sce) {
+    .controller('PipelinesHistoryController',['$state','$scope','$stateParams','$interval','$pipeStats','$authDataService','$viewModel','$moment','$sce','commonUtitlites'
+     function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment, $sce,commonUtitlites) {
         var vm = this;
 
         vm.labels = {
@@ -45,12 +46,8 @@ angular
         };
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
-            var pattern = '.git';
-            var patternLength = pattern.length;
-            var buffer = repoUrl.substr(0, repoUrl.indexOf(pattern));
-            var result = buffer + '/' + 'commit' + '/' + commitId;
-            return result;
-        }
+          return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
+        };
 
         vm.currentPipelineObject = {};
         vm.allJobReportsFromStages = [];
@@ -160,4 +157,4 @@ angular
         //     intervalHistory = undefined;
         // });
 
-    });
+    }]);
