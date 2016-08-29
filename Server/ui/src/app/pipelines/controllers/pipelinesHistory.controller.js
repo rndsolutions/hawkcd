@@ -66,12 +66,14 @@ angular
             return result;
         }
 
+        vm.currentPipelineObject = {};
         $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
             vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
+              vm.currentPipelineObject = currentPipelineRun;
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
                     var result = vm.getLastRunAction(currentPipelineRun);
                     currentPipelineRun.lastPipelineAction = result;
