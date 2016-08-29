@@ -148,6 +148,8 @@ public class StatusUpdaterService {
     private void cancelPipeline(Pipeline pipeline) {
         pipeline.setShouldBeCanceled(false);
         pipeline.setStatus(Status.CANCELED);
+        Date endTime = new Date();
+        pipeline.setEndTime(endTime);
         for (Stage stage : pipeline.getStages()) {
             if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                 stage.setStatus(StageStatus.CANCELED);
