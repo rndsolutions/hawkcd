@@ -96,7 +96,6 @@ angular
 
             vm.lastRun = {};
             vm.lastRun = vm.currentPipelineRuns[0];
-            debugger;
             if (vm.lastRun !== undefined && vm.allJobReportsFromStages.length === 0) {
                 vm.lastRun.stages.forEach(function(currentStage, stagesIndex, stagesArray) {
                     currentStage.jobs.forEach(function(currentJob, jobsIndex, jobsArray) {
