@@ -19,7 +19,7 @@
 <div class="portlet">
   <div class="portlet-body">
       <div id="console" class="tab-pane fade in active">
-          <pre class="console" scroll-glue>{{pipesHistory.currentJob.report}}</pre>
+          <pre class="console" scroll-glue ng-bind-html="pipesHistory.currentJob.report"></pre>
       </div>
   </div>
 </div>
