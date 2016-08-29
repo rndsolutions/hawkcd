@@ -6,7 +6,7 @@
                     <div id="header-main" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS', 'status-canceled' : run.status == 'CANCELED'}">
                         <div id="left-header-container">
                             <div>
-                                #{{run.executionId}} {{run.pipelineDefinitionName}}
+                                #{{run.executionId}} {{run.pipelineDefinitionName.substring(0,6)}} <span ng-if="run.pipelineDefinitionName.length > 10">..</span>
                             </div>
                         </div>
                         <div id="right-header-container">
