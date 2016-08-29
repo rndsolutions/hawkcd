@@ -13,7 +13,7 @@
       <div class="run-item-container status-passed pull-left" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'status-canceled' : pipesRunManagement.currentPipelineRun.status == 'CANCELED'}">
         </div>
         <div class="vertical-center-static text-center">
-            #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName}}
+            #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName.substring(0,22)}} <span ng-if="pipesRunManagement.currentPipelineRun.pipelineDefinitionName.length > 27">...</span>
 
         </div>
         </div>

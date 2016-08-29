@@ -36,7 +36,7 @@
 
     <div class="list-head-title-container">
       <span class="badge badge-default pull-right bg-white font-green bold">{{pipeConfig.pipeline.stageDefinitions.length}}</span>
-      <h3 class="list-title">{{pipeConfig.state.params.pipelineName}}</h3>
+      <h3 class="list-title">{{pipeConfig.state.params.pipelineName.substring(0,22)}} <span ng-if="pipeConfig.state.params.pipelineName.length > 27">...</span></h3>
     </div>
 
   </div>

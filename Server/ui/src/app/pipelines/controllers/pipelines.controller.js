@@ -11,51 +11,98 @@ angular
         };
 
         vm.formData = {};
-        vm.allPipelines = [];
 
         vm.allPermissions = [];
 
-        vm.allPipelineRuns = [];
+        vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
 
         vm.allMaterialDefinitions = [];
 
         vm.allDefinitionsAndRuns = [];
 
-        vm.allPipelineGroups = [];
+        vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
 
         vm.currentStageRuns = [];
-
-        // vm.allDefinitionsAndRuns = viewModel.allPipelineDefinitions;
-
-        // $scope.$watch(function() { return viewModel.allPipelineDefinitions }, function(newVal, oldVal) {
-        //     vm.allDefinitionsAndRuns = viewModel.allPipelineDefinitions;
-        //     console.log(vm.allDefinitionsAndRuns);
-        // });
 
         vm.allPipelines = angular.copy(viewModel.allPipelines);
 
         $scope.$watch(function() {
+            return viewModel.allPipelines
+        }, function(newVal, oldVal) {
+            debugger;
+            vm.allPipelines = angular.copy(viewModel.allPipelines);
+            if(vm.allPipelineRuns.length > 0) {
+                vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+                    vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                        if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                            if(currentPipelineRun.triggerReason == null) {
+                                currentPipelineRun.triggerReason = viewModel.user.username;
+                            }
+                            vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                            vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
+                        }
+                    });
+                });
+            }
+            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                currentPipeline.disabled = false;
+                var isContained = false;
+                vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
+                    if(currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
+                        isContained = true;
+                    }
+                });
+                if(!isContained && currentPipeline.pipelineGroupId != ''){
+                    var newGroup = {};
+                    newGroup.name = currentPipeline.groupName;
+                    newGroup.id = currentPipeline.pipelineGroupId;
+                    if(newGroup.pipelines == null){
+                        newGroup.pipelines = [];
+                    }
+                    newGroup.pipelines.push(currentPipeline);
+                    newGroup.permissionType = 'VIEWER';
+                    vm.allPipelineGroups.push(newGroup);
+                }
+            });
+            console.log(vm.allPipelines);
+        }, true);
+
+        $scope.$watch(function() {
+            return viewModel.allPipelineRuns
+        }, function(newVal, oldVal) {
+            debugger;
+            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
+            vm.allPipelineRuns.sort(function(a, b) {
+                return a.executionId - b.executionId;
+            });
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
+                vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
+                    if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+                        currentPipeline.disabled = false;
+                        if(currentPipelineRun.triggerReason == null) {
+                            currentPipelineRun.triggerReason = viewModel.user.username;
+                        }
+                        vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                        vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
+                    }
+                });
+            });
+            console.log(vm.allPipelineRuns);
+        }, true);
+
+        $scope.$watch(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
+            debugger;
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
             vm.allPipelineGroups.forEach(function(currentPipelineGroup, index, array) {
                 vm.allPipelineGroups[index].pipelines.forEach(function(currentPipelineFromGroup, pipelineFromGroupIndex, array) {
                     vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
-                        // viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                        //     if(currentPipeline.id == currentPermission.permittedEntityId) {
-                        //         currentPipeline.role = currentPermission.permissionType;
-                        //         viewModel.allPipelines[0].role = 'ADMIN';
-                        //         console.log(currentPermission.role);
-                        //     }
-                        // });
                         currentPipeline.disabled = false;
                         if (currentPipelineFromGroup.id == currentPipeline.id) {
                             vm.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
                         }
                     });
-                });
-                vm.allPipelineGroups[index].pipelines.sort(function(a, b) {
-                    return a.executionId - b.executionId;
                 });
             });
 
@@ -83,89 +130,12 @@ angular
         }, true);
 
         $scope.$watch(function() {
-            return viewModel.allPipelines
-        }, function(newVal, oldVal) {
-            vm.allPipelines = angular.copy(viewModel.allPipelines);
-            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
-                currentPipeline.disabled = false;
-                var isContained = false;
-                vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                    if(currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
-                        isContained = true;
-                    }
-                });
-                if(!isContained && currentPipeline.pipelineGroupId != ''){
-                    var newGroup = {};
-                    newGroup.name = currentPipeline.groupName;
-                    newGroup.id = currentPipeline.pipelineGroupId;
-                    if(newGroup.pipelines == null){
-                        newGroup.pipelines = [];
-                    }
-                    newGroup.pipelines.push(currentPipeline);
-                    newGroup.permissionType = 'VIEWER';
-                    vm.allPipelineGroups.push(newGroup);
-                }
-            });
-            vm.allPipelines.sort(function(a, b) {
-                return a.name - b.name;
-            });
-            console.log(vm.allPipelines);
-        }, true);
-
-        $scope.$watch(function() {
             return viewModel.allMaterialDefinitions
         }, function(newVal, oldVal) {
             vm.allMaterialDefinitions = angular.copy(viewModel.allMaterialDefinitions);
             console.log(vm.allMaterialDefinitions);
         }, true);
-
-        $scope.$watch(function() {
-            return viewModel.allPipelineRuns
-        }, function(newVal, oldVal) {
-            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
-            vm.allPipelineRuns.sort(function(a, b) {
-                return a.executionId - b.executionId;
-            });
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
-                vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
-                    if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
-                        if(currentPipelineRun.triggerReason == null) {
-                            currentPipelineRun.triggerReason = viewModel.user.username;
-                        }
-                        vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
-                        vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
-                    }
-                });
-            });
-            vm.allPipelineGroups.forEach(function(currentPipelineGroup, index, array) {
-                vm.allPipelineGroups[index].pipelines.forEach(function(currentPipelineFromGroup, pipelineFromGroupIndex, array) {
-                    vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
-                        // viewModel.user.permissions.forEach(function (currentPermission, permissionIndex, permissionArray) {
-                        //     if(currentPipeline.id == currentPermission.permittedEntityId) {
-                        //         currentPipeline.role = currentPermission.permissionType;
-                        //         viewModel.allPipelines[0].role = 'ADMIN';
-                        //         console.log(currentPermission.role);
-                        //     }
-                        // });
-                        currentPipeline.disabled = false;
-                        if (currentPipelineFromGroup.id == currentPipeline.id) {
-                            vm.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
-                        }
-                    });
-                });
-                vm.allPipelineGroups[index].pipelines.sort(function(a, b) {
-                    return a.executionId - b.executionId;
-                });
-            });
-
-            console.log(vm.allPipelineRuns);
-        }, true);
-
-        // $scope.$watchCollection(function() { return viewModel.allMaterialDefinitions }, function(newVal, oldVal) {
-        //     vm.allMaterials = viewModel.allMaterialDefinitions;
-        //     console.log(vm.allMaterials);
-        // });
-
+        
         vm.currentMaterials = [];
         vm.selectedMaterial = {};
         vm.materialObject = {};
