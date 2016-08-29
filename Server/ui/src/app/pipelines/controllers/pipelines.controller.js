@@ -29,7 +29,6 @@ angular
         $scope.$watch(function() {
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
-            debugger;
             vm.allPipelines = angular.copy(viewModel.allPipelines);
             if(vm.allPipelineRuns.length > 0) {
                 vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
@@ -70,7 +69,6 @@ angular
         $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
-            debugger;
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
             vm.allPipelineRuns.sort(function(a, b) {
                 return a.executionId - b.executionId;
@@ -93,7 +91,6 @@ angular
         $scope.$watch(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
-            debugger;
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
             vm.allPipelineGroups.forEach(function(currentPipelineGroup, index, array) {
                 vm.allPipelineGroups[index].pipelines.forEach(function(currentPipelineFromGroup, pipelineFromGroupIndex, array) {
@@ -135,7 +132,7 @@ angular
             vm.allMaterialDefinitions = angular.copy(viewModel.allMaterialDefinitions);
             console.log(vm.allMaterialDefinitions);
         }, true);
-        
+
         vm.currentMaterials = [];
         vm.selectedMaterial = {};
         vm.materialObject = {};
@@ -415,7 +412,6 @@ angular
                 pipeConfigService.addPipelineDefinitionWithMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
             }
             if (vm.materialType == 'existing') {
-                debugger;
                 addPipelineDTO.materialDefinition = vm.materialObject.id;
                 pipeConfigService.addPipelineDefinitionWithExistingMaterial(addPipelineDTO.pipelineDefinition,addPipelineDTO.materialDefinition);
             }

@@ -41,22 +41,8 @@ angular
         };
 
         vm.getLastRunAction = function(pipelineRun) {
-            if (pipelineRun.endTime == undefined) {
-                return;
-            }
-            var result = {};
-            var runEndTime = pipelineRun.endTime;
-            var delta = moment(runEndTime);
-            var now = moment();
-            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
-            if (diff == 'a few seconds') {
-                diff = 'few seconds ago';
-                result.output = diff;
-            } else {
-                result.output = diff + " ago";
-            }
-            return result;
-        }
+            return moment.getLastRunAction(pipelineRun)
+        };
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
             var pattern = '.git';
