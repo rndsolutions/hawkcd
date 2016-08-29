@@ -76,7 +76,6 @@ public class WsEndpoint extends WebSocketAdapter {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
         LOGGER.info("Socket Connected: " + session);
-        SessionPool.getInstance().add(this);
 
         String tokenQuery = session.getUpgradeRequest().getQueryString();
 
@@ -85,6 +84,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
+            SessionPool.getInstance().add(this);
 
             if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
 

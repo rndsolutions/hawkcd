@@ -32,6 +32,11 @@ angular
                 templateUrl: "app/pipelines/views/partials/pipeline-history/_pipeline-current.html"
             })
 
+            .state('index.pipelineHistory.info', {
+                url: '/current/info',
+                templateUrl: "app/pipelines/views/partials/pipeline-history/_pipeline-history-info.html"
+            })
+
             .state('index.pipelineHistory.history', {
                 url: '/history',
                 templateUrl: "app/pipelines/views/partials/pipeline-history/_pipeline-history.html"
