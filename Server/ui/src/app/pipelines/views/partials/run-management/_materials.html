@@ -25,7 +25,7 @@
             <div class="width-100 padding-top-1" ng-repeat="material in pipesRunManagement.currentPipelineRun.materials">
               <i class="fa fa-github"></i>
               <div class="display-inline-block margin-left-1">
-                {{material.materialDefinition.commitId.substring(0, 7)}} - {{material.materialDefinition.comments}}
+                <a target="_blank" href="{{material.gitLink}}">{{material.materialDefinition.commitId.substring(0, 7)}} - {{material.materialDefinition.comments}}</a>
               </div>
             </div>
           </div>
