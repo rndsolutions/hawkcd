@@ -132,6 +132,14 @@ angular
             return result;
         };
 
+        vm.truncateGitFromUrl = function(repoUrl, commitId) {
+            var pattern = '.git';
+            var patternLength = pattern.length;
+            var buffer = repoUrl.substr(0, repoUrl.indexOf(pattern));
+            var result = buffer + '/' + 'commit' + '/' + commitId;
+            return result;
+        }
+
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);
@@ -145,6 +153,9 @@ angular
             vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                 if(currentPipelineRun.pipelineDefinitionName == vm.pipelineName && currentPipelineRun.executionId == vm.pipelineExecutionID){
                     vm.currentPipelineRun = currentPipelineRun;
+                    vm.currentPipelineRun.materials.forEach(function(currentMaterial,index,array){
+                      currentMaterial.gitLink = vm.truncateGitFromUrl(currentMaterial.materialDefinition.repositoryUrl,currentMaterial.materialDefinition.commitId);
+                    });
                     var result = vm.getLastRunAction(currentPipelineRun);
                     vm.currentPipelineRun.lastPipelineAction = result;
                     if (currentPipelineRun.triggerReason == null) {
