@@ -872,3 +872,7 @@ p {
   padding-top:10px;
   padding-bottom:10px;
 }
+
+.form-required-fix {
+  padding-left:10px;
+}
