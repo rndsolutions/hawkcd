@@ -3,6 +3,7 @@ package net.hawkengine.http;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.interfaces.IPipelineGroupService;
 
@@ -49,7 +50,7 @@ public class PipelineGroupController {
     @Path("/{pipelineGroupId}")
     public Response getPipelineGroupById(@PathParam("pipelineGroupId") String pipelineGroupId) {
         ServiceResult result = this.pipelineGroupService.getById(pipelineGroupId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
@@ -66,7 +67,7 @@ public class PipelineGroupController {
         String isValid = this.schemaValidator.validate(pipelineGroup);
         if (isValid.equals("OK")) {
             ServiceResult result = this.pipelineGroupService.add(pipelineGroup);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -89,7 +90,7 @@ public class PipelineGroupController {
         String isValid = this.schemaValidator.validate(pipelineGroup);
         if (isValid.equals("OK")) {
             ServiceResult result = this.pipelineGroupService.update(pipelineGroup);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -111,7 +112,7 @@ public class PipelineGroupController {
     @Path("/{pipelineDefinitionId}")
     public Response deleteTaskDefinition(@PathParam("pipelineGroupId") String pipelineGroupId) {
         ServiceResult result = this.pipelineGroupService.delete(pipelineGroupId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
