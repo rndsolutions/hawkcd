@@ -30,7 +30,7 @@ angular
         CONSTANTS: {
             'BASE_URL': '/api',
             'SERVER_URL': window.location.origin,
-            'WS_URL': 'ws://' + window.location.host + '/ws/v1',
+            'HOST': window.location.host,
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
@@ -156,7 +156,7 @@ angular
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
 
-        var wsServerLocation = CONSTANTS.WS_URL;
+        var wsServerLocation = 'ws://' + CONSTANTS.HOST + '/ws/v1';
 
         var timerID=0;
 

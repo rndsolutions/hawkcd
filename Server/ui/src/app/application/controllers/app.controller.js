@@ -148,7 +148,7 @@ angular
                         console.log(response.data)
                         $auth.setToken(response.data);
                         $location.path("/pipelines");
-                        $rootScope.startWebsocket(CONSTANTS.WS_URL);
+                        $rootScope.startWebsocket('ws://' + CONSTANTS.HOST + '/ws/v1');
                     })
                     .catch(function(response) {
                         console.log(response)
