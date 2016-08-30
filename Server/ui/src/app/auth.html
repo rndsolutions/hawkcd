@@ -32,7 +32,15 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label visible-ie8 visible-ie9">Password</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" ng-model="password" ng-pattern="/[0-9A-Za-z.-]+/" required>
+                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" ng-model="password" ng-pattern="/[0-9A-Za-z.-]+/" ng-minlength="3" ng-maxlength="32" required>
+                </div>
+                <div class="form-group">
+                  <p ng-show="loginForm.password.$error.minlength" class="alert alert-danger">
+                    Password must be at least 3 symbols.
+                  </p>
+                  <p ng-show="loginForm.password.$error.maxlength" class="alert alert-danger">
+                    Passwords must be maximum 32 symbols.
+                  </p>
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="btn green uppercase btn-login" ng-class="{'disabled':loginForm.username.$invalid || password.length < 3}" ng-click="login()">Login</button>
