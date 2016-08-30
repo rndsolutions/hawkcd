@@ -30,7 +30,7 @@ angular
         CONSTANTS: {
             'BASE_URL': '/api',
             'SERVER_URL': window.location.origin,
-            'WS_URL': 'ws://' + this.SERVER_URL + '/ws/v1',
+            'WS_URL': 'ws://' + window.location.host + '/ws/v1',
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
@@ -208,6 +208,8 @@ angular
                 toaster.clear();
                 toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
                 $rootScope.$apply();
+                console.log(CONSTANTS.WS_URL);
+                console.log(CONSTANTS.SERVER_URL);
             }
         };
         //debugger;
