@@ -2,7 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController', function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment, $sce) {
+    .controller('PipelinesHistoryController',['$state','$scope','$stateParams','$interval','pipeStats','authDataService','viewModel','moment','$sce','commonUtitlites',
+     function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment, $sce,commonUtitlites) {
         var vm = this;
 
         vm.labels = {
@@ -41,30 +42,12 @@ angular
         };
 
         vm.getLastRunAction = function(pipelineRun) {
-            if (pipelineRun.endTime == undefined) {
-                return;
-            }
-            var result = {};
-            var runEndTime = pipelineRun.endTime;
-            var delta = moment(runEndTime);
-            var now = moment();
-            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
-            if (diff == 'a few seconds') {
-                diff = 'few seconds ago';
-                result.output = diff;
-            } else {
-                result.output = diff + " ago";
-            }
-            return result;
-        }
+            return moment.getLastRunAction(pipelineRun)
+        };
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
-            var pattern = '.git';
-            var patternLength = pattern.length;
-            var buffer = repoUrl.substr(0, repoUrl.indexOf(pattern));
-            var result = buffer + '/' + 'commit' + '/' + commitId;
-            return result;
-        }
+          return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
+        };
 
         vm.currentPipelineObject = {};
         vm.allJobReportsFromStages = [];
@@ -174,4 +157,4 @@ angular
         //     intervalHistory = undefined;
         // });
 
-    });
+    }]);

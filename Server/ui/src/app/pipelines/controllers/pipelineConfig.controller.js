@@ -916,6 +916,19 @@ angular
             return vm.currentStageRuns;
         };
 
+        vm.stageSortableOptions = {
+            cancel: ".unsortable",
+            items: "tr:not(.unsortable)",
+            cursor: "move",
+            update: function(e, ui) {
+
+            },
+            stop: function() {
+                var newPipeline = angular.copy(vm.allPipelines[vm.pipelineIndex]);
+                pipeConfigService.updatePipelineDefinition(newPipeline);
+            }
+        };
+
         vm.sortableOptions = {
             cancel: ".unsortable",
             items: "tr:not(.unsortable)",
@@ -925,7 +938,6 @@ angular
             },
             stop: function() {
                 var newJob = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
-
                 pipeConfigService.updateJobDefinition(newJob);
             }
         };
