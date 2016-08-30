@@ -22,7 +22,6 @@ public class HawkServer {
     private Thread pipelinePreparer;
     private Thread jobAssigner;
     private Thread materialTracker;
-    private EndpointFinder endpointFinder;
     private DataImporter dataImporter;
 
     public HawkServer() {
@@ -32,7 +31,6 @@ public class HawkServer {
         this.pipelinePreparer = new Thread(new PipelinePreparer());
         this.jobAssigner = new Thread(new JobAssigner());
         this.materialTracker = new Thread(new MaterialTracker());
-        this.endpointFinder = new EndpointFinder();
         this.dataImporter = new DataImporter();
     }
 
