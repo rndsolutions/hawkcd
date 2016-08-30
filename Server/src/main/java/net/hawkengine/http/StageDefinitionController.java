@@ -3,6 +3,7 @@ package net.hawkengine.http;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.StageDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
 
@@ -51,7 +52,7 @@ public class StageDefinitionController {
     public Response getStageDefinitionById(@PathParam("stageDefinitionId")
                                                    String stageDefinitionId) {
         ServiceResult result = this.stageDefinitionService.getById(stageDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
@@ -68,7 +69,7 @@ public class StageDefinitionController {
         String isValid = this.schemaValidator.validate(stageDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.stageDefinitionService.add(stageDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -91,7 +92,7 @@ public class StageDefinitionController {
         String isValid = this.schemaValidator.validate(stageDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.stageDefinitionService.update(stageDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -113,7 +114,7 @@ public class StageDefinitionController {
     @Path("/{stageDefinitionId}")
     public Response deleteStage(@PathParam("stageDefinitionId") String stageDefinitionId) {
         ServiceResult result = this.stageDefinitionService.delete(stageDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
