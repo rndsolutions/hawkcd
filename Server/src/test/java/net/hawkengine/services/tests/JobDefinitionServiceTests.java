@@ -5,6 +5,7 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.JobDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.StageDefinitionService;
@@ -18,6 +19,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.jar.Attributes;
 
 import static org.mockito.Mockito.when;
 
@@ -98,7 +100,7 @@ public class JobDefinitionServiceTests {
         //Assert
         Assert.assertNotNull(actualResult);
         Assert.assertEquals(expectedJobDefinition.getId(), actualJobDefinition.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedJobDefinition.getPipelineDefinitionId(), actualJobDefinition.getPipelineDefinitionId());
         Assert.assertEquals(expectedJobDefinition.getStageDefinitionId(), actualJobDefinition.getStageDefinitionId());
         Assert.assertEquals(expectedJobDefinition.getName(), actualJobDefinition.getName());
@@ -115,7 +117,7 @@ public class JobDefinitionServiceTests {
         ServiceResult actualResult = jobDefinitionService.getById(invalidId);
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(this.notFoundMessage, actualResult.getMessage());
         Assert.assertNull(actualResult.getObject());
     }
@@ -131,7 +133,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedJobDefinitionsCount, actualJobDefinitions.size());
         Assert.assertEquals(this.retrievalSuccessMessage, actualResult.getMessage());
     }
@@ -152,7 +154,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(successMessage, actualResult.getMessage());
         Assert.assertEquals(actualResultObject.getId(), jobDefinitionToAdd.getId());
     }
@@ -168,7 +170,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(jobDefinitionToAdd, actualResultObject);
         Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
     }
@@ -186,7 +188,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedObject, actualResultObject);
         Assert.assertEquals(successMessage, actualResult.getMessage());
     }
@@ -202,7 +204,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(expectedObject, actualResultObject);
         Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
     }
@@ -224,7 +226,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(expectedObject, actualResultObject);
         Assert.assertEquals(actualResultObject.getEnvironmentVariables(),environmentVariables);
         Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
@@ -241,7 +243,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNull(actualResultObject);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(this.deletionSuccessMessage, actualResult.getMessage());
     }
 
@@ -255,7 +257,7 @@ public class JobDefinitionServiceTests {
         jobDefinitionToReturn.setPipelineDefinitionId(jobDefinitionFromDB.getPipelineDefinitionId());
         jobDefinitionToReturn.setName(jobDefinitionFromDB.getName());
         ServiceResult mockedResult = new ServiceResult();
-        mockedResult.setError(true);
+        mockedResult.setNotificationType(NotificationType.ERROR);
         mockedResult.setMessage(this.notDeletedFailureMessage);
         mockedResult.setObject(jobDefinitionToReturn);
         when(mockedJobDefinitionService.delete("id")).thenReturn(mockedResult);
@@ -265,7 +267,7 @@ public class JobDefinitionServiceTests {
         JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(jobDefinitionToReturn.getId(), actualResultObject.getId());
         Assert.assertEquals(jobDefinitionToReturn.getStageDefinitionId(), actualResultObject.getStageDefinitionId());
         Assert.assertEquals(jobDefinitionToReturn.getPipelineDefinitionId(), actualResultObject.getPipelineDefinitionId());
@@ -293,7 +295,7 @@ public class JobDefinitionServiceTests {
         JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(notDeletedJobDefinition.getStageDefinitionId(), actualResultObject.getStageDefinitionId());
         Assert.assertEquals(notDeletedJobDefinition.getName(), actualResultObject.getName());
         Assert.assertEquals(notDeletedJobDefinition.getPipelineDefinitionId(), actualResultObject.getPipelineDefinitionId());
@@ -309,7 +311,7 @@ public class JobDefinitionServiceTests {
         ServiceResult actualResult = this.jobDefinitionService.delete(invalidId);
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals("JobDefinition does not exists.", actualResult.getMessage());
     }
@@ -326,7 +328,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResultObject);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedNumberOfJobDefinitions, actualResultObject.size());
         Assert.assertEquals(this.retrievalSuccessMessage, actualResult.getMessage());
     }
@@ -343,7 +345,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResultObject);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedNumberOfJobDefinitions, actualNumberOfJobDefinitions);
         Assert.assertEquals(this.retrievalSuccessMessage, actualResult.getMessage());
     }
