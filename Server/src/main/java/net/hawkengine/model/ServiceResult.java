@@ -7,6 +7,10 @@ public class ServiceResult {
     private NotificationType notificationType;
     private String message;
 
+    public ServiceResult(){
+        
+    }
+
     public ServiceResult(Object object, NotificationType notificationType, String message) {
         this.object = object;
         this.notificationType = notificationType;
