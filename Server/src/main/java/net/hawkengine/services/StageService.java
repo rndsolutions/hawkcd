@@ -3,6 +3,7 @@ package net.hawkengine.services;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 
@@ -36,11 +37,11 @@ public class StageService extends CrudService<Stage> implements IStageService {
                 if (stage.getId().equals(stageId)) {
                     result = stage;
 
-                    return super.createServiceResult(result, false, this.successMessage);
+                    return super.createServiceResult(result, NotificationType.SUCCESS, this.successMessage);
                 }
             }
         }
-        return super.createServiceResult(result, true, this.failureMessage);
+        return super.createServiceResult(result, NotificationType.ERROR, this.failureMessage);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
             List<Stage> stages = pipeline.getStages();
             allStages.addAll(stages);
         }
-        return super.createServiceResultArray(allStages, false, this.successMessage);
+        return super.createServiceResultArray(allStages, NotificationType.SUCCESS, this.successMessage);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
 
         for (Stage stageFromDb : stages) {
             if (stageFromDb.getId().equals(stage.getId())) {
-                return super.createServiceResult(stage, true, "already exist");
+                return super.createServiceResult(stage, NotificationType.ERROR, "already exist");
             }
         }
 
@@ -70,21 +71,20 @@ public class StageService extends CrudService<Stage> implements IStageService {
         pipeline.setStages(stages);
         ServiceResult serviceResult = this.pipelineService.update(pipeline);
 
-        if (serviceResult.hasError()) {
-            return super.createServiceResult(stage, true, "not created");
+        if (serviceResult.getNotificationType() == NotificationType.ERROR) {
+            return super.createServiceResult(stage, NotificationType.ERROR, "not created");
         }
         Stage result = this.extractStageFromPipeline(pipeline, stage.getId());
 
         if (result == null) {
-            return super.createServiceResult(result, true, "not created");
+            return super.createServiceResult(result, NotificationType.ERROR, "not created");
         }
 
-        return super.createServiceResult(result, false, "created successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "created successfully");
     }
 
     @Override
     public ServiceResult update(Stage stage) {
-        ServiceResult serviceResult = new ServiceResult();
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         List<Stage> stages = pipeline.getStages();
         int stageCollectionSize = stages.size();
@@ -97,16 +97,16 @@ public class StageService extends CrudService<Stage> implements IStageService {
         }
 
         if (!isPresent) {
-            return super.createServiceResult((Stage) serviceResult.getObject(), true, "not found");
+            return super.createServiceResult(null, NotificationType.ERROR, "not found");
         }
 
         pipeline.setStages(stages);
-        serviceResult = this.pipelineService.update(pipeline);
+        ServiceResult serviceResult = this.pipelineService.update(pipeline);
 
-        if (serviceResult.hasError()) {
-            serviceResult = super.createServiceResult((Stage) serviceResult.getObject(), true, "not updated");
+        if (serviceResult.getNotificationType() == NotificationType.ERROR) {
+            serviceResult = super.createServiceResult((Stage) serviceResult.getObject(), NotificationType.ERROR, "not updated");
         } else {
-            serviceResult = super.createServiceResult(stage, false, "updated successfully");
+            serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "updated successfully");
         }
         return serviceResult;
     }
@@ -127,7 +127,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         }
 
         boolean isRemoved = false;
-        ServiceResult serviceResult = new ServiceResult();
+        ServiceResult serviceResult = null;
         List<Stage> stages = pipelineToUpdate.getStages();
         Stage stage = stages
                 .stream()
@@ -136,21 +136,21 @@ public class StageService extends CrudService<Stage> implements IStageService {
                 .orElse(null);
 
         if (stage == null) {
-            serviceResult = super.createServiceResult(stage, true, "not found");
+            serviceResult = super.createServiceResult(stage, NotificationType.ERROR, "not found");
         }
 
         if (stages.size() > 1) {
             isRemoved = stages.remove(stage);
         } else {
-            return super.createServiceResult(stage, true, "is the last Stage and cannot be deleted");
+            return super.createServiceResult(stage, NotificationType.ERROR, "is the last Stage and cannot be deleted");
         }
 
         if (isRemoved) {
             pipelineToUpdate.setStages(stages);
             serviceResult = this.pipelineService.update(pipelineToUpdate);
-            if (!serviceResult.hasError()) {
+            if (serviceResult.getNotificationType() == NotificationType.SUCCESS) {
 
-                serviceResult = super.createServiceResult(stage, false, "deleted successfully");
+                serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "deleted successfully");
             }
         }
         return serviceResult;
