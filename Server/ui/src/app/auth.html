@@ -8,7 +8,7 @@
             <h1 style="color: white; text-align: center">Welcome!</h1>
         </div>
         <br>
-        <form id="log-form" class="login-form login-form-custom" ng-show="showLoginForm">
+        <form id="log-form" class="login-form login-form-custom" name="loginForm" ng-show="showLoginForm" novalidate>
             <div class="form-header">
                 <div class="form-title font-green heading-three">Sign In</div>
             </div>
@@ -20,14 +20,22 @@
                 <div class="form-group">
                     <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                     <label class="control-label visible-ie8 visible-ie9">Username</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="email" autocomplete="off" placeholder="Username" name="username" ng-model="email" ng-pattern="\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b" required>
+                    <input class="form-control form-control-solid placeholder-no-fix" type="email" autocomplete="off" placeholder="Username" name="username" ng-model="email" ng-pattern="/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/" required novalidate>
+                </div>
+                <div class="form-group">
+                  <p ng-show="loginForm.username.$invalid && loginForm.username.$touched" class="alert alert-danger">
+                    Incorrect username format.
+                  </p>
+                  <p ng-show="mismatchCredentials.errorMessage != undefined" class="alert alert-danger">
+                    {{mismatchCredentials.errorMessage}}
+                  </p>
                 </div>
                 <div class="form-group">
                     <label class="control-label visible-ie8 visible-ie9">Password</label>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" ng-model="password" ng-pattern="/^[0-9A-Za-z.-]{3,32}$/" required>
+                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" ng-model="password" ng-pattern="/[0-9A-Za-z.-]+/" required>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn green uppercase btn-login" ng-click="login()">Login</button>
+                    <button type="submit" class="btn green uppercase btn-login" ng-class="{'disabled':loginForm.username.$invalid || password.length < 3}" ng-click="login()">Login</button>
                     <div class="display-inline">
                         <label class="rememberme check login-remember-fix">
                             <div class="checker"><span><input type="checkbox" name="remember" value="1"></span>
@@ -56,7 +64,7 @@
             <h3 class="font-green">Forget Password ?</h3>
             <p class="font-green"> Enter your e-mail address below to reset your password. </p>
             <div class="form-group">
-                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" ng-pattern="\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b" required> </div>
+                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" ng-pattern="/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/" required> </div>
             <div class="form-actions">
                 <button type="button" id="back-btn" class="btn btn-default"  ng-click="showLogin()">Back</button>
                 <button type="submit" class="btn btn-success uppercase pull-right" ng-disabled="forgetForm.$invalid" id="submit-forgot-password">Submit</button>
@@ -66,17 +74,49 @@
         <!--BEGIN REGISTER FORM-->
         <form class="login-form log-box login-form-custom" name="registerForm" ng-show="showRegisterForm">
             <div class="form-group form-md-line-input">
-                <input type="email" class="form-control" ng-model="register_email" ng-pattern="\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b" required>
+                <input type="email" class="form-control" ng-model="register_email" name="registerEmail" ng-pattern="/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/" required>
                 <label>Email</label>
             </div>
+            <div class="form-group">
+              <p ng-show="(registerForm.registerEmail.$invalid && registerForm.registerEmail.$touched) && registerForm.register_email.length != 0" class="alert alert-danger">
+                Invalid email format!
+              </p>
+            </div>
             <div class="form-group form-md-line-input">
-                <input type="password" class="form-control" ng-model="register_password" ng-pattern="/^[0-9A-Za-z.-]{3,32}$/" required>
+
+                <input type="password"
+                class="form-control"
+                name="registerPassword"
+                ng-model="register_password"
+                ng-pattern="/^[0-9A-Za-z.-]{3,32}$/"
+                ng-minlength="3"
+                ng-maxlength="32"
+                required>
                 <label>Password</label>
+
+            </div>
+            <div class="form-group">
+              <p ng-show="registerForm.registerPassword.$error.minlength" class="alert alert-danger">
+                Password must be minimum 3 symbols.
+              </p>
+              <p ng-show="registerForm.registerPassword.$error.maxlength" class="alert alert-danger">
+                Password must be maximum 32 symbols.
+              </p>
+              <p ng-show="!(registerForm.registerPassword.$error.maxlength) && !(registerForm.registerPassword.$error.minlength) && registerForm.registerPassword.$error.pattern" class="alert alert-danger">
+                Forbidden password characters!
+              </p>
             </div>
 
+
             <div class="form-group form-md-line-input">
-                <input type="password" class="form-control" ng-model="confirm_password" ng-pattern="register_password" required>
+                <input type="password" class="form-control" ng-model="confirm_password" name="confirmPassword" ng-pattern="register_password" required>
                 <label>Confirm Password</label>
+            </div>
+
+            <div class="form-group">
+              <p ng-show="(register_password != confirm_password) && registerForm.confirmPassword.$touched && registerForm.confirmPassword.$invalid" class="alert alert-danger">
+                Passwords does not match!
+              </p>
             </div>
 
             <div class="form-actions">
