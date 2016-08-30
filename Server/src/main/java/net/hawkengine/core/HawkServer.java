@@ -39,7 +39,9 @@ public class HawkServer {
     public void configureJetty() {
         // HTTP connector
         ServerConnector connector = new ServerConnector(this.server);
+        String host = ServerConfiguration.getConfiguration().getServerHost();
         int port = ServerConfiguration.getConfiguration().getServerPort();
+        connector.setHost(host);
         connector.setPort(port);
         this.server.addConnector(connector);
 

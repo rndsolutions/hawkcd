@@ -91,11 +91,11 @@ angular
     }])
 
     /* Setup Routing For All Pages */
-    .config(['$stateProvider', '$urlRouterProvider', '$animateProvider','$authProvider',
-            function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', '$animateProvider','$authProvider', 'CONSTANTS',
+            function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider, CONSTANTS) {
 
              // used for debugging
-             $authProvider.baseUrl = "http://localhost:8080";
+             $authProvider.baseUrl = CONSTANTS.SERVER_URL;
              $authProvider.github({
                   clientId: '2d3dbbf586d2260cbd68',
                   scope: ['user:email','repo']
