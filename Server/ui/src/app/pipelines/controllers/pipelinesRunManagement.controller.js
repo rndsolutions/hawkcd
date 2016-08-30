@@ -2,7 +2,13 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesRunManagement', function ($state, $scope, $stateParams, $interval, pipeStats, runManagementService, pipeExec, pipeConfig, authDataService, viewModel, moment, ansi_up, $sce) {
+    .controller('PipelinesRunManagement', ['$state','$scope','$stateParams','$interval','pipeStats',
+                                            'runManagementService','pipeExec','pipeConfig','authDataService',
+                                            'viewModel','moment','ansi_up','$sce','commonUtitlites',
+                                            function ($state, $scope, $stateParams, $interval, pipeStats,
+                                                    runManagementService, pipeExec, pipeConfig,
+                                                    authDataService, viewModel, moment, ansi_up, $sce,
+                                                    commonUtilities) {
         var vm = this;
 
         $scope.$on("$destroy", function () {
@@ -114,30 +120,12 @@ angular
 
         vm.allPipelines = [];
 
-        vm.getLastRunAction = function(pipelineRun) {
-            if (pipelineRun.endTime == undefined) {
-                return;
-            }
-            var result = {};
-            var runEndTime = pipelineRun.endTime;
-            var delta = moment(runEndTime);
-            var now = moment();
-            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
-            if(diff == 'a few seconds'){
-                diff = 'few seconds ago';
-                result.output = diff;
-            } else {
-                result.output = diff + " ago";
-            }
-            return result;
+        vm.getLastRunAction = function(pipelineRun){
+          return moment.getLastRunAction(pipelineRun);
         };
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
-            var pattern = '.git';
-            var patternLength = pattern.length;
-            var buffer = repoUrl.substr(0, repoUrl.indexOf(pattern));
-            var result = buffer + '/' + 'commit' + '/' + commitId;
-            return result;
+          return commonUtilities.truncateGitFromUrl(repoUrl,commitId);
         }
 
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
@@ -618,4 +606,4 @@ angular
         //     $interval.cancel(intervalRunManagement);
         //     intervalRunManagement = undefined;
         // });
-    });
+    }]);
