@@ -87,7 +87,6 @@ angular
         };
 
        this.logoutUser = function (username) {
-debugger;
            $auth.removeToken();
            viewModelUpdater.flushViewModel();
        };
