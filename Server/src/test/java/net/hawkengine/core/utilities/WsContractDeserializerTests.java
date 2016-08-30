@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.enums.NotificationType;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitils.reflectionassert.ReflectionAssert;
@@ -28,7 +29,7 @@ public class WsContractDeserializerTests {
                 "\"packageName\": \"testPackage\",\n" +
                 "\"methodName\": \"testMethod\",\n" +
                 "\"result\": \"testResult\",\n" +
-                "\"error\": \"testError\",\n" +
+                "\"notificationType\": \"SUCCESS\",\n" +
                 "\"errorMessage\": \"testErrorMessage\",\n" +
                 "\"args\": [{\n" +
                 "\"packageName\": \"testPackage\",\n" +
@@ -43,7 +44,7 @@ public class WsContractDeserializerTests {
         expectedResult.setPackageName("testPackage");
         expectedResult.setMethodName("testMethod");
         expectedResult.setResult("testResult");
-		expectedResult.setError(false);
+		expectedResult.setNotificationType(NotificationType.SUCCESS);
         expectedResult.setErrorMessage("testErrorMessage");
         ConversionObject[] args = {new ConversionObject()};
         args[0].setPackageName("testPackage");
