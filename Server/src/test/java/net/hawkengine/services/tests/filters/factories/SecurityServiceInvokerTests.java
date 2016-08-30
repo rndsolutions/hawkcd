@@ -4,6 +4,7 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.PipelineAuthorizationService;
 import net.hawkengine.services.filters.SecurityService;
@@ -60,7 +61,7 @@ public class SecurityServiceInvokerTests {
     public void passedMethodName_getById_correctServiceResult() throws Exception {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("GET BY ID Service Result");
 
@@ -78,7 +79,7 @@ public class SecurityServiceInvokerTests {
     public void passedMethodName_add_correctServiceResult() throws Exception {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("ADD Service Result");
 
@@ -96,7 +97,7 @@ public class SecurityServiceInvokerTests {
     public void passedMethodName_update_correctServiceResult() throws Exception {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("Update Service Result");
 
@@ -114,7 +115,7 @@ public class SecurityServiceInvokerTests {
     public void passedMethodName_delete_correctServiceResult() throws Exception {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setObject(null);
         expectedServiceResult.setMessage("DELETE Service Result");
 
