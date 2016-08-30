@@ -2,7 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController', function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment) {
+    .controller('PipelinesHistoryController',['$state','$scope','$stateParams','$interval','pipeStats','authDataService','viewModel','moment','$sce','commonUtitlites',
+     function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment, $sce,commonUtitlites) {
         var vm = this;
 
         vm.labels = {
@@ -41,37 +42,23 @@ angular
         };
 
         vm.getLastRunAction = function(pipelineRun) {
-            if (pipelineRun.endTime == undefined) {
-                return;
-            }
-            var result = {};
-            var runEndTime = pipelineRun.endTime;
-            var delta = moment(runEndTime);
-            var now = moment();
-            var diff = moment.duration(moment(now).diff(moment(delta))).humanize();
-            if(diff == 'a few seconds'){
-              diff = 'few seconds ago';
-              result.output = diff;
-            } else {
-              result.output = diff + " ago";
-            }
-            return result;
-        }
+            return moment.getLastRunAction(pipelineRun)
+        };
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
-            var pattern = '.git';
-            var patternLength = pattern.length;
-            var buffer = repoUrl.substr(0, repoUrl.indexOf(pattern));
-            var result = buffer + '/' + 'commit' + '/' + commitId;
-            return result;
-        }
+          return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
+        };
 
+        vm.currentPipelineObject = {};
+        vm.allJobReportsFromStages = [];
         $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
             vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
+                vm.currentPipelineObject = currentPipelineRun;
+
                 if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
                     var result = vm.getLastRunAction(currentPipelineRun);
                     currentPipelineRun.lastPipelineAction = result;
@@ -89,8 +76,27 @@ angular
             vm.currentPipelineRuns.sort(function(a, b) {
                 return b.executionId - a.executionId;
             });
+
+            vm.lastRun = {};
+            vm.lastRun = vm.currentPipelineRuns[0];
+            if (vm.lastRun !== undefined && vm.allJobReportsFromStages.length === 0) {
+                vm.lastRun.stages.forEach(function(currentStage, stagesIndex, stagesArray) {
+                    currentStage.jobs.forEach(function(currentJob, jobsIndex, jobsArray) {
+                        var buffer = ansi_up.ansi_to_html(jobsArray[jobsIndex].report);
+                        var reportToAdd = $sce.trustAsHtml(buffer);
+                        vm.allJobReportsFromStages.push(reportToAdd);
+                    });
+                });
+
+            };
+
+
             if (vm.currentPipelineRuns.length > 0) {
                 vm.currentJob = vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs[vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs.length - 1];
+                vm.currentJob.report = ansi_up.ansi_to_html(vm.currentJob.report);
+                vm.currentJob.report = $sce.trustAsHtml(vm.currentJob.report);
+
+
             }
             console.log(vm.allPipelineRuns);
             console.log(vm.currentPipelineRuns);
@@ -151,4 +157,4 @@ angular
         //     intervalHistory = undefined;
         // });
 
-    });
+    }]);

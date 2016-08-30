@@ -1,0 +1,28 @@
+<div>
+  <i class="icon-layers"></i>
+  <h3 class="page-title display-inline-block">History</h3>
+</div>
+
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a ui-sref="index.pipelines"> <span>Pipelines</span></a>
+        </li>
+        <li>
+              <i class="fa fa-angle-right "></i>
+            <a ui-sref="index.pipelineHistory.history"> <span>{{pipesHistory.currentPipelineObject.pipelineDefinitionName}}</span></a>
+        </li>
+    </ul>
+</div>
+
+<div class="portlet">
+  <div class="portlet-body">
+      <div id="console" class="tab-pane fade in active" style="overflow-y:hidden;">
+          <pre class="console" scroll-glue>
+          <span ng-repeat="report in pipesHistory.allJobReportsFromStages track by $index">
+          <div  ng-bind-html="report"></div></span>
+        </pre>
+      </div>
+  </div>
+</div>

@@ -3,8 +3,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', '$rootScope', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', 'pipeConfig', '$auth', "$location", "$http",
-        function($scope, $rootScope, loginService, viewModel, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
+    .controller('AppController', ['$scope', '$rootScope', 'CONSTANTS', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', 'pipeConfig', '$auth', "$location", "$http",
+        function($scope, $rootScope, CONSTANTS, loginService, viewModel, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
             $scope.$on('$viewContentLoaded', function() {
                 //App.initComponents(); // init core components
                 Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -137,7 +137,7 @@ angular
             });
 
             $scope.login = function() {
-
+              $scope.mismatchCredentials = {};
                 var user = {
                     email: $scope.email,
                     password: $scope.password
@@ -148,9 +148,10 @@ angular
                         console.log(response.data)
                         $auth.setToken(response.data);
                         $location.path("/pipelines");
-                        $rootScope.startWebsocket("ws://hawkserver:8080/ws/v1");
+                        $rootScope.startWebsocket('ws://' + CONSTANTS.HOST + '/ws/v1');
                     })
                     .catch(function(response) {
+                      $scope.mismatchCredentials.errorMessage = response.data.message;
                         console.log(response)
                             // Handle errors here, such as displaying a notification
                             // for invalid email and/or password.
@@ -168,7 +169,7 @@ angular
                 // Simple GET request example:
                 $http({
                     method: 'POST',
-                    url: 'http://localhost:8080/auth/register',
+                    url: CONSTANTS.SERVER_URL + '/auth/register',
                     data: user
                 }).then(function successCallback(response) {
                     $scope.showLogin();
@@ -176,6 +177,12 @@ angular
                 }, function errorCallback(response) {
                     console.log("error response: " + response);
                 });
+
+                $scope.register_email = undefined;
+                $scope.register_password = undefined;
+                $scope.confirm_password = undefined;
+                $scope.registerForm.$setPristine();
+                $scope.registerForm.$setUntouched();
             }
 
         }

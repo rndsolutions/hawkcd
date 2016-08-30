@@ -176,14 +176,24 @@
                                                                     <span class="required"> * </span>
                                                                 </label>
                                                                 <div class="col-md-6">
-                                                                    <input ng-model="pipes.formData.material.git.url" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitUrl}}" ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
+                                                                    <input ng-model="pipes.formData.material.git.url" name="gitUrl" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitUrl}}" ng-pattern="/^(https:\/\/*.+\.git)$/" required/>
                                                                     <div class="form-control-focus"></div>
                                                                 </div>
                                                             </div>
+                                                            <div ng-show="pipelineCreateForm.gitUrl.$invalid && pipelineCreateForm.gitUrl.$touched" class="form-group form-md-line-input">
+                                                                <label class="control-label col-md-3">
+                                                                </label>
+                                                                <div class="col-md-6">
+                                                                    <p id="git-url-error" class="alert alert-danger">
+                                                                        Incorrect Git URL format.
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="form-group form-md-line-input">
                                                                 <label class="control-label col-md-3">Git Branch</label>
                                                                 <div class="col-md-6">
-                                                                    <input ng-model="pipes.formData.material.git.branch" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitBranch}}" ng-pattern="/^([\w-]+)$/"/>
+                                                                    <input ng-model="pipes.formData.material.git.branch" type="text" class="form-control" placeholder="{{pipes.wizardInfo.placeholders.gitBranch}}" ng-pattern="/^([\w-]+)$/" />
                                                                     <div class="form-control-focus"></div>
                                                                 </div>
                                                             </div>
@@ -239,7 +249,7 @@
                                                                 <label for="span_small" class="control-label">Materials</label>
                                                                 <select id="span_small" ng-model="pipes.selectedMaterial" class="form-control select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                                                                     <optgroup label="Your materials">
-                                                                      <option class="drop-down-fixed" value="{{material}}" ng-repeat="material in pipes.currentMaterials">{{material.name}}</option>
+                                                                        <option class="drop-down-fixed" value="{{material}}" ng-repeat="material in pipes.currentMaterials">{{material.name}}</option>
                                                                     </optgroup>
                                                                 </select>
                                                             </div>
@@ -399,7 +409,7 @@
                                                             <label class="col-md-4 control-label summary-header">Credentials</label>
                                                             <div class="col-md-6">
                                                                 <div class="form-control form-control-static summary-info">
-                                                                    <p>{{(pipes.materialObject.username && pipes.materialObject.password)  ? 'Yes' : 'No'}}</p>
+                                                                    <p>{{(pipes.materialObject.username && pipes.materialObject.password) ? 'Yes' : 'No'}}</p>
                                                                 </div>
                                                                 <div class="form-control-focus"> </div>
                                                             </div>

@@ -13,7 +13,7 @@
             <div>
                 <form role="form" name="editMaterialForm" class="form-fixed-size">
                     <div class="form-group form-md-line-input">
-                        <label class="control-label col-md-3 required-fixed">Material Name
+                        <label class="control-label col-md-3 required-fixed form-required-fix">Material Name
                             <span class="required"> * </span>
                         </label>
                         <div class="col-md-6">
@@ -26,8 +26,17 @@
                             <span class="required"> * </span>
                         </label>
                         <div id="urlContainer" class="col-md-6">
-                            <input ng-model="admin.formData.material.repositoryUrl" type="text" class="form-control" ng-pattern="/^(https:\/\/*.+\.git)$/" required />
+                            <input ng-model="admin.formData.material.repositoryUrl" name="gitUrl" type="text" class="form-control" ng-pattern="/^(https:\/\/.+\.git)$/" required />
                             <div class="form-control-focus"></div>
+                        </div>
+                    </div>
+                    <div ng-show="editMaterialForm.gitUrl.$invalid && editMaterialForm.gitUrl.$touched" class="form-group form-md-line-input">
+                        <label class="control-label col-md-3">
+                        </label>
+                        <div class="col-md-6">
+                            <p id="git-url-error" class="alert alert-danger">
+                                Incorrect Git URL format.
+                            </p>
                         </div>
                     </div>
                     <div class="form-group form-md-line-input">

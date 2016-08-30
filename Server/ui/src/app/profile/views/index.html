@@ -35,11 +35,27 @@
                     </div>
                     <div class="form-group form-md-line-input">
                         <label class="control-label">New Password</label>
-                        <input type="password" class="form-control" ng-model="user.newPasswordObject.newPassword" ng-pattern="/^[0-9A-Za-z.-]{3,32}$/" required/>
+                        <input type="password" class="form-control" ng-model="user.newPasswordObject.newPassword" ng-minlength="3" ng-maxlength="32" name="newPassword" ng-pattern="/^[0-9A-Za-z.-]{3,32}$/" required/>
+                    </div>
+                    <div class="form-group">
+                      <p ng-show="editUser.newPassword.$error.minlength" class="alert alert-danger">
+                        Password must be minimum 3 symbols.
+                      </p>
+                      <p ng-show="editUser.newPassword.$error.maxlength" class="alert alert-danger">
+                        Password must be maximum 32 symbols.
+                      </p>
+                      <p ng-show="!(editUser.newPassword.$error.maxlength) && !(editUser.newPassword.$error.minlength) && editUser.newPassword.$error.pattern" class="alert alert-danger">
+                        Forbidden password characters!
+                      </p>
                     </div>
                     <div class="form-group form-md-line-input">
                         <label class="control-label">Re-type New Password</label>
-                        <input type="password" class="form-control" ng-model="user.newPasswordObject.confirmNewPassword" ng-pattern="{{user.newPasswordObject.newPassword}}" required/>
+                        <input type="password" class="form-control" ng-model="user.newPasswordObject.confirmNewPassword" name="confirmPassword" ng-pattern="{{user.newPasswordObject.newPassword}}" required/>
+                    </div>
+                    <div class="form-group">
+                      <p ng-show="(user.newPasswordObject.newPassword != user.newPasswordObject.confirmNewPassword) && editUser.confirmPassword.$touched && editUser.confirmPassword.$invalid" class="alert alert-danger">
+                        Passwords does not match!
+                      </p>
                     </div>
                     <div class="margin-top-10">
                         <button class="btn green-sharp" ng-disabled="editUser.$invalid" ng-click="user.updateUserPassword(user.newPasswordObject)">Change Password</button>

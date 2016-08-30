@@ -28,7 +28,6 @@ angular
                       validationService.dispatcherFlow(object,viewModelUpdater.getUser);
                     },
                     logoutSession: function (object) {
-                        debugger;
                         validationService.flowNoParameters(object, loginService.logout);
                     }
                 },
@@ -149,8 +148,8 @@ angular
                     delete: function(object) {
                         if (object.error == false) {
                             pipeConfigService.getAllPipelineDefinitions();
-                            pipeConfigService.getAllPipelineGroupDTOs();
                             pipeExecService.getAllPipelines();
+                            pipeConfigService.getAllPipelineGroupDTOs();
                         }
                         else{
                             toaster.pop('error', "Notification", object.errorMessage);

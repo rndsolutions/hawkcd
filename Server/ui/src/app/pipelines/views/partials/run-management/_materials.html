@@ -13,7 +13,7 @@
       <div class="run-item-container status-passed pull-left" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'status-canceled' : pipesRunManagement.currentPipelineRun.status == 'CANCELED'}">
         </div>
         <div class="vertical-center-static text-center">
-            #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName}}
+            #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName.substring(0,22)}} <span ng-if="pipesRunManagement.currentPipelineRun.pipelineDefinitionName.length > 27">...</span>
 
         </div>
         </div>
@@ -25,7 +25,7 @@
             <div class="width-100 padding-top-1" ng-repeat="material in pipesRunManagement.currentPipelineRun.materials">
               <i class="fa fa-github"></i>
               <div class="display-inline-block margin-left-1">
-                {{material.materialDefinition.commitId.substring(0, 7)}} - {{material.materialDefinition.comments}}
+                <a target="_blank" href="{{material.gitLink}}">{{material.materialDefinition.commitId.substring(0, 7)}}</a> - {{material.materialDefinition.comments}}
               </div>
             </div>
           </div>
