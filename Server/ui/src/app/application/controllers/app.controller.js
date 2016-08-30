@@ -3,8 +3,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', '$rootScope', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', 'pipeConfig', '$auth', "$location", "$http",
-        function($scope, $rootScope, loginService, viewModel, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
+    .controller('AppController', ['$scope', '$rootScope', 'CONSTANTS', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', 'pipeConfig', '$auth', "$location", "$http",
+        function($scope, $rootScope, CONSTANTS, loginService, viewModel, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
             $scope.$on('$viewContentLoaded', function() {
                 //App.initComponents(); // init core components
                 Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -148,7 +148,7 @@ angular
                         console.log(response.data)
                         $auth.setToken(response.data);
                         $location.path("/pipelines");
-                        $rootScope.startWebsocket("ws://hawkserver:8080/ws/v1");
+                        $rootScope.startWebsocket(CONSTANTS.WS_URL);
                     })
                     .catch(function(response) {
                         console.log(response)
@@ -168,7 +168,7 @@ angular
                 // Simple GET request example:
                 $http({
                     method: 'POST',
-                    url: 'http://localhost:8080/auth/register',
+                    url: CONSTANTS.SERVER_URL + '/auth/register',
                     data: user
                 }).then(function successCallback(response) {
                     $scope.showLogin();

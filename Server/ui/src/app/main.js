@@ -29,7 +29,8 @@ angular
     .constant({
         CONSTANTS: {
             'BASE_URL': '/api',
-            'WS_URL': 'ws://hawkserver:8080/ws/v1',
+            'SERVER_URL': window.location.origin,
+            'WS_URL': 'ws://' + this.SERVER_URL + '/ws/v1',
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
@@ -150,12 +151,12 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", "CONSTANTS", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location, CONSTANTS) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
 
-        var wsServerLocation = "ws://hawkserver:8080/ws/v1";
+        var wsServerLocation = CONSTANTS.WS_URL;
 
         var timerID=0;
 
