@@ -29,7 +29,8 @@ angular
     .constant({
         CONSTANTS: {
             'BASE_URL': '/api',
-            'WS_URL': 'ws://hawkserver:8080/ws/v1',
+            'SERVER_URL': window.location.origin,
+            'HOST': window.location.host,
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
@@ -90,11 +91,11 @@ angular
     }])
 
     /* Setup Routing For All Pages */
-    .config(['$stateProvider', '$urlRouterProvider', '$animateProvider','$authProvider',
-            function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', '$animateProvider','$authProvider', 'CONSTANTS',
+            function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider, CONSTANTS) {
 
              // used for debugging
-             $authProvider.baseUrl = "http://localhost:8080";
+             $authProvider.baseUrl = CONSTANTS.SERVER_URL;
              $authProvider.github({
                   clientId: '2d3dbbf586d2260cbd68',
                   scope: ['user:email','repo']
@@ -150,12 +151,12 @@ angular
     }])
 
     /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location) {
+    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", "CONSTANTS", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location, CONSTANTS) {
         $rootScope.$state = $state; // state to be accessed from view
         $rootScope.$settings = settings; // state to be accessed from view
         $rootScope.$on('$stateChange');
 
-        var wsServerLocation = "ws://hawkserver:8080/ws/v1";
+        var wsServerLocation = 'ws://' + CONSTANTS.HOST + '/ws/v1';
 
         var timerID=0;
 
@@ -207,6 +208,8 @@ angular
                 toaster.clear();
                 toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
                 $rootScope.$apply();
+                console.log(CONSTANTS.WS_URL);
+                console.log(CONSTANTS.SERVER_URL);
             }
         };
         //debugger;

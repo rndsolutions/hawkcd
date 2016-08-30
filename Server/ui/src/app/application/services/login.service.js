@@ -73,7 +73,7 @@ angular
         this.logout = function () {
             $http({
                 method: 'POST',
-                url: 'http://localhost:8080/auth/logout',
+                url: CONSTANTS.SERVER_URL + '/auth/logout',
                 data: viewModel.user.username
             })
                 .then(function(res) {
