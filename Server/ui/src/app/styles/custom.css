@@ -865,3 +865,10 @@ p {
 .accordion-heading-fix {
     color: #333!important;
 }
+
+#git-url-error{
+  margin-top:0;
+  margin-bottom:0;
+  padding-top:10px;
+  padding-bottom:10px;
+}
