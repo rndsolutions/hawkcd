@@ -1,6 +1,6 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.constants.ServerMessages;
+import net.hawkengine.core.utilities.constants.NotificationMessages;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
@@ -52,7 +52,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
             }
         }
 
-        return super.createServiceResultArray(materialDefinitions, false, ServerMessages.RETRIEVED_SUCCESSFULLY);
+        return super.createServiceResultArray(materialDefinitions, false, NotificationMessages.RETRIEVED_SUCCESSFULLY);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
 
         if (!assignedIds.isEmpty()) {
             String assignedIdsAsString = String.join(", ", assignedIds);
-            return super.createServiceResult(null, true, String.format(ServerMessages.COULD_NOT_BE_DELETED, assignedIdsAsString));
+            return super.createServiceResult(null, true, String.format(NotificationMessages.COULD_NOT_BE_DELETED, assignedIdsAsString));
         }
 
         return super.delete(materialDefinitionId);

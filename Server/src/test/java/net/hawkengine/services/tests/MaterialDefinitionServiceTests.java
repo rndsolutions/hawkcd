@@ -1,7 +1,7 @@
 package net.hawkengine.services.tests;
 
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.core.utilities.constants.ServerMessages;
+import net.hawkengine.core.utilities.constants.NotificationMessages;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.GitMaterial;
 import net.hawkengine.model.MaterialDefinition;
@@ -279,7 +279,7 @@ public class MaterialDefinitionServiceTests {
         allPipelineDefinitions.setObject(pipelineDefinitions);
         Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
 
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(ServerMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
+        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(NotificationMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
