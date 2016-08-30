@@ -137,7 +137,7 @@ angular
             });
 
             $scope.login = function() {
-
+              $scope.mismatchCredentials = {};
                 var user = {
                     email: $scope.email,
                     password: $scope.password
@@ -151,6 +151,7 @@ angular
                         $rootScope.startWebsocket('ws://' + CONSTANTS.HOST + '/ws/v1');
                     })
                     .catch(function(response) {
+                      $scope.mismatchCredentials.errorMessage = response.data.message;
                         console.log(response)
                             // Handle errors here, such as displaying a notification
                             // for invalid email and/or password.
@@ -176,6 +177,12 @@ angular
                 }, function errorCallback(response) {
                     console.log("error response: " + response);
                 });
+
+                $scope.register_email = undefined;
+                $scope.register_password = undefined;
+                $scope.confirm_password = undefined;
+                $scope.registerForm.$setPristine();
+                $scope.registerForm.$setUntouched();
             }
 
         }
