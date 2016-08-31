@@ -1,88 +1,109 @@
 package net.hawkengine.core.pipelinescheduler;
 
-import net.hawkengine.model.Agent;
-import net.hawkengine.model.Job;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.StageStatus;
+import net.hawkengine.model.enums.Status;
+import net.hawkengine.services.AgentService;
+import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IAgentService;
+import net.hawkengine.services.interfaces.IPipelineService;
+import net.hawkengine.ws.EndpointConnector;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JobAssignerService {
     private static final Logger LOGGER = Logger.getLogger(JobAssignerService.class.getName());
 
-    public Agent assignAgentToJob(Job job, List<Agent> agents) {
-        Agent result = null;
-        if (job.getStatus() == JobStatus.SCHEDULED) {
-            Agent assignedAgent = agents.stream().filter(a -> a.getId().equals(job.getAssignedAgentId())).findFirst().orElse(null);
-            result = assignedAgent;
-            boolean isEligible = this.isAgentEligibleForJob(job, assignedAgent);
-            if (!isEligible) {
-                job.setStatus(JobStatus.AWAITING);
-                assignedAgent.setAssigned(false);
-                result = assignedAgent;
-                LOGGER.info(String.format("Job %s unassigned from Agent %s", job.getJobDefinitionName(), assignedAgent.getName()));
-            }
-        }
+    private IAgentService agentService;
+    private IPipelineService pipelineService;
+    private JobAssignerUtilities jobAssignerUtilities;
 
-        if (job.getStatus() == JobStatus.AWAITING) {
-            List<Agent> eligibleAgents = this.getEligibleAgentsForJob(job, agents);
-            Agent agentForJob = this.pickMostSuitableAgent(eligibleAgents);
-            if (agentForJob != null) {
-                job.setAssignedAgentId(agentForJob.getId());
-                job.setStatus(JobStatus.SCHEDULED);
-                agentForJob.setAssigned(true);
-                result = agentForJob;
-                LOGGER.info(String.format("Job %s assigned to Agent %s", job.getJobDefinitionName(), agentForJob.getName()));
-            }
-        }
-
-        return result;
+    public JobAssignerService() {
+        this.agentService = new AgentService();
+        this.pipelineService = new PipelineService();
+        this.jobAssignerUtilities = new JobAssignerUtilities();
     }
 
-    public List<Agent> getEligibleAgentsForJob(Job job, List<Agent> agents) {
-        List<Agent> eligibleAgents = new ArrayList<>();
-        for (Agent agent : agents) {
-            boolean isEligible = this.isAgentEligibleForJob(job, agent);
-
-            if (isEligible) {
-                eligibleAgents.add(agent);
+    public void checkUnassignedJobs(List<Agent> agents) {
+        List<Agent> filteredAgents = agents.stream().filter(a -> a.isConnected() && a.isEnabled()).collect(Collectors.toList());
+        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
+        for (Pipeline pipeline : pipelinesInProgress) {
+            boolean isSetToAwaiting = false;
+            Stage stageInProgress = pipeline.getStages().stream().filter(s -> s.getStatus() == StageStatus.IN_PROGRESS).findFirst().orElse(null);
+            if (stageInProgress == null) {
+                return;
             }
-        }
 
-        return eligibleAgents;
-    }
-
-    public Agent pickMostSuitableAgent(List<Agent> agents) {
-        Agent agentForJob = null;
-        if (agents.size() == 1) {
-            agentForJob = agents.get(0);
-        } else if (agents.size() > 1) {
-            int numberOfResources = Integer.MAX_VALUE;
-            for (Agent agent : agents) {
-                if (agent.getResources().size() < numberOfResources) {
-                    numberOfResources = agent.getResources().size();
-                    agentForJob = agent;
+            for (Job job : stageInProgress.getJobs()) {
+                boolean hasAssignableAgent = this.jobAssignerUtilities.hasAssignableAgent(job, filteredAgents);
+                if (!hasAssignableAgent) {
+                    job.setStatus(JobStatus.AWAITING);
+                    isSetToAwaiting = true;
+                    LOGGER.info(String.format("Job %s has no assignable Agents.", job.getJobDefinitionName()));
                 }
             }
-        }
 
-        return agentForJob;
-    }
-
-    public boolean isAgentEligibleForJob(Job job, Agent agent) {
-        boolean isEligible = true;
-        if ((agent == null) || !agent.isConnected() || !agent.isEnabled() || agent.isRunning() || agent.isAssigned()) {
-            isEligible = false;
-        } else {
-            for (String resource : job.getResources()) {
-                if (!(agent.getResources().contains(resource))) {
-                    isEligible = false;
-                    break;
-                }
+            if (isSetToAwaiting) {
+                stageInProgress.setStatus(StageStatus.AWAITING);
+                pipeline.setStatus(Status.AWAITING);
+                this.pipelineService.update(pipeline);
+                LOGGER.info(String.format("Pipeline %s set to AWAITING.", pipeline.getPipelineDefinitionName()));
+                // ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, "");
+//                EndpointConnector.passResultToEndpoint("NotificationService", "notify", notification);
             }
         }
+    }
 
-        return isEligible;
+    public void checkAwaitingJobs(List<Agent> agents) {
+        List<Agent> filteredAgents = agents.stream().filter(a -> a.isConnected() && a.isEnabled()).collect(Collectors.toList());
+        List<Pipeline> awaitingPipelines = (List<Pipeline>) this.pipelineService.getAllPreparedAwaitingPipelines().getObject();
+        for (Pipeline pipeline : awaitingPipelines) {
+            Stage awaitingStage = pipeline.getStages().stream().filter(s -> s.getStatus() == StageStatus.AWAITING).findFirst().orElse(null);
+            if (awaitingStage == null) {
+                return;
+            }
+
+            for (Job job : awaitingStage.getJobs()) {
+                boolean hasAssignableAgent = this.jobAssignerUtilities.hasAssignableAgent(job, filteredAgents);
+                if (hasAssignableAgent) {
+                    job.setStatus(JobStatus.UNASSIGNED);
+                    LOGGER.info(String.format("Job %s set back to IN_PROGRESS.", job.getJobDefinitionName()));
+                }
+            }
+
+            boolean hasAwaitingJobs = awaitingStage.getJobs().stream().anyMatch(j -> j.getStatus() == JobStatus.AWAITING);
+            if (!hasAwaitingJobs) {
+                awaitingStage.setStatus(StageStatus.IN_PROGRESS);
+                pipeline.setStatus(Status.IN_PROGRESS);
+                this.pipelineService.update(pipeline);
+                LOGGER.info(String.format("Pipeline %s set back to IN_PROGRESS.", pipeline.getPipelineDefinitionName()));
+            }
+        }
+    }
+
+    public void assignJobs(List<Agent> agents) {
+        List<Agent> filteredAgents = agents.stream().filter(a -> a.isConnected() && a.isEnabled() && !a.isRunning() && !a.isAssigned()).collect(Collectors.toList());
+        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
+        for (Pipeline pipeline : pipelines) {
+            for (Stage stage : pipeline.getStages()) {
+                if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+                    for (Job job : stage.getJobs()) {
+                        if (filteredAgents.size() != 0) {
+                            Agent agent = this.jobAssignerUtilities.assignAgentToJob(job, filteredAgents);
+                            if (agent != null) {
+                                ServiceResult result = this.agentService.update(agent);
+                                EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.pipelineService.update(pipeline);
+//            EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
+        }
     }
 }

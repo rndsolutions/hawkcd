@@ -29,7 +29,7 @@ public class Job extends DbEntry {
         this.setEnvironmentVariables(new ArrayList<>());
         this.setResources(new HashSet<>());
         this.setTasks(new ArrayList<>());
-        this.setStatus(JobStatus.AWAITING);
+        this.setStatus(JobStatus.UNASSIGNED);
         this.setReport(new StringBuilder());
     }
 

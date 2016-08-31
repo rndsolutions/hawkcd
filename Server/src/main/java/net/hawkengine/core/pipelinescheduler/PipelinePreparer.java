@@ -36,7 +36,7 @@ public class PipelinePreparer implements Runnable {
 
     @Override
     public void run() {
-        LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, "Pipeline Preparer"));
+        LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, PipelinePreparer.class.getSimpleName()));
         try {
             while (true) {
                 List<Pipeline> filteredPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
@@ -48,7 +48,7 @@ public class PipelinePreparer implements Runnable {
                     LOGGER.info(pipeline.getPipelineDefinitionName() + " prepared.");
                 }
 
-                Thread.sleep(ServerConfiguration.getConfiguration().getMaterialTrackerPollInterval() * 1000);
+                Thread.sleep(ServerConfiguration.getConfiguration().getPipelineSchedulerPollInterval() * 1000);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

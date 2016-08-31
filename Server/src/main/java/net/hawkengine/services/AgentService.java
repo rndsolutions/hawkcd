@@ -99,7 +99,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                 Job scheduledJob = stageInProgress
                         .getJobs()
                         .stream()
-                        .filter(j -> j.getStatus() == JobStatus.SCHEDULED)
+                        .filter(j -> j.getStatus() == JobStatus.ASSIGNED)
                         .filter(j -> j.getAssignedAgentId().equals(agentId))
                         .findFirst()
                         .orElse(null);
@@ -118,28 +118,6 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
                 result = createResult(workInfo, NotificationType.SUCCESS, "WorkInfo retrieved successfully");
             }
-//                pipeline.getStages()
-//                        .stream()
-//                        .filter(stage -> stage.getStatus() == StageStatus.IN_PROGRESS)
-//                        .forEach(stage -> stage.getJobs()
-//                                .stream()
-//                                .filter(job -> job.getStatus() == JobStatus.SCHEDULED)
-//                                .filter(job -> job.getAssignedAgentId().equals(agentId))
-//                                .forEach(job -> {
-//                                    workInfo.setPipelineExecutionID(pipeline.getExecutionId());
-//                                    workInfo.setStageExecutionID(stage.getExecutionId());
-//                                    job.setStatus(JobStatus.RUNNING);
-//                                    this.jobService.update(job);
-//                                    workInfo.setJob(job);
-//                                    workInfo.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
-//                                    workInfo.setStageDefinitionName(stage.getStageDefinitionName());
-//                                    workInfo.setJobDefinitionName(job.getJobDefinitionName());
-//
-//                                    result.setObject(workInfo);
-//                                    result.setNotificationType(false);
-//                                    result.setMessage("WorkInfo retrieved successfully");
-//                                }));
-
         } else {
             result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         }
