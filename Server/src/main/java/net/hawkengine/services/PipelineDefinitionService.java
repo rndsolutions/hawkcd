@@ -2,15 +2,8 @@ package net.hawkengine.services;
 
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
-import net.hawkengine.model.GitMaterial;
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.PipelineGroup;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
-import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -42,7 +35,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         this.materialDefinitionService = materialDefinitionService;
     }
 
-    public PipelineDefinitionService(IDbRepository repository, IPipelineService pipelineService){
+    public PipelineDefinitionService(IDbRepository repository, IPipelineService pipelineService) {
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineService = pipelineService;
@@ -88,11 +81,11 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         }
 
         ServiceResult serviceResult = this.materialDefinitionService.add(materialDefinition);
-        if (serviceResult.hasError()) {
-            return super.createServiceResult(null, true, "could not be created");
+        if ((serviceResult.getNotificationType() == NotificationType.ERROR)) {
+            return super.createServiceResult(null, NotificationType.ERROR, "could not be created");
         }
 
-        EndpointConnector.passResultToEndpoint("MaterialDefinitionService","add",serviceResult);
+        EndpointConnector.passResultToEndpoint("MaterialDefinitionService", "add", serviceResult);
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
 
         return this.add(pipelineDefinition);
@@ -111,8 +104,8 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
         this.materialDefinitionService = new MaterialDefinitionService();
         ServiceResult serviceResult = this.materialDefinitionService.getById(materialDefinitionId);
-        if (serviceResult.hasError()) {
-            return super.createServiceResult(null, true, "could not be created");
+        if ((serviceResult.getNotificationType() == NotificationType.ERROR)) {
+            return super.createServiceResult(null, NotificationType.ERROR, "could not be created");
         }
 
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinitionId);
@@ -127,7 +120,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult delete(String pipelineDefinitionId) {
-        if (this.pipelineService == null){
+        if (this.pipelineService == null) {
             this.pipelineService = new PipelineService();
         }
         List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getObject();
@@ -136,7 +129,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
             List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb.stream().filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId)).collect(Collectors.toList());
             for (Pipeline pipeline : pipelineWithinThePipelineDefinition) {
                 ServiceResult result = this.pipelineService.delete(pipeline.getId());
-                if (result.hasError()) {
+                if ((result.getNotificationType() == NotificationType.ERROR)) {
                     return result;
                 }
             }
@@ -149,7 +142,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         ServiceResult result;
         List<PipelineDefinition> allPipelines = (List<PipelineDefinition>) this.getAll().getObject();
         List<PipelineDefinition> scheduledPipelines = allPipelines.stream().filter(p -> p.isAutoSchedulingEnabled()).collect(Collectors.toList());
-        result = super.createServiceResultArray(scheduledPipelines, false, "retrieved successfully");
+        result = super.createServiceResultArray(scheduledPipelines, NotificationType.SUCCESS, "retrieved successfully");
         return result;
     }
 

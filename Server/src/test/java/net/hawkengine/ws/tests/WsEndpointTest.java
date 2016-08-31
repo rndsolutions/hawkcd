@@ -58,7 +58,7 @@ public class WsEndpointTest {
                 "\"packageName\": \"testPackage\",\n" +
                 "\"methodName\": \"testMethod\",\n" +
                 "\"result\": \"testResult\",\n" +
-                "\"error\": \"testError\",\n" +
+                "\"notificationType\": \"SUCCESS\",\n" +
                 "\"errorMessage\": \"testErrorMessage\",\n" +
                 "\"args\": [{\n" +
                 "\"packageName\": \"testPackage\",\n" +

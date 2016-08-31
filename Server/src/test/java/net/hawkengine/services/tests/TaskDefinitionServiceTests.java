@@ -5,6 +5,7 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.services.JobDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -85,7 +86,7 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedTaskDefinition.getId(), actualResultObject.getId());
         Assert.assertEquals(expectedTaskDefinition.getName(), actualResultObject.getName());
         Assert.assertEquals(expectedTaskDefinition.getJobDefinitionId(), actualResultObject.getJobDefinitionId());
@@ -107,7 +108,7 @@ public class TaskDefinitionServiceTests {
         ServiceResult actualResult = this.taskDefinitionService.getById(invalidId);
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(this.notFoundMessage, actualResult.getMessage());
         Assert.assertNull(actualResult.getObject());
     }
@@ -128,7 +129,7 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualResult.getObject());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedJobDefinitionsCount, actualJobDefinitions.size());
         Assert.assertEquals(this.retrievalSuccessMessage, actualResult.getMessage());
     }
@@ -155,7 +156,6 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
-        Assert.assertFalse(actualExecResult.hasError());
         Assert.assertEquals(expectedTask.getId(), actualExecResultObject.getId());
         Assert.assertEquals(expectedTask.getName(), actualExecResultObject.getName());
         Assert.assertEquals(expectedTask.getJobDefinitionId(), actualExecResultObject.getJobDefinitionId());
@@ -183,7 +183,6 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
-        Assert.assertFalse(actualExecResult.hasError());
         Assert.assertEquals(expectedTask.getId(), actualExecResultObject.getId());
         Assert.assertEquals(expectedTask.getName(), actualExecResultObject.getName());
         Assert.assertEquals(expectedTask.getJobDefinitionId(), actualExecResultObject.getJobDefinitionId());
@@ -206,7 +205,6 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
-        Assert.assertFalse(actualExecResult.hasError());
         Assert.assertEquals(expectedTask.getId(), actualExecResultObject.getId());
         Assert.assertEquals(expectedTask.getName(), actualExecResultObject.getName());
         Assert.assertEquals(expectedTask.getJobDefinitionId(), actualExecResultObject.getJobDefinitionId());
@@ -229,7 +227,6 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
-        Assert.assertFalse(actualExecResult.hasError());
         Assert.assertEquals(expectedTask.getId(), actualExecResultObject.getId());
         Assert.assertEquals(expectedTask.getName(), actualExecResultObject.getName());
         Assert.assertEquals(expectedTask.getJobDefinitionId(), actualExecResultObject.getJobDefinitionId());
@@ -261,7 +258,7 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertNull(actualExecResult.getObject());
-        Assert.assertTrue(actualExecResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualExecResult.getNotificationType());
         Assert.assertEquals("TaskDefinition not added successfully.", actualExecResult.getMessage());
     }
 
@@ -317,20 +314,20 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         //Exec
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals(execTask.getName(), actualResultObject.getName());
         Assert.assertEquals(successMessage, actualResult.getMessage());
         //UploadArtifact
-        Assert.assertFalse(actualResult2.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult2.getNotificationType());
         Assert.assertNotNull(actualResult2.getObject());
         Assert.assertEquals(uploadArtifactTask.getName(), actualResultObject2.getName());
         //FetchArtifact
-        Assert.assertFalse(actualResult3.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult3.getNotificationType());
         Assert.assertNotNull(actualResult3.getObject());
         Assert.assertEquals(fetchArtifactTask.getName(), actualResultObject3.getName());
         //FetchMaterial
-        Assert.assertFalse(actualResult4.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult4.getNotificationType());
         Assert.assertNotNull(actualResult4.getObject());
         Assert.assertEquals(fetchMaterialTask.getName(), actualResultObject4.getName());
     }
@@ -347,7 +344,7 @@ public class TaskDefinitionServiceTests {
         ServiceResult result = this.taskDefinitionService.update(notExistingTask);
 
         //Assert
-        Assert.assertTrue(result.hasError());
+        Assert.assertEquals(NotificationType.ERROR, result.getNotificationType());
         Assert.assertEquals(this.notFoundMessage, result.getMessage());
         Assert.assertNull(result.getObject());
     }
@@ -372,7 +369,7 @@ public class TaskDefinitionServiceTests {
         ServiceResult actualResult = this.taskDefinitionService.delete(expectedTask.getId());
 
         //Assert
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(this.deletionSuccessMessage, actualResult.getMessage());
     }
@@ -391,7 +388,7 @@ public class TaskDefinitionServiceTests {
         ServiceResult actualResult = this.taskDefinitionService.delete(expectedTask.getId());
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals("TaskDefinition cannot delete the last task definition.", actualResult.getMessage());
     }
@@ -402,7 +399,7 @@ public class TaskDefinitionServiceTests {
         ServiceResult actualResult = this.taskDefinitionService.delete("12345");
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals("TaskDefinition does not exists.", actualResult.getMessage());
     }

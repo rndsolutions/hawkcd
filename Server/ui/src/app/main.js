@@ -29,8 +29,8 @@ angular
     .constant({
         CONSTANTS: {
             'BASE_URL': '/api',
-            'SERVER_URL': window.location.origin,
-            'HOST': window.location.host,
+            'SERVER_URL': 'http://localhost:8080',
+            'HOST': 'localhost:8080',
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
@@ -63,8 +63,14 @@ angular
 
             //region agent packages
             'AGENT_SERVICE': 'AgentService',
-            'AGENT_MODEL': 'Agent'
+            'AGENT_MODEL': 'Agent',
             //endregion
+
+            //region toaster types
+            'TOAST_WARNING':'WARNING',
+            'TOAST_SUCCESS':'SUCCESS',
+            'TOAST_ERROR':'ERROR'
+            //end region toaster types
         }
     })
 

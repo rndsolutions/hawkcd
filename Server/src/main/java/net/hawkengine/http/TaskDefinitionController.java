@@ -3,6 +3,7 @@ package net.hawkengine.http;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.TaskDefinitionService;
 import net.hawkengine.services.interfaces.ITaskDefinitionService;
 
@@ -49,7 +50,7 @@ public class TaskDefinitionController {
     @Path("/{taskDefinitionId}")
     public Response getTaskDefinitionById(@PathParam("taskDefinitionId") String taskDefinitionId) {
         ServiceResult result = this.taskDefinitionService.getById(taskDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
@@ -66,7 +67,7 @@ public class TaskDefinitionController {
         String isValid = this.schemaValidator.validate(taskDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.taskDefinitionService.addTask(taskDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -90,7 +91,7 @@ public class TaskDefinitionController {
         String isValid = this.schemaValidator.validate(taskDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.taskDefinitionService.updateTask(taskDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -113,7 +114,7 @@ public class TaskDefinitionController {
     @Path("/{taskDefinitionId}")
     public Response deleteTaskDefinition(@PathParam("taskDefinitionId") String taskDefinitionId) {
         ServiceResult result = this.taskDefinitionService.delete(taskDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)

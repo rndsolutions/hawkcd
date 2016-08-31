@@ -6,6 +6,7 @@ import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.StageService;
 import net.hawkengine.services.interfaces.IStageService;
 
@@ -108,7 +109,7 @@ public class StageControllerTests extends JerseyTest {
         //Arrange
         String expectedResult = "Stage not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.stageService.getById(Mockito.any())).thenReturn(this.serviceResult);
 

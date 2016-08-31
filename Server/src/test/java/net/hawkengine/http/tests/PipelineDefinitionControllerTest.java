@@ -3,6 +3,7 @@ package net.hawkengine.http.tests;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.PipelineDefinitionController;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -105,7 +106,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Arrange
         String expectedResult = "PipelineDefinition not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.pipelineDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
 
@@ -143,7 +144,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
         this.pipelineDefinition.setName(null);
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(this.pipelineDefinition);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
@@ -162,7 +163,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Arrange
         this.preparePipelineDefinition();
         String expectedResult = "PipelineDefinition already exists.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
@@ -225,7 +226,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         //Arrange
         this.preparePipelineDefinition();
         String expectedMessage = "PipelineDefinition not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.pipelineDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
@@ -269,7 +270,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         this.preparePipelineDefinition();
         String expectedResult = "ERROR: PIPELINE DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.pipelineDefinition.setName(null);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
@@ -300,7 +301,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     public void deletePipelineDefinition_nonExistingPipelineDefinition_properErrorMessage() {
         //Arrange
         String expectedMessage = "PipelineDefinition not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.pipelineDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 

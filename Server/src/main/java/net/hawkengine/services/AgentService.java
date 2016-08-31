@@ -4,6 +4,7 @@ import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.payload.WorkInfo;
 import net.hawkengine.services.interfaces.IAgentService;
@@ -72,16 +73,16 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                 .collect(Collectors.toList());
 
         ServiceResult result =
-                super.createServiceResultArray(assignableAgents, false, "retrieved successfully");
+                super.createServiceResultArray(assignableAgents, NotificationType.SUCCESS, "retrieved successfully");
 
         return result;
     }
 
     public ServiceResult getWorkInfo(String agentId) {
-        ServiceResult result = new ServiceResult();
+        ServiceResult result = null;
         Agent agent = (Agent) this.getById(agentId).getObject();
         if (agent == null) {
-            result = updateResult(result, null, true, "This agent has no job assigned.");
+            result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         } else if (agent.isAssigned()) {
             List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
             for (Pipeline pipeline : pipelines) {
@@ -115,25 +116,23 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                 workInfo.setJob(scheduledJob);
                 this.jobService.update(scheduledJob);
 
-                result = updateResult(result, workInfo, false, "WorkInfo retrieved successfully");
+                result = createResult(workInfo, NotificationType.SUCCESS, "WorkInfo retrieved successfully");
             }
         } else {
-            result = updateResult(result, null, true, "This agent has no job assigned.");
+            result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         }
 
-        if (result.getMessage() == null) {
+        if (result == null) {
             agent.setAssigned(false);
             this.update(agent);
-            result = updateResult(result, null, true, "This agent has no job assigned.");
+            result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         }
 
         return result;
     }
 
-    private ServiceResult updateResult(ServiceResult result, Object object, boolean error, String message) {
-        result.setObject(object);
-        result.setError(error);
-        result.setMessage(message);
+    private ServiceResult createResult(Object object, NotificationType notificationType, String message) {
+        ServiceResult result = new ServiceResult(object, notificationType, message);
 
         return result;
     }

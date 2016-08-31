@@ -4,6 +4,7 @@ import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
 
@@ -27,8 +28,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
 
     @Override
     public ServiceResult getById(String stageDefinitionId) {
-        ServiceResult serviceResult = new ServiceResult();
-        serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not found");
+        ServiceResult serviceResult = super.createServiceResult(null, NotificationType.ERROR, "not found");
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
@@ -57,9 +57,9 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
                 .orElse(null);
 
         if (stage != null) {
-            serviceResult = super.createServiceResult(stage, false, "retrieved successfully");
+            serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "retrieved successfully");
         } else {
-            serviceResult = super.createServiceResult(stage, true, "not found");
+            serviceResult = super.createServiceResult(stage, NotificationType.ERROR, "not found");
         }
 
         return serviceResult;
@@ -73,7 +73,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             stageDefinitions.addAll(pipelineDefinition.getStageDefinitions());
         }
-        ServiceResult result = super.createServiceResultArray(stageDefinitions, false, "retrieved successfully");
+        ServiceResult result = super.createServiceResultArray(stageDefinitions, NotificationType.SUCCESS, "retrieved successfully");
 
         return result;
     }
@@ -83,26 +83,26 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         List<StageDefinition> stageDefinitions = pipelineFromDatabase.getStageDefinitions();
 
-        ServiceResult result = super.createServiceResultArray(stageDefinitions, false, "retrieved successfully");
+        ServiceResult result = super.createServiceResultArray(stageDefinitions, NotificationType.SUCCESS, "retrieved successfully");
 
         return result;
     }
 
     @Override
     public ServiceResult add(StageDefinition stageDefinition) {
-        ServiceResult result = new ServiceResult();
+        ServiceResult result = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
         PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
 
         for (StageDefinition stDefinition : stageDefinitions) {
             if (stDefinition.getId().equals(stageDefinition.getId())) {
-                return super.createServiceResult((StageDefinition) result.getObject(), true, "already exists");
+                return super.createServiceResult(null, NotificationType.ERROR, "already exists");
             }
         }
 
         if ((this.isPresentWithSameName(stageDefinitions, stageDefinition))) {
-            return super.createServiceResult((StageDefinition) result.getObject(), true, "with that name already exists");
+            return super.createServiceResult(null, NotificationType.ERROR, "with that name already exists");
         }
 
         List<JobDefinition> stageJobDefinitions = stageDefinition.getJobDefinitions();
@@ -114,10 +114,10 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
 
         ServiceResult serviceResult = this.pipelineDefinitionService.update(pipeline);
 
-        if (serviceResult.hasError()) {
-            result = super.createServiceResult((StageDefinition) result.getObject(), true, "not created");
+        if (serviceResult.getNotificationType() == NotificationType.ERROR) {
+            result = super.createServiceResult(null, NotificationType.ERROR, "not created");
         } else {
-            result = super.createServiceResult(stageDefinition, false, "created successfully");
+            result = super.createServiceResult(stageDefinition, NotificationType.SUCCESS, "created successfully");
         }
 
         return result;
@@ -125,7 +125,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
 
     @Override
     public ServiceResult update(StageDefinition stageDefinition) {
-        ServiceResult serviceResult = new ServiceResult();
+        ServiceResult serviceResult = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
         PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
@@ -136,7 +136,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
             if (stageDefinitions.get(i).getId().equals(stageDefinition.getId())) {
                 isPresent = true;
                 if (this.isPresentWithSameName(stageDefinitions, stageDefinition)) {
-                    return super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "with that name already exists");
+                    return super.createServiceResult(null, NotificationType.ERROR, "with that name already exists");
                 } else {
                     stageDefinitions.set(i, stageDefinition);
                 }
@@ -144,16 +144,16 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         }
 
         if (!isPresent) {
-            return super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not found");
+            return super.createServiceResult(null, NotificationType.ERROR, "not found");
         }
 
         pipeline.setStageDefinitions(stageDefinitions);
         ServiceResult pipelineServiceResult = this.pipelineDefinitionService.update(pipeline);
 
-        if (pipelineServiceResult.hasError()) {
-            serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), true, "not updated");
+        if (pipelineServiceResult.getNotificationType() == NotificationType.ERROR) {
+            serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), NotificationType.ERROR, "not updated");
         } else {
-            serviceResult = super.createServiceResult(stageDefinition, false, "updated successfully");
+            serviceResult = super.createServiceResult(stageDefinition, NotificationType.SUCCESS, "updated successfully");
         }
 
         return serviceResult;
@@ -176,7 +176,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         }
 
         boolean isRemoved = false;
-        ServiceResult serviceResult = new ServiceResult();
+        ServiceResult serviceResult = null;
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
         StageDefinition stageDefinition = stageDefinitions
                 .stream()
@@ -185,19 +185,19 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
                 .orElse(null);
 
         if (stageDefinition == null) {
-            serviceResult = super.createServiceResult(stageDefinition, true, "not found");
+            serviceResult = super.createServiceResult(stageDefinition, NotificationType.ERROR, "not found");
         }
 
         if (stageDefinitions.size() > 1) {
             isRemoved = stageDefinitions.remove(stageDefinition);
         } else {
-             super.createServiceResult(stageDefinition, true, "is the last Stage Definition and cannot be deleted");
+             super.createServiceResult(stageDefinition, NotificationType.ERROR, "is the last Stage Definition and cannot be deleted");
         }
 
         if (isRemoved) {
             pipeline.setStageDefinitions(stageDefinitions);
             this.pipelineDefinitionService.update(pipeline);
-            serviceResult = super.createServiceResult(stageDefinition, false, "deleted successfully");
+            serviceResult = super.createServiceResult(stageDefinition, NotificationType.SUCCESS, "deleted successfully");
         }
 
         return serviceResult;

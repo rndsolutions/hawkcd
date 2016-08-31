@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
@@ -56,10 +57,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         this.add(userGroup);
 
         UserGroupDto updatedUserGroupDto = this.getUserGroupDto(userGroup);
-        ServiceResult result = new ServiceResult();
-        result.setError(false);
-        result.setMessage("UserGroup created successfully.");
-        result.setObject(updatedUserGroupDto);
+        ServiceResult result = new ServiceResult(updatedUserGroupDto, NotificationType.SUCCESS, "UserGroup created successfully.");
 
         return result;
     }
@@ -79,10 +77,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         this.update(userGroup);
 
         UserGroupDto updatedUserGroupDto = this.getUserGroupDto(userGroup);
-        ServiceResult result = new ServiceResult();
-        result.setError(false);
-        result.setMessage("UserGroup updated successfully.");
-        result.setObject(updatedUserGroupDto);
+        ServiceResult result = new ServiceResult(updatedUserGroupDto, NotificationType.SUCCESS, "UserGroup updated successfully.");
 
         for (String userId : userGroup.getUserIds()) {
             SessionPool.getInstance().updateUserObjects(userId);
@@ -107,7 +102,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             user.setUserGroupIds(userGroupIds);
             ServiceResult removeGroupFromAllUsers = this.userService.update(user);
-            if (removeGroupFromAllUsers.hasError()) {
+            if (removeGroupFromAllUsers.getNotificationType() == NotificationType.ERROR) {
                 return removeGroupFromAllUsers;
             }
         }
@@ -122,27 +117,20 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
 
-        ServiceResult userGroupResult = new ServiceResult();
+        ServiceResult userGroupResult;
         if (userHasGroupId && !groupHasUserId) {
             userGroup.getUserIds().add(user.getId());
             this.userService.update(user);
             this.update(userGroup);
             UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
-            ServiceResult userResult = new ServiceResult();
-            userResult.setError(false);
-            userResult.setMessage("User assigned successfully.");
-            userResult.setObject(user);
+            ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User assigned successfully.");
             EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
             SessionPool.getInstance().updateUserObjects(user.getId());
 
-            userGroupResult.setError(false);
-            userGroupResult.setMessage("UserGroup updated successfully.");
-            userGroupResult.setObject(userGroupDtoResult);
+            userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {
-            userGroupResult.setError(true);
-            userGroupResult.setMessage("User already assigned to User Group.");
-            userGroupResult.setObject(null);
+            userGroupResult = new ServiceResult(null, NotificationType.ERROR, "User already assigned to User Group.");
         }
 
         return userGroupResult;
@@ -155,27 +143,20 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
 
-        ServiceResult userGroupResult = new ServiceResult();
+        ServiceResult userGroupResult = null;
         if (!userHasGroupId && groupHasUserId) {
             userGroup.getUserIds().remove(user.getId());
             this.userService.update(user);
             this.update(userGroup);
             UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
-            ServiceResult userResult = new ServiceResult();
-            userResult.setError(false);
-            userResult.setMessage("User unassigned successfully.");
-            userResult.setObject(user);
+            ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User unassigned successfully.");
             EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
             SessionPool.getInstance().updateUserObjects(user.getId());
 
-            userGroupResult.setError(false);
-            userGroupResult.setMessage("UserGroup updated successfully.");
-            userGroupResult.setObject(userGroupDtoResult);
+            userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {
-            userGroupResult.setError(true);
-            userGroupResult.setMessage("User already unassigned from User Group.");
-            userGroupResult.setObject(null);
+            userGroupResult = new ServiceResult(null, NotificationType.ERROR, "User already unassigned from User Group.");
         }
 
         return userGroupResult;
@@ -201,10 +182,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             userGroupDtos.add(userGroupDto);
         }
-        ServiceResult userGroupDtosServiceResult = new ServiceResult();
-        userGroupDtosServiceResult.setError(false);
-        userGroupDtosServiceResult.setMessage("User Groups retrieved successfully.");
-        userGroupDtosServiceResult.setObject(userGroupDtos);
+        ServiceResult userGroupDtosServiceResult = new ServiceResult(userGroupDtos, NotificationType.SUCCESS, "User Groups retrieved successfully.");
 
         return userGroupDtosServiceResult;
     }

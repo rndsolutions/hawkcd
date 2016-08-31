@@ -2,6 +2,7 @@ package net.hawkengine.http;
 
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
@@ -40,7 +41,7 @@ public class PipelineController {
     @Path("/{pipelineDefinitionId}")
     public Response getPipelineById(@PathParam("pipelineDefinitionId") String pipelineDefinitionId) {
         ServiceResult response = this.pipelineService.getById(pipelineDefinitionId);
-        if (response.hasError()) {
+        if (response.getNotificationType() == NotificationType.ERROR) {
             return
                     Response.status(Status.NOT_FOUND)
                             .entity(response.getMessage())
@@ -78,7 +79,7 @@ public class PipelineController {
     public Response addPipeline(Pipeline pipeline) {
         ServiceResult response = this.pipelineService.add(pipeline);
 
-        if (response.hasError()) {
+        if (response.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(response.getMessage())
                     .type(MediaType.TEXT_HTML)
@@ -95,7 +96,7 @@ public class PipelineController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(Pipeline pipeline) {
         ServiceResult response = this.pipelineService.update(pipeline);
-        if (response.hasError()) {
+        if (response.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
         } else {
             return Response.status(Status.OK).entity(response.getObject()).build();
