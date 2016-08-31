@@ -337,7 +337,6 @@ angular
             };
 
             vm.selectAssignedPipelineToAssign = function(pipeline, index) {
-              debugger;
                 vm.toggleAssignedPipeline = index;
                 vm.toggleUnassignedPipeline = null;
                 vm.pipelineToAssign = pipeline;
