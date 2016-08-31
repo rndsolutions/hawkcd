@@ -56,7 +56,7 @@ angular
                         validationService.dispatcherFlow(object, [viewModelUpdater.updateUser, adminService.getAllUserGroupDTOs], true);
                     },
                     logout: function(object) {
-                        validationService.dispatcherFlow(object, [loginService.logoutUser], true)
+                        validationService.dispatcherFlow(object, [loginService.logoutUser])
                     }
                 },
                 UserGroupService: {

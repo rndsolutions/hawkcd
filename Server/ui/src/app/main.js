@@ -29,8 +29,8 @@ angular
     .constant({
         CONSTANTS: {
             'BASE_URL': '/api',
-            'SERVER_URL': 'http://localhost:8080',
-            'HOST': 'localhost:8080',
+            'SERVER_URL': window.location.origin,
+            'HOST': window.location.host,
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
@@ -49,63 +49,63 @@ angular
             'USERS': '/Users',
             'DEV': '/dev',
 
-            'MODEL': 'net.hawkengine.model',
-            'SERVICES': 'net.hawkengine.services',
+        'MODEL': 'net.hawkengine.model',
+        'SERVICES': 'net.hawkengine.services',
 
-            //region agent methods
-            'AGENT_GET_BY_ID': 'getAgentById',
-            'AGENT_GET_ALL': 'getAllAgents',
-            'AGENT_ADD': 'addAgent',
-            'AGENT_UPDATE': 'updateAgent',
-            'AGENT_DELETE': 'deleteAgent',
-            'AGENT_SET_CONFIGSTATE': 'setAgentConfigState',
-            //endregion
+        //region agent methods
+        'AGENT_GET_BY_ID': 'getAgentById',
+        'AGENT_GET_ALL': 'getAllAgents',
+        'AGENT_ADD': 'addAgent',
+        'AGENT_UPDATE': 'updateAgent',
+        'AGENT_DELETE': 'deleteAgent',
+        'AGENT_SET_CONFIGSTATE': 'setAgentConfigState',
+        //endregion
 
-            //region agent packages
-            'AGENT_SERVICE': 'AgentService',
-            'AGENT_MODEL': 'Agent',
-            //endregion
+        //region agent packages
+        'AGENT_SERVICE': 'AgentService',
+        'AGENT_MODEL': 'Agent',
+        //endregion
 
-            //region toaster types
-            'TOAST_WARNING':'WARNING',
-            'TOAST_SUCCESS':'SUCCESS',
-            'TOAST_ERROR':'ERROR'
+        //region toaster types
+        'TOAST_WARNING': 'WARNING',
+        'TOAST_SUCCESS': 'SUCCESS',
+        'TOAST_ERROR': 'ERROR'
             //end region toaster types
-        }
-    })
+    }
+})
 
 
 
-    /* Setup global settings */
-    .factory('settings', ['$rootScope', function ($rootScope) {
-        // supported languages
-        var settings = {
-            layout: {
+/* Setup global settings */
+.factory('settings', ['$rootScope', function($rootScope) {
+    // supported languages
+    var settings = {
+        layout: {
 
-                pageContentWhite: true, // set page content layout
-                pageBodySolid: false, // solid body color state
-                pageAutoScrollOnLoad: 1000 // auto scroll to top on page load
-            },
-            assetsPath: '../assets',
-            globalPath: '../assets/global',
-            layoutPath: '../assets/layouts/layout'
-        };
+            pageContentWhite: true, // set page content layout
+            pageBodySolid: false, // solid body color state
+            pageAutoScrollOnLoad: 1000 // auto scroll to top on page load
+        },
+        assetsPath: '../assets',
+        globalPath: '../assets/global',
+        layoutPath: '../assets/layouts/layout'
+    };
 
-        $rootScope.settings = settings;
+    $rootScope.settings = settings;
 
-        return settings;
-    }])
+    return settings;
+}])
 
-    /* Setup Routing For All Pages */
-    .config(['$stateProvider', '$urlRouterProvider', '$animateProvider','$authProvider', 'CONSTANTS',
-            function ($stateProvider, $urlRouterProvider, $animateProvider, $authProvider, CONSTANTS) {
+/* Setup Routing For All Pages */
+.config(['$stateProvider', '$urlRouterProvider', '$animateProvider', '$authProvider', 'CONSTANTS',
+    function($stateProvider, $urlRouterProvider, $animateProvider, $authProvider, CONSTANTS) {
 
-             // used for debugging
-             $authProvider.baseUrl = CONSTANTS.SERVER_URL;
-             $authProvider.github({
-                  clientId: '2d3dbbf586d2260cbd68',
-                  scope: ['user:email','repo']
-                });
+        // used for debugging
+        $authProvider.baseUrl = CONSTANTS.SERVER_URL;
+        $authProvider.github({
+            clientId: '2d3dbbf586d2260cbd68',
+            scope: ['user:email', 'repo']
+        });
 
 
         // Redirect any unmatched url
@@ -119,7 +119,7 @@ angular
                     pageTitle: 'Authenticate'
                 },
                 resolve: {
-                    auth: function (authDataService, pipeStatsService, agentService, $location) {
+                    auth: function(authDataService, pipeStatsService, agentService, $location) {
                         if (authDataService.authenticationData.IsAuthenticated) {
                             //pipeStatsService.getAgentById();
                             // $location.path('/pipelines');
@@ -128,105 +128,110 @@ angular
                 }
             })
 
-            .state('index', {
-                url: "/",
-                templateUrl: "app/main.html",
-                resolve: {
-                    auth: function (authDataService, pipeStatsService, agentService, $location,
+        .state('index', {
+            url: "/",
+            templateUrl: "app/main.html",
+            resolve: {
+                auth: function(authDataService, pipeStatsService, agentService, $location,
                     $auth, $rootScope, $timeout) {
 
-                        console.log("isAuthenticated: "+ $auth.isAuthenticated());
+                    console.log("isAuthenticated: " + $auth.isAuthenticated());
 
-                        if(!$auth.isAuthenticated()){
-                            $timeout(function(){
-                                 $location.path('/authenticate');
-                                 $rootScope.$apply();
-                            }, 100);
-                        }
+                    if (!$auth.isAuthenticated()) {
+                        $timeout(function() {
+                            $location.path('/authenticate');
+                            $rootScope.$apply();
+                        }, 100);
+                    }
 
-                        //$auth.authenticate('github');
+                    //$auth.authenticate('github');
 
-                        if (!authDataService.authenticationData.IsAuthenticated) {
-                            //pipeStatsService.getAgentById();
-                            //$location.path('/authenticate');
-                        }
+                    if (!authDataService.authenticationData.IsAuthenticated) {
+                        //pipeStatsService.getAgentById();
+                        //$location.path('/authenticate');
                     }
                 }
-            })
-
-    }])
-
-    /* Init global settings and run the app */
-    .run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", "CONSTANTS", function ($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location, CONSTANTS) {
-        $rootScope.$state = $state; // state to be accessed from view
-        $rootScope.$settings = settings; // state to be accessed from view
-        $rootScope.$on('$stateChange');
-
-        var wsServerLocation = 'ws://' + CONSTANTS.HOST + '/ws/v1';
-
-        var timerID=0;
-
-
-        //TODO: Replace localStorage with $auth.isAuthenitcated()
-        $rootScope.startWebsocket = function start(wsServerLocation){
-            $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
-
-            $rootScope.socket.onmessage = function (event) {
-                console.log(event.data);
-                websocketReceiverService.processEvent(JSON.parse(event.data));
-            };
-
-            $rootScope.socket.onopen = function (event) {
-                toaster.clear();
-                toaster.pop('success', "Notification", "Connection to server successful!");
-                if(window.timerID){
-                    window.clearInterval(window.timerID);
-                    window.timerID=0;
-                }
-
-                // pipeConfigService.getAllJobDefinitions();
-                // pipeConfigService.getAllStageDefinitions();
-                //pipeStatsService.getAgentById();
-
-                //adminGroupService.getAllPipelineGroups();
-                pipeConfigService.getAllPipelineDefinitions();
-                pipeConfigService.getAllPipelineGroupDTOs();
-                agentService.getAllAgents();
-                pipeExecService.getAllPipelines();
-                adminService.getAllUserGroupDTOs();
-                adminService.getAllUsers();
-                adminMaterialService.getAllMaterialDefinitions();
-            };
-
-            $rootScope.socket.onclose = function (event) {
-                if(!$auth.isAuthenticated()){
-                    $auth.logout();
-                    $location.path('/authenticate');
-                    console.log(event);
-                    toaster.pop('error', "Notification", event.reason);
-                    $rootScope.$apply();
-                    return;
-                }
-                if(!window.timerID){
-                    window.timerID=setInterval(function(){start(wsServerLocation)}, 5000);
-                }
-
-                toaster.clear();
-                toaster.pop('error', "Notification", "Connection lost. Reconnecting...", 0);
-                $rootScope.$apply();
-                console.log(CONSTANTS.WS_URL);
-                console.log(CONSTANTS.SERVER_URL);
             }
-        };
-        //debugger;
-        if($auth.isAuthenticated()){
-            $rootScope.startWebsocket(wsServerLocation);
-            console.log($auth.getToken());
-        }
+        })
 
-    }]);
+    }
+])
+
+/* Init global settings and run the app */
+.run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", "CONSTANTS", "notificationService", function($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location, CONSTANTS, notificationService) {
+    $rootScope.$state = $state; // state to be accessed from view
+    $rootScope.$settings = settings; // state to be accessed from view
+    $rootScope.$on('$stateChange');
+
+    var wsServerLocation = 'ws://' + CONSTANTS.HOST + '/ws/v1';
+
+    var timerID = 0;
+
+
+    //TODO: Replace localStorage with $auth.isAuthenitcated()
+    $rootScope.startWebsocket = function start(wsServerLocation) {
+        $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
+
+        $rootScope.socket.onmessage = function(event) {
+            console.log(event.data);
+            websocketReceiverService.processEvent(JSON.parse(event.data));
+        };
+
+        $rootScope.socket.onopen = function(event) {
+            toaster.clear();
+            debugger;
+            notificationService.notificationDispatcher[CONSTANTS.TOAST_SUCCESS]("Connection to server successful!");
+            if (window.timerID) {
+                window.clearInterval(window.timerID);
+                window.timerID = 0;
+            }
+
+            // pipeConfigService.getAllJobDefinitions();
+            // pipeConfigService.getAllStageDefinitions();
+            //pipeStatsService.getAgentById();
+
+            //adminGroupService.getAllPipelineGroups();
+            pipeConfigService.getAllPipelineDefinitions();
+            pipeConfigService.getAllPipelineGroupDTOs();
+            agentService.getAllAgents();
+            pipeExecService.getAllPipelines();
+            adminService.getAllUserGroupDTOs();
+            adminService.getAllUsers();
+            adminMaterialService.getAllMaterialDefinitions();
+        };
+
+        $rootScope.socket.onclose = function(event) {
+            if (!$auth.isAuthenticated()) {
+                $auth.logout();
+                $location.path('/authenticate');
+                console.log(event);
+                toaster.clear();
+                notificationService.notificationDispatcher[CONSTANTS.TOAST_WARNING](event.reason);
+                $rootScope.$apply();
+                return;
+            }
+            if (!window.timerID) {
+                window.timerID = setInterval(function() {
+                    start(wsServerLocation)
+                }, 5000);
+            }
+
+            toaster.clear();
+            notificationService.notificationDispatcher[CONSTANTS.TOAST_ERROR]("Connection lost. Reconnecting...");
+            $rootScope.$apply();
+            console.log(CONSTANTS.WS_URL);
+            console.log(CONSTANTS.SERVER_URL);
+        }
+    };
+    //debugger;
+    if ($auth.isAuthenticated()) {
+        $rootScope.startWebsocket(wsServerLocation);
+        console.log($auth.getToken());
+    }
+
+}]);
 
 /* Fix for Bootstrap modal behavior */
-window.onhashchange = function () {
+window.onhashchange = function() {
     $('.modal-backdrop').remove();
 };
