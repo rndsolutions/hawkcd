@@ -135,9 +135,8 @@ public class WsEndpoint extends WebSocketAdapter {
             contract = this.resolve(message);
             if (contract == null) {
                 contract = new WsContractDto();
-                contract.setNotificationType(NotificationType.ERROR);
-                contract.setErrorMessage("Invalid Json was provided");
-                remoteEndpoint.sendString(this.jsonConverter.toJson(contract));
+                ServiceResult result = new ServiceResult(null, NotificationType.ERROR, "Invalid Json was provided");
+                EndpointConnector.passResultToEndpoint("NotificationService","sendMessage",result,this.getLoggedUser());
                 return;
             }
 
@@ -210,7 +209,7 @@ public class WsEndpoint extends WebSocketAdapter {
             LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
             e.printStackTrace();
             this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
-        } catch (IOException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
