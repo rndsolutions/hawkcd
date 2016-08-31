@@ -151,7 +151,7 @@ public class StatusUpdaterService {
         Date endTime = new Date();
         pipeline.setEndTime(endTime);
         for (Stage stage : pipeline.getStages()) {
-            if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+            if (stage.getStatus() == StageStatus.IN_PROGRESS || stage.getStatus() == StageStatus.AWAITING) {
                 stage.setStatus(StageStatus.CANCELED);
                 for (Job job : stage.getJobs()) {
                     job.setStatus(JobStatus.CANCELED);

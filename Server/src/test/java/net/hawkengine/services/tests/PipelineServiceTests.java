@@ -288,7 +288,7 @@ public class PipelineServiceTests {
         Stage stage = new Stage();
 
         Job firstJob = new Job();
-        firstJob.setStatus(JobStatus.AWAITING);
+        firstJob.setStatus(JobStatus.UNASSIGNED);
 
         Job secondJob = new Job();
         secondJob.setStatus(JobStatus.PASSED);
