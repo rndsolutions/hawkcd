@@ -1,0 +1,23 @@
+<div id="editResource" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Edit Resource</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form role="form" name="editResourceForm">
+                        <div class="form-group form-md-line-input">
+                            <div class="form-control-focus custom-focus">
+                                <input type="text" ng-model="pipeConfig.newResource" class="form-control" required>
+                            </div>
+                            </div>
+                        <button class="btn green" ng-click="pipeConfig.editResource();pipeConfig.close()" data-dismiss="modal" type="submit" ng-disabled="manageUserGroup.$invalid">Edit Resource</button>
+                        <button class="btn btn-default" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,19 @@
+<div id="removeResource" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Delete Resource</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    Are you sure you want to delete Resource: <strong style="word-break: break-all">{{pipeConfig.resourceToDelete}} </strong>
+                    <br>
+                    <hr>
+                    <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.removeResource();pipeConfig.close()">Delete</button>
+                    <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
