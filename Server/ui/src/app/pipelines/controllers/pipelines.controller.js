@@ -34,9 +34,6 @@ angular
                 vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                     vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
                         if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
-                            if(currentPipelineRun.triggerReason == null) {
-                                currentPipelineRun.triggerReason = viewModel.user.username;
-                            }
                             vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
                             vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
                         }
@@ -206,8 +203,10 @@ angular
             pipelineDefinition.disabled = true;
             var pipeline = {
                 "pipelineDefinitionId": pipelineDefinition.id,
-                "pipelineDefinitionName": pipelineDefinition.name
+                "pipelineDefinitionName": pipelineDefinition.name,
+                "triggerReason":viewModel.user.username
             };
+
             pipeExecService.startPipeline(pipeline);
         };
 
