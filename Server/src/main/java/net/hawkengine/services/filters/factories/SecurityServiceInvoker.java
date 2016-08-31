@@ -60,7 +60,6 @@ public class SecurityServiceInvoker<T extends DbEntry> {
     }
 
     public List<T> filterEntities(List<T> entitiesToFilter, String className, List<Permission> permissions, String methodName) {
-        ServiceResult serviceResult = new ServiceResult();
         switch (methodName) {
             case "getAll":
                 return this.securityService.getAll(entitiesToFilter, className, permissions);

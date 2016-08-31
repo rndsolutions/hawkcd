@@ -5,6 +5,7 @@ import net.hawkengine.http.PipelineController;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 
@@ -107,7 +108,7 @@ public class PipelineControllerTests extends JerseyTest {
         //Arrange
         String expectedResult = "Pipeline not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.pipelineService.getById(Mockito.any())).thenReturn(this.serviceResult);
 

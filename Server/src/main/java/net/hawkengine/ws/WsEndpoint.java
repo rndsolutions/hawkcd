@@ -14,6 +14,7 @@ import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.model.payload.TokenInfo;
 import net.hawkengine.services.UserService;
@@ -92,16 +93,13 @@ public class WsEndpoint extends WebSocketAdapter {
                 userDto.setUsername(tokenInfo.getUser().getEmail());
                 userDto.setPermissions(tokenInfo.getUser().getPermissions());
 
-                ServiceResult serviceResult = new ServiceResult();
-                serviceResult.setError(false);
-                serviceResult.setMessage("User details retrieved successfully");
-                serviceResult.setObject(userDto);
+//                ServiceResult serviceResult = new ServiceResult(userDto, NotificationType.SUCCESS, "User details retrieved successfully");
 
                 WsContractDto contract = new WsContractDto();
                 contract.setClassName("UserInfo");
                 contract.setMethodName("getUser");
                 contract.setResult(userDto);
-                contract.setError(false);
+                contract.setNotificationType(NotificationType.SUCCESS);
                 contract.setErrorMessage("User details retrieved successfully");
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
             }
@@ -109,10 +107,8 @@ public class WsEndpoint extends WebSocketAdapter {
                 UserDto userDto = new UserDto();
                 userDto.setUsername(tokenInfo.getUser().getEmail());
                 userDto.setPermissions(tokenInfo.getUser().getPermissions());
-                ServiceResult result = new ServiceResult();
-                result.setError(false);
-                result.setObject(userDto);
-                result.setMessage("User does not exist.");
+                ServiceResult result = new ServiceResult(userDto, NotificationType.SUCCESS, "User does not exist.");
+
                 EndpointConnector.passResultToEndpoint("UserInfo", "getUser", result, this.getLoggedUser());
                 EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.getLoggedUser());
                 return;
@@ -139,7 +135,7 @@ public class WsEndpoint extends WebSocketAdapter {
             contract = this.resolve(message);
             if (contract == null) {
                 contract = new WsContractDto();
-                contract.setError(true);
+                contract.setNotificationType(NotificationType.ERROR);
                 contract.setErrorMessage("Invalid Json was provided");
                 remoteEndpoint.sendString(this.jsonConverter.toJson(contract));
                 return;
@@ -152,7 +148,7 @@ public class WsEndpoint extends WebSocketAdapter {
 //                String result = schemaValidator.validate(object);
 //
 //                if (!result.equals("OK")) {
-//                    contract.setError(true);
+//                    contract.setNotificationType(true);
 //                    contract.setErrorMessage(result);
 //                    remoteEndpoint.sendString(serializer.toJson(contract));
 //                    return;
@@ -172,7 +168,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
 //                result.setObject(filteredEntities);
                 contract.setResult(filteredEntities);
-                contract.setError(result.hasError());
+                contract.setNotificationType(result.getNotificationType());
                 contract.setErrorMessage(result.getMessage());
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
 
@@ -184,7 +180,7 @@ public class WsEndpoint extends WebSocketAdapter {
                     if (hasPermission) {
                         result = (ServiceResult) this.wsObjectProcessor.call(contract);
                         contract.setResult(result.getObject());
-                        contract.setError(result.hasError());
+                        contract.setNotificationType(result.getNotificationType());
                         contract.setErrorMessage(result.getMessage());
                         SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
                     }
@@ -194,7 +190,7 @@ public class WsEndpoint extends WebSocketAdapter {
                     if (hasPermission) {
                         result = (ServiceResult) this.wsObjectProcessor.call(contract);
                         contract.setResult(result.getObject());
-                        contract.setError(result.hasError());
+                        contract.setNotificationType(result.getNotificationType());
                         contract.setErrorMessage(result.getMessage());
                         if (result.getObject() == null) {
                             SessionPool.getInstance().sendToUserSessions(contract, this.loggedUser);
@@ -205,7 +201,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 }
                 if (!hasPermission) {
                     contract.setResult(null);
-                    contract.setError(true);
+                    contract.setNotificationType(NotificationType.ERROR);
                     contract.setErrorMessage("Unauthorized");
                     SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
                 }
@@ -255,7 +251,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
 
     private void errorDetails(WsContractDto contract, Gson serializer, Exception e, RemoteEndpoint endPoint) {
-        contract.setError(true);
+        contract.setNotificationType(NotificationType.ERROR);
         contract.setErrorMessage(e.getMessage());
         try {
             String errDetails = serializer.toJson(contract);

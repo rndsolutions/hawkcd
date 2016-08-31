@@ -6,6 +6,7 @@ import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdater;
 import net.hawkengine.core.materialhandler.materialupdaters.MaterialUpdaterFactory;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.MaterialType;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.MaterialService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -147,7 +148,7 @@ public class MaterialHandlerServiceTest {
         List<MaterialDefinition> materialDefinitions = new ArrayList<>();
         ServiceResult updatedMaterialDefinition = new ServiceResult();
         updatedMaterialDefinition.setMessage("");
-        updatedMaterialDefinition.setError(false);
+        updatedMaterialDefinition.setNotificationType(NotificationType.SUCCESS);
         updatedMaterialDefinition.setObject(gitMaterial);
 
         ServiceResult serviceResult = new ServiceResult();
@@ -245,7 +246,7 @@ public class MaterialHandlerServiceTest {
 
         material.setMaterialDefinition(gitMaterial);
         ServiceResult updatedServiceResult = new ServiceResult();
-        updatedServiceResult.setError(true);
+        updatedServiceResult.setNotificationType(NotificationType.ERROR);
         updatedServiceResult.setMessage("");
         updatedServiceResult.setObject(gitMaterial);
         Mockito.when(gitMaterial.getErrorMessage()).thenReturn("not empty").thenReturn("new message");
