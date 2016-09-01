@@ -35,15 +35,17 @@ public class JobAssignerService {
             boolean isSetToAwaiting = false;
             Stage stageInProgress = pipeline.getStages().stream().filter(s -> s.getStatus() == StageStatus.IN_PROGRESS).findFirst().orElse(null);
             if (stageInProgress == null) {
-                return;
+                continue;
             }
 
             for (Job job : stageInProgress.getJobs()) {
-                boolean hasAssignableAgent = this.jobAssignerUtilities.hasAssignableAgent(job, filteredAgents);
-                if (!hasAssignableAgent) {
-                    job.setStatus(JobStatus.AWAITING);
-                    isSetToAwaiting = true;
-                    LOGGER.info(String.format("Job %s has no assignable Agents.", job.getJobDefinitionName()));
+                if (job.getStatus() == JobStatus.UNASSIGNED) {
+                    boolean hasAssignableAgent = this.jobAssignerUtilities.hasAssignableAgent(job, filteredAgents);
+                    if (!hasAssignableAgent) {
+                        job.setStatus(JobStatus.AWAITING);
+                        isSetToAwaiting = true;
+                        LOGGER.info(String.format("Job %s has no assignable Agents.", job.getJobDefinitionName()));
+                    }
                 }
             }
 
@@ -65,14 +67,16 @@ public class JobAssignerService {
         for (Pipeline pipeline : awaitingPipelines) {
             Stage awaitingStage = pipeline.getStages().stream().filter(s -> s.getStatus() == StageStatus.AWAITING).findFirst().orElse(null);
             if (awaitingStage == null) {
-                return;
+                continue;
             }
 
             for (Job job : awaitingStage.getJobs()) {
-                boolean hasAssignableAgent = this.jobAssignerUtilities.hasAssignableAgent(job, filteredAgents);
-                if (hasAssignableAgent) {
-                    job.setStatus(JobStatus.UNASSIGNED);
-                    LOGGER.info(String.format("Job %s set back to IN_PROGRESS.", job.getJobDefinitionName()));
+                if (job.getStatus() == JobStatus.AWAITING) {
+                    boolean hasAssignableAgent = this.jobAssignerUtilities.hasAssignableAgent(job, filteredAgents);
+                    if (hasAssignableAgent) {
+                        job.setStatus(JobStatus.UNASSIGNED);
+                        LOGGER.info(String.format("Job %s set back to IN_PROGRESS.", job.getJobDefinitionName()));
+                    }
                 }
             }
 
