@@ -232,6 +232,11 @@ angular
             vm.materialType = "";
         };
 
+        vm.closeTabsModal = function(){
+          addTabForm.tabName.value = '';
+          addTabForm.tabPath.value = '';
+        };
+
         vm.filteredMaterialDefinitions = [];
         vm.getPipelineForConfig = function(pipeName) {
             if (vm.allPipelines != null && vm.allPipelines.length > 0) {
