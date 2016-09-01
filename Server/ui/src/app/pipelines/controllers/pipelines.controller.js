@@ -30,6 +30,7 @@ angular
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
+            vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
             if(vm.allPipelineRuns.length > 0) {
                 vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
                     vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
@@ -43,21 +44,30 @@ angular
             vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                 currentPipeline.disabled = false;
                 var isContained = false;
+                var groupNames = [];
                 vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                    if(currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
+                    if($.grep(currentPipelineGroup.pipelines, function(obj) { return obj.id == currentPipeline.id}).length > 0){
                         isContained = true;
                     }
+                    groupNames.push(currentPipelineGroup.name);
                 });
                 if(!isContained && currentPipeline.pipelineGroupId != ''){
-                    var newGroup = {};
-                    newGroup.name = currentPipeline.groupName;
-                    newGroup.id = currentPipeline.pipelineGroupId;
-                    if(newGroup.pipelines == null){
-                        newGroup.pipelines = [];
+                    var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
+                    debugger;
+                    if(groupIndex > -1){
+                        vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
+                    } else {
+                        var newGroup = {};
+                        newGroup.name = currentPipeline.groupName;
+                        newGroup.id = currentPipeline.pipelineGroupId;
+                        vm.allPipelineGroups.push(newGroup);
+                        if(newGroup.pipelines == null){
+                            newGroup.pipelines = [];
+                        }
+                        newGroup.pipelines.push(currentPipeline);
+                        newGroup.permissionType = 'VIEWER';
                     }
-                    newGroup.pipelines.push(currentPipeline);
-                    newGroup.permissionType = 'VIEWER';
-                    vm.allPipelineGroups.push(newGroup);
+
                 }
             });
             console.log(vm.allPipelines);
@@ -103,21 +113,31 @@ angular
             vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                 currentPipeline.disabled = false;
                 var isContained = false;
+                var groupNames = [];
                 vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
                     if(currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
-                        isContained = true;
+                        if($.grep(currentPipelineGroup.pipelines, function(obj) { return obj.id == currentPipeline.id}).length > 0){
+                            isContained = true;
+                        }
                     }
+                    groupNames.push(currentPipelineGroup.name);
                 });
                 if(!isContained && currentPipeline.pipelineGroupId != ''){
-                    var newGroup = {};
-                    newGroup.name = currentPipeline.groupName;
-                    newGroup.id = currentPipeline.pipelineGroupId;
-                    if(newGroup.pipelines == null){
-                        newGroup.pipelines = [];
+                    var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
+                    debugger;
+                    if(groupIndex > -1){
+                        vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
+                    } else {
+                        var newGroup = {};
+                        newGroup.name = currentPipeline.groupName;
+                        newGroup.id = currentPipeline.pipelineGroupId;
+                        vm.allPipelineGroups.push(newGroup);
+                        if(newGroup.pipelines == null){
+                            newGroup.pipelines = [];
+                        }
+                        newGroup.pipelines.push(currentPipeline);
+                        newGroup.permissionType = 'VIEWER';
                     }
-                    newGroup.pipelines.push(currentPipeline);
-                    newGroup.permissionType = 'VIEWER';
-                    vm.allPipelineGroups.push(newGroup);
                 }
             });
             console.log(vm.allPipelineGroups);
