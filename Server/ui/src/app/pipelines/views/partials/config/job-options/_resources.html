@@ -1,0 +1,30 @@
+<div id="jResources">
+  <div class="table-scrollable">
+    <table class="table table-bordered table-hover">
+      <thead>
+      <tr>
+        <th> Resource </th>
+        <th width="15%"> Controls </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="resource in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].resources">
+        <td style="word-break: break-all">
+          {{resource}}
+        </td>
+        <td>
+          <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editResource" ng-click="pipeConfig.getResourceToUpdate(resource)">Edit</button>
+          <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#removeResource"
+                  ng-click="pipeConfig.getResourceToDelete(resource)" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#addResource" data-toggle="modal">Add Resource</button>
+</div>
+
+<div ng-include src="'app/pipelines/views/partials/config/job-options/_add-resource.html'"></div>
+<div ng-include src="'app/pipelines/views/partials/config/job-options/_edit-resource.html'"></div>
+<div ng-include src="'app/pipelines/views/partials/config/job-options/_remove-resource.html'"></div>
+

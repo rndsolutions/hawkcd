@@ -230,6 +230,10 @@ angular
             vm.newStageVar = {};
             vm.newJobVar = {};
             vm.materialType = "";
+            vm.resourceToAdd = "";
+            vm.oldResource = "";
+            vm.newResource = "";
+            vm.resourceToDelete = "";
         };
 
         vm.filteredMaterialDefinitions = [];
@@ -897,6 +901,35 @@ angular
 
         vm.deleteTask = function(task) {
             pipeConfigService.deleteTaskDefinition(task.id);
+        };
+
+        vm.addResource = function () {
+            var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            taskToUpdate.resources.push(vm.resourceToAdd);
+            pipeConfigService.updateJobDefinition(taskToUpdate);
+        };
+
+        vm.getResourceToUpdate = function (resource) {
+            vm.oldResource = angular.copy(resource);
+            vm.newResource = angular.copy(resource);
+        };
+
+        vm.editResource = function () {
+            var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            var resourceIndex = taskToUpdate.resources.indexOf(vm.oldResource);
+            taskToUpdate.resources[resourceIndex] = vm.newResource;
+            pipeConfigService.updateJobDefinition(taskToUpdate);
+        };
+
+        vm.getResourceToDelete = function (resource) {
+            vm.resourceToDelete = angular.copy(resource);
+        };
+
+        vm.removeResource = function () {
+            var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            var resourceIndex = taskToUpdate.resources.indexOf(vm.resourceToDelete);
+            taskToUpdate.resources.splice(resourceIndex, 1);
+            pipeConfigService.updateJobDefinition(taskToUpdate);
         };
 
         vm.createPipelineDefinition = function(pipeline) {

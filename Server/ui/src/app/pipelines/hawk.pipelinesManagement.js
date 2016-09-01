@@ -123,9 +123,9 @@ angular
                 url: "/variables",
                 templateUrl: "app/pipelines/views/partials/config/job-options/_variables.html"
             })
-            .state('index.pipelineConfig.job.tabs', {
-                url: "/tabs",
-                templateUrl: "app/pipelines/views/partials/config/job-options/_tabs.html"
+            .state('index.pipelineConfig.job.resources', {
+                url: "/resources",
+                templateUrl: "app/pipelines/views/partials/config/job-options/_resources.html"
             });
         //endregion
 
