@@ -67,19 +67,16 @@ angular
 
         viewModelUpdater.updateAgents = function (agents) {
             viewModel.allAgents = agents;
-            //toaster.pop('success', "Notification", "Agents updated!");
         };
 
         viewModelUpdater.addAgent = function (agent) {
             viewModel.allAgents.push(agent);
-            toaster.pop('success', "Notification", "Agent " + agent.id + " added!")
         };
 
         viewModelUpdater.updateAgent = function (agent) {
             viewModel.allAgents.forEach(function (currentAgent, index, array) {
                 if (currentAgent.id == agent.id) {
                     viewModel.allAgents[index] = agent;
-                    //toaster.pop('success', "Notification", "Agent " + agent.hostName + "-" + agent.id.substr(0, 8) + " updated!");
                 }
             })
         };
@@ -90,26 +87,22 @@ angular
 
         viewModelUpdater.addPipelineGroup = function (pipelineGroup) {
             viewModel.allPipelineGroups.push(pipelineGroup);
-            toaster.pop('success', "Notification", "Pipeline Group " + pipelineGroup.name + " added!")
         };
 
         viewModelUpdater.updatePipelineGroup = function (pipelineGroup) {
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
                 if (currentPipelineGroup.id == pipelineGroup.id) {
                     array[index] = pipelineGroup;
-                    toaster.pop('success', "Notification", "Pipeline Group " + pipelineGroup.name + " updated!");
                 }
             })
         };
 
         viewModelUpdater.deletePipelineGroup = function () {
             adminGroupService.getAllPipelineGroups();
-            toaster.pop('success', "Notification", "Pipeline Groups updated!")
         };
 
         viewModelUpdater.getAllPipelineGroups = function (pipelineGroups) {
             viewModel.allPipelineGroups = pipelineGroups;
-            toaster.pop('success', "Notification", "Pipeline Groups updated!");
         };
 
         viewModelUpdater.getAllPipelineDefinitions = function (pipelineDefinitions){
@@ -153,13 +146,11 @@ angular
                 }
             });
             isFound = false;
-            toaster.pop('success', "Notification", "Pipelines updated!");
         };
 
         viewModelUpdater.updatePipelineGroupDTOs = function (pipelineGroupDTOs) {
             //viewModel.allPipelineDefinitions = pipelineGroupDTOs;
             viewModel.allPipelineGroups = pipelineGroupDTOs;
-            toaster.pop('success', "Notification", "Pipelines updated!");
         };
 
         viewModelUpdater.addPipelineDefinition = function (pipelineDefinition) {
@@ -168,7 +159,6 @@ angular
                 if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId){
                     array[index].pipelines.push(pipelineDefinition);
                     viewModel.assignedPipelines.push(pipelineDefinition);
-                    toaster.pop('success', "Notification", "Pipeline Definition " + pipelineDefinition.name + " added!")
                 } else if (pipelineDefinition.pipelineGroupId == '') {
                     viewModel.unassignedPipelines.push(pipelineDefinition);
                 }
@@ -181,7 +171,6 @@ angular
             viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
                 if(currentPipeline.id == pipelineDefinition.id){
                     viewModel.allPipelines[index] = pipelineDefinition;
-                    toaster.pop('success', "Notification", "Pipeline Definition " + pipelineDefinition.name + " updated!")
                 }
             });
 
@@ -200,7 +189,6 @@ angular
         viewModelUpdater.getAllMaterialDefinitions = function (materialDefinitions) {
             //viewModel.allMaterials = materialDefinitions;
             viewModel.allMaterialDefinitions = materialDefinitions;
-            toaster.pop('success', "Notification", "Materials updated!");
         };
 
         viewModelUpdater.getMaterialDefinitionById = function (materialDefinition) {
@@ -217,7 +205,6 @@ angular
                     viewModel.allPipelines[index].materials.forEach(function (currentMaterial, materialIndex, array) {
                         if(currentMaterial.id == materialDefinition.id){
                             viewModel.allPipelines[index].materialDefinitions[materialIndex] = materialDefinition;
-                            toaster.pop('success', "Notification", "Material " + materialDefinition.name + " updated!");
                         }
                     });
                 }
@@ -230,7 +217,6 @@ angular
 
         viewModelUpdater.getAllStageDefinitions = function (stageDefinitions) {
             viewModel.allStages = stageDefinitions;
-            toaster.pop('success', "Notification", "Stages updated!");
         };
 
         viewModelUpdater.getStageDefinitionById = function (stageDefinition) {
@@ -244,7 +230,6 @@ angular
                     viewModel.allPipelines[index].stageDefinitions.push(stageDefinition);
                 }
             });
-            toaster.pop('success', "Notification", "Stage " + stageDefinition.name + " added!");
         };
 
         viewModelUpdater.updateStageDefinition = function (stageDefinition) {
@@ -253,7 +238,6 @@ angular
                     viewModel.allPipelines[index].stageDefinitions.forEach(function (currentStage, stageIndex, array) {
                         if(currentStage.id == stageDefinition.id) {
                             viewModel.allPipelines[index].stageDefinitions[stageIndex] = stageDefinition;
-                            toaster.pop('success', "Notification", "Stage " + stageDefinition.name + " updated!");
                         }
                     });
                 }
@@ -266,7 +250,6 @@ angular
 
         viewModelUpdater.getAllJobDefinitions = function (jobDefinitions) {
             viewModel.allJobs = jobDefinitions;
-            toaster.pop('success', "Notification", "Jobs updated!")
         };
 
         viewModelUpdater.getJobDefinitionById = function (jobDefinition) {
@@ -280,7 +263,6 @@ angular
                     viewModel.allPipelines[index].stageDefinitions.forEach(function (currentStage, stageIndex, stageArray) {
                         if(currentStage.id == jobDefinition.stageDefinitionId){
                             viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions.push(jobDefinition);
-                            toaster.pop('success', "Notification", "Job " + jobDefinition.name + " added!")
                         }
                     });
                 }
@@ -296,7 +278,6 @@ angular
                             viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions.forEach(function (currentJob, jobIndex, jobArray) {
                                 if(currentJob.id == jobDefinition.id) {
                                     viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions[jobIndex] = jobDefinition;
-                                    toaster.pop('success', "Notification", "Job " + jobDefinition.name + " updated!");
                                 }
                             });
                         }
@@ -311,7 +292,6 @@ angular
 
         viewModelUpdater.getAllPipelines = function (pipelines) {
             viewModel.allPipelineRuns = pipelines;
-            toaster.pop('success', "Notification", "Pipeline Runs updated!");
         };
 
         viewModelUpdater.addPipeline = function (pipeline) {
@@ -335,7 +315,6 @@ angular
                             viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions.forEach(function (currentJob, jobIndex, array) {
                                 if(currentJob.id == taskDefinition.jobDefinitionId){
                                     viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions[jobIndex].taskDefinitions.push(taskDefinition);
-                                    toaster.pop('success', "Notification", "Task " + taskDefinition.id + " added!");
                                 }
                             });
                         }
@@ -354,7 +333,6 @@ angular
                                     viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions[jobIndex].taskDefinitions.forEach(function (currentTask, taskIndex, array) {
                                         if(currentTask.id == taskDefinition.id){
                                             viewModel.allPipelines[index].stageDefinitions[stageIndex].jobDefinitions[jobIndex].taskDefinitions[taskIndex] = taskDefinition;
-                                            toaster.pop('success', "Notification", "Task " + taskDefinition.id + " updated!");
                                         }
                                     });
 

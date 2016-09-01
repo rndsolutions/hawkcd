@@ -2,6 +2,7 @@ package net.hawkengine.http;
 
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.StageService;
 import net.hawkengine.services.interfaces.IStageService;
 
@@ -41,7 +42,7 @@ public class StageController {
     @Path("/{stageId}")
     public Response getStageById(@PathParam("stageId") String stageId) {
         ServiceResult response = this.stageService.getById(stageId);
-        if (response.hasError()) {
+        if (response.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
         }
         return Response.status(Status.OK).entity(response.getObject()).build();
@@ -59,7 +60,7 @@ public class StageController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewStage(Stage stage) {
         ServiceResult result = this.stageService.add(stage);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST).entity(result.getMessage()).build();
         }
         return Response.status(Status.CREATED).entity(result.getObject()).build();

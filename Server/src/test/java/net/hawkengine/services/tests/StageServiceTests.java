@@ -5,6 +5,7 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -14,6 +15,7 @@ import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -61,7 +63,7 @@ public class StageServiceTests {
         ServiceResult actualResult = this.stageService.getAll();
 
         //Assert
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertNotNull(actualResult.getObject());
         assertEquals(actualResult.getMessage(), expectedMessage);
         assertEquals(actualResult.getObject(), stageList);
@@ -82,7 +84,7 @@ public class StageServiceTests {
         Stage actualObject = resultList.stream().findFirst().get();
 
         //Assert
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertNotNull(actualResult.getObject());
         assertEquals(actualResult.getMessage(), expectedMessage);
         assertEquals(1, resultList.size());
@@ -102,7 +104,7 @@ public class StageServiceTests {
 
 
         //Assert
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(this.stage.getId(), ((Stage) actualResult.getObject()).getId());
@@ -118,7 +120,7 @@ public class StageServiceTests {
         ServiceResult actualResult = this.stageService.getById(randomId.toString());
 
         //Assert
-        assertFalse(!actualResult.hasError());
+        assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         assertNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -135,7 +137,7 @@ public class StageServiceTests {
                 " " + actualStatus.getId() + " created successfully.";
 
         //Assert
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(this.stage.getId(), ((Stage) actualResult.getObject()).getId());
@@ -156,7 +158,7 @@ public class StageServiceTests {
                 " " + actualStatus.getId() + " updated successfully.";
 
         //Assert
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(StageStatus.PASSED, actualStatus.getStatus());
@@ -176,7 +178,7 @@ public class StageServiceTests {
         ServiceResult actualResult = this.stageService.delete(this.stage.getId());
 
         //Assert
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
     }

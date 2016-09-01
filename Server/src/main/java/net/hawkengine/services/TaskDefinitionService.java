@@ -1,6 +1,7 @@
 package net.hawkengine.services;
 
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.ITaskDefinitionService;
@@ -35,12 +36,12 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
             for (TaskDefinition taskDefinition : taskDefinitions) {
                 if (taskDefinition.getId().equals(taskDefinitionId)) {
                     result = taskDefinition;
-                    return super.createServiceResult(result, false, this.successMessage);
+                    return super.createServiceResult(result, NotificationType.SUCCESS, this.successMessage);
                 }
             }
         }
 
-        return super.createServiceResult(result, true, this.failureMessage);
+        return super.createServiceResult(result, NotificationType.ERROR, this.failureMessage);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
             taskDefinitions.addAll(taskJobDefinitions);
         }
 
-        return super.createServiceResultArray(taskDefinitions, false, this.successMessage);
+        return super.createServiceResultArray(taskDefinitions, NotificationType.SUCCESS, this.successMessage);
     }
 
     @Override
@@ -89,10 +90,10 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
 
         TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
         if (result == null) {
-            return super.createServiceResult(result, true, "not added successfully");
+            return super.createServiceResult(result, NotificationType.ERROR, "not added successfully");
         }
 
-        return super.createServiceResult(result, false, "added successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "added successfully");
     }
 
     @Override
@@ -144,10 +145,10 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         }
 
         if (result == null) {
-            return super.createServiceResult(result, true, "not found");
+            return super.createServiceResult(result, NotificationType.ERROR, "not found");
         }
 
-        return super.createServiceResult(result, false, "updated successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "updated successfully");
     }
 
     @Override
@@ -155,7 +156,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         boolean isRemoved = false;
         TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinitionId).getObject();
         if (taskDefinitionToDelete == null) {
-            return super.createServiceResult(taskDefinitionToDelete, true, "does not exists");
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "does not exists");
         }
 
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
@@ -174,21 +175,21 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
                 }
             }
         } else {
-            return super.createServiceResult(taskDefinitionToDelete, true, "cannot delete the last task definition");
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "cannot delete the last task definition");
         }
 
         if (!isRemoved) {
-            return super.createServiceResult(taskDefinitionToDelete, true, "not deleted");
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "not deleted");
         }
 
         jobDefinition.setTaskDefinitions(taskDefinitions);
         JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
         TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinitionId);
         if (result != null) {
-            return super.createServiceResult(result, true, "not deleted successfully");
+            return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
         }
 
-        return super.createServiceResult(result, false, "deleted successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "deleted successfully");
     }
 
     /**

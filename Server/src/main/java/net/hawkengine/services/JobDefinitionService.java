@@ -3,6 +3,7 @@ package net.hawkengine.services;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
 
@@ -36,12 +37,12 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
             for (JobDefinition jobDefinition : jobDefinitions) {
                 if (jobDefinition.getId().equals(jobDefinitionId)) {
                     result = jobDefinition;
-                    return super.createServiceResult(result, false, this.successMessage);
+                    return super.createServiceResult(result, NotificationType.SUCCESS, this.successMessage);
                 }
             }
         }
 
-        return super.createServiceResult(result, true, this.failureMessage);
+        return super.createServiceResult(result, NotificationType.ERROR, this.failureMessage);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
             jobDefinitions.addAll(currentJobDefinitions);
         }
 
-        return super.createServiceResultArray(jobDefinitions, false, this.successMessage);
+        return super.createServiceResultArray(jobDefinitions, NotificationType.SUCCESS, this.successMessage);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(jobDefinitions, jobDefinition);
         if (hasNameCollision) {
-            return super.createServiceResult(jobDefinition, true, "with the same name exists");
+            return super.createServiceResult(jobDefinition, NotificationType.ERROR, "with the same name exists");
         }
 
         jobDefinitions.add(jobDefinition);
@@ -72,10 +73,10 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
 
         JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinition.getId());
         if (result == null) {
-            return super.createServiceResult(result, true, "not added successfully");
+            return super.createServiceResult(result, NotificationType.ERROR, "not added successfully");
         }
 
-        return super.createServiceResult(result, false, "added successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "added successfully");
     }
 
     @Override
@@ -85,7 +86,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(jobDefinitions, jobDefinition);
         if (hasNameCollision) {
-            return super.createServiceResult(jobDefinition, true, "with the same name exists");
+            return super.createServiceResult(jobDefinition, NotificationType.ERROR, "with the same name exists");
         }
 
         int lengthOfJobDefinitions = jobDefinitions.size();
@@ -101,10 +102,10 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
         }
 
         if (result == null) {
-            return super.createServiceResult(result, true, "not updated successfully");
+            return super.createServiceResult(result, NotificationType.ERROR, "not updated successfully");
         }
 
-        return super.createServiceResult(result, false, "updated successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "updated successfully");
     }
 
     @Override
@@ -112,7 +113,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
         boolean isRemoved = false;
         JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinitionId).getObject();
         if (jobDefinitionToDelete == null) {
-            return super.createServiceResult(jobDefinitionToDelete, true, "does not exists");
+            return super.createServiceResult(jobDefinitionToDelete, NotificationType.ERROR, "does not exists");
         }
 
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService
@@ -131,28 +132,28 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
                 }
             }
         } else {
-            return super.createServiceResult(jobDefinitionToDelete, true, "cannot delete the last job definition");
+            return super.createServiceResult(jobDefinitionToDelete, NotificationType.ERROR, "cannot delete the last job definition");
         }
 
         if (!isRemoved) {
-            return super.createServiceResult(jobDefinitionToDelete, true, "not deleted");
+            return super.createServiceResult(jobDefinitionToDelete, NotificationType.ERROR, "not deleted");
         }
 
         stageDefinition.setJobDefinitions(jobDefinitions);
         StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
         JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinitionId);
         if (result != null) {
-            return super.createServiceResult(result, true, "not deleted successfully");
+            return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
         }
 
-        return super.createServiceResult(result, false, "deleted successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "deleted successfully");
     }
 
     @Override
     public ServiceResult getAllInStage(String stageDefinitionId) {
         StageDefinition currentStage = (StageDefinition) this.stageDefinitionService.getById(stageDefinitionId).getObject();
         List<JobDefinition> allJobDefinitionsInStage = currentStage.getJobDefinitions();
-        return super.createServiceResultArray(allJobDefinitionsInStage, false, this.successMessage);
+        return super.createServiceResultArray(allJobDefinitionsInStage, NotificationType.SUCCESS, this.successMessage);
     }
 
     @Override
@@ -160,7 +161,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
         List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAllInPipeline(pipelineDefinitionId).getObject();
         List<JobDefinition> allJobsInPipeline = new ArrayList<>();
         this.extractJobDefinitionsFromStageDefinitions(stageDefinitions, allJobsInPipeline);
-        return super.createServiceResultArray(allJobsInPipeline, false, this.successMessage);
+        return super.createServiceResultArray(allJobsInPipeline, NotificationType.SUCCESS, this.successMessage);
     }
 
     /**

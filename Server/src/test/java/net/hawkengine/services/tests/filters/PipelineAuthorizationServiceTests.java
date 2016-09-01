@@ -12,6 +12,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
@@ -167,7 +168,7 @@ public class PipelineAuthorizationServiceTests {
 
         //Act
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
-        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
         getByIdPipelineServiceResult.setObject(this.firstPipeline);
 
@@ -185,7 +186,7 @@ public class PipelineAuthorizationServiceTests {
 
         //Act
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
-        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
         getByIdPipelineServiceResult.setObject(this.secondPipeline);
 
@@ -261,7 +262,7 @@ public class PipelineAuthorizationServiceTests {
 
         //Act
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
-        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
         getByIdPipelineServiceResult.setObject(this.fifthPipeline);
 
@@ -279,7 +280,7 @@ public class PipelineAuthorizationServiceTests {
 
         //Act
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
-        getByIdPipelineServiceResult.setError(false);
+        getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
         getByIdPipelineServiceResult.setObject(this.thirdPipeline);
 

@@ -4,6 +4,7 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.JobController;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.JobService;
 import net.hawkengine.services.interfaces.IJobService;
 
@@ -106,7 +107,7 @@ public class JobControllerTests extends JerseyTest {
         //Arrange
         String expectedResult = "Job not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.jobService.getById(Mockito.any())).thenReturn(this.serviceResult);
 

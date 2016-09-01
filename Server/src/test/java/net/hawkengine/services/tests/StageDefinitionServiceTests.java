@@ -8,6 +8,7 @@ import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.StageDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -60,7 +61,7 @@ public class StageDefinitionServiceTests {
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.getById("invalidId");
 
         Assert.assertNull(actualServiceResult.getObject());
-        Assert.assertTrue(actualServiceResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
     @Test
@@ -81,7 +82,7 @@ public class StageDefinitionServiceTests {
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.getByIdInPipeline("invalidId", this.expectedPipelineDefinition.getId());
 
         Assert.assertNull(actualServiceResult.getObject());
-        Assert.assertTrue(actualServiceResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
         Assert.assertEquals(expectedServiceResultMessage, actualServiceResult.getMessage());
     }
 
@@ -124,7 +125,7 @@ public class StageDefinitionServiceTests {
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.add(this.expectedStageDefinition);
 
         Assert.assertNull(actualServiceResult.getObject());
-        Assert.assertTrue(actualServiceResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
     @Test
@@ -137,7 +138,7 @@ public class StageDefinitionServiceTests {
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.add(stageDefinitionToAdd);
 
         Assert.assertNull(actualServiceResult.getObject());
-        Assert.assertTrue(actualServiceResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
     @Test
@@ -161,7 +162,7 @@ public class StageDefinitionServiceTests {
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.update(stageDefinitionToUpdate);
 
         Assert.assertNull(actualServiceResult.getObject());
-        Assert.assertTrue(actualServiceResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
     @Test
@@ -181,25 +182,25 @@ public class StageDefinitionServiceTests {
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.update(stageDefinitionToUpdate);
 
         Assert.assertNull(actualServiceResult.getObject());
-        Assert.assertTrue(actualServiceResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
     @Test
     public void stageDefinitionService_deleteWithValidId_noError() {
         this.injectDataForTestingStageDefinitionService(1);
 
-        ServiceResult result = this.mockedStageDefinitionService.delete(this.expectedStageDefinition.getId());
+        ServiceResult actualServiceResult = this.mockedStageDefinitionService.delete(this.expectedStageDefinition.getId());
 
-        Assert.assertFalse(result.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualServiceResult.getNotificationType());
     }
 
     @Test
     public void stageDefinitionService_deleteWithInvalidId_noError() {
         this.injectDataForTestingStageDefinitionService(1);
 
-        ServiceResult result = this.mockedStageDefinitionService.delete("someInvalidName");
+        ServiceResult actualServiceResult = this.mockedStageDefinitionService.delete("someInvalidName");
 
-        Assert.assertTrue(result.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
     private void injectDataForTestingStageDefinitionService(int numberOfStagesToAdd) {

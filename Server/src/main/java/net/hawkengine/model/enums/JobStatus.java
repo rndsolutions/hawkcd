@@ -1,10 +1,11 @@
 package net.hawkengine.model.enums;
 
 public enum JobStatus {
-    AWAITING,
-    SCHEDULED,
+    UNASSIGNED,
+    ASSIGNED,
     RUNNING,
     PASSED,
     FAILED,
+    AWAITING,
     CANCELED
 }

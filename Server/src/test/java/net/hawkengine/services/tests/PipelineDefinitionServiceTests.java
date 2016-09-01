@@ -6,6 +6,7 @@ import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -52,7 +53,7 @@ public class PipelineDefinitionServiceTests {
 
         Assert.assertNotNull(actualPipelineDefinition);
         Assert.assertEquals(expectedPipelineDefinition.getId(), actualPipelineDefinition.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -63,7 +64,7 @@ public class PipelineDefinitionServiceTests {
 
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.getById(invalidId.toString());
 
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -91,7 +92,7 @@ public class PipelineDefinitionServiceTests {
                 .collect(Collectors.toList())
                 .get(0);
 
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(firstExpectedPipelineDefinition.getId(), firstActualPipelineDefinition.getId());
         Assert.assertEquals(secondExpectedPipelineDefinition.getId(), secondActualPipelineDefinition.getId());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
@@ -105,7 +106,7 @@ public class PipelineDefinitionServiceTests {
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.getAll();
         List<PipelineDefinition> actualResultObject = (List<PipelineDefinition>) actualResult.getObject();
 
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS, actualResultObject.size());
     }
@@ -138,7 +139,7 @@ public class PipelineDefinitionServiceTests {
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualCollectionSize);
         Assert.assertNotNull(actualPipelineDefinition);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedPipelineDefinition.getId(), actualPipelineDefinition.getId());
         Assert.assertEquals(expectedStageDefinition.getId(), actualPipelineDefinition.getStageDefinitions().get(0).getId());
         Assert.assertEquals(expectedJobDefinition.getId(), actualPipelineDefinition.getStageDefinitions().get(0).getJobDefinitions().get(0).getId());
@@ -154,7 +155,7 @@ public class PipelineDefinitionServiceTests {
         this.mockedPipeLineDefinitionService.add(expectedPipelineDefinition);
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.add(expectedPipelineDefinition);
 
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -171,7 +172,7 @@ public class PipelineDefinitionServiceTests {
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.update(expectedResult);
         PipelineDefinition actualResultObject = (PipelineDefinition) actualResult.getObject();
 
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedName, actualResultObject.getName());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -183,7 +184,7 @@ public class PipelineDefinitionServiceTests {
 
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.update(expectedResult);
 
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -196,14 +197,14 @@ public class PipelineDefinitionServiceTests {
 
         ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
         mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
-        mockedGetAllPipelinesServiceResult.setError(false);
+        mockedGetAllPipelinesServiceResult.setNotificationType(NotificationType.SUCCESS);
         mockedGetAllPipelinesServiceResult.setObject(null);
 
         Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
 
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
 
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -216,7 +217,7 @@ public class PipelineDefinitionServiceTests {
 
         ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
         mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
-        mockedGetAllPipelinesServiceResult.setError(false);
+        mockedGetAllPipelinesServiceResult.setNotificationType(NotificationType.SUCCESS);
         mockedGetAllPipelinesServiceResult.setObject(null);
 
         Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
@@ -225,7 +226,7 @@ public class PipelineDefinitionServiceTests {
         ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }

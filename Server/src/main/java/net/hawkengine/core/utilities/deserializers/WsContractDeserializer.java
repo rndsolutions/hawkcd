@@ -15,7 +15,7 @@ public class WsContractDeserializer implements JsonDeserializer<WsContractDto> {
 
     public WsContractDeserializer() {
         this.requiredFields = new ArrayList<>(
-                Arrays.asList("className", "packageName", "methodName", "result", "error", "errorMessage", "args"));
+                Arrays.asList("className", "packageName", "methodName", "result", "notificationType", "errorMessage", "args"));
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(ConversionObject.class, new ConversionObjectDeserializer())
                 .create();
