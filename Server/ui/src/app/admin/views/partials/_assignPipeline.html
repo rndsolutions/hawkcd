@@ -8,7 +8,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in admin.unassignedPipelines">
-                        <span class="label label-default admin-custom" ng-click="admin.selectUnassignedPipelineToAssign(pipeline, $index);admin.toggleUnassignedPipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.toggleUnassignedPipeline == $index}"> {{pipeline.name}}</span>
+                        <span class="label label-default admin-custom" ng-click="admin.selectUnassignedPipelineToAssign(pipeline, $index);admin.toggleUnassignedPipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.toggleUnassignedPipeline == $index}"> {{pipeline.name.substring(0,10)}} <span ng-if="pipeline.name.length > 10">..</span></span>
                     </div>
                 </div>
                 </br>
@@ -26,7 +26,7 @@
                         <h5 ng-click="admin.clearSelection()"> {{pipeGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{pipeGroup.pipelines.length}} </span></h5>
                         </uib-accordion-heading>
                     <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in pipeGroup.pipelines">
-                        <span class="label label-default admin-custom" ng-click="admin.selectAssignedPipelineToAssign(pipeline, $index);admin.toggleAssignedPipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.toggleAssignedPipeline == $index}"> {{pipeline.name}}</span>
+                        <span class="label label-default admin-custom" ng-click="admin.selectAssignedPipelineToAssign(pipeline, $index);admin.toggleAssignedPipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.toggleAssignedPipeline == $index}"> {{pipeline.name.substring(0,10)}} <span ng-if="pipeline.name.length > 10">..</span></span>
                     </div>
                     </div>
                     </uib-accordion>
