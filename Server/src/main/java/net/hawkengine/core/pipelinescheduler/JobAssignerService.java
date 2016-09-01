@@ -2,6 +2,7 @@ package net.hawkengine.core.pipelinescheduler;
 
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.AgentService;
@@ -50,9 +51,10 @@ public class JobAssignerService {
                 stageInProgress.setStatus(StageStatus.AWAITING);
                 pipeline.setStatus(Status.AWAITING);
                 this.pipelineService.update(pipeline);
-                LOGGER.info(String.format("Pipeline %s set to AWAITING.", pipeline.getPipelineDefinitionName()));
-                // ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, "");
-//                EndpointConnector.passResultToEndpoint("NotificationService", "notify", notification);
+                String message = String.format("Pipeline %s set to AWAITING.", pipeline.getPipelineDefinitionName());
+                LOGGER.info(message);
+                ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, message);
+                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", notification);
             }
         }
     }
