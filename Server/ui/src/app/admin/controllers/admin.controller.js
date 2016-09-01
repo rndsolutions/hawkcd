@@ -91,17 +91,17 @@ angular
             };
 
             vm.popOverOptions = {
-                userTitles:{
-                  username:'Username',
-                  dateRegistered:'Registered On',
-                  permissions:'Permissions',
-                  action:'Action'
+                userTitles: {
+                    username: 'Username',
+                    dateRegistered: 'Registered On',
+                    permissions: 'Permissions',
+                    action: 'Action'
                 },
-                userInfo:{
-                  username:'Name of the user',
-                  dateRegistered:'Date registered on',
-                  permissions:'Permissions of the user',
-                  action:'Available actions'
+                userInfo: {
+                    username: 'Name of the user',
+                    dateRegistered: 'Date registered on',
+                    permissions: 'Permissions of the user',
+                    action: 'Available actions'
                 },
                 tableTitles: {
                     name: 'Name',
@@ -280,8 +280,8 @@ angular
 
             vm.isPipeGroupOpen = [];
 
-            vm.openAccordion = function (array, index) {
-                if(array[index] != true && array[index] != false) {
+            vm.openAccordion = function(array, index) {
+                if (array[index] != true && array[index] != false) {
                     array[index] = true;
                 } else {
                     array[index] = !array[index];
@@ -355,7 +355,7 @@ angular
             vm.addUser = function() {
                 adminService.addUser(vm.newUser);
             };
-
+            ``
             vm.removeUser = function() {
                 adminService.deleteUser(vm.selectedUser.id);
             };
@@ -422,7 +422,6 @@ angular
                 vm.toggleAssignedPipeline = null;
                 vm.toggleUnassignedPipeline = null;
             };
-
             vm.close = function() {
                 vm.pipelineGroupToAssign = {};
                 vm.pipelineToAssign = null;
@@ -431,7 +430,8 @@ angular
                 vm.toggleUnassignedPipeline = null;
                 vm.selectedUserGroup = null;
                 vm.selectedUser = null;
-                vm.newUser = {};
+                vm.newUser = null;
+                vm.newUserGroup = {};
                 vm.clearSelection();
             };
 
@@ -633,7 +633,7 @@ angular
             };
 
             vm.setMaterialForEdit = function(material) {
-              vm.materialType = 'hidden';
+                vm.materialType = 'hidden';
                 vm.formData.material = angular.copy(material);
                 if (material.username) {
                     vm.formData.material.credentials = true;
