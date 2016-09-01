@@ -76,7 +76,11 @@ public class StatusUpdaterService {
         for (Stage currentStage : stages) {
             if (currentStage.getStatus() == StageStatus.IN_PROGRESS) {
                 this.updateStageStatus(currentStage);
-                break;
+                if (currentStage.getStatus() == StageStatus.PASSED) {
+                    continue;
+                } else {
+                    break;
+                }
             } else if (currentStage.getStatus() == StageStatus.NOT_RUN) {
                 currentStage.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
