@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="tab-pane active">
 
-                    <form name="addMaterialForm">
+                    <form name="addMaterialForm" novalidate>
                         <div ng-if="admin.materialType == 'git'">
                             <!-- <form role="form" name="addMaterialForm"> -->
                             <div class="form-group form-md-line-input">
@@ -19,7 +19,7 @@
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="admin.formData.material.git.name" type="text" class="form-control" placeholder="" ng-pattern="/^([\w-]+)$/" required/>
+                                    <input ng-model="admin.formData.material.git.name" name="materialName" type="text" class="form-control" placeholder="" ng-pattern="/^([\w-]+)$/" required/>
                                     <div class="form-control-focus"></div>
                                 </div>
                             </div>
@@ -32,7 +32,7 @@
                                     <div class="form-control-focus"></div>
                                 </div>
                             </div>
-                            <div ng-show="addMaterialForm.gitUrl.$invalid && addMaterialForm.gitUrl.$touched" class="form-group form-md-line-input">
+                            <div ng-show="(addMaterialForm.gitUrl.$error.pattern && addMaterialForm.gitUrl.$touched)" class="form-group form-md-line-input">
                                 <label class="control-label col-md-3">
                                 </label>
                                 <div class="col-md-6">

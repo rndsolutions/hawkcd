@@ -231,9 +231,13 @@ angular
                     formData.material.password = undefined;
                 }
                 adminMaterialService.updateGitMaterialDefinition(formData.material);
-                vm.formData = {};
-                vm.closeModal();
+                vm.closeEditModal();
             };
+
+            vm.closeEditModal = function() {
+                vm.formData = {};
+                vm.materialType = 'git';
+            }
 
             $scope.$watch(function() {
                 return viewModel.userGroups
@@ -422,6 +426,7 @@ angular
                 vm.toggleAssignedPipeline = null;
                 vm.toggleUnassignedPipeline = null;
             };
+
             vm.close = function() {
                 vm.pipelineGroupToAssign = {};
                 vm.pipelineToAssign = null;
@@ -437,9 +442,23 @@ angular
             };
 
             vm.closeModal = function() {
-                vm.formData = {};
+                if (vm.formData.material) {
+                    for (var prop in vm.formData.material.git) {
+                        if (prop) {
+                            var current = vm.formData.material.git[prop];
+                            if (current !== '') {
+                                vm.formData.material.git[prop] = '';
+                            }
+                        }
+                    }
+
+                    if (addMaterialForm.gitUrl.value.length > 0) {
+                         vm.formData.material.git.url = '';
+                    }
+                }
+
                 vm.materialType = 'git';
-            }
+            };
 
             vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
 
