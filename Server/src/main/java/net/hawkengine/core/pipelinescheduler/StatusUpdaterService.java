@@ -13,7 +13,12 @@ import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class StatusUpdaterService {
     private static final Logger LOGGER = Logger.getLogger(StatusUpdaterService.class.getName());
@@ -69,11 +74,12 @@ public class StatusUpdaterService {
 
     public void updateStageStatusesInSequence(List<Stage> stages) {
         for (Stage currentStage : stages) {
-            if (currentStage.getStatus() == StageStatus.NOT_RUN) {
-                currentStage.setStatus(StageStatus.IN_PROGRESS);
-                break;
-            } else if (currentStage.getStatus() == StageStatus.IN_PROGRESS) {
+            if (currentStage.getStatus() == StageStatus.IN_PROGRESS) {
                 this.updateStageStatus(currentStage);
+                break;
+            } else if (currentStage.getStatus() == StageStatus.NOT_RUN) {
+                currentStage.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+                currentStage.setStatus(StageStatus.IN_PROGRESS);
                 break;
             } else if (currentStage.getStatus() == StageStatus.PASSED) {
                 continue;
@@ -93,9 +99,11 @@ public class StatusUpdaterService {
         }
 
         if (jobStatuses.contains(JobStatus.FAILED)) {
+            stage.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
             stage.setStatus(StageStatus.FAILED);
             LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionName(), JobStatus.FAILED));
         } else if (this.areAllPassed(jobStatuses)) {
+            stage.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
             stage.setStatus(StageStatus.PASSED);
             LOGGER.info(String.format("Stage %s set to %s", stage.getStageDefinitionName(), JobStatus.PASSED));
         }
@@ -112,13 +120,11 @@ public class StatusUpdaterService {
 
         if (stageStatuses.contains(StageStatus.FAILED)) {
             pipeline.setStatus(Status.FAILED);
-            Date endTime = new Date();
-            pipeline.setEndTime(endTime);
+            pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.FAILED));
         } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
-            Date endTime = new Date();
-            pipeline.setEndTime(endTime);
+            pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.PASSED));
         }
     }
@@ -148,8 +154,7 @@ public class StatusUpdaterService {
     private void cancelPipeline(Pipeline pipeline) {
         pipeline.setShouldBeCanceled(false);
         pipeline.setStatus(Status.CANCELED);
-        Date endTime = new Date();
-        pipeline.setEndTime(endTime);
+        pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         for (Stage stage : pipeline.getStages()) {
             if (stage.getStatus() == StageStatus.IN_PROGRESS || stage.getStatus() == StageStatus.AWAITING) {
                 stage.setStatus(StageStatus.CANCELED);

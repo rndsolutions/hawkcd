@@ -1,11 +1,7 @@
 package net.hawkengine.http;
 
 import net.hawkengine.core.utilities.SchemaValidator;
-import net.hawkengine.model.Agent;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.AgentService;
@@ -13,19 +9,11 @@ import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -125,14 +113,6 @@ public class AgentController {
             return Response.status(Status.OK).build();
         }
 
-        if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
-            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
-            agent.setRunning(false);
-            agent.setAssigned(false);
-            ServiceResult result = this.agentService.update(agent);
-            EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
-        }
-
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();
 
         Stage stage = pipeline.getStages().stream().filter(s -> s.getId().equals(job.getStageId())).findFirst().orElse(null);
@@ -162,6 +142,13 @@ public class AgentController {
         }
 
         this.pipelineService.update(pipeline);
+
+        if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
+            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
+            agent.setAssigned(false);
+            ServiceResult result = this.agentService.update(agent);
+            EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
+        }
 
         return Response.status(Status.OK).build();
     }
