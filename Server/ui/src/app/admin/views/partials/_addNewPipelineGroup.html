@@ -1,25 +1,25 @@
 <div id="addNewPipelineGroup" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.newPipelineGroup.Name=''"></button>
-        <h4 class="modal-title">{{admin.defaultText.addNewPipelineGroup.newGroup}}</h4>
-      </div>
-      <div class="modal-body">
-        <div>
-         <form role="form" name="addPipelineGroupForm">
-             <div class="form-group form-md-line-input text-right">
-                 <div class="form-control-focus custom-focus">
-          <input type="text" ng-model="admin.newPipelineGroup.name" class="form-control" placeholder="{{admin.defaultText.addNewPipelineGroup.input}}" ng-pattern="/^([\w-]+)$/" required>
-             </div>
-             </div>
-          <br>
-          <br>
-          <button class="btn green" ng-click="admin.addNewPipelineGroup()" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.addNewPipelineGroup.submit}}</button>
-          <button class="btn btn-default" data-dismiss="modal" ng-click="admin.newPipelineGroup.Name=''">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
-          </form>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.newPipelineGroup.Name=''"></button>
+                <h4 class="modal-title">{{admin.defaultText.addNewPipelineGroup.newGroup}}</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form role="form" name="addPipelineGroupForm">
+                        <div class="form-group form-md-line-input text-right">
+                            <div class="form-control-focus custom-focus">
+                                <input type="text" ng-model="admin.newPipelineGroup.name" class="form-control" placeholder="{{admin.defaultText.addNewPipelineGroup.input}}" ng-pattern="/^([\w-]+)$/" required>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <button class="btn green" ng-click="admin.addNewPipelineGroup();admin.close()" data-dismiss="modal" type="submit" ng-class="{'disabled':addPipelineGroupForm.$invalid}">{{admin.defaultText.addNewPipelineGroup.submit}}</button>
+                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

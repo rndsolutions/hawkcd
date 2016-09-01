@@ -431,6 +431,7 @@ angular
                 vm.selectedUserGroup = null;
                 vm.selectedUser = null;
                 vm.newUser = null;
+                vm.newPipelineGroup = null;
                 vm.newUserGroup = {};
                 vm.clearSelection();
             };
