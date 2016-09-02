@@ -1,9 +1,6 @@
 package net.hawkengine.services;
 
-import net.hawkengine.model.JobDefinition;
-import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
@@ -108,6 +105,14 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         List<JobDefinition> stageJobDefinitions = stageDefinition.getJobDefinitions();
         for (JobDefinition jobDefinition : stageJobDefinitions) {
             jobDefinition.setStageDefinitionId(stageDefinition.getId());
+            jobDefinition.setPipelineDefinitionId(pipelineDefinitionId);
+
+            List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+            for (TaskDefinition taskDefinition : taskDefinitions){
+                taskDefinition.setJobDefinitionId(jobDefinition.getId());
+                taskDefinition.setStageDefinitionId(stageDefinition.getId());
+                taskDefinition.setPipelineDefinitionId(pipelineDefinitionId);
+            }
         }
         stageDefinitions.add(stageDefinition);
         pipeline.setStageDefinitions(stageDefinitions);
