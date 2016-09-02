@@ -3,8 +3,8 @@ package net.hawkengine.model;
 import net.hawkengine.model.enums.StageStatus;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Stage extends DbEntry{
@@ -15,12 +15,11 @@ public class Stage extends DbEntry{
     private List<EnvironmentVariable> environmentVariables;
     private List<Job> jobs;
     private StageStatus status;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private Duration duration;
 
     public Stage() {
-        this.startTime = new Date();
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());
         this.status = StageStatus.NOT_RUN;
@@ -82,19 +81,19 @@ public class Stage extends DbEntry{
         this.status = status;
     }
 
-    public Date getStartTime() {
-        return this.startTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
-        return this.endTime;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 

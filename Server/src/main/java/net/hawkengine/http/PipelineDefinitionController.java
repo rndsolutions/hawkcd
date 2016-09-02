@@ -3,6 +3,7 @@ package net.hawkengine.http;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 
@@ -51,7 +52,7 @@ public class PipelineDefinitionController {
     public Response getPipelineDefinitionById(@PathParam("pipelineDefinitionId")
                                                       String pipelineDefinitionId) {
         ServiceResult result = this.pipelineDefinitionService.getById(pipelineDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
@@ -68,7 +69,7 @@ public class PipelineDefinitionController {
         String isValid = this.schemaValidator.validate(pipelineDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.pipelineDefinitionService.add(pipelineDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -91,7 +92,7 @@ public class PipelineDefinitionController {
         String isValid = this.schemaValidator.validate(pipelineDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -115,7 +116,7 @@ public class PipelineDefinitionController {
     public Response deletePipeline(@PathParam("pipelineDefinitionId")
                                            String pipelineDefinitionId) {
         ServiceResult result = this.pipelineDefinitionService.delete(pipelineDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)

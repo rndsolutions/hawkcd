@@ -5,6 +5,7 @@ import net.hawkengine.http.AgentController;
 import net.hawkengine.model.Agent;
 import net.hawkengine.model.Environment;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.AgentService;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -106,7 +107,7 @@ public class AgentControllerTests extends JerseyTest {
         //Arrange
         String expectedResult = "Agent not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.agentService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
 
@@ -203,7 +204,7 @@ public class AgentControllerTests extends JerseyTest {
         //Arrange
         this.prepareAgent();
         String expectedResult = "Agent already exists.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.agentService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
@@ -244,7 +245,7 @@ public class AgentControllerTests extends JerseyTest {
         String expectedResult = "Agent not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setObject(null);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         Mockito.when(this.agentService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, "application/json");
 
@@ -294,7 +295,7 @@ public class AgentControllerTests extends JerseyTest {
     public void deleteAgent_nonExistingAgent_errorMessage() {
         //Arrange
         String expectedResult = "Agent not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.agentService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 

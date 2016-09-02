@@ -7,6 +7,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.Material;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.MaterialService;
 import net.hawkengine.services.interfaces.IMaterialService;
 import org.junit.Assert;
@@ -50,7 +51,7 @@ public class MaterialServiceTests {
         //Assert
         Assert.assertNotNull(actualMaterial);
         Assert.assertEquals(expectedMaterial.getId(), actualMaterial.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -64,7 +65,7 @@ public class MaterialServiceTests {
         ServiceResult actualResult = this.materialService.getById(invalidId.toString());
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -94,7 +95,7 @@ public class MaterialServiceTests {
                 .get(0);
 
         //Assert
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(firstExpectedMaterial.getId(), firstActualMaterial.getId());
         Assert.assertEquals(secondExpectedMaterial.getId(), secondActualMaterial.getId());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
@@ -111,7 +112,7 @@ public class MaterialServiceTests {
         List<Material> actualResultObject = (List<Material>) actualResult.getObject();
 
         //Assert
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS, actualResultObject.size());
     }
@@ -127,7 +128,7 @@ public class MaterialServiceTests {
         Material actualResultObject = (Material) actualResult.getObject();
 
         //Assert
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertNotNull(actualResultObject);
         Assert.assertEquals(expectedMaterial.getId(), actualResultObject.getId());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
@@ -145,7 +146,7 @@ public class MaterialServiceTests {
         Material actualResultObject = (Material) actualResult.getObject();
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResultObject);
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -166,7 +167,7 @@ public class MaterialServiceTests {
         Material actualResultObject = (Material) actualResult.getObject();
 
         //Assert
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
         Assert.assertNotNull(actualResultObject);
         Assert.assertEquals(expectedDate, actualResultObject.getChangeDate());
@@ -183,7 +184,7 @@ public class MaterialServiceTests {
         ServiceResult actualResult = this.materialService.update(expectedMaterial);
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -200,7 +201,7 @@ public class MaterialServiceTests {
         Material actualResultObject = (Material) actualResult.getObject();
 
         //Assert
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertNotNull(actualResult.getObject());
         Assert.assertEquals(materialToDelete.getId(), actualResultObject.getId());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
@@ -216,7 +217,7 @@ public class MaterialServiceTests {
         ServiceResult actualResult = this.materialService.delete(materialToDelete.getId());
 
         //Assert
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }

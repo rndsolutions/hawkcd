@@ -1,12 +1,13 @@
 package net.hawkengine.services.tests;
 
 import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.core.utilities.constants.ServerMessages;
+import net.hawkengine.core.utilities.constants.NotificationMessages;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.GitMaterial;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -59,7 +60,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -75,7 +76,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
     @Test
@@ -94,7 +95,7 @@ public class MaterialDefinitionServiceTests {
         // Assert
         Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
         Assert.assertEquals(expectedMaterialDefinitions.get(0).getId(), actualMaterialDefinitions.get(0).getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -110,7 +111,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -135,7 +136,7 @@ public class MaterialDefinitionServiceTests {
         // Assert
         Assert.assertEquals(1, actualMaterialDefinitions.size());
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinitions.get(0).getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -156,7 +157,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertEquals(0, actualMaterialDefinitions.size());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -172,7 +173,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -188,7 +189,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
     @Test
@@ -204,7 +205,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -220,7 +221,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
     @Test
@@ -242,7 +243,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -261,7 +262,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
     @Test
@@ -279,7 +280,7 @@ public class MaterialDefinitionServiceTests {
         allPipelineDefinitions.setObject(pipelineDefinitions);
         Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
 
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(ServerMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
+        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(NotificationMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
@@ -287,7 +288,7 @@ public class MaterialDefinitionServiceTests {
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(actualResult.getMessage(), expectedMessage);
     }
 }
