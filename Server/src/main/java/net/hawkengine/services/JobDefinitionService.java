@@ -3,6 +3,7 @@ package net.hawkengine.services;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
+import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
@@ -60,6 +61,12 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
 
     @Override
     public ServiceResult add(JobDefinition jobDefinition) {
+        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+        if (!taskDefinitions.isEmpty()) {
+            taskDefinitions.stream()
+                    .filter(taskDefinition -> taskDefinition.getJobDefinitionId() == null)
+                    .forEach(taskDefinition -> taskDefinition.setJobDefinitionId(jobDefinition.getId()));
+        }
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(jobDefinitions, jobDefinition);
