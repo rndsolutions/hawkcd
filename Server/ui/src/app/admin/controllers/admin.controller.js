@@ -6,7 +6,6 @@ angular
         function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
-
             vm.breadCrumb = {
                 admin: "Admin"
             };
@@ -91,17 +90,17 @@ angular
             };
 
             vm.popOverOptions = {
-                userTitles:{
-                  username:'Username',
-                  dateRegistered:'Registered On',
-                  permissions:'Permissions',
-                  action:'Action'
+                userTitles: {
+                    username: 'Username',
+                    dateRegistered: 'Registered On',
+                    permissions: 'Permissions',
+                    action: 'Action'
                 },
-                userInfo:{
-                  username:'Name of the user',
-                  dateRegistered:'Date registered on',
-                  permissions:'Permissions of the user',
-                  action:'Available actions'
+                userInfo: {
+                    username: 'Name of the user',
+                    dateRegistered: 'Date registered on',
+                    permissions: 'Permissions of the user',
+                    action: 'Available actions'
                 },
                 tableTitles: {
                     name: 'Name',
@@ -230,10 +229,15 @@ angular
                     formData.material.username = undefined;
                     formData.material.password = undefined;
                 }
+                formData.material.destination = formData.material.destination !== formData.material.name ? formData.material.name : formData.material.destination;
                 adminMaterialService.updateGitMaterialDefinition(formData.material);
-                vm.formData = {};
-                vm.closeModal();
+                vm.closeEditModal();
             };
+
+            vm.closeEditModal = function() {
+                vm.formData = {};
+                vm.materialType = 'git';
+            }
 
             $scope.$watch(function() {
                 return viewModel.userGroups
@@ -280,8 +284,8 @@ angular
 
             vm.isPipeGroupOpen = [];
 
-            vm.openAccordion = function (array, index) {
-                if(array[index] != true && array[index] != false) {
+            vm.openAccordion = function(array, index) {
+                if (array[index] != true && array[index] != false) {
                     array[index] = true;
                 } else {
                     array[index] = !array[index];
@@ -431,14 +435,35 @@ angular
                 vm.toggleUnassignedPipeline = null;
                 vm.selectedUserGroup = null;
                 vm.selectedUser = null;
-                vm.newUser = {};
+                vm.newUser.email = '';
+                vm.newUser.password = '';
+                vm.newUser.confirmPassword = '';
+                vm.newPipelineGroup = null;
+                vm.newUserGroup = {};
                 vm.clearSelection();
             };
 
-            vm.closeModal = function() {
-                vm.formData = {};
-                vm.materialType = 'git';
+            vm.closeModal = function(){
+              vm.formData = {};
+              vm.materialType = 'git';
             }
+
+            vm.closeModalMaterials = function(internalViewModel, materialForm) {
+                var reSetter = '';
+
+                if (!materialForm.$pristine || materialForm.$invalid) {
+                    materialForm.gitUrl.$setViewValue(reSetter);
+                    materialForm.gitUrl.$render();
+                    materialForm.materialName.$setViewValue(reSetter);
+                    materialForm.materialName.$render();
+                    materialForm.$setPristine();
+                    materialForm.$setUntouched();
+                    internalViewModel.formData = {};
+                }
+
+                internalViewModel.materialType = 'git';
+            };
+
 
             vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
 
@@ -633,7 +658,7 @@ angular
             };
 
             vm.setMaterialForEdit = function(material) {
-              vm.materialType = 'hidden';
+                vm.materialType = 'hidden';
                 vm.formData.material = angular.copy(material);
                 if (material.username) {
                     vm.formData.material.credentials = true;

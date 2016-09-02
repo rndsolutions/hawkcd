@@ -5,13 +5,13 @@
                 <div class="pull-right">
                     <!-- <button ></button> -->
                 </div>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.closeModal()"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.closeModalMaterials(admin,addNewMaterialForm)"></button>
                 <h4 class="modal-title text-center">{{admin.defaultText.addNewMaterial.newMaterial}}</h4>
             </div>
             <div class="modal-body">
                 <div class="tab-pane active">
 
-                    <form name="addMaterialForm">
+                    <form name="addNewMaterialForm" novalidate>
                         <div ng-if="admin.materialType == 'git'">
                             <!-- <form role="form" name="addMaterialForm"> -->
                             <div class="form-group form-md-line-input">
@@ -19,7 +19,7 @@
                                     <span class="required"> * </span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input ng-model="admin.formData.material.git.name" type="text" class="form-control" placeholder="" ng-pattern="/^([\w-]+)$/" required/>
+                                    <input ng-model="admin.formData.material.git.name" name="materialName" type="text" class="form-control" placeholder="" ng-pattern="/^([\w-]+)$/" required/>
                                     <div class="form-control-focus"></div>
                                 </div>
                             </div>
@@ -32,7 +32,7 @@
                                     <div class="form-control-focus"></div>
                                 </div>
                             </div>
-                            <div ng-show="addMaterialForm.gitUrl.$invalid && addMaterialForm.gitUrl.$touched" class="form-group form-md-line-input">
+                            <div ng-show="addNewMaterialForm.gitUrl.$error.pattern && addNewMaterialForm.gitUrl.$touched && !addNewMaterialForm.gitUrl.$pristine" class="form-group form-md-line-input">
                                 <label class="control-label col-md-3">
                                 </label>
                                 <div class="col-md-6">
@@ -110,7 +110,7 @@
                         </div>
                         <div id="buttons-row" class="row">
                             <div class="btn-container">
-                                <button class="btn green button-next" type="button" data-dismiss="modal" ng-click="admin.addMaterial(admin.formData);admin.closeModal()" ng-class="{'disabled':addMaterialForm.$invalid}">{{admin.defaultText.addNewMaterial.submit}}
+                                <button class="btn green button-next" type="button" data-dismiss="modal" ng-click="admin.addMaterial(admin.formData);admin.closeModal()" ng-class="{'disabled':addNewMaterialForm.$invalid}">{{admin.defaultText.addNewMaterial.submit}}
                                     <i class="fa fa-angle-right"></i>
                                 </button>
                             </div>

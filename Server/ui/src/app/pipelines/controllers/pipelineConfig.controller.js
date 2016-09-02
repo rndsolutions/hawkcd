@@ -30,7 +30,7 @@ angular
         vm.allJobs = [];
         vm.allTasks = [];
         vm.allStages = [];
-        vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);;
+        vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);
         vm.allPipelineVars = {};
         vm.allStageVars = {};
         vm.allJobVars = {};
@@ -229,11 +229,19 @@ angular
             vm.newPipelineVar = {};
             vm.newStageVar = {};
             vm.newJobVar = {};
+            vm.environmentVariableUtils.pipelines.variableToEdit = {};
+            vm.environmentVariableUtils.stages.variableToEdit = {};
+            vm.environmentVariableUtils.jobs.variableToEdit = {};
             vm.materialType = "";
             vm.resourceToAdd = "";
             vm.oldResource = "";
             vm.newResource = "";
             vm.resourceToDelete = "";
+        };
+
+        vm.closeTabsModal = function() {
+            addTabForm.tabName.value = '';
+            addTabForm.tabPath.value = '';
         };
 
         vm.filteredMaterialDefinitions = [];
@@ -374,7 +382,7 @@ angular
         };
 
         vm.newStage.selectedMaterialForNewStage = {};
-        vm.addStage = function(newStage) {
+        vm.addStage = function(newStage, stageForm) {
             if (newStage.jobDefinitions.taskDefinitions.type == 'EXEC') {
                 var stage = {
                     name: newStage.name,
@@ -457,7 +465,21 @@ angular
                 };
             }
             pipeConfigService.addStageDefinition(stage);
+            stageForm.$setPristine();
+            stageForm.$setUntouched();
+            stageForm.stageName.$setViewValue('');
+            vm.resetObjectProperties(newStage);
+            stageForm.stageName.$render();
+
         };
+
+        vm.resetObjectProperties = function(object) {
+            for (var property in object) {
+                if (object[property]) {
+                    object[property] = '';
+                }
+            }
+        }
 
         vm.editStage = function(stage) {
             var newStage = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex]);
@@ -617,7 +639,6 @@ angular
         vm.assignMaterialToPipeline = function(material) {
             var buffer = JSON.parse(material);
 
-            debugger;
         }
 
         vm.addMaterial = function(newMaterial) {
@@ -903,29 +924,29 @@ angular
             pipeConfigService.deleteTaskDefinition(task.id);
         };
 
-        vm.addResource = function () {
+        vm.addResource = function() {
             var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
             taskToUpdate.resources.push(vm.resourceToAdd);
             pipeConfigService.updateJobDefinition(taskToUpdate);
         };
 
-        vm.getResourceToUpdate = function (resource) {
+        vm.getResourceToUpdate = function(resource) {
             vm.oldResource = angular.copy(resource);
             vm.newResource = angular.copy(resource);
         };
 
-        vm.editResource = function () {
+        vm.editResource = function() {
             var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
             var resourceIndex = taskToUpdate.resources.indexOf(vm.oldResource);
             taskToUpdate.resources[resourceIndex] = vm.newResource;
             pipeConfigService.updateJobDefinition(taskToUpdate);
         };
 
-        vm.getResourceToDelete = function (resource) {
+        vm.getResourceToDelete = function(resource) {
             vm.resourceToDelete = angular.copy(resource);
         };
 
-        vm.removeResource = function () {
+        vm.removeResource = function() {
             var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
             var resourceIndex = taskToUpdate.resources.indexOf(vm.resourceToDelete);
             taskToUpdate.resources.splice(resourceIndex, 1);
@@ -985,6 +1006,7 @@ angular
                     };
                     vm.pipeline.environmentVariables.push(variableToAdd);
                     pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                    vm.close();
                 },
                 editVariable: function(variable) {
                     vm.pipeline.environmentVariables.forEach(function(current, index, array) {
@@ -993,6 +1015,7 @@ angular
                         }
                     });
                     pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                    vm.close();
                 },
                 deleteVariable: function(variable) {
                     vm.pipeline.environmentVariables.forEach(function(current, index, array) {
@@ -1001,6 +1024,7 @@ angular
                         }
                     });
                     pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                    vm.close();
                 },
                 getVariableForEdit: function(variable) {
                     vm.environmentVariableUtils.pipelines.variableToEdit = variable;
@@ -1016,6 +1040,7 @@ angular
                     };
                     vm.stage.environmentVariables.push(variableToAdd);
                     pipeConfigService.updateStageDefinition(vm.stage);
+                    vm.close();
                 },
                 editVariable: function(variable) {
                     vm.stage.environmentVariables.forEach(function(current, index, array) {
@@ -1024,6 +1049,7 @@ angular
                         }
                     });
                     pipeConfigService.updateStageDefinition(vm.stage);
+                    vm.close();
                 },
                 deleteVariable: function(variable) {
                     vm.stage.environmentVariables.forEach(function(current, index, array) {
@@ -1032,6 +1058,7 @@ angular
                         }
                     });
                     pipeConfigService.updateStageDefinition(vm.stage);
+                    vm.close();
                 },
                 getVariableForEdit: function(variable) {
                     vm.environmentVariableUtils.stages.variableToEdit = variable;
@@ -1047,6 +1074,7 @@ angular
                     };
                     vm.job.environmentVariables.push(variableToAdd);
                     pipeConfigService.updateJobDefinition(vm.job);
+                    vm.close();
                 },
                 editVariable: function(variable) {
                     vm.job.environmentVariables.forEach(function(current, index, array) {
@@ -1055,6 +1083,7 @@ angular
                         }
                     });
                     pipeConfigService.updateJobDefinition(vm.job);
+                    vm.close();
                 },
                 deleteVariable: function(variable) {
                     vm.job.environmentVariables.forEach(function(current, index, array) {
