@@ -472,8 +472,8 @@ angular
 
         vm.resetObjectProperties = function(object) {
             for (var property in object) {
-                if (object.hasOwnProperty(property)) {
-                    object[prop] = '';
+                if (object[property]) {
+                    object[property] = '';
                 }
             }
         }
