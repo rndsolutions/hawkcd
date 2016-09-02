@@ -3,6 +3,7 @@ package net.hawkengine.http;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.JobDefinition;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.JobDefinitionService;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 
@@ -50,7 +51,7 @@ public class JobDefinitionController {
     @Path("/{jobDefinitionId}")
     public Response getJobDefinitionById(@PathParam("jobDefinitionId") String jobDefinitionId) {
         ServiceResult result = this.jobDefinitionService.getById(jobDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)
@@ -68,7 +69,7 @@ public class JobDefinitionController {
         String isValid = this.schemaValidator.validate(jobDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.jobDefinitionService.add(jobDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -92,7 +93,7 @@ public class JobDefinitionController {
         String isValid = this.schemaValidator.validate(jobDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.jobDefinitionService.update(jobDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -115,7 +116,7 @@ public class JobDefinitionController {
     @Path("/{jobDefinitionId}")
     public Response deleteJobDefinition(@PathParam("jobDefinitionId") String jobDefinitionId) {
         ServiceResult result = this.jobDefinitionService.delete(jobDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)

@@ -3,6 +3,7 @@ package net.hawkengine.http;
 import net.hawkengine.core.utilities.SchemaValidator;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 
@@ -51,7 +52,7 @@ public class MaterialDefinitionController {
                                                       String materialDefinitionId) {
         ServiceResult result = this.materialDefinitionService.getById(materialDefinitionId);
 
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(result.getMessage()).build();
         }
 
@@ -64,7 +65,7 @@ public class MaterialDefinitionController {
         String isValid = this.schemaValidator.validate(materialDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.materialDefinitionService.add(materialDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -87,7 +88,7 @@ public class MaterialDefinitionController {
         String isValid = this.schemaValidator.validate(materialDefinition);
         if (isValid.equals("OK")) {
             ServiceResult result = this.materialDefinitionService.update(materialDefinition);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -110,7 +111,7 @@ public class MaterialDefinitionController {
     public Response deleteMaterialDefinition(@PathParam("materialDefinitionId")
                                                      String materialDefinitionId) {
         ServiceResult result = this.materialDefinitionService.delete(materialDefinitionId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(result.getMessage()).build();
         }
 

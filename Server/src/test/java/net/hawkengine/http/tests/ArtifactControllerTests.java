@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response;
 public class ArtifactControllerTests {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8080);
+    public WireMockRule wireMockRule = new WireMockRule(2356);
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();

@@ -5,6 +5,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineGroupService;
 
@@ -43,10 +44,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
         PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
         if (existingPipelineGroup != null){
-            ServiceResult result = new ServiceResult();
-            result.setObject(pipelineGroup);
-            result.setError(true);
-            result.setMessage("Pipeline Group with the same name already exists.");
+            ServiceResult result = new ServiceResult(pipelineGroup, NotificationType.ERROR, "Pipeline Group with the same name already exists.");
 
             return result;
         }
@@ -68,7 +66,6 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
 
-        ServiceResult result = new ServiceResult();
         for (PipelineGroup pipelineGroup : pipelineGroups) {
             List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
@@ -80,9 +77,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
             pipelineGroup.setPipelines(pipelineDefinitionsToAdd);
         }
 
-        result.setError(false);
-        result.setMessage("All Pipeline Group DTOs retrieved successfully.");
-        result.setObject(pipelineGroups);
+        ServiceResult result = new ServiceResult(pipelineGroups, NotificationType.SUCCESS, "All Pipeline Groups retrieved successfully.");
 
         return result;
     }

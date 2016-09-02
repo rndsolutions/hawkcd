@@ -1,11 +1,13 @@
 package net.hawkengine.model.dto;
 
+import net.hawkengine.model.enums.NotificationType;
+
 public class WsContractDto {
     private String className;
     private String packageName;
     private String methodName;
     private Object result;
-	private boolean error;
+	private NotificationType notificationType;
     private String errorMessage;
     private ConversionObject[] args;
 
@@ -57,12 +59,12 @@ public class WsContractDto {
         this.args = args;
 	}
 
-	public boolean isError() {
-		return this.error;
+	public NotificationType getNotificationType() {
+		return this.notificationType;
 	}
 
-	public void setError(boolean error) {
-		this.error = error;
+	public void setNotificationType(NotificationType notificationType) {
+		this.notificationType = notificationType;
     }
 }
 

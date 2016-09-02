@@ -1,6 +1,7 @@
 package net.hawkengine.http;
 
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.JobService;
 import net.hawkengine.services.interfaces.IJobService;
 
@@ -36,7 +37,7 @@ public class JobController {
     @Path("/{jobId}")
     public Response getJobById(@PathParam("jobId") String stageId) {
         ServiceResult response = this.jobService.getById(stageId);
-        if (response.hasError()) {
+        if (response.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
         }
         return Response.status(Status.OK).entity(response.getObject()).build();

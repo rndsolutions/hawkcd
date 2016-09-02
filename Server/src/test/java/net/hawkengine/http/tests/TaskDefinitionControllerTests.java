@@ -3,6 +3,7 @@ package net.hawkengine.http.tests;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.TaskDefinitionController;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.TaskDefinitionService;
@@ -107,7 +108,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         //Arrange
         String expectedResult = "TaskDefinition not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.taskDefinitionService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
@@ -145,7 +146,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         this.taskDefinition.setName(null);
         String expectedResult = "ERROR: TASK DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(this.taskDefinition);
         Mockito.when(this.taskDefinitionService.addTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
@@ -225,7 +226,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareTaskDefinition();
         String expectedMessage = "TaskDefinition not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.taskDefinitionService.updateTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
@@ -267,7 +268,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         this.prepareTaskDefinition();
         String expectedResult = "ERROR: TASK DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.taskDefinition.setName(null);
         Mockito.when(this.taskDefinitionService.updateTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
@@ -298,7 +299,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     public void deleteTaskDefinition_nonExistingTaskDefinition_errorMessage() {
         //Arrange
         String expectedMessage = "TaskDefinition not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.taskDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 
@@ -316,7 +317,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareTaskDefinition();
         String expectedMessage = this.taskDefinition.getId() + " cannot delete the last task definition";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.taskDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 

@@ -6,6 +6,7 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.LoginDto;
 import net.hawkengine.model.dto.RegisterDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.UserService;
 import net.hawkengine.ws.SessionPool;
@@ -98,7 +99,7 @@ public class AuthController {
         String hashedPassword = DigestUtils.sha256Hex(login.getPassword());
 
         ServiceResult serviceResult = this.userService.getByEmailAndPassword(login.getEmail(), hashedPassword);
-        if (serviceResult.hasError()){
+        if (serviceResult.getNotificationType() == NotificationType.ERROR){
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(serviceResult)
                     .build();
@@ -107,7 +108,7 @@ public class AuthController {
         User userFromDb = (User) serviceResult.getObject();
 
         if (!userFromDb.isEnabled()){
-            serviceResult.setError(true);
+            serviceResult.setNotificationType(NotificationType.ERROR);
             serviceResult.setMessage("Cannot login");
             serviceResult.setObject(null);
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -153,7 +154,7 @@ public class AuthController {
 
         ServiceResult serviceResult = this.userService.addUserWithoutProvider(user);
 
-        if (serviceResult.hasError()) {
+        if (serviceResult.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(serviceResult)
                     .build();

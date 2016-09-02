@@ -5,6 +5,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.UserDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
@@ -43,7 +44,7 @@ public class UserService extends CrudService<User> implements IUserService {
     @Override
     public ServiceResult add(User user) {
         ServiceResult result = this.getByEmail(user.getEmail());
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
         }
         String password = user.getPassword();
@@ -76,9 +77,9 @@ public class UserService extends CrudService<User> implements IUserService {
                 .orElse(null);
 
         if (user == null) {
-            return super.createServiceResult(user, true, "'s email and password doesn't match");
+            return super.createServiceResult(user, NotificationType.ERROR, "'s email and password doesn't match");
         } else {
-            return super.createServiceResult(user, false, "retrieved successfully");
+            return super.createServiceResult(user, NotificationType.SUCCESS, "retrieved successfully");
         }
     }
 
@@ -93,9 +94,9 @@ public class UserService extends CrudService<User> implements IUserService {
                 .orElse(null);
 
         if (user != null) {
-            return super.createServiceResult(user, true, "with this email already exists");
+            return super.createServiceResult(user, NotificationType.ERROR, "with this email already exists");
         } else {
-            return super.createServiceResult(user, false, "does not exist");
+            return super.createServiceResult(user, NotificationType.SUCCESS, "does not exist");
         }
     }
 
@@ -109,7 +110,7 @@ public class UserService extends CrudService<User> implements IUserService {
         String hashedPassword = DigestUtils.sha256Hex(oldPassword);
         ServiceResult result = this.getByEmailAndPassword(user.getUsername(), hashedPassword);
 
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
         }
         User userToUpdate = (User) result.getObject();

@@ -15,6 +15,7 @@ import net.hawkengine.model.dto.ConversionObject;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.UserGroupDto;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
@@ -107,12 +108,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getAll");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -145,12 +146,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getAll");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -190,12 +191,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getPipelineDTOs");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
         expectedServiceResult.setObject(expectedPipelineGroups);
 
@@ -234,12 +235,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getPipelineDTOs");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
         expectedServiceResult.setObject(expectedPipelineGroups);
 
@@ -279,12 +280,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getById");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group retrieved successfully");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -322,12 +323,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getById");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group retrieved successfully");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -370,12 +371,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("add");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group updated successfully");
         expectedServiceResult.setObject(null);
 
@@ -417,12 +418,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("add");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be added");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -465,12 +466,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("update");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group updated successfully");
         expectedServiceResult.setObject(null);
 
@@ -511,12 +512,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("update");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be deleted");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -556,12 +557,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("delete");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group deleted successfully");
         expectedServiceResult.setObject(null);
 
@@ -599,12 +600,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("delete");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be deleted");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -647,12 +648,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("addUserGroupDto");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group added successfully");
         expectedServiceResult.setObject(null);
 
@@ -694,12 +695,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("addUserGroupDto");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be added");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -750,12 +751,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("assignUserToGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User added successfully to group");
         expectedServiceResult.setObject(null);
 
@@ -804,12 +805,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("assignUserToGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User cannot be added to group");
         expectedServiceResult.setObject(null);
 
@@ -852,12 +853,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("updateUserGroupDto");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group Dto updated successfully");
         expectedServiceResult.setObject(null);
 
@@ -898,12 +899,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("update");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be deleted");
         expectedServiceResult.setObject(userGroupDto);
 
@@ -957,12 +958,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("unassignUserFromGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User removed successfully to group");
         expectedServiceResult.setObject(null);
 
@@ -1014,12 +1015,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("unassignUserFromGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User cannot be removed to group");
         expectedServiceResult.setObject(null);
 
@@ -1058,12 +1059,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("addUserWithoutProvider");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User added successfully");
         expectedServiceResult.setObject(null);
 
@@ -1101,12 +1102,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("addUserWithoutProvider");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{conversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(true);
+        expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User cannot be added");
         expectedServiceResult.setObject(user);
 
@@ -1141,12 +1142,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getAllUserGroups");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -1179,12 +1180,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("getAllUserGroups");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
         expectedServiceResult.setObject(expectedUserGroups);
 
@@ -1231,12 +1232,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("assignPipelineToGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline assigned successfully to group");
         expectedServiceResult.setObject(null);
 
@@ -1281,12 +1282,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("assignPipelineToGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline assigned successfully to group");
         expectedServiceResult.setObject(null);
 
@@ -1326,12 +1327,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("unAssignPipelineFromGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline unassigned successfully from group");
         expectedServiceResult.setObject(null);
 
@@ -1369,12 +1370,12 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("unAssignPipelineFromGroup");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject});
 
         ServiceResult expectedServiceResult = new ServiceResult();
-        expectedServiceResult.setError(false);
+        expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline unassigned successfully from group");
         expectedServiceResult.setObject(null);
 
@@ -1426,7 +1427,7 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("changeUserPassword");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject, thirdConversionObject});
 
@@ -1481,7 +1482,7 @@ public class SecurityServiceTests {
         contract.setPackageName("net.hawkengine.services");
         contract.setMethodName("changeUserPassword");
         contract.setResult("");
-        contract.setError(false);
+        contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
         contract.setArgs(new ConversionObject[]{firstConversionObject, secondConversionObject, thirdConversionObject});
 

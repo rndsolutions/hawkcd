@@ -128,6 +128,22 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         return result;
     }
 
+    @Override
+    public ServiceResult getAllPreparedAwaitingPipelines() {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<Pipeline> updatedPipelines = pipelines
+                .stream()
+                .filter(p -> p.isPrepared() && (p.getStatus() == Status.AWAITING))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
+
+        result.setObject(updatedPipelines);
+
+        return result;
+    }
+
     private void addMaterialsToPipeline(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         List<MaterialDefinition> materialDefinitions =

@@ -4,6 +4,7 @@ import net.hawkengine.model.PermissionObject;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.AgentService;
@@ -108,6 +109,7 @@ public class SessionPool {
             WsContractDto contract = new WsContractDto();
             contract.setClassName("UserService");
             contract.setMethodName("logout");
+            contract.setNotificationType(NotificationType.SUCCESS);
             userSession.send(contract);
             userSession.getSession().close(1000, "User logged out successfully.");
             userSession.setLoggedUser(null);

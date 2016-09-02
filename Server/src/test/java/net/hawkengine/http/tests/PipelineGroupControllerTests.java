@@ -5,6 +5,7 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.PipelineGroupController;
 import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.interfaces.IPipelineGroupService;
 
@@ -107,7 +108,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         //Arrange
         String expectedResult = "PipelineGroup not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.pipelineGroupService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
@@ -145,7 +146,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         this.pipelineGroup.setName("#$!$$@#");
         String expectedResult = "ERROR: PIPELINEGROUP NAME IS INVALID.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(this.pipelineGroup);
         Mockito.when(this.pipelineGroupService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineGroup, "application/json");
@@ -164,7 +165,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         //Arrange
         this.preparePipelineGroup();
         String expectedResult = "PipelineGroup already exists.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setObject(null);
         Mockito.when(this.pipelineGroupService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
@@ -227,7 +228,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         //Arrange
         this.preparePipelineGroup();
         String expectedMessage = "PipelineGroup not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.pipelineGroupService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineGroup, "application/json");
@@ -271,7 +272,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
         this.pipelineGroup.setName(null);
         String expectedResult = "ERROR: PIPELINEGROUP NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(this.pipelineGroup);
         Mockito.when(this.pipelineGroupService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineGroup, "application/json");
@@ -302,7 +303,7 @@ public class PipelineGroupControllerTests extends JerseyTest {
     public void deletePipelineGroup_nonPipelineGroup_errorMessage() {
         //Arrange
         String expectedMessage = "PipelineGroup not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.pipelineGroupService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 
