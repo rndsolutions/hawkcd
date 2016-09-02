@@ -15,8 +15,8 @@
                         </div>
                         <br>
                         <br>
-                        <button class="btn green" ng-click="admin.addUserGroup()" data-dismiss="modal" type="submit" ng-disabled="addUserGroupForm.$invalid">{{admin.defaultText.addNewUserGroup.submit}}</button>
-                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.newUserGroup.name=''">{{admin.defaultText.addNewUserGroup.cancel}}</button>
+                        <button class="btn green" ng-click="admin.addUserGroup();admin.close()" data-dismiss="modal" type="submit" ng-class="{'disabled':addUserGroupForm.$invalid}">{{admin.defaultText.addNewUserGroup.submit}}</button>
+                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.addNewUserGroup.cancel}}</button>
                     </form>
                 </div>
             </div>

@@ -154,7 +154,6 @@ angular
         };
 
         viewModelUpdater.addPipelineDefinition = function (pipelineDefinition) {
-            debugger;
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroupDTO, index, array) {
                 if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId){
                     array[index].pipelines.push(pipelineDefinition);
