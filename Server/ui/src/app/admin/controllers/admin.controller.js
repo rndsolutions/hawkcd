@@ -229,6 +229,7 @@ angular
                     formData.material.username = undefined;
                     formData.material.password = undefined;
                 }
+                formData.material.destination = formData.material.destination !== formData.material.name ? formData.material.name : formData.material.destination;
                 adminMaterialService.updateGitMaterialDefinition(formData.material);
                 vm.closeEditModal();
             };
