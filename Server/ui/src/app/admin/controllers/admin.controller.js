@@ -6,7 +6,6 @@ angular
         function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
-
             vm.breadCrumb = {
                 admin: "Admin"
             };
@@ -359,7 +358,7 @@ angular
             vm.addUser = function() {
                 adminService.addUser(vm.newUser);
             };
-            ``
+
             vm.removeUser = function() {
                 adminService.deleteUser(vm.selectedUser.id);
             };
@@ -435,30 +434,35 @@ angular
                 vm.toggleUnassignedPipeline = null;
                 vm.selectedUserGroup = null;
                 vm.selectedUser = null;
-                vm.newUser = null;
+                vm.newUser.email = '';
+                vm.newUser.password = '';
+                vm.newUser.confirmPassword = '';
                 vm.newPipelineGroup = null;
                 vm.newUserGroup = {};
                 vm.clearSelection();
             };
 
-            vm.closeModal = function() {
-                if (vm.formData.material) {
-                    for (var prop in vm.formData.material.git) {
-                        if (prop) {
-                            var current = vm.formData.material.git[prop];
-                            if (current !== '') {
-                                vm.formData.material.git[prop] = '';
-                            }
-                        }
-                    }
+            vm.closeModal = function(){
+              vm.formData = {};
+              vm.materialType = 'git';
+            }
 
-                    if (addMaterialForm.gitUrl.value.length > 0) {
-                         vm.formData.material.git.url = '';
-                    }
+            vm.closeModalMaterials = function(internalViewModel, materialForm) {
+                var reSetter = '';
+
+                if (!materialForm.$pristine || materialForm.$invalid) {
+                    materialForm.gitUrl.$setViewValue(reSetter);
+                    materialForm.gitUrl.$render();
+                    materialForm.materialName.$setViewValue(reSetter);
+                    materialForm.materialName.$render();
+                    materialForm.$setPristine();
+                    materialForm.$setUntouched();
+                    internalViewModel.formData = {};
                 }
 
-                vm.materialType = 'git';
+                internalViewModel.materialType = 'git';
             };
+
 
             vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
 
