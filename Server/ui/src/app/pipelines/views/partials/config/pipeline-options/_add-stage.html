@@ -230,7 +230,7 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-danger" data-dismiss="modal" type="submit" ng-disabled="addNewStageForm.$invalid" ng-click="pipeConfig.addStage(pipeConfig.newStage,addNewStageForm)">Add Stage</button>
+          <button class="btn btn-danger" data-dismiss="modal" type="submit" ng-class="{'disabled':addNewStageForm.$invalid}" ng-click="pipeConfig.addStage(pipeConfig.newStage,addNewStageForm)">Add Stage</button>
           <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
         </div>
 
