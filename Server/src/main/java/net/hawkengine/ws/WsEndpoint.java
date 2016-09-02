@@ -156,7 +156,7 @@ public class WsEndpoint extends WebSocketAdapter {
             User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
 
             this.setLoggedUser(currentUser);
-            this.loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(this.loggedUser));
+            this.loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(currentUser));
 
             List<Permission> orderedPermissions = this.permissionService.sortPermissions(this.loggedUser.getPermissions());
 

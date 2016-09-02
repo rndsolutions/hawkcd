@@ -44,9 +44,7 @@ public class PermissionService {
                 for (Permission userGroupPermissionFromDb : userGroupPermissionsFromDb) {
                     boolean isPermissionPresent = false;
                     for (Permission userPersmission : user.getPermissions()) {
-                        if (userGroupPermissionFromDb.getPermissionScope() == userPersmission.getPermissionScope() &&
-                                userGroupPermissionFromDb.getPermittedEntityId().equals(userPersmission.getPermittedEntityId()) &&
-                                userGroupPermissionFromDb.getPermissionType() == userPersmission.getPermissionType()) {
+                        if (userGroupPermissionFromDb.getPermittedEntityId().equals(userPersmission.getPermittedEntityId())) {
                             isPermissionPresent = true;
                             break;
                         }
