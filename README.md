@@ -1,8 +1,7 @@
 # HawkCD
+## Continuous Delivery Software
 
 [![Join the chat at https://gitter.im/rndsolutions/hawkcd](https://badges.gitter.im/rndsolutions/hawkcd.svg)](https://gitter.im/rndsolutions/hawkcd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-Continuous Delivery Software
-
 [![Build Status](https://travis-ci.org/rndsolutions/hawkcd.svg?branch=master)](https://travis-ci.org/rndsolutions/hawkcd)
 [![Coverage Status](https://coveralls.io/repos/github/rndsolutions/hawk/badge.svg?branch=master)](https://coveralls.io/github/rndsolutions/hawk?branch=master)
 
