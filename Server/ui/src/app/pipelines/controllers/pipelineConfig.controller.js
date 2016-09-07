@@ -825,7 +825,7 @@ angular
             }
 
             //vm.task = res;
-            vm.updatedTask = vm.task;
+            vm.updatedTask = angular.copy(vm.task);
             vm.getPipelineForTaskById(vm.updatedTask.pipelineDefinitionId);
             vm.getStageForTaskById(vm.updatedTask.stageDefinitionId);
 
@@ -927,9 +927,9 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
-                    stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
-                    jobDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
+                    pipelineDefinitionName: newTask.pipelineDefinitionName,
+                    stageDefinitionName: newTask.stageDefinitionName,
+                    jobDefinitionName: newTask.jobDefinitionName,
                     type: newTask.type,
                     source: newTask.source,
                     runIfCondition: newTask.runIfCondition,
