@@ -11,7 +11,6 @@ angular.module('momentjs', [])
             var endDay = pipelineRun.endTime.date;
             var endTime = pipelineRun.endTime.time;
             var runEndTime = pipelineRun.endTime;
-            debugger;
             var time = moment.utc({
                 year: endDay.year,
                 month: endDay.month,
@@ -20,8 +19,6 @@ angular.module('momentjs', [])
                 minute: endTime.minute,
                 second: endTime.second
             });
-            //date is in UTC. 3 hours back. To be in local we add 3 hours. We also add 1 month, because JS months in date are -1.[arrays count]
-            // time.add(3, 'h');
             time.local();
             time.subtract(1, 'M');
             var delta = moment(time);
@@ -41,12 +38,29 @@ angular.module('momentjs', [])
             var bufferTime = moment.utc(time);
             bufferTime.local();
             var result = {
-              hour: bufferTime.hours(),
-              minute:bufferTime.minutes(),
-              second:bufferTime.seconds()
+                hour: bufferTime.hours(),
+                minute: bufferTime.minutes(),
+                second: bufferTime.seconds()
             };
             return result;
         };
-      
+
+        moment.formatDateUTCToLocal = function(input) {
+            if (input === undefined) {
+                return;
+            }
+            var buffer = moment.utc({
+                year: input.date.year,
+                month: input.date.month,
+                day: input.date.day,
+                hour: input.time.hour,
+                minute: input.time.minute,
+                second: input.time.second
+            });
+            buffer.local();
+            var result = buffer.toObject();
+            return result;
+        }
+
         return moment;
     }]);
