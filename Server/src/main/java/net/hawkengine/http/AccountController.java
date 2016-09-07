@@ -2,6 +2,7 @@ package net.hawkengine.http;
 
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.UserService;
 
 import javax.ws.rs.Consumes;
@@ -46,7 +47,7 @@ public class AccountController {
 
         ServiceResult result = this.usrService.add(user);
 
-        if (result.hasError()){
+        if (result.getNotificationType() == NotificationType.ERROR){
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)

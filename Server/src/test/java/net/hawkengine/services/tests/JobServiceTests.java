@@ -7,8 +7,10 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.*;
 import net.hawkengine.services.interfaces.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -61,7 +63,7 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertEquals(this.job.getId(), actualJob.getId());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -77,7 +79,7 @@ public class JobServiceTests {
 
         //Assert
         assertNull(actualResult.getObject());
-        assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -94,7 +96,7 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualObject.size());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -110,7 +112,7 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertTrue(actualObject.isEmpty());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -127,7 +129,7 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualObject);
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -143,7 +145,7 @@ public class JobServiceTests {
 
         //Assert
         assertNull(actualResult.getObject());
-        assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -161,7 +163,7 @@ public class JobServiceTests {
 
         //Assert
         assertNotNull(actualResult.getObject());
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(this.job.getStatus(), job.getStatus());
     }
@@ -178,7 +180,7 @@ public class JobServiceTests {
         //Assert
         assertNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
-        assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
     @Test
@@ -192,7 +194,7 @@ public class JobServiceTests {
         ServiceResult actualResult = this.jobService.delete(this.job.getId());
 
         //Assert
-        assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertNotNull(actualResult.getObject());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -207,7 +209,7 @@ public class JobServiceTests {
         ServiceResult result = this.jobService.delete(this.job.getId());
 
         //Assert
-        assertTrue(result.hasError());
+        assertEquals(NotificationType.ERROR, result.getNotificationType());
         assertNull(result.getObject());
         assertEquals(expectedMessage, result.getMessage());
     }

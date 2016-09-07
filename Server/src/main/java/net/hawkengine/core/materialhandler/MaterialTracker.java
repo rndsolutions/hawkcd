@@ -69,7 +69,7 @@ public class MaterialTracker implements Runnable {
                     if (isPipelineUpdated) {
                         pipeline.setMaterialsUpdated(true);
                         ServiceResult result = this.pipelineService.update(pipeline);
-                        EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
+//                        EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
                     }
                 }
 

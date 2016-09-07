@@ -4,6 +4,7 @@ import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.Material;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IMaterialService;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
                 .filter(m -> m.getPipelineDefinitionId().equals(pipelineDefinitionId))
                 .collect(Collectors.toList());
 
-        return super.createServiceResultArray(materials, false, "retrieved successfully");
+        return super.createServiceResultArray(materials, NotificationType.SUCCESS, "retrieved successfully");
     }
 
     @Override
@@ -70,9 +71,9 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
                 .orElse(null);
 
         if (latestMaterial != null) {
-            return super.createServiceResult(latestMaterial, false, "retrieved successfully");
+            return super.createServiceResult(latestMaterial, NotificationType.SUCCESS, "retrieved successfully");
         } else {
-            return super.createServiceResult(latestMaterial, true, "not found");
+            return super.createServiceResult(latestMaterial, NotificationType.ERROR, "not found");
         }
     }
 }

@@ -3,6 +3,7 @@ package net.hawkengine.services;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IJobService;
 import net.hawkengine.services.interfaces.IStageService;
 
@@ -35,12 +36,12 @@ public class JobService extends CrudService<Job> implements IJobService {
             for (Job job : jobs) {
                 if (job.getId().equals(jobId)) {
                     result = job;
-                    return super.createServiceResult(result, false, this.successMessage);
+                    return super.createServiceResult(result, NotificationType.SUCCESS, this.successMessage);
                 }
             }
         }
 
-        return super.createServiceResult(result, true, this.failureMessage);
+        return super.createServiceResult(result, NotificationType.ERROR, this.failureMessage);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class JobService extends CrudService<Job> implements IJobService {
             allJobs.addAll(jobs);
         }
 
-        return super.createServiceResultArray(allJobs, false, this.successMessage);
+        return super.createServiceResultArray(allJobs, NotificationType.SUCCESS, this.successMessage);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class JobService extends CrudService<Job> implements IJobService {
 
         for (Job jobFromDb : jobs) {
             if (jobFromDb.getId().equals(job.getId())) {
-                return super.createServiceResult(null, true, "already exists");
+                return super.createServiceResult(null, NotificationType.ERROR, "already exists");
             }
         }
 
@@ -73,11 +74,11 @@ public class JobService extends CrudService<Job> implements IJobService {
 
         Job result = this.extractJobFromStage(stage, job.getId());
 
-        if ((result == null) || serviceResult.hasError()) {
-            return super.createServiceResult(null, true, "not created");
+        if ((result == null) || (serviceResult.getNotificationType() == NotificationType.ERROR)) {
+            return super.createServiceResult(null, NotificationType.ERROR, "not created");
         }
 
-        return super.createServiceResult(result, false, "created successfully");
+        return super.createServiceResult(result, NotificationType.SUCCESS, "created successfully");
     }
 
     @Override
@@ -96,13 +97,13 @@ public class JobService extends CrudService<Job> implements IJobService {
         }
 
         if (serviceResult == null) {
-            return super.createServiceResult(null, true, "not found");
+            return super.createServiceResult(null, NotificationType.ERROR, "not found");
         }
 
-        if (serviceResult.hasError()) {
-            serviceResult = super.createServiceResult((Job) serviceResult.getObject(), true, "not updated");
+        if ((serviceResult.getNotificationType() == NotificationType.ERROR)) {
+            serviceResult = super.createServiceResult((Job) serviceResult.getObject(), NotificationType.ERROR, "not updated");
         } else {
-            serviceResult = super.createServiceResult(job, false, "updated successfully");
+            serviceResult = super.createServiceResult(job, NotificationType.SUCCESS, "updated successfully");
         }
 
         return serviceResult;
@@ -125,7 +126,7 @@ public class JobService extends CrudService<Job> implements IJobService {
         }
 
         if (jobToDelete == null) {
-            return super.createServiceResult(jobToDelete, true, "not found");
+            return super.createServiceResult(jobToDelete, NotificationType.ERROR, "not found");
         }
 
         List<Job> jobs = stageToUpdate.getJobs();
@@ -133,11 +134,11 @@ public class JobService extends CrudService<Job> implements IJobService {
         stageToUpdate.setJobs(jobs);
         ServiceResult serviceResult = this.stageService.update(stageToUpdate);
 
-        if (serviceResult.hasError()) {
-            return super.createServiceResult(null, true, "not found");
+        if ((serviceResult.getNotificationType() == NotificationType.ERROR)) {
+            return super.createServiceResult(null, NotificationType.ERROR, "not found");
         }
 
-        return super.createServiceResult(jobToDelete, false, "deleted successfully");
+        return super.createServiceResult(jobToDelete, NotificationType.SUCCESS, "deleted successfully");
     }
 
     private Job extractJobFromStage(Stage stage, String jobId) {

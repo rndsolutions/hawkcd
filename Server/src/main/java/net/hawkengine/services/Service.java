@@ -2,6 +2,7 @@ package net.hawkengine.services;
 
 import net.hawkengine.model.DbEntry;
 import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.interfaces.IService;
 
 import java.util.List;
@@ -18,28 +19,26 @@ public abstract class Service<T extends DbEntry> implements IService<T> {
     }
 
     @Override
-    public ServiceResult createServiceResult(T object, boolean hasErrors, String messsage) {
-        ServiceResult result = new ServiceResult();
-        result.setError(hasErrors);
-        result.setObject(object);
-        if (!hasErrors) {
+    public ServiceResult createServiceResult(T object, NotificationType notificationType, String messsage) {
+        String resultMessage;
+        if (notificationType == NotificationType.SUCCESS) {
             if (object == null) {
-                result.setMessage(this.getObjectType() + " " + messsage + ".");
+                resultMessage = this.getObjectType() + " " + messsage + ".";
             } else {
-                result.setMessage(this.getObjectType() + " " + object.getId() + " " + messsage + ".");
+                resultMessage = this.getObjectType() + " " + object.getId() + " " + messsage + ".";
             }
         } else {
-            result.setMessage(this.getObjectType() + " " + messsage + ".");
+            resultMessage = this.getObjectType() + " " + messsage + ".";
         }
+        ServiceResult result = new ServiceResult(object, notificationType, resultMessage);
+
         return result;
     }
 
     @Override
-    public ServiceResult createServiceResultArray(List<?> object, boolean hasErrors, String messsage) {
-        ServiceResult result = new ServiceResult();
-        result.setError(hasErrors);
-        result.setObject(object);
-        result.setMessage(this.getObjectType() + "s " + messsage + ".");
+    public ServiceResult createServiceResultArray(List<?> object, NotificationType notificationType, String messsage) {
+        String resultMessage = this.getObjectType() + "s " + messsage + ".";
+        ServiceResult result = new ServiceResult(object, notificationType, resultMessage);
 
         return result;
     }

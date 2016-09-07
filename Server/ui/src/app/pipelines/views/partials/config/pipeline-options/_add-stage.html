@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
             <div class="form-group form-md-line-input">
-              <input type="text" class="form-control" ng-model="pipeConfig.newStage.name" ng-pattern="/^([\w-]+)$/" required>
+              <input type="text" class="form-control" name="stageName" ng-model="pipeConfig.newStage.name" ng-pattern="/^([\w-]+)$/" required>
               <label>Stage Name</label>
             </div>
             <div class="form-group form-md-line-input">
@@ -230,7 +230,7 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-danger" data-dismiss="modal" type="submit" ng-disabled="addNewStageForm.$invalid" ng-click="pipeConfig.addStage(pipeConfig.newStage)">Add Stage</button>
+          <button class="btn btn-danger" data-dismiss="modal" type="submit" ng-class="{'disabled':addNewStageForm.$invalid}" ng-click="pipeConfig.addStage(pipeConfig.newStage,addNewStageForm)">Add Stage</button>
           <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
         </div>
 

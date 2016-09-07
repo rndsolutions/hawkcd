@@ -3,6 +3,7 @@ package net.hawkengine.http.tests;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.http.JobDefinitionController;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.JobDefinitionService;
@@ -105,7 +106,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         //Arrange
         String expectedResult = "JobDefinition not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(null);
         Mockito.when(this.jobDefinitionService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
@@ -143,7 +144,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.jobDefinition.setName(null);
         String expectedResult = "ERROR: JOB DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setObject(this.jobDefinition);
         Mockito.when(this.jobDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
@@ -186,7 +187,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareJobDefinition();
         this.serviceResult.setObject(null);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         String expectedResult = "JobDefinition with the same name exists.";
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.jobDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
@@ -226,7 +227,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareJobDefinition();
         String expectedMessage = "JobDefinition not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
@@ -245,7 +246,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareJobDefinition();
         String expectedResult = "JobDefinition with the same name exists.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
@@ -265,7 +266,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.prepareJobDefinition();
         String expectedResult = "ERROR: JOB DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.jobDefinition.setName(null);
         Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
@@ -296,7 +297,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void deleteJobDefinition_nonExistingJobDefinition_errorMessage() {
         //Arrange
         String expectedMessage = "JobDefinition not found.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 
@@ -314,7 +315,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         //Arrange
         this.prepareJobDefinition();
         String expectedMessage = this.jobDefinition.getId() + " cannot delete the last job definition.";
-        this.serviceResult.setError(true);
+        this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedMessage);
         Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
 

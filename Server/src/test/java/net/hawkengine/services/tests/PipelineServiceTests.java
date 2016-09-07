@@ -7,6 +7,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.MaterialDefinitionService;
@@ -62,7 +63,7 @@ public class PipelineServiceTests {
         Pipeline actualPipeline = (Pipeline) actualResult.getObject();
 
         Assert.assertEquals(expectedPipeline.getId(), actualPipeline.getId());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -75,7 +76,7 @@ public class PipelineServiceTests {
         ServiceResult actualResult = this.pipelineService.getById("someInvalidId");
 
         Assert.assertEquals(actualResult.getObject(), null);
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
     @Test
@@ -95,7 +96,7 @@ public class PipelineServiceTests {
         List<Pipeline> actualPipelines = (List<Pipeline>) actualResult.getObject();
 
         Assert.assertEquals(expectedCollectionSize, actualPipelines.size());
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -103,7 +104,7 @@ public class PipelineServiceTests {
         ServiceResult actualResult = this.pipelineService.getAll();
         List<Pipeline> actualPipelines = (List<Pipeline>) actualResult.getObject();
 
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS, actualPipelines.size());
     }
 
@@ -118,7 +119,7 @@ public class PipelineServiceTests {
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualCollectionSize);
         Assert.assertNotNull(actualPipeline);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedPipeline.getId(), actualPipeline.getId());
     }
 
@@ -136,7 +137,7 @@ public class PipelineServiceTests {
         int actualCollectionSize = actualPipeline.getStages().size();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualCollectionSize);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
     @Test
     public void add_validObjectWithJob_oneObject() {
@@ -156,7 +157,7 @@ public class PipelineServiceTests {
         int actualCollectionSize = actualPipeline.getStages().get(0).getJobs().size();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualCollectionSize);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -187,7 +188,7 @@ public class PipelineServiceTests {
         int actualCollectionSize = actualPipeline.getStages().get(0).getJobs().get(0).getTasks().size();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualCollectionSize);
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
@@ -198,7 +199,7 @@ public class PipelineServiceTests {
         this.pipelineService.add(expectedPipeline);
         ServiceResult actualResult = this.pipelineService.add(expectedPipeline);
 
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertNull(actualResult.getObject());
     }
 
@@ -216,7 +217,7 @@ public class PipelineServiceTests {
         ServiceResult actualResult = this.pipelineService.update(expectedPipeline);
         Pipeline actualPipeline = (Pipeline) actualResult.getObject();
 
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertTrue(actualPipeline.areMaterialsUpdated());
 
     }
@@ -230,14 +231,14 @@ public class PipelineServiceTests {
 
         ServiceResult actualResult = this.pipelineService.delete(pipelineToAdd.getId());
 
-        Assert.assertFalse(actualResult.hasError());
+        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
     }
 
     @Test
     public void delete_nonexistentObject_false() {
         ServiceResult actualResult = this.pipelineService.delete("someInvalidId");
 
-        Assert.assertTrue(actualResult.hasError());
+        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
     @Test
@@ -288,7 +289,7 @@ public class PipelineServiceTests {
         Stage stage = new Stage();
 
         Job firstJob = new Job();
-        firstJob.setStatus(JobStatus.AWAITING);
+        firstJob.setStatus(JobStatus.UNASSIGNED);
 
         Job secondJob = new Job();
         secondJob.setStatus(JobStatus.PASSED);

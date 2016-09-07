@@ -71,10 +71,12 @@
         <form class="forget-form" name="forgetForm" ng-show="showForgotPasswordForm">
             <h3 class="font-green">Forget Password ?</h3>
             <p class="font-green"> Enter your e-mail address below to reset your password. </p>
+            <p class="alert alert-danger" ng-show="(forgetForm.email.$error.pattern && forgetForm.email.$touched)"> Invalid email format. </p>
+
             <div class="form-group">
-                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" ng-pattern="/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/" required> </div>
+                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" ng-model="forgotPassword.email" name="email" ng-pattern="/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/" required> </div>
             <div class="form-actions">
-                <button type="button" id="back-btn" class="btn btn-default"  ng-click="showLogin()">Back</button>
+                <button type="button" id="back-btn" class="btn btn-default"  ng-click="showLogin();cancelForgotPassword()">Back</button>
                 <button type="submit" class="btn btn-success uppercase pull-right" ng-disabled="forgetForm.$invalid" id="submit-forgot-password">Submit</button>
             </div>
         </form>
@@ -133,7 +135,7 @@
             </br>
 
             <div class="form-actions">
-                <button type="button" id="back-btn" class="btn btn-default" ng-click="showLogin()">Back</button>
+                <button type="button" id="back-btn" class="btn btn-default" ng-click="showLogin();cancelRegister();">Back</button>
 
             </div>
         </form>

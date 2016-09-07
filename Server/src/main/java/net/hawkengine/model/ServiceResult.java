@@ -1,9 +1,21 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.enums.NotificationType;
+
 public class ServiceResult {
-    private boolean error;
-    private String message;
     private Object object;
+    private NotificationType notificationType;
+    private String message;
+
+    public ServiceResult(){
+        
+    }
+
+    public ServiceResult(Object object, NotificationType notificationType, String message) {
+        this.object = object;
+        this.notificationType = notificationType;
+        this.message = message;
+    }
 
     public Object getObject() {
         return this.object;
@@ -13,12 +25,12 @@ public class ServiceResult {
         this.object = object;
     }
 
-    public boolean hasError() {
-        return this.error;
+    public NotificationType getNotificationType() {
+        return this.notificationType;
     }
 
-    public void setError(boolean error) {
-        this.error = error;
+    public void setNotificationType(NotificationType notificationType) {
+        this.notificationType = notificationType;
     }
 
     public String getMessage() {

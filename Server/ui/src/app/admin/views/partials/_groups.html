@@ -11,7 +11,7 @@
   <div class="custom-unassigned-pipeline-padding" ng-if="admin.unassignedPipelines.length > 0">
   <h4>Unassigned Pipelines</h4>
   <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in admin.unassignedPipelines">
-    <span class="label label-default admin-custom"> {{pipeline.name}}</span>
+    <span class="label label-default admin-custom"> {{pipeline.name.substring(0,10)}} <span ng-if="pipeline.name.length > 10">..</span>
   </div>
     </div>
   <div class="col-sm-12 padding-top-1">
@@ -32,7 +32,7 @@
             <h5 class="accordion-heading-fix" ng-click="admin.openAccordion(admin.isPipeGroupOpen,$index);admin.clearSelection()"> {{pipeGroup.name}} <span class="badge badge-default custom-admin-badge-color"> {{pipeGroup.pipelines.length}} </span></h5>
         </uib-accordion-heading>
         <div class="custom-admin-pipeline-padding" ng-repeat="pipeline in pipeGroup.pipelines">
-          <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{pipeline.name}}</span>
+          <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{pipeline.name.substring(0,15)}} <span ng-if="pipeline.name.length > 15">..</span>
         </div>
         </br>
         <div class="pull-right">

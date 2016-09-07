@@ -10,7 +10,7 @@ public class EndpointConnector {
         contract.setClassName(className);
         contract.setMethodName(methodName);
         contract.setResult(serviceResult.getObject());
-        contract.setError(serviceResult.hasError());
+        contract.setNotificationType(serviceResult.getNotificationType());
         contract.setErrorMessage(serviceResult.getMessage());
 
         SessionPool.getInstance().sendToAuthorizedSessions(contract);
@@ -21,7 +21,7 @@ public class EndpointConnector {
         contract.setClassName(className);
         contract.setMethodName(methodName);
         contract.setResult(serviceResult.getObject());
-        contract.setError(serviceResult.hasError());
+        contract.setNotificationType(serviceResult.getNotificationType());
         contract.setErrorMessage(serviceResult.getMessage());
 
         SessionPool.getInstance().sendToUserSessions(contract, user);

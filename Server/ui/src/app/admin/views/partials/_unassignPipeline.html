@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    {{admin.defaultText.unassignPipelineModal.confirm}}<strong>{{admin.pipelineToUnassign.name}} </strong>
+                    {{admin.defaultText.unassignPipelineModal.confirm}}<strong>{{admin.pipelineToUnassign.name.substring(0,22)}} <span ng-if="admin.pipelineToUnassign.name.length > 21">..</span> </strong>
                     <br>
                     <hr>
                     <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.unassignPipeline()">Unassign</button>

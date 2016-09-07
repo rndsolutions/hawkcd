@@ -1,30 +1,19 @@
 package net.hawkengine.http;
 
 import net.hawkengine.core.utilities.SchemaValidator;
-import net.hawkengine.model.Agent;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
+import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -62,7 +51,7 @@ public class AgentController {
     @Path("/{agentId}")
     public Response getById(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getById(agentId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND)
                     .type(MediaType.TEXT_HTML)
                     .entity(result.getMessage())
@@ -79,7 +68,7 @@ public class AgentController {
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getWorkInfo(agentId);
-        if (result.hasError()){
+        if (result.getNotificationType() == NotificationType.ERROR){
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .build();
@@ -96,7 +85,7 @@ public class AgentController {
         String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.add(agent);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -122,14 +111,6 @@ public class AgentController {
         // TODO: Move logic into JobService
         if (job == null) {
             return Response.status(Status.OK).build();
-        }
-
-        if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
-            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
-            agent.setRunning(false);
-            agent.setAssigned(false);
-            ServiceResult result = this.agentService.update(agent);
-            EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
         }
 
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();
@@ -162,6 +143,13 @@ public class AgentController {
 
         this.pipelineService.update(pipeline);
 
+        if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
+            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
+            agent.setAssigned(false);
+            ServiceResult result = this.agentService.update(agent);
+            EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
+        }
+
         return Response.status(Status.OK).build();
     }
 
@@ -172,7 +160,7 @@ public class AgentController {
         String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.update(agent);
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.NOT_FOUND)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -199,7 +187,7 @@ public class AgentController {
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.getById(agent.getId());
             Agent agentFromDb = (Agent) result.getObject();
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 result = this.agentService.add(agent);
 
                 return Response.status(Status.OK)
@@ -217,7 +205,7 @@ public class AgentController {
 
             result = this.agentService.update(agentFromDb);
 
-            if (result.hasError()) {
+            if (result.getNotificationType() == NotificationType.ERROR) {
                 return Response.status(Status.BAD_REQUEST)
                         .entity(result.getMessage())
                         .type(MediaType.TEXT_HTML)
@@ -242,7 +230,7 @@ public class AgentController {
     @Path("/{agentId}")
     public Response deleteAgent(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.delete(agentId);
-        if (result.hasError()) {
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND)
                     .entity(result.getMessage())
                     .type(MediaType.TEXT_HTML)

@@ -23,6 +23,7 @@ angular
             };
 
             $scope.userLoginForm = {};
+            $scope.forgetForm = {};
 
             $scope.registerUser = function() {
                 accountService.registerUser($scope.userLoginForm)
@@ -109,6 +110,21 @@ angular
                 $scope.showLoginForm = true;
                 $scope.showRegisterForm = false;
                 $scope.showForgotPasswordForm = false;
+            }
+
+            $scope.cancelRegister = function(){
+              $scope.register_email = '';
+              $scope.register_password = '';
+              $scope.confirm_password = '';
+              $scope.registerForm.$setPristine();
+              $scope.registerForm.$setUntouched();
+            }
+
+            $scope.forgotPassword = {};
+            $scope.cancelForgotPassword = function(){
+              $scope.forgetForm.$setPristine();
+              $scope.forgetForm.$setUntouched();
+              $scope.forgotPassword.email = '';
             }
 
             $scope.showForgotPassword = function() {
