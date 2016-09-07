@@ -90,6 +90,8 @@ angular
                         }
                         vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
                         if (currentPipelineRun.startTime && currentPipelineRun.endTime) {
+                            currentPipelineRun.localStartDate = moment.formatDateUTCToLocal(currentPipelineRun.startTime);
+                            currentPipelineRun.localEndDate = moment.formatDateUTCToLocal(currentPipelineRun.endTime);
                             currentPipelineRun.localStartTime = moment.formatTimeInLocal(currentPipelineRun.startTime.time);
                             currentPipelineRun.localEndTime = moment.formatTimeInLocal(currentPipelineRun.endTime.time);
                         }
