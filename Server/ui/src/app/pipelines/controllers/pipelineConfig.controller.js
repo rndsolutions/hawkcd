@@ -301,9 +301,20 @@ angular
             console.log(vm.selectedPipelineStages);
         };
 
+        vm.getPipelineForTaskUpdate = function(name) {
+            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+                if (currentPipeline.name == name) {
+                    vm.updatedTask.pipelineDefinitionId = currentPipeline.id;
+                    vm.selectedPipelineStages = angular.copy(currentPipeline.stageDefinitions);
+                    debugger;
+                }
+            });
+        };
+
         vm.getPipelineForTaskById = function(id) {
             vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
                 if (currentPipeline.id == id) {
+                    vm.updatedTask.pipelineDefinitionId = currentPipeline.id;
                     vm.selectedPipelineStages = angular.copy(currentPipeline.stageDefinitions);
                 }
             });
@@ -373,9 +384,19 @@ angular
             console.log(vm.selectedStageJobs);
         };
 
+        vm.getStageForTaskUpdate = function(name) {
+            vm.selectedPipelineStages.forEach(function(currentStage, stageIndex, stageArray) {
+                if (currentStage.name == name) {
+                    vm.updatedTask.stageDefinitionId = currentStage.id;
+                    vm.selectedStageJobs = angular.copy(currentStage.jobDefinitions);
+                }
+            });
+        };
+
         vm.getStageForTaskById = function(id) {
             vm.selectedPipelineStages.forEach(function(currentStage, stageIndex, stageArray) {
                 if (currentStage.id == id) {
+                    vm.updatedTask.stageDefinitionId = currentStage.id;
                     vm.selectedStageJobs = angular.copy(currentStage.jobDefinitions);
                 }
             });
@@ -544,6 +565,16 @@ angular
             }
         };
 
+        vm.getJobForTaskUpdate = function(name) {
+            vm.selectedStageJobs.forEach(function(currentJob, jobIndex, jobArray) {
+                debugger;
+                if (currentJob.name == name) {
+                    vm.updatedTask.jobDefinitionId = currentJob.id;
+                    vm.updatedTask.jobDefinitionName = currentJob.name;
+                    debugger;
+                }
+            });
+        };
 
         vm.addJob = function(newJob) {
             if (newJob.taskDefinitions.type == 'EXEC') {
