@@ -89,8 +89,10 @@ angular
                             currentPipelineRun.triggerReason = viewModel.user.username;
                         }
                         vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
-                        currentPipelineRun.localStartTime = moment.formatTimeInLocal(currentPipelineRun.startTime.time);
-                        currentPipelineRun.localEndTime = moment.formatTimeInLocal(currentPipelineRun.endTime.time);
+                        if (currentPipelineRun.startTime && currentPipelineRun.endTime) {
+                            currentPipelineRun.localStartTime = moment.formatTimeInLocal(currentPipelineRun.startTime.time);
+                            currentPipelineRun.localEndTime = moment.formatTimeInLocal(currentPipelineRun.endTime.time);
+                        }
                         vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
                     }
                 });
