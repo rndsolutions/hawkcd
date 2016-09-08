@@ -14,8 +14,8 @@
     <div class="panel-body">
         <div class="info">
             <p><strong>Started:</strong>
-                <span ng-if="pipe.lastRun != null">{{pipe.lastRun.startTime.time.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.startTime.time.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipe.lastRun.startTime.date.day}}/{{pipe.lastRun.startTime.date.month}}/{{pipe.lastRun.startTime.date.year}}</span></p>
-            <p><strong>Finished:</strong> {{pipe.End | date:"dd/MM/yyyy HH:mm"}}</p>
+                <span ng-if="pipe.lastRun.localStartTime != null">{{pipe.lastRun.localStartTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.localStartTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.localStartTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipe.lastRun.localStartDate.date}}/{{pipe.lastRun.localStartDate.months}}/{{pipe.lastRun.localStartDate.years}}</span></p>
+            <p><strong>Finished:</strong><span ng-if="pipe.lastRun.localEndTime != null"> {{pipe.lastRun.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipe.lastRun.localEndDate.date}}/{{pipe.lastRun.localEndDate.months}}/{{pipe.lastRun.localEndDate.years}}</span></p>
             <div style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap; "><strong>Reason:</strong> {{pipe.lastRun.triggerReason}}</div>
 
         </div>
@@ -28,7 +28,7 @@
             <span ng-if="stage.status=='FAILED' && $index<9">
               <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
-                <span ng-if="stage.status=='CANCELED' && $index<9">
+            <span ng-if="stage.status=='CANCELED' && $index<9">
               <button type="button" class="btn btn-canceled s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'NOT_RUN' && $index<9">

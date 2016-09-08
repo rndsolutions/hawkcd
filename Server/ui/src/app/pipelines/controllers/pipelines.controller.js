@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService, adminMaterialService) {
+    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService, adminMaterialService, moment) {
         var vm = this;
         vm.toggleLogo = 1;
 
@@ -31,37 +31,38 @@ angular
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
-            if(vm.allPipelineRuns.length > 0) {
-                vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
-                    vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
-                        if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+            if (vm.allPipelineRuns.length > 0) {
+                vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
+                    vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
+                        if (currentPipelineRun.pipelineDefinitionId == currentPipeline.id) {
                             vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
                             vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
                         }
                     });
                 });
             }
-            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
                 currentPipeline.disabled = false;
                 var isContained = false;
                 var groupNames = [];
-                vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                    if($.grep(currentPipelineGroup.pipelines, function(obj) { return obj.id == currentPipeline.id}).length > 0){
+                vm.allPipelineGroups.forEach(function(currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
+                    if ($.grep(currentPipelineGroup.pipelines, function(obj) {
+                            return obj.id == currentPipeline.id
+                        }).length > 0) {
                         isContained = true;
                     }
                     groupNames.push(currentPipelineGroup.name);
                 });
-                if(!isContained && currentPipeline.pipelineGroupId != ''){
+                if (!isContained && currentPipeline.pipelineGroupId != '') {
                     var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
-                    debugger;
-                    if(groupIndex > -1){
+                    if (groupIndex > -1) {
                         vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
                     } else {
                         var newGroup = {};
                         newGroup.name = currentPipeline.groupName;
                         newGroup.id = currentPipeline.pipelineGroupId;
                         vm.allPipelineGroups.push(newGroup);
-                        if(newGroup.pipelines == null){
+                        if (newGroup.pipelines == null) {
                             newGroup.pipelines = [];
                         }
                         newGroup.pipelines.push(currentPipeline);
@@ -80,14 +81,20 @@ angular
             vm.allPipelineRuns.sort(function(a, b) {
                 return a.executionId - b.executionId;
             });
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
-                vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
-                    if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
+            vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
+                vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
+                    if (currentPipelineRun.pipelineDefinitionId == currentPipeline.id) {
                         currentPipeline.disabled = false;
-                        if(currentPipelineRun.triggerReason == null) {
+                        if (currentPipelineRun.triggerReason == null) {
                             currentPipelineRun.triggerReason = viewModel.user.username;
                         }
                         vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
+                        if (currentPipelineRun.startTime && currentPipelineRun.endTime) {
+                            currentPipelineRun.localStartDate = moment.formatDateUTCToLocal(currentPipelineRun.startTime);
+                            currentPipelineRun.localEndDate = moment.formatDateUTCToLocal(currentPipelineRun.endTime);
+                            currentPipelineRun.localStartTime = moment.formatTimeInLocal(currentPipelineRun.startTime.time);
+                            currentPipelineRun.localEndTime = moment.formatTimeInLocal(currentPipelineRun.endTime.time);
+                        }
                         vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
                     }
                 });
@@ -110,29 +117,31 @@ angular
                 });
             });
 
-            vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
                 currentPipeline.disabled = false;
                 var isContained = false;
                 var groupNames = [];
-                vm.allPipelineGroups.forEach(function (currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                    if(currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
-                        if($.grep(currentPipelineGroup.pipelines, function(obj) { return obj.id == currentPipeline.id}).length > 0){
+                vm.allPipelineGroups.forEach(function(currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
+                    if (currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
+                        if ($.grep(currentPipelineGroup.pipelines, function(obj) {
+                                return obj.id == currentPipeline.id
+                            }).length > 0) {
                             isContained = true;
                         }
                     }
                     groupNames.push(currentPipelineGroup.name);
                 });
-                if(!isContained && currentPipeline.pipelineGroupId != ''){
+                if (!isContained && currentPipeline.pipelineGroupId != '') {
                     var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
                     debugger;
-                    if(groupIndex > -1){
+                    if (groupIndex > -1) {
                         vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
                     } else {
                         var newGroup = {};
                         newGroup.name = currentPipeline.groupName;
                         newGroup.id = currentPipeline.pipelineGroupId;
                         vm.allPipelineGroups.push(newGroup);
-                        if(newGroup.pipelines == null){
+                        if (newGroup.pipelines == null) {
                             newGroup.pipelines = [];
                         }
                         newGroup.pipelines.push(currentPipeline);
@@ -224,7 +233,7 @@ angular
             var pipeline = {
                 "pipelineDefinitionId": pipelineDefinition.id,
                 "pipelineDefinitionName": pipelineDefinition.name,
-                "triggerReason":viewModel.user.username
+                "triggerReason": viewModel.user.username
             };
 
             pipeExecService.startPipeline(pipeline);
@@ -432,7 +441,7 @@ angular
             }
             if (vm.materialType == 'existing') {
                 addPipelineDTO.materialDefinition = vm.materialObject.id;
-                pipeConfigService.addPipelineDefinitionWithExistingMaterial(addPipelineDTO.pipelineDefinition,addPipelineDTO.materialDefinition);
+                pipeConfigService.addPipelineDefinitionWithExistingMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
             }
 
             vm.selectedMaterial = {};

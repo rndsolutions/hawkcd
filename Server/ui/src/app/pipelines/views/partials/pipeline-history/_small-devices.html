@@ -1,7 +1,7 @@
 <div id="runs-container-small" ng-repeat="run in pipesHistory.currentPipelineRuns">
     <div class="mt-element-list">
-        <div class="mt-list-container list-simple ext-1 group" >
-            <a class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false" >
+        <div class="mt-list-container list-simple ext-1 group">
+            <a class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false">
                 <div id="header-container" class="list-toggle done">
                     <div id="header-main" ng-class="{'status-passed' : run.status == 'PASSED', 'status-failed' : run.status == 'FAILED', 'status-working' : run.status == 'IN_PROGRESS', 'status-canceled' : run.status == 'CANCELED'}">
                         <div id="left-header-container">
