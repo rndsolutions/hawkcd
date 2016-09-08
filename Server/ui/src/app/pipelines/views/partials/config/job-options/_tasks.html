@@ -24,8 +24,8 @@
         <td ng-if="task.type == 'UPLOAD_ARTIFACT'"> Source: {{task.source}}</td>
         <td> to do </td>
         <td>
-          <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTaskForUpdate(task)">Edit</button>
-          <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#removeTask"
+          <button class="btn yellow unsortable" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTaskForUpdate(task)">Edit</button>
+          <button class="btn red unsortable" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#removeTask"
                   ng-click="pipeConfig.getTask(task)" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions.length > 1">Delete</button>
         </td>
       </tr>
