@@ -12,6 +12,14 @@ angular
 
             $scope.userEmail = localStorage['email'];
 
+            $scope.user = {};
+
+            $scope.$watch(function() {
+                return viewModel.user;
+            }, function(newVal, oldVal) {
+                $scope.user = viewModel.user;
+            }, true);
+
             // console.log(localStorage);
             $scope.latestCommit = "";
 
