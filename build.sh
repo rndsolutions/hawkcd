@@ -74,6 +74,8 @@ failBuild
 echo "copy files server build outputs to the dist folder"
 cp -r build/libs/* ../dist/Server
 
+cp ../hawkcd.sh ../dist/Server/
+
 echo "list current dir:"
 ls -al
 
