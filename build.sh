@@ -23,6 +23,12 @@ ls -al
 
 echo "creating dist folder.."
 cd ../
+
+if [ -d "dist" ]; then
+    rm -rf dist
+    failBuild
+fi
+
 mkdir dist
 
 echo "list current dir:"
@@ -43,8 +49,7 @@ ls -al
 
 echo "cleaning up resources folder..."
 cd ../Server/src/main/resources/
-rm -rf dist
-failBuild
+
 
 
 echo "building the client..."
@@ -74,7 +79,9 @@ failBuild
 echo "copy files server build outputs to the dist folder"
 cp -r build/libs/* ../dist/Server
 
-cp ../hawkcd.sh ../dist/Server/
+cp ../Server/hawkcd.sh ../dist/Server/
+
+cp ../Agent/agent.sh ../dist/Agent/
 
 echo "list current dir:"
 ls -al
