@@ -11,6 +11,7 @@ function failBuild  {
     fi
  }
 
+
 echo "building the agent.."
 cd Agent
 
@@ -42,7 +43,7 @@ echo "list current dir:"
 ls -al
 
 cd ../Agent/
-cp -r build/libs/* ../dist/Agent
+cp build/libs/Agent-all.jar ../dist/Agent
 
 echo "list current dir:"
 ls -al
@@ -77,13 +78,23 @@ failBuild
 
 
 echo "copy files server build outputs to the dist folder"
-cp -r build/libs/* ../dist/Server
+cp  build/libs/Server-all.jar ../dist/Server
 
 cp ../Server/hawkcd.sh ../dist/Server/
 
 cp ../Agent/agent.sh ../dist/Agent/
 
-echo "list current dir:"
-ls -al
+cd ../dist/Server
+wget http://www.hawkcd.io/downloads/dependences/redis.tar.gz
+tar zxvf redis.tar.gz
+rm redis.tar.gz
+
+#create distribution packages
+echo "Create distribution packages"
+cd ../
+tar -cvzf hawkcd.tar.gz Server
+tar -cvzf hawkcd-agent.tar.gz Agent
+
+echo -e "Build finished successfully"
 
 

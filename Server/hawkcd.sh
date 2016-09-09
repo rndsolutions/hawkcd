@@ -72,7 +72,7 @@ function check_java {
       return 1;
   fi
 
-  if [ "$JAVA_VERSION" > "1.8" ]; then
+  if [[ "$JAVA_VERSION" > '1.8' ]]; then
       echo -e "${GREEN}Java version $JAVA_VERSION is found ${RESET}"
   else
       echo -e "${RED} java 1.8 or above is required ${RESET}"
@@ -99,7 +99,7 @@ function start_server {
   java -jar Server-all.jar &
 }
 function start_db {
-  data/redis/redis-server &
+  data/Linux/redis/redis-server &
 }
 function list {
   echo "---Available commands---"
