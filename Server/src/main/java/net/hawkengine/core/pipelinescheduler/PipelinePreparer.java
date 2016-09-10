@@ -121,6 +121,7 @@ public class PipelinePreparer implements Runnable {
             currentStage.setEnvironmentVariables(stageDefinitions.get(i).getEnvironmentVariables());
             currentStage.setPipelineId(pipeline.getId());
             currentStage.setJobs(this.preparePipelineJobs(stageDefinitions.get(i).getJobDefinitions(), currentStage));
+            currentStage.setTriggeredManually(stageDefinitions.get(i).isTriggeredManually());
 
             stages.set(i, currentStage);
         }
