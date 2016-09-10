@@ -102,7 +102,6 @@ angular
         };
 
         adminService.resetUserPassword = function(user) {
-          debugger;
             var methodName = "resetUserPassword";
             var className = "UserService";
             var packageName = "net.hawkengine.services";
