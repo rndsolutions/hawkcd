@@ -1,5 +1,7 @@
 package net.hawkengine.agent.components.taskexecutor.executors;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -12,11 +14,14 @@ import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.enums.TaskType;
 import net.hawkengine.agent.models.Job;
 import net.hawkengine.agent.models.Task;
+import net.hawkengine.agent.models.TaskDefinition;
 import net.hawkengine.agent.models.UploadArtifactTask;
+import net.hawkengine.agent.models.payload.UploadArtifactInfo;
 import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 
+import net.hawkengine.agent.utilities.deserializers.TaskDefinitionAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +50,7 @@ public class UploadArtifactExecutorTest extends TestBase {
     private WorkInfo workInfo;
     private UploadArtifactExecutor uploadArtifactExecutor;
     private StringBuilder report;
+    private Gson jsonConverter;
 
     @Before
     public void setUp() {
@@ -69,6 +75,10 @@ public class UploadArtifactExecutorTest extends TestBase {
         this.uploadArtifactExecutor = new UploadArtifactExecutor(this.mockedClient, this.mockedFileManagementService);
         this.report = new StringBuilder();
         this.setupData();
+
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .create();
     }
 
     private void setupData() {
@@ -104,10 +114,13 @@ public class UploadArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn(null);
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
 
+        UploadArtifactInfo uploadArtifactInfo = new UploadArtifactInfo(this.mockedFile, this.uploadArtifactTaskDefinition.getDestination());
+        String uploadArtifactInfoAsString = this.jsonConverter.toJson(uploadArtifactInfo);
+
         Mockito.when(this.mockedClient.resource("my/path/upload-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, this.mockedFile)).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, uploadArtifactInfoAsString)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(200);
 
         //Act
@@ -157,10 +170,13 @@ public class UploadArtifactExecutorTest extends TestBase {
         Mockito.when(this.mockedFileManagementService.zipFiles("pathToFile", this.mockedFileList, "rootPath", false)).thenReturn(null);
         Mockito.when(this.mockedFileManagementService.urlCombine(Mockito.anyString())).thenReturn("my/path");
 
+        UploadArtifactInfo uploadArtifactInfo = new UploadArtifactInfo(this.mockedFile, this.uploadArtifactTaskDefinition.getDestination());
+        String uploadArtifactInfoAsString = this.jsonConverter.toJson(uploadArtifactInfo);
+
         Mockito.when(this.mockedClient.resource("my/path/upload-artifact")).thenReturn(this.mockedResource);
         Mockito.when(this.mockedResource.type(Mockito.anyString())).thenReturn(this.mockedBuilder);
         Mockito.when(this.mockedResource.accept(Mockito.anyString())).thenReturn(this.mockedBuilder);
-        Mockito.when(this.mockedResource.type("multipart/form-data").post(ClientResponse.class, this.mockedFile)).thenReturn(this.mockedResponse);
+        Mockito.when(this.mockedResource.type("application/json").post(ClientResponse.class, uploadArtifactInfoAsString)).thenReturn(this.mockedResponse);
         Mockito.when(this.mockedResponse.getStatus()).thenReturn(400);
 
         //Act
