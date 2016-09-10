@@ -1,6 +1,11 @@
 package net.hawkengine.http;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.hawkengine.core.ServerConfiguration;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.payload.UploadArtifactInfo;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
@@ -19,29 +24,42 @@ public class ArtifactController {
     private IFileManagementService fileManagementService;
     private String basePath;
     private String outputFolder;
+    private Gson jsonConverter;
 
     public ArtifactController() {
         this.fileManagementService = new FileManagementService();
         this.basePath = System.getProperty("user.dir");
         this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
         this.fileManagementService.deleteDirectoryRecursively(this.outputFolder);
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .create();
     }
 
     public ArtifactController(IFileManagementService fileManagementService) {
         this.fileManagementService = fileManagementService;
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .create();
     }
 
     @POST
     @Path("/{pipelineExecutionID}/upload-artifact")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response unzipFile(@PathParam("pipelineName") String pipelineName,
                               @PathParam("pipelineExecutionID") String pipelineExecutionID,
-                              File zipFile) {
+                              String uploadArtifactInfoAsString) {
         String artifactsFolder = ServerConfiguration.getConfiguration().getArtifactsDestination();
-        this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID;
+        UploadArtifactInfo uploadArtifactInfo = this.jsonConverter.fromJson(uploadArtifactInfoAsString, UploadArtifactInfo.class);
+        if (uploadArtifactInfo.getDestination() != null){
+            String destination = this.fileManagementService.normalizePath(uploadArtifactInfo.getDestination());
+            this.outputFolder = destination + File.separator + pipelineName + File.separator + pipelineExecutionID;
+        } else {
+            this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID;
+        }
 
-        String errorMessage = this.fileManagementService.unzipFile(zipFile.getPath(), this.outputFolder);
+        String errorMessage = this.fileManagementService.unzipFile(uploadArtifactInfo.getZipFile().getPath(), this.outputFolder);
 
         if (errorMessage != null) {
             return Response.status(Response.Status.NOT_FOUND)
