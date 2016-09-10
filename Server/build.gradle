@@ -15,6 +15,17 @@ plugins {
 
 }
 
+
+test {
+reports {
+    html {
+     enabled true
+    }
+     reports.html.destination = "$buildDir/test-results/agent-report"
+    }
+}
+
+
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
 
 jacocoTestReport {
@@ -85,7 +96,7 @@ dependencies {
 
     compile 'org.eclipse.jetty.websocket:javax-websocket-client-impl:9.3.8.v20160314'
 
-    //Jersey ----  
+    //Jersey ----
 
     compile 'org.glassfish.jersey.core:jersey-server:2.22.2'
 
