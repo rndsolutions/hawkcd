@@ -378,7 +378,7 @@ angular
             vm.userDTO = {};
             vm.changeUserPassword = function(updatedUser,userDTO,form){
               updatedUser.password = userDTO.newPassword;
-              adminService.updateUserPassword(updatedUser);
+              adminService.resetUserPassword(updatedUser);
               form.$setPristine();
               form.$setUntouched();
               form.userEmail = '';
