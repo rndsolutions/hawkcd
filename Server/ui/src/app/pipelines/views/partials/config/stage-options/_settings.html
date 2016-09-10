@@ -7,31 +7,31 @@
         <input type="text" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" class="form-control" ng-model="pipeConfig.updatedStage.name" ng-pattern="/^([\w-]+)$/" required>
         <label>Stage Name</label>
       </div>
-      <!--<div class="form-group form-md-radios">-->
-        <!--<label>Stage Type</label>-->
-        <!--<div class="md-radio-list">-->
-          <!--<div class="md-radio">-->
-            <!--<input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sManual" name="trigger"-->
-                   <!--value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">-->
-            <!--<label for="sManual">-->
-              <!--<span></span>-->
-              <!--<span class="check"></span>-->
-              <!--<span class="box"></span> Manual </label>-->
-          <!--</div>-->
-          <!--<div class="md-radio">-->
-            <!--<input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sOnSuccess" name="trigger"-->
-                   <!--value="false" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">-->
-            <!--<label for="sOnSuccess">-->
-              <!--<span></span>-->
-              <!--<span class="check"></span>-->
-              <!--<span class="box"></span> On Success </label>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
+      <div class="form-group form-md-radios">
+        <label>Stage Trigger</label>
+        <div class="md-radio-list">
+          <div class="md-radio">
+            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sManual" name="trigger"
+                   ng-value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
+            <label for="sManual">
+              <span></span>
+              <span class="check"></span>
+              <span class="box"></span> Manual </label>
+          </div>
+          <div class="md-radio">
+            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sOnSuccess" name="trigger"
+                   ng-value="false" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
+            <label for="sOnSuccess">
+              <span></span>
+              <span class="check"></span>
+              <span class="box"></span> On Success </label>
+          </div>
+        </div>
+      </div>
     </div>
 
     <button class="btn green-sharp" ng-click="pipeConfig.editStage(pipeConfig.updatedStage)"
-            ng-disabled="editStageForm.$invalid || pipeConfig.updatedStage.StageType == pipeConfig.stage.StageType && pipeConfig.updatedStage.name == pipeConfig.stage.name || pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">
+            ng-disabled="editStageForm.$invalid || pipeConfig.updatedStage.isTriggeredManually == pipeConfig.stage.isTriggeredManually && pipeConfig.updatedStage.name == pipeConfig.stage.name || pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">
       Update
     </button>
   </form>
