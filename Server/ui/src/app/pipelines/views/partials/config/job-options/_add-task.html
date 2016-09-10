@@ -172,6 +172,10 @@
                             <input type="text" class="form-control" ng-model="pipeConfig.newTask.source" required>
                             <label>Source</label>
                         </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control" ng-model="pipeConfig.newTask.destination" required>
+                            <label>Destination</label>
+                        </div>
                         <div class="form-group form-md-radios">
                             <label>Run If Conditions</label>
                             <div class="md-radio-list" ng-init="pipeConfig.newTask.runIfCondition='PASSED'">

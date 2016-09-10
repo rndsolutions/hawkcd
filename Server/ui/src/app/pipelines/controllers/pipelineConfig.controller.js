@@ -852,6 +852,7 @@ angular
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     source: newTask.source,
+                    destination:newTask.destination,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 }
@@ -913,6 +914,7 @@ angular
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
                     source: newTask.source,
+                    destination: newTask.destination,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 }
