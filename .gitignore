@@ -256,3 +256,4 @@ site
 /Agent/Log/
 /dist/
 src/test/resources/
+rev.txt
