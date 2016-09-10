@@ -1,0 +1,45 @@
+<div id="resetUserInfo" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Manage {{admin.selectedUser.email}}</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form role="form" name="resetUserInfo">
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3 required-fixed form-required-fix">User Email
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-model="admin.userDTO.email" type="text" name="userEmail" class="form-control" />
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3 required-fixed form-required-fix">New password
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-model="admin.userDTO.newPassword" type="password" name="userNewPassword" class="form-control" />
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3 required-fixed form-required-fix">Confirm password
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-pattern="admin.userDTO.newPassword" ng-model="admin.userDTO.confirmNewPassword" type="password" name="confirmNewPassword" class="form-control" />
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                        <br>
+                        <button class="btn green" ng-click="admin.updateUserPermission()" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.editUserInfo.changeButton}}</button>
+                        <button class="btn red" ng-click="admin.changeUserPassword(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.editUserInfo.resetPassword}}</button>
+                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closePermissionModal()">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
