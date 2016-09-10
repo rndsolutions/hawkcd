@@ -73,7 +73,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
 
         File zipFile = this.fileManagementService.generateUniqueFile(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath(), "zip");
 
-        String errorMessage = this.fileManagementService.zipFiles(zipFile.getPath(), files, rootPath, false);
+        String errorMessage = this.fileManagementService.zipFiles(zipFile.getPath(), files, rootPath, true);
 
         if (errorMessage != null) {
             zipFile.delete();
