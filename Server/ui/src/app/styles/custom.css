@@ -876,3 +876,7 @@ p {
 .form-required-fix {
   padding-left:10px;
 }
+
+.padding-cog {
+  padding:8px;
+}

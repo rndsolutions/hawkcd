@@ -33,9 +33,9 @@
                             </div>
                         </div>
                         <br>
-                        <button class="btn green" ng-click="admin.updateUserPermission()" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.editUserInfo.changeButton}}</button>
+                        <button class="btn green" ng-click="admin.changeUserEmail(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.editUserInfo.changeButton}}</button>
                         <button class="btn red" ng-click="admin.changeUserPassword(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.editUserInfo.resetPassword}}</button>
-                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closePermissionModal()">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
+                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
                         <br>
                     </form>
                 </div>

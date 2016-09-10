@@ -81,8 +81,8 @@ angular
                 },
                 editUserInfo: {
                     header: 'Delete User',
-                    changeButton:'Change Email',
-                    resetPassword:'Reset Password',
+                    changeButton: 'Change Email',
+                    resetPassword: 'Reset Password',
                     confirm: 'Confirm',
                     delete: 'Confirm',
                     cancel: 'Cancel'
@@ -371,20 +371,26 @@ angular
                 adminService.addUser(vm.newUser);
             };
 
-            vm.changeUserEmail = function(updatedUser,form){
-
+            vm.userDTO = {};
+            vm.changeUserEmail = function(updatedUser, userDTO, form) {
+                updatedUser.email = userDTO.email;
+                adminService.updateUser(updatedUser);
+                vm.closeUserSettingsModal(form);
             }
 
-            vm.userDTO = {};
-            vm.changeUserPassword = function(updatedUser,userDTO,form){
-              updatedUser.password = userDTO.newPassword;
-              adminService.resetUserPassword(updatedUser);
-              form.$setPristine();
-              form.$setUntouched();
-              form.userEmail = '';
-              form.userNewPassword = '';
-              form.confirmNewPassword = '';
-              vm.userDTO = {};
+            vm.changeUserPassword = function(updatedUser, userDTO, form) {
+                updatedUser.password = userDTO.newPassword;
+                adminService.resetUserPassword(updatedUser);
+                vm.closeUserSettingsModal(form);
+            }
+
+            vm.closeUserSettingsModal = function(form) {
+                form.$setPristine();
+                form.$setUntouched();
+                form.userEmail = '';
+                form.userNewPassword = '';
+                form.confirmNewPassword = '';
+                vm.userDTO = {};
             }
 
             vm.removeUser = function() {
@@ -470,9 +476,9 @@ angular
                 vm.clearSelection();
             };
 
-            vm.closeModal = function(){
-              vm.formData = {};
-              vm.materialType = 'git';
+            vm.closeModal = function() {
+                vm.formData = {};
+                vm.materialType = 'git';
             }
 
             vm.closeModalMaterials = function(internalViewModel, materialForm) {
