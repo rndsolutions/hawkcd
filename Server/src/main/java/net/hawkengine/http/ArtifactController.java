@@ -4,12 +4,17 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.File;
 
-@Path("/Artifacts/{pipelineName}/{stageName}/{jobName}")
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+@Path("/Artifacts/{pipelineName}")
 public class ArtifactController {
     private IFileManagementService fileManagementService;
     private String basePath;
@@ -27,15 +32,14 @@ public class ArtifactController {
     }
 
     @POST
-    @Path("/upload-artifact")
+    @Path("/{pipelineExecutionID}/upload-artifact")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response unzipFile(@PathParam("pipelineName") String pipelineName,
-                              @PathParam("stageName") String stageName,
-                              @PathParam("jobName") String jobName,
+                              @PathParam("pipelineExecutionID") String pipelineExecutionID,
                               File zipFile) {
         String artifactsFolder = ServerConfiguration.getConfiguration().getArtifactsDestination();
-        this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + stageName + File.separator + jobName;
+        this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID;
 
         String errorMessage = this.fileManagementService.unzipFile(zipFile.getPath(), this.outputFolder);
 
@@ -48,7 +52,7 @@ public class ArtifactController {
                 .build();
     }
 
-    @Path("/fetch-artifact")
+    @Path("/{stageName}/{jobName}/fetch-artifact")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.MULTIPART_FORM_DATA)
