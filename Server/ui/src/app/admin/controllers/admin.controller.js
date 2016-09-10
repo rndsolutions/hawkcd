@@ -79,6 +79,14 @@ angular
                     delete: 'Confirm',
                     cancel: 'Cancel'
                 },
+                editUserInfo: {
+                    header: 'Delete User',
+                    changeButton:'Change Email',
+                    resetPassword:'Reset Password',
+                    confirm: 'Confirm',
+                    delete: 'Confirm',
+                    cancel: 'Cancel'
+                },
                 deleteGroupModal: {
                     header: 'Delete Pipeline Group',
                     confirm: 'Are you sure you want to delete Group: '
@@ -94,13 +102,15 @@ angular
                     username: 'Username',
                     dateRegistered: 'Registered On',
                     permissions: 'Permissions',
-                    action: 'Action'
+                    action: 'Action',
+                    edit: 'Edit'
                 },
                 userInfo: {
                     username: 'Name of the user',
                     dateRegistered: 'Date registered on',
                     permissions: 'Permissions of the user',
-                    action: 'Available actions'
+                    action: 'Available actions',
+                    edit: 'Reset user password. Change user email'
                 },
                 tableTitles: {
                     name: 'Name',
@@ -330,6 +340,7 @@ angular
 
             vm.selectUser = function(index) {
                 vm.selectedUser = angular.copy(vm.users[index]);
+                vm.userDTO = angular.copy(vm.users[index]);
             };
 
             vm.selectPipeline = function(pipeline, index) {
@@ -359,6 +370,22 @@ angular
             vm.addUser = function() {
                 adminService.addUser(vm.newUser);
             };
+
+            vm.changeUserEmail = function(updatedUser,form){
+
+            }
+
+            vm.userDTO = {};
+            vm.changeUserPassword = function(updatedUser,userDTO,form){
+              updatedUser.password = userDTO.newPassword;
+              adminService.updateUserPassword(updatedUser);
+              form.$setPristine();
+              form.$setUntouched();
+              form.userEmail = '';
+              form.userNewPassword = '';
+              form.confirmNewPassword = '';
+              vm.userDTO = {};
+            }
 
             vm.removeUser = function() {
                 adminService.deleteUser(vm.selectedUser.id);
