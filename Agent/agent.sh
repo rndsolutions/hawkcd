@@ -1,4 +1,7 @@
 #!/bin/bash
+
+version=<replace>
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 RESET="$(tput sgr0)"
@@ -16,11 +19,11 @@ function start {
 
 function stop {
   #statements\
-    if [[ -z $(pgrep -x -f  "java -jar Agent-all.jar") ]]; then
+    if [[ -z $(pgrep -x -f  "java -jar $version.jar") ]]; then
       #statements
       echo "Agent is not running"
     else
-      pgrep -x -f  "java -jar Agent-all.jar" | kill $(tail)
+      pgrep -x -f  "java -jar $version.jar" | kill $(tail)
       echo "Agent stopped"
     fi
 }
@@ -61,7 +64,7 @@ function check_java {
 
 function start_agent {
   #statements
-  java -jar Agent-all.jar &
+  java -jar "$version".jar &
 }
 
 
