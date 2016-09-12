@@ -3,14 +3,18 @@ package net.hawkengine.core.pipelinescheduler;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.Task;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskStatus;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
+import net.hawkengine.ws.EndpointConnector;
+
 import org.apache.log4j.Logger;
 
 import java.time.ZoneOffset;
@@ -125,6 +129,10 @@ public class StatusUpdaterService {
                 stage.setStatus(StageStatus.NOT_RUN);
                 pipeline.setStatus(Status.AWAITING);
                 LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.AWAITING));
+                String message = String.format("Stage %s is set to be manually triggered", stage.getStageDefinitionName());
+                LOGGER.info(message);
+                ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, message);
+                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", notification);
             }
         }
 
