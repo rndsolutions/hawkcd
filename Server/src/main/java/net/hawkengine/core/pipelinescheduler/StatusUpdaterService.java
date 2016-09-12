@@ -3,14 +3,18 @@ package net.hawkengine.core.pipelinescheduler;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Job;
 import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
 import net.hawkengine.model.Task;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskStatus;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
+import net.hawkengine.ws.EndpointConnector;
+
 import org.apache.log4j.Logger;
 
 import java.time.ZoneOffset;
@@ -81,7 +85,7 @@ public class StatusUpdaterService {
                 } else {
                     break;
                 }
-            } else if (currentStage.getStatus() == StageStatus.NOT_RUN) {
+            } else if ((currentStage.getStatus() == StageStatus.NOT_RUN)) {
                 currentStage.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
                 break;
@@ -120,16 +124,26 @@ public class StatusUpdaterService {
         for (Stage stage : stages) {
             StageStatus stageStatus = stage.getStatus();
             stageStatuses.add(stageStatus);
+
+            if(stage.isTriggeredManually() && (stage.getStatus() == StageStatus.IN_PROGRESS)) {
+                stage.setStatus(StageStatus.NOT_RUN);
+                pipeline.setStatus(Status.AWAITING);
+                LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.AWAITING));
+                String message = String.format("Stage %s is set to be manually triggered", stage.getStageDefinitionName());
+                LOGGER.info(message);
+                ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, message);
+                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", notification);
+            }
         }
 
-        if (stageStatuses.contains(StageStatus.FAILED)) {
+        if(stageStatuses.contains(StageStatus.FAILED)) {
             pipeline.setStatus(Status.FAILED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.FAILED));
-        } else if (this.areAllPassed(stageStatuses)) {
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.FAILED));
+        } else if(this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), StageStatus.PASSED));
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.PASSED));
         }
     }
 
