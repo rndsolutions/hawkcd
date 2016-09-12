@@ -3,6 +3,26 @@
 prj_dir=pwd
 build_script="build1.sh"
 
+agent_base_name="agent"
+server_base_name="hawkcd"
+version="0.0.4"
+
+arg1=$1
+
+if [[ -z $2 ]]; then
+  revision="alpha.xx"
+else
+  revision="alpha."$2
+fi
+
+agent_artifact="$agent_base_name-$version-$revision.jar"
+server_artifact="$server_base_name-$version-$revision.jar"
+
+
+echo "Arguments:  $arg1 , $revision "
+echo "Agent Artifact: $agent_artifact"
+echo "Server Artifact: $server_artifact"
+
 #utill
 function clean {
   #clean up dist folder
@@ -45,10 +65,10 @@ function compile_agent {
 
   #cd Agent
   gradle -b $($prj_dir)/Agent/build.gradle clean
-  gradle -b $($prj_dir)/Agent/build.gradle build -x test
-
-  cp $($prj_dir)/Agent/build/libs/Agent-all.jar dist/Agent
+  gradle -b $($prj_dir)/Agent/build.gradle -Pbase_Name="$agent_base_name" -PbuildVersion="$version" -Prevision="$revision" build -x test
+  #gradle -b $($prj_dir)/Agent/build.gradle build -x test
   cp $($prj_dir)/Agent/agent.sh dist/Agent
+  cp "$($prj_dir)/Agent/build/libs/$agent_artifact" dist/Agent
   exit_on_fail
 }
 function run_agent_unit_test {
@@ -62,6 +82,7 @@ function package_agent_nix {
 
   cd dist
   tar -cvzf hawkcd-agent.tar.gz Agent
+  cd ../
 }
 function package_agent_win {
   echo "to be implemented"
@@ -86,16 +107,15 @@ function build_ui {
 function compile_server {
   build_ui
 
-  pwd
-
   echo "building the server.."
   rm -rf $($prj_dir)/dist/Server/*
 
   #cd Agent
   gradle -b $($prj_dir)/Server/build.gradle clean
-  gradle -b $($prj_dir)/Server/build.gradle build -x test
 
-  cp $($prj_dir)/Server/build/libs/Server-all.jar dist/Server
+  gradle -b $($prj_dir)/Server/build.gradle -Pbase_Name="$server_base_name" -PbuildVersion="$version" -Prevision="$revision" build -x test
+
+  cp "$($prj_dir)/Server/build/libs/$server_artifact" dist/Server
   cp $($prj_dir)/Server/hawkcd.sh dist/Server
   exit_on_fail
 }
@@ -108,7 +128,7 @@ function run_server_unit_test {
 }
 
 function package_server_win {
-echo pwd
+  echo pwd
 }
 
 function package_server_nix {
@@ -123,6 +143,15 @@ function package_server_nix {
   cd ../
 }
 
+function all {
+  compile_agent
+  run_agent_unit_test
+  package_agent_nix
+
+  compile_server
+  run_server_unit_test
+  package_server_nix
+}
 
 function list {
   echo "usage: ./build.sh <command> "
@@ -135,13 +164,12 @@ function list {
   echo "  run_server_unit_test"
   echo "  package_server_nix"
   echo "  package_server_win"
+  echo "  all"
   echo
 
 }
 
-arg=$1
-
-case "$arg" in
+case "$arg1" in
 "compile_agent")
       compile_agent
     ;;
@@ -168,6 +196,9 @@ case "$arg" in
     ;;
 "package_server_win")
       package_server_nix
+    ;;
+"all")
+      "all"
     ;;
 *)
     "list"
