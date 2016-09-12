@@ -68,6 +68,8 @@ function compile_agent {
   gradle -b $($prj_dir)/Agent/build.gradle -Pbase_Name="$agent_base_name" -PbuildVersion="$version" -Prevision="$revision" build -x test
   #gradle -b $($prj_dir)/Agent/build.gradle build -x test
   cp $($prj_dir)/Agent/agent.sh dist/Agent
+  sed -i "s/<replace>/$agent_base_name-$version-$revision/g" $($prj_dir)/dist/Agent/agent.sh
+
   cp "$($prj_dir)/Agent/build/libs/$agent_artifact" dist/Agent
   exit_on_fail
 }
@@ -117,6 +119,9 @@ function compile_server {
 
   cp "$($prj_dir)/Server/build/libs/$server_artifact" dist/Server
   cp $($prj_dir)/Server/hawkcd.sh dist/Server
+
+  sed -i "s/<replace>/$server_base_name-$version-$revision/g" $($prj_dir)/dist/Server/hawkcd.sh
+
   exit_on_fail
 }
 

@@ -69,7 +69,7 @@ task fatJar(type: Jar) {
         exclude "META-INF/*.DSA"
         exclude "META-INF/*.RSA"
     }
-    //with jar
+    with jar
 }
 
 artifacts {
