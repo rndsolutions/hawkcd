@@ -53,6 +53,11 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
+        EnvironmentVariable environmentVariable = new EnvironmentVariable();
+        environmentVariable.setKey("COUNT");
+        environmentVariable.setValue("1");
+        pipelineDefinition.getEnvironmentVariables().add(environmentVariable);
+
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
         for (StageDefinition stageDefinition : stageDefinitions) {
             stageDefinition.setPipelineDefinitionId(pipelineDefinition.getId());
