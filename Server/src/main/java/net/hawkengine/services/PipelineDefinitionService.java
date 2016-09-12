@@ -56,6 +56,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         EnvironmentVariable environmentVariable = new EnvironmentVariable();
         environmentVariable.setKey("COUNT");
         environmentVariable.setValue("1");
+        environmentVariable.setDeletable(false);
         pipelineDefinition.getEnvironmentVariables().add(environmentVariable);
 
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
