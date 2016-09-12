@@ -60,6 +60,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             pipeline.setExecutionId(1);
         } else {
             pipeline.setExecutionId(lastPipeline.getExecutionId() + 1);
+            pipelineDefinition.setRevisionCount(pipelineDefinition.getRevisionCount() + 1);
+
+            this.pipelineDefinitionService.update(pipelineDefinition);
         }
 
         this.addMaterialsToPipeline(pipeline);
