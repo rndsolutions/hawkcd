@@ -174,6 +174,5 @@ public class StageService extends CrudService<Stage> implements IStageService {
                 .orElse(null);
 
         return result;
-
     }
 }
