@@ -86,12 +86,13 @@ public class FetchArtifactExecutorTest extends TestBase {
         this.fetchArtifactTaskDefinition.setDestination("correctDestination");
         this.correctFetchArtifactTask.setTaskDefinition(this.fetchArtifactTaskDefinition);
 
-        this.source = this.fetchArtifactTaskDefinition.getPipelineDefinitionName() + File.separator + this.fetchArtifactTaskDefinition.getStageDefinitionName() + File.separator + this.fetchArtifactTaskDefinition.getJobDefinitionName() + File.separator + this.fetchArtifactTaskDefinition.getSource();
-
         this.workInfo = new WorkInfo();
         this.workInfo.setPipelineDefinitionName("correct");
         this.workInfo.setStageDefinitionName("correct");
         this.workInfo.setJob(this.fetchArtifactJob);
+
+        this.source = this.fetchArtifactTaskDefinition.getPipelineDefinitionName() + File.separator + this.workInfo.getPipelineExecutionID() + File.separator + this.fetchArtifactTaskDefinition.getSource();
+
     }
 
     @Test
