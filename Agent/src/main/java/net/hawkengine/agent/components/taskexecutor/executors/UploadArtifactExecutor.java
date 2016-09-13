@@ -57,7 +57,9 @@ public class UploadArtifactExecutor extends TaskExecutor {
         LOGGER.debug(uploadingMessage);
         ReportAppender.appendInfoMessage(uploadingMessage, report);
 
-        String fullPath = this.fileManagementService.pathCombine(taskDefinition.getSource());
+        String pathToFile = AgentConfiguration.getInstallInfo().getAgentSandbox() + File.separator + "Pipelines" + File.separator + workInfo.getPipelineDefinitionName() + File.separator + taskDefinition.getSource();
+
+        String fullPath = this.fileManagementService.pathCombine(pathToFile);
         String rootPath = this.fileManagementService.getRootPath(fullPath);
         String wildCardPattern = this.fileManagementService.getPattern(rootPath, fullPath);
 
@@ -80,7 +82,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, "Error occurred in zipping files!");
         }
 
-        String executionFolder = "Run" + workInfo.getPipelineExecutionID();
+        String executionFolder = String.valueOf(workInfo.getPipelineExecutionID());
         UploadArtifactInfo uploadArtifactInfo = new UploadArtifactInfo(zipFile, taskDefinition.getDestination());
         String uploadArtifactInfoAsString = this.jsonConverter.toJson(uploadArtifactInfo);
         String folderPath = String.format(ConfigConstants.SERVER_CREATE_ARTIFACT_API_ADDRESS, workInfo.getPipelineDefinitionName(), executionFolder);

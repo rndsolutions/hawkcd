@@ -216,7 +216,8 @@ public class FileManagementService implements IFileManagementService {
     @Override
     public String normalizePath(String filePath) {
 
-        return StringUtils.replace(filePath, "\\", "/");
+        filePath = StringUtils.replace(filePath, "/", File.separator);
+        return StringUtils.replace(filePath, "\\", File.separator);
     }
 
     @Override
