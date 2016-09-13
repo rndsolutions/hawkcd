@@ -1,12 +1,16 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.constants.ConfigurationConstants;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
+import net.hawkengine.model.configuration.filetree.Directory;
 import net.hawkengine.model.enums.NotificationType;
+import net.hawkengine.services.interfaces.IFileManagementService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +18,19 @@ public class StageService extends CrudService<Stage> implements IStageService {
     private static final Class CLASS_TYPE = Stage.class;
 
     private IPipelineService pipelineService;
+    private IFileManagementService fileManagementService;
     private String failureMessage = "not found";
     private String successMessage = "retrieved successfully";
 
     public StageService() {
         this.pipelineService = new PipelineService();
+        this.fileManagementService = new FileManagementService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
     public StageService(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
+        this.fileManagementService = new FileManagementService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
@@ -86,6 +93,10 @@ public class StageService extends CrudService<Stage> implements IStageService {
     @Override
     public ServiceResult update(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
+        String artifactsDirectory = System.getProperty("user.dir") + File.separator +
+                                    ConfigurationConstants.PROPERTY_ARTIFACTS_DESTINATION + File.separator +
+                                    pipeline.getPipelineDefinitionName() + File.separator + pipeline.getExecutionId();
+        Directory artifactDirectory = this.fileManagementService.getFileNames(new File(artifactsDirectory));
         List<Stage> stages = pipeline.getStages();
         int stageCollectionSize = stages.size();
         boolean isPresent = false;

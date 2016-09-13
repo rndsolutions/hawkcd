@@ -1,10 +1,12 @@
 package net.hawkengine.services;
 
+import net.hawkengine.model.configuration.filetree.Directory;
 import net.hawkengine.services.interfaces.IFileManagementService;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -253,5 +255,31 @@ public class FileManagementService implements IFileManagementService {
         }
 
         return "";
+    }
+
+    @Override
+    public Directory getFileNames(File parentDirectory) {
+        Directory directory = new Directory();
+        directory.setDirectoryName(parentDirectory.getName());
+        ArrayList<Directory> inDirectories = new ArrayList<>();
+        ArrayList<net.hawkengine.model.configuration.filetree.File> inFiles = new ArrayList<>();
+        File[] files = parentDirectory.listFiles();
+        Boolean hasArtifacts = files == null ? false : true;
+        if(hasArtifacts){
+            for (File file : files){
+                if(file.isDirectory()){
+                    inDirectories.add(getFileNames(file));
+                } else {
+                    net.hawkengine.model.configuration.filetree.File createdFile = new net.hawkengine.model.configuration.filetree.File();
+                    createdFile.setFileName(file.getName());
+                    createdFile.setPath(file.getAbsolutePath());
+                    inFiles.add(createdFile);
+                }
+            }
+        }
+
+        directory.setFiles(inFiles);
+        directory.setSubDirectories(inDirectories);
+        return directory;
     }
 }
