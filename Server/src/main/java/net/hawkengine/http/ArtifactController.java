@@ -11,11 +11,7 @@ import net.hawkengine.services.interfaces.IFileManagementService;
 
 import java.io.File;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -54,7 +50,7 @@ public class ArtifactController {
         UploadArtifactInfo uploadArtifactInfo = this.jsonConverter.fromJson(uploadArtifactInfoAsString, UploadArtifactInfo.class);
         if (uploadArtifactInfo.getDestination() != null){
             String destination = this.fileManagementService.normalizePath(uploadArtifactInfo.getDestination());
-            this.outputFolder = destination + File.separator + pipelineName + File.separator + pipelineExecutionID;
+            this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID + File.separator + destination;
         } else {
             this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID;
         }
@@ -70,15 +66,14 @@ public class ArtifactController {
                 .build();
     }
 
-    @Path("/{stageName}/{jobName}/fetch-artifact")
+    @Path("/{stageName}/fetch-artifact")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response zipFile(String directory) {
-        directory = ServerConfiguration.getConfiguration().getArtifactsDestination() + File.separator + directory;
-        String fullPath = this.fileManagementService.getAbsolutePath(directory);
-        String rootPath = this.fileManagementService.getRootPath(fullPath);
-        String wildCardPattern = this.fileManagementService.getPattern(rootPath, fullPath);
+        directory =  this.basePath + File.separator + ServerConfiguration.getConfiguration().getArtifactsDestination() + File.separator + directory;
+        String rootPath = this.fileManagementService.getRootPath(directory);
+        String wildCardPattern = this.fileManagementService.getPattern(rootPath, directory);
 
         if (rootPath.isEmpty()) {
 
