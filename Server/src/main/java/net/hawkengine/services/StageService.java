@@ -126,7 +126,6 @@ public class StageService extends CrudService<Stage> implements IStageService {
     public ServiceResult delete(String stageId) {
         Pipeline pipelineToUpdate = new Pipeline();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
-
         for (Pipeline pipeline : pipelines) {
             List<Stage> stages = pipeline.getStages();
 
