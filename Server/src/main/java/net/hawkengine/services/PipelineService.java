@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
@@ -141,6 +142,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         result.setObject(updatedPipelines);
 
+        return result;
+    }
+
+    @Override
+    public ServiceResult cancelPipelineRun(String pipelineId) {
+        ServiceResult result = this.getById(pipelineId);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            //result.setMessage("error check");
+        }
+        Pipeline pipeline = (Pipeline) result.getObject();
+        pipeline.setShouldBeCanceled(true);
+        result = this.update(pipeline);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            //result.setMessage("error check");
+        }
         return result;
     }
 

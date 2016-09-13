@@ -128,6 +128,16 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
+    public boolean cancelPipelineRun(String entity, String className, List permissions){
+        this.authorizationService = AuthorizationServiceFactory.create(className);
+        boolean hasPermission = this.authorizationService.add(entity,permissions);
+        if (hasPermission) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean addUserGroupDto(String entity, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         boolean hasPermission = this.authorizationService.add(entity, permissions);
