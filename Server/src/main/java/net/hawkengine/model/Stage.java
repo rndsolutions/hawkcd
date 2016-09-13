@@ -18,6 +18,7 @@ public class Stage extends DbEntry{
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
+    private boolean isTriggeredManually;
 
     public Stage() {
         this.setEnvironmentVariables(new ArrayList<>());
@@ -103,5 +104,13 @@ public class Stage extends DbEntry{
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public boolean isTriggeredManually() {
+        return isTriggeredManually;
+    }
+
+    public void setTriggeredManually(boolean triggeredManually) {
+        isTriggeredManually = triggeredManually;
     }
 }

@@ -1,5 +1,7 @@
 package net.hawkengine.services.interfaces;
 
+import net.hawkengine.model.configuration.filetree.Directory;
+
 import java.io.File;
 import java.io.InputStream;
 
@@ -29,4 +31,7 @@ public interface IFileManagementService {
     String urlCombine(String... args);
 
     String getAbsolutePath(String path);
+
+    Directory getFileNames(File parentDirectory);
+
 }

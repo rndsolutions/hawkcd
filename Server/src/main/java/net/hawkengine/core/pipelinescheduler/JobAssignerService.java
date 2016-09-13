@@ -33,7 +33,7 @@ public class JobAssignerService {
         List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelinesInProgress) {
             boolean isSetToAwaiting = false;
-            Stage stageInProgress = pipeline.getStages().stream().filter(s -> s.getStatus() == StageStatus.IN_PROGRESS).findFirst().orElse(null);
+            Stage stageInProgress = pipeline.getStages().stream().filter(s -> (s.getStatus() == StageStatus.IN_PROGRESS) && !s.isTriggeredManually()).findFirst().orElse(null);
             if (stageInProgress == null) {
                 continue;
             }
@@ -95,7 +95,7 @@ public class JobAssignerService {
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelines) {
             for (Stage stage : pipeline.getStages()) {
-                if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+                if ((stage.getStatus() == StageStatus.IN_PROGRESS) && !stage.isTriggeredManually()) {
                     for (Job job : stage.getJobs()) {
                         if (filteredAgents.size() != 0) {
                             Agent agent = this.jobAssignerUtilities.assignAgentToJob(job, filteredAgents);

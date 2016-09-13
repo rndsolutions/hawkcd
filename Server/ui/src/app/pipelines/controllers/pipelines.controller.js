@@ -88,14 +88,31 @@ angular
                         if (currentPipelineRun.triggerReason == null) {
                             currentPipelineRun.triggerReason = viewModel.user.username;
                         }
+                        currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                            if(currentStage.endTime) {
+                                currentPipelineRun.lastStage = currentStage;
+                                currentPipelineRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
+                                currentPipelineRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
+                            }
+                        });
                         vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
-                        if (currentPipelineRun.startTime && currentPipelineRun.endTime) {
+                        if (currentPipelineRun.startTime) {
                             currentPipelineRun.localStartDate = moment.formatDateUTCToLocal(currentPipelineRun.startTime);
-                            currentPipelineRun.localEndDate = moment.formatDateUTCToLocal(currentPipelineRun.endTime);
                             currentPipelineRun.localStartTime = moment.formatTimeInLocal(currentPipelineRun.startTime.time);
+                        }
+                        if (currentPipelineRun.endTime) {
+                            currentPipelineRun.localEndDate = moment.formatDateUTCToLocal(currentPipelineRun.endTime);
                             currentPipelineRun.localEndTime = moment.formatTimeInLocal(currentPipelineRun.endTime.time);
                         }
                         vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
+                        // vm.lastStage = {};
+                        // vm.allPipelines[pipelineIndex].lastRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                        //     if(currentStage.status == 'PASSED' || currentStage.status == 'FAILED' || currentStage.status == 'CANCELED') {
+                        //         vm.allPipelines[pipelineIndex].lastRun.lastStage = currentStage;
+                        //         vm.allPipelines[pipelineIndex].lastRun.lastStage = moment.formatDateUTCToLocal(vm.allPipelines[pipelineIndex].lastRun.lastStage.endTime);
+                        //         vm.allPipelines[pipelineIndex].lastRun.lastStage = moment.formatTimeInLocal(vm.allPipelines[pipelineIndex].lastRun.lastStage.endTime.time);
+                        //     }
+                        // });
                     }
                 });
             });
