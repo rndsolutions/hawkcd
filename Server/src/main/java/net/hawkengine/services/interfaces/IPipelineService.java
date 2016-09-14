@@ -11,4 +11,6 @@ public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getAllPreparedPipelinesInProgress();
 
     ServiceResult getAllPreparedAwaitingPipelines();
+
+    ServiceResult cancelPipelineRun(String pipelineId);
 }
