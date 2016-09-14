@@ -49,7 +49,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
 
         String fetchingMessage = String.format("Start fetching artifact source:  %s\\%s\\%s",
                 taskDefinition.getPipelineDefinitionName(),
-                workInfo.getPipelineExecutionID(),
+                taskDefinition.getPipelineExecutionId(),
                 taskDefinition.getSource());
         LOGGER.debug(fetchingMessage);
         ReportAppender.appendInfoMessage(fetchingMessage, report);

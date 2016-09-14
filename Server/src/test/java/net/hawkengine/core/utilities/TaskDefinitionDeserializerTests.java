@@ -73,8 +73,7 @@ public class TaskDefinitionDeserializerTests {
                 "\"type\": \"FETCH_ARTIFACT\",\n" +
                 "\"name\": \"fetchArtifact\",\n" +
                 "\"pipelineDefinitionName\": \"testPipe\",\n" +
-                "\"stageDefinitionName\": \"one\",\n" +
-                "\"jobDefinitionName\": \"first\",\n" +
+                "\"pipelineExecutionId\": \"one\",\n" +
                 "\"source\": \"mySource\",\n" +
                 "\"destination\": \"dist\"\n" +
                 "}";
@@ -89,7 +88,6 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertEquals("fetchArtifact", actualResult.getName());
         Assert.assertEquals("testPipe",actualResult.getPipelineDefinitionName());
         Assert.assertEquals("one",actualResult.getPipelineExecutionId());
-        Assert.assertEquals("first",actualResult.getJobDefinitionName());
         Assert.assertEquals("mySource",actualResult.getSource());
     }
 
