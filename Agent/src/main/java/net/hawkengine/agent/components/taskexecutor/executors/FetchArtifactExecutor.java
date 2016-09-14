@@ -3,7 +3,6 @@ package net.hawkengine.agent.components.taskexecutor.executors;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.xml.internal.ws.api.server.SDDocument;
 import net.hawkengine.agent.AgentConfiguration;
 import net.hawkengine.agent.components.taskexecutor.TaskExecutor;
 import net.hawkengine.agent.constants.ConfigConstants;
@@ -40,10 +39,10 @@ public class FetchArtifactExecutor extends TaskExecutor {
         FetchArtifactTask taskDefinition = (FetchArtifactTask) task.getTaskDefinition();
         super.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
-        if ((taskDefinition.getPipelineExecutionId() == null) || (taskDefinition.getPipelineExecutionId().isEmpty())){
+        if ((taskDefinition.getPipelineExecutionId() == null) || (taskDefinition.getPipelineExecutionId().isEmpty())) {
             return this.nullProcessing(report, task, "Error occurred in getting pipeline execution ID!");
         }
-        if ((taskDefinition.getPipelineDefinitionName() == null) || (taskDefinition.getPipelineDefinitionName().isEmpty())){
+        if ((taskDefinition.getPipelineDefinitionName() == null) || (taskDefinition.getPipelineDefinitionName().isEmpty())) {
             return this.nullProcessing(report, task, "Error occurred in getting pipeline name!");
         }
 
@@ -80,12 +79,12 @@ public class FetchArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, "Error occurred in creating the artifact!");
         }
         String destination;
-        if (taskDefinition.getDestination() != null){
+        if (taskDefinition.getDestination() != null) {
             destination = String.valueOf(Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir() + File.separator + taskDefinition.getPipelineDefinitionName(), taskDefinition.getDestination()));
         } else {
             destination = String.valueOf(Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir() + File.separator + taskDefinition.getPipelineDefinitionName()));
         }
-            errorMessage = this.fileManagementService.unzipFile(filePath, destination);
+        errorMessage = this.fileManagementService.unzipFile(filePath, destination);
         filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath()).toString();
         String deleteMessage = this.fileManagementService.deleteFilesInDirectory(filePath);
 
