@@ -88,7 +88,7 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertEquals(TaskType.FETCH_ARTIFACT, actualResult.getType());
         Assert.assertEquals("fetchArtifact", actualResult.getName());
         Assert.assertEquals("testPipe",actualResult.getPipelineDefinitionName());
-        Assert.assertEquals("one",actualResult.getStageDefinitionName());
+        Assert.assertEquals("one",actualResult.getPipelineExecutionId());
         Assert.assertEquals("first",actualResult.getJobDefinitionName());
         Assert.assertEquals("mySource",actualResult.getSource());
     }

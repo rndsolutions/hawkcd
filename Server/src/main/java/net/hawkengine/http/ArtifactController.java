@@ -66,7 +66,7 @@ public class ArtifactController {
                 .build();
     }
 
-    @Path("/{stageName}/fetch-artifact")
+    @Path("/{pipelineExecutionID}/fetch-artifact")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.MULTIPART_FORM_DATA)

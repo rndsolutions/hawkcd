@@ -508,7 +508,7 @@ public class SchemaValidatorTests {
         fetchArtifactTask.setName("taskDefinition");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
         fetchArtifactTask.setPipelineDefinitionName("pipelineName");
-        fetchArtifactTask.setStageDefinitionName("pipelineStage");
+        fetchArtifactTask.setPipelineExecutionId("pipelineStage");
         fetchArtifactTask.setJobDefinitionName("pipelineJob");
         fetchArtifactTask.setSource("sourceFolder");
         fetchArtifactTask.setDestination("destinationFolder");
@@ -561,7 +561,7 @@ public class SchemaValidatorTests {
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
         fetchArtifactTask.setPipelineDefinitionName("pipelineName");
-        fetchArtifactTask.setStageDefinitionName("stageName");
+        fetchArtifactTask.setPipelineExecutionId("stageName");
         String expectedResult = "ERROR: FETCH ARTIFACT JOB NAME IS NULL.";
 
         //Act
@@ -579,7 +579,7 @@ public class SchemaValidatorTests {
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
         fetchArtifactTask.setPipelineDefinitionName("pipelineName");
-        fetchArtifactTask.setStageDefinitionName("stageName");
+        fetchArtifactTask.setPipelineExecutionId("stageName");
         fetchArtifactTask.setJobDefinitionName("jobNae");
         String expectedResult = "ERROR: FETCH ARTIFACT TASK SOURCE FOLDER IS NULL.";
 
@@ -598,7 +598,7 @@ public class SchemaValidatorTests {
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
         fetchArtifactTask.setPipelineDefinitionName("pipelineName");
-        fetchArtifactTask.setStageDefinitionName("stageName");
+        fetchArtifactTask.setPipelineExecutionId("stageName");
         fetchArtifactTask.setJobDefinitionName("jobNae");
         fetchArtifactTask.setSource("sourcefolder");
         String expectedResult = "ERROR: FETCH ARTIFACT TASK DESTINATION FOLDER IS NULL.";
