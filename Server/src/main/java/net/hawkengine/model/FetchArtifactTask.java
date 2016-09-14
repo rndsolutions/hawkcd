@@ -6,8 +6,7 @@ public class FetchArtifactTask extends TaskDefinition {
 
 
     private String pipelineDefinitionName;
-    private String stageDefinitionName;
-    private String jobDefinitionName;
+    private String pipelineExecutionId;
     private String source;
     private String destination;
 
@@ -23,20 +22,12 @@ public class FetchArtifactTask extends TaskDefinition {
         this.pipelineDefinitionName = value;
     }
 
-    public String getStageDefinitionName() {
-        return this.stageDefinitionName;
+    public String getPipelineExecutionId() {
+        return this.pipelineExecutionId;
     }
 
-    public void setStageDefinitionName(String value) {
-        this.stageDefinitionName = value;
-    }
-
-    public String getJobDefinitionName() {
-        return this.jobDefinitionName;
-    }
-
-    public void setJobDefinitionName(String value) {
-        this.jobDefinitionName = value;
+    public void setPipelineExecutionId(String value) {
+        this.pipelineExecutionId = value;
     }
 
     public String getSource() {

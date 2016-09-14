@@ -80,8 +80,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         this.fetchArtifactTaskDefinition = new FetchArtifactTask();
         this.fetchArtifactTaskDefinition.setName("fetchArtifactTask");
         this.fetchArtifactTaskDefinition.setPipelineDefinitionName("pipeline");
-        this.fetchArtifactTaskDefinition.setStageDefinitionName("pipeline");
-        this.fetchArtifactTaskDefinition.setJobDefinitionName(this.fetchArtifactJob.getJobDefinitionName());
+        this.fetchArtifactTaskDefinition.setPipelineExecutionId("pipeline");
         this.fetchArtifactTaskDefinition.setSource("correctSource");
         this.fetchArtifactTaskDefinition.setDestination("correctDestination");
         this.correctFetchArtifactTask.setTaskDefinition(this.fetchArtifactTaskDefinition);
@@ -91,7 +90,7 @@ public class FetchArtifactExecutorTest extends TestBase {
         this.workInfo.setStageDefinitionName("correct");
         this.workInfo.setJob(this.fetchArtifactJob);
 
-        this.source = this.fetchArtifactTaskDefinition.getPipelineDefinitionName() + File.separator + this.workInfo.getPipelineExecutionID() + File.separator + this.fetchArtifactTaskDefinition.getSource();
+        this.source = this.fetchArtifactTaskDefinition.getPipelineDefinitionName() + File.separator + this.fetchArtifactTaskDefinition.getPipelineExecutionId() + File.separator + this.fetchArtifactTaskDefinition.getSource();
 
     }
 

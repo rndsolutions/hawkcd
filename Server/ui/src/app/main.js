@@ -22,7 +22,7 @@ angular
         'toaster',
         'momentjs',
         'satellizer',
-        'ansi_up'
+        'ansi_up',
         'ngJsTree'
         //'ngAnimate'
         //'flow'
