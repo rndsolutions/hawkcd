@@ -10,14 +10,9 @@ import java.util.List;
 public class UserAuthorizationService implements IAuthorizationService {
     @Override
     public List getAll(List permissions, List entriesToFilter) {
-        List <Permission> permisssions = permissions;
-        for (Permission permission : permisssions) {
-            if (permission.getPermissionScope() == PermissionScope.SERVER) {
-                if (permission.getPermissionType() == PermissionType.VIEWER || permission.getPermissionType() == PermissionType.OPERATOR) {
 
-                    return entriesToFilter;
-                }
-            }
+        if (this.hasViewerOrOperatorPermission(permissions)){
+            return entriesToFilter;
         }
 
         if (this.hasPermission(permissions)){
@@ -28,7 +23,16 @@ public class UserAuthorizationService implements IAuthorizationService {
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        return this.hasPermission(permissions);
+
+        if (this.hasPermission(permissions)){
+            return true;
+        }
+
+        if (this.hasViewerOrOperatorPermission(permissions)){
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -50,6 +54,18 @@ public class UserAuthorizationService implements IAuthorizationService {
         for (Permission permission : permissions) {
             if (permission.getPermissionScope() == PermissionScope.SERVER && permission.getPermissionType() == PermissionType.ADMIN) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasViewerOrOperatorPermission(List<Permission> permissions) {
+        for (Permission permission : permissions) {
+            if (permission.getPermissionScope() == PermissionScope.SERVER) {
+                if (permission.getPermissionType() == PermissionType.VIEWER || permission.getPermissionType() == PermissionType.OPERATOR) {
+
+                    return true;
+                }
             }
         }
         return false;
