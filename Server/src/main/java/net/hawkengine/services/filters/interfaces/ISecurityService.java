@@ -19,8 +19,6 @@ public interface ISecurityService<T extends DbEntry> {
 
     boolean delete(String entity, String className, List<Permission> permissions);
 
-    boolean cancelPipelineRun(String entity, String className, List<Permission> permissions);
-
     boolean addUserGroupDto(String entity, String className, List<Permission> permissions);
 
     boolean updateUserGroupDto(String entity, String className, List<Permission> permissions);
