@@ -83,7 +83,7 @@ angular
                     header: 'Delete User',
                     changeButton: 'Change Email',
                     resetPassword: 'Reset Password',
-                    confirm: 'Confirm',
+                    save: 'Save',
                     delete: 'Confirm',
                     cancel: 'Cancel'
                 },
@@ -372,6 +372,26 @@ angular
             };
 
             vm.userDTO = {};
+            vm.submitUserSettingsForm = function(updatedUser, userDTO, form) {
+                var changeEmailFlag = ((form.userEmail.$viewValue !== updatedUser.email) &&
+                    (form.userNewPassword.$viewValue === undefined || form.userNewPassword.$viewValue.length === 0)) ? true : false;
+                var changePasswordFlag = ((form.userEmail.$viewValue === updatedUser.email) &&
+                    (userDTO.newPassword !== undefined && userDTO.newPassword.length !== 0)) ? true : false;
+                var changeBothFlag = ((form.userEmail.$viewValue !== updatedUser.email) &&
+                    (userDTO.newPassword !== undefined && userDTO.newPassword.length !== 0)) ? true : false;
+                if (changeEmailFlag) {
+                    vm.changeUserEmail(updatedUser, userDTO, form);
+                } else if (changePasswordFlag) {
+                    vm.changeUserPassword(updatedUser, userDTO, form);
+                } else if (changeBothFlag) {
+                    var innerForm = angular.copy(form);
+                    var innerDTO = angular.copy(userDTO);
+                    var innerUserDTO = angular.copy(updatedUser);
+                    vm.changeUserEmail(innerUserDTO, innerDTO, innerForm);
+                    vm.changeUserPassword(innerUserDTO, innerDTO, innerForm);
+                }
+            }
+
             vm.changeUserEmail = function(updatedUser, userDTO, form) {
                 updatedUser.email = userDTO.email;
                 adminService.updateUser(updatedUser);

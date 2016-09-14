@@ -20,21 +20,45 @@
                             <label class="control-label col-md-3 required-fixed form-required-fix">New password
                             </label>
                             <div class="col-md-6">
-                                <input ng-model="admin.userDTO.newPassword" type="password" name="userNewPassword" class="form-control" />
+                                <input ng-model="admin.userDTO.newPassword" ng-pattern="/^[0-9A-Za-z.-]{3,32}$/" ng-minlength="3" ng-maxlength="32" type="password" name="userNewPassword" class="form-control" />
                                 <div class="form-control-focus"></div>
                             </div>
+                        </div>
+                        <div class="form-group form-md-line">
+                            <p ng-show="resetUserInfo.userNewPassword.$error.minlength" class="alert alert-danger">
+                                Password must be minimum 3 symbols.
+                            </p>
+                            <p ng-show="resetUserInfo.userNewPassword.$error.maxlength" class="alert alert-danger">
+                                Password must be maximum 32 symbols.
+                            </p>
+                            <p ng-show="!(resetUserInfo.userNewPassword.$error.maxlength) && !(resetUserInfo.userNewPassword.$error.minlength) && resetUserInfo.userNewPassword.$error.pattern" class="alert alert-danger">
+                                Forbidden password characters!
+                            </p>
                         </div>
                         <div class="form-group form-md-line-input">
                             <label class="control-label col-md-3 required-fixed form-required-fix">Confirm password
                             </label>
                             <div class="col-md-6">
-                                <input ng-pattern="admin.userDTO.newPassword" ng-model="admin.userDTO.confirmNewPassword" type="password" name="confirmNewPassword" class="form-control" />
+                                <input ng-pattern="admin.userDTO.newPassword" ng-model="admin.userDTO.confirmNewPassword" ng-pattern="admin.userDTO.newPassword" ng-minlength="3" ng-maxlength="32" type="password" name="confirmNewPassword" class="form-control" />
                                 <div class="form-control-focus"></div>
                             </div>
                         </div>
+                        <div class="form-group form-md-line">
+                            <p ng-show="resetUserInfo.confirmNewPassword.$error.minlength" class="alert alert-danger">
+                                Password must be minimum 3 symbols.
+                            </p>
+                            <p ng-show="resetUserInfo.confirmNewPassword.$error.maxlength" class="alert alert-danger">
+                                Password must be maximum 32 symbols.
+                            </p>
+                            <p ng-show="resetUserInfo.confirmNewPassword.$touched && admin.userDTO.confirmNewPassword !== admin.userDTO.newPassword" class="alert alert-danger">
+                                Passwords do not match!
+                            </p>
+                            <p ng-show="!(resetUserInfo.confirmNewPassword.$error.maxlength) && !(resetUserInfo.confirmNewPassword.$error.minlength) && resetUserInfo.confirmNewPassword.$error.pattern" class="alert alert-danger">
+                                Forbidden password symbols!
+                            </p>
+                        </div>
                         <br>
-                        <button class="btn green" ng-click="admin.changeUserEmail(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.editUserInfo.changeButton}}</button>
-                        <button class="btn red" ng-click="admin.changeUserPassword(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.editUserInfo.resetPassword}}</button>
+                        <button class="btn green" ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="resetUserInfo.$invalid">{{admin.defaultText.editUserInfo.save}}</button>
                         <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
                         <br>
                     </form>
