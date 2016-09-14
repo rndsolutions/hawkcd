@@ -435,7 +435,6 @@ angular
                 //         adminService.assignUser(angular.copy(currentUser), vm.selectedUserGroup);
                 //     }
                 // });
-
                 vm.selectedUserGroup.users.forEach(function(currentUser, userIndex, userArray) {
                     var isFound = false;
                     if (currentUser.isClicked) {
