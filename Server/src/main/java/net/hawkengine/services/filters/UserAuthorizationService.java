@@ -10,6 +10,16 @@ import java.util.List;
 public class UserAuthorizationService implements IAuthorizationService {
     @Override
     public List getAll(List permissions, List entriesToFilter) {
+        List <Permission> permisssions = permissions;
+        for (Permission permission : permisssions) {
+            if (permission.getPermissionScope() == PermissionScope.SERVER) {
+                if (permission.getPermissionType() == PermissionType.VIEWER || permission.getPermissionType() == PermissionType.OPERATOR) {
+
+                    return entriesToFilter;
+                }
+            }
+        }
+
         if (this.hasPermission(permissions)){
             return entriesToFilter;
         }
