@@ -214,7 +214,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             task.setRunIfCondition(taskDefinition.getRunIfCondition());
             tasks.add(task);
         }
-
+  
         job.setTasks(tasks);
     }
 }
