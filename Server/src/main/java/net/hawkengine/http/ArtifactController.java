@@ -40,11 +40,11 @@ public class ArtifactController {
     }
 
     @POST
-    @Path("/{pipelineExecutionID}/upload-artifact")
+    @Path("/{pipelineExecutionId}/upload-artifact")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response unzipFile(@PathParam("pipelineName") String pipelineName,
-                              @PathParam("pipelineExecutionID") String pipelineExecutionID,
+                              @PathParam("pipelineExecutionId") String pipelineExecutionID,
                               String uploadArtifactInfoAsString) {
         String artifactsFolder = ServerConfiguration.getConfiguration().getArtifactsDestination();
         UploadArtifactInfo uploadArtifactInfo = this.jsonConverter.fromJson(uploadArtifactInfoAsString, UploadArtifactInfo.class);
@@ -66,7 +66,7 @@ public class ArtifactController {
                 .build();
     }
 
-    @Path("/{pipelineExecutionID}/fetch-artifact")
+    @Path("/{pipelineExecutionId}/fetch-artifact")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.MULTIPART_FORM_DATA)
