@@ -25,13 +25,13 @@
                             </div>
                         </div>
                         <div class="form-group form-md-line">
-                            <p ng-show="resetUserInfo.userNewPassword.$error.minlength" class="alert alert-danger">
+                            <p ng-show="resetUserInfo.userNewPassword.$error.minlength && resetUserInfo.userNewPassword.$dirty" class="alert alert-danger">
                                 Password must be minimum 3 symbols.
                             </p>
-                            <p ng-show="resetUserInfo.userNewPassword.$error.maxlength" class="alert alert-danger">
+                            <p ng-show="resetUserInfo.userNewPassword.$error.maxlength && resetUserInfo.userNewPassword.$dirty" class="alert alert-danger">
                                 Password must be maximum 32 symbols.
                             </p>
-                            <p ng-show="!(resetUserInfo.userNewPassword.$error.maxlength) && !(resetUserInfo.userNewPassword.$error.minlength) && resetUserInfo.userNewPassword.$error.pattern" class="alert alert-danger">
+                            <p ng-show="!(resetUserInfo.userNewPassword.$error.maxlength) && !(resetUserInfo.userNewPassword.$error.minlength) && resetUserInfo.userNewPassword.$error.pattern && resetUserInfo.userNewPassword.$dirty" class="alert alert-danger">
                                 Forbidden password characters!
                             </p>
                         </div>
@@ -44,22 +44,13 @@
                             </div>
                         </div>
                         <div class="form-group form-md-line">
-                            <p ng-show="resetUserInfo.confirmNewPassword.$error.minlength" class="alert alert-danger">
-                                Password must be minimum 3 symbols.
-                            </p>
-                            <p ng-show="resetUserInfo.confirmNewPassword.$error.maxlength" class="alert alert-danger">
-                                Password must be maximum 32 symbols.
-                            </p>
                             <p ng-show="resetUserInfo.confirmNewPassword.$touched && admin.userDTO.confirmNewPassword !== admin.userDTO.newPassword" class="alert alert-danger">
                                 Passwords do not match!
-                            </p>
-                            <p ng-show="!(resetUserInfo.confirmNewPassword.$error.maxlength) && !(resetUserInfo.confirmNewPassword.$error.minlength) && resetUserInfo.confirmNewPassword.$error.pattern" class="alert alert-danger">
-                                Forbidden password symbols!
                             </p>
                         </div>
                         <br>
                         <div class="form-group text-center">
-                          <button class="btn green" ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="resetUserInfo.$invalid">{{admin.defaultText.buttonTitles.ok}}</button>
+                          <button class="btn green" ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-class="{'disabled':resetUserInfo.$invalid || (admin.userDTO.newPassword !== admin.userDTO.confirmNewPassword)}">{{admin.defaultText.buttonTitles.ok}}</button>
                           <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.buttonTitles.cancel}}</button>
                         </div>
                     </form>

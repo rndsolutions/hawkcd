@@ -409,11 +409,15 @@ angular
             }
 
             vm.closeUserSettingsModal = function(form) {
+                form.userEmail.$viewValue = undefined;
+                form.userNewPassword.$viewValue = undefined;
+                form.confirmNewPassword.$viewValue = undefined;
                 form.$setPristine();
                 form.$setUntouched();
-                form.userEmail = '';
-                form.userNewPassword = '';
-                form.confirmNewPassword = '';
+                form.userEmail.$render();
+                form.userNewPassword.$render();
+                form.confirmNewPassword.$render();
+
                 vm.userDTO = {};
             }
 
