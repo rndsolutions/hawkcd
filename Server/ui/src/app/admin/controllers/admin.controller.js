@@ -94,6 +94,10 @@ angular
                 unassignPipelineModal: {
                     header: 'Unassign Pipeline',
                     confirm: 'Are you sure you want to unassign Pipeline: '
+                },
+                buttonTitles:{
+                  ok:'Ok',
+                  cancel:'Cancel'
                 }
             };
 

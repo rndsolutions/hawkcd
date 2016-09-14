@@ -58,9 +58,10 @@
                             </p>
                         </div>
                         <br>
-                        <button class="btn green" ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="resetUserInfo.$invalid">{{admin.defaultText.editUserInfo.save}}</button>
-                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
-                        <br>
+                        <div class="form-group text-center">
+                          <button class="btn green" ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-disabled="resetUserInfo.$invalid">{{admin.defaultText.buttonTitles.ok}}</button>
+                          <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.buttonTitles.cancel}}</button>
+                        </div>
                     </form>
                 </div>
             </div>
