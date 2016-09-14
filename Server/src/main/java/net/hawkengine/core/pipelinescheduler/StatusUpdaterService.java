@@ -42,7 +42,7 @@ public class StatusUpdaterService {
             if (pipeline.shouldBeCanceled()) {
                 this.cancelPipeline(pipeline);
                 LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
-                ServiceResult result = new ServiceResult(null, NotificationType.SUCCESS, "Pipeline " + pipeline.getPipelineDefinitionName() + " was sucessfully canceled");
+                ServiceResult result = new ServiceResult(null, NotificationType.WARNING, "Pipeline " + pipeline.getPipelineDefinitionName() + " was sucessfully canceled");
                 EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result);
             } else {
                 this.updateAllStatuses(pipeline);
