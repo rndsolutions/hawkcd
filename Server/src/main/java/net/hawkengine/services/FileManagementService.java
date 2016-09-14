@@ -1,6 +1,6 @@
 package net.hawkengine.services;
 
-import net.hawkengine.model.configuration.filetree.Directory;
+import net.hawkengine.model.configuration.filetree.JsTreeFile;
 import net.hawkengine.services.interfaces.IFileManagementService;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -259,28 +259,32 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public Directory getFileNames(File parentDirectory) {
-        Directory directory = new Directory();
-        directory.setDirectoryName(parentDirectory.getName());
-        ArrayList<Directory> inDirectories = new ArrayList<>();
-        ArrayList<net.hawkengine.model.configuration.filetree.File> inFiles = new ArrayList<>();
+    public JsTreeFile getFileNames(File parentDirectory) {
+        JsTreeFile directory = new JsTreeFile();
+
+        directory.setText(parentDirectory.getName());
+        directory.setPath(parentDirectory.getAbsolutePath());
+
+        List<JsTreeFile> childs = new ArrayList<>();
+
         File[] files = parentDirectory.listFiles();
+
         Boolean hasArtifacts = files == null ? false : true;
+
         if(hasArtifacts){
             for (File file : files){
                 if(file.isDirectory()){
-                    inDirectories.add(getFileNames(file));
+                    childs.add(getFileNames(file));
                 } else {
-                    net.hawkengine.model.configuration.filetree.File createdFile = new net.hawkengine.model.configuration.filetree.File();
-                    createdFile.setFileName(file.getName());
-                    createdFile.setPath(file.getAbsolutePath());
-                    inFiles.add(createdFile);
+                    JsTreeFile currentFile = new JsTreeFile();
+                    currentFile.setText(file.getName());
+                    currentFile.setPath(file.getAbsolutePath());
+                    childs.add(currentFile);
                 }
             }
         }
 
-        directory.setFiles(inFiles);
-        directory.setSubDirectories(inDirectories);
+        directory.setChildren(childs);
         return directory;
     }
 }

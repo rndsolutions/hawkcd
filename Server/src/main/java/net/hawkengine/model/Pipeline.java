@@ -1,6 +1,6 @@
 package net.hawkengine.model;
 
-import net.hawkengine.model.configuration.filetree.Directory;
+import net.hawkengine.model.configuration.filetree.JsTreeFile;
 import net.hawkengine.model.enums.Status;
 
 import java.time.Duration;
@@ -26,7 +26,7 @@ public class Pipeline extends DbEntry {
     private boolean areMaterialsUpdated;
     private boolean isPrepared;
     private boolean shouldBeCanceled;
-    private List<Directory> artifactsFileStructure;
+    private List<JsTreeFile> artifactsFileStructure;
 
     public Pipeline() {
         this.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
@@ -158,11 +158,11 @@ public class Pipeline extends DbEntry {
         this.shouldBeCanceled = shouldBeCanceled;
     }
 
-    public List<Directory> getArtifactsFileStructure() {
+    public List<JsTreeFile> getArtifactsFileStructure() {
         return this.artifactsFileStructure;
     }
 
-    public void setArtifactsFileStructure(List<Directory> artifactsFileStructure) {
+    public void setArtifactsFileStructure(List<JsTreeFile> artifactsFileStructure) {
         this.artifactsFileStructure = artifactsFileStructure;
     }
 }
