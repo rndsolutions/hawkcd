@@ -24,9 +24,11 @@ public class AuthorizationServiceFactory {
                 authorizationService = new AgentAuthorizationService();
                 return authorizationService;
             case "PipelineService":
+                authorizationService = new PipelineAuthorizationService();
+                return authorizationService;
             case "StageService":
             case "JobService":
-                authorizationService = new PipelineAuthorizationService();
+                authorizationService = new StageAutorizationService();
                 return authorizationService;
             case "PipelineGroupService":
                 authorizationService = new PipelineGroupAuthorizationService();
