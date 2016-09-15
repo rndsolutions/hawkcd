@@ -10,46 +10,38 @@ import java.util.List;
 public class UserGroupAuthorizationService implements IAuthorizationService {
     @Override
     public List getAll(List permissions, List entriesToFilter) {
-        if (this.hasViewerOrOperatorPermission(permissions)){
+        if (this.hasMultiplePermissions(permissions)){
             return entriesToFilter;
         }
 
-        if (this.hasPermission(permissions)){
-            return entriesToFilter;
-        }
         return null;
     }
 
     @Override
     public boolean getById(String entityId, List permissions) {
 
-        if (this.hasPermission(permissions)){
+        if (this.hasMultiplePermissions(permissions)){
             return true;
         }
-
-        if (this.hasViewerOrOperatorPermission(permissions)){
-            return true;
-        }
-
         return false;
     }
 
     @Override
     public boolean add(String entity, List permissions) {
-        return this.hasPermission(permissions);
+        return this.hasAdminPermission(permissions);
     }
 
     @Override
     public boolean update(String entity, List permissions) {
-        return this.hasPermission(permissions);
+        return this.hasAdminPermission(permissions);
     }
 
     @Override
     public boolean delete(String entityId, List permissions) {
-        return this.hasPermission(permissions);
+        return this.hasAdminPermission(permissions);
     }
 
-    private boolean hasPermission(List<Permission> permissions) {
+    private boolean hasAdminPermission(List<Permission> permissions) {
         for (Permission permission : permissions) {
             if (permission.getPermissionScope() == PermissionScope.SERVER && permission.getPermissionType() == PermissionType.ADMIN) {
                 return true;
@@ -58,8 +50,13 @@ public class UserGroupAuthorizationService implements IAuthorizationService {
         return false;
     }
 
-    private boolean hasViewerOrOperatorPermission(List<Permission> permissions) {
+    private boolean hasMultiplePermissions(List<Permission> permissions) {
         for (Permission permission : permissions) {
+
+            if (permission.getPermissionScope() == PermissionScope.SERVER && permission.getPermissionType() == PermissionType.ADMIN) {
+                return true;
+            }
+
             if (permission.getPermissionScope() == PermissionScope.SERVER) {
                 if (permission.getPermissionType() == PermissionType.VIEWER || permission.getPermissionType() == PermissionType.OPERATOR) {
 
