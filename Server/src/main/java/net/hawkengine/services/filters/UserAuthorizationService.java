@@ -11,7 +11,7 @@ public class UserAuthorizationService implements IAuthorizationService {
     @Override
     public List getAll(List permissions, List entriesToFilter) {
 
-        if (this.hasMultiplePermissions(permissions)){
+        if (this.hasPermissionToGet(permissions)) {
             return entriesToFilter;
         }
 
@@ -21,7 +21,7 @@ public class UserAuthorizationService implements IAuthorizationService {
     @Override
     public boolean getById(String entityId, List permissions) {
 
-        if (this.hasMultiplePermissions(permissions)){
+        if (this.hasPermissionToGet(permissions)) {
             return true;
         }
 
@@ -45,26 +45,21 @@ public class UserAuthorizationService implements IAuthorizationService {
 
     private boolean hasAdminPermission(List<Permission> permissions) {
         for (Permission permission : permissions) {
-            if (permission.getPermissionScope() == PermissionScope.SERVER && permission.getPermissionType() == PermissionType.ADMIN) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 return true;
             }
         }
+
         return false;
     }
 
-    private boolean hasMultiplePermissions(List<Permission> permissions) {
+    private boolean hasPermissionToGet(List<Permission> permissions) {
         for (Permission permission : permissions) {
-            if (permission.getPermissionScope() == PermissionScope.SERVER && permission.getPermissionType() == PermissionType.ADMIN) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
                 return true;
             }
-
-            if (permission.getPermissionScope() == PermissionScope.SERVER) {
-                if (permission.getPermissionType() == PermissionType.VIEWER || permission.getPermissionType() == PermissionType.OPERATOR) {
-
-                    return true;
-                }
-            }
         }
+
         return false;
     }
 }
