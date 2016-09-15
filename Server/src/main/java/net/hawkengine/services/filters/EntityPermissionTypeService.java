@@ -48,6 +48,9 @@ public class EntityPermissionTypeService {
             } else if (permission.getPermittedEntityId().equals(pipelineDefinition.getPipelineGroupId())) {
                 pipelineDefinition.setPermissionType(permission.getPermissionType());
             }
+            if ((permission.getPermissionScope() == PermissionScope.PIPELINE_GROUP) && permission.getPermissionType() == PermissionType.ADMIN) {
+                pipelineDefinition.setPermissionType(permission.getPermissionType());
+            }
             if (permission.getPermittedEntityId().equals(pipelineDefinition.getId())) {
                 pipelineDefinition.setPermissionType(permission.getPermissionType());
             }
