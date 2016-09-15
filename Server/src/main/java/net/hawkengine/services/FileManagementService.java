@@ -263,6 +263,7 @@ public class FileManagementService implements IFileManagementService {
         JsTreeFile directory = new JsTreeFile();
 
         directory.setText(parentDirectory.getName());
+        directory.setType("folder");
         directory.setPath(parentDirectory.getAbsolutePath());
 
         List<JsTreeFile> childs = new ArrayList<>();
@@ -274,10 +275,11 @@ public class FileManagementService implements IFileManagementService {
         if(hasArtifacts){
             for (File file : files){
                 if(file.isDirectory()){
-                    childs.add(getFileNames(file));
+                    childs.add(this.getFileNames(file));
                 } else {
                     JsTreeFile currentFile = new JsTreeFile();
                     currentFile.setText(file.getName());
+                    currentFile.setType("file");
                     currentFile.setPath(file.getAbsolutePath());
                     childs.add(currentFile);
                 }
