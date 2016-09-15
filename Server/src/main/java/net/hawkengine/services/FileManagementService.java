@@ -1,5 +1,6 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.model.configuration.filetree.JsTreeFile;
 import net.hawkengine.services.interfaces.IFileManagementService;
 import net.lingala.zip4j.core.ZipFile;
@@ -264,7 +265,8 @@ public class FileManagementService implements IFileManagementService {
 
         directory.setText(parentDirectory.getName());
         directory.setType("folder");
-        directory.setPath(parentDirectory.getAbsolutePath());
+        String directoryPath = parentDirectory.getAbsolutePath().substring(System.getProperty("user.dir").length() + 1);
+        directory.setPath(directoryPath);
 
         List<JsTreeFile> childs = new ArrayList<>();
 
@@ -280,7 +282,8 @@ public class FileManagementService implements IFileManagementService {
                     JsTreeFile currentFile = new JsTreeFile();
                     currentFile.setText(file.getName());
                     currentFile.setType("file");
-                    currentFile.setPath(file.getAbsolutePath());
+                    String filePath = parentDirectory.getAbsolutePath().substring(System.getProperty("user.dir").length() + 1);
+                    currentFile.setPath(filePath);
                     childs.add(currentFile);
                 }
             }

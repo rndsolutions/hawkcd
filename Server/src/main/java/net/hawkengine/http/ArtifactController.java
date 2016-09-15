@@ -110,13 +110,16 @@ public class ArtifactController {
                 .build();
     }
 
-    @Path("/{pipelineExecutionId}/{artifactSource}")
+    @Path("/{pipelineExecutionId}/{artifactSource:.*}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/force-download")
     public Response getArtifact(@PathParam("pipelineName") String pipelineName,
                                 @PathParam("pipelineExecutionId") String pipelineExecutionID,
                                 @PathParam("artifactSource") String artifactSource){
+
+        artifactSource = this.fileManagementService.normalizePath(artifactSource);
+
         String directory = this.basePath + File.separator + ServerConfiguration.getConfiguration().getArtifactsDestination() + File.separator + pipelineName + File.separator + pipelineExecutionID + File.separator + artifactSource;
 
         File fileToReturn = new File(directory);

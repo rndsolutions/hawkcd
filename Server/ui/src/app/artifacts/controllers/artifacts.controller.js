@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.artifactManagement')
-    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, moment, commonUtitlites, filterRuns) {
+    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, moment, commonUtitlites, filterRuns, artifactService) {
         var vm = this;
 
         vm.allPipelines = [];
@@ -55,7 +55,12 @@ angular
 
         }, true);
 
-        $scope.treeInstance = {};
+        $scope.treeEventsObj = function (e, data) {
+            var selectedNode = data.node.original;
+            if(selectedNode.type != 'folder'){
+                artifactService.getFile(selectedNode.path + '/' + selectedNode.text);
+            }
+        };
 
         $scope.treeConfig = {
             core : {
@@ -77,11 +82,27 @@ angular
 
         $(document).ready(function(){
             $('#jstree').jstree();
+            // $(document).on("select_node.jstree", function (e, data) {
+            //     // vm.selectedData = angular.copy($scope.treeData);
+            //     var node = data.node;
+            //     debugger;
+            // });
+            // $(document).on("click", ".jstree-anchor", function (e) {
+            //     var node = e;
+            //     debugger;
+            // });
         });
 
-        $('#jstree').on("changed.jstree", function (e, data) {
-            // vm.selectedData = angular.copy($scope.treeData);
-        });
+        // $('#jstree').on("changed.jstree", function (e, data) {
+        //     // vm.selectedData = angular.copy($scope.treeData);
+        // });
+
+
+
+        // $('#jstree').bind("select_node.jstree", function (e, data) {
+        //     var object = data.instance.get_json()[0];
+        //     debugger;
+        // });
 
         // var selected_nodes = $scope.treeInstance.jstree(true).get_selected();
 

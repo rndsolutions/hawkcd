@@ -13,7 +13,7 @@
         </div>
         <div id="runs-container-small" ng-repeat="pipeline in artifact.filteredItems">
             <div class="mt-element-list">
-                <div class="mt-list-container list-simple ext-1 group">
+                <div class="mt-list-container list-simple ext-1 group" id="list-container" style="">
                     <a class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false">
                         <div id="artifact-header-container" class="list-toggle done">
                             <div id="artifact-main-header" ng-class="{'status-passed' : pipeline.status == 'PASSED', 'status-failed' : pipeline.status == 'FAILED', 'status-working' : pipeline.status == 'IN_PROGRESS', 'status-canceled' : pipeline.status == 'CANCELED','vertical-center' : true}">
@@ -37,12 +37,14 @@
                                       <div class="">
                                             <div class="break-word"><i class="fa fa-user fa-1x"></i> {{pipeline.materials[0].materialDefinition.authorName}}</div>
                                         </div>
-                                        <div class="display-inline vertical-center">
+                                        <div class="vertical-center-top">
+
+                                        </div>
+                                        <div class="display-inline">
                                             <div class="display-inline break-word" ng-model="pipeline.lastPipelineAction.output"><i class="fa fa-calendar fa-1x"></i><span ng-if="pipeline.lastStage.localEndTime != null">  {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastRun.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </a>
@@ -52,7 +54,6 @@
                     </div>
                 </div>
             </div>
-            <br/>
         </div>
 
     </div>

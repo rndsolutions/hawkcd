@@ -52,13 +52,10 @@
 }
 
 .vertical-center-top {
-    position: relative;
-    top: 40%;
-    transform: translateY(-60%);
+  margin:10%;
 }
 
-.vertical-center-bottom {
-    position: relative;
-    top: 60%;
-    transform: translateY(-40%);
+#list-container {
+  border: 10px solid #E1E5EC;
+  margin:4px;
 }
