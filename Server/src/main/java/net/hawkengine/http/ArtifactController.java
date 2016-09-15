@@ -109,4 +109,25 @@ public class ArtifactController {
                 .entity(zipFile)
                 .build();
     }
+
+    @Path("/{pipelineExecutionId}/{artifactSource}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/force-download")
+    public Response getArtifact(@PathParam("pipelineName") String pipelineName,
+                                @PathParam("pipelineExecutionId") String pipelineExecutionID,
+                                @PathParam("artifactSource") String artifactSource){
+        String directory = this.basePath + File.separator + ServerConfiguration.getConfiguration().getArtifactsDestination() + File.separator + pipelineName + File.separator + pipelineExecutionID + File.separator + artifactSource;
+
+        File fileToReturn = new File(directory);
+
+        if (!fileToReturn.exists()){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .build();
+        }
+
+        return Response.status(Response.Status.OK)
+                .entity(fileToReturn)
+                .build();
+    }
 }
