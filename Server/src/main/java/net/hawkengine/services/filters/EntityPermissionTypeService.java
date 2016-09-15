@@ -127,6 +127,7 @@ public class EntityPermissionTypeService {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 userDto.setPermissionType(PermissionType.ADMIN);
             }
+
         }
 
         return userDto;
@@ -139,8 +140,19 @@ public class EntityPermissionTypeService {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 userGroupDto.setPermissionType(PermissionType.ADMIN);
             }
-        }
 
+            if (permission.getPermissionScope() == PermissionScope.SERVER) {
+                if (permission.getPermissionType() == PermissionType.VIEWER) {
+                    userGroupDto.setPermissionType(PermissionType.VIEWER);
+                }
+            }
+
+            if (permission.getPermissionScope() == PermissionScope.SERVER) {
+                if (permission.getPermissionType() == PermissionType.OPERATOR) {
+                    userGroupDto.setPermissionType(PermissionType.OPERATOR);
+                }
+            }
+        }
         return userGroupDto;
     }
 
@@ -151,7 +163,18 @@ public class EntityPermissionTypeService {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 user.setPermissionType(PermissionType.ADMIN);
             }
-        }
+                if (permission.getPermissionScope() == PermissionScope.SERVER) {
+                    if (permission.getPermissionType() == PermissionType.VIEWER) {
+                        user.setPermissionType(PermissionType.VIEWER);
+                    }
+                }
+
+                if (permission.getPermissionScope() == PermissionScope.SERVER) {
+                    if (permission.getPermissionType() == PermissionType.OPERATOR) {
+                        user.setPermissionType(PermissionType.OPERATOR);
+                    }
+                }
+            }
 
         return user;
     }
