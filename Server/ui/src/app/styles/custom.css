@@ -811,6 +811,10 @@ p {
     padding-left: 5%;
 }
 
+.padding-right-5 {
+    padding-right: 5%;
+}
+
 .padding-left-1 {
     padding-left: 1%;
 }
@@ -928,7 +932,8 @@ p {
 
 .vertical-center-artifact {
     position: relative;
-    transform: translateY(40%);
+    top:50%!important;
+    transform: translateY(-50%);
 }
 
 .mouse {

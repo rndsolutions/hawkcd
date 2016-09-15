@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.artifactManagement')
-    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, moment, commonUtitlites) {
+    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, moment, commonUtitlites, filterRuns) {
         var vm = this;
 
         vm.allPipelines = [];
@@ -13,12 +13,18 @@ angular
 
         vm.isRunSelected = [];
 
+        vm.query = "";
+
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
             return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
         };
 
         vm.goToGitLink = function(link) {
             location.href = link;
+        };
+
+        vm.search = function() {
+            vm.filteredItems = filterRuns.search(vm.allPipelineRuns, vm.query);
         };
 
         $scope.$watch(function() {
@@ -42,15 +48,12 @@ angular
             });
 
             vm.allPipelineRuns.sort(function(a, b) {
-                if(!a.startTime || !b.startTime){
-                    return;
-                }
                 return moment.utc(b.startTime.date).add(b.startTime.time.hour, 'hours').add(b.startTime.time.minute, 'minutes').add(b.startTime.time.second, 'seconds').diff(moment.utc(a.startTime.date).add(a.startTime.time.hour, 'hours').add(a.startTime.time.minute, 'minutes').add(a.startTime.time.second, 'seconds'));
             });
 
-        }, true);
+            vm.search();
 
-        $scope.treeData = [ { "id": "ajson1", "parent": "#", "text": "Simple root node lol", "state": { "opened": true }, "__uiNodeId": 1 }, { "id": "ajson2", "parent": "#", "text": "Root node 2", "state": { "opened": true }, "__uiNodeId": 2 }, { "id": "ajson3", "parent": "ajson2", "text": "Child 1", "state": { "opened": true }, "__uiNodeId": 3 }, { "id": "ajson4", "parent": "ajson2", "text": "Child 2", "state": { "opened": true }, "__uiNodeId": 4 } ];
+        }, true);
 
         $scope.treeInstance = {};
 
@@ -61,7 +64,15 @@ angular
                 },
                 check_callback : true
             },
-            plugins : ['types','state']
+            types : {
+                folder : {
+                    icon : "fa fa-folder-o"
+                },
+                file : {
+                    icon : "fa fa-file-text-o"
+                }
+            },
+            plugins : ['types']
         };
 
         $(document).ready(function(){
@@ -69,7 +80,7 @@ angular
         });
 
         $('#jstree').on("changed.jstree", function (e, data) {
-            vm.selectedData = angular.copy($scope.treeData);
+            // vm.selectedData = angular.copy($scope.treeData);
         });
 
         // var selected_nodes = $scope.treeInstance.jstree(true).get_selected();
