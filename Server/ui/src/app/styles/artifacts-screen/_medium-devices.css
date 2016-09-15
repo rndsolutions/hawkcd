@@ -1,0 +1,64 @@
+#left-container{
+  display:inline-block;
+  text-align: center;
+  margin-top:15px;
+  width:15%;
+  height: auto!important;
+}
+
+#middle-container{
+  display:inline-block;
+  vertical-align: top;
+  border-left:2px solid gray;
+  text-align: center;
+  margin-top:2px;
+  height: 80px;!important;
+  width:65%;
+}
+
+#right-container {
+  display:inline-block;
+  border-left:2px solid gray;
+  height: 80px!important;
+  width:19%;
+}
+
+.user-info-cell{
+  height: auto!important;
+  display:inline-block;
+  padding-left:3px;
+}
+
+#artifact-header-container{
+    height: 100px;
+    background-color: #E1E5EC!important;
+    padding-right:0px;
+    padding-left:8px;
+    color: black;
+    font-weight: 500;
+}
+
+#artifact-main-header {
+  border-left:4px solid #2ab4c0 ;
+  height: 80px!important;
+}
+
+.center-cell {
+  margin:auto!important;
+}
+
+.break-word {
+  word-break: break-all;
+}
+
+.vertical-center-top {
+    position: relative;
+    top: 40%;
+    transform: translateY(-60%);
+}
+
+.vertical-center-bottom {
+    position: relative;
+    top: 60%;
+    transform: translateY(-40%);
+}

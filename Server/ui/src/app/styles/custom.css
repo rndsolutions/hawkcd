@@ -939,3 +939,7 @@ p {
 .mouse {
     cursor: default;
 }
+
+@media screen and (max-width: 2560px){
+  @import "artifacts-screen/_medium-devices.css";
+}

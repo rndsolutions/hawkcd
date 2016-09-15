@@ -10,67 +10,50 @@
             <div class="input-group input-group-lg add-on custom-search-artifact">
                 <input type="text" class="form-control search-query custom-line-height" style="width:30%" ng-model="artifact.query" ng-change="artifact.search()" ng-pattern="/^([\w-]+)$/" placeholder="Search">
             </div>
-            <div class="width-100">
-                <uib-accordion close-others="true" id="pipelineDefinitionAccordion" class="custom-accordion">
-                    <div uib-accordion-group class="run-item custom-accordion accordion-heading-fix pointer" id="pipelineDefinitionGroup{{$index}}"
-                         is-open="artifact.isDefinitionGroupOpen[$index]"
-                         is-disabled="true"
-                         ng-repeat="pipeline in artifact.filteredItems"
-                         ng-click="artifact.openAccordion(artifact.isDefinitionGroupOpen, $index);artifact.clearSelection()">
-                        <!-- pipelines container-->
-                        <uib-accordion-heading id="accordionHeading" style="margin:0!important;padding:0!important;">
-
-                            <div class="width-100">
-                            <div class="width-20 pull-left padding-0" style="display:flex">
-                                <div class="pull-left" style="height:65px">
-                                    <div class="run-item-container status-passed pull-left vertical-center" ng-class="{'status-passed': pipeline.status == 'PASSED', 'status-failed' : pipeline.status == 'FAILED', 'status-working' : pipeline.status == 'IN_PROGRESS', 'status-canceled' : pipeline.status == 'CANCELED'}">
+        </div>
+        <div id="runs-container-small" ng-repeat="pipeline in artifact.filteredItems">
+            <div class="mt-element-list">
+                <div class="mt-list-container list-simple ext-1 group">
+                    <a class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false">
+                        <div id="artifact-header-container" class="list-toggle done">
+                            <div id="artifact-main-header" ng-class="{'status-passed' : pipeline.status == 'PASSED', 'status-failed' : pipeline.status == 'FAILED', 'status-working' : pipeline.status == 'IN_PROGRESS', 'status-canceled' : pipeline.status == 'CANCELED','vertical-center' : true}">
+                                <div id="left-container" class="vertical-center center-cell">
+                                    <div class="break-word">
+                                        #{{pipeline.executionId}} {{pipeline.pipelineDefinitionName.substring(0,22)}} <span ng-if="pipeline.pipelineDefinitionName.length > 22">..</span>
                                     </div>
                                 </div>
-                            <div class="pull-left padding-left-5">
-                                <h5 class="accordion-heading-fix vertical-center"> #{{pipeline.executionId}} {{pipeline.pipelineDefinitionName.substring(0,22)}}<span ng-if="pipeline.pipelineDefinitionName.length > 22">...</span> - {{pipeline.status}}</h5>
-                            </div>
-                            </div>
-
-                            <div class="width-60 pull-left padding-0" style="display:flex">
-                                <div class="display-inline-block pull-left" style="height:65px">
-                                    <div class="run-item-container pull-left" style="border-left:1px solid black;">
-                                    </div>
-                                </div>
-                                <div class="pull-left padding-left-1">
-                                    <span ng-repeat="material in pipeline.materials">
-                                        <h5 class="accordion-heading-fix vertical-center">
-                                            <i class="fa fa-gg"></i>
-                                            <a target="_blank" href="{{material.gitLink}}" ng-click="artifact.goToGitLink(material.gitLink);$event.stopPropagation()" class="green-jungle">
-
+                                <div id="middle-container" class="text-center">
+                                  <div class="center-cell vertical-center">
+                                    <div ng-repeat="material in pipeline.materials">
+                                        <i class="fa fa-gg"></i>
+                                        <a target="_blank" href="{{material.gitLink}}" ng-click="artifact.goToGitLink(material.gitLink)" class="green-jungle">
                                             <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
-                                            <span> {{material.materialDefinition.comments}}</span>
-                                        </h5>
-                                    </span>
+                                        <span> {{material.materialDefinition.comments}}</span>
+                                    </div>
+                                  </div>
                                 </div>
-                            </div>
-                            <div class="width-20 pull-left padding-0" style="display:flex">
-                                <div class="display-inline-block pull-left" style="height:65px">
-                                    <div class="run-item-container pull-left" style="border-left:1px solid black;">
+                                <div id="right-container" class="pull-right">
+                                    <div class="user-info-cell vertical-center">
+                                      <div class="">
+                                            <div class="break-word"><i class="fa fa-user fa-1x"></i> {{pipeline.materials[0].materialDefinition.authorName}}</div>
+                                        </div>
+                                        <div class="display-inline vertical-center">
+                                            <div class="display-inline break-word" ng-model="pipeline.lastPipelineAction.output"><i class="fa fa-calendar fa-1x"></i><span ng-if="pipeline.lastStage.localEndTime != null">  {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastRun.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="pull-left padding-left-5">
-                                    <span class="accordion-heading-fix vertical-center"><h5 class="padding-bottom-5"><i class="fa fa-user"></i>  {{pipeline.materials[0].materialDefinition.authorName}}</h5></span>
-                                    <span class="accordion-heading-fix vertical-center"><h5 class="padding-top-1"><i class="fa fa-calendar"></i> <span ng-if="pipeline.lastStage.localEndTime != null">  {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastRun.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</span></h5></span>
-                                </div>
-                            </div>
-                            </div>
-                        </uib-accordion-heading>
 
-                        <div class="width-100 mouse" ng-click="$event.stopPropagation()">
-                            <div class="nav-justified">
-                                <div id="jstree" js-tree="treeConfig" ng-model="pipeline.artifactsFileStructure[0].children" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events-obj="treeEventsObj">
-
-                                </div>
                             </div>
                         </div>
+                    </a>
+                    <div class="panel-collapse collapse" id="list{{$index}}" aria-expanded="false">
+                      <div id="jstree" js-tree="treeConfig" ng-model="pipeline.artifactsFileStructure[0].children" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events-obj="treeEventsObj">
+                      </div>
                     </div>
-                </uib-accordion>
+                </div>
             </div>
+            <br/>
         </div>
+
     </div>
 </div>
