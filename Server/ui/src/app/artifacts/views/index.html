@@ -63,7 +63,7 @@
 
                         <div class="width-100 mouse" ng-click="$event.stopPropagation()">
                             <div class="nav-justified">
-                                <div id="jstree" js-tree="treeConfig" ng-model="pipeline.artifactsFileStructure[0].children" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events-obj="treeEventsObj">
+                                <div id="jstree" js-tree="treeConfig" ng-model="pipeline.artifactsFileStructure[0].children" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events-obj="treeEventsObj" tree-events="select_node:treeEventsObj;">
 
                                 </div>
                             </div>
