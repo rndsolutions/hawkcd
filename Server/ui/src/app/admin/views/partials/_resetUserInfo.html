@@ -17,9 +17,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                          <p ng-show="(resetUserInfo.userEmail.$error.pattern && resetUserInfo.userEmail.$touched) && admin.userDTO.email.length != 0" class="alert alert-danger">
-                            Invalid email format!
-                          </p>
+                            <p ng-show="(resetUserInfo.userEmail.$error.pattern && resetUserInfo.userEmail.$touched) && admin.userDTO.email.length != 0" class="alert alert-danger">
+                                Invalid email format!
+                            </p>
                         </div>
                         <div class="form-group form-md-line-input">
                             <label class="control-label col-md-3 required-fixed form-required-fix">New password
@@ -44,19 +44,25 @@
                             <label class="control-label col-md-3 required-fixed form-required-fix">Confirm password
                             </label>
                             <div class="col-md-6">
-                                <input ng-pattern="admin.userDTO.newPassword" ng-model="admin.userDTO.confirmNewPassword" ng-pattern="admin.userDTO.newPassword" ng-minlength="3" ng-maxlength="32" type="password" name="confirmNewPassword" class="form-control" />
+                                <input ng-model="admin.userDTO.confirmNewPassword" ng-pattern="resetUserInfo.userNewPassword.$viewValue" type="password" name="confirmNewPassword" class="form-control" />
                                 <div class="form-control-focus"></div>
                             </div>
                         </div>
                         <div class="form-group form-md-line">
-                            <p ng-show="(resetUserInfo.confirmNewPassword.$invalid && resetUserInfo.confirmNewPassword.$touched) && resetUserInfo.confirmNewPassword !== resetUserInfo.userNewPassword" class="alert alert-danger">
+                            <p ng-show="(resetUserInfo.confirmNewPassword.$error.pattern && resetUserInfo.confirmNewPassword.$touched) && resetUserInfo.confirmNewPassword.$viewValue !== resetUserInfo.userNewPassword.$viewValue" class="alert alert-danger">
                                 Passwords do not match!
                             </p>
                         </div>
                         <br>
                         <div class="form-group text-center">
-                          <button class="btn green" ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)" data-dismiss="modal" type="submit" ng-class="{'disabled':resetUserInfo.$invalid || (admin.userDTO.newPassword !== admin.userDTO.confirmNewPassword)}">{{admin.defaultText.buttonTitles.ok}}</button>
-                          <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.buttonTitles.cancel}}</button>
+                            <button class="btn green"
+                                    ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)"
+                                    data-dismiss="modal" type="submit" ng-class="{'disabled':(resetUserInfo.userEmail.$invalid || resetUserInfo.userEmail.$viewValue.length == 0) ||
+                                                                                             (resetUserInfo.userNewPassword.$invalid && resetUserInfo.userNewPassword.$viewValue.length > 0) ||
+                                                                                             (resetUserInfo.userNewPassword.$viewValue.length == 0 && resetUserInfo.confirmNewPassword.$viewValue.length > 0) ||
+                                                                                             (resetUserInfo.confirmNewPassword.$viewValue.length > 0 && resetUserInfo.userNewPassword.$viewValue.length == 0) ||
+                                                                                              resetUserInfo.confirmNewPassword.$error.pattern }">{{admin.defaultText.buttonTitles.ok}}</button>
+                            <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.buttonTitles.cancel}}</button>
                         </div>
                     </form>
                 </div>
