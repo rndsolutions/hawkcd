@@ -12,6 +12,7 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.interfaces.IUserService;
 import net.hawkengine.ws.SessionPool;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.tools.ant.taskdefs.condition.Not;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,5 +119,18 @@ public class UserService extends CrudService<User> implements IUserService {
         userToUpdate.setPassword(hashedPasswordToUpdateUser);
 
         return this.update(userToUpdate);
+    }
+
+    @Override
+    public ServiceResult resetUserPassword(User user) {
+        String hashedPassword = DigestUtils.sha256Hex(user.getPassword());
+
+        ServiceResult result = this.getById(user.getId());
+
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            return result;
+        }
+        user.setPassword(hashedPassword);
+        return this.update(user);
     }
 }

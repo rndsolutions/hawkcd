@@ -947,3 +947,7 @@ p {
 @media screen and (min-width: 768px) and (max-width: 991px){
   @import "artifacts-screen/_medium-devices.css";
 }
+
+.padding-cog {
+  padding:8px;
+}

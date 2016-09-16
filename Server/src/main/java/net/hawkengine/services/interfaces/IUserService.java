@@ -14,4 +14,6 @@ public interface IUserService extends ICrudService<User> {
     ServiceResult addUserWithoutProvider(User user);
 
     ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword);
+
+    ServiceResult resetUserPassword(User user);
 }
