@@ -244,4 +244,10 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     public boolean addWithMaterialDefinition(String entity, String className, List list) {
         return true;
     }
+
+    @Override
+    public boolean addStageWithSpecificJobs(String entity, String className, List permissions) {
+
+        return this.add(entity, className, permissions);
+    }
 }
