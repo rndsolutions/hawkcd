@@ -16,7 +16,7 @@ public final class ConfigConstants {
     public static final String SERVER_REPORT_AGENT_API_ADDRESS = "agents";
     public static final String SERVER_REPORT_JOB_API_ADDRESS = "agents/work";
     public static final String SERVER_CHECK_FOR_WORK_API_ADDRESS = "agents/%s/work";
-    public static final String SERVER_CREATE_ARTIFACT_API_ADDRESS = "Artifacts/%s/%s/%s";
+    public static final String SERVER_CREATE_ARTIFACT_API_ADDRESS = "Artifacts/%s/%s";
     public static final String SERVER_FETCH_ARTIFACT_API_ADDRESS = "pipeline-definitions";
     public static final String ARTIFACTS_DIRECTORY = "Artifacts";
 }

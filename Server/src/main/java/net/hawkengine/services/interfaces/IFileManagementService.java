@@ -1,5 +1,7 @@
 package net.hawkengine.services.interfaces;
 
+import net.hawkengine.model.configuration.filetree.JsTreeFile;
+
 import java.io.File;
 import java.io.InputStream;
 
@@ -29,4 +31,6 @@ public interface IFileManagementService {
     String urlCombine(String... args);
 
     String getAbsolutePath(String path);
+
+    JsTreeFile getFileNames(File parentDirectory);
 }

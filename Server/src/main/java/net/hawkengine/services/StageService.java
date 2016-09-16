@@ -1,12 +1,18 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.utilities.constants.ConfigurationConstants;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.Stage;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.StageDto;
 import net.hawkengine.model.enums.NotificationType;
+import net.hawkengine.services.interfaces.IFileManagementService;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +20,14 @@ public class StageService extends CrudService<Stage> implements IStageService {
     private static final Class CLASS_TYPE = Stage.class;
 
     private IPipelineService pipelineService;
+    private IFileManagementService fileManagementService;
     private IJobDefinitionService jobDefinitionService;
     private String failureMessage = "not found";
     private String successMessage = "retrieved successfully";
 
     public StageService() {
         this.pipelineService = new PipelineService();
+        this.fileManagementService = new FileManagementService();
         this.jobDefinitionService = new JobDefinitionService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
@@ -27,6 +35,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     //TODO: add tests for JobDefinitionService
     public StageService(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
+        this.fileManagementService = new FileManagementService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
@@ -118,7 +127,6 @@ public class StageService extends CrudService<Stage> implements IStageService {
     public ServiceResult delete(String stageId) {
         Pipeline pipelineToUpdate = new Pipeline();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
-
         for (Pipeline pipeline : pipelines) {
             List<Stage> stages = pipeline.getStages();
 
@@ -166,7 +174,6 @@ public class StageService extends CrudService<Stage> implements IStageService {
                 .orElse(null);
 
         return result;
-
     }
 
     @Override

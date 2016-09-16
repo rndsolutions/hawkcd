@@ -7,6 +7,9 @@ agent_base_name="agent"
 server_base_name="hawkcd"
 version="0.0.4"
 
+#save to a file the latest commit
+git show > rev.txt
+
 arg1=$1
 
 if [[ -z $2 ]]; then
@@ -66,7 +69,8 @@ function compile_agent {
   #cd Agent
   gradle -b $($prj_dir)/Agent/build.gradle clean
   gradle -b $($prj_dir)/Agent/build.gradle -Pbase_Name="$agent_base_name" -PbuildVersion="$version" -Prevision="$revision" build -x test
-  #gradle -b $($prj_dir)/Agent/build.gradle build -x test
+
+  cp $($prj_dir)/rev.txt dist/Agent
   cp $($prj_dir)/Agent/agent.sh dist/Agent
   sed -i "s/<replace>/$agent_base_name-$version-$revision/g" $($prj_dir)/dist/Agent/agent.sh
 
@@ -114,9 +118,10 @@ function compile_server {
 
   #cd Agent
   gradle -b $($prj_dir)/Server/build.gradle clean
-
   gradle -b $($prj_dir)/Server/build.gradle -Pbase_Name="$server_base_name" -PbuildVersion="$version" -Prevision="$revision" build -x test
 
+  echo "$prj_dir"
+  cp $($prj_dir)/rev.txt dist/Server
   cp "$($prj_dir)/Server/build/libs/$server_artifact" dist/Server
   cp $($prj_dir)/Server/hawkcd.sh dist/Server
 
