@@ -1,9 +1,9 @@
 package net.hawkengine.services;
 
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
+import net.hawkengine.model.*;
+import net.hawkengine.model.dto.StageDto;
 import net.hawkengine.model.enums.NotificationType;
+import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 
@@ -14,14 +14,17 @@ public class StageService extends CrudService<Stage> implements IStageService {
     private static final Class CLASS_TYPE = Stage.class;
 
     private IPipelineService pipelineService;
+    private IJobDefinitionService jobDefinitionService;
     private String failureMessage = "not found";
     private String successMessage = "retrieved successfully";
 
     public StageService() {
         this.pipelineService = new PipelineService();
+        this.jobDefinitionService = new JobDefinitionService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
+    //TODO: add tests for JobDefinitionService
     public StageService(IPipelineService pipelineService) {
         this.pipelineService = pipelineService;
         super.setObjectType(CLASS_TYPE.getSimpleName());
@@ -164,5 +167,30 @@ public class StageService extends CrudService<Stage> implements IStageService {
 
         return result;
 
+    }
+
+    @Override
+    public ServiceResult addStageWithSpecificJobs(StageDto stageDto) {
+        Stage stageToAdd = stageDto.getStage();
+        List<Job> jobs = new ArrayList<>();
+
+        for (String jobDefinitionId : stageDto.getJobDefinitionIds()) {
+            ServiceResult result =  this.jobDefinitionService.getById(jobDefinitionId);
+
+            if (result.getNotificationType() == NotificationType.ERROR){
+                return result;
+            }
+            JobDefinition jobDefinition = (JobDefinition) result.getObject();
+            Job jobToAdd = new Job();
+            jobToAdd.setPipelineId(stageToAdd.getPipelineId());
+            jobToAdd.setJobDefinitionId(jobDefinition.getId());
+            jobToAdd.setJobDefinitionName(jobDefinition.getName());
+            jobToAdd.setStageId(stageToAdd.getId());
+            jobToAdd.setJobDefinitionName(jobDefinition.getName());
+            jobs.add(jobToAdd);
+        }
+        stageToAdd.setJobs(jobs);
+
+        return this.add(stageToAdd);
     }
 }
