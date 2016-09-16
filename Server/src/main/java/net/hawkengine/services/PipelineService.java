@@ -71,11 +71,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 env.setValue(environmentVariable.getValue());
             });
             pipelineDefinition.setEnvironmentVariables(environmentVariables);
-            this.pipelineDefinitionService.update(pipelineDefinition);
+            ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
+            EndpointConnector.passResultToEndpoint("PipelineDefinitionService", "update", result);
         }
 
         this.addMaterialsToPipeline(pipeline);
         this.addStagesToPipeline(pipeline);
+
         return super.add(pipeline);
     }
 
