@@ -940,6 +940,10 @@ p {
     cursor: default;
 }
 
-@media screen and (max-width: 2560px){
+@media screen and (max-width: 767px){
+  @import "artifacts-screen/_small-devices.css";
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px){
   @import "artifacts-screen/_medium-devices.css";
 }
