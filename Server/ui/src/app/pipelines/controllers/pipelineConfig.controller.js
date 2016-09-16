@@ -484,6 +484,7 @@ angular
         vm.editStage = function(stage) {
             var newStage = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex]);
             newStage.name = stage.name;
+            newStage.isTriggeredManually = stage.isTriggeredManually;
             $state.go('index.pipelineConfig.stage.settings', {
                 groupName: vm.pipeline.groupName,
                 pipelineName: vm.pipeline.name,
