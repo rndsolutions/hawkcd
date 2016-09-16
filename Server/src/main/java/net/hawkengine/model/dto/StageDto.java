@@ -4,27 +4,22 @@ import net.hawkengine.model.Stage;
 import java.util.List;
 
 public class StageDto {
-    private String stageDefinitionId;
-    private List<Stage> stages;
+    private Stage stage;
+    private List<String> jobDefinitionIds;
 
-    public StageDto(String stageDefinitionId, List<Stage> stages) {
-        this.stageDefinitionId = stageDefinitionId;
-        this.stages = stages;
+    public Stage getStage() {
+        return this.stage;
     }
 
-    public String getStageDefinitionId() {
-        return this.stageDefinitionId;
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
-    public void setStageDefinitionId(String stageDefinitionId) {
-        this.stageDefinitionId = stageDefinitionId;
+    public List<String> getJobDefinitionIds() {
+        return this.jobDefinitionIds;
     }
 
-    public List<Stage> getStages() {
-        return this.stages;
-    }
-
-    public void setStages(List<Stage> stages) {
-        this.stages = stages;
+    public void setJobDefinitionIds(List<String> jobDefinitionIds) {
+        this.jobDefinitionIds = jobDefinitionIds;
     }
 }
