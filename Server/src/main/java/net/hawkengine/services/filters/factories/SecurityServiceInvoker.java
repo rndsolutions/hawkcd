@@ -45,6 +45,8 @@ public class SecurityServiceInvoker<T extends DbEntry> {
                 return this.securityService.updateUserGroupDto(entity, className, permissions);
             case "addWithMaterialDefinition":
                 return this.securityService.addWithMaterialDefinition(entity, className, permissions);
+            case "resetUserPassword":
+                return this.securityService.resetUserPassword(entity, className, permissions);
             default:
                 return false;
         }
