@@ -1,43 +1,65 @@
 package net.hawkengine.http;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.hawkengine.core.ServerConfiguration;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.payload.UploadArtifactInfo;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.File;
 
-@Path("/Artifacts/{pipelineName}/{stageName}/{jobName}")
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+@Path("/Artifacts/{pipelineName}")
 public class ArtifactController {
     private IFileManagementService fileManagementService;
     private String basePath;
     private String outputFolder;
+    private Gson jsonConverter;
 
     public ArtifactController() {
         this.fileManagementService = new FileManagementService();
         this.basePath = System.getProperty("user.dir");
         this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
         this.fileManagementService.deleteDirectoryRecursively(this.outputFolder);
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .create();
     }
 
     public ArtifactController(IFileManagementService fileManagementService) {
         this.fileManagementService = fileManagementService;
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .create();
     }
 
     @POST
-    @Path("/upload-artifact")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/{pipelineExecutionID}/upload-artifact")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response unzipFile(@PathParam("pipelineName") String pipelineName,
-                              @PathParam("stageName") String stageName,
-                              @PathParam("jobName") String jobName,
-                              File zipFile) {
+                              @PathParam("pipelineExecutionID") String pipelineExecutionID,
+                              String uploadArtifactInfoAsString) {
         String artifactsFolder = ServerConfiguration.getConfiguration().getArtifactsDestination();
-        this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + stageName + File.separator + jobName;
+        UploadArtifactInfo uploadArtifactInfo = this.jsonConverter.fromJson(uploadArtifactInfoAsString, UploadArtifactInfo.class);
+        if (uploadArtifactInfo.getDestination() != null){
+            String destination = this.fileManagementService.normalizePath(uploadArtifactInfo.getDestination());
+            this.outputFolder = destination + File.separator + pipelineName + File.separator + pipelineExecutionID;
+        } else {
+            this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID;
+        }
 
-        String errorMessage = this.fileManagementService.unzipFile(zipFile.getPath(), this.outputFolder);
+        String errorMessage = this.fileManagementService.unzipFile(uploadArtifactInfo.getZipFile().getPath(), this.outputFolder);
 
         if (errorMessage != null) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -48,7 +70,7 @@ public class ArtifactController {
                 .build();
     }
 
-    @Path("/fetch-artifact")
+    @Path("/{stageName}/{jobName}/fetch-artifact")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.MULTIPART_FORM_DATA)
