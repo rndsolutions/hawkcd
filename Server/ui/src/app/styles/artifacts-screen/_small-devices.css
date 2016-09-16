@@ -44,7 +44,8 @@
   }
 
  .artifacts-small-material-holder{
-   list-style-type: none;
+   display:block!important;
+   list-style-type: none!important;
    margin-left:5px;
  }
 
