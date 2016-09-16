@@ -49,7 +49,7 @@
                         </div>
                     </a>
                     <div class="panel-collapse collapse" id="list{{$index}}" aria-expanded="false">
-                      <div id="jstree" js-tree="treeConfig" ng-model="pipeline.artifactsFileStructure[0].children" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events-obj="treeEventsObj">
+                      <div id="jstree" js-tree="treeConfig" ng-model="pipeline.artifactsFileStructure[0].children" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events-obj="treeEventsObj" tree-events="select_node:treeEventsObj;">
                       </div>
                     </div>
                 </div>
