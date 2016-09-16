@@ -294,16 +294,28 @@ angular
             vm.selectedStageJobs = {};
             for (var i = 0; i < vm.allPipelines.length; i++) {
                 if (vm.allPipelines[i].name == pipeline) {
-                    vm.selectedPipelineStages = vm.allPipelines[i].stageDefinitions;
+                    vm.selectedPipelineStages = angular.copy(vm.allPipelines[i].stageDefinitions);
                     break;
                 }
             }
             console.log(vm.selectedPipelineStages);
         };
 
+        vm.getPipelineForTaskUpdate = function(name) {
+            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+                if (currentPipeline.name == name) {
+                    // vm.updatedTask.pipelineDefinitionId = angular.copy(currentPipeline.id);
+                    vm.selectedPipelineStages = angular.copy(currentPipeline.stageDefinitions);
+                    // vm.getStageForTaskUpdate(vm.updatedTask.stageDefinitionName);
+                    debugger;
+                }
+            });
+        };
+
         vm.getPipelineForTaskById = function(id) {
             vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
                 if (currentPipeline.id == id) {
+                    // vm.updatedTask.pipelineDefinitionId = angular.copy(currentPipeline.id);
                     vm.selectedPipelineStages = angular.copy(currentPipeline.stageDefinitions);
                 }
             });
@@ -366,16 +378,28 @@ angular
             vm.selectedStageJobs = {};
             for (var i = 0; i < vm.selectedPipelineStages.length; i++) {
                 if (vm.selectedPipelineStages[i].name == stage) {
-                    vm.selectedStageJobs = vm.selectedPipelineStages[i].jobDefinitions;
+                    vm.selectedStageJobs = angular.copy(vm.selectedPipelineStages[i].jobDefinitions);
                     break;
                 }
             }
             console.log(vm.selectedStageJobs);
         };
 
+        vm.getStageForTaskUpdate = function(name) {
+            vm.selectedPipelineStages.forEach(function(currentStage, stageIndex, stageArray) {
+                if (currentStage.name == name) {
+                    // vm.updatedTask.stageDefinitionId = angular.copy(currentStage.id);
+                    vm.selectedStageJobs = angular.copy(currentStage.jobDefinitions);
+                    // vm.getJobForTaskUpdate(vm.updatedTask.jobDefinitionName);
+                    debugger;
+                }
+            });
+        };
+
         vm.getStageForTaskById = function(id) {
             vm.selectedPipelineStages.forEach(function(currentStage, stageIndex, stageArray) {
                 if (currentStage.id == id) {
+                    // vm.updatedTask.stageDefinitionId = angular.copy(currentStage.id);
                     vm.selectedStageJobs = angular.copy(currentStage.jobDefinitions);
                 }
             });
@@ -517,7 +541,7 @@ angular
 
                 vm.updatedJob.name = vm.job.name;
 
-                vm.currentJob = job;
+                vm.currentJob = angular.copy(job);
             }
         };
 
@@ -545,6 +569,27 @@ angular
             }
         };
 
+        vm.getJobForTaskById = function(id) {
+            vm.selectedStageJobs.forEach(function(currentJob, jobIndex, jobArray) {
+                debugger;
+                if (currentJob.id == id) {
+                    vm.updatedTask.jobDefinitionId = angular.copy(currentJob.id);
+                    vm.updatedTask.jobDefinitionName = angular.copy(currentJob.name);
+                    debugger;
+                }
+            });
+        };
+
+        vm.getJobForTaskUpdate = function(name) {
+            vm.selectedStageJobs.forEach(function(currentJob, jobIndex, jobArray) {
+                debugger;
+                if (currentJob.name == name) {
+                    // vm.updatedTask.jobDefinitionId = angular.copy(currentJob.id);
+                    vm.updatedTask.jobDefinitionName = angular.copy(currentJob.name);
+                    debugger;
+                }
+            });
+        };
 
         vm.addJob = function(newJob) {
             if (newJob.taskDefinitions.type == 'EXEC') {
@@ -779,7 +824,7 @@ angular
             }
 
             //vm.task = res;
-            vm.updatedTask = vm.task;
+            vm.updatedTask = angular.copy(vm.task);
 
             //vm.taskIndex = taskIndex;
         };
@@ -795,9 +840,9 @@ angular
             }
 
             //vm.task = res;
-            vm.updatedTask = vm.task;
-            vm.getPipelineForTaskById(vm.updatedTask.pipelineDefinitionId);
-            vm.getStageForTaskById(vm.updatedTask.stageDefinitionId);
+            vm.updatedTask = angular.copy(vm.task);
+            vm.getPipelineForTaskUpdate(vm.updatedTask.pipelineDefinitionName);
+            vm.getStageForTaskUpdate(vm.updatedTask.stageDefinitionName);
 
             //vm.taskIndex = taskIndex;
         };
@@ -837,9 +882,9 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
-                    stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
-                    jobDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
+                    pipelineDefinitionName: newTask.pipeline,
+                    stageDefinitionName: newTask.stage,
+                    jobDefinitionName: newTask.job,
                     type: newTask.type,
                     source: newTask.source,
                     runIfCondition: newTask.runIfCondition,
@@ -897,9 +942,9 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
-                    stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
-                    jobDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
+                    pipelineDefinitionName: newTask.pipelineDefinitionName,
+                    stageDefinitionName: newTask.stageDefinitionName,
+                    jobDefinitionName: newTask.jobDefinitionName,
                     type: newTask.type,
                     source: newTask.source,
                     runIfCondition: newTask.runIfCondition,
