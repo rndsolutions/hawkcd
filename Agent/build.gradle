@@ -8,9 +8,45 @@ jar {
     }
 }
 
+//e.g. versioning strategy:
+
+//agent.0.0.4-alpha.2
+//agent.0.0.4-alpha.50
+
+//agent.0.0.5-alpha.0
+//agent.0.0.4-alpha.2
+
+//hawkcd.0.0.4-alpha.1
+//hawkcd.0.0.4-alpha.2
+//hawkcd.0.0.4-alpha.3
+
+//hawkcd.0.0.7-beta.1
+//hawkcd.0.8.4-rc.1
+
+//hawkcd.1.0.0.jar
+
+//hawkcd.0.8.4.1
+//hawkcd.0.8.4.2 etc
+
+//agent.0.0.4-alpha.1
+//hawkcd.0.0.4-alpha.1
+
+
 task fatJar(type: Jar) {
     manifest.from jar.manifest
-    classifier = 'all'
+
+    if((project.hasProperty('base_Name'))){
+        baseName = base_Name
+    }
+
+    if((project.hasProperty('buildVersion'))){
+        version = buildVersion
+    }
+
+    if((project.hasProperty('revision'))){
+        classifier = revision
+    }
+
     from {
         configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
     } {

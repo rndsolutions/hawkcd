@@ -49,7 +49,19 @@ jar {
 
 task fatJar(type: Jar) {
     manifest.from jar.manifest
-    classifier = 'all'
+
+    if((project.hasProperty('base_Name'))){
+        baseName = base_Name
+    }
+
+    if((project.hasProperty('buildVersion'))){
+        version = buildVersion
+    }
+
+    if((project.hasProperty('revision'))){
+        classifier = revision
+    }
+
     from {
         configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
     } {

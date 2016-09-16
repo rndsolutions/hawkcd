@@ -1,4 +1,7 @@
 #!/bin/bash
+
+version=<replace>
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 RESET="$(tput sgr0)"
@@ -16,11 +19,11 @@ function start {
 }
 function stop {
   #statements\
-    if [[ -z $(pgrep -x -f  "java -jar Server-all.jar") ]]; then
+    if [[ -z $(pgrep -x -f  "java -jar $version.jar") ]]; then
       #statements
       echo "hawkcd is not running"
     else
-      pgrep -x -f  "java -jar Server-all.jar" | kill $(tail)
+      pgrep -x -f  "java -jar $version.jar" | kill $(tail)
       echo "Application server stopped"
     fi
 
@@ -96,7 +99,7 @@ function check_open_port {
 }
 function start_server {
   #statements
-  java -jar Server-all.jar &
+  java -jar $version.jar &
 }
 function start_db {
   data/Linux/redis/redis-server &
@@ -119,7 +122,7 @@ server_port=${tmp3:-'8080' }
 
 case "$func" in
 "start")
-      is_running=$(pgrep -x -f  "java -jar Server-all.jar")
+      is_running=$(pgrep -x -f  "java -jar $version.jar")
       echo $is_running
       if [[ -z $is_running ]]; then
         "start"
