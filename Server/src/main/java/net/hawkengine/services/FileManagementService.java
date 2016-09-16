@@ -1,10 +1,13 @@
 package net.hawkengine.services;
 
+import net.hawkengine.core.ServerConfiguration;
+import net.hawkengine.model.configuration.filetree.JsTreeFile;
 import net.hawkengine.services.interfaces.IFileManagementService;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -214,7 +217,8 @@ public class FileManagementService implements IFileManagementService {
     @Override
     public String normalizePath(String filePath) {
 
-        return StringUtils.replace(filePath, "\\", "/");
+        filePath = StringUtils.replace(filePath, "/", File.separator);
+        return StringUtils.replace(filePath, "\\", File.separator);
     }
 
     @Override
@@ -253,5 +257,39 @@ public class FileManagementService implements IFileManagementService {
         }
 
         return "";
+    }
+
+    @Override
+    public JsTreeFile getFileNames(File parentDirectory) {
+        JsTreeFile directory = new JsTreeFile();
+
+        directory.setText(parentDirectory.getName());
+        directory.setType("folder");
+        String directoryPath = parentDirectory.getAbsolutePath().substring(System.getProperty("user.dir").length() + 1);
+        directory.setPath(directoryPath);
+
+        List<JsTreeFile> childs = new ArrayList<>();
+
+        File[] files = parentDirectory.listFiles();
+
+        Boolean hasArtifacts = files == null ? false : true;
+
+        if(hasArtifacts){
+            for (File file : files){
+                if(file.isDirectory()){
+                    childs.add(this.getFileNames(file));
+                } else {
+                    JsTreeFile currentFile = new JsTreeFile();
+                    currentFile.setText(file.getName());
+                    currentFile.setType("file");
+                    String filePath = parentDirectory.getAbsolutePath().substring(System.getProperty("user.dir").length() + 1);
+                    currentFile.setPath(filePath);
+                    childs.add(currentFile);
+                }
+            }
+        }
+
+        directory.setChildren(childs);
+        return directory;
     }
 }

@@ -203,19 +203,18 @@ public class FileManagementService implements IFileManagementService {
         scanner.setBasedir(this.normalizePath(rootPath));
         scanner.setIncludes(new String[]{wildCardPattern});
         scanner.scan();
-        String[] allPaths = scanner.getIncludedFiles();
 
-        List<File> allFiles = new ArrayList<File>();
-        String[] directories = scanner.getIncludedDirectories();
-        for (String directory : directories) {
-            allFiles.add(new File(rootPath, directory));
+        List<File> allFiles = new ArrayList<>();
+        if (wildCardPattern.equals("**")){
+            File directory = scanner.getBasedir();
+            allFiles.add(directory);
+
+            return allFiles;
         }
 
-        for (int i = 0; i < allPaths.length; i++) {
-            File file = new File(rootPath, allPaths[i]);
-            if (!allFiles.contains(file.getParentFile())) {
-                allFiles.add(file);
-            }
+        String[] files = scanner.getIncludedFiles();
+        for (String file : files) {
+            allFiles.add(new File(rootPath, file));
         }
 
         return allFiles;
