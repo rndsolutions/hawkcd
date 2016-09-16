@@ -12,6 +12,7 @@ angular
         "hawk.userManagement",
         "hawk.adminManagement",
         "hawk.profileManagement",
+        "hawk.artifactManagement",
         "ui.router",
         'ui.sortable',
         "ui.bootstrap",
@@ -21,7 +22,8 @@ angular
         'toaster',
         'momentjs',
         'satellizer',
-        'ansi_up'
+        'ansi_up',
+        'ngJsTree'
         //'ngAnimate'
         //'flow'
     ])
@@ -179,7 +181,6 @@ angular
 
         $rootScope.socket.onopen = function(event) {
             toaster.clear();
-            debugger;
             notificationService.notificationDispatcher[CONSTANTS.TOAST_SUCCESS]("Connection to server successful!");
             if (window.timerID) {
                 window.clearInterval(window.timerID);

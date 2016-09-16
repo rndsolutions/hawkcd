@@ -27,7 +27,7 @@
                             <label for="arguments">Arguments</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <input type="text" onmouseenter="$(this).tooltip('show')" title="/&#60AgentRootDir&#62/Pipelines/{{pipeConfig.currentPipeline}}/" class="form-control" ng-model="pipeConfig.newTask.workingDirectory">
+                            <input type="text" onmouseenter="$(this).tooltip('show')" title="/&#60AgentRootDir&#62/Pipelines/{{pipeConfig.currentPipeline.name}}/" class="form-control" ng-model="pipeConfig.newTask.workingDirectory">
                             <label>Working Directory</label>
                         </div>
                         <div class="form-group form-md-radios">
@@ -74,32 +74,34 @@
                     <div ng-if="pipeConfig.newTask.type == 'FETCH_ARTIFACT'">
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="pipelineSelect" id="pipelineSelect"
-                                    ng-model="pipeConfig.newTask.pipeline" ng-change="pipeConfig.getPipelineForTask(pipeConfig.newTask.pipeline)" required>
-                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.name}}" >{{pipeline.name}}</option>
+                                    ng-model="pipeConfig.newTask.pipelineObject" ng-change="pipeConfig.getRunsFromPipelineDefinition(pipeConfig.newTask.pipelineObject)" required>
+                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline}}" >{{pipeline.name}}</option>
                             </select>
                             <label for="pipelineSelect">Pipeline</label>
                         </div>
 
                         <div class="form-group form-md-line-input">
-                            <select class="form-control" name="stageSelect" id="stageSelect"
-                                    ng-model="pipeConfig.newTask.stage" ng-change="pipeConfig.getStageForTask(pipeConfig.newTask.stage)" required>
-                                <option ng-repeat="stage in pipeConfig.selectedPipelineStages"
-                                    value="{{stage.name}}">{{stage.name}}</option>
+                            <select class="form-control" name="runSelect" id="runSelect"
+                                    ng-model="pipeConfig.newTask.pipelineRun" ng-change="pipeConfig.selectRunFromPipelineDefinition(pipeConfig.newTask.pipelineRun)" required>
+                                <option ng-repeat="run in pipeConfig.currentPipelineRuns" value="{{run}}">{{run.executionId}}</option>
                             </select>
-                            <label for="stageSelect">Stage</label>
+                            <label for="runSelect">Run</label>
                         </div>
 
                         <div class="form-group form-md-line-input">
-                            <select class="form-control" name="jobSelect" id="jobSelect" ng-model="pipeConfig.newTask.job" required>
-                                <option ng-repeat="job in pipeConfig.selectedStageJobs" value="{{job.name}}">{{job.name}}</option>
-                            </select>
-                            <label for="jobSelect">Job</label>
-                        </div>
-
-                        <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.newTask.source" required>
+                            <input type="text" class="form-control"
+                                   title="Server/Artifacts/{{pipeConfig.selectedPipelineForTask.name}}/{{pipeConfig.selectedPipelineRunForTask.executionId}}/"
+                                   ng-model="pipeConfig.newTask.source">
                             <label>Source</label>
                         </div>
+
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control"
+                                   title="Agent/Pipelines/{{pipeConfig.selectedPipelineForTask.name}}/"
+                                   ng-model="pipeConfig.newTask.destination">
+                            <label>Destination</label>
+                        </div>
+
                         <div class="form-group form-md-radios">
                             <label>Run If Conditions</label>
                             <div class="md-radio-list" ng-init="pipeConfig.newTask.runIfCondition='PASSED'">
@@ -169,8 +171,16 @@
                     </div>
                     <div ng-if="pipeConfig.newTask.type == 'UPLOAD_ARTIFACT'">
                         <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.newTask.source" required>
+                            <input type="text" class="form-control"
+                                   title="Agent/Pipelines/<PipelineName>/"
+                                   ng-model="pipeConfig.newTask.source">
                             <label>Source</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control"
+                                   title="Server/Artifacts/<PipelineName>/<PipelineRun>/"
+                                   ng-model="pipeConfig.newTask.destination">
+                            <label>Destination</label>
                         </div>
                         <div class="form-group form-md-radios">
                             <label>Run If Conditions</label>
@@ -204,7 +214,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.addTask(pipeConfig.newTask)" ng-disabled="addTaskForm.$invalid">Add Task</button>
+                    <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.addTask(pipeConfig.newTask);pipeConfig.close()" ng-disabled="addTaskForm.$invalid">Add Task</button>
                     <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
                 </div>
             </form>
