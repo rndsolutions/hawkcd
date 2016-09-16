@@ -190,6 +190,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
             jobs.add(jobToAdd);
         }
         stageToAdd.setJobs(jobs);
+        stageToAdd.setExecutionId(stageToAdd.getExecutionId() + 1);
 
         return this.add(stageToAdd);
     }
