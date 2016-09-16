@@ -58,17 +58,17 @@
                         <div class="vertical-center display-inline-block width-100 pull-left padding-left-5">
                         {{job.jobDefinitionName}}
                         </div>
-                        <span class="pull-right position-relative" aria-hidden="true">
+                        <span class="pull-right position-relative padding-right-5" aria-hidden="true">
                             <i class="fa fa-list"></i>
                         </span>
                     </div>
                 </div>
             </div>
                 <div class="controls left-buttons-stage">
-                    <!--<button class="btn btn-primary" ng-click="pipesRunManagement.selectAlllJobs(stage);pipesRunManagement.reRunStageJobs(stage)">-->
-                        <!--Run-->
-                        <!--<span class="glyphicon glyphicon-play control"></span>-->
-                    <!--</button>-->
+                    <button class="btn btn-primary" data-target="#selectJobs" data-toggle="modal" ng-click="pipesRunManagement.selectJobs(stage);">
+                        Run
+                        <span class="glyphicon glyphicon-play control"></span>
+                    </button>
 
                     <!--<button class="btn btn-default" data-target="#rerunStage" data-toggle="modal" ng-click="pipesRunManagement.setSelectedStageForReRun(stage)">-->
                         <!--<span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>-->
@@ -79,3 +79,5 @@
         </div>
     </div>
 </div>
+
+<div ng-include src="'app/pipelines/views/partials/run-management/_select-jobs.html'"></div>
