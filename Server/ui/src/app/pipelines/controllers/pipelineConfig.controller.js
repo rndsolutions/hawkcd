@@ -887,6 +887,7 @@ angular
                 }
             }
             pipeConfigService.addTaskDefinition(task);
+            pipeConfig.close();
         };
 
         vm.editTask = function(newTask) {
@@ -949,6 +950,7 @@ angular
                 }
             }
             pipeConfigService.updateTaskDefinition(updatedTask);
+            pipeConfig.close();
         };
 
         vm.deleteTask = function(task) {
