@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=agent-1.0.4-alpha.1002
+version=<replace>
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
