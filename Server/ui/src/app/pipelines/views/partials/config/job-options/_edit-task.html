@@ -65,28 +65,35 @@
                     <div ng-if="pipeConfig.task.type == 'FETCH_ARTIFACT'">
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="pipelineSelect" id="pipelineSelectUpdate"
-                                    ng-model="pipeConfig.updatedTask.pipelineDefinitionName" ng-change="pipeConfig.getPipelineForTaskById(pipeConfig.updatedTask.pipelineDefinitionId)" required>
-                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.name}}" >{{pipeline.name}}</option>
+                                    ng-model="pipeConfig.updatedTask.pipelineObject"
+                                    ng-init="pipeConfig.getRunsFromPipelineDefinition(pipeConfig.updatedTask.pipelineObject)"
+                                    ng-change="pipeConfig.getRunsFromPipelineDefinition(pipeConfig.updatedTask.pipelineObject)" required>
+                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline}}" >{{pipeline.name}}</option>
                             </select>
-                            <label for="pipelineSelect">Pipeline</label>
+                            <label for="pipelineSelectUpdate">Pipeline</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <select class="form-control" name="stageSelect" id="stageSelectUpdate"
-                                    ng-model="pipeConfig.updatedTask.stageDefinitionName" ng-change="pipeConfig.getStageForTaskById(pipeConfig.newTask.stageDefinitionId)" required>
-                                <option ng-repeat="stage in pipeConfig.selectedPipelineStages"
-                                        value="{{stage.name}}">{{stage.name}}</option>
+                            <select class="form-control" name="runSelect" id="runSelectUpdate"
+                                    ng-model="pipeConfig.updatedTask.pipelineRun"
+                                    ng-init="pipeConfig.selectRunFromPipelineDefinition(pipeConfig.updatedTask.pipelineRun)"
+                                    ng-change="pipeConfig.selectRunFromPipelineDefinition(pipeConfig.updatedTask.pipelineRun)"
+                                    required>
+                                <option ng-repeat="run in pipeConfig.currentPipelineRuns"
+                                        value="{{run}}">{{run.executionId}}</option>
                             </select>
-                            <label for="stageSelect">Stage</label>
+                            <label for="runSelectUpdate">Run</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <select class="form-control" name="jobSelect" id="jobSelectUpdate" ng-model="pipeConfig.updatedTask.jobDefinitionName" required>
-                                <option ng-repeat="job in pipeConfig.selectedStageJobs" value="{{job.name}}">{{job.name}}</option>
-                            </select>
-                            <label for="jobSelect">Job</label>
-                        </div>
-                        <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.source" required>
+                            <input type="text" class="form-control"
+                                   title="Server/Artifacts/{{pipeConfig.selectedPipelineForTask.name}}/{{pipeConfig.selectedPipelineRunForTask.executionId}}/"
+                                   ng-model="pipeConfig.updatedTask.source">
                             <label>Source</label>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <input type="text" class="form-control"
+                                   title="Agent/Pipelines/{{pipeConfig.selectedPipelineForTask.name}}/"
+                                   ng-model="pipeConfig.updatedTask.destination">
+                            <label>Destination</label>
                         </div>
                         <div class="form-group form-md-radios">
                             <label>Run If Condition</label>
@@ -157,11 +164,11 @@
                     </div>
                     <div ng-if="pipeConfig.task.type == 'UPLOAD_ARTIFACT'">
                         <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.source" required>
+                            <input type="text" class="form-control" title="Agent/Pipelines/<PipelineName>/" ng-model="pipeConfig.updatedTask.source">
                             <label>Source</label>
                         </div>
                         <div class="form-group form-md-line-input">
-                            <input type="text" class="form-control" ng-model="pipeConfig.updatedTask.destination" required>
+                            <input type="text" class="form-control" title="Server/Artifacts/<PipelineName>/<PipelineRun>/" ng-model="pipeConfig.updatedTask.destination">
                             <label>Destination</label>
                         </div>
                         <div class="form-group form-md-radios">
@@ -196,7 +203,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" data-dismiss="modal" type="submit" ng-disabled="editTaskForm.$invalid" ng-click="pipeConfig.editTask(pipeConfig.updatedTask)">Edit Task</button>
+                    <button class="btn btn-danger" data-dismiss="modal" type="submit" ng-disabled="editTaskForm.$invalid" ng-click="pipeConfig.editTask(pipeConfig.updatedTask);pipeConfig.close()">Edit Task</button>
                     <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
                 </div>
             </form>

@@ -101,6 +101,13 @@ angular
             console.log(vm.allPipelines);
         }, true);
 
+        $scope.$watch(function() {
+            return viewModel.allPipelineRuns
+        }, function(newVal, oldVal) {
+            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
+            console.log(vm.allPipelineRuns);
+        }, true);
+
         // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
         //     vm.allMaterials = viewModel.allMaterialDefinitions;
         //     console.log(vm.allMaterials);
@@ -298,6 +305,27 @@ angular
                 }
             }
             console.log(vm.selectedPipelineStages);
+        };
+
+        vm.getRunsFromPipelineDefinition = function (pipeline) {
+            vm.newTask.pipelineRun = '';
+            vm.selectedPipelineForTask = JSON.parse(angular.copy(pipeline));
+            vm.currentPipelineRuns = [];
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
+                if(vm.selectedPipelineForTask.id == currentPipelineRun.pipelineDefinitionId){
+                    vm.currentPipelineRuns.push(currentPipelineRun);
+                }
+            });
+
+            vm.currentPipelineRuns.sort(function(a, b) {
+                return a.executionId - b.executionId;
+            });
+
+            // console.log(vm.currentPipelineRuns);
+        };
+
+        vm.selectRunFromPipelineDefinition = function (pipelineRun) {
+            vm.selectedPipelineRunForTask = JSON.parse(angular.copy(pipelineRun));
         };
 
         vm.getPipelineForTaskById = function(id) {
@@ -836,11 +864,11 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
-                    stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
-                    jobDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
+                    pipelineDefinitionName: JSON.parse(newTask.pipelineObject).name,
+                    pipelineExecutionId: JSON.parse(newTask.pipelineRun).executionId,
                     type: newTask.type,
                     source: newTask.source,
+                    destination: newTask.destination,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
@@ -897,11 +925,11 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
-                    stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
-                    jobDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].name,
+                    pipelineDefinitionName: JSON.parse(newTask.pipelineObject).name,
+                    pipelineExecutionId: JSON.parse(newTask.pipelineRun).executionId,
                     type: newTask.type,
                     source: newTask.source,
+                    destination: newTask.destination,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
