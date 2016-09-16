@@ -38,4 +38,6 @@ public interface ISecurityService<T extends DbEntry> {
     boolean changeUserPassword(String loggedUserEmail, String entity, String className, List<Permission> permissions);
 
     boolean addWithMaterialDefinition(String entity, String className, List<Permission> permissions);
+
+    boolean addStageWithSpecificJobs(String entity, String className, List<Permission> permissions);
 }
