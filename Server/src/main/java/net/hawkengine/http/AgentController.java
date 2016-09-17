@@ -1,11 +1,16 @@
 package net.hawkengine.http;
 
 import net.hawkengine.core.utilities.SchemaValidator;
+import net.hawkengine.core.utilities.constants.ConfigurationConstants;
 import net.hawkengine.model.*;
+import net.hawkengine.model.configuration.filetree.JsTreeFile;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.NotificationType;
+import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.AgentService;
+import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IFileManagementService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
 
@@ -13,6 +18,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
@@ -20,6 +29,7 @@ import java.util.List;
 @Path("/agents")
 public class AgentController {
     private AgentService agentService;
+    private IFileManagementService fileManagementService;
     private SchemaValidator schemaValidator;
     private IPipelineService pipelineService;
 
@@ -27,12 +37,14 @@ public class AgentController {
         this.agentService = new AgentService();
         this.schemaValidator = new SchemaValidator();
         this.pipelineService = new PipelineService();
+        this.fileManagementService = new FileManagementService();
     }
 
     public AgentController(AgentService agentService) {
         this.agentService = agentService;
         this.schemaValidator = new SchemaValidator();
         this.pipelineService = new PipelineService();
+        this.fileManagementService = new FileManagementService();
     }
 
     @GET
@@ -141,9 +153,26 @@ public class AgentController {
             }
         }
 
-        this.pipelineService.update(pipeline);
-
         if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
+            boolean hasUploadArtifact = false;
+            for(Task task : job.getTasks()){
+                if(task.getType() == TaskType.UPLOAD_ARTIFACT){
+                    hasUploadArtifact = true;
+                    break;
+                }
+            }
+
+            if(hasUploadArtifact) {
+                String artifactsDirectory = System.getProperty("user.dir") + File.separator +
+                        ConfigurationConstants.PROPERTY_ARTIFACTS_DESTINATION + File.separator +
+                        pipeline.getPipelineDefinitionName() + File.separator + pipeline.getExecutionId();
+                JsTreeFile artifactDirectory = this.fileManagementService.getFileNames(new File(artifactsDirectory));
+                pipeline.setArtifactsFileStructure(new ArrayList<JsTreeFile>(Arrays.asList(artifactDirectory)));
+            }
+
+            this.pipelineService.update(pipeline);
+
+
             Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
             agent.setAssigned(false);
             ServiceResult result = this.agentService.update(agent);

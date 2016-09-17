@@ -2,8 +2,13 @@ package net.hawkengine.http.tests;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.hawkengine.core.ServerConfiguration;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.http.ArtifactController;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.payload.UploadArtifactInfo;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
@@ -32,6 +37,7 @@ public class ArtifactControllerTests {
     private File[] mockedFileList;
 
     private ArtifactController artifactController;
+    private Gson jsonConverter;
 
     @BeforeClass
     public static void setUpClass() {
@@ -44,6 +50,10 @@ public class ArtifactControllerTests {
         this.artifactController = new ArtifactController(this.mockedFileManagementService);
         this.mockedFile = new File("pathToFile");
         this.mockedFileList = new File[1];
+
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .create();
     }
 
     @Test
@@ -115,7 +125,10 @@ public class ArtifactControllerTests {
         //Arrange
         Mockito.when(this.mockedFileManagementService.unzipFile("pathToFile", "rootPath")).thenReturn(null);
 
-        Response actualResponse = this.artifactController.unzipFile("testPipeline", "testStage", "testJob", this.mockedFile);
+        UploadArtifactInfo uploadArtifactInfo = new UploadArtifactInfo(this.mockedFile, "testDestination");
+        String uploadArtifactInfoAsString = this.jsonConverter.toJson(uploadArtifactInfo);
+
+        Response actualResponse = this.artifactController.unzipFile("testPipeline", "testPipelineExecutionFolder", uploadArtifactInfoAsString);
 
         Assert.assertEquals(200, actualResponse.getStatus());
     }
@@ -126,7 +139,10 @@ public class ArtifactControllerTests {
         this.mockedFile = new File("");
         Mockito.when(this.mockedFileManagementService.unzipFile(Mockito.anyString(), Mockito.anyString())).thenReturn("Cannot unzip file");
 
-        Response actualResponse = this.artifactController.unzipFile("testPipeline", "testStage", "testJob", this.mockedFile);
+        UploadArtifactInfo uploadArtifactInfo = new UploadArtifactInfo(this.mockedFile, "testDestination");
+        String uploadArtifactInfoAsString = this.jsonConverter.toJson(uploadArtifactInfo);
+
+        Response actualResponse = this.artifactController.unzipFile("testPipeline", "testPipelineExecutionFolder", uploadArtifactInfoAsString);
 
         Assert.assertEquals(404, actualResponse.getStatus());
     }

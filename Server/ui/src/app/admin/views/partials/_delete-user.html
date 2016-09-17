@@ -8,10 +8,11 @@
             <div class="modal-body">
                 <h1>Are you sure you want to delete User: {{admin.user.UserName}}</h1>
             </div>
-            <div class="modal-footer">
-                <button class="btn green" data-dismiss="modal" ng-click="admin.deleteUser(admin.user.Id)">Delete User</button>
-                <button class="btn" data-dismiss="modal">Cancel</button>
+            <div class="form-group text-center">
+                <button class="btn green" data-dismiss="modal" ng-click="admin.deleteUser(admin.user.Id)">{{admin.defaultText.buttonTitles.ok}}</button>
+                <button class="btn" data-dismiss="modal">{{admin.defaultText.buttonTitles.cancel}}</button>
             </div>
+            <br>
         </div>
     </div>
 </div>

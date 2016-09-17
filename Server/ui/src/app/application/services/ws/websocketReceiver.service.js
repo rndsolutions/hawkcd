@@ -55,6 +55,8 @@ angular
                     assignUserToGroup: function(object) {
                         validationService.dispatcherFlow(object, [viewModelUpdater.updateUser, adminService.getAllUserGroupDTOs], true);
                     },
+                    resetUserPassword:function(object) {
+                    },
                     logout: function(object) {
                         validationService.dispatcherFlow(object, [loginService.logoutUser])
                     }
