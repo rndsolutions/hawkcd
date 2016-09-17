@@ -173,9 +173,10 @@ public class StageService extends CrudService<Stage> implements IStageService {
     public ServiceResult addStageWithSpecificJobs(StageDto stageDto) {
         Stage stageToAdd = stageDto.getStage();
         List<Job> jobs = new ArrayList<>();
+        ServiceResult result;
 
         for (String jobDefinitionId : stageDto.getJobDefinitionIds()) {
-            ServiceResult result =  this.jobDefinitionService.getById(jobDefinitionId);
+            result =  this.jobDefinitionService.getById(jobDefinitionId);
 
             if (result.getNotificationType() == NotificationType.ERROR){
                 return result;
@@ -191,6 +192,14 @@ public class StageService extends CrudService<Stage> implements IStageService {
         }
         stageToAdd.setJobs(jobs);
         stageToAdd.setExecutionId(stageToAdd.getExecutionId() + 1);
+
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stageToAdd.getPipelineId()).getObject();
+        pipeline.setStageRun(true);
+
+        result = this.pipelineService.update(pipeline);
+        if (result.getNotificationType() == NotificationType.ERROR){
+            return result;
+        }
 
         return this.add(stageToAdd);
     }

@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.enums.Status;
 
 import java.time.Duration;
@@ -25,6 +26,7 @@ public class Pipeline extends DbEntry {
     private boolean areMaterialsUpdated;
     private boolean isPrepared;
     private boolean shouldBeCanceled;
+    private boolean isStageRun;
 
     public Pipeline() {
         this.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
@@ -153,5 +155,14 @@ public class Pipeline extends DbEntry {
 
     public void setShouldBeCanceled(boolean shouldBeCanceled) {
         this.shouldBeCanceled = shouldBeCanceled;
+    }
+
+    public boolean isStageRun() {
+        return this.isStageRun;
+    }
+
+    @JsonProperty("isStageRun")
+    public void setStageRun(boolean stageRun) {
+        this.isStageRun = stageRun;
     }
 }
