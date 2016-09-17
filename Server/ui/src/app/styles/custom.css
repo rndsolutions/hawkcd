@@ -586,6 +586,7 @@ p {
 
 .custom-admin-badge-color {
     background-color: #999999!important;
+    color:black!important;
 }
 
 .admin-custom:hover {
@@ -673,6 +674,12 @@ p {
 
 .custom-search {
     margin: auto!important;
+    padding-bottom: 15px!important;
+    width: 60%!important;
+}
+
+.custom-search-artifact {
+    margin-left: 1%!important;
     padding-bottom: 15px!important;
     width: 60%!important;
 }
@@ -804,12 +811,28 @@ p {
     padding-left: 5%;
 }
 
+.padding-right-5 {
+    padding-right: 5%;
+}
+
 .padding-left-1 {
     padding-left: 1%;
 }
 
+.padding-left-0 {
+    padding-left: 0;
+}
+
+.padding-0 {
+    padding: 0;
+}
+
 .padding-top-5 {
     padding-top: 5%;
+}
+
+.padding-bottom-5 {
+    padding-bottom: 5%;
 }
 
 .padding-top-1 {
@@ -822,6 +845,10 @@ p {
 
 .margin-left-1 {
     margin-left: 1%;
+}
+
+.margin-left-0 {
+    margin-left: 0;
 }
 
 .margin-top-5 {
@@ -875,4 +902,52 @@ p {
 
 .form-required-fix {
   padding-left:10px;
+}
+
+.custom-accordion .panel-heading {
+    background: #E1E5EC!important;
+    border-radius:0;
+    height:65px;
+    padding: 0 0 16px;
+}
+
+.custom-accordion .panel-title {
+    position:relative;
+    margin-top:0!important;
+    padding-bottom:0!important;
+}
+
+.custom-accordion .panel-body {
+    border-top:none!important;
+    background:white;
+}
+
+.custom-accordion .panel {
+    border-radius:0;
+}
+
+.custom-accordion .panel-collapse {
+    padding-top:16px;
+}
+
+.vertical-center-artifact {
+    position: relative;
+    top:50%!important;
+    transform: translateY(-50%);
+}
+
+.mouse {
+    cursor: default;
+}
+
+@media screen and (max-width: 767px){
+  @import "artifacts-screen/_small-devices.css";
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px){
+  @import "artifacts-screen/_medium-devices.css";
+}
+
+.padding-cog {
+  padding:8px;
 }

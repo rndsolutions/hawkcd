@@ -48,7 +48,7 @@ public class JobExecutor implements IJobExecutor {
 //        this.currentJob.appendToJobResult(String.format("Start to prepare %s/%s/%s/%s/%s on %s %s",
 //                this.getCurrentJob().getPipelineDefinitionName(),
 //                this.getCurrentJob().getPipelineExecutionId(),
-//                this.getCurrentJob().getStageDefinitionName(),
+//                this.getCurrentJob().getPipelineExecutionId(),
 //                this.getCurrentJob().getStageExecutionId(),
 //                this.getCurrentJob().getJobName(),
 //                AgentConfiguration.getAgentInfo().getName(),
@@ -116,7 +116,7 @@ public class JobExecutor implements IJobExecutor {
 //        this.currentJob.setPipelineId(workInfo.getPipelineId());
 //        this.currentJob.setPipelineLabel(workInfo.getLabelTemplate());
 //        this.currentJob.setPipelineExecutionId(workInfo.getPipelineExecutionID());
-//        this.currentJob.setStageDefinitionName(workInfo.getStageDefinitionName());
+//        this.currentJob.setPipelineExecutionId(workInfo.getPipelineExecutionId());
 //        this.currentJob.setStageId(workInfo.getStageId());
 //        this.currentJob.setStageExecutionId(workInfo.getStageExecutionID());
 //        this.currentJob.setJobName(workInfo.getJobDefinitionName().getName());

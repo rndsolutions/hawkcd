@@ -79,6 +79,14 @@ angular
                     delete: 'Confirm',
                     cancel: 'Cancel'
                 },
+                editUserInfo: {
+                    header: 'Delete User',
+                    changeButton: 'Change Email',
+                    resetPassword: 'Reset Password',
+                    save: 'Save',
+                    delete: 'Confirm',
+                    cancel: 'Cancel'
+                },
                 deleteGroupModal: {
                     header: 'Delete Pipeline Group',
                     confirm: 'Are you sure you want to delete Group: '
@@ -86,6 +94,10 @@ angular
                 unassignPipelineModal: {
                     header: 'Unassign Pipeline',
                     confirm: 'Are you sure you want to unassign Pipeline: '
+                },
+                buttonTitles:{
+                  ok:'Ok',
+                  cancel:'Cancel'
                 }
             };
 
@@ -94,13 +106,15 @@ angular
                     username: 'Username',
                     dateRegistered: 'Registered On',
                     permissions: 'Permissions',
-                    action: 'Action'
+                    action: 'Action',
+                    edit: 'Edit'
                 },
                 userInfo: {
                     username: 'Name of the user',
                     dateRegistered: 'Date registered on',
                     permissions: 'Permissions of the user',
-                    action: 'Available actions'
+                    action: 'Available actions',
+                    edit: 'Reset user password. Change user email'
                 },
                 tableTitles: {
                     name: 'Name',
@@ -330,6 +344,7 @@ angular
 
             vm.selectUser = function(index) {
                 vm.selectedUser = angular.copy(vm.users[index]);
+                vm.userDTO = angular.copy(vm.users[index]);
             };
 
             vm.selectPipeline = function(pipeline, index) {
@@ -360,6 +375,52 @@ angular
                 adminService.addUser(vm.newUser);
             };
 
+            vm.userDTO = {};
+            vm.submitUserSettingsForm = function(updatedUser, userDTO, form) {
+                var changeEmailFlag = ((form.userEmail.$viewValue !== updatedUser.email) &&
+                    (form.userNewPassword.$viewValue === undefined || form.userNewPassword.$viewValue.length === 0)) ? true : false;
+                var changePasswordFlag = ((form.userEmail.$viewValue === updatedUser.email) &&
+                    (userDTO.newPassword !== undefined && userDTO.newPassword.length !== 0)) ? true : false;
+                var changeBothFlag = ((form.userEmail.$viewValue !== updatedUser.email) &&
+                    (userDTO.newPassword !== undefined && userDTO.newPassword.length !== 0)) ? true : false;
+                if (changeEmailFlag) {
+                    vm.changeUserEmail(updatedUser, userDTO, form);
+                } else if (changePasswordFlag) {
+                    vm.changeUserPassword(updatedUser, userDTO, form);
+                } else if (changeBothFlag) {
+                    var innerForm = angular.copy(form);
+                    var innerDTO = angular.copy(userDTO);
+                    var innerUserDTO = angular.copy(updatedUser);
+                    vm.changeUserEmail(innerUserDTO, innerDTO, innerForm);
+                    vm.changeUserPassword(innerUserDTO, innerDTO, innerForm);
+                }
+            }
+
+            vm.changeUserEmail = function(updatedUser, userDTO, form) {
+                updatedUser.email = userDTO.email;
+                adminService.updateUser(updatedUser);
+                vm.closeUserSettingsModal(form);
+            }
+
+            vm.changeUserPassword = function(updatedUser, userDTO, form) {
+                updatedUser.password = userDTO.newPassword;
+                adminService.resetUserPassword(updatedUser);
+                vm.closeUserSettingsModal(form);
+            }
+
+            vm.closeUserSettingsModal = function(form) {
+                form.userEmail.$viewValue = undefined;
+                form.userNewPassword.$viewValue = undefined;
+                form.confirmNewPassword.$viewValue = undefined;
+                form.$setPristine();
+                form.$setUntouched();
+                form.userEmail.$render();
+                form.userNewPassword.$render();
+                form.confirmNewPassword.$render();
+
+                vm.userDTO = {};
+            }
+
             vm.removeUser = function() {
                 adminService.deleteUser(vm.selectedUser.id);
             };
@@ -382,7 +443,6 @@ angular
                 //         adminService.assignUser(angular.copy(currentUser), vm.selectedUserGroup);
                 //     }
                 // });
-
                 vm.selectedUserGroup.users.forEach(function(currentUser, userIndex, userArray) {
                     var isFound = false;
                     if (currentUser.isClicked) {
@@ -443,9 +503,9 @@ angular
                 vm.clearSelection();
             };
 
-            vm.closeModal = function(){
-              vm.formData = {};
-              vm.materialType = 'git';
+            vm.closeModal = function() {
+                vm.formData = {};
+                vm.materialType = 'git';
             }
 
             vm.closeModalMaterials = function(internalViewModel, materialForm) {

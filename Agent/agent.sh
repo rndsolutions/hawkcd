@@ -28,6 +28,83 @@ function stop {
     fi
 }
 
+function upgrade {
+  #./agent.sh upgrade /path
+  INSTALL_DIR=$tmp2
+  #check if the directory
+  echo $INSTALL_DIR
+  if [[ -d "$INSTALL_DIR" ]]; then
+    #check if agent.sh file exists
+    echo "checking Install dir"
+    if [[ -f "$INSTALL_DIR/agent.sh" ]]; then
+       ls -al "$INSTALL_DIR"
+       #extracts the jar version to upgrade
+       result=$(find "$INSTALL_DIR" -name 'agent-*' -type f | grep -P -o "agent-\d.\d.\d*-(alpha|beta|rc).\d*")
+       #echo "$result"
+       _name=$(grep -P -o "agent" <<< $result)
+       _version=$(grep -P -o "(\d{1,2}.\d{1,4}.\d{1,4})" <<< $result)
+       _qualifier=$(grep -P -o "(alpha|beta|rc)" <<< $result)
+       _revision=$(grep -P -o "(\d{1,4}$)" <<< $result)
+       echo "hello from upgrade: $_version"
+       #revision
+       can_upgrade $_name $_version $_qualifier $_revision
+    fi
+  else
+    echo -e "${RED}Can't find Install Dir: Please provide path to the Agent Instllation directory${RESET}"
+  fi
+}
+
+function can_upgrade {
+  _name=$1
+  _version=$2
+  _qualifier=$3
+  _rev=$4
+
+  full_version_to_upgrade="$_name-$_version.$_qualifier.$_rev"
+  echo "preparing to upgrade... $full_version_to_upgrade to $version "
+  _current=$(grep -P -o "(\d{1,2}.\d{1,4}.\d{1,4})" <<< $version)
+  _ver_to_upgrade=$2
+
+  echo "_current: $_current _ver_to_upgrade: $_ver_to_upgrade"
+  #check version numbers
+  if [[ "$current" < "$ver_to_upgrade" || "$_current" = "$ver_to_upgrade" ]]; then
+    _current=$(grep -P -o "(alpha|beta|rc)" <<< $version)
+    _c_qualifier=$_current
+    #echo "_current: $_current _qualifier: $_qualifier"
+    #check qualifiers
+    if [[ $_current < $_qualifier || $_current = $_qualifier ]]; then
+        _current=$(grep -P -o "(\d{1,4}$)" <<< $version);
+        #echo "_current: $_current _revision: $_rev"
+        #check revisions
+        if [[ $_current < $_rev || $_current = $_rev ]]; then
+          #statements
+          echo " Can not upgrade.. $full_version_to_upgrade to $version"
+          return 1
+        else if [[ $_c_qualifier > $_qualifier ]]; then
+          #statements
+          echo "Upgradeing.. $full_version_to_upgrade to $version"
+        fi
+        echo " Can not upgrade.. $full_version_to_upgrade to $version"
+          return 0;
+        fi #end revision
+        echo " Can not upgrade.. $full_version_to_upgrade to $version"
+        return 1
+    else
+      echo "Upgradeing... $full_version_to_upgrade to  $version"
+      return 0
+    fi #end qualifier
+  else
+    echo "Upgradeing... $full_version_to_upgrade to  $version"
+  fi #end version
+
+  return 0
+}
+
+function version {
+  #statements
+  echo "$version"
+}
+
 
 function check_java {
   if type -p java; then
@@ -60,14 +137,10 @@ function check_java {
       return 1;
   fi
 }
-
-
 function start_agent {
   #statements
   java -jar "$version".jar &
 }
-
-
 function list {
   echo "---Available commands---"
   echo "start - starts database and application server"
@@ -81,8 +154,6 @@ tmp1=$1 ;tmp2=$2; tm3=$3;
 
 #set default values
 func=${tmp1:-'start'}
-db_port=${tmp2:='6379' }
-server_port=${tmp3:-'8080' }
 
 case "$func" in
 "start")
@@ -98,9 +169,16 @@ case "$func" in
 "stop")
    "stop"
     ;;
- "check")
+"check")
     "check"
     ;;
+"upgrade")
+        echo "calling upgrade"
+       "upgrade"
+       ;;
+"version")
+       "version"
+       ;;
 *)
     "list"
     ;;

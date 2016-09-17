@@ -1,5 +1,6 @@
 package net.hawkengine.model;
 
+import net.hawkengine.model.configuration.filetree.JsTreeFile;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.enums.Status;
 
@@ -26,6 +27,7 @@ public class Pipeline extends DbEntry {
     private boolean areMaterialsUpdated;
     private boolean isPrepared;
     private boolean shouldBeCanceled;
+    private List<JsTreeFile> artifactsFileStructure;
     private boolean isStageRun;
 
     public Pipeline() {
@@ -34,6 +36,7 @@ public class Pipeline extends DbEntry {
         this.setMaterials(new ArrayList<>());
         this.setEnvironments(new ArrayList<>());
         this.setStages(new ArrayList<>());
+        this.setArtifactsFileStructure(new ArrayList<>());
         this.status = Status.IN_PROGRESS;
     }
 
@@ -155,6 +158,14 @@ public class Pipeline extends DbEntry {
 
     public void setShouldBeCanceled(boolean shouldBeCanceled) {
         this.shouldBeCanceled = shouldBeCanceled;
+    }
+
+    public List<JsTreeFile> getArtifactsFileStructure() {
+        return this.artifactsFileStructure;
+    }
+
+    public void setArtifactsFileStructure(List<JsTreeFile> artifactsFileStructure) {
+        this.artifactsFileStructure = artifactsFileStructure;
     }
 
     public boolean isStageRun() {

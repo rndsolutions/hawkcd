@@ -39,5 +39,7 @@ public interface ISecurityService<T extends DbEntry> {
 
     boolean addWithMaterialDefinition(String entity, String className, List<Permission> permissions);
 
+    boolean resetUserPassword(String entity, String className, List<Permission> permissions);
+
     boolean addStageWithSpecificJobs(String entity, String className, List<Permission> permissions);
 }
