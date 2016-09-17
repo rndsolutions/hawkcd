@@ -1,0 +1,69 @@
+<div id="resetUserInfo" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)" aria-hidden="true"></button>
+                <h4 class="modal-title">Manage {{admin.selectedUser.email}}</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form role="form" name="resetUserInfo">
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3 required-fixed form-required-fix">User Email
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-model="admin.userDTO.email" type="text" name="userEmail" ng-pattern="/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/" class="form-control" />
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p ng-show="(resetUserInfo.userEmail.$error.pattern && resetUserInfo.userEmail.$touched) && admin.userDTO.email.length != 0" class="alert alert-danger">
+                                Invalid email format!
+                            </p>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3 required-fixed form-required-fix">New password
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-model="admin.userDTO.newPassword" ng-pattern="/^[0-9A-Za-z.-]{3,32}$/" ng-minlength="3" ng-maxlength="32" type="password" name="userNewPassword" class="form-control" />
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-line">
+                            <p ng-show="resetUserInfo.userNewPassword.$error.minlength && resetUserInfo.userNewPassword.$touched" class="alert alert-danger">
+                                Password must be minimum 3 symbols.
+                            </p>
+                            <p ng-show="resetUserInfo.userNewPassword.$error.maxlength && resetUserInfo.userNewPassword.$touched" class="alert alert-danger">
+                                Password must be maximum 32 symbols.
+                            </p>
+                            <p ng-show="(!resetUserInfo.userNewPassword.$error.minlength && !resetUserInfo.userNewPassword.$error.maxlength && resetUserInfo.userNewPassword.$touched) && resetUserInfo.userNewPassword.$error.pattern" class="alert alert-danger">
+                                Forbidden password characters!
+                            </p>
+                        </div>
+                        <div class="form-group form-md-line-input">
+                            <label class="control-label col-md-3 required-fixed form-required-fix">Confirm password
+                            </label>
+                            <div class="col-md-6">
+                                <input ng-model="admin.userDTO.confirmNewPassword" ng-pattern="resetUserInfo.userNewPassword.$modelValue" type="password" name="confirmNewPassword" class="form-control" />
+                                <div class="form-control-focus"></div>
+                            </div>
+                        </div>
+                        <div class="form-group form-md-line">
+                            <p ng-show="(resetUserInfo.confirmNewPassword.$error.pattern && resetUserInfo.confirmNewPassword.$touched) && resetUserInfo.confirmNewPassword.$viewValue !== resetUserInfo.userNewPassword.$viewValue" class="alert alert-danger">
+                                Passwords do not match!
+                            </p>
+                        </div>
+                        <br>
+                        <div class="form-group text-center">
+                            <button class="btn green"
+                                    ng-click="admin.submitUserSettingsForm(admin.selectedUser,admin.userDTO,resetUserInfo)"
+                                    data-dismiss="modal" type="submit" ng-class="{'disabled': resetUserInfo.$invalid ||
+                                    ((resetUserInfo.confirmNewPassword.$modelValue && !resetUserInfo.userNewPassword.$modelValue) || (!resetUserInfo.confirmNewPassword.$modelValue && resetUserInfo.userNewPassword.$modelValue))}">{{admin.defaultText.buttonTitles.ok}}</button>
+                            <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeUserSettingsModal(resetUserInfo)">{{admin.defaultText.buttonTitles.cancel}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

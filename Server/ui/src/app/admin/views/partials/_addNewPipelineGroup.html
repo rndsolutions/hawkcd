@@ -15,16 +15,18 @@
                         </div>
                         <br>
                         <div class="form-group">
-                          <p ng-show="loginForm.password.$error.minlength" class="alert alert-danger">
-                            Password must be at least 3 symbols.
-                          </p>
-                          <p ng-show="loginForm.password.$error.maxlength" class="alert alert-danger">
-                            Passwords must be maximum 32 symbols.
-                          </p>
+                            <p ng-show="loginForm.password.$error.minlength" class="alert alert-danger">
+                                Password must be at least 3 symbols.
+                            </p>
+                            <p ng-show="loginForm.password.$error.maxlength" class="alert alert-danger">
+                                Passwords must be maximum 32 symbols.
+                            </p>
                         </div>
                         <br>
-                        <button class="btn green" ng-click="admin.addNewPipelineGroup();admin.close()" data-dismiss="modal" type="submit" ng-class="{'disabled':addPipelineGroupForm.$invalid}">{{admin.defaultText.addNewPipelineGroup.submit}}</button>
-                        <button class="btn btn-default" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.addNewPipelineGroup.cancel}}</button>
+                        <div class="form-group text-center">
+                            <button class="btn green" ng-click="admin.addNewPipelineGroup();admin.close()" data-dismiss="modal" type="submit" ng-class="{'disabled':addPipelineGroupForm.$invalid}">{{admin.defaultText.buttonTitles.ok}}</button>
+                            <button class="btn btn-default" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
+                        </div>
                     </form>
                 </div>
             </div>

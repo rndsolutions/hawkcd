@@ -158,6 +158,18 @@ public class EntityPermissionTypeService {
         return user;
     }
 
+    public UserGroup setPermissionTypeToObject(List<Permission> permissions, UserGroup userGroup){
+        userGroup.setPermissionType(PermissionType.NONE);
+
+        for (Permission permission : permissions) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
+                userGroup.setPermissionType(PermissionType.ADMIN);
+            }
+        }
+
+        return userGroup;
+    }
+
     public MaterialDefinition setPermissionTypeToObject(List<Permission> permissions, MaterialDefinition materialDefinition){
         materialDefinition.setPermissionType(PermissionType.ADMIN);
         return materialDefinition;
