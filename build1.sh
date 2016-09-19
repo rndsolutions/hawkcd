@@ -153,7 +153,7 @@ function package_server_nix {
   cd ../
 }
 
-function all {
+function build_all {
   compile_agent
   run_agent_unit_test
   package_agent_nix
@@ -174,7 +174,7 @@ function list {
   echo "  run_server_unit_test"
   echo "  package_server_nix"
   echo "  package_server_win"
-  echo "  all"
+  echo "  build_all"
   echo
 
 }
@@ -207,8 +207,8 @@ case "$arg1" in
 "package_server_win")
       package_server_nix
     ;;
-"all")
-      "all"
+"build_all")
+      "build_all"
     ;;
 *)
     "list"
