@@ -34,6 +34,12 @@
                                                                                       popover-trigger="{{admin.popOverOptions.triggers.click}}"
                                                                                       popover-animation="true">?</span></h4></th>
                   </th>
+                  <th>
+                      <h4>{{admin.popOverOptions.userTitles.edit}} <span class="badge badge-default" uib-popover="{{admin.popOverOptions.userInfo.edit}}"
+                                                                                      popover-placement="{{admin.popOverOptions.placements.top}}"
+                                                                                      popover-trigger="{{admin.popOverOptions.triggers.click}}"
+                                                                                      popover-animation="true">?</span></h4></th>
+                  </th>
             </tr>
             </thead>
             <tbody id="usersTable">
@@ -50,6 +56,11 @@
                     <td>
                       <input type="checkbox" ng-model="user.isEnabled" data-on-text="ENABLED" data-off-text="DISABLED" bootstrap-switch id="switch-box" ng-click="scope.toggleUser()"/>
                     </td>
+                    <td>
+                      <div class="padding-cog">
+                        <i class="fa fa-cog fa-2x text-center pointer" data-target="#resetUserInfo" data-toggle="modal" ng-click="admin.selectUser($index)"></i>
+                      </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -62,3 +73,4 @@
 <div ng-include src="'app/admin/views/partials/_add-userGroup.html'"></div>
 <div ng-include src="'app/admin/views/partials/_manageUser.html'"></div>
 <div ng-include src="'app/admin/views/partials/_removeUser.html'"></div>
+<div ng-include src="'app/admin/views/partials/_resetUserInfo.html'"></div>

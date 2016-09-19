@@ -49,10 +49,11 @@
                 </ul>
             </div>
             </br>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-dismiss="modal" ng-disabled="searchForm.$invalid" ng-click="admin.assignUsers()">Done</button>
-                <button class="btn" data-dismiss="modal" ng-click="admin.close()">Cancel</button>
+            <div class="form-group text-center">
+                <button class="btn btn-primary" data-dismiss="modal" ng-disabled="searchForm.$invalid" ng-click="admin.assignUsers()">{{admin.defaultText.buttonTitles.ok}}</button>
+                <button class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
             </div>
+            <br>
         </div>
     </div>
 </div>

@@ -101,6 +101,18 @@ angular
             console.log(json);
         };
 
+        adminService.resetUserPassword = function(user) {
+            var methodName = "resetUserPassword";
+            var className = "UserService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         adminService.updateUserPassword = function(user, newUserPassword,oldPassword) {
             var methodName = "changeUserPassword";
             var className = "UserService";

@@ -1,6 +1,7 @@
 package net.hawkengine.model;
 
 import net.hawkengine.model.configuration.filetree.JsTreeFile;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.hawkengine.model.enums.Status;
 
 import java.time.Duration;
@@ -27,6 +28,7 @@ public class Pipeline extends DbEntry {
     private boolean isPrepared;
     private boolean shouldBeCanceled;
     private List<JsTreeFile> artifactsFileStructure;
+    private boolean isStageRun;
 
     public Pipeline() {
         this.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
@@ -164,5 +166,14 @@ public class Pipeline extends DbEntry {
 
     public void setArtifactsFileStructure(List<JsTreeFile> artifactsFileStructure) {
         this.artifactsFileStructure = artifactsFileStructure;
+    }
+
+    public boolean isStageRun() {
+        return this.isStageRun;
+    }
+
+    @JsonProperty("isStageRun")
+    public void setStageRun(boolean stageRun) {
+        this.isStageRun = stageRun;
     }
 }

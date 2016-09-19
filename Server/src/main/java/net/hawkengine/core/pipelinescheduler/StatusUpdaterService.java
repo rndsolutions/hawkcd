@@ -61,7 +61,11 @@ public class StatusUpdaterService {
             Object queueNode = queue.poll();
             if (queueNode.getClass() == Job.class) {
                 pipelineToUpdate = (Pipeline) node;
-                this.updatePipelineStatus(pipelineToUpdate);
+                if (pipelineToUpdate.isStageRun()){
+                    pipelineToUpdate.setStageRun(false);
+                } else {
+                    this.updatePipelineStatus(pipelineToUpdate);
+                }
                 return true;
             }
 

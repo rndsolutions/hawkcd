@@ -10,8 +10,10 @@
                     {{admin.defaultText.unassignPipelineModal.confirm}}<strong>{{admin.pipelineToUnassign.name.substring(0,22)}} <span ng-if="admin.pipelineToUnassign.name.length > 21">..</span> </strong>
                     <br>
                     <hr>
-                    <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.unassignPipeline()">Unassign</button>
-                    <button class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.deletePipelineModal.cancel}}</button>
+                </div>
+                <div class="form-group text-center">
+                  <button class="btn btn-danger"  data-dismiss="modal" ng-click="admin.unassignPipeline()">{{admin.defaultText.buttonTitles.ok}}</button>
+                  <button class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
                 </div>
             </div>
         </div>
