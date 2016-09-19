@@ -3,6 +3,7 @@ package net.hawkengine.core.pipelinescheduler;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.*;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.PipelineDefinitionService;
@@ -54,38 +55,22 @@ public class PipelinePreparer implements Runnable {
         }
     }
 
-//    public List<Pipeline> getAllUpdatedPipelines() {
-//        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
-//
-//        List<Pipeline> filteredPipelines = pipelines
-//                .stream()
-//                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == Status.IN_PROGRESS) && !(p.isPrepared()))
-//                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-//                .collect(Collectors.toList());
-//
-//        return filteredPipelines;
-//    }
-
     public Pipeline preparePipeline(Pipeline pipelineToPrepare) {
         this.currentPipeline = pipelineToPrepare;
         String pipelineDefinitionId = pipelineToPrepare.getPipelineDefinitionId();
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
 
-        List<StageDefinition> stages = pipelineDefinition.getStageDefinitions();
-        List<Environment> pipelineDefinitionEnvironments = pipelineDefinition.getEnvironments();
-        List<EnvironmentVariable> pipelineDefinitionEnvironmentVariables = pipelineDefinition.getEnvironmentVariables();
+        if (pipelineToPrepare.getStatus() == Status.IN_PROGRESS) {
+            pipelineToPrepare.setStages(this.preparePipelineStages(pipelineDefinition.getStageDefinitions(), pipelineToPrepare));
+        } else {
+            pipelineToPrepare.setStages(this.preparePipelineStagesToRerun(pipelineDefinition.getStageDefinitions(), pipelineToPrepare));
+        }
 
         pipelineToPrepare.setPipelineDefinitionId(pipelineDefinitionId);
-        pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
-        pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
+        pipelineToPrepare.setEnvironmentVariables(pipelineDefinition.getEnvironmentVariables());
+        pipelineToPrepare.setEnvironments(pipelineDefinition.getEnvironments());
         pipelineToPrepare.setPrepared(true);
 
-        if (pipelineToPrepare.getStatus() == Status.IN_PROGRESS) {
-            pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare));
-        } else {
-            pipelineToPrepare.setStages(this.prepareRerunPipelineStages(stages, pipelineToPrepare));
-        }
-        
         return pipelineToPrepare;
     }
 
@@ -132,7 +117,7 @@ public class PipelinePreparer implements Runnable {
         return stages;
     }
 
-    public List<Stage> prepareRerunPipelineStages(List<StageDefinition> stageDefinitions, Pipeline pipeline) {
+    public List<Stage> preparePipelineStagesToRerun(List<StageDefinition> stageDefinitions, Pipeline pipeline) {
         int numberOfStageDefinitions = stageDefinitions.size();
 
         List<Stage> stages = pipeline.getStages();
@@ -148,14 +133,19 @@ public class PipelinePreparer implements Runnable {
                 currentStage = stageToRerun;
                 currentStage.setTriggeredManually(false);
             } else {
+                if (i < stageToRerunIndex) {
+                    currentStage.setStatus(StageStatus.UNSCHEDULED);
+                }
+
+                currentStage.setPipelineId(pipeline.getId());
                 currentStage.setTriggeredManually(currentStageDefinition.isTriggeredManually());
                 for (int j = 0; j < currentStageDefinition.getJobDefinitions().size(); j++) {
                     currentStage.getJobs().add(new Job());
                 }
+
                 currentStage.setJobs(this.preparePipelineJobs(currentStageDefinition.getJobDefinitions(), currentStage));
             }
 
-            currentStage.setPipelineId(pipeline.getId());
             currentStage.setStageDefinitionId(currentStageDefinition.getId());
             currentStage.setStageDefinitionName(currentStageDefinition.getName());
             currentStage.setExecutionId(stageExecutionId);
@@ -175,9 +165,11 @@ public class PipelinePreparer implements Runnable {
         for (int i = 0; i < jobDefinitionCollectionSize; i++) {
             Job currentJob = jobs.get(i);
             currentJob.setJobDefinitionId(jobDefinitions.get(i).getId());
+            currentJob.setJobDefinitionName(jobDefinitions.get(i).getName());
+            currentJob.setStageId(stage.getId());
+            currentJob.setPipelineId(stage.getPipelineId());
             currentJob.setEnvironmentVariables(jobDefinitions.get(i).getEnvironmentVariables());
             currentJob.setResources(jobDefinitions.get(i).getResources());
-            currentJob.setStageId(stage.getId());
             currentJob.setPipelineId(stage.getPipelineId());
             currentJob.setTasks(this.prepareTasks(jobDefinitions.get(i).getTaskDefinitions(), currentJob));
 
