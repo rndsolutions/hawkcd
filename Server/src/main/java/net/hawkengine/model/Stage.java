@@ -21,6 +21,7 @@ public class Stage extends DbEntry{
     private boolean isTriggeredManually;
 
     public Stage() {
+        this.executionId = 1;
         this.setEnvironmentVariables(new ArrayList<>());
         this.setJobs(new ArrayList<>());
         this.status = StageStatus.NOT_RUN;
