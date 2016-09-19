@@ -1,9 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.constants.ConfigurationConstants;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.StageDto;
 import net.hawkengine.model.enums.NotificationType;
@@ -12,7 +8,6 @@ import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,18 +162,9 @@ public class StageService extends CrudService<Stage> implements IStageService {
         return serviceResult;
     }
 
-    private Stage extractStageFromPipeline(Pipeline pipline, String stageId) {
-        Stage result = pipline.getStages().stream()
-                .filter(stage -> stage.getId().equals(stageId))
-                .findFirst()
-                .orElse(null);
-
-        return result;
-    }
-
     @Override
     public ServiceResult addStageWithSpecificJobs(StageDto stageDto) {
-        Stage stageToAdd = stageDto.getStage();
+        Stage stageToAdd = new Stage();
         List<Job> jobs = new ArrayList<>();
         ServiceResult result;
 
@@ -190,18 +176,22 @@ public class StageService extends CrudService<Stage> implements IStageService {
             }
             JobDefinition jobDefinition = (JobDefinition) result.getObject();
             Job jobToAdd = new Job();
-            jobToAdd.setPipelineId(stageToAdd.getPipelineId());
+            jobToAdd.setPipelineId(stageDto.getPipelineId());
             jobToAdd.setJobDefinitionId(jobDefinition.getId());
             jobToAdd.setJobDefinitionName(jobDefinition.getName());
             jobToAdd.setStageId(stageToAdd.getId());
             jobToAdd.setJobDefinitionName(jobDefinition.getName());
             jobs.add(jobToAdd);
         }
+
+        stageToAdd.setStageDefinitionId(stageDto.getStageDefinitionId());
+        stageToAdd.setPipelineId(stageDto.getPipelineId());
+        stageToAdd.setExecutionId(stageDto.getExecutionId() + 1);
         stageToAdd.setJobs(jobs);
-        stageToAdd.setExecutionId(stageToAdd.getExecutionId() + 1);
 
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stageToAdd.getPipelineId()).getObject();
         pipeline.setStageRun(true);
+        pipeline.setPrepared(false);
 
         result = this.pipelineService.update(pipeline);
         if (result.getNotificationType() == NotificationType.ERROR){
@@ -209,5 +199,14 @@ public class StageService extends CrudService<Stage> implements IStageService {
         }
 
         return this.add(stageToAdd);
+    }
+
+    private Stage extractStageFromPipeline(Pipeline pipline, String stageId) {
+        Stage result = pipline.getStages().stream()
+                .filter(stage -> stage.getId().equals(stageId))
+                .findFirst()
+                .orElse(null);
+
+        return result;
     }
 }

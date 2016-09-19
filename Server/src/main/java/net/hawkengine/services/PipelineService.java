@@ -103,7 +103,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .filter(p -> p.areMaterialsUpdated() && ((!p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS)) || ((!p.isPrepared() && p.isStageRun()))))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -119,7 +119,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .filter(p -> p.isPrepared() && ((p.getStatus() == Status.IN_PROGRESS) || p.isStageRun()))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 

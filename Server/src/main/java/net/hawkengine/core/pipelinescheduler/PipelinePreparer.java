@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PipelinePreparer implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(PipelinePreparer.class);
@@ -55,18 +54,17 @@ public class PipelinePreparer implements Runnable {
         }
     }
 
-    // TODO: Replace with method form PipelineService
-    public List<Pipeline> getAllUpdatedPipelines() {
-        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
-
-        List<Pipeline> filteredPipelines = pipelines
-                .stream()
-                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == Status.IN_PROGRESS) && !(p.isPrepared()))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-                .collect(Collectors.toList());
-
-        return filteredPipelines;
-    }
+//    public List<Pipeline> getAllUpdatedPipelines() {
+//        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+//
+//        List<Pipeline> filteredPipelines = pipelines
+//                .stream()
+//                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == Status.IN_PROGRESS) && !(p.isPrepared()))
+//                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+//                .collect(Collectors.toList());
+//
+//        return filteredPipelines;
+//    }
 
     public Pipeline preparePipeline(Pipeline pipelineToPrepare) {
         this.currentPipeline = pipelineToPrepare;
@@ -80,9 +78,14 @@ public class PipelinePreparer implements Runnable {
         pipelineToPrepare.setPipelineDefinitionId(pipelineDefinitionId);
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
         pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
-        pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare));
         pipelineToPrepare.setPrepared(true);
 
+        if (pipelineToPrepare.getStatus() == Status.IN_PROGRESS) {
+            pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare));
+        } else {
+            pipelineToPrepare.setStages(this.prepareRerunPipelineStages(stages, pipelineToPrepare));
+        }
+        
         return pipelineToPrepare;
     }
 
@@ -124,6 +127,41 @@ public class PipelinePreparer implements Runnable {
             currentStage.setTriggeredManually(stageDefinitions.get(i).isTriggeredManually());
 
             stages.set(i, currentStage);
+        }
+
+        return stages;
+    }
+
+    public List<Stage> prepareRerunPipelineStages(List<StageDefinition> stageDefinitions, Pipeline pipeline) {
+        int numberOfStageDefinitions = stageDefinitions.size();
+
+        List<Stage> stages = pipeline.getStages();
+        Stage stageToRerun = stages.remove(stages.size() - 1);
+        int stageExecutionId = stageToRerun.getExecutionId();
+        int stageToRerunIndex = this.getStageToRerunIndex(stageToRerun, stageDefinitions, numberOfStageDefinitions);
+
+        for (int i = 0; i < numberOfStageDefinitions; i++) {
+            StageDefinition currentStageDefinition = stageDefinitions.get(i);
+
+            Stage currentStage = new Stage();
+            if (i == stageToRerunIndex) {
+                currentStage = stageToRerun;
+                currentStage.setTriggeredManually(false);
+            } else {
+                currentStage.setTriggeredManually(currentStageDefinition.isTriggeredManually());
+                for (int j = 0; j < currentStageDefinition.getJobDefinitions().size(); j++) {
+                    currentStage.getJobs().add(new Job());
+                }
+                currentStage.setJobs(this.preparePipelineJobs(currentStageDefinition.getJobDefinitions(), currentStage));
+            }
+
+            currentStage.setPipelineId(pipeline.getId());
+            currentStage.setStageDefinitionId(currentStageDefinition.getId());
+            currentStage.setStageDefinitionName(currentStageDefinition.getName());
+            currentStage.setExecutionId(stageExecutionId);
+            currentStage.setEnvironmentVariables(currentStageDefinition.getEnvironmentVariables());
+
+            stages.add(currentStage);
         }
 
         return stages;
@@ -177,5 +215,17 @@ public class PipelinePreparer implements Runnable {
         }
 
         return tasks;
+    }
+
+    private int getStageToRerunIndex(Stage stageToRerun, List<StageDefinition> stageDefinitions, int numberOfStageDefinitions) {
+        int stageToRerunIndex = -1;
+        for (int i = 0; i < numberOfStageDefinitions; i++) {
+            if (stageToRerun.getStageDefinitionId().equals(stageDefinitions.get(i).getId())) {
+                stageToRerunIndex = i;
+                break;
+            }
+        }
+
+        return stageToRerunIndex;
     }
 }
