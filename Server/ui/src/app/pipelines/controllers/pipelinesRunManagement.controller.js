@@ -131,8 +131,20 @@ angular
             };
 
             vm.reRunStage = function() {
-                vm.selectedStage
-                pipeExec.reRunStage(vm.selectedStage);
+                vm.stageToRerun = {};
+                vm.stageToRerun.pipelineId = vm.selectedStage.pipelineId;
+                vm.stageToRerun.executionId = vm.selectedStage.executionId;
+                vm.stageToRerun.stageDefinitionId = vm.selectedStage.stageDefinitionId;
+                vm.stageToRerun.jobDefinitionIds = [];
+
+                vm.selectedStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
+                    if(currentJob.isSelected) {
+                        vm.stageToRerun.jobDefinitionIds.push(vm.currentJob.jobDefinitionId);
+                    }
+                });
+
+                pipeExec.reRunStage(vm.stageToRerun);
+                vm.stageToRerun = {};
             };
 
 
