@@ -1,18 +1,35 @@
 package net.hawkengine.model.dto;
 
-import net.hawkengine.model.Stage;
 import java.util.List;
 
 public class StageDto {
-    private Stage stage;
+    private String stageDefinitionId;
+    private String pipelineId;
+    private int executionId;
     private List<String> jobDefinitionIds;
 
-    public Stage getStage() {
-        return this.stage;
+    public String getStageDefinitionId() {
+        return stageDefinitionId;
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setStageDefinitionId(String stageDefinitionId) {
+        this.stageDefinitionId = stageDefinitionId;
+    }
+
+    public String getPipelineId() {
+        return pipelineId;
+    }
+
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
+    }
+
+    public int getExecutionId() {
+        return executionId;
+    }
+
+    public void setExecutionId(int executionId) {
+        this.executionId = executionId;
     }
 
     public List<String> getJobDefinitionIds() {
