@@ -139,7 +139,7 @@ angular
 
                 vm.selectedStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
                     if(currentJob.isSelected) {
-                        vm.stageToRerun.jobDefinitionIds.push(vm.currentJob.jobDefinitionId);
+                        vm.stageToRerun.jobDefinitionIds.push(currentJob.jobDefinitionId);
                     }
                 });
 
