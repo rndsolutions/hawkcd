@@ -3,10 +3,10 @@
 angular
     .module('hawk.pipelinesManagement')
     .controller('PipelinesRunManagement', ['$state', '$scope', '$stateParams', '$interval', 'pipeStats',
-        'runManagementService', 'pipeExec', 'pipeConfig', 'authDataService',
+        'runManagementService', 'pipeExecService', 'pipeConfig', 'authDataService',
         'viewModel', 'moment', 'ansi_up', '$sce', 'commonUtitlites',
         function ($state, $scope, $stateParams, $interval, pipeStats,
-                  runManagementService, pipeExec, pipeConfig,
+                  runManagementService, pipeExecService, pipeConfig,
                   authDataService, viewModel, moment, ansi_up, $sce,
                   commonUtilities) {
             var vm = this;
@@ -143,7 +143,7 @@ angular
                     }
                 });
 
-                pipeExec.reRunStage(vm.stageToRerun);
+                pipeExecService.reRunStage(vm.stageToRerun);
                 vm.stageToRerun = {};
             };
 
