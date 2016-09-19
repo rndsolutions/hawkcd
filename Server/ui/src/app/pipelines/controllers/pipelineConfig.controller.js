@@ -879,7 +879,7 @@ angular
             }
 
             //vm.task = res;
-            vm.updatedTask = vm.task;
+            vm.updatedTask = angular.copy(vm.task);
             // vm.getPipelineForTaskById(vm.updatedTask.pipelineDefinitionId);
             // vm.getStageForTaskById(vm.updatedTask.stageDefinitionId);
             vm.getPipelineForTaskUpdate(vm.updatedTask.pipelineDefinitionName);
