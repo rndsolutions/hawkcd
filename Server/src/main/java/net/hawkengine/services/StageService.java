@@ -164,9 +164,13 @@ public class StageService extends CrudService<Stage> implements IStageService {
 
     @Override
     public ServiceResult addStageWithSpecificJobs(StageDto stageDto) {
+        ServiceResult result;
+        if (stageDto.getJobDefinitionIds().isEmpty()) {
+            return super.createServiceResult(null, NotificationType.ERROR, "must have at least one Job selected.");
+        }
+
         Stage stageToAdd = new Stage();
         List<Job> jobs = new ArrayList<>();
-        ServiceResult result;
 
         for (String jobDefinitionId : stageDto.getJobDefinitionIds()) {
             result =  this.jobDefinitionService.getById(jobDefinitionId);
@@ -174,6 +178,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
             if (result.getNotificationType() == NotificationType.ERROR){
                 return result;
             }
+
             JobDefinition jobDefinition = (JobDefinition) result.getObject();
             Job jobToAdd = new Job();
             jobToAdd.setPipelineId(stageDto.getPipelineId());
@@ -190,6 +195,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         stageToAdd.setJobs(jobs);
 
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stageToAdd.getPipelineId()).getObject();
+        pipeline.getStages().add(stageToAdd);
         pipeline.setStageRun(true);
         pipeline.setPrepared(false);
 
@@ -198,7 +204,8 @@ public class StageService extends CrudService<Stage> implements IStageService {
             return result;
         }
 
-        return this.add(stageToAdd);
+        result = super.createServiceResult(stageToAdd, NotificationType.SUCCESS, "created successfully.");
+        return result;
     }
 
     private Stage extractStageFromPipeline(Pipeline pipline, String stageId) {
