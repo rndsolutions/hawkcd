@@ -58,14 +58,6 @@ angular
 
             //Partials' content begin
 
-            //Re-run stage
-
-            vm.reRunStage = {
-                selectAll: "Select all",
-                reRun: "Rerun",
-                cancel: "Cancel"
-            };
-
             //Run-info
 
             vm.runInfoDefaultText = {
@@ -136,11 +128,11 @@ angular
 
             vm.selectJobs = function (stage) {
                 vm.selectedStage = angular.copy(stage);
+            };
 
-                vm.selectedStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
-                    vm.selectedStage.jobs[jobIndex].isSelected = true;
-                });
-                debugger;
+            vm.reRunStage = function() {
+                vm.selectedStage
+                pipeExec.reRunStage(vm.selectedStage);
             };
 
 

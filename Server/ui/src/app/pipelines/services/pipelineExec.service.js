@@ -19,6 +19,18 @@ angular
             console.log(json);
         };
 
+        pipeExecService.reRunStage = function (stage) {
+            var methodName = "add";
+            var className = "StageService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.Stage\", \"object\": " + JSON.stringify(stage) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeExecService.stopPipeline = function (pipeline) {
             var methodName = "update";
             var className = "PipelineService";

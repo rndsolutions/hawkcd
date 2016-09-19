@@ -18,7 +18,7 @@
                             <td>{{job.jobDefinitionName}}</td>
                             <td>
                                 <div class="md-checkbox text-center">
-                                    <input type="checkbox" id="select{{$index}}" class="md-check" ng-model="job.isSelected">
+                                    <input type="checkbox" id="select{{$index}}" class="md-check" ng-model="job.isSelected" ng-init="job.isSelected=true">
                                     <label for="select{{$index}}">
                                         <span></span>
                                         <span class="check"></span>
