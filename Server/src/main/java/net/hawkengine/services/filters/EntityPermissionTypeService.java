@@ -129,6 +129,7 @@ public class EntityPermissionTypeService {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
                 userDto.setPermissionType(PermissionType.ADMIN);
             }
+
         }
 
         return userDto;
@@ -138,11 +139,10 @@ public class EntityPermissionTypeService {
         userGroupDto.setPermissionType(PermissionType.NONE);
 
         for (Permission permission : permissions) {
-            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
-                userGroupDto.setPermissionType(PermissionType.ADMIN);
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
+                    userGroupDto.setPermissionType(permission.getPermissionType());
             }
         }
-
         return userGroupDto;
     }
 
@@ -150,8 +150,8 @@ public class EntityPermissionTypeService {
         user.setPermissionType(PermissionType.NONE);
 
         for (Permission permission : permissions) {
-            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
-                user.setPermissionType(PermissionType.ADMIN);
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() != PermissionType.NONE)) {
+                user.setPermissionType(permission.getPermissionType());
             }
         }
 
