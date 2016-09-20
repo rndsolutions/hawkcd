@@ -1,4 +1,4 @@
-<div class="stage" ng-click="pipesRunManagement.selectStage($index);pipesRunManagement.toggleRun=$index">
+<div class="stage" ng-click="pipesRunManagement.selectStage($index, pipesRunManagement.currentSelectedRunIndex);pipesRunManagement.toggleRun=$index">
     <div class="panel panel-info p-box-inner">
         <!--<a class="p-link">-->
         <div class="p-link">
@@ -7,7 +7,7 @@
                         {{stage.stageDefinitionName}}
                         <!--<span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage[0].stageDefinitionName})" class="icon-settings font-lg ico"></span>-->
                         <div class="pull-right display-inline-block">
-                            <i ng-class="{'fa fa-check text-success vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN' && stage.status != 'CANCELED', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED'}"></i>
+                            <i ng-class="{'fa fa-check text-success vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN' && stage.status != 'CANCELED' && stage.status != 'UNSCHEDULED', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED'}"></i>
                         </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <!--<p><strong>{{pipesRunManagement.stageDefaultText.trigger}}</strong> TEMP </p>-->
                 <div class="job-list">
                 <div class="height-50px" ng-repeat="job in stage.jobs" ng-class-even="'custom-nth-color'">
-                    <div class="run-item-container display-inline-block width-100 pull-left pointer" ng-class="{'status-passed': job.status == 'PASSED', 'status-failed' : job.status == 'FAILED', 'status-working' : job.status == 'RUNNING', 'status-awaiting' : job.status == 'AWAITING' || (job.status != 'PASSED' && job.status != 'FAILED' && job.status != 'RUNNING' && job.status != 'CANCELED'), 'status-canceled' : job.status == 'CANCELED', 'jobSelected' : pipesRunManagement.selectedJob.id == job.id}" ng-click="pipesRunManagement.selectJob($parent.$index,$index)">
+                    <div class="run-item-container display-inline-block width-100 pull-left pointer" ng-class="{'status-passed': job.status == 'PASSED', 'status-failed' : job.status == 'FAILED', 'status-working' : job.status == 'RUNNING', 'status-awaiting' : job.status == 'AWAITING' || (job.status != 'PASSED' && job.status != 'FAILED' && job.status != 'RUNNING' && job.status != 'CANCELED'), 'status-canceled' : job.status == 'CANCELED', 'jobSelected' : pipesRunManagement.selectedJob.id == job.id}" ng-click="pipesRunManagement.selectJob($parent.$index,$index, pipesRunManagement.currentSelectedRunIndex)">
                         <div class="vertical-center display-inline-block width-100 pull-left padding-left-5">
                         {{job.jobDefinitionName}}
                         </div>

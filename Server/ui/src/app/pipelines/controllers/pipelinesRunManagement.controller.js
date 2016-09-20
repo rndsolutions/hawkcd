@@ -33,6 +33,8 @@ angular
 
             vm.lastRunSelected = 1;
 
+            vm.currentSelectedRunIndex = 1;
+
             vm.groupName = $stateParams.groupName;
             vm.pipelineName = $state.params.pipelineName;
             vm.pipelineExecutionID = $state.params.executionID;
@@ -144,7 +146,6 @@ angular
                 });
 
                 pipeExecService.reRunStage(vm.stageToRerun);
-                vm.stageToRerun = {};
             };
 
 
@@ -174,26 +175,46 @@ angular
                             vm.currentPipelineRun.triggerReason = viewModel.user.username;
                         }
                         vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
-                            if (currentPipelineRun.pipelineDefinitionId == currentPipeline.id) {
-                                vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
-                                vm.currentPipelineRunStages.forEach(function (currentStageDefinition, stageDefinitionIndex, stageDefinitionArray) {
-                                    vm.currentPipelineRun.stages.forEach(function (currentStageRun, stageRunIndex, stageRunarray) {
-                                        if (currentStageDefinition.id == currentStageRun.stageDefinitionId) {
-                                            vm.temporaryStages.push(currentStageRun);
-                                        }
-                                    });
-                                    vm.currentPipelineRunStages[stageDefinitionIndex] = vm.temporaryStages;
-                                    vm.temporaryStages = [];
-                                });
-                            }
+                            // if (currentPipelineRun.pipelineDefinitionId == currentPipeline.id) {
+                            //     vm.currentPipelineRunStages = angular.copy(currentPipeline.stageDefinitions);
+                            //     vm.currentPipelineRunStages.forEach(function (currentStageDefinition, stageDefinitionIndex, stageDefinitionArray) {
+                            //         vm.currentPipelineRun.stages.forEach(function (currentStageRun, stageRunIndex, stageRunarray) {
+                            //             if (currentStageDefinition.id == currentStageRun.stageDefinitionId) {
+                            //                 vm.temporaryStages.push(currentStageRun);
+                            //             }
+                            //         });
+                            //         vm.currentPipelineRunStages[stageDefinitionIndex] = vm.temporaryStages;
+                            //         vm.temporaryStages = [];
+                            //     });
+                            // }
                         });
+                        var lastExecutionId = 0;
                         currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                             currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
                                 currentJob.report = ansi_up.ansi_to_html(currentJob.report);
                                 currentJob.report = $sce.trustAsHtml(currentJob.report);
-
                             });
+                            if(currentStage.executionId > lastExecutionId) {
+                                lastExecutionId = currentStage.executionId;
+                            }
                         });
+
+                        vm.currentPipelineRun.stageRuns = [];
+                        for(var i = 0; i < lastExecutionId; i++) {
+                            var newArray = [];
+                            vm.currentPipelineRun.stageRuns.push(newArray);
+                            vm.currentPipelineRun.stageRuns[i].index = i + 1;
+                            currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                                if(currentStage.executionId == i + 1) {
+                                    if(!vm.currentPipelineRun.stageRuns[i].stages) {
+                                        vm.currentPipelineRun.stageRuns[i].stages = [];
+                                    }
+                                    vm.currentPipelineRun.stageRuns[i].stages.push(currentStage);
+                                }
+                            });
+                        }
+                        debugger;
+
                     }
 
                 });
@@ -470,14 +491,14 @@ angular
             //Change the class of selected stage - needed for the initialization
             vm.toggleRun = 0;
 
-            vm.selectStage = function (index) {
+            vm.selectStage = function (index, stageRunIndex) {
                 //Needed for class change
                 vm.toggleRun = index;
 
                 vm.selectedStageIndexInMainDB = index;
 
                 // //  Get the selected stage - with LastRun + all Runs
-                vm.selectedStage = vm.currentPipelineRun.stages[index];
+                vm.selectedStage = vm.currentPipelineRun.stageRuns[stageRunIndex - 1].stages[index];
                 // nameOfStage = vm.selectedStage.Runs[0].Name;
                 //
                 // //Need this variable, so the runs are displayed in the modal for re run stage
@@ -521,11 +542,11 @@ angular
             //  $('#tree_1').jstree();
             //});
 
-            vm.selectJob = function (stageIndex, jobIndex) {
-                vm.selectStage(stageIndex);
-                var selectedRunIndex = vm.currentPipelineRun.stages[vm.toggleRun] - 1;
+            vm.selectJob = function (stageIndex, jobIndex, stageRunIndex) {
+                vm.selectStage(stageIndex, stageRunIndex);
+                var selectedRunIndex = vm.currentPipelineRun.stageRuns[stageRunIndex - 1].stages[vm.toggleRun] - 1;
 
-                vm.selectedJob = vm.currentPipelineRun.stages[vm.toggleRun].jobs[jobIndex];
+                vm.selectedJob = vm.currentPipelineRun.stageRuns[stageRunIndex - 1].stages[vm.toggleRun].jobs[jobIndex];
                 vm.selectedRunIndex = selectedRunIndex;
                 vm.jobIndex = jobIndex;
             };

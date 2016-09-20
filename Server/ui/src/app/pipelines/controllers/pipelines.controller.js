@@ -20,6 +20,8 @@ angular
 
         vm.allDefinitionsAndRuns = [];
 
+        vm.currentSelectedRunIndex = 0;
+
         vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
 
         vm.currentStageRuns = [];
