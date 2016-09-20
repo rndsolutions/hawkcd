@@ -187,4 +187,22 @@ public class StatusUpdaterService {
             }
         }
     }
+
+    private List<Stage> getLastRunsOfStages(List<Stage> stages) {
+        int lastExecutionId = 0;
+        for (Stage stage : stages) {
+            if (stage.getExecutionId() > lastExecutionId) {
+                lastExecutionId = stage.getExecutionId();
+            }
+        }
+
+        List<Stage> lastRuns = new ArrayList<>();
+        for (Stage stage : stages) {
+            if (stage.getExecutionId() == lastExecutionId) {
+                lastRuns.add(stage);
+            }
+        }
+
+        return lastRuns;
+    }
 }
