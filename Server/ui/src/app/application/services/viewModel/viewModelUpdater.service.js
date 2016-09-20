@@ -199,13 +199,9 @@ angular
         };
 
         viewModelUpdater.updateMaterialDefinition = function (materialDefinition) {
-            viewModel.allPipelines.forEach(function (currentPipeline, index, array) {
-                if(currentPipeline.id == materialDefinition.pipelineDefinitionId) {
-                    viewModel.allPipelines[index].materials.forEach(function (currentMaterial, materialIndex, array) {
-                        if(currentMaterial.id == materialDefinition.id){
-                            viewModel.allPipelines[index].materialDefinitions[materialIndex] = materialDefinition;
-                        }
-                    });
+            viewModel.allMaterialDefinitions.forEach(function (currentMaterial, materialIndex, array) {
+                if(currentMaterial.id == materialDefinition.id){
+                    viewModel.allMaterialDefinitions[materialIndex] = materialDefinition;
                 }
             });
         };
