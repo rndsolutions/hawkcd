@@ -133,7 +133,7 @@ angular
                 currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                     if(currentStage.id == stage.id) {
                         currentStage.isTriggeredManually = false;
-                        currentStage.status = 'PAUSED';
+                        currentStage.status = 'IN_PROGRESS';
                         currentPipelineRun.status = 'IN_PROGRESS';
                         pipeExecService.update(currentPipelineRun);
                     }
@@ -178,8 +178,8 @@ angular
                     });
                     currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                         currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
-                            currentJob.report = ansi_up.ansi_to_html(currentJob.report);
-                            currentJob.report = $sce.trustAsHtml(currentJob.report);
+                            currentJob.processedReport = ansi_up.ansi_to_html(currentJob.report);
+                            currentJob.processedReport = $sce.trustAsHtml(currentJob.report);
 
                         });
                     });
