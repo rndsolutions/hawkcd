@@ -129,12 +129,12 @@ angular
         };
 
         vm.continueStage = function (stage) {
-            stage.isTriggeredManually = false;
-            stage.status = 'PAUSED';
             vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
                 currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                     if(currentStage.id == stage.id) {
-                        currentPipelineRun.status = 'PAUSED';
+                        currentStage.isTriggeredManually = false;
+                        currentStage.status = 'PAUSED';
+                        currentPipelineRun.status = 'IN_PROGRESS';
                         pipeExecService.update(currentPipelineRun);
                     }
                 });
