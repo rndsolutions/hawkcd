@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="pipeVar in pipeConfig.allPipelineVars">
+                <tr ng-repeat="pipeVar in pipeConfig.allPipelines[pipeConfig.pipelineIndex].environmentVariables">
                     <td> {{pipeVar.key}} </td>
                     <td> {{pipeVar.isSecured ? '******' : pipeVar.value}} </td>
                     <td> {{pipeVar.isSecured ? 'Yes' : 'No'}} </td>

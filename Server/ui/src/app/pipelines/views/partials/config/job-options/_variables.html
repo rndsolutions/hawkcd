@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="jobVar in pipeConfig.allJobVars">
+                <tr ng-repeat="jobVar in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].environmentVariables">
                     <td> {{jobVar.key}} </td>
                     <td> {{jobVar.isSecured ? '******' : jobVar.value}} </td>
                     <td> {{jobVar.isSecured ? 'Yes' : 'No'}} </td>

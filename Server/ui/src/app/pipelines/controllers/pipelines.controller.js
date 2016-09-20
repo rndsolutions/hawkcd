@@ -150,7 +150,6 @@ angular
                 });
                 if (!isContained && currentPipeline.pipelineGroupId != '') {
                     var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
-                    debugger;
                     if (groupIndex > -1) {
                         vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
                     } else {

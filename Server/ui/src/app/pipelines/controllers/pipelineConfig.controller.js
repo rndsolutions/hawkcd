@@ -1063,7 +1063,7 @@ angular
                     vm.close();
                 },
                 getVariableForEdit: function(variable) {
-                    vm.environmentVariableUtils.pipelines.variableToEdit = variable;
+                    vm.environmentVariableUtils.pipelines.variableToEdit = angular.copy(variable);
                 },
                 variableToEdit: {}
             },
@@ -1097,7 +1097,7 @@ angular
                     vm.close();
                 },
                 getVariableForEdit: function(variable) {
-                    vm.environmentVariableUtils.stages.variableToEdit = variable;
+                    vm.environmentVariableUtils.stages.variableToEdit = angular.copy(variable);
                 },
                 variableToEdit: {}
             },
@@ -1130,7 +1130,7 @@ angular
                     pipeConfigService.updateJobDefinition(vm.job);
                 },
                 getVariableForEdit: function(variable) {
-                    vm.environmentVariableUtils.jobs.variableToEdit = variable;
+                    vm.environmentVariableUtils.jobs.variableToEdit = angular.copy(variable);
                 },
                 variableToEdit: {}
             }
