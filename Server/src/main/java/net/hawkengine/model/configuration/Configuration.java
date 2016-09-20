@@ -9,7 +9,6 @@ public final class Configuration {
     private String serverHost;
     private int serverPort;
     private DatabaseType databaseType;
-    private boolean shouldUseEmbeddedDb;
     private Map<DatabaseType, DatabaseConfig> databaseConfigs;
     private Map<OAuthProviderType, ProviderConfig> oAuthProviderConfigs;
     private String materialsDestination;
@@ -43,14 +42,6 @@ public final class Configuration {
 
     public Map<DatabaseType, DatabaseConfig> getDatabaseConfigs() {
         return databaseConfigs;
-    }
-
-    public boolean shouldUseEmbeddedDb() {
-        return shouldUseEmbeddedDb;
-    }
-
-    public void setShouldUseEmbeddedDb(boolean shouldUseEmbeddedDb) {
-        this.shouldUseEmbeddedDb = shouldUseEmbeddedDb;
     }
 
     public void setDatabaseConfigs(Map<DatabaseType, DatabaseConfig> databaseConfigs) {
