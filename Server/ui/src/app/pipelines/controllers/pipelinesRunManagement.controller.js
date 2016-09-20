@@ -179,7 +179,7 @@ angular
                     currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                         currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
                             currentJob.processedReport = ansi_up.ansi_to_html(currentJob.report);
-                            currentJob.processedReport = $sce.trustAsHtml(currentJob.report);
+                            currentJob.processedReport = $sce.trustAsHtml(currentJob.processedReport);
 
                         });
                     });
