@@ -6,10 +6,6 @@
         <input type="text" ng-disabled="pipeConfig.pipeline.permissionType != 'ADMIN'" class="form-control" ng-minlength="3" ng-model="pipeConfig.updatedPipeline.name" ng-pattern="/^([\w-]+)$/" required>
         <label>Pipeline Name</label>
       </div>
-      <div class="form-group form-md-line-input">
-        <input type="text" ng-disabled="pipeConfig.pipeline.permissionType != 'ADMIN'" class="form-control" ng-minlength="3" ng-model="pipeConfig.updatedPipeline.labelTemplate" required>
-        <label>Label Template</label>
-      </div>
       <div class="form-group form-md-checkboxes">
         <div class="md-checkbox-list">
           <div class="md-checkbox">
@@ -25,7 +21,7 @@
     <!--<button class="btn green-sharp" data-toggle="confirmation" data-popout="true" data-placement="right" id="updatePipe" data-on-confirm="updatePipeline()">Update</button>-->
     <!-- || pipeConfig.updatedPipeline.Name == pipeConfig.pipeline.Name -->
     <button class="btn green-sharp" type="submit" ng-click="pipeConfig.editPipeline(pipeConfig.updatedPipeline)"
-    ng-disabled="editPipeForm.$invalid || pipeConfig.updatedPipeline.LabelTemplate == pipeConfig.pipeline.LabelTemplate && pipeConfig.updatedPipeline.name == pipeConfig.pipeline.name && pipeConfig.updatedPipeline.autoScheduling == pipeConfig.pipeline.autoScheduling || pipeConfig.pipeline.permissionType != 'ADMIN'">Update</button>
+    ng-disabled="editPipeForm.$invalid || pipeConfig.updatedPipeline.name == pipeConfig.pipeline.name && pipeConfig.updatedPipeline.autoScheduling == pipeConfig.pipeline.isAutoSchedulingEnabled || pipeConfig.pipeline.permissionType != 'ADMIN'">Update</button>
   </form>
 
 </div>

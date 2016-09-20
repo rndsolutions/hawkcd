@@ -12,6 +12,7 @@ public class PipelineDefinition extends DbEntry {
     private String pipelineGroupId;
     private String groupName;
     private String labelTemplate;
+    private int revisionCount;
     private Set<String> materialDefinitionIds;
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
@@ -25,6 +26,7 @@ public class PipelineDefinition extends DbEntry {
         this.setMaterialDefinitionIds(new HashSet<>());
         this.setEnvironments(new ArrayList<>());
         this.setStageDefinitions(new ArrayList<>());
+        this.setRevisionCount(1);
     }
 
     public String getName() {
@@ -49,6 +51,14 @@ public class PipelineDefinition extends DbEntry {
 
     public void setLabelTemplate(String labelTemplate) {
         this.labelTemplate = labelTemplate;
+    }
+
+    public int getRevisionCount() {
+        return this.revisionCount;
+    }
+
+    public void setRevisionCount(int revisionCount) {
+        this.revisionCount = revisionCount;
     }
 
     public Set<String> getMaterialDefinitionIds() {

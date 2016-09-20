@@ -286,7 +286,6 @@ angular
                 vm.newMaterials = {};
 
                 vm.updatedPipeline.name = vm.pipeline.name;
-                vm.updatedPipeline.labelTemplate = vm.pipeline.labelTemplate;
                 vm.updatedPipeline.autoScheduling = vm.pipeline.isAutoSchedulingEnabled;
                 vm.currentPipeline = vm.pipeline;
             } else {
@@ -1063,7 +1062,7 @@ angular
                     vm.close();
                 },
                 getVariableForEdit: function(variable) {
-                    vm.environmentVariableUtils.pipelines.variableToEdit = variable;
+                    vm.environmentVariableUtils.pipelines.variableToEdit = angular.copy(variable);
                 },
                 variableToEdit: {}
             },
