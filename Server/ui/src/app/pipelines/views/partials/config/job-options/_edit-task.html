@@ -125,8 +125,13 @@
                     </div>
                     <div ng-if="pipeConfig.task.type == 'FETCH_MATERIAL'">
                         <div class="form-group form-md-line-input">
-                            <select class="form-control" name="materialSelect" id="editMaterialSelect" ng-model="pipeConfig.updatedTask.material" required>
-                                <option ng-repeat="material in pipeConfig.filteredMaterialDefinitions" value="{{material}}">{{material.name}}</option>
+                            <select class="form-control"
+                            name="materialSelect"
+                            id="editMaterialSelect"
+                            ng-options="material.name for material in pipeConfig.filteredMaterialDefinitions track by material.name"
+                            ng-model="pipeConfig.selectedTaskMaterial"
+                            required>
+                                <!-- <option ng-repeat="material in pipeConfig.filteredMaterialDefinitions" value="material">{{material.name}}</option> -->
                             </select>
                             <label for="editMaterialSelect">Material</label>
                         </div>
