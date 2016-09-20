@@ -18,6 +18,7 @@ import net.hawkengine.services.interfaces.IPipelineGroupService;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.ws.WsObjectProcessor;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -232,16 +233,22 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             return true;
         }
         boolean hasPermission = this.authorizationService.update(entity, permissions);
-        if (hasPermission) {
-            return true;
-        }
 
-        return false;
+        return hasPermission;
     }
 
 
     @Override
     public boolean addWithMaterialDefinition(String entity, String className, List list) {
         return true;
+    }
+
+    @Override
+    public boolean resetUserPassword(String entity, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
+        User user = this.jsonConverter.fromJson(entity, User.class);
+        boolean hasPermission = this.authorizationService.update(entity, permissions);
+
+        return hasPermission;
     }
 }

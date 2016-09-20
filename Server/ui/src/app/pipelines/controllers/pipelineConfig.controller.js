@@ -252,6 +252,7 @@ angular
         };
 
         vm.filteredMaterialDefinitions = [];
+        vm.taskMaterial = {};
         vm.getPipelineForConfig = function(pipeName) {
             if (vm.allPipelines != null && vm.allPipelines.length > 0) {
                 vm.allPipelines.forEach(function(currentPipeline, index, array) {
@@ -304,7 +305,6 @@ angular
                     break;
                 }
             }
-            console.log(vm.selectedPipelineStages);
         };
 
         vm.getRunsFromPipelineDefinition = function (pipeline) {
@@ -397,7 +397,6 @@ angular
                     break;
                 }
             }
-            console.log(vm.selectedStageJobs);
         };
 
         vm.getStageForTaskById = function(id) {
@@ -524,6 +523,8 @@ angular
             pipeConfigService.deleteStageDefinition(stage.id);
         };
 
+        vm.selectedTask = {};
+        vm.selectedJobTasks = [];
         vm.getJob = function(job) {
             if (vm.job != null) {
                 vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function(currentJob, index, array) {
@@ -531,8 +532,11 @@ angular
                         vm.job = array[index];
                         vm.allJobVars = vm.job.environmentVariables;
                         vm.jobIndex = index;
+                        vm.selectedJobTasks = angular.copy(array[index].taskDefinitions);
                     }
                 });
+
+
 
                 vm.jobDeleteButton = false;
                 //vm.job = res;
@@ -740,7 +744,6 @@ angular
             //vm.materialDeleteButton = false;
             //vm.material = res;
 
-            console.log(vm.material);
             if (typeof(vm.material.username) !== 'undefined' &&
                 typeof(vm.material.password) !== 'undefined') {
                 vm.hasCredentials = true;
@@ -811,6 +814,7 @@ angular
             //vm.taskIndex = taskIndex;
         };
 
+        vm.selectedTaskMaterial;
         vm.getTaskForUpdate = function(task) {
             if (vm.task != null) {
                 vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].taskDefinitions.forEach(function(currentTask, index, array) {
@@ -821,11 +825,13 @@ angular
                 });
             }
 
+            vm.selectedTaskMaterial = vm.filteredMaterialDefinitions.find(function(materialDefinition,index,array){
+              return task.materialDefinitionId === materialDefinition.id;
+            });
             //vm.task = res;
             vm.updatedTask = vm.task;
             vm.getPipelineForTaskById(vm.updatedTask.pipelineDefinitionId);
             vm.getStageForTaskById(vm.updatedTask.stageDefinitionId);
-
             //vm.taskIndex = taskIndex;
         };
 
@@ -996,7 +1002,6 @@ angular
                     });
                 }
             });
-            console.log(vm.currentStageRuns);
             return vm.currentStageRuns;
         };
 

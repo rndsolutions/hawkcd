@@ -32,10 +32,11 @@
                     </uib-accordion>
                 </div>
                 </br>
-                <div class="modal-footer">
-                    <button class="btn btn-danger" data-dismiss="modal" ng-click="admin.assignPipeline(admin.pipelineToAssign)" ng-disabled="admin.pipelineToAssign == null">Assign Pipeline</button>
-                    <button class="btn" data-dismiss="modal" ng-click="admin.close()">Cancel</button>
+                <div class="form-group text-center">
+                    <button class="btn btn-danger" data-dismiss="modal" ng-click="admin.assignPipeline(admin.pipelineToAssign)" ng-disabled="admin.pipelineToAssign == null">{{admin.defaultText.buttonTitles.ok}}</button>
+                    <button class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
                 </div>
+                <br>
             </form>
         </div>
     </div>
