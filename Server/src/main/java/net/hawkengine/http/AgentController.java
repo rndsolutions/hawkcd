@@ -170,14 +170,13 @@ public class AgentController {
                 pipeline.setArtifactsFileStructure(new ArrayList<JsTreeFile>(Arrays.asList(artifactDirectory)));
             }
 
-            this.pipelineService.update(pipeline);
-
-
             Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
             agent.setAssigned(false);
             ServiceResult result = this.agentService.update(agent);
             EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
         }
+
+        this.pipelineService.update(pipeline);
 
         return Response.status(Status.OK).build();
     }
