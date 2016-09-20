@@ -43,6 +43,18 @@ angular
             console.log(json);
         };
 
+        pipeExecService.update = function () {
+            var methodName = "update";
+            var className = "PipelineService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"net.hawkengine.model.Pipeline\", \"object\": " + JSON.stringify(pipeline) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeExecService.scheduleLatestPipeline = function (pipeName, token) {
 
         };

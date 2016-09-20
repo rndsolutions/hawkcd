@@ -3,10 +3,10 @@
 angular
     .module('hawk.pipelinesManagement')
     .controller('PipelinesRunManagement', ['$state','$scope','$stateParams','$interval','pipeStats',
-                                            'runManagementService','pipeExec','pipeConfig','authDataService',
+                                            'runManagementService','pipeExecService','pipeConfig','authDataService',
                                             'viewModel','moment','ansi_up','$sce','commonUtitlites',
                                             function ($state, $scope, $stateParams, $interval, pipeStats,
-                                                    runManagementService, pipeExec, pipeConfig,
+                                                    runManagementService, pipeExecService, pipeConfig,
                                                     authDataService, viewModel, moment, ansi_up, $sce,
                                                     commonUtilities) {
         var vm = this;
@@ -126,7 +126,20 @@ angular
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
           return commonUtilities.truncateGitFromUrl(repoUrl,commitId);
-        }
+        };
+
+        vm.continueStage = function (stage) {
+            stage.isTriggeredManually = false;
+            stage.status = 'PAUSED';
+            vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
+                currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                    if(currentStage.id == stage.id) {
+                        currentPipelineRun.status = 'PAUSED';
+                        pipeExecService.update(currentPipelineRun);
+                    }
+                });
+            });
+        };
 
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;

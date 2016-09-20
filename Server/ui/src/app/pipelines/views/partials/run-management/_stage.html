@@ -70,6 +70,11 @@
                         <!--<span class="glyphicon glyphicon-play control"></span>-->
                     <!--</button>-->
 
+                    <button class="btn btn-primary" ng-if="stage.isTriggeredManually && stage.status == 'PAUSED'" ng-click="pipesRunManagement.continueStage(stage)">
+                    Continue
+                    <span class="glyphicon glyphicon-play control"></span>
+                    </button>
+
                     <!--<button class="btn btn-default" data-target="#rerunStage" data-toggle="modal" ng-click="pipesRunManagement.setSelectedStageForReRun(stage)">-->
                         <!--<span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>-->
                     <!--</button>-->
