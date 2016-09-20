@@ -43,7 +43,7 @@ angular
             console.log(json);
         };
 
-        pipeExecService.update = function () {
+        pipeExecService.update = function (pipeline) {
             var methodName = "update";
             var className = "PipelineService";
             var packageName = "net.hawkengine.services";
