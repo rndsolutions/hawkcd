@@ -18,7 +18,7 @@ angular
 
             .state('index.pipelineHistory', {
                 abstract: true,
-                url: 'pipelines/{pipelineName}',
+                url: 'pipelines/{pipelineName}/{pipelineId}',
                 templateUrl: "app/pipelines/views/history.html",
                 data: {
                     pageTitle: 'Pipeline History'

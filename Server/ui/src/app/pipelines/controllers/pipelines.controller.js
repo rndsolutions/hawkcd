@@ -220,10 +220,6 @@ angular
             pipeConfigService.deletePipelineDefinition(id);
         };
 
-        vm.getAllHistoryPipelines = function(id) {
-            pipeExecService.getAllHistoryPipelines(id);
-        };
-
         //region add pipeline modal config
         vm.bar = 1;
         vm.back = function() {

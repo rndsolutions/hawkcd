@@ -32,6 +32,7 @@ angular
         //Get the current group and pipeline name
         vm.groupName = $stateParams.groupName;
         vm.pipelineName = $stateParams.pipelineName;
+         vm.pipelineId = $stateParams.pipelineId;
 
         vm.allPipelineRuns = angular.copy(viewModel.historyPipelines);
 
@@ -40,6 +41,12 @@ angular
         vm.updateClock = function(pipelineRun) {
 
         };
+
+         vm.getAllHistoryPipelines = function(id) {
+             pipeExecService.getAllHistoryPipelines(id);
+         };
+
+         vm.getAllHistoryPipelines(vm.pipelineId);
 
         vm.getLastRunAction = function(pipelineRun) {
             return moment.getLastRunAction(pipelineRun)
