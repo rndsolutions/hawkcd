@@ -84,6 +84,8 @@ public class Agent implements IAgent {
                 }
 
                 if ((response != null) && (response.getStatus() == Status.OK.getStatusCode())) {
+                    String jobAsString = this.jsonConverter.toJson(this.jobExecutor.getCurrentJob());
+                    webResource.type("application/json").put(ClientResponse.class, jobAsString);
                     this.logger.info(MessageConstants.JOB_REPORT_SENT);
                     AgentConfiguration.getAgentInfo().setRunning(false);
                     this.jobExecutor.setCurrentJob(null);
