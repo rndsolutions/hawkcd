@@ -16,7 +16,7 @@
                     <td> {{pipeVar.isSecured ? 'Yes' : 'No'}} </td>
                     <td>
                         <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editPipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)">Edit</button>
-                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removePipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)" ng-class="{'disabled': pipeConfig.variableDeleteButton}">Delete</button>
+                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removePipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)" ng-class="{'disabled': pipeConfig.variableDeleteButton || !pipeVar.isDeletable}">Delete</button>
                     </td>
                 </tr>
             </tbody>

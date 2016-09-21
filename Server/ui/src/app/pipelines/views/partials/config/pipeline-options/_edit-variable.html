@@ -8,7 +8,7 @@
               </div>
               <div class="modal-body">
                   <div class="form-group form-md-line-input">
-                      <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.key" name="variableName" ng-pattern="/^([\w-]+)$/" required>
+                      <input type="text" class="form-control" ng-disabled="!pipeConfig.environmentVariableUtils.pipelines.variableToEdit.isDeletable" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.key" name="variableName" ng-pattern="/^([\w-]+)$/" required>
                       <label>Name</label>
                   </div>
                   <div class="form-group form-md-line-input">

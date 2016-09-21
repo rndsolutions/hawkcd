@@ -259,6 +259,7 @@ angular
         vm.stop = function(pipelineDefinition, pipeline) {
             pipelineDefinition.disabled = true;
             pipeline.shouldBeCanceled = true;
+            pipeline.status = 'IN_PROGRESS';
             pipeExecService.stopPipeline(pipeline);
         };
         //endregion

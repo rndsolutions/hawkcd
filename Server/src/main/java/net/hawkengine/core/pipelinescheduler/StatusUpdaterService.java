@@ -1,20 +1,11 @@
 package net.hawkengine.core.pipelinescheduler;
 
 import net.hawkengine.core.utilities.constants.LoggerMessages;
-import net.hawkengine.model.Job;
-import net.hawkengine.model.Pipeline;
-import net.hawkengine.model.ServiceResult;
-import net.hawkengine.model.Stage;
-import net.hawkengine.model.Task;
-import net.hawkengine.model.enums.JobStatus;
-import net.hawkengine.model.enums.NotificationType;
-import net.hawkengine.model.enums.StageStatus;
-import net.hawkengine.model.enums.Status;
-import net.hawkengine.model.enums.TaskStatus;
+import net.hawkengine.model.*;
+import net.hawkengine.model.enums.*;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
-
 import org.apache.log4j.Logger;
 
 import java.time.ZoneOffset;
@@ -122,27 +113,27 @@ public class StatusUpdaterService {
     public void updatePipelineStatus(Pipeline pipeline) {
         List<Stage> stages = pipeline.getStages();
         List<StageStatus> stageStatuses = new ArrayList<>();
-
         for (Stage stage : stages) {
             StageStatus stageStatus = stage.getStatus();
             stageStatuses.add(stageStatus);
-
-            if(stage.isTriggeredManually() && (stage.getStatus() == StageStatus.IN_PROGRESS)) {
-                stage.setStatus(StageStatus.NOT_RUN);
-                pipeline.setStatus(Status.AWAITING);
-                LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.AWAITING));
-                String message = String.format("Stage %s is set to be manually triggered", stage.getStageDefinitionName());
-                LOGGER.info(message);
-                ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, message);
+            if (stage.isTriggeredManually() && (stage.getStatus() == StageStatus.IN_PROGRESS)) {
+                pipeline.setStatus(Status.PAUSED);
+                stage.setStatus(StageStatus.PAUSED);
+                String pipelinePaused = String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.PAUSED);
+                LOGGER.info(pipelinePaused);
+                String stagePaused = String.format("Stage %s must be triggered manually", stage.getStageDefinitionName());
+                LOGGER.info(stagePaused);
+                String notificationMessage = pipelinePaused + System.lineSeparator() + stagePaused;
+                ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, notificationMessage);
                 EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", notification);
             }
         }
 
-        if(stageStatuses.contains(StageStatus.FAILED)) {
+        if (stageStatuses.contains(StageStatus.FAILED)) {
             pipeline.setStatus(Status.FAILED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.FAILED));
-        } else if(this.areAllPassed(stageStatuses)) {
+        } else if (this.areAllPassed(stageStatuses)) {
             pipeline.setStatus(Status.PASSED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
             LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.PASSED));

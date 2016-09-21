@@ -31,7 +31,7 @@
             <span ng-if="stage.status=='CANCELED' && $index<9">
               <button type="button" class="btn btn-canceled s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
-            <span ng-if="stage.status == 'NOT_RUN' && $index<9">
+            <span ng-if="stage.status == 'NOT_RUN' || stage.status == 'PAUSED' || stage.status == 'AWAITING' && $index<9">
                  <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'IN_PROGRESS' && $index<9">
@@ -48,7 +48,7 @@
 
         </div>
         <div class="controls">
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status == 'IN_PROGRESS' || pipe.disabled == true}" id="startbtn" ng-click="pipes.play(pipe)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status == 'IN_PROGRESS' || pipe.lastRun.status == 'PAUSED' || pipe.lastRun.status == 'AWAITING' || pipe.disabled == true}" id="startbtn" ng-click="pipes.play(pipe)">
                 <span class="glyphicon glyphicon-play control"></span>
             </button>
             <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}">
@@ -59,7 +59,7 @@
                 <span class="glyphicon glyphicon-pause control"></span>
             </button>
 
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' || pipe.disabled == true}" id="stopbtn" ng-click="pipes.stop(pipe, pipe.lastRun)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' && pipe.lastRun.status != 'PAUSED' && pipe.lastRun.status != 'AWAITING' || pipe.disabled == true}" id="stopbtn" ng-click="pipes.stop(pipe, pipe.lastRun)">
                 <span class="glyphicon glyphicon-stop control"></span>
             </button>
         </div>
