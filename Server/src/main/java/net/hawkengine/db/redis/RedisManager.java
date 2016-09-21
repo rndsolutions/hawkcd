@@ -5,10 +5,8 @@ import net.hawkengine.model.configuration.DatabaseConfig;
 import net.hawkengine.model.enums.DatabaseType;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.embedded.RedisServer;
 
 public class RedisManager {
-    private static RedisServer redisEmbeddedDb;
     private static JedisPool jedisPool;
 
     static JedisPool getJedisPool() {
@@ -21,13 +19,6 @@ public class RedisManager {
         int port = config.getPort();
         String password = config.getPassword();
 
-        redisEmbeddedDb = RedisServer.builder().port(port).build();
-
-        boolean shouldUseEmbeddedDb = ServerConfiguration.getConfiguration().shouldUseEmbeddedDb();
-        if (shouldUseEmbeddedDb) {
-            redisEmbeddedDb.start();
-        }
-
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setTestOnBorrow(true);
 
@@ -35,7 +26,6 @@ public class RedisManager {
     }
 
     public static void disconnect() {
-        redisEmbeddedDb.stop();
         jedisPool.destroy();
     }
 }
