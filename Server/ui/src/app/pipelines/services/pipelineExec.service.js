@@ -44,7 +44,7 @@ angular
         };
 
         pipeExecService.getAllHistoryPipelines = function (id) {
-            var methodName = "getAllHistoryPipelineDtos";
+            var methodName = "getAllPipelineHistoryDtos";
             var className = "PipelineService";
             var packageName = "net.hawkengine.services";
             var result = "";
