@@ -1,7 +1,6 @@
 package net.hawkengine.services.filters.factories;
 
 import net.hawkengine.model.DbEntry;
-import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.SecurityService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
@@ -66,9 +65,11 @@ public class SecurityServiceInvoker<T extends DbEntry> {
             case "getAll":
                 return this.securityService.getAll(entitiesToFilter, className, permissions);
             case "getAllPipelineGroupDTOs":
-                return this.securityService.getPipelineDTOs(entitiesToFilter, className, permissions);
+                return this.securityService.getAllPipelineGroupDTOs(entitiesToFilter, className, permissions);
             case "getAllUserGroups":
                 return this.securityService.getAllUserGroups(entitiesToFilter, className, permissions);
+            case "getAllPipelineHistoryDTOs":
+                return this.securityService.getAllPipelineHistoryDtos(entitiesToFilter, className, permissions);
             default:
                 return null;
         }

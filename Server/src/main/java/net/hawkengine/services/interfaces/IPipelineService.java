@@ -4,6 +4,8 @@ import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 
 public interface IPipelineService extends ICrudService<Pipeline> {
+    ServiceResult getAllByDefinitionId(String pipelineDefinitionId);
+
     ServiceResult getAllNonupdatedPipelines();
 
     ServiceResult getAllUpdatedUnpreparedPipelinesInProgress();
@@ -12,4 +14,7 @@ public interface IPipelineService extends ICrudService<Pipeline> {
 
     ServiceResult getAllPreparedAwaitingPipelines();
 
+    ServiceResult getLastRun(String pipelineDefinitionId);
+
+    ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId);
 }

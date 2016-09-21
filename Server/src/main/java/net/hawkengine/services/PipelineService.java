@@ -3,6 +3,8 @@ package net.hawkengine.services;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.dto.PipelineDto;
+import net.hawkengine.model.dto.StageDto;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -95,6 +97,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
+    public ServiceResult getAllByDefinitionId(String pipelineDefinitionId) {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId))
+                .collect(Collectors.toList());
+
+        result.setObject(filteredPipelines);
+
+        return result;
+    }
+
+    @Override
     public ServiceResult getAllNonupdatedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -154,6 +171,60 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 .collect(Collectors.toList());
 
         result.setObject(updatedPipelines);
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult getLastRun(String pipelineDefinitionId) {
+        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        Pipeline lastRun = null;
+        int lastExecutionId = 0;
+        for (Pipeline pipeline : pipelines) {
+            if (pipeline.getExecutionId() > lastExecutionId) {
+                lastRun = pipeline;
+            }
+        }
+
+        result.setObject(lastRun);
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId) {
+        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<PipelineDto> pipelineDtos = new ArrayList<>();
+        for (Pipeline pipeline : pipelines) {
+            PipelineDto pipelineDto = new PipelineDto();
+            pipelineDto.setPipelineId(pipeline.getId());
+            pipelineDto.setPipelineDefinitionId(pipeline.getPipelineDefinitionId());
+            pipelineDto.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
+            pipelineDto.setExecutionId(pipeline.getExecutionId());
+            pipelineDto.setMaterials(pipeline.getMaterials());
+            pipelineDto.setStartTime(pipeline.getStartTime());
+            pipelineDto.setEndTime(pipeline.getEndTime());
+            pipelineDto.setDuration(pipeline.getDuration());
+
+            List<Stage> stages = pipeline.getStages();
+            List<StageDto> stageDtos = new ArrayList<>();
+            for (Stage stage : stages) {
+                StageDto stageDto = new StageDto();
+                stageDto.setStageDefinitionName(stage.getStageDefinitionName());
+                stageDto.setStatus(stage.getStatus());
+                stageDto.setEndTime(stage.getEndTime());
+                stageDtos.add(stageDto);
+            }
+
+            pipelineDto.setStages(stageDtos);
+            pipelineDtos.add(pipelineDto);
+        }
+
+        result.setObject(pipelineDtos);
 
         return result;
     }
@@ -228,7 +299,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             task.setRunIfCondition(taskDefinition.getRunIfCondition());
             tasks.add(task);
         }
-  
+
         job.setTasks(tasks);
     }
 }

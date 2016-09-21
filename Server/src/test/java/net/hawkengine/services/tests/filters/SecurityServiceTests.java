@@ -175,7 +175,7 @@ public class SecurityServiceTests {
     }
 
     @Test
-    public void getPipelineDTOs_withPermissionsForOneObject_twoEntities() {
+    public void getAllPipelineGroupDTOs_withPermissionsForOneObject_twoEntities() {
         List<PipelineGroup> expectedPipelineGroups = new ArrayList<>();
         this.createPipelineDefinitionsAndPipelineGroups();
         expectedPipelineGroups.add(this.firstPipelineGroup);
@@ -189,7 +189,7 @@ public class SecurityServiceTests {
         WsContractDto contract = new WsContractDto();
         contract.setClassName("PipelineGroupService");
         contract.setPackageName("net.hawkengine.services");
-        contract.setMethodName("getPipelineDTOs");
+        contract.setMethodName("getAllPipelineGroupDTOs");
         contract.setResult("");
         contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
@@ -211,7 +211,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        List actualServiceResult = this.securityService.getPipelineDTOs(expectedPipelineGroups, contract.getClassName(), this.createPermissions());
+        List actualServiceResult = this.securityService.getAllPipelineGroupDTOs(expectedPipelineGroups, contract.getClassName(), this.createPermissions());
 
         //Assert
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualServiceResult.size());
@@ -219,7 +219,7 @@ public class SecurityServiceTests {
     }
 
     @Test
-    public void getPipelineDTOs_withoutPermissions_noEntity() {
+    public void getAllPipelineGroupDTOs_withoutPermissions_noEntity() {
         List<PipelineGroup> expectedPipelineGroups = new ArrayList<>();
         this.createPipelineDefinitionsAndPipelineGroups();
         expectedPipelineGroups.add(this.firstPipelineGroup);
@@ -233,7 +233,7 @@ public class SecurityServiceTests {
         WsContractDto contract = new WsContractDto();
         contract.setClassName("PipelineGroupService");
         contract.setPackageName("net.hawkengine.services");
-        contract.setMethodName("getPipelineDTOs");
+        contract.setMethodName("getAllPipelineGroupDTOs");
         contract.setResult("");
         contract.setNotificationType(NotificationType.SUCCESS);
         contract.setErrorMessage("");
@@ -257,7 +257,7 @@ public class SecurityServiceTests {
         }
 
         //Act
-        List actualServiceResult = this.securityService.getPipelineDTOs(expectedPipelineGroups, contract.getClassName(), permissions);
+        List actualServiceResult = this.securityService.getAllPipelineGroupDTOs(expectedPipelineGroups, contract.getClassName(), permissions);
 
         //Assert
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_NO_OBJECTS, actualServiceResult.size());
