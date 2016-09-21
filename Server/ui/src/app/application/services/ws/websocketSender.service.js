@@ -6,7 +6,14 @@ angular
         var websocketSenderService = this;
 
         websocketSenderService.call = function (json) {
-            $rootScope.socket.send(json);
+            if($rootScope.socket.readyState === 1) {
+                $rootScope.socket.send(json);
+
+            } else {
+                setTimeout(function() {
+                    websocketSenderService.call(json);
+                }, 500);
+            }
         };
 
         return websocketSenderService;
