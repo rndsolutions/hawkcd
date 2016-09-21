@@ -71,7 +71,7 @@ angular
 
                 }
             });
-            console.log(vm.allPipelines);
+            // console.log(vm.allPipelines);
         }, true);
 
         $scope.$watch(function() {
@@ -218,6 +218,10 @@ angular
 
         vm.deletePipelineDefinition = function(id) {
             pipeConfigService.deletePipelineDefinition(id);
+        };
+
+        vm.getAllHistoryPipelines = function(id) {
+            pipeExecService.getAllHistoryPipelines(id);
         };
 
         //region add pipeline modal config

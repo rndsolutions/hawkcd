@@ -159,6 +159,9 @@ angular
                     getAll: function(object) {
                         validationService.dispatcherFlow(object, [viewModelUpdater.getAllPipelines]);
                     },
+                    getAllPipelineHistoryDtos: function (object) {
+                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllHistoryPipelines]);
+                    },
                     add: function(object) {
                         validationService.dispatcherFlow(object, [viewModelUpdater.addPipeline], true);
                     },

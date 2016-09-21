@@ -119,7 +119,7 @@ angular
                 runArray[runIndex] = false;
             });
             vm.isRunSelected[index] = true;
-            console.log($scope.treeData);
+            // console.log($scope.treeData);
         };
 
     });

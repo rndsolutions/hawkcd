@@ -339,6 +339,10 @@ angular
             });
         };
 
+        viewModelUpdater.getAllHistoryPipelines = function (pipelines) {
+            viewModel.historyPipelines = pipelines;
+        };
+
         viewModelUpdater.flushViewModel = function () {
             viewModel.allAgents = [];
             viewModel.user = {};

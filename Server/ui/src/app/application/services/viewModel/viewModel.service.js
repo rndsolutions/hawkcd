@@ -27,5 +27,7 @@ angular
             
         viewModel.allPipelineRuns = [];
 
+        viewModel.historyPipelines = [];
+
         return viewModel;
     }]);
