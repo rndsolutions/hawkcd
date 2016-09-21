@@ -150,7 +150,6 @@ angular
                 });
                 if (!isContained && currentPipeline.pipelineGroupId != '') {
                     var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
-                    debugger;
                     if (groupIndex > -1) {
                         vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
                     } else {
@@ -260,6 +259,7 @@ angular
         vm.stop = function(pipelineDefinition, pipeline) {
             pipelineDefinition.disabled = true;
             pipeline.shouldBeCanceled = true;
+            pipeline.status = 'IN_PROGRESS';
             pipeExecService.stopPipeline(pipeline);
         };
         //endregion

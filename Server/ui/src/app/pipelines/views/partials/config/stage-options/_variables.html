@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="stageVar in pipeConfig.allStageVars">
+                <tr ng-repeat="stageVar in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].environmentVariables">
                     <td> {{stageVar.key}} </td>
                     <td> {{stageVar.isSecured ? '******' : stageVar.value}} </td>
                     <td> {{stageVar.isSecured ? 'Yes' : 'No'}} </td>
