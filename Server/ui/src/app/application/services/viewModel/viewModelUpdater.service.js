@@ -343,6 +343,10 @@ angular
             viewModel.historyPipelines = pipelines;
         };
 
+        viewModelUpdater.getAllArtifactPipelines = function (pipelines) {
+            viewModel.artifactPipelines = pipelines;
+        };
+
         viewModelUpdater.flushViewModel = function () {
             viewModel.allAgents = [];
             viewModel.user = {};

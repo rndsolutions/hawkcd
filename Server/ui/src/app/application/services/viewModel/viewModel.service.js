@@ -29,5 +29,7 @@ angular
 
         viewModel.historyPipelines = [];
 
+        viewModel.artifactPipelines = [];
+
         return viewModel;
     }]);

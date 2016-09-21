@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.artifactManagement')
-    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, moment, commonUtitlites, filterRuns, artifactService) {
+    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, moment, commonUtitlites, filterRuns, artifactService, pipeExecService) {
         var vm = this;
 
         vm.allPipelines = [];
@@ -14,6 +14,12 @@ angular
         vm.isRunSelected = [];
 
         vm.query = "";
+
+        vm.getAllArtifactPipelines = function() {
+            pipeExecService.getAllArtifactPipelines();
+        };
+
+        vm.getAllArtifactPipelines();
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
             return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
@@ -28,9 +34,9 @@ angular
         };
 
         $scope.$watch(function() {
-            return viewModel.allPipelineRuns
+            return viewModel.artifactPipelines
         }, function(newVal, oldVal) {
-            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
+            vm.allPipelineRuns = angular.copy(viewModel.artifactPipelines);
 
             vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
                 currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {

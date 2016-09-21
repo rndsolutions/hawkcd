@@ -162,6 +162,9 @@ angular
                     getAllPipelineHistoryDTOs: function (object) {
                         validationService.dispatcherFlow(object, [viewModelUpdater.getAllHistoryPipelines]);
                     },
+                    getAllPipelineArtifactDTOs: function (object) {
+                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllArtifactPipelines]);
+                    },
                     add: function(object) {
                         validationService.dispatcherFlow(object, [viewModelUpdater.addPipeline], true);
                     },
