@@ -1,6 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.ws.EndpointConnector;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
@@ -9,6 +8,7 @@ import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
+import net.hawkengine.ws.EndpointConnector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +60,24 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             pipeline.setExecutionId(1);
         } else {
             pipeline.setExecutionId(lastPipeline.getExecutionId() + 1);
+            pipelineDefinition.setRevisionCount(pipelineDefinition.getRevisionCount() + 1);
+            List<EnvironmentVariable> environmentVariables = pipelineDefinition.getEnvironmentVariables();
+            EnvironmentVariable environmentVariable = environmentVariables.stream().filter(e -> e.getKey().equals("COUNT")).findFirst().orElse(null);
+
+            int envAutoIncrement = Integer.parseInt(environmentVariable.getValue()) + 1;
+
+            environmentVariable.setValue(String.valueOf(envAutoIncrement));
+            environmentVariables.stream().filter(env -> env.getKey().equals(environmentVariable.getKey())).forEach(env -> {
+                env.setValue(environmentVariable.getValue());
+            });
+            pipelineDefinition.setEnvironmentVariables(environmentVariables);
+            ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
+            EndpointConnector.passResultToEndpoint("PipelineDefinitionService", "update", result);
         }
 
         this.addMaterialsToPipeline(pipeline);
         this.addStagesToPipeline(pipeline);
+
         return super.add(pipeline);
     }
 

@@ -6,13 +6,16 @@ public class EnvironmentVariable extends DbEntry {
     private String key;
     private String value;
     private boolean isSecured;
+    private boolean isDeletable;
 
     public EnvironmentVariable() {
+        this.setDeletable(true);
     }
 
     public EnvironmentVariable(String key, String value) {
         this.key = key;
         this.value = value;
+        this.setDeletable(true);
     }
 
     public String getKey() {
@@ -38,5 +41,14 @@ public class EnvironmentVariable extends DbEntry {
     @JsonProperty("isSecured")
     public void setSecured(boolean value) {
         this.isSecured = value;
+    }
+
+    public boolean isDeletable() {
+        return this.isDeletable;
+    }
+
+    @JsonProperty("isDeletable")
+    public void setDeletable(boolean deletable) {
+        this.isDeletable = deletable;
     }
 }
