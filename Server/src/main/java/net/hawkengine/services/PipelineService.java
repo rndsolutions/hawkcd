@@ -209,6 +209,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         return result;
     }
 
+    @Override
+    public ServiceResult getAllPipelineArtifactDTOs() {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<PipelineDto> pipelineDtos = new ArrayList<>();
+        for (Pipeline pipeline : pipelines) {
+            PipelineDto pipelineDto = new PipelineDto();
+            pipelineDto.constructArtifactPipelineDto(pipeline);
+            pipelineDtos.add(pipelineDto);
+        }
+
+        result.setObject(pipelineDtos);
+
+        return result;
+    }
+
     private void addMaterialsToPipeline(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         List<MaterialDefinition> materialDefinitions =

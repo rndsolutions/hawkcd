@@ -126,7 +126,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public List getAllPipelineHistoryDtos(List entitiesToFilter, String className, List permissions) {
+    public List getAllPipelineDtos(List entitiesToFilter, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         List<PipelineDto> filteredEntities = new ArrayList<>();
         for (Object entity : entitiesToFilter) {
