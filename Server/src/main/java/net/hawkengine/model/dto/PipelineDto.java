@@ -19,6 +19,7 @@ public class PipelineDto extends PermissionObject {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
+    private String triggerReason;
     private List<JsTreeFile> artifactsFileStructure;
     private List<StageDto> stages;
 
@@ -47,6 +48,7 @@ public class PipelineDto extends PermissionObject {
         this.startTime = pipeline.getStartTime();
         this.endTime = pipeline.getEndTime();
         this.duration = pipeline.getDuration();
+        this.triggerReason = pipeline.getTriggerReason();
 
         List<Stage> stages = pipeline.getStages();
         for (Stage pipelineStage : stages) {
