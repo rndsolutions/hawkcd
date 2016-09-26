@@ -43,7 +43,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     public ServiceResult add(PipelineGroup pipelineGroup) {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
         PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
-        if (existingPipelineGroup != null){
+        if (existingPipelineGroup != null || pipelineGroup.getName().equals("UnassignedPipelines")) {
             ServiceResult result = new ServiceResult(pipelineGroup, NotificationType.ERROR, "Pipeline Group with the same name already exists.");
 
             return result;

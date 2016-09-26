@@ -7,6 +7,7 @@ import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.*;
+import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
@@ -57,29 +58,59 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     @Override
     public List getAllPipelineGroupDTOs(List entitiesToFilter, String className, List permissions) {
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) entitiesToFilter;
-        List<PipelineGroup> filteredPipelineGroups = new ArrayList<>();
-        List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
         this.authorizationService = AuthorizationServiceFactory.create(className);
-        //TODO: REFACTOR THIS PART
-        List<PipelineGroup> filteredEntities = (List<PipelineGroup>) this.authorizationService.getAll(permissions, pipelineGroups);
+        List<PipelineGroup> filteredPipelineGroups = (List<PipelineGroup>) this.authorizationService.getAll(permissions, pipelineGroups);
+
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         this.authorizationService = AuthorizationServiceFactory.create("PipelineDefinitionService");
         List<PipelineDefinition> filteredPipelineDefinitions = (List<PipelineDefinition>) this.authorizationService.getAll(permissions, pipelineDefinitions);
 
-        for (PipelineGroup filteredEntity : filteredEntities) {
-            List<PipelineDefinition> pipelineDefinitionsWithinFilteredGroup = filteredEntity.getPipelines();
-            for (PipelineDefinition pipelineDefinitionWithinFilteredGroup : pipelineDefinitionsWithinFilteredGroup) {
-                for (PipelineDefinition filteredPipelineDefinition : filteredPipelineDefinitions) {
-                    if (filteredPipelineDefinition.getId().equals(pipelineDefinitionWithinFilteredGroup.getId()) && filteredPipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
-                        pipelineDefinitionsToAdd.add(filteredPipelineDefinition);
+        PipelineGroup unassignedPipelinesGroup = new PipelineGroup();
+        unassignedPipelinesGroup.setPermissionType(PermissionType.VIEWER);
+        unassignedPipelinesGroup.setName("UnassignedPipelines");
+
+        for (PipelineDefinition pipelineDefinition : filteredPipelineDefinitions) {
+            boolean foundGroupForPipeline = false;
+            for (PipelineGroup pipelineGroup : filteredPipelineGroups) {
+                if (pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
+                    if (pipelineGroup.getPermissionType() == PermissionType.NONE) {
+                        pipelineGroup.setPermissionType(PermissionType.VIEWER);
                     }
+
+                    pipelineGroup.getPipelines().add(pipelineDefinition);
+                    foundGroupForPipeline = true;
+                    break;
                 }
             }
-            filteredEntity.setPipelines(pipelineDefinitionsToAdd);
-            filteredPipelineGroups.add(filteredEntity);
-            pipelineDefinitionsToAdd = new ArrayList<>();
+
+            if (!foundGroupForPipeline) {
+                unassignedPipelinesGroup.getPipelines().add(pipelineDefinition);
+            }
         }
+
+        if (!unassignedPipelinesGroup.getPipelines().isEmpty()) {
+            filteredPipelineGroups.add(unassignedPipelinesGroup);
+        }
+
+//        List<PipelineGroup> filteredPipelineGroups = new ArrayList<>();
+//        List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
+
+
+
+//        for (PipelineGroup filteredEntity : filteredPipelineGroups) {
+//            List<PipelineDefinition> pipelineDefinitionsWithinFilteredGroup = filteredEntity.getPipelines();
+//            for (PipelineDefinition pipelineDefinitionWithinFilteredGroup : pipelineDefinitionsWithinFilteredGroup) {
+//                for (PipelineDefinition filteredPipelineDefinition : filteredPipelineDefinitions) {
+//                    if (filteredPipelineDefinition.getId().equals(pipelineDefinitionWithinFilteredGroup.getId()) && filteredPipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
+//                        pipelineDefinitionsToAdd.add(filteredPipelineDefinition);
+//                    }
+//                }
+//            }
+//            filteredEntity.setPipelines(pipelineDefinitionsToAdd);
+//            filteredPipelineGroups.add(filteredEntity);
+//            pipelineDefinitionsToAdd = new ArrayList<>();
+//        }
 
         List<PipelineGroupDto> pipelineGroupDtos = this.doStuff(filteredPipelineGroups);
 
@@ -273,6 +304,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         List<PipelineGroupDto> pipelineGroupDtos = new ArrayList<>();
         for (PipelineGroup pipelineGroup : pipelineGroups) {
             PipelineGroupDto pipelineGroupDto = new PipelineGroupDto();
+            pipelineGroupDto.setPermissionType(pipelineGroup.getPermissionType());
             pipelineGroupDto.setName(pipelineGroup.getName());
             List<PipelineDefinition> pipelineDefinitions = pipelineGroup.getPipelines();
             List<PipelineDefinitionDto> pipelineDefinitionDtos = new ArrayList<>();
@@ -280,28 +312,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
                 PipelineDefinitionDto pipelineDefinitionDto = new PipelineDefinitionDto();
                 Pipeline lastRun = (Pipeline) this.pipelineService.getLastRun(pipelineDefinition.getId()).getObject();
                 pipelineDefinitionDto.constructDto(pipelineDefinition, lastRun);
-
-//                List<StageDto> stageDtos = new ArrayList<>();
-//                if (lastRun != null) {
-//                    pipelineDefinitionDto.setStartTime(lastRun.getStartTime());
-//                    pipelineDefinitionDto.setTriggerReason(lastRun.getTriggerReason());
-//                    List<Stage> stages = lastRun.getStages();
-//                    for (Stage stage : stages) {
-//                        StageDto stageDto = new StageDto();
-//                        stageDto.setStageDefinitionName(stage.getStageDefinitionName());
-//                        stageDto.setStatus(stage.getStatus());
-//                        stageDto.setEndTime(stage.getEndTime());
-//                        stageDtos.add(stageDto);
-//                    }
-//                } else {
-//                    List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
-//
-//                    for (StageDefinition stageDefinition : stageDefinitions) {
-//                        stageDtos.add(new StageDto());
-//                    }
-//                }
-//
-//                pipelineDefinitionDto.setStages(stageDtos);
                 pipelineDefinitionDtos.add(pipelineDefinitionDto);
             }
 
