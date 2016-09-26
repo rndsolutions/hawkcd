@@ -1,5 +1,6 @@
 package net.hawkengine.model.dto;
 
+import net.hawkengine.model.Stage;
 import net.hawkengine.model.enums.StageStatus;
 
 import java.time.LocalDateTime;
@@ -9,27 +10,9 @@ public class StageDto {
     private StageStatus status;
     private LocalDateTime endTime;
 
-    public String getStageDefinitionName() {
-        return stageDefinitionName;
-    }
-
-    public void setStageDefinitionName(String stageDefinitionName) {
-        this.stageDefinitionName = stageDefinitionName;
-    }
-
-    public StageStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(StageStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void constructDto(Stage stage) {
+        this.stageDefinitionName = stage.getStageDefinitionName();
+        this.status = stage.getStatus();
+        this.endTime = stage.getEndTime();
     }
 }

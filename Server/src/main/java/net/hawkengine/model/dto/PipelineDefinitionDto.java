@@ -1,52 +1,25 @@
 package net.hawkengine.model.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import net.hawkengine.model.PermissionObject;
+import net.hawkengine.model.Pipeline;
+import net.hawkengine.model.PipelineDefinition;
 
-public class PipelineDefinitionDto {
+public class PipelineDefinitionDto extends PermissionObject{
     private String id;
     private String name;
-    private List<StageDto> stages;
-    private LocalDateTime startTime;
-    private String triggerReason;
+    private PipelineDto lastRun;
 
-    public String getId() {
-        return id;
+    public PipelineDefinitionDto() {
+        this.lastRun = new PipelineDto();
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<StageDto> getStages() {
-        return stages;
-    }
-
-    public void setStages(List<StageDto> stages) {
-        this.stages = stages;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getTriggerReason() {
-        return triggerReason;
-    }
-
-    public void setTriggerReason(String triggerReason) {
-        this.triggerReason = triggerReason;
+    public void constructDto(PipelineDefinition pipelineDefinition, Pipeline pipeline) {
+        this.id = pipelineDefinition.getId();
+        this.name = pipelineDefinition.getName();
+        if (pipeline != null) {
+            this.lastRun.constructBasePipelineDto(pipeline);
+        } else {
+            this.lastRun.constructEmptyPipelineDto(pipelineDefinition);
+        }
     }
 }

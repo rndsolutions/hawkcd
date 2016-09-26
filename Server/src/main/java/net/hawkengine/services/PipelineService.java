@@ -4,7 +4,6 @@ import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.PipelineDto;
-import net.hawkengine.model.dto.StageDto;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -201,26 +200,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<PipelineDto> pipelineDtos = new ArrayList<>();
         for (Pipeline pipeline : pipelines) {
             PipelineDto pipelineDto = new PipelineDto();
-            pipelineDto.setPipelineId(pipeline.getId());
-            pipelineDto.setPipelineDefinitionId(pipeline.getPipelineDefinitionId());
-            pipelineDto.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
-            pipelineDto.setExecutionId(pipeline.getExecutionId());
-            pipelineDto.setMaterials(pipeline.getMaterials());
-            pipelineDto.setStartTime(pipeline.getStartTime());
-            pipelineDto.setEndTime(pipeline.getEndTime());
-            pipelineDto.setDuration(pipeline.getDuration());
-
-            List<Stage> stages = pipeline.getStages();
-            List<StageDto> stageDtos = new ArrayList<>();
-            for (Stage stage : stages) {
-                StageDto stageDto = new StageDto();
-                stageDto.setStageDefinitionName(stage.getStageDefinitionName());
-                stageDto.setStatus(stage.getStatus());
-                stageDto.setEndTime(stage.getEndTime());
-                stageDtos.add(stageDto);
-            }
-
-            pipelineDto.setStages(stageDtos);
+            pipelineDto.constructHistoryPipelineDto(pipeline);
             pipelineDtos.add(pipelineDto);
         }
 

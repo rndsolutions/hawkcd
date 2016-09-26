@@ -100,7 +100,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         List<PipelineDto> filteredEntities = new ArrayList<>();
         for (Object entity : entitiesToFilter) {
             PipelineDto pipelineDto = (PipelineDto)entity;
-            boolean hasPermission = this.authorizationService.getById(pipelineDto.getPipelineId(), permissions);
+            boolean hasPermission = this.authorizationService.getById(pipelineDto.getId(), permissions);
             if (hasPermission) {
                 filteredEntities.add(pipelineDto);
             }
@@ -113,9 +113,9 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     public boolean getById(String entity, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         String entityId = entity.substring(1, entity.length() - 1);
-        boolean hasPermisssion = this.authorizationService.getById(entityId, permissions);
-        if (hasPermisssion) {
-            return hasPermisssion;
+        boolean hasPermission = this.authorizationService.getById(entityId, permissions);
+        if (hasPermission) {
+            return hasPermission;
         }
         return false;
     }
@@ -278,30 +278,30 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
             List<PipelineDefinitionDto> pipelineDefinitionDtos = new ArrayList<>();
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
                 PipelineDefinitionDto pipelineDefinitionDto = new PipelineDefinitionDto();
-                pipelineDefinitionDto.setId(pipelineDefinition.getId());
-                pipelineDefinitionDto.setName(pipelineDefinition.getName());
                 Pipeline lastRun = (Pipeline) this.pipelineService.getLastRun(pipelineDefinition.getId()).getObject();
-                List<StageDto> stageDtos = new ArrayList<>();
-                if (lastRun != null) {
-                    pipelineDefinitionDto.setStartTime(lastRun.getStartTime());
-                    pipelineDefinitionDto.setTriggerReason(lastRun.getTriggerReason());
-                    List<Stage> stages = lastRun.getStages();
-                    for (Stage stage : stages) {
-                        StageDto stageDto = new StageDto();
-                        stageDto.setStageDefinitionName(stage.getStageDefinitionName());
-                        stageDto.setStatus(stage.getStatus());
-                        stageDto.setEndTime(stage.getEndTime());
-                        stageDtos.add(stageDto);
-                    }
-                } else {
-                    List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
+                pipelineDefinitionDto.constructDto(pipelineDefinition, lastRun);
 
-                    for (StageDefinition stageDefinition : stageDefinitions) {
-                        stageDtos.add(new StageDto());
-                    }
-                }
-
-                pipelineDefinitionDto.setStages(stageDtos);
+//                List<StageDto> stageDtos = new ArrayList<>();
+//                if (lastRun != null) {
+//                    pipelineDefinitionDto.setStartTime(lastRun.getStartTime());
+//                    pipelineDefinitionDto.setTriggerReason(lastRun.getTriggerReason());
+//                    List<Stage> stages = lastRun.getStages();
+//                    for (Stage stage : stages) {
+//                        StageDto stageDto = new StageDto();
+//                        stageDto.setStageDefinitionName(stage.getStageDefinitionName());
+//                        stageDto.setStatus(stage.getStatus());
+//                        stageDto.setEndTime(stage.getEndTime());
+//                        stageDtos.add(stageDto);
+//                    }
+//                } else {
+//                    List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
+//
+//                    for (StageDefinition stageDefinition : stageDefinitions) {
+//                        stageDtos.add(new StageDto());
+//                    }
+//                }
+//
+//                pipelineDefinitionDto.setStages(stageDtos);
                 pipelineDefinitionDtos.add(pipelineDefinitionDto);
             }
 
