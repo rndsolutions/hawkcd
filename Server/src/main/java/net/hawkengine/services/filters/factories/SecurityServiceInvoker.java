@@ -25,6 +25,7 @@ public class SecurityServiceInvoker<T extends DbEntry> {
             case "add":
                 return this.securityService.add(entity, className, permissions);
             case "update":
+            case "cancelPipeline":
                 return this.securityService.update(entity, className, permissions);
             case "delete":
                 return this.securityService.delete(entity, className, permissions);
@@ -51,7 +52,7 @@ public class SecurityServiceInvoker<T extends DbEntry> {
         }
     }
 
-    public boolean changeUserPasswrod(String loggedUserEmail, String entity, String className, List<Permission> permissions, String methodName) {
+    public boolean changeUserPassword(String loggedUserEmail, String entity, String className, List<Permission> permissions, String methodName) {
         switch (methodName) {
             case "changeUserPassword":
                 return this.securityService.changeUserPassword(loggedUserEmail, entity, className, permissions);

@@ -174,7 +174,7 @@ public class WsEndpoint extends WebSocketAdapter {
             } else {
                 boolean hasPermission;
                 if (contract.getMethodName().equals("changeUserPassword")) {
-                    hasPermission = this.securityServiceInvoker.changeUserPasswrod(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+                    hasPermission = this.securityServiceInvoker.changeUserPassword(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
                     if (hasPermission) {
                         result = (ServiceResult) this.wsObjectProcessor.call(contract);
                         contract.setResult(result.getObject());

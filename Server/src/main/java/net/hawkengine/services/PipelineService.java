@@ -4,6 +4,7 @@ import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.PipelineDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -225,6 +226,19 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         result.setObject(pipelineDtos);
 
         return result;
+    }
+
+    @Override
+    public ServiceResult cancelPipeline(String pipelineId) {
+        ServiceResult result = this.getById(pipelineId);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            return result;
+        }
+
+        Pipeline pipeline = (Pipeline) result.getObject();
+        pipeline.setShouldBeCanceled(true);
+        pipeline.setStatus(Status.IN_PROGRESS);
+        return this.update(pipeline);
     }
 
     private void addMaterialsToPipeline(Pipeline pipeline) {
