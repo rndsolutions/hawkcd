@@ -175,7 +175,7 @@ angular
         $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
 
         $rootScope.socket.onmessage = function(event) {
-            console.log(event.data);
+            // console.log(event.data);
             websocketReceiverService.processEvent(JSON.parse(event.data));
         };
 
@@ -195,7 +195,6 @@ angular
             pipeConfigService.getAllPipelineDefinitions();
             pipeConfigService.getAllPipelineGroupDTOs();
             agentService.getAllAgents();
-            pipeExecService.getAllPipelines();
             adminService.getAllUserGroupDTOs();
             adminService.getAllUsers();
             adminMaterialService.getAllMaterialDefinitions();
