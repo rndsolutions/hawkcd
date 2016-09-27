@@ -7,7 +7,7 @@
                         {{stage.stageDefinitionName}}
                         <!--<span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage[0].stageDefinitionName})" class="icon-settings font-lg ico"></span>-->
                         <div class="pull-right display-inline-block">
-                            <i ng-class="{'fa fa-check text-success vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN' && stage.status != 'CANCELED', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED'}"></i>
+                            <i ng-class="{'fa fa-check text-success vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN' && stage.status != 'CANCELED' && stage.status != 'AWAITING', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED'}"></i>
                         </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-                <div class="controls left-buttons-stage">
+                <div class="controls left-buttons-stage" style="height:42px;">
                     <!--<button class="btn btn-primary" ng-click="pipesRunManagement.selectAlllJobs(stage);pipesRunManagement.reRunStageJobs(stage)">-->
                         <!--Run-->
                         <!--<span class="glyphicon glyphicon-play control"></span>-->
