@@ -34,9 +34,7 @@ angular
         };
 
         pipelineUpdater.addPipeline = function (pipeline) {
-            if(!jQuery.isEmptyObject(viewModel.runManagementPipeline)){
-                viewModel.runManagementPipeline = pipeline;
-            } else if(viewModel.artifactPipelines.length > 0){
+            if(viewModel.artifactPipelines.length > 0){
                 var newPipeline = {};
                 newPipeline.executionId = pipeline.executionId;
                 newPipeline.materials = pipeline.materials;
@@ -85,7 +83,9 @@ angular
             //     }
             // });
             if(!jQuery.isEmptyObject(viewModel.runManagementPipeline)){
-                viewModel.runManagementPipeline = pipeline;
+                if(viewModel.runManagementPipeline.id == pipeline.id){
+                    viewModel.runManagementPipeline = pipeline;
+                }
             } else if(viewModel.artifactPipelines.length > 0){
                 viewModel.artifactPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                     if(currentPipeline.id == pipeline.id) {
