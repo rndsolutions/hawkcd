@@ -68,7 +68,7 @@
             </div>
             <div class="additional-info">
                 <div id="time-interval" ng-model="run.lastPipelineAction.output" class="display-inline"><i class="fa fa-calendar fa-1x "></i> {{run.lastPipelineAction.output}}</div>
-                <div id="link-button" class="fa-item pull-right" ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId})">
+                <div id="link-button" class="fa-item pull-right" ui-sref="index.pipelineRunManagement({pipelineName:run.pipelineDefinitionName, executionID: run.executionId, pipelineId: run.id})">
                     <i class="fa fa-list pull-right"></i>
                 </div>
             </div>
