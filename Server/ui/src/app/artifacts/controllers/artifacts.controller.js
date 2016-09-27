@@ -2,7 +2,7 @@
 
 angular
     .module('hawk.artifactManagement')
-    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, moment, commonUtitlites, filterRuns, artifactService, pipeExecService) {
+    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, pipelineUpdater, moment, commonUtitlites, filterRuns, artifactService, pipeExecService) {
         var vm = this;
 
         vm.allPipelines = [];
@@ -127,5 +127,9 @@ angular
             vm.isRunSelected[index] = true;
             // console.log($scope.treeData);
         };
+
+        $scope.$on("$destroy", function() {
+            pipelineUpdater.flushAllArtifactPipelines();
+        });
 
     });
