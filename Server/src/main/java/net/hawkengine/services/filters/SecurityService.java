@@ -6,16 +6,17 @@ import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
-import net.hawkengine.model.dto.*;
-import net.hawkengine.model.enums.PermissionType;
+import net.hawkengine.model.dto.PipelineDto;
+import net.hawkengine.model.dto.PipelineGroupDto;
+import net.hawkengine.model.dto.UserDto;
+import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineGroupService;
-import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.ws.WsObjectProcessor;
 
@@ -25,12 +26,12 @@ import java.util.List;
 public class SecurityService<T extends DbEntry> implements ISecurityService {
     private IAuthorizationService authorizationService;
     private Gson jsonConverter;
+    private IPipelineGroupService pipelineGroupService;
     private IPipelineDefinitionService pipelineDefinitionService;
-    private IPipelineService pipelineService;
 
     public SecurityService() {
+        this.pipelineGroupService = new PipelineGroupService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
-        this.pipelineService = new PipelineService();
 
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
@@ -66,53 +67,9 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         this.authorizationService = AuthorizationServiceFactory.create("PipelineDefinitionService");
         List<PipelineDefinition> filteredPipelineDefinitions = (List<PipelineDefinition>) this.authorizationService.getAll(permissions, pipelineDefinitions);
 
-        PipelineGroup unassignedPipelinesGroup = new PipelineGroup();
-        unassignedPipelinesGroup.setPermissionType(PermissionType.VIEWER);
-        unassignedPipelinesGroup.setName("UnassignedPipelines");
+        filteredPipelineGroups = this.pipelineGroupService.placePipelinesIntoGroups(filteredPipelineGroups, filteredPipelineDefinitions);
 
-        for (PipelineDefinition pipelineDefinition : filteredPipelineDefinitions) {
-            boolean foundGroupForPipeline = false;
-            for (PipelineGroup pipelineGroup : filteredPipelineGroups) {
-                if (pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
-                    if (pipelineGroup.getPermissionType() == PermissionType.NONE) {
-                        pipelineGroup.setPermissionType(PermissionType.VIEWER);
-                    }
-
-                    pipelineGroup.getPipelines().add(pipelineDefinition);
-                    foundGroupForPipeline = true;
-                    break;
-                }
-            }
-
-            if (!foundGroupForPipeline) {
-                unassignedPipelinesGroup.getPipelines().add(pipelineDefinition);
-            }
-        }
-
-        if (!unassignedPipelinesGroup.getPipelines().isEmpty()) {
-            filteredPipelineGroups.add(unassignedPipelinesGroup);
-        }
-
-//        List<PipelineGroup> filteredPipelineGroups = new ArrayList<>();
-//        List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
-
-
-
-//        for (PipelineGroup filteredEntity : filteredPipelineGroups) {
-//            List<PipelineDefinition> pipelineDefinitionsWithinFilteredGroup = filteredEntity.getPipelines();
-//            for (PipelineDefinition pipelineDefinitionWithinFilteredGroup : pipelineDefinitionsWithinFilteredGroup) {
-//                for (PipelineDefinition filteredPipelineDefinition : filteredPipelineDefinitions) {
-//                    if (filteredPipelineDefinition.getId().equals(pipelineDefinitionWithinFilteredGroup.getId()) && filteredPipelineDefinition.getPipelineGroupId().equals(filteredEntity.getId())) {
-//                        pipelineDefinitionsToAdd.add(filteredPipelineDefinition);
-//                    }
-//                }
-//            }
-//            filteredEntity.setPipelines(pipelineDefinitionsToAdd);
-//            filteredPipelineGroups.add(filteredEntity);
-//            pipelineDefinitionsToAdd = new ArrayList<>();
-//        }
-
-        List<PipelineGroupDto> pipelineGroupDtos = this.doStuff(filteredPipelineGroups);
+        List<PipelineGroupDto> pipelineGroupDtos = this.pipelineGroupService.convertGroupsToDtos(filteredPipelineGroups);
 
         return pipelineGroupDtos;
     }
@@ -298,27 +255,5 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         boolean hasPermission = this.authorizationService.update(entity, permissions);
 
         return hasPermission;
-    }
-
-    private List<PipelineGroupDto> doStuff(List<PipelineGroup> pipelineGroups) {
-        List<PipelineGroupDto> pipelineGroupDtos = new ArrayList<>();
-        for (PipelineGroup pipelineGroup : pipelineGroups) {
-            PipelineGroupDto pipelineGroupDto = new PipelineGroupDto();
-            pipelineGroupDto.setPermissionType(pipelineGroup.getPermissionType());
-            pipelineGroupDto.setName(pipelineGroup.getName());
-            List<PipelineDefinition> pipelineDefinitions = pipelineGroup.getPipelines();
-            List<PipelineDefinitionDto> pipelineDefinitionDtos = new ArrayList<>();
-            for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                PipelineDefinitionDto pipelineDefinitionDto = new PipelineDefinitionDto();
-                Pipeline lastRun = (Pipeline) this.pipelineService.getLastRun(pipelineDefinition.getId()).getObject();
-                pipelineDefinitionDto.constructDto(pipelineDefinition, lastRun);
-                pipelineDefinitionDtos.add(pipelineDefinitionDto);
-            }
-
-            pipelineGroupDto.setPipelines(pipelineDefinitionDtos);
-            pipelineGroupDtos.add(pipelineGroupDto);
-        }
-
-        return pipelineGroupDtos;
     }
 }
