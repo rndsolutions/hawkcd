@@ -11,7 +11,7 @@
                 <input type="text" class="form-control search-query custom-line-height" style="width:30%" ng-model="artifact.query" ng-change="artifact.search()" ng-pattern="/^([\w-]+)$/" placeholder="Search">
             </div>
         </div>
-        <div ng-repeat="pipeline in artifact.filteredItems">
+        <div ng-repeat="pipeline in artifact.filteredItems track by $index">
             <div class="mt-element-list">
                 <div class="mt-list-container list-simple ext-1 group" id="list-container" style="">
                         <div id="artifact-header-container" class="list-toggle done">
@@ -51,12 +51,12 @@
                                         </div>
                                         <div class="display-inline">
                                             <div class="display-inline break-word" ng-model="pipeline.lastPipelineAction.output"><i class="fa fa-calendar fa-1x"></i><span ng-if="pipeline.lastStage.localEndTime != null">
-                                              {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastRun.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</div>
+                                              {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</span></div>
                                         </div>
                                     </div>
                                     <div class="display-inline">
                                       <div id="expander-medium">
-                                          <a id="expander" class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false"><i class="icon-arrow-down"></i></a>
+                                          <a id="secondExpander" ng-click="artifact.loadJsTree($index, $event)" class="list-toggle-container" data-toggle="collapse" data-target="#list{{$index}}" aria-expanded="false"><i class="icon-arrow-down"></i></a>
                                       </div>
                                     </div>
                                 </div>
@@ -87,13 +87,13 @@
                           </p>
                           <div class="display-block">
                               <div class="display-inline break-word" ng-model="pipeline.lastPipelineAction.output"><i class="fa fa-calendar fa-1x"></i><span ng-if="pipeline.lastStage.localEndTime != null">
-                                {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastRun.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</div>
+                                {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastRun.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</span></div>
                           </div>
                         </li>
                       </ul>
                       <br>
 
-                      <div id="jstree" js-tree="treeConfig" ng-model="pipeline.artifactsFileStructure[0].children" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events-obj="treeEventsObj" tree-events="select_node:treeEventsObj;">
+                      <div id="jstree{{$index}}" js-tree="treeConfig" should-apply="ignoreModelChanges()" tree-events-obj="treeEventsObj" tree-events="select_node:treeEventsObj;">
                       </div>
                     </div>
                 </div>

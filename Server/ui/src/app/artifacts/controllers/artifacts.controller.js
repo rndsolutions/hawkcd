@@ -61,6 +61,13 @@ angular
 
         }, true);
 
+        vm.loadJsTree = function (index, event) {
+            if(event.currentTarget.attributes['aria-expanded'].nodeValue == 'false'){
+                $('#jstree' + index).jstree(true).settings.core.data = angular.copy(vm.allPipelineRuns[index].artifactsFileStructure[0].children);
+                $('#jstree' + index).jstree(true).refresh();
+            }
+        };
+
         $scope.treeEventsObj = function (e, data) {
             var selectedNode = data.node.original;
             if(selectedNode.type != 'folder'){
@@ -86,18 +93,18 @@ angular
             plugins : ['types']
         };
 
-        $(document).ready(function(){
-            $('#jstree').jstree();
-            // $(document).on("select_node.jstree", function (e, data) {
-            //     // vm.selectedData = angular.copy($scope.treeData);
-            //     var node = data.node;
-            //     debugger;
-            // });
-            // $(document).on("click", ".jstree-anchor", function (e) {
-            //     var node = e;
-            //     debugger;
-            // });
-        });
+        // $(document).ready(function(){
+        //     $('#jstree').jstree();
+        //     // $(document).on("select_node.jstree", function (e, data) {
+        //     //     // vm.selectedData = angular.copy($scope.treeData);
+        //     //     var node = data.node;
+        //     //     debugger;
+        //     // });
+        //     // $(document).on("click", ".jstree-anchor", function (e) {
+        //     //     var node = e;
+        //     //     debugger;
+        //     // });
+        // });
 
         // $('#jstree').on("changed.jstree", function (e, data) {
         //     // vm.selectedData = angular.copy($scope.treeData);
