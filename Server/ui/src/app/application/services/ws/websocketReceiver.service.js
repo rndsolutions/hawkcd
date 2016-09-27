@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService', 'pipeExecService', 'notificationService',
-        function($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService, pipeExecService, notificationService) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
+        function($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
@@ -30,7 +30,7 @@ angular
                 },
                 UserInfo: {
                     getUser: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getUser]);
+                        validationService.dispatcherFlow(object, [loggedUserUpdater.getUser]);
                     },
                     logoutSession: function(object) {
                         validationService.dispatcherFlow(object, [loginService.logout], true);
@@ -38,22 +38,22 @@ angular
                 },
                 UserService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getUsers]);
+                        validationService.dispatcherFlow(object, [userUpdater.getUsers]);
                     },
                     addUserWithoutProvider: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addUser], true);
+                        validationService.dispatcherFlow(object, [userUpdater.addUser], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateUser], true);
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
                     },
                     changeUserPassword: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateUser], true)
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true)
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUsers], true);
                     },
                     assignUserToGroup: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateUser, adminService.getAllUserGroupDTOs], true);
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser, adminService.getAllUserGroupDTOs], true);
                     },
                     resetUserPassword:function(object) {
                     },
@@ -63,44 +63,36 @@ angular
                 },
                 UserGroupService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getUserGroups]);
+                        validationService.dispatcherFlow(object, [userGroupUpdater.getUserGroups]);
                     },
                     getAllUserGroups: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getUserGroupDTOs]);
+                        validationService.dispatcherFlow(object, [userGroupUpdater.getUserGroupDTOs]);
                     },
                     addUserGroupDto: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addUserGroup], true);
+                        validationService.dispatcherFlow(object, [userGroupUpdater.addUserGroup], true);
                     },
                     updateUserGroupDto: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateUserGroup], true);
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
                     assignUserToGroup: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateUserGroup], true);
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
                     unassignUserFromGroup: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateUserGroup], true);
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUserGroupDTOs], true);
                     }
                 },
-                AuthorizationService: {
-                    getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getPermissions]);
-                    },
-                    updatePermission: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updatePermissions], true);
-                    }
-                },
                 AgentService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateAgents]);
+                        validationService.dispatcherFlow(object, [agentUpdater.updateAgents]);
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addAgent], true);
+                        validationService.dispatcherFlow(object, [agentUpdater.addAgent], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateAgent]);
+                        validationService.dispatcherFlow(object, [agentUpdater.updateAgent]);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [agentService.getAllAgents], true);
@@ -112,16 +104,16 @@ angular
                         //viewModelUpdater.updatePipelineGroupDTOs(pipelineGroups);
                     },
                     getAllPipelineGroupDTOs: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updatePipelineGroupDTOs]);
+                        validationService.dispatcherFlow(object, [pipelineGroupUpdater.updatePipelineGroupDTOs]);
                     },
                     getById: function(object) {
 
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addPipelineGroup], true);
+                        validationService.dispatcherFlow(object, [pipelineGroupUpdater.addPipelineGroup], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updatePipelineGroup], true);
+                        validationService.dispatcherFlow(object, [pipelineGroupUpdater.updatePipelineGroup], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineGroupDTOs], true);
@@ -129,16 +121,16 @@ angular
                 },
                 PipelineDefinitionService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllPipelineDefinitions]);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.getAllPipelineDefinitions]);
                     },
                     getById: function(object) {
 
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addPipelineDefinition], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.addPipelineDefinition], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updatePipelineDefinition], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition], true);
                         // pipeConfigService.getAllPipelineGroupDTOs();
                         // pipeConfigService.getAllPipelineDefinitions();
                     },
@@ -146,30 +138,33 @@ angular
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeExecService.getAllPipelines, pipeConfigService.getAllPipelineGroupDTOs]);
                     },
                     assignPipelineToGroup: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
                     },
                     unassignPipelineFromGroup: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
                     },
                     addWithMaterialDefinition: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addPipelineDefinition], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.addPipelineDefinition], true);
                     }
                 },
                 PipelineService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllPipelines]);
+                        validationService.dispatcherFlow(object, [pipelineUpdater.getAllPipelines]);
+                    },
+                    getById: function (object) {
+                        validationService.dispatcherFlow(object, [pipelineUpdater.getRunManagementPipeline])
                     },
                     getAllPipelineHistoryDTOs: function (object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllHistoryPipelines]);
+                        validationService.dispatcherFlow(object, [pipelineUpdater.getAllHistoryPipelines]);
                     },
                     getAllPipelineArtifactDTOs: function (object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllArtifactPipelines]);
+                        validationService.dispatcherFlow(object, [pipelineUpdater.getAllArtifactPipelines]);
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addPipeline], true);
+                        validationService.dispatcherFlow(object, [pipelineUpdater.addPipeline], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updatePipeline]);
+                        validationService.dispatcherFlow(object, [pipelineUpdater.updatePipeline]);
                     },
                     delete: function(object) {
 
@@ -177,16 +172,16 @@ angular
                 },
                 MaterialDefinitionService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllMaterialDefinitions]);
+                        validationService.dispatcherFlow(object, [materialDefinitionUpdater.getAllMaterialDefinitions]);
                     },
                     getById: function(object) {
 
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addMaterialDefinition], true);
+                        validationService.dispatcherFlow(object, [materialDefinitionUpdater.addMaterialDefinition], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateMaterialDefinition], true);
+                        validationService.dispatcherFlow(object, [materialDefinitionUpdater.updateMaterialDefinition], true);
                         // pipeConfigService.getAllMaterialDefinitions();
                     },
                     delete: function(object) {
@@ -195,13 +190,13 @@ angular
                 },
                 StageDefinitionService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllStageDefinitions]);
+                        validationService.dispatcherFlow(object, [stageDefinitionUpdater.getAllStageDefinitions]);
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addStageDefinition], true);
+                        validationService.dispatcherFlow(object, [stageDefinitionUpdater.addStageDefinition], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateStageDefinition], true);
+                        validationService.dispatcherFlow(object, [stageDefinitionUpdater.updateStageDefinition], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs], true);
@@ -209,13 +204,13 @@ angular
                 },
                 JobDefinitionService: {
                     getAll: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.getAllJobDefinitions]);
+                        validationService.dispatcherFlow(object, [jobDefinitionUpdater.getAllJobDefinitions]);
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addJobDefinition], true);
+                        validationService.dispatcherFlow(object, [jobDefinitionUpdater.addJobDefinition], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateJobDefinition], true);
+                        validationService.dispatcherFlow(object, [jobDefinitionUpdater.updateJobDefinition], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs], true);
@@ -226,10 +221,10 @@ angular
                         //viewModelUpdater.getAllTaskDefinitions(object.result);
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.addTaskDefinition], true);
+                        validationService.dispatcherFlow(object, [taskDefinitionUpdater.addTaskDefinition], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [viewModelUpdater.updateTaskDefinition], true);
+                        validationService.dispatcherFlow(object, [taskDefinitionUpdater.updateTaskDefinition], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs], true);
