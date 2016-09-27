@@ -71,18 +71,18 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     @Override
     public ServiceResult getAllPipelineGroupDTOs() {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
-
-        for (PipelineGroup pipelineGroup : pipelineGroups) {
-            List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
-            for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
-                    pipelineDefinitionsToAdd.add(pipelineDefinition);
-                }
-            }
-
-            pipelineGroup.setPipelines(pipelineDefinitionsToAdd);
-        }
+//        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
+//
+//        for (PipelineGroup pipelineGroup : pipelineGroups) {
+//            List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
+//            for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
+//                if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
+//                    pipelineDefinitionsToAdd.add(pipelineDefinition);
+//                }
+//            }
+//
+//            pipelineGroup.setPipelines(pipelineDefinitionsToAdd);
+//        }
 
         ServiceResult result = new ServiceResult(pipelineGroups, NotificationType.SUCCESS, "All Pipeline Groups retrieved successfully.");
 
