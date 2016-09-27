@@ -21,30 +21,31 @@
         </div>
         <div class="stages">
 
-            <span ng-repeat="stage in pipe.stages">
+            <span ng-repeat="stage in pipe.lastRun.stages">
           <span ng-if="stage.status=='PASSED' && $index<9">
-<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+<button type="button" class="btn btn-success s"  ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
              </span>
             <span ng-if="stage.status=='FAILED' && $index<9">
-              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+              <button type="button" class="btn btn-danger s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status=='CANCELED' && $index<9">
-              <button type="button" class="btn btn-canceled s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+              <button type="button" class="btn btn-canceled s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'NOT_RUN' || stage.status == 'PAUSED' || stage.status == 'AWAITING' && $index<9">
-                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'IN_PROGRESS' && $index<9">
-                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'SCHEDULED' && $index<9">
-                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                  <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
-            </span>
-            <span ng-if="pipe.stages == null" ng-repeat="stageDefinition in pipe.stageDefinitions">
+                <span ng-if="stage.status == null">
                 <button type="button" class="btn default s" ng-class="{'disabled' : true}"></button>
             </span>
-            <span ng-if="pipe.stageDefinitions.length > 10"> . . .</span>
+            <span ng-if="pipe.stages.length > 10"> . . .</span>
+            </span>
+
 
         </div>
         <div class="controls">

@@ -14,8 +14,6 @@ angular
 
         vm.allPermissions = [];
 
-        vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
-
         vm.allMaterialDefinitions = [];
 
         vm.allDefinitionsAndRuns = [];
@@ -27,143 +25,28 @@ angular
         vm.allPipelines = angular.copy(viewModel.allPipelines);
 
         $scope.$watch(function() {
-            return viewModel.allPipelines
-        }, function(newVal, oldVal) {
-            vm.allPipelines = angular.copy(viewModel.allPipelines);
-            vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
-            if (vm.allPipelineRuns.length > 0) {
-                vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
-                    vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
-                        if (currentPipelineRun.pipelineDefinitionId == currentPipeline.id) {
-                            vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
-                            vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
-                        }
-                    });
-                });
-            }
-            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
-                currentPipeline.disabled = false;
-                var isContained = false;
-                var groupNames = [];
-                vm.allPipelineGroups.forEach(function(currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                    if ($.grep(currentPipelineGroup.pipelines, function(obj) {
-                            return obj.id == currentPipeline.id
-                        }).length > 0) {
-                        isContained = true;
-                    }
-                    groupNames.push(currentPipelineGroup.name);
-                });
-                if (!isContained && currentPipeline.pipelineGroupId != '') {
-                    var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
-                    if (groupIndex > -1) {
-                        vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
-                    } else {
-                        var newGroup = {};
-                        newGroup.name = currentPipeline.groupName;
-                        newGroup.id = currentPipeline.pipelineGroupId;
-                        vm.allPipelineGroups.push(newGroup);
-                        if (newGroup.pipelines == null) {
-                            newGroup.pipelines = [];
-                        }
-                        newGroup.pipelines.push(currentPipeline);
-                        newGroup.permissionType = 'VIEWER';
-                    }
-
-                }
-            });
-            // console.log(vm.allPipelines);
-        }, true);
-
-        $scope.$watch(function() {
-            return viewModel.allPipelineRuns
-        }, function(newVal, oldVal) {
-            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
-            vm.allPipelineRuns.sort(function(a, b) {
-                return a.executionId - b.executionId;
-            });
-            vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
-                vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
-                    if (currentPipelineRun.pipelineDefinitionId == currentPipeline.id) {
-                        currentPipeline.disabled = false;
-                        if (currentPipelineRun.triggerReason == null) {
-                            currentPipelineRun.triggerReason = viewModel.user.username;
-                        }
-                        currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
-                            if(currentStage.endTime) {
-                                currentPipelineRun.lastStage = currentStage;
-                                currentPipelineRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
-                                currentPipelineRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
-                            }
-                        });
-                        vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
-                        if (currentPipelineRun.startTime) {
-                            currentPipelineRun.localStartDate = moment.formatDateUTCToLocal(currentPipelineRun.startTime);
-                            currentPipelineRun.localStartTime = moment.formatTimeInLocal(currentPipelineRun.startTime.time);
-                        }
-                        if (currentPipelineRun.endTime) {
-                            currentPipelineRun.localEndDate = moment.formatDateUTCToLocal(currentPipelineRun.endTime);
-                            currentPipelineRun.localEndTime = moment.formatTimeInLocal(currentPipelineRun.endTime.time);
-                        }
-                        vm.allPipelines[pipelineIndex].lastRun = currentPipelineRun;
-                        // vm.lastStage = {};
-                        // vm.allPipelines[pipelineIndex].lastRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
-                        //     if(currentStage.status == 'PASSED' || currentStage.status == 'FAILED' || currentStage.status == 'CANCELED') {
-                        //         vm.allPipelines[pipelineIndex].lastRun.lastStage = currentStage;
-                        //         vm.allPipelines[pipelineIndex].lastRun.lastStage = moment.formatDateUTCToLocal(vm.allPipelines[pipelineIndex].lastRun.lastStage.endTime);
-                        //         vm.allPipelines[pipelineIndex].lastRun.lastStage = moment.formatTimeInLocal(vm.allPipelines[pipelineIndex].lastRun.lastStage.endTime.time);
-                        //     }
-                        // });
-                    }
-                });
-            });
-            console.log(vm.allPipelineRuns);
-        }, true);
-
-        $scope.$watch(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
-            vm.allPipelineGroups.forEach(function(currentPipelineGroup, index, array) {
-                vm.allPipelineGroups[index].pipelines.forEach(function(currentPipelineFromGroup, pipelineFromGroupIndex, array) {
-                    vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, array) {
-                        currentPipeline.disabled = false;
-                        if (currentPipelineFromGroup.id == currentPipeline.id) {
-                            vm.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
+
+            vm.allPipelineGroups.forEach(function (currentPipelineGroup, groupIndex, groupArray) {
+                currentPipelineGroup.pipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                    currentPipeline.lastRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                        if(currentStage.endTime) {
+                            currentPipeline.lastRun.lastStage = currentStage;
+                            currentPipeline.lastRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
+                            currentPipeline.lastRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
                         }
                     });
-                });
-            });
-
-            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
-                currentPipeline.disabled = false;
-                var isContained = false;
-                var groupNames = [];
-                vm.allPipelineGroups.forEach(function(currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
-                    if (currentPipeline.pipelineGroupId == currentPipelineGroup.id) {
-                        if ($.grep(currentPipelineGroup.pipelines, function(obj) {
-                                return obj.id == currentPipeline.id
-                            }).length > 0) {
-                            isContained = true;
-                        }
+                    if (currentPipeline.lastRun.startTime) {
+                        currentPipeline.lastRun.localStartDate = moment.formatDateUTCToLocal(currentPipeline.lastRun.startTime);
+                        currentPipeline.lastRun.localStartTime = moment.formatTimeInLocal(currentPipeline.lastRun.startTime.time);
                     }
-                    groupNames.push(currentPipelineGroup.name);
-                });
-                if (!isContained && currentPipeline.pipelineGroupId != '') {
-                    var groupIndex = $.inArray(currentPipeline.groupName, groupNames);
-                    if (groupIndex > -1) {
-                        vm.allPipelineGroups[groupIndex].pipelines.push(currentPipeline);
-                    } else {
-                        var newGroup = {};
-                        newGroup.name = currentPipeline.groupName;
-                        newGroup.id = currentPipeline.pipelineGroupId;
-                        vm.allPipelineGroups.push(newGroup);
-                        if (newGroup.pipelines == null) {
-                            newGroup.pipelines = [];
-                        }
-                        newGroup.pipelines.push(currentPipeline);
-                        newGroup.permissionType = 'VIEWER';
+                    if (currentPipeline.lastRun.endTime) {
+                        currentPipeline.lastRun.localEndDate = moment.formatDateUTCToLocal(currentPipeline.lastRun.endTime);
+                        currentPipeline.lastRun.localEndTime = moment.formatTimeInLocal(currentPipeline.lastRun.endTime.time);
                     }
-                }
+                });
             });
             console.log(vm.allPipelineGroups);
         }, true);
@@ -187,24 +70,24 @@ angular
             });
         };
 
-        vm.getStageRunsFromPipeline = function(pipeline) {
-            vm.currentStageRuns = [];
-            vm.allPipelineRuns.forEach(function(currentPipeline, index, array) {
-                if (currentPipeline.pipelineDefinitionId == pipeline.id) {
-                    if (currentPipeline.stageDefinitions.length == 0) {
-                        pipeline.stageDefinitions.forEach(function(currentStageDefinition, stageIndex, stageArray) {
-                            vm.currentStageRuns.push(currentStageDefinition);
-                        });
-                    } else {
-                        currentPipeline.stages.forEach(function(currentStage, index, array) {
-                            vm.currentStageRuns.push(currentStage);
-                        });
-                    }
-                }
-            });
-            console.log(vm.currentStageRuns);
-            return vm.currentStageRuns;
-        };
+        // vm.getStageRunsFromPipeline = function(pipeline) {
+        //     vm.currentStageRuns = [];
+        //     // vm.allPipelineRuns.forEach(function(currentPipeline, index, array) {
+        //     //     if (currentPipeline.pipelineDefinitionId == pipeline.id) {
+        //     //         if (currentPipeline.stageDefinitions.length == 0) {
+        //     //             pipeline.stageDefinitions.forEach(function(currentStageDefinition, stageIndex, stageArray) {
+        //     //                 vm.currentStageRuns.push(currentStageDefinition);
+        //     //             });
+        //     //         } else {
+        //     //             currentPipeline.stages.forEach(function(currentStage, index, array) {
+        //     //                 vm.currentStageRuns.push(currentStage);
+        //     //             });
+        //     //         }
+        //     //     }
+        //     // });
+        //     console.log(vm.currentStageRuns);
+        //     return vm.currentStageRuns;
+        // };
 
         vm.all = [];
 
@@ -258,9 +141,7 @@ angular
         //TODO Not implemented on the back-end yet
         vm.stop = function(pipelineDefinition, pipeline) {
             pipelineDefinition.disabled = true;
-            pipeline.shouldBeCanceled = true;
-            pipeline.status = 'IN_PROGRESS';
-            pipeExecService.stopPipeline(pipeline);
+            pipeExecService.stopPipeline(pipeline.id);
         };
         //endregion
 
@@ -272,136 +153,6 @@ angular
             vm.pipeName = input.name;
             vm.pipeId = input.id;
         };
-
-        // vm.getAll = function () {
-        //     var tokenIsValid = authDataService.checkTokenExpiration();
-        //     if (tokenIsValid) {
-        //         var token = window.localStorage.getItem("accessToken");
-        //
-        //         pipeConfig.getAllPipelineDefs(token)
-        //             .then(function (defs) {
-        //                     var all = [];
-        //                     vm.allDefinitionsAndRuns = [];
-        //                     vm.allDefinitionsAndRuns.push(defs);
-        //
-        //                     pipeStats.getAllPipelines(token)
-        //                         .then(function (runs) {
-        //                                 vm.allDefinitionsAndRuns.push(runs);
-        //
-        //                                 //Combine definitions and runs of pipelines in one array
-        //                                 all = pipesService.combineDefinitionAndRuns(vm.allDefinitionsAndRuns);
-        //
-        //                                 //Orders the data by pipeline name sorted by ExecutionID
-        //                                 all = pipesService.arrangePipelinesByNameAndExecution(all);
-        //
-        //                                 //This method gets last execution for each stage in the last run of each pipeline
-        //                                 all = pipesService.getLastStageRunForLastPipeline(all);
-        //
-        //                                 //Get groups only - needed for empty groups (no pipelines)
-        //                                 pipeConfig.getAllGroups(token)
-        //                                     .then(function (res) {
-        //                                         for (var i = 0; i < res.length; i++) {
-        //                                             if (res[i].Pipelines.length == 0) {
-        //                                                 var name = res[i].Name;
-        //                                                 all[name] = res[i];
-        //                                             }
-        //                                         }
-        //                                         vm.allPipelines = all;
-        //                                     }, function (err) {
-        //                                         console.log(err);
-        //                                     })
-        //                             },
-        //                             function (err) {
-        //                                 console.log(err);
-        //                             })
-        //                 },
-        //                 function (err) {
-        //
-        //                 });
-        //     } else {
-        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-        //         authDataService.getNewToken(currentRefreshToken)
-        //             .then(function (res) {
-        //                 var token = res.access_token;
-        //                 pipeConfig.getAllPipelineDefs(token)
-        //                     .then(function (defs) {
-        //                             var all = [];
-        //                             vm.allDefinitionsAndRuns = [];
-        //                             vm.allDefinitionsAndRuns.push(defs);
-        //
-        //                             pipeStats.getAllPipelines(token)
-        //                                 .then(function (runs) {
-        //                                         vm.allDefinitionsAndRuns.push(runs);
-        //                                         //Combine definitions and runs of pipelines in one array
-        //                                         all = pipesService.combineDefinitionAndRuns(vm.allDefinitionsAndRuns);
-        //
-        //                                         //Orders the data by pipeline name sorted by ExecutionID
-        //                                         all = pipesService.arrangePipelinesByNameAndExecution(all);
-        //
-        //                                         //This method gets last execution for each stage in the last run of each pipeline
-        //                                         all = pipesService.getLastStageRunForLastPipeline(all);
-        //
-        //                                         //Get groups only - needed for empty groups (no pipelines)
-        //                                         pipeConfig.getAllGroups(token)
-        //                                             .then(function (res) {
-        //                                                 for (var i = 0; i < res.length; i++) {
-        //                                                     if (res[i].Pipelines.length == 0) {
-        //                                                         var name = res[i].Name;
-        //                                                         all[name] = res[i];
-        //                                                     }
-        //                                                 }
-        //                                                 vm.allPipelines = all;
-        //                                             }, function (err) {
-        //                                                 console.log(err);
-        //                                             })
-        //                                     },
-        //                                     function (err) {
-        //                                         console.log(err);
-        //                                     })
-        //                         },
-        //                         function (err) {
-        //                             console.log(err);
-        //                         });
-        //             }, function (err) {
-        //                 console.log(err);
-        //             })
-        //     }
-        // };
-
-        // vm.getAll = function() {
-        //     var tokenIsValid = authDataService.checkTokenExpiration();
-        //     if (tokenIsValid) {
-        //         var token = window.localStorage.getItem("accessToken");
-        //         pipeConfig.getAllPipelineDefs(token)
-        //             .then(function(res) {
-        //                 vm.allDefinitionsAndRuns = [];
-        //                 vm.allDefinitionsAndRuns.push(res);
-        //                 //vm.allDefinitionsAndRuns = pipesService.arrangePipelinesByNameAndExecution(vm.allDefinitionsAndRuns);
-        //                 vm.allPipelines = res;
-        //                 console.log(vm.allPipelines);
-        //                 console.log(res);
-        //             }, function(err) {
-        //                 console.log(err);
-        //             })
-        //     } else {
-        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-        //         authDataService.getNewToken(currentRefreshToken)
-        //             .then(function(res) {
-        //                 var token = res.access_token;
-        //                 pipeConfig.getAllPipelineDefs(token)
-        //                     .then(function(res) {
-        //                         vm.allDefinitionsAndRuns = [];
-        //                         vm.allDefinitionsAndRuns.push(res);
-        //                         //vm.allDefinitionsAndRuns = pipesService.arrangePipelinesByNameAndExecution(vm.allDefinitionsAndRuns);
-        //                         vm.allPipelines = res;
-        //                         console.log(vm.allPipelines);
-        //                         console.log(res);
-        //                     }, function(err) {
-        //                         console.log(err);
-        //                     })
-        //             })
-        //     }
-        // };
 
         vm.addPipeline = function(formData) {
             vm.formData = formData;
@@ -464,105 +215,7 @@ angular
             vm.selectedMaterial = {};
             vm.materialObject = {};
             vm.materialType = 'hidden';
-
-            //TODO
-            // if (vm.formData.material.tfs) {
-            //     var tfs = {
-            //         "PipelineName": vm.formData.pipeline.name,
-            //         "Name": vm.formData.materials.tfs.name,
-            //         "Type": 'TFS',
-            //         "Url": vm.formData.materials.tfs.url,
-            //         "AutoTriggerOnChange": vm.formData.materials.tfs.poll,
-            //         "Destination": vm.formData.materials.tfs.name,
-            //         "MaterialSpecificDetails": {
-            //             "domain": vm.formData.materials.tfs.domain,
-            //             "projectPath": vm.formData.materials.tfs.projectPath,
-            //             "username": vm.formData.materials.tfs.username,
-            //             "password": vm.formData.materials.tfs.password
-            //         }
-            //     };
-            //     materials.push(tfs);
-            // }
-            // //
-            // if (vm.materialType == 'nuget') {
-            //     material = {
-            //         "pipelineName": vm.formData.pipeline.name,
-            //         "name": vm.formData.material.nuget.name,
-            //         "type": 'NUGET',
-            //         "repositoryUrl": vm.formData.material.nuget.url,
-            //         "isPollingForChanges": vm.formData.material.nuget.poll,
-            //         "destination": vm.formData.material.nuget.name,
-            //         "packageId": vm.formData.material.nuget.packageId,
-            //         "includePrerelease": vm.formData.material.nuget.includePrerelease
-            //     };
-            // }
-
-
-
-            // var tokenIsValid = authDataService.checkTokenExpiration();
-            // if (tokenIsValid) {
-            //     var token = window.localStorage.getItem("accessToken");
-            //     pipeConfig.createPipeline(pipeline, token)
-            //         .then(function (res) {
-            //             vm.formData = {};
-            //             vm.getAll();
-            //             console.log(res);
-            //         }, function (err) {
-            //             vm.formData = {};
-            //             vm.getAll();
-            //             console.log(err);
-            //         })
-            // } else {
-            //     var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //     authDataService.getNewToken(currentRefreshToken)
-            //         .then(function (res) {
-            //             var token = res.access_token;
-            //             pipeConfig.createPipeline(pipeline, token)
-            //                 .then(function (res) {
-            //                     vm.formData = {};
-            //                     vm.getAll();
-            //                     console.log(res);
-            //                 }, function (err) {
-            //                     vm.formData = {};
-            //                     vm.getAll();
-            //                     console.log(err);
-            //                 })
-            //         }, function (err) {
-            //             console.log(err);
-            //         })
-            // }
         };
-
-        // vm.removePipeline = function(pipeName) {
-        //     var tokenIsValid = authDataService.checkTokenExpiration();
-        //     if (tokenIsValid) {
-        //         var token = window.localStorage.getItem("accessToken");
-        //         pipeConfig.deletePipeline(pipeName, token)
-        //             .then(function(res) {
-        //                 vm.getAll();
-        //                 console.log(res);
-        //             }, function(err) {
-        //                 vm.getAll();
-        //                 console.log(err);
-        //             })
-        //     } else {
-        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-        //         authDataService.getNewToken(currentRefreshToken)
-        //             .then(function(res) {
-        //                 var token = res.access_token;
-        //                 pipeConfig.deletePipeline(pipeName, token)
-        //                     .then(function(res) {
-        //                         vm.getAll();
-        //                         console.log(res);
-        //                     }, function(err) {
-        //                         vm.getAll();
-        //                         console.log(err);
-        //                     })
-        //             }, function(err) {
-        //                 console.log(err);
-        //             })
-        //     }
-        // };
 
         vm.wizardInfo = {
             steps: {
