@@ -184,6 +184,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         for (Pipeline pipeline : pipelines) {
             if (pipeline.getExecutionId() > lastExecutionId) {
                 lastRun = pipeline;
+                lastExecutionId = pipeline.getExecutionId();
             }
         }
 
