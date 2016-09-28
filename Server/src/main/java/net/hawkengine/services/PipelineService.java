@@ -212,18 +212,18 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, int numberOfPipelines) {
+    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
         return this.getPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
     }
 
     @Override
-    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, int numberOfPipelines, String pipelineId) {
+    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
                 .filter(p -> p.getPipelineDefinitionName().contains(searchCriteria))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
                 .collect(Collectors.toList());
 
         int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
