@@ -2,8 +2,12 @@
 
 angular
     .module('hawk')
-    .factory('pipelineUpdater', ['viewModel', function (viewModel) {
+    .factory('pipelineUpdater', ['viewModel', 'commonUtitlites', 'moment', function (viewModel, commonUtitlites, moment) {
         var pipelineUpdater = this;
+
+        pipelineUpdater.truncateGitFromUrl = function(repoUrl, commitId) {
+            return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
+        };
 
         pipelineUpdater.getAllHistoryPipelines = function (pipelines) {
             viewModel.historyPipelines = pipelines;
@@ -14,7 +18,22 @@ angular
         };
 
         pipelineUpdater.getAllArtifactPipelines = function (pipelines) {
-            viewModel.artifactPipelines = pipelines;
+            pipelines.forEach(function (currentPipelineRun, runIndex, runArray) {
+                currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {
+                    var definition = currentMaterial.materialDefinition;
+                    currentMaterial.gitLink = pipelineUpdater.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
+                });
+
+                currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                    if(currentStage.endTime) {
+                        currentPipelineRun.lastStage = currentStage;
+                        currentPipelineRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
+                        currentPipelineRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
+                    }
+                });
+                viewModel.artifactPipelines.push(currentPipelineRun);
+                viewModel.artifactPipelines[0].disabled = false;
+            });
         };
 
         pipelineUpdater.flushAllArtifactPipelines = function () {
@@ -45,7 +64,8 @@ angular
                 newPipeline.triggerReason = pipeline.triggerReason;
                 newPipeline.artifactsFileStructure = pipeline.artifactsFileStructure;
                 newPipeline.stages = pipeline.stages;
-                viewModel.artifactPipelines.push(newPipeline);
+                viewModel.artifactPipelines.unshift(newPipeline);
+                viewModel.artifactPipelines.pop();
             } else if(viewModel.historyPipelines.length > 0) {
                 var newPipeline = {};
                 newPipeline.executionId = pipeline.executionId;
@@ -90,6 +110,10 @@ angular
                 viewModel.artifactPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                     if(currentPipeline.id == pipeline.id) {
                         currentPipeline.executionId = pipeline.executionId;
+                        pipeline.materials.forEach(function(currentMaterial, index, array) {
+                            var definition = currentMaterial.materialDefinition;
+                            currentMaterial.gitLink = pipelineUpdater.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
+                        });
                         currentPipeline.materials = pipeline.materials;
                         currentPipeline.status = pipeline.status;
                         currentPipeline.startTime = pipeline.startTime;
@@ -97,6 +121,13 @@ angular
                         currentPipeline.duration = pipeline.duration;
                         currentPipeline.triggerReason = pipeline.triggerReason;
                         currentPipeline.artifactsFileStructure = pipeline.artifactsFileStructure;
+                        pipeline.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                            if(currentStage.endTime) {
+                                currentPipelineRun.lastStage = currentStage;
+                                currentPipelineRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
+                                currentPipelineRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
+                            }
+                        });
                         currentPipeline.stages = pipeline.stages;
                     }
                 });

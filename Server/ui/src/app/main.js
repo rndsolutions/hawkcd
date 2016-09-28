@@ -23,7 +23,8 @@ angular
         'momentjs',
         'satellizer',
         'ansi_up',
-        'ngJsTree'
+        'ngJsTree',
+        'infinite-scroll'
         //'ngAnimate'
         //'flow'
     ])

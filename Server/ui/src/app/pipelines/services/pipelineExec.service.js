@@ -55,12 +55,14 @@ angular
             console.log(json);
         };
 
-        pipeExecService.getAllArtifactPipelines = function () {
-            var methodName = "getAllPipelineArtifactDTOs";
+        pipeExecService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
+            var methodName = "getPipelineArtifactDTOs";
             var className = "PipelineService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + searchCriteria + "\"}",
+                        "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
+                        "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineId + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

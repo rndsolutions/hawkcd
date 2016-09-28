@@ -135,7 +135,11 @@ angular
                         // pipeConfigService.getAllPipelineDefinitions();
                     },
                     delete: function(object) {
-                        validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeExecService.getAllPipelines, pipeConfigService.getAllPipelineGroupDTOs]);
+                        if(viewModel.artifactPipelines[0]){
+                            validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeExecService.getAllPipelines, pipeConfigService.getAllPipelineGroupDTOs, pipeExecService.getAllArtifactPipelines(viewModel.artifactPipelines[0].searchCriteria, viewModel.artifactPipelines.length - 1, '')]);
+                        } else{
+                            validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeExecService.getAllPipelines, pipeConfigService.getAllPipelineGroupDTOs, pipeExecService.getAllArtifactPipelines('', viewModel.artifactPipelines.length - 1, '')]);
+                        }
                     },
                     assignPipelineToGroup: function(object) {
                         validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
@@ -157,7 +161,10 @@ angular
                     getAllPipelineHistoryDTOs: function (object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllHistoryPipelines]);
                     },
-                    getAllPipelineArtifactDTOs: function (object) {
+                    getPipelineArtifactDTOs: function (object) {
+                        if(object.args[2].object == "\"\""){
+                            viewModel.artifactPipelines = [];
+                        }
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllArtifactPipelines]);
                     },
                     add: function(object) {

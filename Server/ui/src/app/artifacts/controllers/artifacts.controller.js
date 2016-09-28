@@ -7,19 +7,15 @@ angular
 
         vm.allPipelines = [];
 
-        vm.allPipelineRuns = [];
-
         vm.isDefinitionGroupOpen = [];
 
         vm.isRunSelected = [];
 
-        vm.query = "";
+        vm.query = '';
 
-        vm.getAllArtifactPipelines = function() {
-            pipeExecService.getAllArtifactPipelines();
-        };
+        vm.scrollDisable = false;
 
-        vm.getAllArtifactPipelines();
+        pipeExecService.getAllArtifactPipelines('', 10, '');
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
             return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
@@ -30,40 +26,54 @@ angular
         };
 
         vm.search = function() {
-            vm.filteredItems = filterRuns.search(vm.allPipelineRuns, vm.query);
+            // vm.filteredItems = filterRuns.search(vm.allPipelineRuns, vm.query);
+            viewModel.artifactPipelines[0].searchCriteria = angular.copy(vm.query);
+            vm.searchCriteria = angular.copy(vm.query);
+            pipeExecService.getAllArtifactPipelines(vm.query, 10, '');
         };
 
-        $scope.$watch(function() {
-            return viewModel.artifactPipelines
-        }, function(newVal, oldVal) {
-            vm.allPipelineRuns = angular.copy(viewModel.artifactPipelines);
+        // $scope.$watch(function() {
+        //     return viewModel.artifactPipelines
+        // }, function(newVal, oldVal) {
+        //     vm.allPipelineRuns = angular.copy(viewModel.artifactPipelines);
+        //
+        //     vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
+        //         currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {
+        //             var definition = currentMaterial.materialDefinition;
+        //             currentMaterial.gitLink = vm.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
+        //         });
+        //
+        //         currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+        //             if(currentStage.endTime) {
+        //                 currentPipelineRun.lastStage = currentStage;
+        //                 currentPipelineRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
+        //                 currentPipelineRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
+        //             }
+        //         });
+        //     });
+        //
+        //     vm.allPipelineRuns.sort(function(a, b) {
+        //         return moment.utc(b.startTime.date).add(b.startTime.time.hour, 'hours').add(b.startTime.time.minute, 'minutes').add(b.startTime.time.second, 'seconds').diff(moment.utc(a.startTime.date).add(a.startTime.time.hour, 'hours').add(a.startTime.time.minute, 'minutes').add(a.startTime.time.second, 'seconds'));
+        //     });
+        //
+        //     vm.search();
+        //
+        // }, true);
 
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
-                currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {
-                    var definition = currentMaterial.materialDefinition;
-                    currentMaterial.gitLink = vm.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
-                });
+        vm.allPipelineRuns = function () {
+            return viewModel.artifactPipelines;
+        };
 
-                currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
-                    if(currentStage.endTime) {
-                        currentPipelineRun.lastStage = currentStage;
-                        currentPipelineRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
-                        currentPipelineRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
-                    }
-                });
-            });
-
-            vm.allPipelineRuns.sort(function(a, b) {
-                return moment.utc(b.startTime.date).add(b.startTime.time.hour, 'hours').add(b.startTime.time.minute, 'minutes').add(b.startTime.time.second, 'seconds').diff(moment.utc(a.startTime.date).add(a.startTime.time.hour, 'hours').add(a.startTime.time.minute, 'minutes').add(a.startTime.time.second, 'seconds'));
-            });
-
-            vm.search();
-
-        }, true);
+        vm.scrollCall = function() {
+            if(vm.allPipelineRuns()[0].disabled == false){
+                pipeExecService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
+            }
+            vm.allPipelineRuns()[0].disabled = true;
+        };
 
         vm.loadJsTree = function (index, event) {
             if(event.currentTarget.attributes['aria-expanded'].nodeValue == 'false'){
-                $('#jstree' + index).jstree(true).settings.core.data = angular.copy(vm.allPipelineRuns[index].artifactsFileStructure[0].children);
+                $('#jstree' + index).jstree(true).settings.core.data = angular.copy(vm.allPipelineRuns()[index].artifactsFileStructure[0].children);
                 $('#jstree' + index).jstree(true).refresh();
             }
         };

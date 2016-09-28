@@ -1,5 +1,5 @@
 <h3 class="page-title"> Artifacts</h3>
-<div class="portlet light" id="artifacts-portlet">
+<div class="portlet light" id="artifacts-portlet" infinite-scroll="artifact.scrollCall()" infinite-scroll-distance="0">
     <div class="portlet-title right">
         <div class="caption ng-binding">
             <i class="fa fa-cogs"></i>Artifacts
@@ -7,11 +7,12 @@
     </div>
     <div class="portlet-body">
         <div class="row">
-            <div class="input-group input-group-lg add-on custom-search-artifact">
-                <input type="text" class="form-control search-query custom-line-height" style="width:30%" ng-model="artifact.query" ng-change="artifact.search()" ng-pattern="/^([\w-]+)$/" placeholder="Search">
+            <div class="custom-search-artifact">
+                <input type="text" class="form-control search-query custom-line-height" style="width:30%" ng-model="artifact.query" placeholder="Search">
+                    <button class="btn green margin-top-1" ng-click="artifact.search()">Search</button>
             </div>
         </div>
-        <div ng-repeat="pipeline in artifact.filteredItems track by $index">
+        <div ng-repeat="pipeline in artifact.allPipelineRuns() track by $index">
             <div class="mt-element-list">
                 <div class="mt-list-container list-simple ext-1 group" id="list-container" style="">
                         <div id="artifact-header-container" class="list-toggle done">
