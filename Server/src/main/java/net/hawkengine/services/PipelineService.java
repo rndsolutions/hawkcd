@@ -212,12 +212,36 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public ServiceResult getAllPipelineArtifactDTOs() {
+    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, int numberOfPipelines) {
+        return this.getPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
+    }
+
+    @Override
+    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, int numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .filter(p -> p.getPipelineDefinitionName().contains(searchCriteria))
+                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .collect(Collectors.toList());
+
+        int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
+        if (indexOfPipeline == -1) {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        } else {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .skip(indexOfPipeline + 1)
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        }
 
         List<PipelineDto> pipelineDtos = new ArrayList<>();
-        for (Pipeline pipeline : pipelines) {
+        for (Pipeline pipeline : filteredPipelines) {
             PipelineDto pipelineDto = new PipelineDto();
             pipelineDto.constructArtifactPipelineDto(pipeline);
             pipelineDtos.add(pipelineDto);
@@ -313,5 +337,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         }
 
         job.setTasks(tasks);
+    }
+
+    private int getIndexOfPipeline(List<Pipeline> pipelines, String pipelineId) {
+        int indexOfPipeline = -1;
+
+        if (pipelineId != null) {
+            int collectionSize = pipelines.size();
+            for (int i = 0; i < collectionSize; i++) {
+                if (pipelines.get(i).getId().equals(pipelineId)) {
+                    indexOfPipeline = i;
+                    break;
+                }
+            }
+        }
+
+        return indexOfPipeline;
     }
 }

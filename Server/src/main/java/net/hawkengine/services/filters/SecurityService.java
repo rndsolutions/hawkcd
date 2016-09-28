@@ -83,7 +83,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public List getAllPipelineDtos(List entitiesToFilter, String className, List permissions) {
+    public List getAllPipelineHistoryDtos(List entitiesToFilter, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         List<PipelineDto> filteredEntities = new ArrayList<>();
         for (Object entity : entitiesToFilter) {
@@ -95,6 +95,11 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         }
 
         return filteredEntities;
+    }
+
+    @Override
+    public List getPipelineArtifactDtos(List entitiesToFilter, String className, List permissions) {
+        return entitiesToFilter;
     }
 
     @Override

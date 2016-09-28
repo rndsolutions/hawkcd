@@ -164,7 +164,7 @@ public class WsEndpoint extends WebSocketAdapter {
 
             if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs")
                     || contract.getMethodName().equals("getAllUserGroups") || contract.getMethodName().equals("getAllPipelineHistoryDTOs")
-                    || contract.getMethodName().equals("getAllPipelineArtifactDTOs")) {
+                    || contract.getMethodName().equals("getPipelineArtifactDTOs")) {
                 result = (ServiceResult) this.wsObjectProcessor.call(contract);
                 List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
                 contract.setResult(filteredEntities);

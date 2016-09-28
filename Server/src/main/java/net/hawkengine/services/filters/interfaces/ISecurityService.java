@@ -11,7 +11,9 @@ public interface ISecurityService<T extends DbEntry> {
 
     List<PipelineGroup> getAllPipelineGroupDTOs(List<T> entitiesToFilter, String className, List<Permission> permissions);
 
-    List getAllPipelineDtos(List entitiesToFilter, String className, List permissions);
+    List getAllPipelineHistoryDtos(List entitiesToFilter, String className, List permissions);
+
+    List getPipelineArtifactDtos(List entitiesToFilter, String className, List permissions);
 
     boolean getById(String entity, String className, List<Permission> permissions);
 

@@ -70,8 +70,9 @@ public class SecurityServiceInvoker<T extends DbEntry> {
             case "getAllUserGroups":
                 return this.securityService.getAllUserGroups(entitiesToFilter, className, permissions);
             case "getAllPipelineHistoryDTOs":
-            case "getAllPipelineArtifactDTOs":
-                return this.securityService.getAllPipelineDtos(entitiesToFilter, className, permissions);
+                return this.securityService.getAllPipelineHistoryDtos(entitiesToFilter, className, permissions);
+            case "getPipelineArtifactDTOs":
+                return this.securityService.getPipelineArtifactDtos(entitiesToFilter, className, permissions);
             default:
                 return null;
         }
