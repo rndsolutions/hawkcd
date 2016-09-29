@@ -80,7 +80,7 @@ angular
             return viewModel.allPermissions;
         }, function(newVal, oldVal) {
             vm.allPermissions = angular.copy(viewModel.allPermissions);
-            console.log(vm.allPermissions);
+            // console.log(vm.allPermissions);
         }, true);
 
         // $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
@@ -98,14 +98,14 @@ angular
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
-            console.log(vm.allPipelines);
+            // console.log(vm.allPipelines);
         }, true);
 
         $scope.$watch(function() {
             return viewModel.allPipelineRuns
         }, function(newVal, oldVal) {
             vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
-            console.log(vm.allPipelineRuns);
+            // console.log(vm.allPipelineRuns);
         }, true);
 
         // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {

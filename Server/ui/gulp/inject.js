@@ -32,6 +32,7 @@ gulp.task('inject', ['scripts'], function () {
       path.join('!' + conf.paths.src, '/app/**/*.mock.js'),
       path.join('!' + conf.paths.src, '/app/**/jstree.min.js'),
       path.join('!' + conf.paths.src, '/app/**/ngJsTree.min.js'),
+      path.join('!' + conf.paths.src, '/app/**/ng-infinite-scroll.min.js'),
       path.join('!' + conf.paths.src, '/app/**/bootstrap-switch.js')
     ])
     .pipe($.angularFilesort()).on('error', conf.errorHandler('AngularFilesort'));

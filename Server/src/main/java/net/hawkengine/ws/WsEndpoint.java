@@ -102,8 +102,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 contract.setNotificationType(NotificationType.SUCCESS);
                 contract.setErrorMessage("User details retrieved successfully");
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
-            }
-            else{
+            } else {
                 UserDto userDto = new UserDto();
                 userDto.setUsername(tokenInfo.getUser().getEmail());
                 userDto.setPermissions(tokenInfo.getUser().getPermissions());
@@ -121,7 +120,7 @@ public class WsEndpoint extends WebSocketAdapter {
         WsContractDto contract = null;
         RemoteEndpoint remoteEndpoint = null;
 
-        if (this.getLoggedUserFromDatabase() == null){
+        if (this.getLoggedUserFromDatabase() == null) {
             return;
         }
 
@@ -136,7 +135,7 @@ public class WsEndpoint extends WebSocketAdapter {
             if (contract == null) {
                 contract = new WsContractDto();
                 ServiceResult result = new ServiceResult(null, NotificationType.ERROR, "Invalid Json was provided");
-                EndpointConnector.passResultToEndpoint("NotificationService","sendMessage",result,this.getLoggedUser());
+                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result, this.getLoggedUser());
                 return;
             }
 
@@ -153,6 +152,7 @@ public class WsEndpoint extends WebSocketAdapter {
 //                    return;
 //                }
 //            }
+
             User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
 
             this.setLoggedUser(currentUser);
@@ -162,20 +162,19 @@ public class WsEndpoint extends WebSocketAdapter {
 
             ServiceResult result;
 
-            if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs") || contract.getMethodName().equals("getAllUserGroups")) {
+            if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs")
+                    || contract.getMethodName().equals("getAllUserGroups") || contract.getMethodName().equals("getAllPipelineHistoryDTOs")
+                    || contract.getMethodName().equals("getPipelineArtifactDTOs")) {
                 result = (ServiceResult) this.wsObjectProcessor.call(contract);
                 List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//                result.setObject(filteredEntities);
                 contract.setResult(filteredEntities);
                 contract.setNotificationType(result.getNotificationType());
                 contract.setErrorMessage(result.getMessage());
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
-
             } else {
                 boolean hasPermission;
                 if (contract.getMethodName().equals("changeUserPassword")) {
-                    hasPermission = this.securityServiceInvoker.changeUserPasswrod(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-
+                    hasPermission = this.securityServiceInvoker.changeUserPassword(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
                     if (hasPermission) {
                         result = (ServiceResult) this.wsObjectProcessor.call(contract);
                         contract.setResult(result.getObject());
@@ -198,6 +197,7 @@ public class WsEndpoint extends WebSocketAdapter {
                         }
                     }
                 }
+
                 if (!hasPermission) {
                     contract.setResult(null);
                     contract.setNotificationType(NotificationType.ERROR);

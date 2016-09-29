@@ -22,16 +22,16 @@ angular
         };
 
         pipeConfigService.getPipelineDefinitionById = function (id) {
-                    var methodName = "getById";
-                    var className = "PipelineDefinitionService";
-                    var packageName = "net.hawkengine.services";
-                    var result = "";
-                    var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
-                    var error = "";
-                    var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
-                    websocketSenderService.call(json);
-                    console.log(json);
-                };
+            var methodName = "getById";
+            var className = "PipelineDefinitionService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
 
         pipeConfigService.getAllPipelineGroupDTOs = function () {
             var methodName = "getAllPipelineGroupDTOs";
