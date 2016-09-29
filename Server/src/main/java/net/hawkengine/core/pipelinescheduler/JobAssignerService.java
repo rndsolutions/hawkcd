@@ -6,8 +6,10 @@ import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.AgentService;
+import net.hawkengine.services.JobService;
 import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IAgentService;
+import net.hawkengine.services.interfaces.IJobService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
 import org.apache.log4j.Logger;
@@ -20,11 +22,13 @@ public class JobAssignerService {
 
     private IAgentService agentService;
     private IPipelineService pipelineService;
+    private IJobService jobService;
     private JobAssignerUtilities jobAssignerUtilities;
 
     public JobAssignerService() {
         this.agentService = new AgentService();
         this.pipelineService = new PipelineService();
+        this.jobService = new JobService();
         this.jobAssignerUtilities = new JobAssignerUtilities();
     }
 
@@ -100,6 +104,7 @@ public class JobAssignerService {
                         if (filteredAgents.size() != 0) {
                             Agent agent = this.jobAssignerUtilities.assignAgentToJob(job, filteredAgents);
                             if (agent != null) {
+                                this.jobService.update(job);
                                 ServiceResult result = this.agentService.update(agent);
                                 EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
                             }
@@ -107,8 +112,6 @@ public class JobAssignerService {
                     }
                 }
             }
-
-            this.pipelineService.update(pipeline);
 //            EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
         }
     }
