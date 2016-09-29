@@ -135,11 +135,16 @@ angular
                         // pipeConfigService.getAllPipelineDefinitions();
                     },
                     delete: function(object) {
-                        if(viewModel.artifactPipelines[0]){
-                            validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeExecService.getAllPipelines, pipeConfigService.getAllPipelineGroupDTOs, pipeExecService.getAllArtifactPipelines(viewModel.artifactPipelines[0].searchCriteria, viewModel.artifactPipelines.length - 1, '')]);
-                        } else{
-                            validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeExecService.getAllPipelines, pipeConfigService.getAllPipelineGroupDTOs, pipeExecService.getAllArtifactPipelines('', viewModel.artifactPipelines.length - 1, '')]);
+                        var criteria = '';
+                        validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs]);
+                        for(var i = 0; i < viewModel.artifactPipelines.length - 1; i++){
+                            if(viewModel.artifactPipelines[i] && viewModel.artifactPipelines[i].searchCriteria){
+                                criteria = angular.copy(viewModel.artifactPipelines[i].searchCriteria);
+                                break;
+                            }
                         }
+
+                        pipeExecService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
                     },
                     assignPipelineToGroup: function(object) {
                         validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
@@ -163,12 +168,26 @@ angular
                     },
                     getPipelineArtifactDTOs: function (object) {
                         if(object.args[2].object == "\"\""){
+                            for(var i = 0; i < viewModel.artifactPipelines.length - 1; i++){
+                                if(viewModel.artifactPipelines[i].searchCriteria){
+                                    object.result[0].searchCriteria = viewModel.artifactPipelines[i].searchCriteria;
+                                    break;
+                                }
+                            }
                             viewModel.artifactPipelines = [];
                         }
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllArtifactPipelines]);
                     },
                     add: function(object) {
+                        var criteria = '';
                         validationService.dispatcherFlow(object, [pipelineUpdater.addPipeline], true);
+                        for(var i = 0; i < viewModel.artifactPipelines.length - 1; i++){
+                            if(viewModel.artifactPipelines[i].searchCriteria){
+                                criteria = viewModel.artifactPipelines[i].searchCriteria;
+                                break;
+                            }
+                        }
+                        pipeExecService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
                     },
                     update: function(object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.updatePipeline]);

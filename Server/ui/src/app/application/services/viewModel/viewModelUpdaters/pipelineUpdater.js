@@ -32,7 +32,9 @@ angular
                     }
                 });
                 viewModel.artifactPipelines.push(currentPipelineRun);
-                viewModel.artifactPipelines[0].disabled = false;
+                if(viewModel.artifactPipelines[0]){
+                    viewModel.artifactPipelines[0].disabled = false;
+                }
             });
         };
 
@@ -53,32 +55,6 @@ angular
         };
 
         pipelineUpdater.addPipeline = function (pipeline) {
-            if(viewModel.artifactPipelines.length > 0){
-                var newPipeline = {};
-                newPipeline.executionId = pipeline.executionId;
-                newPipeline.materials = pipeline.materials;
-                newPipeline.status = pipeline.status;
-                newPipeline.startTime = pipeline.startTime;
-                newPipeline.endTime = pipeline.endTime;
-                newPipeline.duration = pipeline.duration;
-                newPipeline.triggerReason = pipeline.triggerReason;
-                newPipeline.artifactsFileStructure = pipeline.artifactsFileStructure;
-                newPipeline.stages = pipeline.stages;
-                viewModel.artifactPipelines.unshift(newPipeline);
-                viewModel.artifactPipelines.pop();
-            } else if(viewModel.historyPipelines.length > 0) {
-                var newPipeline = {};
-                newPipeline.executionId = pipeline.executionId;
-                newPipeline.materials = pipeline.materials;
-                newPipeline.status = pipeline.status;
-                newPipeline.startTime = pipeline.startTime;
-                newPipeline.endTime = pipeline.endTime;
-                newPipeline.duration = pipeline.duration;
-                newPipeline.triggerReason = pipeline.triggerReason;
-                newPipeline.stages = pipeline.stages;
-                viewModel.historyPipelines.push(newPipeline);
-            }
-
             viewModel.allPipelineGroups.forEach(function (currentGroup, groupIndex, groupArray) {
                 currentGroup.pipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                     if(currentPipeline.id == pipeline.pipelineDefinitionId) {
@@ -123,9 +99,9 @@ angular
                         currentPipeline.artifactsFileStructure = pipeline.artifactsFileStructure;
                         pipeline.stages.forEach(function (currentStage, stageIndex, stageArray) {
                             if(currentStage.endTime) {
-                                currentPipelineRun.lastStage = currentStage;
-                                currentPipelineRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
-                                currentPipelineRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
+                                currentPipeline.lastStage = currentStage;
+                                currentPipeline.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
+                                currentPipeline.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
                             }
                         });
                         currentPipeline.stages = pipeline.stages;

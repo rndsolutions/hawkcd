@@ -27,7 +27,9 @@ angular
 
         vm.search = function() {
             // vm.filteredItems = filterRuns.search(vm.allPipelineRuns, vm.query);
-            viewModel.artifactPipelines[0].searchCriteria = angular.copy(vm.query);
+            if(viewModel.artifactPipelines[0]){
+                viewModel.artifactPipelines[0].searchCriteria = angular.copy(vm.query);
+            }
             vm.searchCriteria = angular.copy(vm.query);
             pipeExecService.getAllArtifactPipelines(vm.query, 10, '');
         };
@@ -65,10 +67,12 @@ angular
         };
 
         vm.scrollCall = function() {
-            if(vm.allPipelineRuns()[0].disabled == false){
-                pipeExecService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
+            if(vm.allPipelineRuns()[0]){
+                if(vm.allPipelineRuns()[0].disabled == false){
+                    pipeExecService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
+                }
+                vm.allPipelineRuns()[0].disabled = true;
             }
-            vm.allPipelineRuns()[0].disabled = true;
         };
 
         vm.loadJsTree = function (index, event) {

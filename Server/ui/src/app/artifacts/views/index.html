@@ -8,8 +8,8 @@
     <div class="portlet-body">
         <div class="row">
             <div class="custom-search-artifact">
-                <input type="text" class="form-control search-query custom-line-height" style="width:30%" ng-model="artifact.query" placeholder="Search">
-                    <button class="btn green margin-top-1" ng-click="artifact.search()">Search</button>
+                <input type="text" class="form-control search-query custom-line-height display-inline-block" style="width:30%" ng-keyup="$event.keyCode == 13 && artifact.search()" ng-model="artifact.query" placeholder="Search">
+                    <button class="btn green margin-left-1" ng-click="artifact.search()">Search</button>
             </div>
         </div>
         <div ng-repeat="pipeline in artifact.allPipelineRuns() track by $index">
@@ -34,7 +34,7 @@
                                 </div>
                                 <div id="middle-container" class="text-center">
                                   <div class="center-cell vertical-center">
-                                    <div ng-repeat="material in pipeline.materials">
+                                    <div ng-repeat="material in pipeline.materials track by $index">
                                         <i class="fa fa-gg"></i>
                                         <a target="_blank" href="{{material.gitLink}}" ng-click="artifact.goToGitLink(material.gitLink)" class="green-jungle">
                                             <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
