@@ -95,7 +95,7 @@ public class JobAssignerService {
     }
 
     public void assignJobs(List<Agent> agents) {
-        List<Agent> filteredAgents = agents.stream().filter(a -> a.isConnected() && a.isEnabled() && !a.isRunning() && !a.isAssigned()).collect(Collectors.toList());
+        List<Agent> filteredAgents = agents.stream().filter(a -> a.isConnected() && a.isEnabled() && !a.isRunning()).collect(Collectors.toList());
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelines) {
             for (Stage stage : pipeline.getStages()) {
