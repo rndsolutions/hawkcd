@@ -121,10 +121,9 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         }
 
         if (result == null) {
+            agent.setAssigned(false);
+            this.update(agent);
             result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
-//            agent.setAssigned(false);
-//            this.update(agent);
-//            result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         }
 
         return result;
