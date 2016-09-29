@@ -51,7 +51,6 @@ angular
         pipelineDefinitionUpdater.addPipelineDefinition = function (pipelineDefinition) {
             viewModel.allPipelineGroups.forEach(function (currentPipelineGroupDTO, index, array) {
                 if(currentPipelineGroupDTO.id == pipelineDefinition.pipelineGroupId){
-                    array[index].pipelines.push(pipelineDefinition);
                     viewModel.assignedPipelines.push(pipelineDefinition);
                 } else if (pipelineDefinition.pipelineGroupId == '') {
                     viewModel.unassignedPipelines.push(pipelineDefinition);
