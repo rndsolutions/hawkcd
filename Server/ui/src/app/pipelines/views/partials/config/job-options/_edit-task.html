@@ -128,7 +128,7 @@
                             <select class="form-control"
                             name="materialSelect"
                             id="editMaterialSelect"
-                            ng-options="material.name for material in pipeConfig.allMaterials track by material.name"
+                            ng-options="material.name for material in pipeConfig.filteredMaterialDefinitions track by material.name"
                             ng-model="pipeConfig.selectedTaskMaterial"
                             required>
                                 <!-- <option ng-repeat="material in pipeConfig.filteredMaterialDefinitions" value="material">{{material.name}}</option> -->
