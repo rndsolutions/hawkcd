@@ -18,7 +18,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +79,7 @@ public class AgentController {
     @Path("/{agentId}/work")
     public Response getWork(@PathParam("agentId") String agentId) {
         ServiceResult result = this.agentService.getWorkInfo(agentId);
-        if (result.getNotificationType() == NotificationType.ERROR){
+        if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(result.getMessage())
                     .build();
@@ -125,6 +124,7 @@ public class AgentController {
             return Response.status(Status.OK).build();
         }
 
+        PipelineService.lock.lock();
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();
 
         Stage stage = pipeline.getStages().stream().filter(s -> s.getId().equals(job.getStageId())).findFirst().orElse(null);
@@ -155,14 +155,14 @@ public class AgentController {
 
         if ((job.getStatus() == JobStatus.PASSED) || (job.getStatus() == JobStatus.FAILED)) {
             boolean hasUploadArtifact = false;
-            for(Task task : job.getTasks()){
-                if(task.getType() == TaskType.UPLOAD_ARTIFACT){
+            for (Task task : job.getTasks()) {
+                if (task.getType() == TaskType.UPLOAD_ARTIFACT) {
                     hasUploadArtifact = true;
                     break;
                 }
             }
 
-            if(hasUploadArtifact) {
+            if (hasUploadArtifact) {
                 String artifactsDirectory = System.getProperty("user.dir") + File.separator +
                         ConfigurationConstants.PROPERTY_ARTIFACTS_DESTINATION + File.separator +
                         pipeline.getPipelineDefinitionName() + File.separator + pipeline.getExecutionId();
@@ -177,6 +177,7 @@ public class AgentController {
         }
 
         this.pipelineService.update(pipeline);
+        PipelineService.lock.unlock();
 
         return Response.status(Status.OK).build();
     }
@@ -194,9 +195,9 @@ public class AgentController {
                         .type(MediaType.TEXT_HTML)
                         .build();
             }
-                return Response.status(Status.OK)
-                        .entity(result.getObject())
-                        .build();
+            return Response.status(Status.OK)
+                    .entity(result.getObject())
+                    .build();
 
         } else {
             return Response.status(Status.BAD_REQUEST)
@@ -264,7 +265,7 @@ public class AgentController {
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
-            return Response.status(Status.NO_CONTENT)
-                    .build();
+        return Response.status(Status.NO_CONTENT)
+                .build();
     }
 }

@@ -14,10 +14,13 @@ import net.hawkengine.ws.EndpointConnector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private static final Class CLASS_TYPE = Pipeline.class;
+    public static Lock lock = new ReentrantLock();
 
     private IPipelineDefinitionService pipelineDefinitionService;
     private IMaterialDefinitionService materialDefinitionService;
