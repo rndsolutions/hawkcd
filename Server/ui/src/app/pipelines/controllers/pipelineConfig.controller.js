@@ -977,6 +977,7 @@ angular
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     materialDefinitionId: vm.selectedTaskMaterial.id,
                     type: newTask.type,
+                    pipelineName: vm.allPipelines[vm.pipelineIndex].name,
                     materialType: vm.selectedTaskMaterial.type,
                     materialName: vm.selectedTaskMaterial.name,
                     destination: vm.selectedTaskMaterial.name,
