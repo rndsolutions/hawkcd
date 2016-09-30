@@ -260,21 +260,21 @@ angular
                         vm.allPipelineVars = vm.pipeline.environmentVariables;
                         vm.pipelineIndex = index;
 
-                        currentPipeline.materialDefinitionIds.forEach(function(currentDefinition, definitionIndex, definitionArray) {
-                            vm.allMaterials.forEach(function(currentMaterial, materialIndex, materialArray) {
-                                if (currentDefinition === currentMaterial.id) {
-                                    var isContained = false;
-                                    vm.filteredMaterialDefinitions.forEach(function(currentFilteredMaterial, filteredMaterialIndex, filteredMaterialArray) {
-                                        if (currentFilteredMaterial.id === currentMaterial.id) {
-                                            isContained = true;
-                                        }
-                                    });
-                                    if (!isContained) {
-                                        vm.filteredMaterialDefinitions.push(currentMaterial);
-                                    }
-                                }
-                            });
-                        });
+                        // currentPipeline.materialDefinitionIds.forEach(function(currentDefinition, definitionIndex, definitionArray) {
+                        //     vm.allMaterials.forEach(function(currentMaterial, materialIndex, materialArray) {
+                        //         if (currentDefinition === currentMaterial.id) {
+                        //             var isContained = false;
+                        //             vm.filteredMaterialDefinitions.forEach(function(currentFilteredMaterial, filteredMaterialIndex, filteredMaterialArray) {
+                        //                 if (currentFilteredMaterial.id === currentMaterial.id) {
+                        //                     isContained = true;
+                        //                 }
+                        //             });
+                        //             if (!isContained) {
+                        //                 vm.filteredMaterialDefinitions.push(currentMaterial);
+                        //             }
+                        //         }
+                        //     });
+                        // });
                     }
                 });
 
@@ -870,7 +870,7 @@ angular
             //vm.taskIndex = taskIndex;
         };
 
-        vm.selectedTaskMaterial;
+        vm.selectedTaskMaterial = {};
         vm.getTaskForUpdate = function(task) {
             if (vm.task != null) {
                 vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].taskDefinitions.forEach(function(currentTask, index, array) {
@@ -881,7 +881,7 @@ angular
                 });
             }
 
-            vm.selectedTaskMaterial = vm.filteredMaterialDefinitions.find(function(materialDefinition,index,array){
+            vm.selectedTaskMaterial = vm.allMaterials.find(function(materialDefinition,index,array){
               return task.materialDefinitionId === materialDefinition.id;
             });
             //vm.task = res;
@@ -975,11 +975,11 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    materialDefinitionId: JSON.parse(newTask.material).id,
+                    materialDefinitionId: vm.selectedTaskMaterial.id,
                     type: newTask.type,
-                    materialType: JSON.parse(newTask.material).type,
-                    materialName: JSON.parse(newTask.material).name,
-                    destination: JSON.parse(newTask.material).name,
+                    materialType: vm.selectedTaskMaterial.type,
+                    materialName: vm.selectedTaskMaterial.name,
+                    destination: vm.selectedTaskMaterial.name,
                     runIfCondition: newTask.runIfCondition,
                     ignoreErrors: newTask.ignoreErrors
                 };
