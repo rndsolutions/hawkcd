@@ -260,21 +260,21 @@ angular
                         vm.allPipelineVars = vm.pipeline.environmentVariables;
                         vm.pipelineIndex = index;
 
-                        // currentPipeline.materialDefinitionIds.forEach(function(currentDefinition, definitionIndex, definitionArray) {
-                        //     vm.allMaterials.forEach(function(currentMaterial, materialIndex, materialArray) {
-                        //         if (currentDefinition === currentMaterial.id) {
-                        //             var isContained = false;
-                        //             vm.filteredMaterialDefinitions.forEach(function(currentFilteredMaterial, filteredMaterialIndex, filteredMaterialArray) {
-                        //                 if (currentFilteredMaterial.id === currentMaterial.id) {
-                        //                     isContained = true;
-                        //                 }
-                        //             });
-                        //             if (!isContained) {
-                        //                 vm.filteredMaterialDefinitions.push(currentMaterial);
-                        //             }
-                        //         }
-                        //     });
-                        // });
+                        currentPipeline.materialDefinitionIds.forEach(function(currentDefinition, definitionIndex, definitionArray) {
+                            vm.allMaterials.forEach(function(currentMaterial, materialIndex, materialArray) {
+                                if (currentDefinition === currentMaterial.id) {
+                                    var isContained = false;
+                                    vm.filteredMaterialDefinitions.forEach(function(currentFilteredMaterial, filteredMaterialIndex, filteredMaterialArray) {
+                                        if (currentFilteredMaterial.id === currentMaterial.id) {
+                                            isContained = true;
+                                        }
+                                    });
+                                    if (!isContained) {
+                                        vm.filteredMaterialDefinitions.push(currentMaterial);
+                                    }
+                                }
+                            });
+                        });
                     }
                 });
 
@@ -374,7 +374,7 @@ angular
         vm.getRunForTaskUpdate = function (executionId) {
             vm.currentPipelineRuns = [];
             vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
-                if (currentPipeline.name == vm.updatedTask.pipelineObject.name) {
+                if (vm.updatedTask.pipelineObject && currentPipeline.name == vm.updatedTask.pipelineObject.name) {
                     vm.allPipelineRuns.forEach(function(currentPipelineRun, runIndex, runArray) {
                         if (currentPipelineRun.pipelineDefinitionName == currentPipeline.name) {
                             vm.currentPipelineRuns.push(currentPipelineRun);
@@ -672,6 +672,7 @@ angular
             }
             if (newJob.taskDefinitions.type == 'FETCH_MATERIAL') {
                 var materialForJob = JSON.parse(newJob.taskDefinitions.material);
+                debugger;
                 var job = {
                     name: newJob.name,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
@@ -970,6 +971,7 @@ angular
                 };
             }
             if (newTask.type == 'FETCH_MATERIAL') {
+                debugger;
                 var updatedTask = {
                     id: task.id,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
