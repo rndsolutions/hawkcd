@@ -4,6 +4,7 @@ import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.Agent;
 import net.hawkengine.services.AgentService;
+import net.hawkengine.services.PipelineService;
 import net.hawkengine.services.interfaces.IAgentService;
 import org.apache.log4j.Logger;
 
@@ -30,10 +31,12 @@ public class JobAssigner implements Runnable {
             while (true) {
                 List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
 
+                PipelineService.lock.lock();
                 this.statusUpdaterService.updateStatuses();
                 this.jobAssignerService.checkUnassignedJobs(agents);
                 this.jobAssignerService.checkAwaitingJobs(agents);
                 this.jobAssignerService.assignJobs(agents);
+                PipelineService.lock.unlock();
 
                 Thread.sleep(POLL_INTERVAL);
             }

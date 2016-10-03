@@ -16,7 +16,7 @@ public class JobAssignerUtilities {
         if (job.getStatus() == JobStatus.ASSIGNED) {
             Agent assignedAgent = agents.stream().filter(a -> a.getId().equals(job.getAssignedAgentId())).findFirst().orElse(null);
             result = assignedAgent;
-            boolean isEligible = this.isAgentEligibleForJob(job, assignedAgent);
+            boolean isEligible = this.isAssignedAgentEligibleForJob(job, assignedAgent);
             if (!isEligible) {
                 job.setStatus(JobStatus.UNASSIGNED);
                 assignedAgent.setAssigned(false);
@@ -44,7 +44,6 @@ public class JobAssignerUtilities {
         List<Agent> eligibleAgents = new ArrayList<>();
         for (Agent agent : agents) {
             boolean isEligible = this.isAgentEligibleForJob(job, agent);
-
             if (isEligible) {
                 eligibleAgents.add(agent);
             }
@@ -101,19 +100,35 @@ public class JobAssignerUtilities {
     }
 
     public boolean hasAssignableAgent(Job job, List<Agent> agents) {
-        boolean hasAssignableAgent = true;
         for (Agent agent : agents) {
+            boolean agentIsAssignable = true;
             for (String resource : job.getResources()) {
                 if (!(agent.getResources().contains(resource))) {
-                    hasAssignableAgent = false;
+                    agentIsAssignable = false;
                 }
             }
 
-            if (hasAssignableAgent) {
+            if (agentIsAssignable) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public boolean isAssignedAgentEligibleForJob(Job job, Agent agent) {
+        boolean isEligible = true;
+        if ((agent == null) || !agent.isConnected() || !agent.isEnabled() || agent.isRunning() || !agent.isAssigned()) {
+            isEligible = false;
+        } else {
+            for (String resource : job.getResources()) {
+                if (!(agent.getResources().contains(resource))) {
+                    isEligible = false;
+                    break;
+                }
+            }
+        }
+
+        return isEligible;
     }
 }

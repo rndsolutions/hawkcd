@@ -118,8 +118,6 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
                 result = createResult(workInfo, NotificationType.SUCCESS, "WorkInfo retrieved successfully");
             }
-        } else {
-            result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         }
 
         if (result == null) {

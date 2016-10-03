@@ -127,10 +127,10 @@ angular
 
                     },
                     add: function(object) {
-                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.addPipelineDefinition], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.addPipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs], true);
                     },
                     update: function(object) {
-                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs], true);
                         // pipeConfigService.getAllPipelineGroupDTOs();
                         // pipeConfigService.getAllPipelineDefinitions();
                     },
@@ -153,7 +153,7 @@ angular
                         validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
                     },
                     addWithMaterialDefinition: function(object) {
-                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.addPipelineDefinition], true);
+                        validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.addPipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs], true);
                     }
                 },
                 PipelineService: {
