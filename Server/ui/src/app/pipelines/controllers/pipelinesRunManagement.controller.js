@@ -210,7 +210,7 @@ angular
         $scope.$watch(function() { return viewModel.runManagementPipeline}, function (newVal, oldVal) {
             vm.currentPipelineRun = angular.copy(viewModel.runManagementPipeline);
 
-            if(vm.currentPipelineRun.stages){
+            if(vm.currentPipelineRun.stages && vm.isFirstLoad){
                 vm.selectJob(0, 0);
                 vm.isFirstLoad = false;
             }
