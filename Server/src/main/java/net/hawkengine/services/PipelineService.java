@@ -3,6 +3,8 @@ package net.hawkengine.services;
 import net.hawkengine.db.DbRepositoryFactory;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.dto.PipelineDto;
+import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.Status;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
@@ -95,6 +97,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
+    public ServiceResult getAllByDefinitionId(String pipelineDefinitionId) {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId))
+                .collect(Collectors.toList());
+
+        result.setObject(filteredPipelines);
+
+        return result;
+    }
+
+    @Override
     public ServiceResult getAllNonupdatedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -156,6 +173,96 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         result.setObject(updatedPipelines);
 
         return result;
+    }
+
+    @Override
+    public ServiceResult getLastRun(String pipelineDefinitionId) {
+        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        Pipeline lastRun = null;
+        int lastExecutionId = 0;
+        for (Pipeline pipeline : pipelines) {
+            if (pipeline.getExecutionId() > lastExecutionId) {
+                lastRun = pipeline;
+                lastExecutionId = pipeline.getExecutionId();
+            }
+        }
+
+        result.setObject(lastRun);
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId) {
+        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+
+        List<PipelineDto> pipelineDtos = new ArrayList<>();
+        for (Pipeline pipeline : pipelines) {
+            PipelineDto pipelineDto = new PipelineDto();
+            pipelineDto.constructHistoryPipelineDto(pipeline);
+            pipelineDtos.add(pipelineDto);
+        }
+
+        result.setObject(pipelineDtos);
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
+        return this.getPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
+    }
+
+    @Override
+    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
+        ServiceResult result = this.getAll();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .filter(p -> p.getPipelineDefinitionName().contains(searchCriteria))
+                .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
+                .collect(Collectors.toList());
+
+        int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
+        if (indexOfPipeline == -1) {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        } else {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .skip(indexOfPipeline + 1)
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        }
+
+        List<PipelineDto> pipelineDtos = new ArrayList<>();
+        for (Pipeline pipeline : filteredPipelines) {
+            PipelineDto pipelineDto = new PipelineDto();
+            pipelineDto.constructArtifactPipelineDto(pipeline);
+            pipelineDtos.add(pipelineDto);
+        }
+
+        result.setObject(pipelineDtos);
+
+        return result;
+    }
+
+    @Override
+    public ServiceResult cancelPipeline(String pipelineId) {
+        ServiceResult result = this.getById(pipelineId);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            return result;
+        }
+
+        Pipeline pipeline = (Pipeline) result.getObject();
+        pipeline.setShouldBeCanceled(true);
+        pipeline.setStatus(Status.IN_PROGRESS);
+        return this.update(pipeline);
     }
 
     private void addMaterialsToPipeline(Pipeline pipeline) {
@@ -228,7 +335,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             task.setRunIfCondition(taskDefinition.getRunIfCondition());
             tasks.add(task);
         }
-  
+
         job.setTasks(tasks);
+    }
+
+    private int getIndexOfPipeline(List<Pipeline> pipelines, String pipelineId) {
+        int indexOfPipeline = -1;
+
+        if (pipelineId != null) {
+            int collectionSize = pipelines.size();
+            for (int i = 0; i < collectionSize; i++) {
+                if (pipelines.get(i).getId().equals(pipelineId)) {
+                    indexOfPipeline = i;
+                    break;
+                }
+            }
+        }
+
+        return indexOfPipeline;
     }
 }

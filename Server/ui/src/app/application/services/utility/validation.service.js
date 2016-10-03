@@ -24,7 +24,7 @@ angular
         validationService.dispatcherFlow = function(object, solveFunctions, shouldDisplay) {
             if (object.notificationType == CONSTANTS.TOAST_SUCCESS) {
                 solveFunctions.forEach(function(currentFunction,index,array){
-                  currentFunction(object.result);
+                    currentFunction(object.result);
                 });
 
                 if (shouldDisplay) {

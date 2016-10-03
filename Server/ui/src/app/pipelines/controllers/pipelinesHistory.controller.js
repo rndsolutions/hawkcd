@@ -2,8 +2,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController',['$state','$scope','$stateParams','$interval','pipeStats','authDataService','viewModel','moment','$sce','commonUtitlites',
-     function($state, $scope, $stateParams, $interval, pipeStats, authDataService, viewModel, moment, $sce,commonUtitlites) {
+    .controller('PipelinesHistoryController',['$state', '$rootScope','$scope','$stateParams','$interval','pipeStats','pipeExecService','authDataService','viewModel', 'pipelineUpdater','moment','$sce','commonUtitlites',
+     function($state, $rootScope, $scope, $stateParams, $interval, pipeStats, pipeExecService, authDataService, viewModel, pipelineUpdater, moment, $sce,commonUtitlites) {
         var vm = this;
 
         vm.labels = {
@@ -32,14 +32,21 @@ angular
         //Get the current group and pipeline name
         vm.groupName = $stateParams.groupName;
         vm.pipelineName = $stateParams.pipelineName;
+         vm.pipelineId = $stateParams.pipelineId;
 
-        vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
+        vm.allPipelineRuns = angular.copy(viewModel.historyPipelines);
 
         vm.spinIcon = false;
 
         vm.updateClock = function(pipelineRun) {
 
         };
+
+         vm.getAllHistoryPipelines = function(id) {
+             pipeExecService.getAllHistoryPipelines(id);
+         };
+
+         vm.getAllHistoryPipelines(vm.pipelineId);
 
         vm.getLastRunAction = function(pipelineRun) {
             return moment.getLastRunAction(pipelineRun)
@@ -52,9 +59,9 @@ angular
         vm.currentPipelineObject = {};
         vm.allJobReportsFromStages = [];
         $scope.$watch(function() {
-            return viewModel.allPipelineRuns
+            return viewModel.historyPipelines
         }, function(newVal, oldVal) {
-            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
+            vm.allPipelineRuns = angular.copy(viewModel.historyPipelines);
             vm.currentPipelineRuns = [];
             vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
                 vm.currentPipelineObject = currentPipelineRun;
@@ -77,84 +84,32 @@ angular
                 return b.executionId - a.executionId;
             });
 
-            vm.lastRun = {};
-            vm.lastRun = vm.currentPipelineRuns[0];
-            if (vm.lastRun !== undefined && vm.allJobReportsFromStages.length === 0) {
-                vm.lastRun.stages.forEach(function(currentStage, stagesIndex, stagesArray) {
-                    currentStage.jobs.forEach(function(currentJob, jobsIndex, jobsArray) {
-                        var buffer = ansi_up.ansi_to_html(jobsArray[jobsIndex].report);
-                        var reportToAdd = $sce.trustAsHtml(buffer);
-                        vm.allJobReportsFromStages.push(reportToAdd);
-                    });
-                });
-
-            };
-
-
-            if (vm.currentPipelineRuns.length > 0) {
-                vm.currentJob = vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs[vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs.length - 1];
-                vm.currentJob.report = ansi_up.ansi_to_html(vm.currentJob.report);
-                vm.currentJob.report = $sce.trustAsHtml(vm.currentJob.report);
+            // vm.lastRun = {};
+            // vm.lastRun = vm.currentPipelineRuns[0];
+            // if (vm.lastRun !== undefined && vm.allJobReportsFromStages.length === 0) {
+            //     vm.lastRun.stages.forEach(function(currentStage, stagesIndex, stagesArray) {
+            //         currentStage.jobs.forEach(function(currentJob, jobsIndex, jobsArray) {
+            //             var buffer = ansi_up.ansi_to_html(jobsArray[jobsIndex].report);
+            //             var reportToAdd = $sce.trustAsHtml(buffer);
+            //             vm.allJobReportsFromStages.push(reportToAdd);
+            //         });
+            //     });
+            //
+            // }
 
 
-            }
-            console.log(vm.allPipelineRuns);
-            console.log(vm.currentPipelineRuns);
+            // if (vm.currentPipelineRuns.length > 0) {
+            //     vm.currentJob = vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs[vm.currentPipelineRuns[0].stages[vm.currentPipelineRuns[0].stages.length - 1].jobs.length - 1];
+            //     vm.currentJob.report = ansi_up.ansi_to_html(vm.currentJob.report);
+            //     vm.currentJob.report = $sce.trustAsHtml(vm.currentJob.report);
+            //
+            //
+            // }
+            // console.log(vm.allPipelineRuns);
+            // console.log(vm.currentPipelineRuns);
         }, true);
 
-
-        //Gets all executions of a pipeline by given name
-        // vm.getAll = function () {
-        //     var tokenIsValid = authDataService.checkTokenExpiration();
-        //     if (tokenIsValid) {
-        //         var token = window.localStorage.getItem("accessToken");
-        //         pipeStats.getAllRunsByName(vm.pipelineName, token)
-        //             .then(function (res) {
-        //                 // success
-        //                 vm.currentPipeline = res;
-        //                 vm.currentPipeline = _.sortBy(vm.currentPipeline, 'ExecutionID');
-        //                 vm.currentPipeline.reverse();
-        //                 for (var i = 0; i < vm.currentPipeline.length; i += 1) {
-        //                     vm.currentPipeline[i].Stages = _.groupBy(vm.currentPipeline[i].Stages, 'Name');
-        //                 }
-        //
-        //             }, function (err) {
-        //                 console.log(err);
-        //             })
-        //     } else {
-        //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-        //         authDataService.getNewToken(currentRefreshToken)
-        //             .then(function (res) {
-        //                 var token = res.access_token;
-        //                 pipeStats.getAllRunsByName(vm.pipelineName, token)
-        //                     .then(function (res) {
-        //                         // success
-        //                         vm.currentPipeline = res;
-        //                         vm.currentPipeline = _.sortBy(vm.currentPipeline, 'ExecutionID');
-        //                         vm.currentPipeline.reverse();
-        //                         for (var i = 0; i < vm.currentPipeline.length; i += 1) {
-        //                             vm.currentPipeline[i].Stages = _.groupBy(vm.currentPipeline[i].Stages, 'Name');
-        //                         }
-        //
-        //                     }, function (err) {
-        //                         console.log(err);
-        //                     })
-        //             }, function (err) {
-        //                 console.log(err);
-        //             })
-        //     }
-        // };
-
-        //Init the controller
-        //vm.getAll();
-
-        // var intervalHistory = $interval(function () {
-        //     vm.getAll();
-        // }, 3000);
-
-        // $scope.$on('$destroy', function () {
-        //     $interval.cancel(intervalHistory);
-        //     intervalHistory = undefined;
-        // });
-
+         $scope.$on("$destroy", function() {
+             pipelineUpdater.flushAllHistoryPipelines();
+         });
     }]);

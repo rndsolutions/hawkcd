@@ -24,8 +24,14 @@ angular
         viewModel.allMaterialDefinitions = [];
 
         viewModel.allPipelineGroups = [];
-            
+
         viewModel.allPipelineRuns = [];
+
+        viewModel.historyPipelines = [];
+
+        viewModel.artifactPipelines = [];
+
+        viewModel.runManagementPipeline = {};
 
         return viewModel;
     }]);

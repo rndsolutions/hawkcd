@@ -9,7 +9,11 @@ import java.util.List;
 public interface ISecurityService<T extends DbEntry> {
     List<T> getAll(List<T> entitiesToFilter, String className, List<Permission> permissions);
 
-    List<PipelineGroup> getPipelineDTOs(List<T> entitiesToFilter, String className, List<Permission> permissions);
+    List<PipelineGroup> getAllPipelineGroupDTOs(List<T> entitiesToFilter, String className, List<Permission> permissions);
+
+    List getAllPipelineHistoryDtos(List entitiesToFilter, String className, List permissions);
+
+    List getPipelineArtifactDtos(List entitiesToFilter, String className, List permissions);
 
     boolean getById(String entity, String className, List<Permission> permissions);
 

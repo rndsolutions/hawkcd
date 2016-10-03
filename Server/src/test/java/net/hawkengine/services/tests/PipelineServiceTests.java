@@ -6,6 +6,7 @@ import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
+import net.hawkengine.model.dto.PipelineDto;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
@@ -49,6 +50,7 @@ public class PipelineServiceTests {
         this.materialDefinitionService = new MaterialDefinitionService(this.materialDefinitionIDbRepository, this.pipelineDefinitionService);
         this.pipelineService = new PipelineService(this.pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.expectedPipelineDefinition = new PipelineDefinition();
+        this.expectedPipelineDefinition.setName("TestPipeline");
         this.pipelineDefinitionService.add(this.expectedPipelineDefinition);
     }
 
@@ -278,6 +280,127 @@ public class PipelineServiceTests {
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelines.size());
     }
 
+    @Test
+    public void getPipelineArtifactDTOs_sameNumberOfPipelines_correctCollection() {
+        // Arrange
+        PipelineDefinition firstPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("FirstPipeline");
+        List<Pipeline> firstPipelines = this.insertPipelinesIntoDatabase(1, firstPipelineDefinition.getId());
+
+        int expectedCollectionSize = 1;
+        String expectedId = firstPipelines.get(0).getId();
+
+        // Act
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1).getObject();
+
+        // Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(expectedId, actualResult.get(0).getId());
+    }
+
+    @Test
+    public void getPipelineArtifactDTOs_lessPipelinesThanActual_correctCollection() {
+        // Arrange
+        PipelineDefinition firstPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("FirstPipeline");
+        List<Pipeline> firstPipelines = this.insertPipelinesIntoDatabase(2, firstPipelineDefinition.getId());
+
+        int expectedCollectionSize = 1;
+        String expectedId = firstPipelines.get(1).getId();
+
+        // Act
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1).getObject();
+
+        // Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(expectedId, actualResult.get(0).getId());
+    }
+
+    @Test
+    public void getPipelineArtifactDTOs_morePipelinesThanActual_correctCollection() {
+        // Arrange
+        PipelineDefinition firstPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("FirstPipeline");
+        List<Pipeline> firstPipelines = this.insertPipelinesIntoDatabase(1, firstPipelineDefinition.getId());
+
+        int expectedCollectionSize = 1;
+        String expectedId = firstPipelines.get(0).getId();
+
+        // Act
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 2).getObject();
+
+        // Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(expectedId, actualResult.get(0).getId());
+    }
+
+    @Test
+    public void getPipelineArtifactDTOs_withSearchCriteriaExisting_correctCollection() {
+        // Arrange
+        PipelineDefinition firstPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("FirstPipeline");
+        List<Pipeline> firstPipelines = this.insertPipelinesIntoDatabase(1, firstPipelineDefinition.getId());
+        PipelineDefinition secondPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("SecondPipeline");
+        this.insertPipelinesIntoDatabase(1, secondPipelineDefinition.getId());
+
+        int expectedCollectionSize = 1;
+        String expectedId = firstPipelines.get(0).getId();
+
+        // Act
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("First", 1).getObject();
+
+        // Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(expectedId, actualResult.get(0).getId());
+    }
+
+    @Test
+    public void getPipelineArtifactDTOs_withSearchCriteriaNotExisting_correctCollection() {
+        // Arrange
+        PipelineDefinition firstPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("FirstPipeline");
+        this.insertPipelinesIntoDatabase(1, firstPipelineDefinition.getId());
+
+        int expectedCollectionSize = 0;
+
+        // Act
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("Second", 1).getObject();
+
+        // Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+    }
+
+    @Test
+    public void getPipelineArtifactDTOs_fromSpecificPipelineIdExisting_correctCollection() {
+        // Arrange
+        PipelineDefinition firstPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("FirstPipeline");
+        List<Pipeline> firstPipelines = this.insertPipelinesIntoDatabase(2, firstPipelineDefinition.getId());
+        String idToStartFrom = firstPipelines.get(1).getId();
+
+        int expectedCollectionSize = 1;
+        String expectedId = firstPipelines.get(0).getId();
+
+        // Act
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1, idToStartFrom).getObject();
+
+        // Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(expectedId, actualResult.get(0).getId());
+    }
+
+    @Test
+    public void getPipelineArtifactDTOs_fromSpecificPipelineIdNotExisting_correctCollection() {
+        // Arrange
+        PipelineDefinition firstPipelineDefinition = this.insertPipelineDefinitionIntoDatabase("FirstPipeline");
+        List<Pipeline> firstPipelines = this.insertPipelinesIntoDatabase(1, firstPipelineDefinition.getId());
+        String idToStartFrom = firstPipelines.get(0).getId();
+
+        int expectedCollectionSize = 1;
+        String expectedId = firstPipelines.get(0).getId();
+
+        // Act
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1, "fakeId").getObject();
+
+        // Assert
+        Assert.assertEquals(expectedCollectionSize, actualResult.size());
+        Assert.assertEquals(expectedId, actualResult.get(0).getId());
+    }
+
     private List<Pipeline> injectDataForTestingStatusUpdater() {
         List<Pipeline> pipelines = new ArrayList<>();
         List<Job> jobsToAdd = new ArrayList<>();
@@ -340,6 +463,26 @@ public class PipelineServiceTests {
         thirdPipeline.setStages(stagesToAdd);
         pipelines.add(thirdPipeline);
         this.pipelineService.add(thirdPipeline);
+
+        return pipelines;
+    }
+
+    private PipelineDefinition insertPipelineDefinitionIntoDatabase(String pipelineDefinitionName) {
+        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+        pipelineDefinition.setName(pipelineDefinitionName);
+        this.pipelineDefinitionService.add(pipelineDefinition);
+
+        return pipelineDefinition;
+    }
+
+    private List<Pipeline> insertPipelinesIntoDatabase(int numberOfPipelines, String pipelineDefinitionId) {
+        List<Pipeline> pipelines = new ArrayList<>();
+        for (int i = 1; i <= numberOfPipelines; i++) {
+            Pipeline pipeline = new Pipeline();
+            pipeline.setPipelineDefinitionId(pipelineDefinitionId);
+            this.pipelineService.add(pipeline);
+            pipelines.add(pipeline);
+        }
 
         return pipelines;
     }

@@ -1,7 +1,6 @@
 package net.hawkengine.services.filters.factories;
 
 import net.hawkengine.model.DbEntry;
-import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.SecurityService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
@@ -28,6 +27,7 @@ public class SecurityServiceInvoker<T extends DbEntry> {
             case "update":
                 return this.securityService.update(entity, className, permissions);
             case "delete":
+            case "cancelPipeline":
                 return this.securityService.delete(entity, className, permissions);
             case "assignUserToGroup":
                 return this.securityService.assignUserToGroup(entity, className, permissions);
@@ -52,7 +52,7 @@ public class SecurityServiceInvoker<T extends DbEntry> {
         }
     }
 
-    public boolean changeUserPasswrod(String loggedUserEmail, String entity, String className, List<Permission> permissions, String methodName) {
+    public boolean changeUserPassword(String loggedUserEmail, String entity, String className, List<Permission> permissions, String methodName) {
         switch (methodName) {
             case "changeUserPassword":
                 return this.securityService.changeUserPassword(loggedUserEmail, entity, className, permissions);
@@ -66,9 +66,13 @@ public class SecurityServiceInvoker<T extends DbEntry> {
             case "getAll":
                 return this.securityService.getAll(entitiesToFilter, className, permissions);
             case "getAllPipelineGroupDTOs":
-                return this.securityService.getPipelineDTOs(entitiesToFilter, className, permissions);
+                return this.securityService.getAllPipelineGroupDTOs(entitiesToFilter, className, permissions);
             case "getAllUserGroups":
                 return this.securityService.getAllUserGroups(entitiesToFilter, className, permissions);
+            case "getAllPipelineHistoryDTOs":
+                return this.securityService.getAllPipelineHistoryDtos(entitiesToFilter, className, permissions);
+            case "getPipelineArtifactDTOs":
+                return this.securityService.getPipelineArtifactDtos(entitiesToFilter, className, permissions);
             default:
                 return null;
         }

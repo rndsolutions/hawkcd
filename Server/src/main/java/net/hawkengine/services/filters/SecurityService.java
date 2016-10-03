@@ -2,14 +2,16 @@ package net.hawkengine.services.filters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.*;
+import net.hawkengine.model.dto.PipelineDto;
+import net.hawkengine.model.dto.PipelineGroupDto;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.PipelineGroupService;
 import net.hawkengine.services.filters.factories.AuthorizationServiceFactory;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
@@ -18,17 +20,19 @@ import net.hawkengine.services.interfaces.IPipelineGroupService;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.ws.WsObjectProcessor;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SecurityService<T extends DbEntry> implements ISecurityService {
     private IAuthorizationService authorizationService;
     private Gson jsonConverter;
+    private IPipelineGroupService pipelineGroupService;
     private IPipelineDefinitionService pipelineDefinitionService;
 
     public SecurityService() {
+        this.pipelineGroupService = new PipelineGroupService();
         this.pipelineDefinitionService = new PipelineDefinitionService();
+
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -54,42 +58,57 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public List<PipelineGroup> getPipelineDTOs(List entitiesToFilter, String className, List permissions) {
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+    public List getAllPipelineGroupDTOs(List entitiesToFilter, String className, List permissions) {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) entitiesToFilter;
-        List<PipelineGroup> filteredPipelineGroups = new ArrayList<>();
-        List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
         this.authorizationService = AuthorizationServiceFactory.create(className);
-        //TODO: REFACTOR THIS PART
-        List<PipelineGroup> filteredEntities = (List<PipelineGroup>) this.authorizationService.getAll(permissions, pipelineGroups);
+        List<PipelineGroup> filteredPipelineGroups = (List<PipelineGroup>) this.authorizationService.getAll(permissions, pipelineGroups);
+
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         this.authorizationService = AuthorizationServiceFactory.create("PipelineDefinitionService");
-        List<T> filteredPipelineDefintions = (List<T>) this.authorizationService.getAll(permissions, pipelineDefinitions);
+        List<PipelineDefinition> filteredPipelineDefinitions = (List<PipelineDefinition>) this.authorizationService.getAll(permissions, pipelineDefinitions);
 
-        for (PipelineGroup filteredEntity : filteredEntities) {
+        filteredPipelineGroups = this.pipelineGroupService.placePipelinesIntoGroups(filteredPipelineGroups, filteredPipelineDefinitions);
 
-            List<PipelineDefinition> pipelineDefinitionsWithinFilteredGroup = filteredEntity.getPipelines();
-            for (PipelineDefinition pipelineDefinitionWithinFilteredGroup : pipelineDefinitionsWithinFilteredGroup) {
-                for (PipelineDefinition filteredPipelineDefintion : (List<PipelineDefinition>) filteredPipelineDefintions) {
-                    if (filteredPipelineDefintion.getId().equals(pipelineDefinitionWithinFilteredGroup.getId()) && filteredPipelineDefintion.getPipelineGroupId().equals(filteredEntity.getId())) {
-                        pipelineDefinitionsToAdd.add(filteredPipelineDefintion);
-                    }
-                }
+        List<PipelineGroupDto> pipelineGroupDtos = this.pipelineGroupService.convertGroupsToDtos(filteredPipelineGroups);
+
+        return pipelineGroupDtos;
+    }
+
+    @Override
+    public List getAllUserGroups(List entitiesToFilter, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
+        List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
+
+        return filteredEntities;
+    }
+
+    @Override
+    public List getAllPipelineHistoryDtos(List entitiesToFilter, String className, List permissions) {
+        this.authorizationService = AuthorizationServiceFactory.create(className);
+        List<PipelineDto> filteredEntities = new ArrayList<>();
+        for (Object entity : entitiesToFilter) {
+            PipelineDto pipelineDto = (PipelineDto)entity;
+            boolean hasPermission = this.authorizationService.getById(pipelineDto.getId(), permissions);
+            if (hasPermission) {
+                filteredEntities.add(pipelineDto);
             }
-            filteredEntity.setPipelines(pipelineDefinitionsToAdd);
-            filteredPipelineGroups.add(filteredEntity);
-            pipelineDefinitionsToAdd = new ArrayList<>();
         }
 
-        return filteredPipelineGroups;
+        return filteredEntities;
+    }
+
+    @Override
+    public List getPipelineArtifactDtos(List entitiesToFilter, String className, List permissions) {
+        return entitiesToFilter;
     }
 
     @Override
     public boolean getById(String entity, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         String entityId = entity.substring(1, entity.length() - 1);
-        boolean hasPermisssion = this.authorizationService.getById(entityId, permissions);
-        if (hasPermisssion) {
-            return hasPermisssion;
+        boolean hasPermission = this.authorizationService.getById(entityId, permissions);
+        if (hasPermission) {
+            return hasPermission;
         }
         return false;
     }
@@ -181,14 +200,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     }
 
     @Override
-    public List getAllUserGroups(List entitiesToFilter, String className, List permissions) {
-        this.authorizationService = AuthorizationServiceFactory.create(className);
-        List<T> filteredEntities = this.authorizationService.getAll(permissions, entitiesToFilter);
-
-        return filteredEntities;
-    }
-
-    @Override
     public boolean assignPipelineToGroup(String pipelineGroup, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         boolean hasPermission = true; //this.authorizationService.update(pipelineDefintion, permissions);
@@ -236,7 +247,6 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
         return hasPermission;
     }
-
 
     @Override
     public boolean addWithMaterialDefinition(String entity, String className, List list) {
