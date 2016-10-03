@@ -121,6 +121,10 @@ angular
 
         vm.allPipelines = [];
 
+        vm.isFirstLoad = true;
+
+        vm.isFullScreen = false;
+
         vm.runManagementPipeline = {};
 
         vm.getRunManagementPipeline = function(id) {
@@ -137,8 +141,50 @@ angular
           return commonUtilities.truncateGitFromUrl(repoUrl,commitId);
         };
 
+        $(document).keyup(function (e) {
+            var keyCode = e.keyCode;
+            if(keyCode == 27){
+                vm.isFullScreen = false;
+            }
+        });
+
+        vm.toggleFullScreen = function() {
+            var element = document.getElementById("console");
+            if(!vm.isFullScreen){
+                if(element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if(element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if(element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if(element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            } else {
+                if(document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if(document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if(document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if(document.webkitIsFullScreen) {
+                    document.cancelFullScreen();
+                }
+            }
+
+            vm.isFullScreen = !vm.isFullScreen;
+        };
+
+        $('#console').bind('webkitfullscreenchange mozfullscreenchange fullscreenchange', function(e) {
+            var state = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+            var event = state ? 'FullscreenOn' : 'FullscreenOff';
+
+            // Now do something interesting
+            alert('Event: ' + event);
+        });
+
         vm.continueStage = function (stage) {
-            var currentPipelineRun = angular.copy(vm.runManagementPipeline);
+            var currentPipelineRun = angular.copy(vm.currentPipelineRun);
             currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                 if(currentStage.id == stage.id) {
                     currentStage.isTriggeredManually = false;
@@ -162,9 +208,13 @@ angular
         }, true);
 
         $scope.$watch(function() { return viewModel.runManagementPipeline}, function (newVal, oldVal) {
-            vm.runManagementPipeline = angular.copy(viewModel.runManagementPipeline);
+            vm.currentPipelineRun = angular.copy(viewModel.runManagementPipeline);
 
-            vm.currentPipelineRun = vm.runManagementPipeline;
+            if(vm.currentPipelineRun.stages && vm.isFirstLoad){
+                vm.selectJob(0, 0);
+                vm.isFirstLoad = false;
+            }
+
             if(!jQuery.isEmptyObject(vm.currentPipelineRun)){
                 vm.currentPipelineRun.materials.forEach(function(currentMaterial,index,array){
                     currentMaterial.gitLink = vm.truncateGitFromUrl(currentMaterial.materialDefinition.repositoryUrl,currentMaterial.materialDefinition.commitId);
