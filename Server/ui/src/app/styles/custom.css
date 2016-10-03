@@ -178,6 +178,16 @@ p {
     text-underline: none;
 }
 
+.job-selected-stage {
+    background-color: #337ab7 !important;
+    color: #ffffff;
+    text-transform: none;
+    text-underline: none;
+    padding-top:1px!important;
+    font-size: 13px!important;
+    padding-bottom:1px!important;
+}
+
 .mat-logo {
     border: 0;
     display: inline-block;

@@ -5,8 +5,6 @@
       <tr>
         <th> Job </th>
         <th> Resources </th>
-        <th> Run Type </th>
-        <th> Run Multiple instances </th>
         <th> Controls </th>
       </tr>
       </thead>
@@ -15,9 +13,9 @@
       <!--ng-repeat-->
       <tr ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions">
         <td> {{job.name}} </td>
-        <td> to do </td>
-        <td> {{job.runType}} </td>
-        <td> to do </td>
+        <td>
+          <div ng-repeat="resource in job.resources" class="label label-default job-selected-stage vertical-center margin-left-1">{{resource}}</div>
+        </td>
         <td>
           <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJob" data-toggle="modal"
                   ng-click="pipeConfig.getJob(job)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions.length > 1">Delete</button>
