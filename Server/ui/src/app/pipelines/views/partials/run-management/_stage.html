@@ -1,4 +1,4 @@
-<div class="stage" ng-click="pipesRunManagement.selectStage($index);pipesRunManagement.toggleRun=$index">
+<div class="stage" ng-class="{'stage-selected': pipesRunManagement.selectedStage.id == stage.id}">
     <div class="panel panel-info p-box-inner">
         <!--<a class="p-link">-->
         <div class="p-link">
@@ -58,7 +58,7 @@
                         <div class="vertical-center display-inline-block width-100 pull-left padding-left-5">
                         {{job.jobDefinitionName}}
                         </div>
-                        <span class="pull-right position-relative" aria-hidden="true">
+                        <span class="pull-right position-relative padding-right-5" aria-hidden="true">
                             <i class="fa fa-list"></i>
                         </span>
                     </div>
