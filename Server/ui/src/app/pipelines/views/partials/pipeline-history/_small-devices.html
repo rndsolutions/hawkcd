@@ -40,7 +40,7 @@
                         </span>
                     </li>
                     <li class="mt-list-item done" ng-repeat="stage in run.stages track by $index" style="border:none;display:block;margin-top:5px;border-radius:10px;" ng-class="{'btn green-jungle':stage.status == 'PASSED','btn red-thunderbird':stage.status == 'FAILED', 'btn stage-cancel': stage.status == 'CANCELED',
-                                  'btn white':stage.status=='NOT_RUN' || stage.status=='AWAITING','btn yellow-saffron':stage.status=='IN_PROGRESS','stages-size':true}">{{stage.stageDefinitionName}}
+                                  'btn white':stage.status=='NOT_RUN' || stage.status=='AWAITING' || stage.status=='PAUSED','btn yellow-saffron':stage.status=='IN_PROGRESS','stages-size':true}">{{stage.stageDefinitionName}}
                     </li>
                 </ul>
             </div>
