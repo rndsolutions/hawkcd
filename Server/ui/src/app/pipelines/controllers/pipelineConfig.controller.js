@@ -479,7 +479,7 @@ angular
                             arguments: newStage.jobDefinitions.taskDefinitions.arguments,
                             workingDirectory: newStage.jobDefinitions.taskDefinitions.workingDirectory,
                             runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition,
-                            ignoreErrors: newStage.jobDefinitions.taskDefinitions.ignoreErrors || false
+                            isIgnoringErrors: newStage.jobDefinitions.taskDefinitions.isIgnoringErrors || false
                         }]
                     }]
                 };
@@ -521,8 +521,7 @@ angular
                             materialType: selectedMaterialForJob.type,
                             materialName: selectedMaterialForJob.name,
                             destination: selectedMaterialForJob.name,
-                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition,
-                            ignoreErrors: newStage.jobDefinitions.taskDefinitions.ignoreErrors
+                            runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
                                 // pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                                 // type: newStage.jobDefinitions.taskDefinitions.type,
                                 // materialName: selectedMaterialForJob.name,
@@ -647,7 +646,7 @@ angular
                         arguments: newJob.taskDefinitions.arguments,
                         workingDirectory: newJob.taskDefinitions.workingDirectory,
                         runIfCondition: newJob.taskDefinitions.runIfCondition,
-                        ignoreErrors: newJob.taskDefinitions.ignoreErrors || false
+                        isIgnoringErrors: newJob.taskDefinitions.isIgnoringErrors || false
                     }]
                 }
             }
@@ -906,7 +905,7 @@ angular
                     arguments: newTask.arguments,
                     workingDirectory: newTask.workingDirectory,
                     runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    isIgnoringErrors: newTask.isIgnoringErrors
                 };
             }
             if (newTask.type == 'FETCH_MATERIAL') {
@@ -921,8 +920,7 @@ angular
                     materialType: selectedMaterial.type,
                     materialName: selectedMaterial.name,
                     destination: selectedMaterial.name,
-                    runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    runIfCondition: newTask.runIfCondition
                 };
             }
             if (newTask.type == 'FETCH_ARTIFACT') {
@@ -935,8 +933,7 @@ angular
                     type: newTask.type,
                     source: newTask.source,
                     destination: newTask.destination,
-                    runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    runIfCondition: newTask.runIfCondition
                 };
             }
             if (newTask.type == 'UPLOAD_ARTIFACT') {
@@ -947,8 +944,7 @@ angular
                     type: newTask.type,
                     source: newTask.source,
                     destination:newTask.destination,
-                    runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    runIfCondition: newTask.runIfCondition
                 }
             }
             pipeConfigService.addTaskDefinition(task);
@@ -967,7 +963,7 @@ angular
                     arguments: newTask.arguments,
                     workingDirectory: newTask.workingDirectory,
                     runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    isIgnoringErrors: newTask.isIgnoringErrors
                 };
             }
             if (newTask.type == 'FETCH_MATERIAL') {
@@ -983,8 +979,7 @@ angular
                     materialType: vm.selectedTaskMaterial.type,
                     materialName: vm.selectedTaskMaterial.name,
                     destination: vm.selectedTaskMaterial.name,
-                    runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    runIfCondition: newTask.runIfCondition
                 };
             }
             if (newTask.type == 'FETCH_ARTIFACT') {
@@ -998,8 +993,7 @@ angular
                     type: newTask.type,
                     source: newTask.source,
                     destination: newTask.destination,
-                    runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    runIfCondition: newTask.runIfCondition
                 };
             }
             if (newTask.type == 'UPLOAD_ARTIFACT') {
@@ -1011,8 +1005,7 @@ angular
                     type: newTask.type,
                     source: newTask.source,
                     destination: newTask.destination,
-                    runIfCondition: newTask.runIfCondition,
-                    ignoreErrors: newTask.ignoreErrors
+                    runIfCondition: newTask.runIfCondition
                 }
             }
             pipeConfigService.updateTaskDefinition(updatedTask);
