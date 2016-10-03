@@ -138,16 +138,19 @@ angular
         };
 
         vm.continueStage = function (stage) {
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
-                currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
-                    if(currentStage.id == stage.id) {
-                        currentStage.isTriggeredManually = false;
-                        currentStage.status = 'IN_PROGRESS';
-                        currentPipelineRun.status = 'IN_PROGRESS';
-                        pipeExecService.update(currentPipelineRun);
-                    }
-                });
+            var currentPipelineRun = angular.copy(vm.runManagementPipeline);
+            currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
+                if(currentStage.id == stage.id) {
+                    currentStage.isTriggeredManually = false;
+                    currentStage.status = 'IN_PROGRESS';
+                    currentPipelineRun.status = 'IN_PROGRESS';
+                    pipeExecService.update(currentPipelineRun);
+                }
             });
+        };
+                                                
+        vm.stop = function(pipeline) {
+            pipeExecService.stopPipeline(pipeline.id);
         };
 
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
