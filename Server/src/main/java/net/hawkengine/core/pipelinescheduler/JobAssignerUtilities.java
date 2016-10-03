@@ -19,8 +19,10 @@ public class JobAssignerUtilities {
             boolean isEligible = this.isAssignedAgentEligibleForJob(job, assignedAgent);
             if (!isEligible) {
                 job.setStatus(JobStatus.UNASSIGNED);
-                assignedAgent.setAssigned(false);
-                result = assignedAgent;
+                if (assignedAgent != null) {
+                    assignedAgent.setAssigned(false);
+                }
+
                 LOGGER.info(String.format("Job %s unassigned from Agent %s", job.getJobDefinitionName(), assignedAgent.getName()));
             }
         }
