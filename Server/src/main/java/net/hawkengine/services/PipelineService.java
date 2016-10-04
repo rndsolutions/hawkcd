@@ -5,7 +5,7 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.PipelineDto;
 import net.hawkengine.model.enums.NotificationType;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -137,7 +137,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -153,7 +153,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -169,7 +169,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == Status.AWAITING))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -264,7 +264,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         Pipeline pipeline = (Pipeline) result.getObject();
         pipeline.setShouldBeCanceled(true);
-        pipeline.setStatus(Status.IN_PROGRESS);
+        pipeline.setStatus(PipelineStatus.IN_PROGRESS);
         return this.update(pipeline);
     }
 

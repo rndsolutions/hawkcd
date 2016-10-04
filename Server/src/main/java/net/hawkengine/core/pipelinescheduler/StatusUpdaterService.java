@@ -117,9 +117,9 @@ public class StatusUpdaterService {
             StageStatus stageStatus = stage.getStatus();
             stageStatuses.add(stageStatus);
             if (stage.isTriggeredManually() && (stage.getStatus() == StageStatus.IN_PROGRESS)) {
-                pipeline.setStatus(Status.PAUSED);
+                pipeline.setStatus(PipelineStatus.PAUSED);
                 stage.setStatus(StageStatus.PAUSED);
-                String pipelinePaused = String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.PAUSED);
+                String pipelinePaused = String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), PipelineStatus.PAUSED);
                 LOGGER.info(pipelinePaused);
                 String stagePaused = String.format("Stage %s must be triggered manually", stage.getStageDefinitionName());
                 LOGGER.info(stagePaused);
@@ -130,13 +130,13 @@ public class StatusUpdaterService {
         }
 
         if (stageStatuses.contains(StageStatus.FAILED)) {
-            pipeline.setStatus(Status.FAILED);
+            pipeline.setStatus(PipelineStatus.FAILED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.FAILED));
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), PipelineStatus.FAILED));
         } else if (this.areAllPassed(stageStatuses)) {
-            pipeline.setStatus(Status.PASSED);
+            pipeline.setStatus(PipelineStatus.PASSED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.PASSED));
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), PipelineStatus.PASSED));
         }
     }
 
@@ -164,7 +164,7 @@ public class StatusUpdaterService {
 
     private void cancelPipeline(Pipeline pipeline) {
         pipeline.setShouldBeCanceled(false);
-        pipeline.setStatus(Status.CANCELED);
+        pipeline.setStatus(PipelineStatus.CANCELED);
         pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         for (Stage stage : pipeline.getStages()) {
             if (stage.getStatus() == StageStatus.IN_PROGRESS || stage.getStatus() == StageStatus.AWAITING) {

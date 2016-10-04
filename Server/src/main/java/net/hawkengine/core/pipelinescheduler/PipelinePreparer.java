@@ -3,7 +3,7 @@ package net.hawkengine.core.pipelinescheduler;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.*;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -61,7 +61,7 @@ public class PipelinePreparer implements Runnable {
 
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
-                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == Status.IN_PROGRESS) && !(p.isPrepared()))
+                .filter(p -> p.areMaterialsUpdated() && (p.getStatus() == PipelineStatus.IN_PROGRESS) && !(p.isPrepared()))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 

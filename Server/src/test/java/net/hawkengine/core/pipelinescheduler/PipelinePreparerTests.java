@@ -6,7 +6,7 @@ import net.hawkengine.core.utilities.constants.TestsConstants;
 import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -56,22 +56,22 @@ public class PipelinePreparerTests {
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         firstExpectedResult.setMaterialsUpdated(true);
-        firstExpectedResult.setStatus(Status.IN_PROGRESS);
+        firstExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         secondExpectedResult.setMaterialsUpdated(true);
-        secondExpectedResult.setStatus(Status.IN_PROGRESS);
+        secondExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         Pipeline thirdExpectedResult = new Pipeline();
         thirdExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         thirdExpectedResult.setMaterialsUpdated(true);
-        thirdExpectedResult.setStatus(Status.FAILED);
+        thirdExpectedResult.setStatus(PipelineStatus.FAILED);
 
         Pipeline fourthExpectedResult = new Pipeline();
         fourthExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         fourthExpectedResult.setMaterialsUpdated(true);
-        fourthExpectedResult.setStatus(Status.IN_PROGRESS);
+        fourthExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         this.pipelineService.add(firstExpectedResult);
         this.pipelineService.add(secondExpectedResult);
@@ -119,12 +119,12 @@ public class PipelinePreparerTests {
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         firstExpectedResult.setMaterialsUpdated(true);
-        firstExpectedResult.setStatus(Status.IN_PROGRESS);
+        firstExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         secondExpectedResult.setMaterialsUpdated(false);
-        secondExpectedResult.setStatus(Status.IN_PROGRESS);
+        secondExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         this.pipelineService.add(firstExpectedResult);
         this.pipelineService.add(secondExpectedResult);
@@ -145,13 +145,13 @@ public class PipelinePreparerTests {
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         firstExpectedResult.setMaterialsUpdated(true);
-        firstExpectedResult.setStatus(Status.IN_PROGRESS);
+        firstExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         secondExpectedResult.setMaterialsUpdated(true);
         secondExpectedResult.setPrepared(true);
-        secondExpectedResult.setStatus(Status.IN_PROGRESS);
+        secondExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         this.pipelineService.add(firstExpectedResult);
         this.pipelineService.add(secondExpectedResult);
@@ -172,17 +172,17 @@ public class PipelinePreparerTests {
         Pipeline firstExpectedResult = new Pipeline();
         firstExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         firstExpectedResult.setMaterialsUpdated(true);
-        firstExpectedResult.setStatus(Status.IN_PROGRESS);
+        firstExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         Pipeline secondExpectedResult = new Pipeline();
         secondExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         secondExpectedResult.setMaterialsUpdated(false);
-        secondExpectedResult.setStatus(Status.IN_PROGRESS);
+        secondExpectedResult.setStatus(PipelineStatus.IN_PROGRESS);
 
         Pipeline thirdExpectedResult = new Pipeline();
         thirdExpectedResult.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
         thirdExpectedResult.setMaterialsUpdated(true);
-        thirdExpectedResult.setStatus(Status.FAILED);
+        thirdExpectedResult.setStatus(PipelineStatus.FAILED);
 
         this.pipelineService.add(firstExpectedResult);
         this.pipelineService.add(secondExpectedResult);
@@ -310,12 +310,12 @@ public class PipelinePreparerTests {
         Pipeline firstPipeline = new Pipeline();
         firstPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
         firstPipeline.setMaterialsUpdated(true);
-        firstPipeline.setStatus(Status.IN_PROGRESS);
+        firstPipeline.setStatus(PipelineStatus.IN_PROGRESS);
 
         Pipeline secondPipeline = new Pipeline();
         secondPipeline.setPipelineDefinitionId(pipelineDefinition.getId());
         secondPipeline.setMaterialsUpdated(true);
-        secondPipeline.setStatus(Status.IN_PROGRESS);
+        secondPipeline.setStatus(PipelineStatus.IN_PROGRESS);
 
         this.pipelineService.add(firstPipeline);
         this.pipelineService.add(secondPipeline);
