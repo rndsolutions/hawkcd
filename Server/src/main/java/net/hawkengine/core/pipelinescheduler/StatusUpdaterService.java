@@ -35,6 +35,8 @@ public class StatusUpdaterService {
                 LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
                 ServiceResult result = new ServiceResult(null, NotificationType.WARNING, "Pipeline " + pipeline.getPipelineDefinitionName() + " was sucessfully canceled");
                 EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result);
+            } else if (pipeline.getStatus() == PipelineStatus.PAUSED) {
+                this.pausePipeline(pipeline);
             } else {
                 this.updateAllStatuses(pipeline);
             }
@@ -71,6 +73,10 @@ public class StatusUpdaterService {
 
     public void updateStageStatusesInSequence(List<Stage> stages) {
         for (Stage currentStage : stages) {
+            if (currentStage.getStatus() == StageStatus.PAUSED) {
+                currentStage.setStatus(StageStatus.IN_PROGRESS);
+            }
+
             if (currentStage.getStatus() == StageStatus.IN_PROGRESS) {
                 this.updateStageStatus(currentStage);
                 if (currentStage.getStatus() == StageStatus.PASSED) {
@@ -175,6 +181,16 @@ public class StatusUpdaterService {
                         task.setStatus(TaskStatus.CANCELED);
                     }
                 }
+            }
+        }
+    }
+
+    private void pausePipeline(Pipeline pipeline) {
+        List<Stage> stages = pipeline.getStages();
+        for (Stage stage : stages) {
+            if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+                stage.setStatus(StageStatus.PAUSED);
+                break;
             }
         }
     }
