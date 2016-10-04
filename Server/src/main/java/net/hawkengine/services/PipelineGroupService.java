@@ -129,8 +129,8 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
             List<PipelineDefinitionDto> pipelineDefinitionDtos = new ArrayList<>();
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
                 PipelineDefinitionDto pipelineDefinitionDto = new PipelineDefinitionDto();
-                Pipeline lastRun = (Pipeline) this.pipelineService.getLastRun(pipelineDefinition.getId()).getObject();
-                pipelineDefinitionDto.constructDto(pipelineDefinition, lastRun);
+                List<Pipeline> definitionRuns = (List<Pipeline>) this.pipelineService.getAllByDefinitionId(pipelineDefinition.getId()).getObject();
+                pipelineDefinitionDto.constructDto(pipelineDefinition, definitionRuns);
                 pipelineDefinitionDtos.add(pipelineDefinitionDto);
             }
 

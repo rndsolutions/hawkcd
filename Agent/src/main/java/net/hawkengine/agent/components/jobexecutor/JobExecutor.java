@@ -46,7 +46,7 @@ public class JobExecutor implements IJobExecutor {
         //this.printEnvironmentVariables(workInfo.getEnvironmentVariables());
 
 //        this.currentJob.appendToJobResult(String.format("Start to prepare %s/%s/%s/%s/%s on %s %s",
-//                this.getCurrentJob().getPipelineDefinitionName(),
+//                this.getCurrentJob().getDesignatedPipelineDefinitionName(),
 //                this.getCurrentJob().getPipelineExecutionId(),
 //                this.getCurrentJob().getPipelineExecutionId(),
 //                this.getCurrentJob().getStageExecutionId(),
@@ -112,7 +112,7 @@ public class JobExecutor implements IJobExecutor {
 
     public void initJobExecutionInfo(WorkInfo workInfo) {
 //        this.currentJob = new JobExecutionInfo();
-//        this.currentJob.setPipelineDefinitionName(workInfo.getPipelineDefinitionName());
+//        this.currentJob.setDesignatedPipelineDefinitionName(workInfo.getDesignatedPipelineDefinitionName());
 //        this.currentJob.setPipelineId(workInfo.getPipelineId());
 //        this.currentJob.setPipelineLabel(workInfo.getLabelTemplate());
 //        this.currentJob.setPipelineExecutionId(workInfo.getPipelineExecutionID());

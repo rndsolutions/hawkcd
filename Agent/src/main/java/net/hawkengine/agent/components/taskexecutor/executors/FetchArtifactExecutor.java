@@ -39,16 +39,16 @@ public class FetchArtifactExecutor extends TaskExecutor {
         FetchArtifactTask taskDefinition = (FetchArtifactTask) task.getTaskDefinition();
         super.updateTask(task, TaskStatus.PASSED, LocalDateTime.now(), null);
 
-        if ((taskDefinition.getPipelineExecutionId() == null) || (taskDefinition.getPipelineExecutionId().isEmpty())) {
+        if ((taskDefinition.getDesignatedPipelineExecutionId() == null) || (taskDefinition.getDesignatedPipelineExecutionId().isEmpty())) {
             return this.nullProcessing(report, task, "Error occurred in getting pipeline execution ID!");
         }
-        if ((taskDefinition.getPipelineDefinitionName() == null) || (taskDefinition.getPipelineDefinitionName().isEmpty())) {
+        if ((taskDefinition.getDesignatedPipelineDefinitionName() == null) || (taskDefinition.getDesignatedPipelineDefinitionName().isEmpty())) {
             return this.nullProcessing(report, task, "Error occurred in getting pipeline name!");
         }
 
         String fetchingMessage = String.format("Start fetching artifact source:  %s\\%s\\%s",
-                taskDefinition.getPipelineDefinitionName(),
-                taskDefinition.getPipelineExecutionId(),
+                taskDefinition.getDesignatedPipelineDefinitionName(),
+                taskDefinition.getDesignatedPipelineExecutionId(),
                 taskDefinition.getSource());
         LOGGER.debug(fetchingMessage);
         ReportAppender.appendInfoMessage(fetchingMessage, report);
@@ -58,7 +58,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
 
         String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/fetch-artifact";
         WebResource webResource = this.restClient.resource(requestSource);
-        String source = taskDefinition.getPipelineDefinitionName() + File.separator + taskDefinition.getPipelineExecutionId() + File.separator + taskDefinition.getSource();
+        String source = taskDefinition.getDesignatedPipelineDefinitionName() + File.separator + taskDefinition.getDesignatedPipelineExecutionId() + File.separator + taskDefinition.getSource();
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, source);
 
         if ((response.getStatus() != 200)) {
@@ -80,9 +80,9 @@ public class FetchArtifactExecutor extends TaskExecutor {
         }
         String destination;
         if (taskDefinition.getDestination() != null) {
-            destination = String.valueOf(Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir() + File.separator + taskDefinition.getPipelineDefinitionName(), taskDefinition.getDestination()));
+            destination = String.valueOf(Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir() + File.separator + taskDefinition.getDesignatedPipelineDefinitionName(), taskDefinition.getDestination()));
         } else {
-            destination = String.valueOf(Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir() + File.separator + taskDefinition.getPipelineDefinitionName()));
+            destination = String.valueOf(Paths.get(AgentConfiguration.getInstallInfo().getAgentPipelinesDir() + File.separator + taskDefinition.getDesignatedPipelineDefinitionName()));
         }
         errorMessage = this.fileManagementService.unzipFile(filePath, destination);
         filePath = Paths.get(AgentConfiguration.getInstallInfo().getAgentTempDirectoryPath()).toString();

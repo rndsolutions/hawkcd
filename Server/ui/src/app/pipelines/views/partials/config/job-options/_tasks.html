@@ -20,7 +20,7 @@
         <td> {{task.runIfCondition}} </td>
         <td ng-if="task.type == 'EXEC'"> {{task.command + ' ' + task.arguments}} </td>
         <td ng-if="task.type == 'FETCH_MATERIAL'"> Material: {{task.materialName}} </td>
-        <td ng-if="task.type == 'FETCH_ARTIFACT'"> Pipeline: {{task.pipelineDefinitionName}}, Run: {{task.pipelineExecutionId}}, Source: {{task.source}}, Destination: {{task.destination}}</td>
+        <td ng-if="task.type == 'FETCH_ARTIFACT'"> Pipeline: {{task.designatedPipelineDefinitionName}}, Run: <span ng-if="task.shouldUseLatestRun == true">Latest</span><span ng-if="task.shouldUseLatestRun == false">{{task.designatedPipelineExecutionId}}</span>, Source: {{task.source}}, Destination: {{task.destination}}</td>
         <td ng-if="task.type == 'UPLOAD_ARTIFACT'"> Source: {{task.source}}, Destination: {{task.destination}}</td>
         <td> to do </td>
         <td>
