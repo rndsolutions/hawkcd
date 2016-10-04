@@ -5,7 +5,7 @@ import net.hawkengine.model.enums.TaskType;
 public class FetchArtifactTask extends TaskDefinition {
     private String designatedPipelineDefinitionId;
     private String designatedPipelineDefinitionName;
-    private int designatedPipelineExecutionId;
+    private String designatedPipelineExecutionId;
     private String source;
     private String destination;
     private boolean shouldUseLatestRun;
@@ -30,11 +30,11 @@ public class FetchArtifactTask extends TaskDefinition {
         this.designatedPipelineDefinitionName = value;
     }
 
-    public int getDesignatedPipelineExecutionId() {
+    public String getDesignatedPipelineExecutionId() {
         return this.designatedPipelineExecutionId;
     }
 
-    public void setDesignatedPipelineExecutionId(int value) {
+    public void setDesignatedPipelineExecutionId(String value) {
         this.designatedPipelineExecutionId = value;
     }
 
