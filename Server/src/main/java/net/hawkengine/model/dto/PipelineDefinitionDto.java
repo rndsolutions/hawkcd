@@ -27,7 +27,7 @@ public class PipelineDefinitionDto extends PermissionObject {
             int numberOfPipelines = pipelines.size();
             for (int i = 0; i < numberOfPipelines; i++) {
                 this.pipelineExecutionIds.add(pipelines.get(i).getExecutionId());
-                if (i == numberOfPipelines - 1) {
+                if (i == 0) {
                     this.lastRun.constructBasePipelineDto(pipelines.get(i));
                 }
             }

@@ -174,7 +174,7 @@ public class PipelinePreparer implements Runnable {
             } else if (currentTask.getType() == TaskType.FETCH_ARTIFACT) {
                 FetchArtifactTask fetchArtifactTask = (FetchArtifactTask) taskDefinitions.get(i);
                 if (fetchArtifactTask.shouldUseLatestRun()) {
-                    Pipeline currentPipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();
+                    Pipeline currentPipeline = (Pipeline) this.pipelineService.getLastRun(fetchArtifactTask.getDesignatedPipelineDefinitionId()).getObject();
                     fetchArtifactTask.setDesignatedPipelineExecutionId(currentPipeline.getExecutionId());
                     currentTask.setTaskDefinition(fetchArtifactTask);
                 }
