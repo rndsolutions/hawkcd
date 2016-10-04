@@ -5,7 +5,7 @@ build_script="build1.sh"
 
 agent_base_name="agent"
 server_base_name="hawkcd"
-version="0.0.4"
+version="0.0.5"
 
 #save to a file the latest commit
 git show > rev.txt
