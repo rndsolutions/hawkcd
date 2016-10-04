@@ -268,6 +268,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         return this.update(pipeline);
     }
 
+    @Override
+    public ServiceResult pausePipeline(String pipelineId) {
+        ServiceResult result = this.getById(pipelineId);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            return result;
+        }
+
+        Pipeline pipeline = (Pipeline) result.getObject();
+        if (pipeline.getStatus() == PipelineStatus.IN_PROGRESS) {
+            pipeline.setStatus(PipelineStatus.PAUSED);
+        } else {
+            pipeline.setStatus(PipelineStatus.IN_PROGRESS);
+        }
+
+        return this.update(pipeline);
+    }
+
     private void addMaterialsToPipeline(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         List<MaterialDefinition> materialDefinitions =
