@@ -6,6 +6,7 @@ import net.hawkengine.model.PipelineDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelineDefinitionDto extends PermissionObject {
     private String id;
@@ -21,11 +22,12 @@ public class PipelineDefinitionDto extends PermissionObject {
     public void constructDto(PipelineDefinition pipelineDefinition, List<Pipeline> pipelines) {
         this.id = pipelineDefinition.getId();
         this.name = pipelineDefinition.getName();
+        pipelines = pipelines.stream().sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId())).collect(Collectors.toList());
         if (!pipelines.isEmpty()) {
             int numberOfPipelines = pipelines.size();
-            for (int i = 1; i <= numberOfPipelines; i++) {
+            for (int i = 0; i < numberOfPipelines; i++) {
                 this.pipelineExecutionIds.add(pipelines.get(i).getExecutionId());
-                if (i == numberOfPipelines) {
+                if (i == numberOfPipelines - 1) {
                     this.lastRun.constructBasePipelineDto(pipelines.get(i));
                 }
             }
