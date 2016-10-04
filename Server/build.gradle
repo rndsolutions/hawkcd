@@ -21,7 +21,7 @@ reports {
     html {
      enabled true
     }
-     reports.html.destination = "$buildDir/test-results/agent-report"
+     reports.html.destination = "$buildDir/test-results/server-report"
     }
 }
 
