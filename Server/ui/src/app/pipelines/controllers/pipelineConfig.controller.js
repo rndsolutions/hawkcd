@@ -40,6 +40,8 @@ angular
         vm.jobIndex = {};
         vm.materialIndex = {};
 
+        vm.shouldUseLatest = "";
+
         vm.currentStageRuns = [];
 
         vm.wizardInfo = {
@@ -102,11 +104,25 @@ angular
         }, true);
 
         $scope.$watch(function() {
-            return viewModel.allPipelineRuns
+            return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
-            vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
-            // console.log(vm.allPipelineRuns);
-        }, true);
+            vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
+
+            vm.allPipelinesForTask = [];
+
+            vm.allPipelineGroups.forEach(function(currentPipelineGroup, pipelineGroupIndex, pipelineGroupArray) {
+                currentPipelineGroup.pipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray){
+                    vm.allPipelinesForTask.push(currentPipeline);
+                });
+            });
+        });
+
+        // $scope.$watch(function() {
+        //     return viewModel.allPipelineRuns
+        // }, function(newVal, oldVal) {
+        //     vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
+        //     // console.log(vm.allPipelineRuns);
+        // }, true);
 
         // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
         //     vm.allMaterials = viewModel.allMaterialDefinitions;
@@ -310,14 +326,15 @@ angular
             vm.newTask.pipelineRun = '';
             vm.selectedPipelineForTask = JSON.parse(angular.copy(pipeline));
             vm.currentPipelineRuns = [];
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
-                if(vm.selectedPipelineForTask.id == currentPipelineRun.pipelineDefinitionId){
-                    vm.currentPipelineRuns.push(currentPipelineRun);
+            vm.allPipelinesForTask.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                // if(vm.selectedPipelineForTask.id == currentPipelineRun.pipelineDefinitionId){
+                //     vm.currentPipelineRuns.push(currentPipelineRun);
+                // }
+                if(currentPipeline.id == vm.selectedPipelineForTask.id) {
+                    currentPipeline.pipelineExecutionIds.forEach(function(currentExecutionId, executionIdArray, executionIdIndex){
+                        vm.currentPipelineRuns.push(currentExecutionId);
+                    });
                 }
-            });
-
-            vm.currentPipelineRuns.sort(function(a, b) {
-                return a.executionId - b.executionId;
             });
 
             // console.log(vm.currentPipelineRuns);
@@ -345,7 +362,7 @@ angular
 
         vm.selectRunFromPipelineDefinitionUpdate = function (executionId) {
             vm.currentPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
-                if(currentPipelineRun.executionId == executionId) {
+                if(currentPipelineRun == executionId) {
                     vm.updatedTask.pipelineRun = angular.copy(currentPipelineRun);
                 }
             });
@@ -360,7 +377,7 @@ angular
         };
 
         vm.getPipelineForTaskUpdate = function (name) {
-            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+            vm.allPipelinesForTask.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
                 if (currentPipeline.name == name) {
                     vm.updatedTask.pipelineObject = angular.copy(currentPipeline);
                 }
@@ -373,22 +390,36 @@ angular
 
         vm.getRunForTaskUpdate = function (executionId) {
             vm.currentPipelineRuns = [];
-            vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
-                if (vm.updatedTask.pipelineObject && currentPipeline.name == vm.updatedTask.pipelineObject.name) {
-                    vm.allPipelineRuns.forEach(function(currentPipelineRun, runIndex, runArray) {
-                        if (currentPipelineRun.pipelineDefinitionName == currentPipeline.name) {
-                            vm.currentPipelineRuns.push(currentPipelineRun);
-                            if(currentPipelineRun.executionId == executionId) {
-                                vm.updatedTask.pipelineRun = angular.copy(currentPipelineRun);
-                            }
-                        }
-                    });
-                }
-            });
+            // vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+            //     if (vm.updatedTask.pipelineObject && currentPipeline.name == vm.updatedTask.pipelineObject.name) {
+            //         vm.allPipelineRuns.forEach(function(currentPipelineRun, runIndex, runArray) {
+            //             if (currentPipelineRun.pipelineDefinitionName == currentPipeline.name) {
+            //                 vm.currentPipelineRuns.push(currentPipelineRun);
+            //                 if(currentPipelineRun.executionId == executionId) {
+            //                     vm.updatedTask.pipelineRun = angular.copy(currentPipelineRun);
+            //                 }
+            //             }
+            //         });
+            //     }
+            // });
 
-            vm.currentPipelineRuns.sort(function(a, b) {
-                return a.executionId - b.executionId;
-            });
+           vm.allPipelinesForTask.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
+               if(vm.updatedTask.pipelineObject && currentPipeline.name == vm.updatedTask.pipelineObject.name) {
+                   if(vm.updatedTask.shouldUseLatestRun) {
+                       vm.updatedTask.pipelineRun = -1;
+                   }
+                   currentPipeline.pipelineExecutionIds.forEach(function (currentExecutionId, executionIdArray, executionIdIndex) {
+                       vm.currentPipelineRuns.push(currentExecutionId);
+                       if(!vm.updatedTask.shouldUseLatestRun && currentExecutionId == executionId) {
+                           vm.updatedTask.pipelineRun = angular.copy(currentExecutionId);
+                       }
+                   });
+               }
+           });
+
+            // vm.currentPipelineRuns.sort(function(a, b) {
+            //     return a.executionId - b.executionId;
+            // });
 
         };
 
@@ -671,7 +702,6 @@ angular
             }
             if (newJob.taskDefinitions.type == 'FETCH_MATERIAL') {
                 var materialForJob = JSON.parse(newJob.taskDefinitions.material);
-                debugger;
                 var job = {
                     name: newJob.name,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
@@ -888,8 +918,8 @@ angular
             vm.updatedTask = angular.copy(vm.task);
             // vm.getPipelineForTaskById(vm.updatedTask.pipelineDefinitionId);
             // vm.getStageForTaskById(vm.updatedTask.stageDefinitionId);
-            vm.getPipelineForTaskUpdate(vm.updatedTask.pipelineDefinitionName);
-            vm.getRunForTaskUpdate(vm.updatedTask.pipelineExecutionId);
+            vm.getPipelineForTaskUpdate(vm.updatedTask.designatedPipelineDefinitionName);
+            vm.getRunForTaskUpdate(vm.updatedTask.designatedPipelineExecutionId);
 
             //vm.taskIndex = taskIndex;
         };
@@ -928,13 +958,17 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    pipelineDefinitionName: JSON.parse(newTask.pipelineObject).name,
-                    pipelineExecutionId: JSON.parse(newTask.pipelineRun).executionId,
+                    designatedPipelineDefinitionName: JSON.parse(newTask.pipelineObject).name,
                     type: newTask.type,
                     source: newTask.source,
                     destination: newTask.destination,
                     runIfCondition: newTask.runIfCondition
                 };
+                if(newTask.pipelineRun == 'true'){
+                    task.shouldUseLatestRun = true;
+                } else {
+                    task.designatedPipelineExecutionId = newTask.pipelineRun;
+                }
             }
             if (newTask.type == 'UPLOAD_ARTIFACT') {
                 var task = {
@@ -967,7 +1001,6 @@ angular
                 };
             }
             if (newTask.type == 'FETCH_MATERIAL') {
-                debugger;
                 var updatedTask = {
                     id: task.id,
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
@@ -988,13 +1021,17 @@ angular
                     pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
-                    pipelineDefinitionName: newTask.pipelineObject.name,
-                    pipelineExecutionId: newTask.pipelineRun.executionId,
+                    designatedPipelineDefinitionName: newTask.pipelineObject.name,
                     type: newTask.type,
                     source: newTask.source,
                     destination: newTask.destination,
                     runIfCondition: newTask.runIfCondition
                 };
+                if(vm.updatedTask.pipelineRun == -1){
+                    updatedTask.shouldUseLatestRun = true;
+                } else {
+                    updatedTask.designatedPipelineExecutionId = parseInt(newTask.pipelineRun);
+                }
             }
             if (newTask.type == 'UPLOAD_ARTIFACT') {
                 var updatedTask = {
