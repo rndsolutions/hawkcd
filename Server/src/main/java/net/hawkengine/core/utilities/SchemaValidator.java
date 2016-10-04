@@ -215,10 +215,10 @@ public class SchemaValidator {
                 return this.message = "ERROR: FETCH ARTIFACT PIPELINE NAME IS NULL.";
             }
 
-            String pipelineStage = fetchArtifactTask.getDesignatedPipelineExecutionId();
-            if (pipelineStage == null) {
-                return this.message = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
-            }
+//            String pipelineStage = fetchArtifactTask.getDesignatedPipelineExecutionId();
+//            if (pipelineStage == null) {
+//                return this.message = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
+//            }
 
             String source = fetchArtifactTask.getSource();
             if (source == null) {

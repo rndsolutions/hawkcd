@@ -508,7 +508,7 @@ public class SchemaValidatorTests {
         fetchArtifactTask.setName("taskDefinition");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
         fetchArtifactTask.setDesignatedPipelineDefinitionName("pipelineName");
-        fetchArtifactTask.setDesignatedPipelineExecutionId("pipelineStage");
+//        fetchArtifactTask.setDesignatedPipelineExecutionId("pipelineStage");
         fetchArtifactTask.setSource("sourceFolder");
         fetchArtifactTask.setDestination("destinationFolder");
 
@@ -536,22 +536,22 @@ public class SchemaValidatorTests {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    public void validate_FetchArtifactTaskStage_NameNull(){
-        //Arrange
-        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
-        fetchArtifactTask.setName("TaksDefinitionName");
-        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setDesignatedPipelineDefinitionName("pipelineName");
-        String expectedResult = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
-
-        //Act
-        String actualResult = this.validator.validate(fetchArtifactTask);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult, actualResult);
-    }
+//    @Test
+//    public void validate_FetchArtifactTaskStage_NameNull(){
+//        //Arrange
+//        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
+//        fetchArtifactTask.setName("TaksDefinitionName");
+//        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
+//        fetchArtifactTask.setDesignatedPipelineDefinitionName("pipelineName");
+//        String expectedResult = "ERROR: FETCH ARTIFACT STAGE NAME IS NULL.";
+//
+//        //Act
+//        String actualResult = this.validator.validate(fetchArtifactTask);
+//
+//        //Assert
+//        assertNotNull(actualResult);
+//        assertEquals(expectedResult, actualResult);
+//    }
 
     @Test
     public void validate_FetchArtifactTaskTaskFolder_Null(){
@@ -560,7 +560,7 @@ public class SchemaValidatorTests {
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
         fetchArtifactTask.setDesignatedPipelineDefinitionName("pipelineName");
-        fetchArtifactTask.setDesignatedPipelineExecutionId("stageName");
+//        fetchArtifactTask.setDesignatedPipelineExecutionId("stageName");
         String expectedResult = "ERROR: FETCH ARTIFACT TASK SOURCE FOLDER IS NULL.";
 
         //Act
@@ -578,7 +578,7 @@ public class SchemaValidatorTests {
         fetchArtifactTask.setName("TaksDefinitionName");
         fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
         fetchArtifactTask.setDesignatedPipelineDefinitionName("pipelineName");
-        fetchArtifactTask.setDesignatedPipelineExecutionId("stageName");
+//        fetchArtifactTask.setDesignatedPipelineExecutionId("stageName");
         fetchArtifactTask.setSource("sourcefolder");
         String expectedResult = "ERROR: FETCH ARTIFACT TASK DESTINATION FOLDER IS NULL.";
 

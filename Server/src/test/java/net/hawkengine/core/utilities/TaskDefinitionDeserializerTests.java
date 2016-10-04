@@ -72,8 +72,8 @@ public class TaskDefinitionDeserializerTests {
         String jsonAsString = "{\n" +
                 "\"type\": \"FETCH_ARTIFACT\",\n" +
                 "\"name\": \"fetchArtifact\",\n" +
-                "\"pipelineDefinitionName\": \"testPipe\",\n" +
-                "\"pipelineExecutionId\": \"one\",\n" +
+                "\"designatedPipelineDefinitionName\": \"testPipe\",\n" +
+                "\"designatedPipelineExecutionId\": 1,\n" +
                 "\"source\": \"mySource\",\n" +
                 "\"destination\": \"dist\"\n" +
                 "}";
@@ -87,7 +87,7 @@ public class TaskDefinitionDeserializerTests {
         Assert.assertEquals(TaskType.FETCH_ARTIFACT, actualResult.getType());
         Assert.assertEquals("fetchArtifact", actualResult.getName());
         Assert.assertEquals("testPipe",actualResult.getDesignatedPipelineDefinitionName());
-        Assert.assertEquals("one",actualResult.getDesignatedPipelineExecutionId());
+        Assert.assertEquals(1 ,actualResult.getDesignatedPipelineExecutionId());
         Assert.assertEquals("mySource",actualResult.getSource());
     }
 
