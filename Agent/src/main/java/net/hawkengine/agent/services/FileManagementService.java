@@ -187,7 +187,7 @@ public class FileManagementService implements IFileManagementService {
 
         String pattern = path.replace(rootPath, "");
 
-        if (pattern.isEmpty()) {
+        if (pattern.isEmpty() || pattern.equals("/") || pattern.equals("\\")) {
             pattern = "**";
         }
 
@@ -198,9 +198,8 @@ public class FileManagementService implements IFileManagementService {
 
     @Override
     public List<File> getFiles(String rootPath, String wildCardPattern) {
-
         DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir(this.normalizePath(rootPath));
+        scanner.setBasedir(rootPath);
         scanner.setIncludes(new String[]{wildCardPattern});
         scanner.scan();
 

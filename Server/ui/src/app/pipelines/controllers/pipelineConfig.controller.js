@@ -343,14 +343,14 @@ angular
         vm.getRunsFromPipelineDefinitionForUpdate = function (name) {
             vm.selectedPipelineForTaskUpdateName = angular.copy(name);
             vm.currentPipelineRuns = [];
-            vm.allPipelineRuns.forEach(function (currentPipelineRun, runIndex, runArray) {
-                if(vm.selectedPipelineForTaskUpdateName == currentPipelineRun.pipelineDefinitionName){
-                    vm.currentPipelineRuns.push(currentPipelineRun);
-                }
-            });
+            vm.allPipelinesForTask.forEach(function (currentPipelineRun, runIndex, runArray) {
+                if(vm.selectedPipelineForTaskUpdateName == currentPipelineRun.name){
+                    // vm.currentPipelineRuns.push(currentPipelineRun);
 
-            vm.currentPipelineRuns.sort(function(a, b) {
-                return a.executionId - b.executionId;
+                    currentPipelineRun.pipelineExecutionIds.forEach(function(currentExecutionId, executionIdArray, executionIdIndex) {
+                        vm.currentPipelineRuns.push(currentExecutionId);
+                    });
+                }
             });
 
             // console.log(vm.currentPipelineRuns);
@@ -526,13 +526,20 @@ angular
                             type: newStage.jobDefinitions.taskDefinitions.type,
                             pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                             pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
-                            stageDefinitionName: newStage.name,
-                            jobDefinitionName: newStage.jobDefinitions.name,
-                            source: newStage.jobDefinitions.taskDefinitions.source,
+                            designatedPipelineDefinitionName: JSON.parse(newStage.jobDefinitions.taskDefinitions.pipelineObject).name,
+                            designatedPipelineDefinitionId: JSON.parse(newStage.jobDefinitions.taskDefinitions.pipelineObject).id,
+                            source: (typeof newStage.jobDefinitions.taskDefinitions.source === 'undefined') ? '' : newStage.jobDefinitions.taskDefinitions.source,
+                            destination: (typeof newStage.jobDefinitions.taskDefinitions.destination === 'undefined') ? '' : newStage.jobDefinitions.taskDefinitions.destination,
+
                             runIfCondition: newStage.jobDefinitions.taskDefinitions.runIfCondition
                         }]
                     }]
                 };
+                if(newStage.jobDefinitions.taskDefinitions.pipelineRun == 'true'){
+                    stage.jobDefinitions[0].taskDefinitions[0].shouldUseLatestRun = true;
+                } else {
+                    stage.jobDefinitions[0].taskDefinitions[0].designatedPipelineExecutionId = newStage.jobDefinitions.taskDefinitions.pipelineRun;
+                }
             }
             if (newStage.jobDefinitions.taskDefinitions.type == 'FETCH_MATERIAL') {
                 var selectedMaterialForJob = JSON.parse(vm.newStage.selectedMaterialForNewStage);
@@ -571,7 +578,8 @@ angular
                         taskDefinitions: [{
                             pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                             type: newStage.jobDefinitions.taskDefinitions.type,
-                            source: newStage.jobDefinitions.taskDefinitions.source
+                            source: (typeof newStage.jobDefinitions.taskDefinitions.source === 'undefined') ? '' : newStage.jobDefinitions.taskDefinitions.source,
+                            destination: (typeof newStage.jobDefinitions.taskDefinitions.destination === 'undefined') ? '' : newStage.jobDefinitions.taskDefinitions.destination,
                         }]
                     }]
                 };
@@ -691,14 +699,18 @@ angular
                         type: newJob.taskDefinitions.type,
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                        pipelineDefinitionName: vm.allPipelines[vm.pipelineIndex].name,
-                        stageDefinitionName: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].name,
-                        jobDefinitionName: newJob.name,
-                        source: newJob.taskDefinitions.source,
-                        destination: newJob.taskDefinitions.destination,
+                        designatedPipelineDefinitionName: JSON.parse(newJob.taskDefinitions.pipelineObject).name,
+                        designatedPipelineDefinitionId: JSON.parse(newJob.taskDefinitions.pipelineObject).id,
+                        source: (typeof newJob.taskDefinitions.source === 'undefined') ? '' : newJob.taskDefinitions.source,
+                        destination: (typeof newJob.taskDefinitions.destination === 'undefined') ? '' : newJob.taskDefinitions.destination,
                         runIfCondition: newJob.taskDefinitions.runIfCondition
                     }]
                 };
+                if(newJob.taskDefinitions.pipelineRun == 'true'){
+                    job.taskDefinitions[0].shouldUseLatestRun = true;
+                } else {
+                    job.taskDefinitions[0].designatedPipelineExecutionId = newJob.taskDefinitions.pipelineRun;
+                }
             }
             if (newJob.taskDefinitions.type == 'FETCH_MATERIAL') {
                 var materialForJob = JSON.parse(newJob.taskDefinitions.material);
@@ -728,8 +740,8 @@ angular
                         type: newJob.taskDefinitions.type,
                         pipelineDefinitionId: vm.allPipelines[vm.pipelineIndex].id,
                         stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
-                        source: newJob.taskDefinitions.source,
-                        destination: newJob.taskDefinitions.destination,
+                        source: (typeof newJob.taskDefinitions.source === 'undefined') ? '' : newJob.taskDefinitions.source,
+                        destination: (typeof newJob.taskDefinitions.destination === 'undefined') ? '' : newJob.taskDefinitions.destination,
                         runIfCondition: newJob.taskDefinitions.runIfCondition
                     }]
                 };
@@ -959,9 +971,10 @@ angular
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     designatedPipelineDefinitionName: JSON.parse(newTask.pipelineObject).name,
+                    designatedPipelineDefinitionId: JSON.parse(newTask.pipelineObject).id,
                     type: newTask.type,
-                    source: newTask.source,
-                    destination: newTask.destination,
+                    source: (typeof newTask.source === 'undefined') ? '' : newTask.source,
+                    destination: (typeof newTask.destination === 'undefined') ? '' : newTask.destination,
                     runIfCondition: newTask.runIfCondition
                 };
                 if(newTask.pipelineRun == 'true'){
@@ -976,8 +989,8 @@ angular
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
-                    source: newTask.source,
-                    destination:newTask.destination,
+                    source: (typeof newTask.source === 'undefined') ? '' : newTask.source,
+                    destination: (typeof newTask.destination === 'undefined') ? '' : newTask.destination,
                     runIfCondition: newTask.runIfCondition
                 }
             }
@@ -1022,9 +1035,10 @@ angular
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     designatedPipelineDefinitionName: newTask.pipelineObject.name,
+                    designatedPipelineDefinitionId: newTask.pipelineObject.id,
                     type: newTask.type,
-                    source: newTask.source,
-                    destination: newTask.destination,
+                    source: (typeof newTask.source === 'undefined') ? '' : newTask.source,
+                    destination: (typeof newTask.destination === 'undefined') ? '' : newTask.destination,
                     runIfCondition: newTask.runIfCondition
                 };
                 if(vm.updatedTask.pipelineRun == -1){
@@ -1040,8 +1054,8 @@ angular
                     stageDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].id,
                     jobDefinitionId: vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex].id,
                     type: newTask.type,
-                    source: newTask.source,
-                    destination: newTask.destination,
+                    source: (typeof newTask.source === 'undefined') ? '' : newTask.source,
+                    destination: (typeof newTask.destination === 'undefined') ? '' : newTask.destination,
                     runIfCondition: newTask.runIfCondition
                 }
             }

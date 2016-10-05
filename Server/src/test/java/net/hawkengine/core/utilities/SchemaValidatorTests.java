@@ -553,42 +553,6 @@ public class SchemaValidatorTests {
 //        assertEquals(expectedResult, actualResult);
 //    }
 
-    @Test
-    public void validate_FetchArtifactTaskTaskFolder_Null(){
-        //Arrange
-        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
-        fetchArtifactTask.setName("TaksDefinitionName");
-        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setDesignatedPipelineDefinitionName("pipelineName");
-//        fetchArtifactTask.setDesignatedPipelineExecutionId("stageName");
-        String expectedResult = "ERROR: FETCH ARTIFACT TASK SOURCE FOLDER IS NULL.";
-
-        //Act
-        String actualResult = this.validator.validate(fetchArtifactTask);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult, actualResult);
-    }
-
-    @Test
-    public void validate_FetchArtifactTaskDestinationFolder_Null(){
-        //Arrange
-        FetchArtifactTask fetchArtifactTask = new FetchArtifactTask();
-        fetchArtifactTask.setName("TaksDefinitionName");
-        fetchArtifactTask.setRunIfCondition(RunIf.PASSED);
-        fetchArtifactTask.setDesignatedPipelineDefinitionName("pipelineName");
-//        fetchArtifactTask.setDesignatedPipelineExecutionId("stageName");
-        fetchArtifactTask.setSource("sourcefolder");
-        String expectedResult = "ERROR: FETCH ARTIFACT TASK DESTINATION FOLDER IS NULL.";
-
-        //Act
-        String actualResult = this.validator.validate(fetchArtifactTask);
-
-        //Assert
-        assertNotNull(actualResult);
-        assertEquals(expectedResult, actualResult);
-    }
 //--------------------------------------------------------------------------------------------------
 
 
@@ -611,39 +575,6 @@ public class SchemaValidatorTests {
         assertEquals(this.expectedResult,actualResult);
     }
 
-
-    @Test
-    public void validate_UploadArtifactTaskSource_Null(){
-        //Arrane
-        UploadArtifactTask uploadArtifactTask = new UploadArtifactTask();
-        uploadArtifactTask.setName("taskDefinition");
-        uploadArtifactTask.setRunIfCondition(RunIf.PASSED);
-        String expectedResult = "ERROR: UPLOAD ARTIFACT TASK SOURCE FOLDER IS NULL.";
-
-        //Act
-        String actualResult = this.validator.validate(uploadArtifactTask);
-
-        //Arrange
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
-    }
-
-    @Test
-    public void validate_UploadArtifactTaskDestination_Null(){
-        //Arrane
-        UploadArtifactTask uploadArtifactTask = new UploadArtifactTask();
-        uploadArtifactTask.setName("taskDefinition");
-        uploadArtifactTask.setRunIfCondition(RunIf.PASSED);
-        uploadArtifactTask.setSource("/source");
-        String expectedResult = "ERROR: UPLOAD ARTIFACT TASK DESTINATION FOLDER IS NULL.";
-
-        //Act
-        String actualResult = this.validator.validate(uploadArtifactTask);
-
-        //Arrange
-        assertNotNull(actualResult);
-        assertEquals(expectedResult,actualResult);
-    }
 //--------------------------------------------------------------------------------------------------
 
 

@@ -4,15 +4,16 @@ import net.hawkengine.model.configuration.filetree.JsTreeFile;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 
 public interface IFileManagementService {
     String unzipFile(String filePath, String destination);
 
     String streamToFile(InputStream stream, String filePath);
 
-    File[] getFiles(String rootPath, String wildCardPattern);
+    List<File> getFiles(String rootPath, String wildCardPattern);
 
-    String zipFiles(String zipFilePath, File[] files, String filesRootPath, boolean includeRootPath);
+    String zipFiles(String zipFilePath, List<File> files, String filesRootPath, boolean includeRootPath);
 
     File generateUniqueFile(String filePath, String fileExtension);
 

@@ -43,10 +43,6 @@ public class FetchArtifactTask extends TaskDefinition {
     }
 
     public void setSource(String source) {
-        if (source == null) {
-            source = "";
-        }
-
         this.source = source;
     }
 

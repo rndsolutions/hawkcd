@@ -46,9 +46,11 @@ public class FetchArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, "Error occurred in getting pipeline name!");
         }
 
-        String fetchingMessage = String.format("Start fetching artifact source:  %s\\%s\\%s",
-                taskDefinition.getDesignatedPipelineDefinitionName(),
-                taskDefinition.getDesignatedPipelineExecutionId(),
+        String fetchingMessage = String.format("Start fetching artifact source: " +
+                taskDefinition.getDesignatedPipelineDefinitionName() +
+                File.separator +
+                taskDefinition.getDesignatedPipelineExecutionId() +
+                File.separator +
                 taskDefinition.getSource());
         LOGGER.debug(fetchingMessage);
         ReportAppender.appendInfoMessage(fetchingMessage, report);
@@ -59,6 +61,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
         String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/fetch-artifact";
         WebResource webResource = this.restClient.resource(requestSource);
         String source = taskDefinition.getDesignatedPipelineDefinitionName() + File.separator + taskDefinition.getDesignatedPipelineExecutionId() + File.separator + taskDefinition.getSource();
+
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, source);
 
         if ((response.getStatus() != 200)) {
