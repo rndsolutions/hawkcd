@@ -56,10 +56,10 @@ public class UploadArtifactExecutor extends TaskExecutor {
         LOGGER.debug(uploadingMessage);
         ReportAppender.appendInfoMessage(uploadingMessage, report);
 
-        String pathToFile = AgentConfiguration.getInstallInfo().getAgentSandbox() + File.separator + "Pipelines" + File.separator + workInfo.getPipelineDefinitionName();
-        if (!taskDefinition.getSource().isEmpty()) {
-            pathToFile = pathToFile + File.separator + taskDefinition.getSource();
-        }
+        String pathToFile = AgentConfiguration.getInstallInfo().getAgentSandbox() + File.separator + "Pipelines" + File.separator + workInfo.getPipelineDefinitionName() + File.separator + taskDefinition.getSource();
+//        if (!taskDefinition.getSource().isEmpty()) {
+//            pathToFile = pathToFile + File.separator + taskDefinition.getSource();
+//        }
 
         String fullPath = this.fileManagementService.pathCombine(pathToFile);
         String rootPath = this.fileManagementService.getRootPath(fullPath);
@@ -69,7 +69,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, String.format("%s is Non-existent source.", taskDefinition.getSource()));
         }
 
-        List<File> files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
+        List<File> files = this.fileManagementService.getFiles(fullPath, wildCardPattern);
 
         if (files.size() == 0) {
             return this.nullProcessing(report, task, String.format("Error in getting files in %s", fullPath));

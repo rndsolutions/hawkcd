@@ -60,7 +60,7 @@ public class FetchArtifactExecutor extends TaskExecutor {
 
         String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/fetch-artifact";
         WebResource webResource = this.restClient.resource(requestSource);
-        String source = taskDefinition.getDesignatedPipelineDefinitionName() + File.separator + taskDefinition.getDesignatedPipelineExecutionId();
+        String source = taskDefinition.getDesignatedPipelineDefinitionName() + File.separator + taskDefinition.getDesignatedPipelineExecutionId() + File.separator + taskDefinition.getSource();
 
         ClientResponse response = webResource.type("application/json").post(ClientResponse.class, source);
 
