@@ -19,7 +19,6 @@ import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 import net.hawkengine.agent.utilities.ReportAppender;
 import net.hawkengine.agent.utilities.deserializers.TaskDefinitionAdapter;
-import net.hawkengine.model.MaterialDefinition;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -57,7 +56,10 @@ public class UploadArtifactExecutor extends TaskExecutor {
         LOGGER.debug(uploadingMessage);
         ReportAppender.appendInfoMessage(uploadingMessage, report);
 
-        String pathToFile = AgentConfiguration.getInstallInfo().getAgentSandbox() + File.separator + "Pipelines" + File.separator + workInfo.getPipelineDefinitionName() + File.separator + taskDefinition.getSource();
+        String pathToFile = AgentConfiguration.getInstallInfo().getAgentSandbox() + File.separator + "Pipelines" + File.separator + workInfo.getPipelineDefinitionName();
+        if (!taskDefinition.getSource().isEmpty()) {
+            pathToFile = pathToFile + File.separator + taskDefinition.getSource();
+        }
 
         String fullPath = this.fileManagementService.pathCombine(pathToFile);
         String rootPath = this.fileManagementService.getRootPath(fullPath);
