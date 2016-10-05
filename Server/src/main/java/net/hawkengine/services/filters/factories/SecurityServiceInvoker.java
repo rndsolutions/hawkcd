@@ -28,6 +28,7 @@ public class SecurityServiceInvoker<T extends DbEntry> {
                 return this.securityService.update(entity, className, permissions);
             case "delete":
             case "cancelPipeline":
+            case "pausePipeline":
                 return this.securityService.delete(entity, className, permissions);
             case "assignUserToGroup":
                 return this.securityService.assignUserToGroup(entity, className, permissions);
