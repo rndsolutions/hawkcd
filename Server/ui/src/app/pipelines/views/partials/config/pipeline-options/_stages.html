@@ -19,7 +19,7 @@
         <td> {{stage.isTriggeredManually}} </td>
         <td> {{stage.jobDefinitions.length}} </td>
         <td>
-          <button class="btn red" data-target="#removeStage" data-toggle="modal"
+          <button class="btn red unsortable" data-target="#removeStage" data-toggle="modal"
                   ng-click="pipeConfig.getStage(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">Delete</button>
         </td>
       </tr>
