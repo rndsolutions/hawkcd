@@ -8,6 +8,8 @@ public class UploadArtifactTask extends TaskDefinition {
 
     public UploadArtifactTask() {
         this.setType(TaskType.UPLOAD_ARTIFACT);
+        this.source = "";
+        this.destination = "";
     }
 
     public String getSource() {

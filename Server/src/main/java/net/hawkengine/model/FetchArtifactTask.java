@@ -12,6 +12,8 @@ public class FetchArtifactTask extends TaskDefinition {
 
     public FetchArtifactTask() {
         this.setType(TaskType.FETCH_ARTIFACT);
+        this.source = "";
+        this.destination = "";
     }
 
     public String getDesignatedPipelineDefinitionId() {
