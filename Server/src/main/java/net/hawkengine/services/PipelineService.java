@@ -197,15 +197,55 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         return result;
     }
 
+//    @Override
+//    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId) {
+//        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
+//        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+//
+//        List<PipelineDto> pipelineDtos = new ArrayList<>();
+//        for (Pipeline pipeline : pipelines) {
+//            PipelineDto pipelineDto = new PipelineDto();
+//            pipelineDto.constructHistoryPipelineDto(pipeline);
+//            pipelineDtos.add(pipelineDto);
+//        }
+//
+//        result.setObject(pipelineDtos);
+//
+//        return result;
+//    }
+
     @Override
-    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId) {
+    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines) {
+        return this.getAllPipelineHistoryDTOs(pipelineDefinitionId, numberOfPipelines, null);
+    }
+
+    @Override
+    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
+                .collect(Collectors.toList());
+
+        int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
+        if (indexOfPipeline == -1) {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        } else {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .skip(indexOfPipeline + 1)
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        }
 
         List<PipelineDto> pipelineDtos = new ArrayList<>();
-        for (Pipeline pipeline : pipelines) {
+        for (Pipeline pipeline : filteredPipelines) {
             PipelineDto pipelineDto = new PipelineDto();
-            pipelineDto.constructHistoryPipelineDto(pipeline);
+            pipelineDto.constructArtifactPipelineDto(pipeline);
             pipelineDtos.add(pipelineDto);
         }
 
