@@ -1,6 +1,6 @@
 package net.hawkengine.model.payload;
 
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ public class JobExecutionInfo {
     private String stageName;
     private String jobId;
     private String jobName;
-    private Status status = Status.PASSED;
+    private PipelineStatus status = PipelineStatus.PASSED;
     private String jobStateString;
     private LocalDateTime start;
     private LocalDateTime end;
@@ -104,11 +104,11 @@ public class JobExecutionInfo {
         this.jobName = value;
     }
 
-    public Status getStatus() {
+    public PipelineStatus getStatus() {
         return this.status;
     }
 
-    public void setStatus(Status value) {
+    public void setStatus(PipelineStatus value) {
         this.status = value;
     }
 

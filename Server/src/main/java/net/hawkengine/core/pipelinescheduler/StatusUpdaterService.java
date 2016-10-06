@@ -33,8 +33,10 @@ public class StatusUpdaterService {
             if (pipeline.shouldBeCanceled()) {
                 this.cancelPipeline(pipeline);
                 LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
-                ServiceResult result = new ServiceResult(null, NotificationType.WARNING, "Pipeline " + pipeline.getPipelineDefinitionName() + " was sucessfully canceled");
+                ServiceResult result = new ServiceResult(null, NotificationType.WARNING, "Pipeline " + pipeline.getPipelineDefinitionName() + " was successfully canceled");
                 EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result);
+            } else if (pipeline.getStatus() == PipelineStatus.PAUSED) {
+                this.pausePipeline(pipeline);
             } else {
                 this.updateAllStatuses(pipeline);
             }
@@ -71,6 +73,11 @@ public class StatusUpdaterService {
 
     public void updateStageStatusesInSequence(List<Stage> stages) {
         for (Stage currentStage : stages) {
+            if (currentStage.getStatus() == StageStatus.PAUSED) {
+                currentStage.setStatus(StageStatus.IN_PROGRESS);
+                currentStage.setTriggeredManually(false);
+            }
+
             if (currentStage.getStatus() == StageStatus.IN_PROGRESS) {
                 this.updateStageStatus(currentStage);
                 if (currentStage.getStatus() == StageStatus.PASSED) {
@@ -117,9 +124,9 @@ public class StatusUpdaterService {
             StageStatus stageStatus = stage.getStatus();
             stageStatuses.add(stageStatus);
             if (stage.isTriggeredManually() && (stage.getStatus() == StageStatus.IN_PROGRESS)) {
-                pipeline.setStatus(Status.PAUSED);
+                pipeline.setStatus(PipelineStatus.PAUSED);
                 stage.setStatus(StageStatus.PAUSED);
-                String pipelinePaused = String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.PAUSED);
+                String pipelinePaused = String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), PipelineStatus.PAUSED);
                 LOGGER.info(pipelinePaused);
                 String stagePaused = String.format("Stage %s must be triggered manually", stage.getStageDefinitionName());
                 LOGGER.info(stagePaused);
@@ -130,13 +137,13 @@ public class StatusUpdaterService {
         }
 
         if (stageStatuses.contains(StageStatus.FAILED)) {
-            pipeline.setStatus(Status.FAILED);
+            pipeline.setStatus(PipelineStatus.FAILED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.FAILED));
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), PipelineStatus.FAILED));
         } else if (this.areAllPassed(stageStatuses)) {
-            pipeline.setStatus(Status.PASSED);
+            pipeline.setStatus(PipelineStatus.PASSED);
             pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), Status.PASSED));
+            LOGGER.info(String.format("Pipeline %s set to %s", pipeline.getPipelineDefinitionName(), PipelineStatus.PASSED));
         }
     }
 
@@ -164,7 +171,7 @@ public class StatusUpdaterService {
 
     private void cancelPipeline(Pipeline pipeline) {
         pipeline.setShouldBeCanceled(false);
-        pipeline.setStatus(Status.CANCELED);
+        pipeline.setStatus(PipelineStatus.CANCELED);
         pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         for (Stage stage : pipeline.getStages()) {
             if (stage.getStatus() == StageStatus.IN_PROGRESS || stage.getStatus() == StageStatus.AWAITING) {
@@ -175,6 +182,16 @@ public class StatusUpdaterService {
                         task.setStatus(TaskStatus.CANCELED);
                     }
                 }
+            }
+        }
+    }
+
+    private void pausePipeline(Pipeline pipeline) {
+        List<Stage> stages = pipeline.getStages();
+        for (Stage stage : stages) {
+            if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+                stage.setStatus(StageStatus.PAUSED);
+                break;
             }
         }
     }

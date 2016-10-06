@@ -2,7 +2,7 @@ package net.hawkengine.model.dto;
 
 import net.hawkengine.model.*;
 import net.hawkengine.model.configuration.filetree.JsTreeFile;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ public class PipelineDto extends PermissionObject {
     private String pipelineDefinitionName;
     private int executionId;
     private List<Material> materials;
-    private Status status;
+    private PipelineStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
