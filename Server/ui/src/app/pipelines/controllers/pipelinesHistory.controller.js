@@ -42,11 +42,7 @@ angular
 
         };
 
-         vm.getAllHistoryPipelines = function(id) {
-             pipeExecService.getAllHistoryPipelines(id);
-         };
-
-         vm.getAllHistoryPipelines(vm.pipelineId);
+        pipeExecService.getAllHistoryPipelines(vm.pipelineId, 10, '');
 
         vm.getLastRunAction = function(pipelineRun) {
             return moment.getLastRunAction(pipelineRun)
@@ -80,9 +76,6 @@ angular
                     vm.currentPipelineRuns.push(currentPipelineRun);
                 }
             });
-            vm.currentPipelineRuns.sort(function(a, b) {
-                return b.executionId - a.executionId;
-            });
 
             // vm.lastRun = {};
             // vm.lastRun = vm.currentPipelineRuns[0];
@@ -108,6 +101,15 @@ angular
             // console.log(vm.allPipelineRuns);
             // console.log(vm.currentPipelineRuns);
         }, true);
+
+         vm.scrollCall = function() {
+             if(vm.allPipelineRuns[0]){
+                 if(vm.allPipelineRuns[0].disabled == false){
+                     pipeExecService.getAllHistoryPipelines(vm.pipelineId, 10, vm.allPipelineRuns[vm.allPipelineRuns.length - 1].id);
+                 }
+                 vm.allPipelineRuns[0].disabled = true;
+             }
+         };
 
          $scope.$on("$destroy", function() {
              pipelineUpdater.flushAllHistoryPipelines();
