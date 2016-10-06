@@ -1,0 +1,63 @@
+<?xml version='1.0'?>
+<!-- Created with MSI Factory version 2.1.1011.0
+     on 2016-10-06 at 09:12:51 -->
+<?include BuildVars.wxi?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Product Id="$(var.ProductBuildGUID)" Name="HawkCD Server - $(var.BuildNumber)" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
+<Package InstallerVersion="301" Description="Hawk CD Agent" Comments="Package Comments" Platform="x86" Manufacturer="RnD Solutions Ltd." Languages="0" Compressed="yes"/>
+<Upgrade Id="EC3C72CC-B52F-4A00-A632-595710B93D88">
+<UpgradeVersion Property="OLDERVERSIONBEINGUPGRADED" Minimum="0.0.0" Maximum="$(var.BuildNumber)" IncludeMinimum="yes"/>
+<UpgradeVersion Property="NEWERVERSIONDETECTED" Minimum="$(var.BuildNumber)" OnlyDetect="yes"/>
+</Upgrade>
+<InstallExecuteSequence>
+<RemoveExistingProducts After="InstallInitialize"/>
+</InstallExecuteSequence>
+<InstallUISequence/>
+<AdminExecuteSequence/>
+<AdminUISequence/>
+<AdvertiseExecuteSequence/>
+<Media Id="1" DiskPrompt="Disk 1" Cabinet="setup.cab" EmbedCab="yes" CompressionLevel="mszip"/>
+<Property Id="DiskPrompt" Value="!(loc.UIDiskPrompt)"/>
+<Property Id="ARPNOMODIFY" Value="1"/>
+<Property Id="ARPPRODUCTICON" Value="hawk_0001.ico"/>
+<Icon Id="hawk_0001.ico" SourceFile="$(var.Buildzone)\Installers\Images\hawk.ico"/>
+<Property Id="ALLUSERS" Value="1"/>
+<Property Id="MSIFACTUIRMOption" Value="UseRM"/>
+<Property Id="MSIFACT_INSTALLDIR" Value="INSTALLDIR"/>
+<Feature Id="Complete" Title="Complete" Level="1" Description="Complete program features." Absent="allow" AllowAdvertise="no" TypicalDefault="install" Display="collapse" InstallDefault="local">
+<ComponentRef Id="RegKey_0001"/>
+<ComponentRef Id="RegValAdd_0002"/>
+<MergeRef Id="Hawk_Server_Files"/>
+</Feature>
+<Directory Id="TARGETDIR" Name="SourceDir">
+<Directory Id="ProgramFilesFolder" Name="ProgramFilesFolder">
+<Directory Id="HAWKCDDIR" Name="HawkCD">
+<Directory Id="INSTALLDIR" Name="Server"/>
+</Directory>
+</Directory>
+</Directory>
+<UIRef Id="SUFWI_UI"/>
+<UIRef Id="SUFWIUI_Common" />
+<UIRef Id="SUFUI_ErrorText" />
+<UIRef Id="SUFUI_ProgressText" />
+</Product>
+<Fragment>
+<DirectoryRef Id="TARGETDIR">
+<Component Id="RegKey_0001" Guid="E88C44F4-7051-415B-8DBC-AD5CBD774D50" KeyPath="yes">
+<RegistryKey Action="createAndRemoveOnUninstall" Root="HKLM" Key="Software\RnD\Hawk"/>
+</Component>
+</DirectoryRef>
+</Fragment>
+<Fragment>
+<DirectoryRef Id="TARGETDIR">
+<Component Id="RegValAdd_0002" Guid="0284583B-3D56-46BE-8884-B40BAF94D727">
+<RegistryValue Action="write" Type="string" Root="HKLM" Key="Software\RnD\Hawk\Server" Name="Version" KeyPath="yes" Value="[VERSION]"/>
+</Component>
+</DirectoryRef>
+</Fragment>
+<Fragment>
+<DirectoryRef Id="INSTALLDIR">
+<Merge Id="Hawk_Server_Files" SourceFile="$(var.Buildzone)\Merge Module Definitions\Server.msm" DiskId="1" Language="1033"/>
+</DirectoryRef>
+</Fragment>
+</Wix>

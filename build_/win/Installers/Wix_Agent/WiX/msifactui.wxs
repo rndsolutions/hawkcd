@@ -1,0 +1,556 @@
+<?include BuildVars.wxi?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+        <UI>
+            <Dialog Id="WelcomeDlg" Width="370" Height="270" Title="!(loc.WelcomeDlg_Title)">
+                <Control Id="Description" Type="Text" X="21" Y="82" Width="320" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeDlgDescription)" />
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+                	<Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+</Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="Image_SideBanner" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="CancelDlg" Y="10" Width="260" Height="85" Title="!(loc.CancelDlg_Title)">
+                <Control Id="No" Type="PushButton" X="132" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonNo)">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+<Control Id="Yes" Type="PushButton" X="72" Y="57" Width="56" Height="17" Text="!(loc.UIButtonYes)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+                </Control>
+<Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30" Text="!(loc.CancelDlgText)" />
+<Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="!(loc.CancelDlgIconTooltip)" FixedSize="yes" IconSize="32" Text="Image_Warning" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="LicenseAgreementDlg" Width="370" Height="270" Title="!(loc.LicenseAgreementDlg_Title)">
+                <Control Id="LicenseAcceptedCheckBox" Type="CheckBox" X="20" Y="207" Width="330" Height="18" CheckBoxValue="1" Property="LicenseAccepted" Text="!(loc.LicenseAgreementDlgLicenseAcceptedCheckBox)" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
+                 </Control>
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+                    <Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+                    <Condition Action="disable"><![CDATA[LicenseAccepted <> "1"]]></Condition>
+                    <Condition Action="enable">LicenseAccepted = "1"</Condition>
+                </Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="LicenseText" Type="ScrollableText" X="20" Y="60" Width="330" Height="140" Sunken="yes" TabSkip="no">
+                <Text>{\rtf1\ansi\ansicpg1200\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset204 MS Shell Dlg 2;}{\f1\fnil\fcharset0 MS Shell Dlg 2;}}
+\viewkind4\uc1\pard\lang1026\f0\fs17 ENPS is provided subject to license and includes enhanced functionality for integration with third-party devices and systems. To the extent that you make use of such functionality, AP hereby provides you with notice that under the terms of your ENPS agreement, any workstation or terminal connected to or using all or part of ENPS, through the enhanced integration functionality or any other means, is considered a workstation or terminal for the purposes of the workstation-based licensing set forth in your agreement. Download, installation or use of ENPS software in any environment including development, testing or production constitutes understanding and acknowledgement of this notice.\par
+\par
+\lang1033\f1\par
+\lang1026\f0\par
+}
+</Text>
+</Control>
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="BrowseDlg" Width="370" Height="270" Title="!(loc.BrowseDlg_Title)">
+                <Control Id="PathEdit" Type="PathEdit" X="25" Y="202" Width="320" Height="18" Property="_BrowseProperty" Indirect="yes" />
+                <Control Id="OK" Type="PushButton" X="240" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonOK)">
+                    <Publish Event="SetTargetPath" Value="[_BrowseProperty]">1</Publish>
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="Reset" Value="0">1</Publish>
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                <Control Id="ComboLabel" Type="Text" X="25" Y="58" Width="44" Height="10" TabSkip="no" Text="!(loc.BrowseDlgComboLabel)" />
+                <Control Id="DirectoryCombo" Type="DirectoryCombo" X="70" Y="55" Width="220" Height="80" Property="_BrowseProperty" Indirect="yes" Fixed="yes" Remote="yes">
+                    <Subscribe Event="IgnoreChange" Attribute="IgnoreChange" />
+                </Control>
+                <Control Id="Button_Bmp_Up" Type="PushButton" X="298" Y="55" Width="19" Height="19" ToolTip="!(loc.BrowseDlgButton_Bmp_UpTooltip)" Icon="yes" FixedSize="yes" IconSize="16" Text="Icon_Up">
+                    <Publish Event="DirectoryListUp" Value="0">1</Publish>
+                </Control>
+                <Control Id="NewFolder" Type="PushButton" X="325" Y="55" Width="19" Height="19" ToolTip="!(loc.BrowseDlgNewFolderTooltip)" Icon="yes" FixedSize="yes" IconSize="16" Text="Icon_New">
+                    <Publish Event="DirectoryListNew" Value="0">1</Publish>
+                </Control>
+                <Control Id="DirectoryList" Type="DirectoryList" X="25" Y="83" Width="320" Height="98" Property="_BrowseProperty" Sunken="yes" Indirect="yes" TabSkip="no" />
+                <Control Id="PathLabel" Type="Text" X="25" Y="190" Width="320" Height="10" TabSkip="no" Text="!(loc.BrowseDlgPathLabel)" />
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.BrowseDlgDescription)" />
+                </Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="InstallDirDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+                <Control Id="FolderLabel" Text="The installation wizard will install the files for [ProductName] in the following folder.
+
+To install into a different folder, click the Browse button, and select another folder.
+
+You can choose not to install [ProductName] by clicking Cancel to exit.
+        " Type="Text" X="10" Y="50" Width="344" Height="113"/>
+<Control Id="DestinationFolderBox" Text="!(loc.DestinationFolderGroupBox)" Type="GroupBox" X="20" Y="166" Width="309" Height="47"/>
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">1</Publish>
+                </Control>
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
+</Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Folder" Type="PathEdit" X="27" Y="185" Width="228" Height="21" Property="MSIFACT_INSTALLDIR" Indirect="yes">
+					<Publish Event="SetTargetPath" Value="INSTALLDIR">1</Publish>
+<Publish Property="TARGETDIR" Value="[INSTALLDIR]">1</Publish>
+</Control>
+<Control Id="ChangeFolder" Type="PushButton" X="260" Y="187" Width="56" Height="17" Text="!(loc.InstallDirDlgChange)">
+                	<Publish Property="_BrowseProperty" Value="[MSIFACT_INSTALLDIR]" Order="1">1</Publish>
+            		<Publish Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+            	</Control>
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="VerifyReadyDlgInstall" Width="370" Height="270" Title="!(loc.VerifyReadyDlg_Title)" TrackDiskSpace="yes">
+                <Control Id="Install" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.VerifyReadyDlgInstall)" ElevationShield="yes">
+                    <Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfRbDiskDlg">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)</Publish>
+                    <Publish Event="EndDialog" Value="Return">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="EnableRollback" Value="False">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfDiskDlg">(OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")</Publish>
+                </Control>
+<Control Id="InstallTitle" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.VerifyReadyDlgInstallTitle)">
+                </Control>
+<Control Id="InstallText" Type="Text" X="25" Y="81" Width="320" Height="36" Text="Click Install to begin the installation. Click Back to review or change any of your installation settings. Click Cancel to exit.">
+                </Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                    <Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="OutOfRbDiskDlg" Width="370" Height="270" Title="!(loc.OutOfRbDiskDlg_Title)">
+                <Control Id="No" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonNo)">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+<Control Id="Yes" Type="PushButton" X="240" Y="243" Width="56" Height="17" Text="!(loc.UIButtonYes)">
+                    <Publish Event="EnableRollback" Value="False">1</Publish>
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="Text" Type="Text" X="20" Y="53" Width="330" Height="40" Text="!(loc.OutOfRbDiskDlgText)" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description" Type="Text" X="20" Y="20" Width="319" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.OutOfRbDiskDlgDescription)" />
+<Control Id="VolumeList" Type="VolumeCostList" X="20" Y="159" Width="330" Height="68" Sunken="yes" Fixed="yes" Remote="yes" ShowRollbackCost="yes" Text="!(loc.OutOfRbDiskDlgVolumeList)" />
+<Control Id="Text2" Type="Text" X="20" Y="94" Width="330" Height="62" Text="!(loc.OutOfRbDiskDlgText2)" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="OutOfDiskDlg" Width="370" Height="270" Title="!(loc.OutOfDiskDlg_Title)">
+                <Control Id="OK" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonOK)">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="Text" Type="Text" X="20" Y="53" Width="330" Height="40" Text="!(loc.OutOfDiskDlgText)" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description" Type="Text" X="20" Y="20" Width="320" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.OutOfDiskDlgDescription)" />
+<Control Id="VolumeList" Type="VolumeCostList" X="20" Y="100" Width="330" Height="120" Sunken="yes" Fixed="yes" Remote="yes" Text="!(loc.OutOfDiskDlgVolumeList)" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="MaintenanceWelcomeDlg" Width="370" Height="270" Title="!(loc.MaintenanceWelcomeDlg_Title)">
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+                    <Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
+                    <Publish Event="NewDialog" Value="MaintenanceTypeDlgNoChange">1</Publish>
+                </Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="Image_SideBanner" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description" Type="Text" X="25" Y="77" Width="318" Height="60" Transparent="yes" NoPrefix="yes" Text="!(loc.MaintenanceWelcomeDlgDescription)" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="WaitForCostingDlg" Y="10" Width="260" Height="85" Title="!(loc.WaitForCostingDlg_Title)">
+                <Control Id="Return" Type="PushButton" X="102" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.WaitForCostingDlgReturn)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+                </Control>
+<Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30" Text="!(loc.WaitForCostingDlgText)" />
+<Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="!(loc.WaitForCostingDlgIconTooltip)" FixedSize="yes" IconSize="32" Text="Image_Warning" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="MaintenanceTypeDlgNoChange" Width="370" Height="270" Title="!(loc.MaintenanceTypeDlg_Title)">
+                <Control Id="ChangeButton" Type="PushButton" X="40" Y="65" Width="80" Height="17" Disabled="yes" ToolTip="!(loc.MaintenanceTypeDlgChangeButtonTooltip)" Text="!(loc.MaintenanceTypeDlgChangeButton)">
+                </Control>
+                <Control Id="ChangeDisabledText" Type="Text" X="60" Y="85" Width="280" Height="20" Text="!(loc.MaintenanceTypeDlgChangeDisabledText)">
+                </Control>
+                <Control Id="RepairButton" Type="PushButton" X="40" Y="118" Width="80" Height="17" ToolTip="!(loc.MaintenanceTypeDlgRepairButtonTooltip)" Text="!(loc.MaintenanceTypeDlgRepairButton)">
+                    <Publish Property="MSIFACTUI_InstallMode" Value="Repair">1</Publish>
+                    <Publish Event="NewDialog" Value="MaintenanceVerifyReadyDlgNoChange">1</Publish>
+                    <Condition Action="disable">ARPNOREPAIR</Condition>
+                </Control>
+                <Control Id="RepairText" Type="Text" X="60" Y="138" Width="280" Height="30" Text="!(loc.MaintenanceTypeDlgRepairText)">
+                    <Condition Action="hide">ARPNOREPAIR</Condition>
+                </Control>
+                <Control Id="RepairDisabledText" Type="Text" X="60" Y="138" Width="280" Height="30" Text="!(loc.MaintenanceTypeDlgRepairDisabledText)" Hidden="yes">
+                    <Condition Action="show">ARPNOREPAIR</Condition>
+                </Control>
+                <Control Id="RemoveButton" Type="PushButton" X="40" Y="171" Width="80" Height="17" ToolTip="!(loc.MaintenanceTypeDlgRemoveButtonTooltip)" Text="!(loc.MaintenanceTypeDlgRemoveButton)">
+                    <Publish Property="MSIFACTUI_InstallMode" Value="Remove">1</Publish>
+                    <Publish Event="NewDialog" Value="MaintenanceVerifyReadyDlgNoChange">1</Publish>
+                    <Condition Action="disable">ARPNOREMOVE</Condition>
+                </Control>
+                <Control Id="RemoveText" Type="Text" X="60" Y="191" Width="280" Height="20" Text="!(loc.MaintenanceTypeDlgRemoveText)">
+                    <Condition Action="hide">ARPNOREMOVE</Condition>
+                </Control>
+                <Control Id="RemoveDisabledText" Type="Text" X="60" Y="191" Width="280" Height="20" Text="!(loc.MaintenanceTypeDlgRemoveDisabledText)" Hidden="yes">
+                    <Condition Action="show">ARPNOREMOVE</Condition>
+                </Control>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+                </Control>
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonNext)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)" Default="yes">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="240" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.MaintenanceTypeDlgTitle)" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.MaintenanceTypeDlgDescription)" />
+            </Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="MaintenanceVerifyReadyDlgNoChange" Width="370" Height="270" Title="!(loc.VerifyReadyDlg_Title)" TrackDiskSpace="yes">
+                <Control Id="Repair" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Hidden="yes" Text="!(loc.VerifyReadyDlgRepair)">
+                    <Condition Action="show">MSIFACTUI_InstallMode = "Repair"</Condition>
+                    <Condition Action="default">MSIFACTUI_InstallMode = "Repair"</Condition>
+                    <Publish Event="ReinstallMode" Value="ecmus"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
+                    <Publish Event="Reinstall" Value="All"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
+                    <Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfRbDiskDlg">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)</Publish>
+                    <Publish Event="EndDialog" Value="Return">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="EnableRollback" Value="False">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfDiskDlg">(OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")</Publish>
+                </Control>
+                <Control Id="Remove" Type="PushButton" X="236" Y="243" Width="56" Height="17" Hidden="yes" Text="!(loc.VerifyReadyDlgRemove)">
+                    <Condition Action="show">MSIFACTUI_InstallMode = "Remove"</Condition>
+                    <Publish Event="Remove" Value="All"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
+                    <Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfRbDiskDlg">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)</Publish>
+                    <Publish Event="EndDialog" Value="Return">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="EnableRollback" Value="False">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfDiskDlg">(OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")</Publish>
+                </Control>
+                <Control Id="RepairText" Type="Text" X="25" Y="70" Width="320" Height="80" Hidden="yes" Text="!(loc.VerifyReadyDlgRepairText)">
+                    <Condition Action="show">MSIFACTUI_InstallMode = "Repair"</Condition>
+                </Control>
+                <Control Id="RemoveText" Type="Text" X="25" Y="70" Width="320" Height="80" Hidden="yes" Text="!(loc.VerifyReadyDlgRemoveText)">
+                    <Condition Action="show">MSIFACTUI_InstallMode = "Remove"</Condition>
+                </Control>
+
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                    <Condition Action="default">MSIFACTUI_InstallMode = "Remove"</Condition>
+                    <Publish Event="NewDialog" Value="MaintenanceTypeDlgNoChange">1</Publish>
+                </Control>
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+            </Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="ResumeDlg" Width="370" Height="270" Title="!(loc.ResumeDlg_Title)">
+                <Control Id="Description" Type="Text" X="30" Y="116" Width="316" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.ResumeDlgDescription)" />
+<Control Id="Install" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.ResumeDlgInstall)" ElevationShield="yes">
+                    <Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
+                    <Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfRbDiskDlg">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)</Publish>
+                    <Publish Event="EndDialog" Value="Return">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="EnableRollback" Value="False">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
+                    <Publish Event="SpawnDialog" Value="OutOfDiskDlg">(OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")</Publish>
+                </Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="Image_SideBanner" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="ProgressDlg" Width="370" Height="270" Title="!(loc.ProgressDlg_Title)" Modeless="yes">
+                <!-- mutually exclusive title and description strings overlap  -->
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonNext)" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="TextInstalling" Type="Text" X="35" Y="65" Width="300" Height="20" Hidden="yes" Text="!(loc.ProgressDlgTextInstalling)">
+                    <Condition Action="show">NOT Installed OR (Installed AND (RESUME OR Preselected) AND NOT PATCH)</Condition>
+                </Control>
+<Control Id="TextChanging" Type="Text" X="35" Y="65" Width="300" Height="20" Hidden="yes" Text="!(loc.ProgressDlgTextChanging)">
+                    <Condition Action="show">MSIFACTUI_InstallMode = "Change"</Condition>
+                </Control>
+<Control Id="TextRepairing" Type="Text" X="35" Y="65" Width="300" Height="20" Hidden="yes" Text="!(loc.ProgressDlgTextRepairing)">
+                    <Condition Action="show">MSIFACTUI_InstallMode = "Repair"</Condition>
+                </Control>
+<Control Id="TextRemoving" Type="Text" X="35" Y="65" Width="300" Height="20" Hidden="yes" Text="!(loc.ProgressDlgTextRemoving)">
+                    <Condition Action="show">MSIFACTUI_InstallMode = "Remove"</Condition>
+                </Control>
+<Control Id="ActionText" Type="Text" X="71" Y="100" Width="266" Height="17">
+                    <Subscribe Event="ActionText" Attribute="Text" />
+                </Control>
+<Control Id="ProgressBar" Type="ProgressBar" X="35" Y="123" Width="300" Height="11" ProgressBlocks="yes" Text="!(loc.ProgressDlgProgressBar)">
+                    <Subscribe Event="SetProgress" Attribute="Progress"/>
+</Control>
+<Control Id="StatusLabel" Type="Text" X="35" Y="100" Width="35" Height="11" Text="!(loc.ProgressDlgStatusLabel)" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="PrepareDlg" Width="370" Height="270" Title="!(loc.PrepareDlg_Title)" Modeless="yes">
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="Image_SideBanner" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description" Type="Text" X="38" Y="100" Width="305" Height="43" Transparent="yes" NoPrefix="yes" Text="!(loc.PrepareDlgDescription)" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" TabSkip="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Disabled="yes" TabSkip="yes" Text="!(loc.UIButtonNext)" />
+<Control Id="ActionData" Type="Text" X="135" Y="125" Width="220" Height="30" Transparent="yes" NoPrefix="yes">
+                    <Subscribe Event="ActionData" Attribute="Text" />
+                </Control>
+<Control Id="ActionText" Type="Text" X="135" Y="100" Width="220" Height="20" Transparent="yes" NoPrefix="yes">
+                    <Subscribe Event="ActionText" Attribute="Text" />
+                </Control>
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="ExitDialog" Width="370" Height="270" Title="!(loc.ExitDialog_Title)">
+                <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonFinish)">
+                	<Publish Event="EndDialog" Value="Return" Order="999">1</Publish>
+                </Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonCancel)" />
+<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="Image_SideBanner" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description" Type="Text" X="32" Y="78" Width="220" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.ExitDialogDescription)" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="UserExit" Width="370" Height="270" Title="!(loc.UserExit_Title)">
+                <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonFinish)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+                </Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonCancel)" />
+<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="Image_SideBanner" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description1" Type="Text" X="23" Y="79" Width="332" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.UserExitDescription1)" />
+<Control Id="Description2" Type="Text" X="23" Y="124" Width="220" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.UserExitDescription2)" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="FatalError" Width="370" Height="270" Title="!(loc.FatalError_Title)">
+                <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonFinish)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+                </Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonCancel)" />
+<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="Image_SideBanner" />
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.UIButtonBack)" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description1" Type="Text" X="23" Y="73" Width="327" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.FatalErrorDescription1)" />
+<Control Id="Description2" Type="Text" X="23" Y="132" Width="220" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.FatalErrorDescription2)" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="FilesInUse" Width="370" Height="270" Title="!(loc.FilesInUse_Title)" KeepModeless="yes">
+                <Control Id="Retry" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonRetry)">
+                    <Publish Event="EndDialog" Value="Retry">1</Publish>
+                </Control>
+<Control Id="Ignore" Type="PushButton" X="235" Y="243" Width="56" Height="17" Text="!(loc.UIButtonIgnore)">
+                    <Publish Event="EndDialog" Value="Ignore">1</Publish>
+                </Control>
+<Control Id="Exit" Type="PushButton" X="166" Y="243" Width="56" Height="17" Text="!(loc.FilesInUseExit)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="Text" Type="Text" X="20" Y="55" Width="330" Height="30" Text="!(loc.FilesInUseText)" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+<Control Id="Description" Type="Text" X="20" Y="23" Width="280" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.FilesInUseDescription)" />
+<Control Id="List" Type="ListBox" X="20" Y="94" Width="330" Height="123" Property="FileInUseProcess" Sunken="yes" TabSkip="yes" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="ErrorDlg" Y="10" Width="270" Height="105" Title="!(loc.ErrorDlg_Title)" ErrorDialog="yes">
+                <Control Id="ErrorText" Type="Text" X="48" Y="15" Width="205" Height="60" TabSkip="no" Text="!(loc.ErrorDlgErrorText)" />
+<Control Id="Y" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.UIButtonYes)">
+                    <Publish Event="EndDialog" Value="ErrorYes">1</Publish>
+                </Control>
+<Control Id="A" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="EndDialog" Value="ErrorAbort">1</Publish>
+                </Control>
+<Control Id="C" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="EndDialog" Value="ErrorCancel">1</Publish>
+                </Control>
+<Control Id="ErrorIcon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="!(loc.ErrorDlgErrorIconTooltip)" FixedSize="yes" IconSize="32" Text="Image_ErrorIcon" />
+<Control Id="I" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.UIButtonIgnore)">
+                    <Publish Event="EndDialog" Value="ErrorIgnore">1</Publish>
+                </Control>
+<Control Id="N" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.UIButtonNo)">
+                    <Publish Event="EndDialog" Value="ErrorNo">1</Publish>
+                </Control>
+<Control Id="O" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.UIButtonOK)">
+                    <Publish Event="EndDialog" Value="ErrorOk">1</Publish>
+                </Control>
+<Control Id="R" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.UIButtonRetry)">
+                    <Publish Event="EndDialog" Value="ErrorRetry">1</Publish>
+                </Control>
+</Dialog>
+
+            <Property Id="ErrorDialog" Value="ErrorDlg" />
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="MsiRMFilesInUse" Width="370" Height="270" Title="!(loc.MsiRMFilesInUse_Title)" KeepModeless="yes">
+                <Control Id="OK" Type="PushButton" X="240" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonOK)">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                    <Publish Event="RMShutdownAndRestart" Value="0">MSIFACTUIRMOption~="UseRM"</Publish>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+                </Control>
+
+                <Control Id="ShutdownOption" Type="RadioButtonGroup" X="34" Y="176" Width="305" Height="52" Property="MSIFACTUIRMOption">
+                    <RadioButtonGroup Property="MSIFACTUIRMOption">
+                        <RadioButton Value="UseRM" X="5" Y="12" Width="295" Height="17" Text="!(loc.MsiRMFilesInUseUseRM)" />
+                        <RadioButton Value="DontUseRM" X="6" Y="29" Width="296" Height="17" Text="!(loc.MsiRMFilesInUseDontUseRM)" />
+                    </RadioButtonGroup>
+                </Control>
+
+                <Control Id="List" Type="ListBox" X="20" Y="89" Width="330" Height="84" Property="FileInUseProcess" Sunken="yes" TabSkip="yes" />
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+                <Control Id="Text" Type="Text" X="20" Y="55" Width="332" Height="33" Text="!(loc.MsiRMFilesInUseText)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Description" Type="Text" X="20" Y="23" Width="280" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.MsiRMFilesInUseDescription)" />
+                </Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+<UI Id="SUFWI_UI">
+<TextStyle Id="UI_Font_Normal" FaceName="Segoe UI" Size="10"/>
+<TextStyle Id="UI_Font_Bigger" FaceName="Segoe UI" Size="12"/>
+<TextStyle Id="UI_Font_Title" FaceName="Segoe UI" Size="10" Bold="yes"/>
+<TextStyle Id="UI_Font_Emphasized" FaceName="Segoe UI" Size="10" Italic="yes"/>
+<TextStyle Id="UI_Dialog_Title" FaceName="Segoe UI" Size="11" Bold="yes" Red="255" Green="255" Blue="255"/>
+<TextStyle Id="UI_Dialog_Title_Description" FaceName="Segoe UI" Size="10" Red="255" Green="255" Blue="255"/>
+<Property Id="DefaultUIFont" Value="UI_Font_Normal"/>
+<Binary Id="Image_SideBanner" SourceFile="$(var.Buildzone)\Installers\Images\HawkCDAgentInitialFinalize.bmp"/>
+<Binary Id="Image_TopBanner" SourceFile="$(var.Buildzone)\Installers\Images\HawkCDAgentBanner.bmp"/>
+<Binary Id="Image_Error" SourceFile="$(var.Buildzone)\Installers\Images\error.bmp"/>
+<Binary Id="Image_Tick" SourceFile="$(var.Buildzone)\Installers\Images\tick.bmp"/>
+<Binary Id="Icon_Up" SourceFile="$(var.Buildzone)\Installers\Images\Up.ico"/>
+<Binary Id="Icon_New" SourceFile="$(var.Buildzone)\Installers\Images\New.ico"/>
+<Binary Id="Image_Warning" SourceFile="$(var.Buildzone)\Installers\Images\warning.ico"/>
+<Binary Id="Image_ErrorIcon" SourceFile="$(var.Buildzone)\Installers\Images\error.ico"/>
+<DialogRef Id="WelcomeDlg"/>
+<DialogRef Id="CancelDlg"/>
+<DialogRef Id="LicenseAgreementDlg"/>
+<DialogRef Id="BrowseDlg"/>
+<DialogRef Id="InstallDirDlg"/>
+<DialogRef Id="VerifyReadyDlgInstall"/>
+<DialogRef Id="OutOfRbDiskDlg"/>
+<DialogRef Id="OutOfDiskDlg"/>
+<DialogRef Id="MaintenanceWelcomeDlg"/>
+<DialogRef Id="WaitForCostingDlg"/>
+<DialogRef Id="MaintenanceTypeDlgNoChange"/>
+<DialogRef Id="MaintenanceVerifyReadyDlgNoChange"/>
+<DialogRef Id="ResumeDlg"/>
+<DialogRef Id="ProgressDlg"/>
+<DialogRef Id="PrepareDlg"/>
+<DialogRef Id="ExitDialog"/>
+<DialogRef Id="UserExit"/>
+<DialogRef Id="FatalError"/>
+<DialogRef Id="FilesInUse"/>
+<DialogRef Id="ErrorDlg"/>
+<DialogRef Id="MsiRMFilesInUse"/>
+<InstallUISequence>
+<Show Dialog="WelcomeDlg" Before="ProgressDlg">NOT Installed</Show>
+<Show Dialog="MaintenanceWelcomeDlg" Before="ProgressDlg">Installed AND NOT RESUME AND NOT Preselected</Show>
+<Show Dialog="ResumeDlg" Before="ProgressDlg">Installed AND (RESUME OR Preselected)</Show>
+<Show Dialog="ProgressDlg" Before="ExecuteAction"/>
+<Show Dialog="PrepareDlg" Before="AppSearch"/>
+<Show Dialog="ExitDialog" OnExit="success"/>
+<Show Dialog="UserExit" OnExit="cancel"/>
+<Show Dialog="FatalError" OnExit="error"/>
+</InstallUISequence>
+<AdminUISequence>
+<Show Dialog="ExitDialog" OnExit="success"/>
+<Show Dialog="UserExit" OnExit="cancel"/>
+<Show Dialog="FatalError" OnExit="error"/>
+</AdminUISequence>
+</UI>
+</Fragment>
+</Wix>
