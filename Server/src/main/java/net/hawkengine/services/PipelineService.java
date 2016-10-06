@@ -6,6 +6,7 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.dto.PipelineDto;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.PipelineStatus;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -225,7 +226,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
-                .filter(p -> p.getPipelineDefinitionName().contains(searchCriteria))
+                .filter(p -> p.getPipelineDefinitionName().toLowerCase().contains(searchCriteria.toLowerCase()))
                 .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -278,8 +279,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         Pipeline pipeline = (Pipeline) result.getObject();
         if (pipeline.getStatus() == PipelineStatus.IN_PROGRESS) {
             pipeline.setStatus(PipelineStatus.PAUSED);
+            List<Stage> stages = pipeline.getStages();
+            for (Stage stage : stages) {
+                if(stage.getStatus() == StageStatus.IN_PROGRESS){
+                    stage.setStatus(StageStatus.PAUSED);
+                }
+            }
         } else {
             pipeline.setStatus(PipelineStatus.IN_PROGRESS);
+            List<Stage> stages = pipeline.getStages();
+            for (Stage stage : stages) {
+                if(stage.getStatus() == StageStatus.PAUSED){
+                    stage.setStatus(StageStatus.IN_PROGRESS);
+                    stage.setTriggeredManually(false);
+                }
+            }
         }
 
         return this.update(pipeline);

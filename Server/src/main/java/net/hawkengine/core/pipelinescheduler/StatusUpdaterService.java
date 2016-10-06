@@ -75,6 +75,7 @@ public class StatusUpdaterService {
         for (Stage currentStage : stages) {
             if (currentStage.getStatus() == StageStatus.PAUSED) {
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
+                currentStage.setTriggeredManually(false);
             }
 
             if (currentStage.getStatus() == StageStatus.IN_PROGRESS) {
