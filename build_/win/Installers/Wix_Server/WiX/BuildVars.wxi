@@ -1,0 +1,32 @@
+﻿<Include>
+<?define ApplicationDataFolder="C:\Users\SlaviDimitrov\AppData\Roaming" ?>
+<?define ApplicationDataFolderCommon="C:\ProgramData" ?>
+<?define BuildNumber="1.1.1" ?>
+<?define Buildzone="C:\Users\SlaviDimitrov\Desktop\build" ?>
+<?define CommonFilesFolder="C:\Program Files (x86)\Common Files" ?>
+<?define DesktopFolder="C:\Users\SlaviDimitrov\Desktop" ?>
+<?define DesktopFolderCommon="C:\Users\SlaviDimitrov\Desktop" ?>
+<?define FontsFolder="C:\Windows\Fonts" ?>
+<?define MSIFactoryDrive="C:" ?>
+<?define MSIFactoryFolder="C:\Program Files (x86)\MSI Factory" ?>
+<?define MyDocuments="C:\Users\SlaviDimitrov\Documents" ?>
+<?define OutputFolder="C:\Users\SlaviDimitrov\Desktop\build\Installers\Wix_Server\WiX" ?>
+<?define ProductBuildGUID="d3adf2a6-8ea0-4733-b1d0-319e6b85583e" ?>
+<?define ProgramFilesFolder="C:\Program Files (x86)" ?>
+<?define ProjectFolder="C:\Users\SlaviDimitrov\Desktop\build\InstallerProjects" ?>
+<?define RevisionNumbe="1" ?>
+<?define RevisionNumber="1" ?>
+<?define SetupFactoryDrive="C:" ?>
+<?define SetupFactoryFolder="C:\Program Files (x86)\MSI Factory" ?>
+<?define StartFolder="C:\Users\SlaviDimitrov\AppData\Roaming\Microsoft\Windows\Start Menu" ?>
+<?define StartFolderCommon="C:\Users\SlaviDimitrov\AppData\Roaming\Microsoft\Windows\Start Menu" ?>
+<?define StartProgramsFolder="C:\Users\SlaviDimitrov\AppData\Roaming\Microsoft\Windows\Start Menu\Programs" ?>
+<?define StartProgramsFolderCommon="C:\Users\SlaviDimitrov\AppData\Roaming\Microsoft\Windows\Start Menu\Programs" ?>
+<?define StartupFolder="C:\Users\SlaviDimitrov\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" ?>
+<?define StartupFolderCommon="C:\Users\SlaviDimitrov\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" ?>
+<?define SystemDrive="C:" ?>
+<?define SystemFolder="C:\WINDOWS\system32" ?>
+<?define TempFolder="C:\Users\SLAVID~1\AppData\Local\Temp" ?>
+<?define UserProjectsFolder="C:\Users\SlaviDimitrov\Documents\MSI Factory\Projects" ?>
+<?define WindowsFolder="C:\WINDOWS" ?>
+</Include>
