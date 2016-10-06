@@ -12,6 +12,7 @@
                     <button class="btn green margin-left-1" ng-click="artifact.search()">Search</button>
             </div>
         </div>
+        <div ng-if="artifact.allPipelineRuns().length == 0 && !artifact.isFirstLoad"><h4 class="text-center">No Pipeline Runs found.</h4></div>
         <div ng-repeat="pipeline in artifact.allPipelineRuns() track by $index">
             <div class="mt-element-list">
                 <div class="mt-list-container list-simple ext-1 group" id="list-container" style="">
