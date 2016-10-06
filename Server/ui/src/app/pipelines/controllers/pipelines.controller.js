@@ -131,13 +131,22 @@ angular
         //region pipeline controls
         vm.play = function(pipelineDefinition) {
             pipelineDefinition.disabled = true;
-            var pipeline = {
-                "pipelineDefinitionId": pipelineDefinition.id,
-                "pipelineDefinitionName": pipelineDefinition.name,
-                "triggerReason": viewModel.user.username
-            };
+            if(pipelineDefinition.lastRun.status == 'PAUSED'){
+                pipeExecService.pausePipeline(pipelineDefinition.lastRun.id);
+            } else {
+                var pipeline = {
+                    "pipelineDefinitionId": pipelineDefinition.id,
+                    "pipelineDefinitionName": pipelineDefinition.name,
+                    "triggerReason": viewModel.user.username
+                };
 
-            pipeExecService.startPipeline(pipeline);
+                pipeExecService.startPipeline(pipeline);
+            }
+        };
+
+        vm.pause = function (pipelineDefinition) {
+            pipelineDefinition.disabled = true;
+            pipeExecService.pausePipeline(pipelineDefinition.lastRun.id);
         };
 
         //TODO Not implemented on the back-end yet

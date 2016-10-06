@@ -185,14 +185,11 @@ angular
 
         vm.continueStage = function (stage) {
             var currentPipelineRun = angular.copy(vm.currentPipelineRun);
-            currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
-                if(currentStage.id == stage.id) {
-                    currentStage.isTriggeredManually = false;
-                    currentStage.status = 'IN_PROGRESS';
-                    currentPipelineRun.status = 'IN_PROGRESS';
-                    pipeExecService.update(currentPipelineRun);
-                }
-            });
+            pipeExecService.pausePipeline(currentPipelineRun.id);
+        };
+
+        vm.pause = function (pipeline) {
+            pipeExecService.pausePipeline(pipeline.id);
         };
                                                 
         vm.stop = function(pipeline) {

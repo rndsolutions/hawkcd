@@ -49,14 +49,14 @@
 
         </div>
         <div class="controls">
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status == 'IN_PROGRESS' || pipe.lastRun.status == 'PAUSED' || pipe.lastRun.status == 'AWAITING' || pipe.disabled == true}" id="startbtn" ng-click="pipes.play(pipe)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status == 'IN_PROGRESS' || pipe.lastRun.status == 'AWAITING' || pipe.disabled == true}" id="startbtn" ng-click="pipes.play(pipe)">
                 <span class="glyphicon glyphicon-play control"></span>
             </button>
             <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}">
                 <span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>
             </button>
 
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' || pipe.lastRun.status == 'PASSED' || pipe.lastRun.status == 'FAILED'}" ng-click="pipes.pause(pipe)">
                 <span class="glyphicon glyphicon-pause control"></span>
             </button>
 

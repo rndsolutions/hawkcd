@@ -4,7 +4,7 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.services.AgentService;
 import net.hawkengine.services.JobService;
 import net.hawkengine.services.PipelineService;
@@ -55,7 +55,7 @@ public class JobAssignerService {
 
             if (isSetToAwaiting) {
                 stageInProgress.setStatus(StageStatus.AWAITING);
-                pipeline.setStatus(Status.AWAITING);
+                pipeline.setStatus(PipelineStatus.AWAITING);
                 this.pipelineService.update(pipeline);
                 String message = String.format("Pipeline %s set to AWAITING.", pipeline.getPipelineDefinitionName());
                 LOGGER.info(message);
@@ -87,7 +87,7 @@ public class JobAssignerService {
             boolean hasAwaitingJobs = awaitingStage.getJobs().stream().anyMatch(j -> j.getStatus() == JobStatus.AWAITING);
             if (!hasAwaitingJobs) {
                 awaitingStage.setStatus(StageStatus.IN_PROGRESS);
-                pipeline.setStatus(Status.IN_PROGRESS);
+                pipeline.setStatus(PipelineStatus.IN_PROGRESS);
                 this.pipelineService.update(pipeline);
                 LOGGER.info(String.format("Pipeline %s set back to IN_PROGRESS.", pipeline.getPipelineDefinitionName()));
             }

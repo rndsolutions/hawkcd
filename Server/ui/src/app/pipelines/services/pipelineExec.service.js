@@ -19,6 +19,18 @@ angular
             console.log(json);
         };
 
+        pipeExecService.pausePipeline = function (id) {
+            var methodName = "pausePipeline";
+            var className = "PipelineService";
+            var packageName = "net.hawkengine.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+            console.log(json);
+        };
+
         pipeExecService.stopPipeline = function (id) {
             var methodName = "cancelPipeline";
             var className = "PipelineService";
@@ -99,9 +111,6 @@ angular
 
         };
         pipeExecService.schedulePipelineWithRevision = function (pipeName, changes) {
-
-        };
-        pipeExecService.pausePipeline = function (pipeId) {
 
         };
         pipeExecService.resumePipeline = function (pipeId) {
