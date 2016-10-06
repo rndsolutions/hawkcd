@@ -184,8 +184,16 @@
 
           <div ng-if="pipeConfig.newJob.taskDefinitions.type == 'UPLOAD_ARTIFACT'">
             <div class="form-group form-md-line-input">
-              <input type="text" class="form-control" ng-model="pipeConfig.newJob.taskDefinitions.rource" required>
+              <input type="text" class="form-control"
+                     title="Agent/Pipelines/<PipelineName>/"
+                     ng-model="pipeConfig.newJob.taskDefinitions.source">
               <label>Source</label>
+            </div>
+            <div class="form-group form-md-line-input">
+              <input type="text" class="form-control"
+                     title="Server/Artifacts/<PipelineName>/<PipelineRun>/"
+                     ng-model="pipeConfig.newJob.taskDefinitions.destination">
+              <label>Destination</label>
             </div>
             <div class="form-group form-md-radios">
               <label>Run If Conditions</label>

@@ -1,7 +1,7 @@
 package net.hawkengine.model;
 
 import net.hawkengine.model.configuration.filetree.JsTreeFile;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public class Pipeline extends DbEntry {
     private List<EnvironmentVariable> environmentVariables;
     private List<Environment> environments;
     private List<Stage> stages;
-    private Status status;
+    private PipelineStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
@@ -35,7 +35,7 @@ public class Pipeline extends DbEntry {
         this.setEnvironments(new ArrayList<>());
         this.setStages(new ArrayList<>());
         this.setArtifactsFileStructure(new ArrayList<>());
-        this.status = Status.IN_PROGRESS;
+        this.status = PipelineStatus.IN_PROGRESS;
     }
 
     public String getPipelineDefinitionId() {
@@ -94,11 +94,11 @@ public class Pipeline extends DbEntry {
         this.stages = stages;
     }
 
-    public Status getStatus() {
+    public PipelineStatus getStatus() {
         return this.status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(PipelineStatus status) {
         this.status = status;
     }
 

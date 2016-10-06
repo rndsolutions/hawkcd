@@ -189,6 +189,9 @@ angular
                         }
                         pipeExecService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
                     },
+                    pausePipeline: function(object) {
+                        validationService.dispatcherFlow(object, []);
+                    },
                     update: function(object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.updatePipeline]);
                     },

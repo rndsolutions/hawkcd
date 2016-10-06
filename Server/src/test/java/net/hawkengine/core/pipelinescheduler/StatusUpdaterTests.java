@@ -6,8 +6,8 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
+import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.model.enums.StageStatus;
-import net.hawkengine.model.enums.Status;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -60,7 +60,7 @@ public class StatusUpdaterTests {
         List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
 
         for (Pipeline actualPipeline: actualPipelines) {
-            Assert.assertEquals(Status.IN_PROGRESS, actualPipeline.getStatus());
+            Assert.assertEquals(PipelineStatus.IN_PROGRESS, actualPipeline.getStatus());
         }
     }
 
@@ -75,7 +75,7 @@ public class StatusUpdaterTests {
                 jobs.stream().filter(job -> job.getStatus() == JobStatus.FAILED).forEach(job -> {
                     String pipelineId = expectedPipelineObject.getId();
                     Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
-                    Assert.assertNotEquals(Status.FAILED, actualPipeline.getStatus());
+                    Assert.assertNotEquals(PipelineStatus.FAILED, actualPipeline.getStatus());
                 });
             }
         }
@@ -100,7 +100,7 @@ public class StatusUpdaterTests {
                     this.pipelineService.update(expectedPipelineObject);
                     String pipelineId = expectedPipelineObject.getId();
                     Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
-                    Assert.assertEquals(Status.PASSED, actualPipeline.getStatus());
+                    Assert.assertEquals(PipelineStatus.PASSED, actualPipeline.getStatus());
                 }
             }
         }
@@ -258,7 +258,7 @@ public class StatusUpdaterTests {
 
         this.statusUpdaterService.updatePipelineStatus(expectedPipeline);
 
-        Assert.assertEquals(Status.PASSED, expectedPipeline.getStatus());
+        Assert.assertEquals(PipelineStatus.PASSED, expectedPipeline.getStatus());
     }
 
     @Test
@@ -278,7 +278,7 @@ public class StatusUpdaterTests {
 
         this.statusUpdaterService.updatePipelineStatus(expectedPipeline);
 
-        Assert.assertEquals(Status.FAILED, expectedPipeline.getStatus());
+        Assert.assertEquals(PipelineStatus.FAILED, expectedPipeline.getStatus());
     }
 
     @Test
