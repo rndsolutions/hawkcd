@@ -12,6 +12,7 @@ import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private static final Class CLASS_TYPE = Pipeline.class;
+    private static final Logger LOGGER = Logger.getLogger(PipelineService.class.getName());
+
     public static Lock lock = new ReentrantLock();
 
     private IPipelineDefinitionService pipelineDefinitionService;
@@ -279,17 +282,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         Pipeline pipeline = (Pipeline) result.getObject();
         if (pipeline.getStatus() == PipelineStatus.IN_PROGRESS) {
             pipeline.setStatus(PipelineStatus.PAUSED);
+            result.setNotificationType(NotificationType.WARNING);
+            String message = String.format("Pipeline %s set to PAUSED.", pipeline.getPipelineDefinitionName());
+            result.setMessage(message);
+            LOGGER.info(message);
             List<Stage> stages = pipeline.getStages();
             for (Stage stage : stages) {
-                if(stage.getStatus() == StageStatus.IN_PROGRESS){
+                if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                     stage.setStatus(StageStatus.PAUSED);
                 }
             }
         } else {
             pipeline.setStatus(PipelineStatus.IN_PROGRESS);
+            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipeline.getPipelineDefinitionName());
+            LOGGER.info(message);
             List<Stage> stages = pipeline.getStages();
             for (Stage stage : stages) {
-                if(stage.getStatus() == StageStatus.PAUSED){
+                if (stage.getStatus() == StageStatus.PAUSED) {
                     stage.setStatus(StageStatus.IN_PROGRESS);
                     stage.setTriggeredManually(false);
                 }
