@@ -33,6 +33,13 @@ sudo apt-get install -y nodejs
 sudo npm install gulp -g
 sudo npm install bower -g
 ```
+### Build *.tar.gz - agent & server packages
+```bash
+
+./build1.sh build_all
+
+```
+
 
 ###License
 
