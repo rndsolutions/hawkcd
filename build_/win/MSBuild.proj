@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project DefaultTargets="HawkCdMergeModules" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="C:\Program Files (x86)\MSBuild\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <PropertyGroup>
+	<BuildVersion>1.0.0</BuildVersion> <!--Here the VERSION property is submitted as msbuild command line parameter-->
+	<BuildZoneDir>$(MSBuildProjectDirectory)</BuildZoneDir>
+	<MSIAgentOutput>$(BuildZoneDir)\Installers\Wix_Agent\WiX</MSIAgentOutput>
+	<MSIServerOutput>$(BuildZoneDir)\Installers\Wix_Server\WiX</MSIServerOutput>
+	<OutputDirectory>$(BuildZoneDir)\Merge Module Definitions</OutputDirectory>
+	<BuildZone>$(BuildZoneDir)\BuildZone</BuildZone>
+	<InstallerProjectDir>$(BuildZoneDir)\InstallerProjects</InstallerProjectDir>
+	<Hawk_Agent_Product_GUID>$([System.Guid]::NewGuid())</Hawk_Agent_Product_GUID>
+	<Hawk_Server_Product_GUID>$([System.Guid]::NewGuid())</Hawk_Server_Product_GUID>
+  </PropertyGroup>
+
+  <Target Name="HawkCdMergeModules">
+  
+  <!-- Modify the variables used in the installer project to match the proper directories on the build server-->
+    <CreateItem Include="$(MSBuildProjectDirectory)\Installers\Wix_Agent\WiX\BuildVars.wxi;$(MSBuildProjectDirectory)\Installers\Wix_Server\WiX\BuildVars.wxi">
+      <Output TaskParameter="Include" ItemName="BuildVars" />
+    </CreateItem>
+
+    <FileUpdate Files="@(BuildVars)"
+								Regex="Buildzone=&quot;.*&quot;"
+								ReplacementText="Buildzone=&quot;$(BuildZoneDir)&quot;" />
+
+    <FileUpdate Files="@(BuildVars)"
+						Regex="BuildNumber=&quot;.*&quot;"
+						ReplacementText="BuildNumber=&quot;$(BuildVersion)&quot;" />
+						
+						
+	<!--Generate WXS Agent and Server files-->
+	<Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\heat.exe&quot; dir &quot;$(BuildZoneDir)\Agent&quot; -o &quot;$(BuildZoneDir)\Merge Module Definitions\Agent.wxs&quot; -gg -sreg -sfrag -suid -ke -srd -template module -var var.SourceDir "/>
+		
+	<Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\heat.exe&quot; dir &quot;$(BuildZoneDir)\Server&quot; -o &quot;$(BuildZoneDir)\Merge Module Definitions\Server.wxs&quot; -gg -sreg -sfrag -suid -ke -srd -template module -var var.SourceDir "  />
+  
+    <CreateItem Include="$(BuildZoneDir)\Merge Module Definitions\Agent.wxs">
+      <Output TaskParameter="Include" ItemName="WxsAgent" />
+    </CreateItem>
+	
+	<CreateItem Include="$(BuildZoneDir)\Merge Module Definitions\Server.wxs">
+      <Output TaskParameter="Include" ItemName="WxsServer" />
+    </CreateItem>
+	
+	    <FileUpdate Files="@(WxsAgent)"
+              Regex="PUT-MODULE-NAME-HERE"
+              ReplacementText="Hawk_Agent_Files" />
+			  
+		<FileUpdate Files="@(WxsServer)"
+              Regex="PUT-MODULE-NAME-HERE"
+              ReplacementText="Hawk_Server_Files" />
+			  
+		<FileUpdate Files="@(WxsAgent)"
+			  Regex="PUT-COMPANY-NAME-HERE"
+			  ReplacementText="RnD Solutions Ltd." />
+						
+		<FileUpdate Files="@(WxsServer)"
+			 Regex="PUT-COMPANY-NAME-HERE"
+			 ReplacementText="RnD Solutions Ltd." />
+			 
+	<!--Generate WIXOBJ Agent and Server files-->
+  
+	<Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\candle.exe&quot; &quot;@(WxsAgent)&quot; -dBuildzone=&quot;$(BuildZoneDir)&quot; -dSourceDir=&quot;$(BuildZoneDir)\Agent&quot; -out &quot;$(BuildZoneDir)\Merge Module Definitions\%(RecursiveDir)%(Filename).wixobj&quot;" />
+  
+  
+	<Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\candle.exe&quot; &quot;@(WxsServer)&quot; -dBuildzone=&quot;$(BuildZoneDir)&quot; -dSourceDir=&quot;$(BuildZoneDir)\Server&quot; -out &quot;$(BuildZoneDir)\Merge Module Definitions\%(RecursiveDir)%(Filename).wixobj&quot;" />
+  
+	<!--Generate the merge modules-->
+	 <CreateItem Include="$(BuildZoneDir)\Merge Module Definitions\Agent.wixobj">
+      <Output TaskParameter="Include" ItemName="AgentWixObjFiles" />
+    </CreateItem>
+	
+	<CreateItem Include="$(BuildZoneDir)\Merge Module Definitions\Server.wixobj">
+      <Output TaskParameter="Include" ItemName="ServerWixObjFiles" />
+    </CreateItem>
+	
+	 <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\light.exe&quot; -dBuildzone=&quot;$(BuildZoneDir)&quot; &quot;@(AgentWixObjFiles)&quot; -loc &quot;$(BuildZoneDir)\Installers\Localization\English-US.wxl&quot; -out &quot;$(BuildZoneDir)\Merge Module Definitions\%(Filename).msm&quot;" />
+	 
+	 <Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\light.exe&quot; -dBuildzone=&quot;$(BuildZoneDir)&quot; &quot;@(ServerWixObjFiles)&quot; -loc &quot;$(BuildZoneDir)\Installers\Localization\English-US.wxl&quot; -out &quot;$(BuildZoneDir)\Merge Module Definitions\%(Filename).msm&quot;" />
+  
+     <CallTarget Targets="CreateInstallers"/>
+  </Target>
+
+  <Target Name="CreateInstallers">
+	 <CreateItem Include="$(MSIAgentOutput)\BuildVars.wxi">
+      <Output TaskParameter="Include" ItemName="BuildVarsAgent" />
+    </CreateItem>
+	
+	<!--Update the Agent build variables-->
+    <FileUpdate Files="@(BuildVarsAgent)"
+						Regex="ProjectFolder=&quot;.*&quot;"
+						ReplacementText="ProjectFolder=&quot;$(InstallerProjectDir)&quot;" />
+
+    <FileUpdate Files="@(BuildVarsAgent)"
+						Regex="BuildNumber=&quot;.*&quot;"
+						ReplacementText="BuildNumber=&quot;$(Version)&quot;" />
+						
+						
+	<FileUpdate Files="@(BuildVarsAgent)"
+        Regex="ProductBuildGUID=&quot;.*&quot;"
+        ReplacementText="ProductBuildGUID=&quot;$(Hawk_Agent_Product_GUID)&quot;" />
+						
+	 <CreateItem Include="$(MSIServerOutput)\BuildVars.wxi">
+      <Output TaskParameter="Include" ItemName="BuildVarsServer" />
+    </CreateItem>
+	
+	<!--Update the Server build variables-->
+    <FileUpdate Files="@(BuildVarsServer)"
+						Regex="ProjectFolder=&quot;.*&quot;"
+						ReplacementText="ProjectFolder=&quot;$(InstallerProjectDir)&quot;" />
+
+    <FileUpdate Files="@(BuildVarsServer)"
+						Regex="BuildNumber=&quot;.*&quot;"
+						ReplacementText="BuildNumber=&quot;$(Version)&quot;" />
+						
+	<FileUpdate Files="@(BuildVarsServer)"
+        Regex="ProductBuildGUID=&quot;.*&quot;"
+        ReplacementText="ProductBuildGUID=&quot;$(Hawk_Server_Product_GUID)&quot;" />
+		
+		
+
+	<CreateItem Include="$(MSIAgentOutput)\*.wxs">
+      <Output ItemName="WixInstallWxsFiles_Agent" TaskParameter="Include" />
+    </CreateItem>
+	
+		<CreateItem Include="$(MSIServerOutput)\*.wxs">
+      <Output ItemName="WixInstallWxsFiles_Server" TaskParameter="Include" />
+    </CreateItem>
+	
+	<!--Generate installers WIXOBJ Agent and Server files-->
+	<Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\candle.exe&quot; -ext WixIISExtension &quot;@(WixInstallWxsFiles_Agent)&quot; -dBuildzone=&quot;$(BuildZone)&quot; -out &quot;$(MSIAgentOutput)\%(Filename).wixobj&quot;"/>
+	
+	<Exec Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\candle.exe&quot; -ext WixIISExtension &quot;@(WixInstallWxsFiles_Server)&quot; -dBuildzone=&quot;$(BuildZone)&quot; -out &quot;$(MSIServerOutput)\%(Filename).wixobj&quot;"/>
+	
+	 <!--Generate the MSI files-->
+	 <Exec WorkingDirectory="$(MSIAgentOutput)" Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\light.exe&quot; -ext WixIISExtension -loc &quot;$(BuildZoneDir)\Installers\Localization\English-US.wxl&quot; -out &quot;$(InstallerProjectDir)\HawkCD_Agent.msi&quot; &quot;Common.wixobj&quot; &quot;ErrorText.wixobj&quot; &quot;HawkCD_Agent.wixobj&quot; &quot;msifactui.wixobj&quot; &quot;ProgressText.wixobj&quot;"/>
+
+	 <Exec WorkingDirectory="$(MSIServerOutput)" Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\light.exe&quot; -ext WixIISExtension -loc &quot;$(BuildZoneDir)\Installers\Localization\English-US.wxl&quot; -out &quot;$(InstallerProjectDir)\HawkCD_Server.msi&quot; &quot;Common.wixobj&quot; &quot;ErrorText.wixobj&quot; &quot;HawkCD_Server.wixobj&quot; &quot;msifactui.wixobj&quot; &quot;ProgressText.wixobj&quot;"/>
+	
+	</Target>
+	
+</Project>
