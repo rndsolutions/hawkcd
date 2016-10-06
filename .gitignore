@@ -198,7 +198,6 @@ Web/Content/bower_components/*
 hawk/*
 hawk/
 *.wixobj
-*.wxs
 *.wxi
 *.msi
 *.wixpdb
