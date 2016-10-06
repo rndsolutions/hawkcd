@@ -9,11 +9,11 @@ import net.hawkengine.model.payload.UploadArtifactInfo;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
-import java.io.File;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.util.List;
 
 @Path("/Artifacts/{pipelineName}")
 public class ArtifactController {
@@ -83,7 +83,7 @@ public class ArtifactController {
                     .build();
         }
 
-        File[] files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
+        List<File> files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
 
         if (files == null) {
             return Response.status(Response.Status.NOT_FOUND)

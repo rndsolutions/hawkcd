@@ -21,6 +21,8 @@ import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 
@@ -34,7 +36,7 @@ public class ArtifactControllerTests {
 
     private IFileManagementService mockedFileManagementService;
     private File mockedFile;
-    private File[] mockedFileList;
+    private List<File> mockedFileList;
 
     private ArtifactController artifactController;
     private Gson jsonConverter;
@@ -49,7 +51,7 @@ public class ArtifactControllerTests {
         this.mockedFileManagementService = Mockito.mock(FileManagementService.class);
         this.artifactController = new ArtifactController(this.mockedFileManagementService);
         this.mockedFile = new File("pathToFile");
-        this.mockedFileList = new File[1];
+        this.mockedFileList = new ArrayList<>();
 
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())

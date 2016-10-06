@@ -83,32 +83,35 @@
           <div ng-if="pipeConfig.newJob.taskDefinitions.type == 'FETCH_ARTIFACT'">
             <div class="form-group form-md-line-input">
                 <select class="form-control" name="pipelineSelect" id="pipeJobSelect"
-                        ng-model="pipeConfig.newJob.Tasks.Pipeline" ng-change="pipeConfig.getPipelineForTask(pipeConfig.newJob.taskDefinitions.pipelineDefinition)" required>
-                    <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.name}}">{{pipeline.name}}</option>
+                        ng-model="pipeConfig.newJob.taskDefinitions.pipelineObject" ng-change="pipeConfig.getRunsFromPipelineDefinition(pipeConfig.newJob.taskDefinitions.pipelineObject)" required>
+                    <option ng-repeat="pipeline in pipeConfig.allPipelinesForTask" value="{{pipeline}}">{{pipeline.name}}</option>
                 </select>
                 <label for="pipeJobSelect">Pipeline</label>
             </div>
 
             <div class="form-group form-md-line-input">
-                <select class="form-control" name="stageSelect" id="stageJobSelect"
-                        ng-model="pipeConfig.newJob.Tasks.Stage" ng-change="pipeConfig.getStageForTask(pipeConfig.newJob.taskDefinitions.stageDefinition)" required>
-                    <option ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions"
-                        value="{{stage.name}}">{{stage.name}}</option>
-                </select>
-                <label for="stageJobSelect">Stage</label>
+              <select class="form-control" name="runSelect" id="runSelect"
+                      ng-model="pipeConfig.newJob.taskDefinitions.pipelineRun" ng-change="pipeConfig.selectRunFromPipelineDefinition(pipeConfig.newJob.taskDefinitions.pipelineRun)" required>
+                <option value="true">Latest</option>
+                <option ng-repeat="id in pipeConfig.currentPipelineRuns" value="{{id}}">{{id}}</option>
+              </select>
+              <label for="runSelect">Run</label>
             </div>
 
             <div class="form-group form-md-line-input">
-                <select class="form-control" name="jobSelect" id="jobJobSelect" ng-model="pipeConfig.newJob.taskDefinition.jobDefinition" required>
-                    <option ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions" value="{{job.name}}">{{job.name}}</option>
-                </select>
-                <label for="jobJobSelect">Job</label>
-            </div>
-
-            <div class="form-group form-md-line-input">
-              <input type="text" class="form-control" ng-model="pipeConfig.newJob.taskDefinitions.source" required>
+              <input type="text" class="form-control"
+                     title="Server/Artifacts/{{pipeConfig.selectedPipelineForTask.name}}/<ExecutionId>/"
+                     ng-model="pipeConfig.newJob.taskDefinitions.source">
               <label>Source</label>
             </div>
+
+            <div class="form-group form-md-line-input">
+              <input type="text" class="form-control"
+                     title="Agent/Pipelines/{{pipeConfig.selectedPipelineForTask.name}}/"
+                     ng-model="pipeConfig.newJob.taskDefinitions.destination">
+              <label>Destination</label>
+            </div>
+
             <div class="form-group form-md-radios">
               <label>Run If Conditions</label>
               <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='Passed'">

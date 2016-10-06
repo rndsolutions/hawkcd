@@ -1,13 +1,11 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.model.configuration.filetree.JsTreeFile;
 import net.hawkengine.services.interfaces.IFileManagementService;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +24,7 @@ import java.util.UUID;
 public class FileManagementService implements IFileManagementService {
 
     @Override
-    public String zipFiles(String zipFilePath, File[] files, String filesRootPath, boolean includeRootPath) {
+    public String zipFiles(String zipFilePath, List<File> files, String filesRootPath, boolean includeRootPath) {
 
         String errorMessage = null;
         ZipParameters parameters = new ZipParameters();
@@ -39,8 +37,10 @@ public class FileManagementService implements IFileManagementService {
         try {
             ZipFile zipFile = new ZipFile(zipFilePath);
 
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+
+
+            for (int i = 0; i < files.size(); i++) {
+                File file = files.get(i);
                 if (file.isFile()) {
                     zipFile.addFile(file, parameters);
                 }
@@ -165,7 +165,7 @@ public class FileManagementService implements IFileManagementService {
 
         String pattern = path.replace(rootPath, "");
 
-        if (pattern.isEmpty()) {
+        if (pattern.isEmpty() || pattern.equals("/") || pattern.equals("\\")) {
             pattern = "**";
         }
 
@@ -175,31 +175,52 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public File[] getFiles(String rootPath, String wildCardPattern) {
+    public List<File> getFiles(String rootPath, String wildCardPattern) {
 
         DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir(this.normalizePath(rootPath));
+        scanner.setBasedir(rootPath);
         scanner.setIncludes(new String[]{wildCardPattern});
         scanner.scan();
-        String[] allPaths = scanner.getIncludedFiles();
 
-        List<File> allFiles = new ArrayList<File>();
-        String[] directories = scanner.getIncludedDirectories();
-        for (String directory : directories) {
-            allFiles.add(new File(rootPath, directory));
+        List<File> allFiles = new ArrayList<>();
+        if (wildCardPattern.equals("**")){
+            File directory = scanner.getBasedir();
+            allFiles.add(directory);
+
+            return allFiles;
         }
 
-        for (int i = 0; i < allPaths.length; i++) {
-            File file = new File(rootPath, allPaths[i]);
-            if (!allFiles.contains(file.getParentFile())) {
-                allFiles.add(file);
-            }
+        String[] files = scanner.getIncludedFiles();
+        for (String file : files) {
+            allFiles.add(new File(rootPath, file));
         }
 
-        if (allFiles.size() == 0) {
-            return null;
-        }
-        return allFiles.toArray(new File[]{});
+        return allFiles;
+
+
+//        DirectoryScanner scanner = new DirectoryScanner();
+//        scanner.setBasedir(this.normalizePath(rootPath));
+//        scanner.setIncludes(new String[]{wildCardPattern});
+//        scanner.scan();
+//        String[] allPaths = scanner.getIncludedFiles();
+//
+//        List<File> allFiles = new ArrayList<File>();
+//        String[] directories = scanner.getIncludedDirectories();
+//        for (String directory : directories) {
+//            allFiles.add(new File(rootPath, directory));
+//        }
+//
+//        for (int i = 0; i < allPaths.length; i++) {
+//            File file = new File(rootPath, allPaths[i]);
+//            if (!allFiles.contains(file.getParentFile())) {
+//                allFiles.add(file);
+//            }
+//        }
+//
+//        if (allFiles.size() == 0) {
+//            return null;
+//        }
+//        return allFiles.toArray(new File[]{});
     }
 
     @Override

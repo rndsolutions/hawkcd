@@ -7,11 +7,41 @@
 
 The HawkCD intends to be one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
 
-**Getting started:**
-* [Setup Hawk Server on Windows Environment](https://github.com/rndsolutions/hawkcd/wiki/Setup-Hawk-Server-on-Windows-Environment)
-* [Setup Hawk Server on Linux Environment](https://github.com/rndsolutions/hawkcd/wiki/Setup-Hawk-Server-on-Linux-(Ubuntu)-Environment#setup-hawk-server-on-linux-ubuntu-environment)
+###Setting up build enviroment 
 
-## License
+```bash
+
+#git
+sudo apt-get install git
+
+#java
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+
+#gradle
+sudo add-apt-repository ppa:cwchien/gradle
+sudo apt-get update
+sudo apt-get install gradle
+
+#nodejs
+sudo apt-get install build-essential
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+#gulp & bower
+sudo npm install gulp -g
+sudo npm install bower -g
+```
+### Build *.tar.gz - agent & server packages
+```bash
+
+./build1.sh build_all
+
+```
+
+
+###License
 
 Hawkengine is an open source project, sponsored by <a href="http://rnd-solutions.net/">R&D Solutions Ltd.</a> under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
 

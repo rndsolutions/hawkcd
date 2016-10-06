@@ -67,23 +67,24 @@
                             <select class="form-control" name="pipelineSelect" id="pipelineSelectUpdate"
                                     ng-model="pipeConfig.updatedTask.pipelineObject.name"
                                     ng-change="pipeConfig.getRunsFromPipelineDefinitionForUpdate(pipeConfig.updatedTask.pipelineObject.name)" required>
-                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline.name}}" >{{pipeline.name}}</option>
+                                <option ng-repeat="pipeline in pipeConfig.allPipelinesForTask" value="{{pipeline.name}}" >{{pipeline.name}}</option>
                             </select>
                             <label for="pipelineSelectUpdate">Pipeline</label>
                         </div>
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="runSelect" id="runSelectUpdate" convert-to-number
-                                    ng-model="pipeConfig.updatedTask.pipelineRun.executionId"
-                                    ng-change="pipeConfig.selectRunFromPipelineDefinitionUpdate(pipeConfig.updatedTask.pipelineRun.executionId)"
+                                    ng-model="pipeConfig.updatedTask.pipelineRun"
+                                    ng-change="pipeConfig.selectRunFromPipelineDefinitionUpdate(pipeConfig.updatedTask.pipelineRun)"
                                     required>
-                                <option ng-repeat="run in pipeConfig.currentPipelineRuns"
-                                        ng-value="run.excecutionId">{{run.executionId}}</option>
+                                <option value="-1">Latest</option>
+                                <option ng-repeat="id in pipeConfig.currentPipelineRuns"
+                                        ng-value="id">{{id}}</option>
                             </select>
                             <label for="runSelectUpdate">Run</label>
                         </div>
                         <div class="form-group form-md-line-input">
                             <input type="text" class="form-control"
-                                   title="Server/Artifacts/{{pipeConfig.updatedTask.pipelineObject.name}}/{{pipeConfig.updatedTask.pipelineRun.executionId}}/"
+                                   title="Server/Artifacts/{{pipeConfig.updatedTask.pipelineObject.name}}/<ExecutionId>/"
                                    ng-model="pipeConfig.updatedTask.source">
                             <label>Source</label>
                         </div>

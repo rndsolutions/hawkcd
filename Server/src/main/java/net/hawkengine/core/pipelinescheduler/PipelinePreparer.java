@@ -171,7 +171,15 @@ public class PipelinePreparer implements Runnable {
                         break;
                     }
                 }
+            } else if (currentTask.getType() == TaskType.FETCH_ARTIFACT) {
+                FetchArtifactTask fetchArtifactTask = (FetchArtifactTask) taskDefinitions.get(i);
+                if (fetchArtifactTask.shouldUseLatestRun()) {
+                    Pipeline currentPipeline = (Pipeline) this.pipelineService.getLastRun(fetchArtifactTask.getDesignatedPipelineDefinitionId()).getObject();
+                    fetchArtifactTask.setDesignatedPipelineExecutionId(Integer.toString(currentPipeline.getExecutionId()));
+                    currentTask.setTaskDefinition(fetchArtifactTask);
+                }
             }
+
             currentTask.setRunIfCondition(taskDefinitions.get(i).getRunIfCondition());
             tasks.set(i, currentTask);
         }

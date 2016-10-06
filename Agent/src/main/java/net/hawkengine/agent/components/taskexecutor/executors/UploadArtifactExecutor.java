@@ -19,7 +19,6 @@ import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 import net.hawkengine.agent.utilities.ReportAppender;
 import net.hawkengine.agent.utilities.deserializers.TaskDefinitionAdapter;
-import net.hawkengine.model.MaterialDefinition;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -58,6 +57,9 @@ public class UploadArtifactExecutor extends TaskExecutor {
         ReportAppender.appendInfoMessage(uploadingMessage, report);
 
         String pathToFile = AgentConfiguration.getInstallInfo().getAgentSandbox() + File.separator + "Pipelines" + File.separator + workInfo.getPipelineDefinitionName() + File.separator + taskDefinition.getSource();
+//        if (!taskDefinition.getSource().isEmpty()) {
+//            pathToFile = pathToFile + File.separator + taskDefinition.getSource();
+//        }
 
         String fullPath = this.fileManagementService.pathCombine(pathToFile);
         String rootPath = this.fileManagementService.getRootPath(fullPath);
@@ -67,7 +69,7 @@ public class UploadArtifactExecutor extends TaskExecutor {
             return this.nullProcessing(report, task, String.format("%s is Non-existent source.", taskDefinition.getSource()));
         }
 
-        List<File> files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
+        List<File> files = this.fileManagementService.getFiles(fullPath, wildCardPattern);
 
         if (files.size() == 0) {
             return this.nullProcessing(report, task, String.format("Error in getting files in %s", fullPath));

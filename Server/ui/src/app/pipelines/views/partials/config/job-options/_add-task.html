@@ -75,7 +75,7 @@
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="pipelineSelect" id="pipelineSelect"
                                     ng-model="pipeConfig.newTask.pipelineObject" ng-change="pipeConfig.getRunsFromPipelineDefinition(pipeConfig.newTask.pipelineObject)" required>
-                                <option ng-repeat="pipeline in pipeConfig.allPipelines" value="{{pipeline}}" >{{pipeline.name}}</option>
+                                <option ng-repeat="pipeline in pipeConfig.allPipelinesForTask" value="{{pipeline}}" >{{pipeline.name}}</option>
                             </select>
                             <label for="pipelineSelect">Pipeline</label>
                         </div>
@@ -83,14 +83,15 @@
                         <div class="form-group form-md-line-input">
                             <select class="form-control" name="runSelect" id="runSelect"
                                     ng-model="pipeConfig.newTask.pipelineRun" ng-change="pipeConfig.selectRunFromPipelineDefinition(pipeConfig.newTask.pipelineRun)" required>
-                                <option ng-repeat="run in pipeConfig.currentPipelineRuns" value="{{run}}">{{run.executionId}}</option>
+                                <option value="true">Latest</option>
+                                <option ng-repeat="id in pipeConfig.currentPipelineRuns" value="{{id}}">{{id}}</option>
                             </select>
                             <label for="runSelect">Run</label>
                         </div>
 
                         <div class="form-group form-md-line-input">
                             <input type="text" class="form-control"
-                                   title="Server/Artifacts/{{pipeConfig.selectedPipelineForTask.name}}/{{pipeConfig.selectedPipelineRunForTask.executionId}}/"
+                                   title="Server/Artifacts/{{pipeConfig.selectedPipelineForTask.name}}/<ExecutionId>/"
                                    ng-model="pipeConfig.newTask.source">
                             <label>Source</label>
                         </div>
