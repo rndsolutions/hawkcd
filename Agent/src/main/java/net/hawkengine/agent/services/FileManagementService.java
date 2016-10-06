@@ -198,12 +198,18 @@ public class FileManagementService implements IFileManagementService {
 
     @Override
     public List<File> getFiles(String rootPath, String wildCardPattern) {
+        List<File> allFiles = new ArrayList<>();
+        File file = new File(rootPath);
+        if (file.isFile()) {
+            allFiles.add(file);
+            return allFiles;
+        }
+
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(rootPath);
         scanner.setIncludes(new String[]{wildCardPattern});
         scanner.scan();
 
-        List<File> allFiles = new ArrayList<>();
         if (wildCardPattern.equals("**")){
             File directory = scanner.getBasedir();
             allFiles.add(directory);
@@ -212,8 +218,8 @@ public class FileManagementService implements IFileManagementService {
         }
 
         String[] files = scanner.getIncludedFiles();
-        for (String file : files) {
-            allFiles.add(new File(rootPath, file));
+        for (String f : files) {
+            allFiles.add(new File(rootPath, f));
         }
 
         return allFiles;
