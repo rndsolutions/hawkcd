@@ -23,7 +23,7 @@ public class JobAssignerUtilities {
                     assignedAgent.setAssigned(false);
                 }
 
-                LOGGER.info(String.format("Job %s unassigned from Agent %s", job.getJobDefinitionName(), assignedAgent.getName()));
+                LOGGER.info(String.format("Job %s unassigned from Agent", job.getJobDefinitionName()));
             }
         }
 
