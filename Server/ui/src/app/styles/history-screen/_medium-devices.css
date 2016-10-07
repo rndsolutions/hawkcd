@@ -56,7 +56,8 @@
     width: 15%;
 }
 .run-info-container {
-    text-align: center;
+    text-align: left;
+    padding-left:5%;
     float: inherit;
 }
 .buffer {

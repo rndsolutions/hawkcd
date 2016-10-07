@@ -4,7 +4,7 @@
             <div class="buffer"></div>
             <div class="run-info-container">
                 #{{run.executionId}} {{run.pipelineDefinitionName.substring(0,10)}} <span ng-if="run.pipelineDefinitionName.length > 10">..</span>
-                <div class="label label-default run-label vertical-center margin-left-1 text-center" ng-class="{'passed': run.status == 'PASSED', 'failed' : run.status == 'FAILED', 'yellow' : run.status == 'IN_PROGRESS', 'canceled-run' : run.status == 'CANCELED', 'awaiting' : run.status == 'AWAITING'}" ng-if="run.status"> {{run.status}}</div>
+                <div class="label label-default run-label vertical-center margin-left-1 text-center" ng-class="{'passed': run.status == 'PASSED', 'failed' : run.status == 'FAILED', 'working' : run.status == 'IN_PROGRESS', 'canceled-run' : run.status == 'CANCELED', 'awaiting' : run.status == 'AWAITING'}" ng-if="run.status"> {{run.status}}</div>
             </div>
             <div class="buffer"></div>
         </div>
@@ -25,10 +25,10 @@
 
                         <div ng-if="stage.status === 'IN_PROGRESS'" class="progress progress-striped active stage-content" style="">
                             <div class="progress-bar progress-bar-warning stage-content" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="155" style="">
-                                <div class="stage-text" ng-if="stage.stageDefinitionName.length > 7">
-                                    {{stage.stageDefinitionName.substring(0,7)}}..
+                                <div class="stage-text" ng-if="stage.stageDefinitionName.length > 15">
+                                    {{stage.stageDefinitionName.substring(0,15)}}..
                                 </div>
-                                <div class="stage-text" ng-if="stage.stageDefinitionName.length <= 7">
+                                <div class="stage-text" ng-if="stage.stageDefinitionName.length <= 15">
                                     {{stage.stageDefinitionName}}
                                 </div>
                             </div>
@@ -36,10 +36,10 @@
 
                         <div ng-if="stage.status !== 'IN_PROGRESS'" class="stage-content" ng-class="{'label label-sm stage-success':stage.status == 'PASSED','label label-sm stage-fail':stage.status == 'FAILED', 'label labem-sm stage-cancel' : stage.status == 'CANCELED',
                             'label label-sm stage-not-run':stage.status=='NOT_RUN' || stage.status=='AWAITING' || stage.status=='PAUSED','label label-sm stage-working':stage.status=='IN_PROGRESS'}">
-                            <div class="stage-text" ng-if="stage.stageDefinitionName.length > 7">
-                                {{stage.stageDefinitionName.substring(0,7)}}..
+                            <div class="stage-text" ng-if="stage.stageDefinitionName.length > 15">
+                                {{stage.stageDefinitionName.substring(0,15)}}..
                             </div>
-                            <div class="stage-text" ng-if="stage.stageDefinitionName.length <= 7">
+                            <div class="stage-text" ng-if="stage.stageDefinitionName.length <= 15">
                                 {{stage.stageDefinitionName}}
                             </div>
 
