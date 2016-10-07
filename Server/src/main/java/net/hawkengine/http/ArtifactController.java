@@ -21,12 +21,13 @@ public class ArtifactController {
     private String basePath;
     private String outputFolder;
     private Gson jsonConverter;
+    private File zipFile;
 
     public ArtifactController() {
         this.fileManagementService = new FileManagementService();
         this.basePath = System.getProperty("user.dir");
         this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
-        this.fileManagementService.deleteDirectoryRecursively(this.outputFolder);
+//        this.fileManagementService.deleteDirectoryRecursively(this.outputFolder);
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .create();
@@ -37,6 +38,11 @@ public class ArtifactController {
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .create();
+    }
+
+    protected void finalize() throws Throwable {
+        super.finalize();
+        this.zipFile.delete();
     }
 
     @POST
@@ -77,7 +83,6 @@ public class ArtifactController {
         String wildCardPattern = this.fileManagementService.getPattern(rootPath, directory);
 
         if (rootPath.isEmpty()) {
-
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.TEXT_HTML)
                     .build();
@@ -93,12 +98,12 @@ public class ArtifactController {
 
         this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
 
-        File zipFile = this.fileManagementService.generateUniqueFile(this.outputFolder, "zip");
+        this.zipFile = this.fileManagementService.generateUniqueFile(this.outputFolder, "zip");
 
         String errorMessage = this.fileManagementService.zipFiles(zipFile.getPath(), files, rootPath, false);
 
         if (errorMessage != null) {
-            zipFile.delete();
+            this.zipFile.delete();
 
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.TEXT_HTML)
