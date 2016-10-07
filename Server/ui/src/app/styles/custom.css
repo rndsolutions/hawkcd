@@ -201,6 +201,10 @@ p {
     background-color: #5cb85c;
 }
 
+.icon-passed {
+    color: #5cb85c;
+}
+
 .working{
     background-color: #F1C40F;
 }
@@ -1042,4 +1046,9 @@ p {
 
 .padding-cog {
   padding:8px;
+}
+
+.modal-content {
+    max-height: 90vh;
+    overflow-y: scroll;
 }

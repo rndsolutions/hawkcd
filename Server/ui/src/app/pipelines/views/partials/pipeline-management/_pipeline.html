@@ -18,7 +18,7 @@
             <p><strong>Finished:</strong><span ng-if="pipe.lastRun.lastStage.localEndTime != null"> {{pipe.lastRun.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipe.lastRun.lastStage.localEndDate.date}}/{{pipe.lastRun.lastStage.localEndDate.months}}/{{pipe.lastRun.lastStage.localEndDate.years}}</span></p>
             <div style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap; "><strong>Reason:</strong> {{pipe.lastRun.triggerReason}}</div>
             <strong>Status:</strong>
-            <div class="label label-default run-label vertical-center margin-left-1 text-center" ng-class="{'passed': pipe.lastRun.status == 'PASSED', 'failed' : pipe.lastRun.status == 'FAILED', 'yellow' : pipe.lastRun.status == 'IN_PROGRESS', 'canceled-run' : pipe.lastRun.status == 'CANCELED', 'awaiting' : pipe.lastRun.status == 'AWAITING'}" ng-if="pipe.lastRun.status"> {{pipe.lastRun.status}}</div>
+            <div class="label label-default run-label vertical-center margin-left-1 text-center" ng-class="{'passed': pipe.lastRun.status == 'PASSED', 'failed' : pipe.lastRun.status == 'FAILED', 'working' : pipe.lastRun.status == 'IN_PROGRESS', 'canceled-run' : pipe.lastRun.status == 'CANCELED', 'awaiting' : pipe.lastRun.status == 'AWAITING'}" ng-if="pipe.lastRun.status"> {{pipe.lastRun.status}}</div>
         </div>
         <div class="stages">
 
@@ -36,7 +36,7 @@
                  <button type="button" class="btn default s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'IN_PROGRESS' && $index<9">
-                 <button type="button" class="btn yellow s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
+                 <button type="button" class="btn working s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>
               </span>
             <span ng-if="stage.status == 'SCHEDULED' && $index<9">
                   <button type="button" class="btn yellow-mint s" ui-sref="index.pipelineRunManagement({pipelineName:pipe.name, executionID: pipe.lastRun.executionId, pipelineId: pipe.lastRun.id})" ng-class="{'disabled': pipe.ExecutionID == 0}"></button>

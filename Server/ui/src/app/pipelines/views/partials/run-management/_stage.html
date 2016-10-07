@@ -7,7 +7,7 @@
                         {{stage.stageDefinitionName}}
                         <!--<span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage[0].stageDefinitionName})" class="icon-settings font-lg ico"></span>-->
                         <div class="pull-right display-inline-block">
-                            <i ng-class="{'fa fa-check text-success vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN' && stage.status != 'CANCELED' && stage.status != 'AWAITING' && stage.status != 'PAUSED' && pipesRunManagement.currentPipelineRun.status != 'CANCELED', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED', 'fa fa-pause text-warning vertical-center-icon': stage.status == 'PAUSED'}"></i>
+                            <i ng-class="{'fa fa-check icon-passed vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN' && stage.status != 'CANCELED' && stage.status != 'AWAITING' && stage.status != 'PAUSED' && pipesRunManagement.currentPipelineRun.status != 'CANCELED', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED', 'fa fa-pause text-warning vertical-center-icon': stage.status == 'PAUSED'}"></i>
                         </div>
                 </div>
             </div>
