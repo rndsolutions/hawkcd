@@ -504,8 +504,21 @@ p {
     /*!*border: 1px solid #2C3E50!important;*!*/
 /*}*/
 
+.job-name {
+    font-size: 17px;
+}
+
 .job-name:hover {
     color: #2C3E50!important;
+}
+
+.list-item-content.job-padding {
+    padding: 0!important;
+}
+
+.stage-display-name{
+    font-weight: 400;
+    font-size: 19px;
 }
 
 .job-item:hover {
