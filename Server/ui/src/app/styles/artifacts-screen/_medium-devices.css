@@ -1,6 +1,6 @@
 #left-container{
   display:inline-block;
-  text-align: center;
+  padding-left:1%;
   margin-top:15px;
   width:15%;
   height: auto!important;
@@ -50,7 +50,7 @@
 }
 
 #artifact-header-container{
-    height: 90px;
+    height: 70px;
     background-color: #E1E5EC!important;
     padding-right:0px;
     padding-left:8px;

@@ -33,9 +33,10 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div id="middle-container" class="text-center">
+                                <div id="middle-container" class="">
                                   <div class="center-cell vertical-center">
-                                    <div ng-repeat="material in pipeline.materials track by $index">
+                                      <div class="label label-default run-label vertical-center margin-left-1 pull-left" ng-class="{'passed': pipeline.status == 'PASSED', 'failed' : pipeline.status == 'FAILED', 'yellow' : pipeline.status == 'IN_PROGRESS', 'canceled-run' : pipeline.status == 'CANCELED', 'awaiting' : pipeline.status == 'AWAITING'}" ng-if="pipeline.status"> {{pipeline.status}}</div>
+                                    <div ng-repeat="material in pipeline.materials track by $index" style="padding-left:10%;text-align:left">
                                         <i class="fa fa-gg"></i>
                                         <a target="_blank" href="{{material.gitLink}}" ng-click="artifact.goToGitLink(material.gitLink)" class="green-jungle">
                                             <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>

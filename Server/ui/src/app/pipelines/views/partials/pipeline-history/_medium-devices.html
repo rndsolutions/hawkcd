@@ -4,6 +4,7 @@
             <div class="buffer"></div>
             <div class="run-info-container">
                 #{{run.executionId}} {{run.pipelineDefinitionName.substring(0,10)}} <span ng-if="run.pipelineDefinitionName.length > 10">..</span>
+                <div class="label label-default run-label vertical-center margin-left-1 text-center" ng-class="{'passed': run.status == 'PASSED', 'failed' : run.status == 'FAILED', 'yellow' : run.status == 'IN_PROGRESS', 'canceled-run' : run.status == 'CANCELED', 'awaiting' : run.status == 'AWAITING'}" ng-if="run.status"> {{run.status}}</div>
             </div>
             <div class="buffer"></div>
         </div>

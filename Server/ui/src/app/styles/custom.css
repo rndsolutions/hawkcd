@@ -188,6 +188,64 @@ p {
     padding-bottom:1px!important;
 }
 
+.run-label {
+    color: #ffffff;
+    text-transform: none;
+    text-underline: none;
+    padding-top:1px!important;
+    font-size: 13px!important;
+    padding-bottom:1px!important;
+}
+
+.passed {
+    background-color: #5cb85c;
+}
+
+.working{
+    background-color: #F1C40F;
+}
+
+.idle{
+    background-color: #36c6d3;
+}
+.failed{
+    background-color: #d9534f;
+}
+
+.awaiting {
+    color:lightslategrey;
+    background-color: #EEF1F5;
+}
+
+.canceled-run {
+    background-color: #778899;
+}
+
+.job-list::-webkit-scrollbar-thumb {
+    border-radius:50px;
+    border:4px solid rgba(255,255,255,0);
+    background-clip: content-box;
+    _background-color:#bfbfbf;
+    background-color: #A0A0A0;
+}
+
+.job-list::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width:12px;
+    _background-color:#f0f0f0;
+}
+
+.job-list::-webkit-scrollbar-thumb:hover {
+    border-radius:12px;
+    border:4px solid rgba(255,255,255,0);
+    background-clip:content-box;
+    background-color:#A0A0A0;
+}
+
+.job-list::-webkit-scrollbar-corner {
+    background-color:#e6e6e6;
+}
+
 .mat-logo {
     border: 0;
     display: inline-block;

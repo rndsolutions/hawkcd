@@ -1,7 +1,8 @@
 <div class="portlet light custom-portlet">
     <div class="portlet-title">
-      <div class="caption">
-        <i class="fa fa-cogs"></i>Pipeline Run Info
+      <div class="caption" style="width:90%">
+        <i class="fa fa-cogs"></i>Pipeline Run
+        <div class="label label-default run-label vertical-center margin-left-1" ng-class="{'passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'canceled-run' : pipesRunManagement.currentPipelineRun.status == 'CANCELED', 'awaiting' : pipesRunManagement.currentPipelineRun.status == 'AWAITING'}">{{pipesRunManagement.currentPipelineRun.status}}</div>
       </div>
       <div class="tools right">
         <a href="javascript:;" class="expand"> </a>
@@ -12,7 +13,7 @@
         <div class="display-inline-block pull-left height-100px width-15">
       <div class="run-item-container status-passed pull-left" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'status-canceled' : pipesRunManagement.currentPipelineRun.status == 'CANCELED', 'status-awaiting' : pipesRunManagement.currentPipelineRun.status == 'AWAITING'}">
         </div>
-        <div class="vertical-center-static text-center">
+        <div class="vertical-center-static" style="padding-left:5%">
             #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName.substring(0,22)}} <span ng-if="pipesRunManagement.currentPipelineRun.pipelineDefinitionName.length > 27">...</span>
         </div>
         </div>
