@@ -33,9 +33,10 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div id="middle-container" class="text-center">
+                                <div id="middle-container" class="">
                                   <div class="center-cell vertical-center">
-                                    <div ng-repeat="material in pipeline.materials track by $index">
+                                      <div class="label label-default run-label vertical-center margin-left-1 pull-left" ng-class="{'passed': pipeline.status == 'PASSED', 'failed' : pipeline.status == 'FAILED', 'working' : pipeline.status == 'IN_PROGRESS', 'canceled-run' : pipeline.status == 'CANCELED', 'awaiting' : pipeline.status == 'AWAITING'}" ng-if="pipeline.status"> {{pipeline.status}}</div>
+                                    <div ng-repeat="material in pipeline.materials track by $index" style="padding-left:10%;text-align:left">
                                         <i class="fa fa-gg"></i>
                                         <a target="_blank" href="{{material.gitLink}}" ng-click="artifact.goToGitLink(material.gitLink)" class="green-jungle">
                                             <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
@@ -46,13 +47,13 @@
                                 <div id="right-container" class="pull-right">
                                     <div class="artifact-user-info-cell vertical-center">
                                       <div class="display-inline">
-                                            <div class="break-word"><i class="fa fa-user fa-1x"></i> {{pipeline.materials[0].materialDefinition.authorName}}</div>
+                                            <div class="break-word"> Author: <i class="fa fa-user fa-1x"></i> {{pipeline.materials[0].materialDefinition.authorName}}</div>
                                         </div>
                                         <div class="vertical-center-top">
 
                                         </div>
                                         <div class="display-inline">
-                                            <div class="display-inline break-word" ng-model="pipeline.lastPipelineAction.output"><i class="fa fa-calendar fa-1x"></i><span ng-if="pipeline.lastStage.localEndTime != null">
+                                            <div class="display-inline break-word" ng-model="pipeline.lastPipelineAction.output"> Finished: <i class="fa fa-calendar fa-1x"></i><span ng-if="pipeline.lastStage.localEndTime != null">
                                               {{pipeline.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipeline.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipeline.lastStage.localEndDate.date}}/{{pipeline.lastStage.localEndDate.months}}/{{pipeline.lastStage.localEndDate.years}}</span></div>
                                         </div>
                                     </div>

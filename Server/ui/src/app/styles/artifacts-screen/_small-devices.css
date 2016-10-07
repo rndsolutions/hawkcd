@@ -9,7 +9,7 @@
 
   #left-container{
     display:inline-block;
-    text-align: center;
+    padding-left:1%;
     margin-top:15px;
     width:100%;
     height: auto!important;

@@ -36,6 +36,7 @@ angular
         vm.popOverOptions = {
             popOverTitles: {
                 agent: 'Agent Name',
+                status: 'Agent Status',
                 sandbox: 'The Install location of the agent on the server',
                 os: 'The Operation System the agent is running on',
                 ipAddress: 'The Server IP',

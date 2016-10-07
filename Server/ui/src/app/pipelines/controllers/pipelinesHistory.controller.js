@@ -42,7 +42,7 @@ angular
 
         };
 
-        pipeExecService.getAllHistoryPipelines(vm.pipelineId, 10, '');
+        pipeExecService.getAllHistoryPipelines(vm.pipelineId, 10);
 
         vm.getLastRunAction = function(pipelineRun) {
             return moment.getLastRunAction(pipelineRun)
@@ -62,19 +62,17 @@ angular
             vm.allPipelineRuns.forEach(function(currentPipelineRun, index, array) {
                 vm.currentPipelineObject = currentPipelineRun;
 
-                if (currentPipelineRun.pipelineDefinitionName == $stateParams.pipelineName) {
-                    var result = vm.getLastRunAction(currentPipelineRun);
-                    currentPipelineRun.lastPipelineAction = result;
-                    currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {
-                        var definition = currentMaterial.materialDefinition;
-                        currentMaterial.gitLink = vm.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
-                    });
+                var result = vm.getLastRunAction(currentPipelineRun);
+                currentPipelineRun.lastPipelineAction = result;
+                currentPipelineRun.materials.forEach(function(currentMaterial, index, array) {
+                    var definition = currentMaterial.materialDefinition;
+                    currentMaterial.gitLink = vm.truncateGitFromUrl(definition.repositoryUrl, definition.commitId);
+                });
 
-                    if (currentPipelineRun.triggerReason == null) {
-                        currentPipelineRun.triggerReason = viewModel.user.username;
-                    }
-                    vm.currentPipelineRuns.push(currentPipelineRun);
+                if (currentPipelineRun.triggerReason == null) {
+                    currentPipelineRun.triggerReason = viewModel.user.username;
                 }
+                vm.currentPipelineRuns.push(currentPipelineRun);
             });
 
             // vm.lastRun = {};

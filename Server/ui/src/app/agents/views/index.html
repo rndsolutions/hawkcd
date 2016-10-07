@@ -33,6 +33,11 @@
                                                                                                     popover-trigger="{{agents.popOverOptions.triggers.click}}"
                                                                                                     popover-animation="true">?</span></h4></th>
                                 <th>
+                                    <h4>{{agents.defaultText.tableHeaders.status}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.status}}"
+                                                                                            popover-placement="{{agents.popOverOptions.placements.top}}"
+                                                                                            popover-trigger="{{agents.popOverOptions.triggers.click}}"
+                                                                                            popover-animation="true">?</span></h4></th>
+                                <th>
                                     <h4>{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.sandbox}}"
                                                                                                     popover-placement="{{agents.popOverOptions.placements.top}}"
                                                                                                     popover-trigger="{{agents.popOverOptions.triggers.click}}"
@@ -69,6 +74,8 @@
                                 </td>
                                 <td>
                                     <h5> {{agent.hostName + "-" +  agent.id.substr(0,8)}}</h5></td>
+                                <td>
+                                    <h5> {{agent.status}}</h5></td>
                                 <td>
                                     <h5>{{agent.rootPath}} </h5></td>
                                 <td>
