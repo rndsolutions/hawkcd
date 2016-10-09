@@ -16,11 +16,15 @@ public interface IPipelineService extends ICrudService<Pipeline> {
 
     ServiceResult getLastRun(String pipelineDefinitionId);
 
-    ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId);
+    ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines);
+
+    ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId);
 
     ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines);
 
     ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId);
 
     ServiceResult cancelPipeline(String pipelineId);
+
+    ServiceResult pausePipeline(String pipelineId);
 }

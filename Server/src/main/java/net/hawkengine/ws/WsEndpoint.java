@@ -162,9 +162,28 @@ public class WsEndpoint extends WebSocketAdapter {
 
             ServiceResult result;
 
-            if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs")
-                    || contract.getMethodName().equals("getAllUserGroups") || contract.getMethodName().equals("getAllPipelineHistoryDTOs")
-                    || contract.getMethodName().equals("getPipelineArtifactDTOs")) {
+            if (contract.getMethodName().equals("getAllPipelineHistoryDTOs") || contract.getMethodName().equals("getPipelineArtifactDTOs")) {
+                result = (ServiceResult) this.wsObjectProcessor.call(contract);
+                List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+                contract.setResult(filteredEntities);
+                contract.setNotificationType(result.getNotificationType());
+                contract.setErrorMessage(result.getMessage());
+                this.send(contract);
+            } else if (contract.getClassName().equals("PipelineService") && contract.getMethodName().equals("getById")) {
+                boolean hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+                if (hasPermission) {
+                    result = (ServiceResult) this.wsObjectProcessor.call(contract);
+                    contract.setResult(result.getObject());
+                    contract.setNotificationType(result.getNotificationType());
+                    contract.setErrorMessage(result.getMessage());
+                } else {
+                    contract.setResult(null);
+                    contract.setNotificationType(NotificationType.ERROR);
+                    contract.setErrorMessage("Unauthorized");
+                }
+
+                this.send(contract);
+            } else if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs") || contract.getMethodName().equals("getAllUserGroups")) {
                 result = (ServiceResult) this.wsObjectProcessor.call(contract);
                 List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
                 contract.setResult(filteredEntities);
@@ -184,7 +203,6 @@ public class WsEndpoint extends WebSocketAdapter {
                     }
                 } else {
                     hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-
                     if (hasPermission) {
                         result = (ServiceResult) this.wsObjectProcessor.call(contract);
                         contract.setResult(result.getObject());

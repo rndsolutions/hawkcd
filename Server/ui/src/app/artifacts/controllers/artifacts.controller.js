@@ -15,6 +15,8 @@ angular
 
         vm.scrollDisable = false;
 
+        vm.isFirstLoad = true;
+
         pipeExecService.getAllArtifactPipelines('', 10, '');
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
@@ -26,8 +28,9 @@ angular
         };
 
         vm.search = function() {
+            vm.isFirstLoad = false;
             // vm.filteredItems = filterRuns.search(vm.allPipelineRuns, vm.query);
-            if(viewModel.artifactPipelines[0]){
+            if(viewModel.artifactPipelines[0] && viewModel.artifactPipelines[0].searchCriteria){
                 viewModel.artifactPipelines[0].searchCriteria = angular.copy(vm.query);
             }
             vm.searchCriteria = angular.copy(vm.query);
@@ -71,6 +74,7 @@ angular
                 if(vm.allPipelineRuns()[0].disabled == false){
                     pipeExecService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
                 }
+                vm.isFirstLoad = false;
                 vm.allPipelineRuns()[0].disabled = true;
             }
         };

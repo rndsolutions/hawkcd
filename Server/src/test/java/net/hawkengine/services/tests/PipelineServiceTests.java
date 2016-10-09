@@ -10,7 +10,7 @@ import net.hawkengine.model.dto.PipelineDto;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
@@ -248,7 +248,7 @@ public class PipelineServiceTests {
         List<Pipeline> expectedPipelines = this.injectDataForTestingStatusUpdater();
         Pipeline firstExpectedPipeline = expectedPipelines.get(1);
         Pipeline secondExpectedPipeline = expectedPipelines.get(2);
-        firstExpectedPipeline.setStatus(Status.IN_PROGRESS);
+        firstExpectedPipeline.setStatus(PipelineStatus.IN_PROGRESS);
         firstExpectedPipeline.setMaterialsUpdated(true);
         secondExpectedPipeline.setMaterialsUpdated(true);
         this.pipelineService.update(firstExpectedPipeline);

@@ -5,12 +5,14 @@ import net.hawkengine.db.IDbRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.dto.PipelineDto;
 import net.hawkengine.model.enums.NotificationType;
-import net.hawkengine.model.enums.Status;
+import net.hawkengine.model.enums.PipelineStatus;
+import net.hawkengine.model.enums.StageStatus;
 import net.hawkengine.model.enums.TaskType;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private static final Class CLASS_TYPE = Pipeline.class;
+    private static final Logger LOGGER = Logger.getLogger(PipelineService.class.getName());
+
     public static Lock lock = new ReentrantLock();
 
     private IPipelineDefinitionService pipelineDefinitionService;
@@ -137,7 +141,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -153,7 +157,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == Status.IN_PROGRESS))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -169,7 +173,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == Status.AWAITING))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING))
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -197,15 +201,55 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         return result;
     }
 
+//    @Override
+//    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId) {
+//        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
+//        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+//
+//        List<PipelineDto> pipelineDtos = new ArrayList<>();
+//        for (Pipeline pipeline : pipelines) {
+//            PipelineDto pipelineDto = new PipelineDto();
+//            pipelineDto.constructHistoryPipelineDto(pipeline);
+//            pipelineDtos.add(pipelineDto);
+//        }
+//
+//        result.setObject(pipelineDtos);
+//
+//        return result;
+//    }
+
     @Override
-    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId) {
+    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines) {
+        return this.getAllPipelineHistoryDTOs(pipelineDefinitionId, numberOfPipelines, null);
+    }
+
+    @Override
+    public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> filteredPipelines = pipelines
+                .stream()
+                .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
+                .collect(Collectors.toList());
+
+        int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
+        if (indexOfPipeline == -1) {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        } else {
+            filteredPipelines = filteredPipelines
+                    .stream()
+                    .skip(indexOfPipeline + 1)
+                    .limit(numberOfPipelines)
+                    .collect(Collectors.toList());
+        }
 
         List<PipelineDto> pipelineDtos = new ArrayList<>();
-        for (Pipeline pipeline : pipelines) {
+        for (Pipeline pipeline : filteredPipelines) {
             PipelineDto pipelineDto = new PipelineDto();
-            pipelineDto.constructHistoryPipelineDto(pipeline);
+            pipelineDto.constructArtifactPipelineDto(pipeline);
             pipelineDtos.add(pipelineDto);
         }
 
@@ -225,7 +269,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
-                .filter(p -> p.getPipelineDefinitionName().contains(searchCriteria))
+                .filter(p -> p.getPipelineDefinitionName().toLowerCase().contains(searchCriteria.toLowerCase()))
                 .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
                 .collect(Collectors.toList());
 
@@ -264,7 +308,43 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         Pipeline pipeline = (Pipeline) result.getObject();
         pipeline.setShouldBeCanceled(true);
-        pipeline.setStatus(Status.IN_PROGRESS);
+        pipeline.setStatus(PipelineStatus.IN_PROGRESS);
+        return this.update(pipeline);
+    }
+
+    @Override
+    public ServiceResult pausePipeline(String pipelineId) {
+        ServiceResult result = this.getById(pipelineId);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            return result;
+        }
+
+        Pipeline pipeline = (Pipeline) result.getObject();
+        if (pipeline.getStatus() == PipelineStatus.IN_PROGRESS) {
+            pipeline.setStatus(PipelineStatus.PAUSED);
+            result.setNotificationType(NotificationType.WARNING);
+            String message = String.format("Pipeline %s set to PAUSED.", pipeline.getPipelineDefinitionName());
+            result.setMessage(message);
+            LOGGER.info(message);
+            List<Stage> stages = pipeline.getStages();
+            for (Stage stage : stages) {
+                if (stage.getStatus() == StageStatus.IN_PROGRESS) {
+                    stage.setStatus(StageStatus.PAUSED);
+                }
+            }
+        } else {
+            pipeline.setStatus(PipelineStatus.IN_PROGRESS);
+            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipeline.getPipelineDefinitionName());
+            LOGGER.info(message);
+            List<Stage> stages = pipeline.getStages();
+            for (Stage stage : stages) {
+                if (stage.getStatus() == StageStatus.PAUSED) {
+                    stage.setStatus(StageStatus.IN_PROGRESS);
+                    stage.setTriggeredManually(false);
+                }
+            }
+        }
+
         return this.update(pipeline);
     }
 

@@ -85,7 +85,7 @@ public class AuthController {
 //        }
 //
 //
-//        return Response.status(Response.Status.CREATED)
+//        return Response.status(Response.PipelineStatus.CREATED)
 //                .entity(user)
 //                .build();
 //    }

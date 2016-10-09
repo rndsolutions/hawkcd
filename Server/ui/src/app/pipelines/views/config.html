@@ -31,7 +31,7 @@
 <div class="mt-element-list col-md-3" style="padding-left: 0!important;" ng-init="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName)">
 
   <div class="mt-list-head list-simple ext-1 font-white p-config-head"
-       ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name})"
+       ui-sref="index.pipelineConfig.pipeline.stages({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name})"
        ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName)">
 
     <div class="list-head-title-container">
@@ -45,10 +45,10 @@
     <div ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions" ng-init="pipeConfig.getStageByName(pipeConfig.state.params.stageName)">
       <a class="list-toggle-container" data-target="#{{stage.name}}">
 
-        <div class="list-toggle uppercase s-config"
-             ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
+        <div class="list-toggle"
+             ui-sref="index.pipelineConfig.stage.jobs({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
              id="{{'stage'+$index}}" ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage)">
-                <span class="clip">{{stage.name}}</span>
+          <span class="clip stage-display-name">{{stage.name}}</span>
           <span class="badge badge-default pull-right bg-white font-green bold"> {{stage.jobDefinitions.length}}</span>
         </div>
       </a>
@@ -57,10 +57,10 @@
            ng-class="{'in': pipeConfig.currentStage.name == stage.name}">
         <ul>
           <li class="mt-list-item job-item" ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions" id="{{stage.name+'job'+$index}}" ng-class="{'selectedS': pipeConfig.isJobSelected(job.name)}"
-              ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name, jobName:job.name})"
+              ui-sref="index.pipelineConfig.job.tasks({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name, jobName:job.name})"
               ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage);pipeConfig.getJob(job)" ng-init="pipeConfig.getJobByName(pipeConfig.state.params.jobName)">
-            <div class="list-item-content">
-              <h3 class="uppercase clip">
+            <div class="list-item-content job-padding">
+              <h3 class="clip">
                 <a class="job-name">{{job.name}}</a>
               </h3>
             </div>

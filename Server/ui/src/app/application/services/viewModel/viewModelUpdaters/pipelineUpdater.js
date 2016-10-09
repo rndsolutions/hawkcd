@@ -10,7 +10,10 @@ angular
         };
 
         pipelineUpdater.getAllHistoryPipelines = function (pipelines) {
-            viewModel.historyPipelines = pipelines;
+            pipelines.forEach(function (currentPipelineRun, runIndex, runArray) {
+                viewModel.historyPipelines.push(currentPipelineRun);
+            });
+            viewModel.historyPipelines[0].disabled = false;
         };
 
         pipelineUpdater.flushAllHistoryPipelines = function () {
