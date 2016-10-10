@@ -19,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.File;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -217,6 +219,7 @@ public class AgentController {
             ServiceResult result = this.agentService.getById(agent.getId());
             Agent agentFromDb = (Agent) result.getObject();
             if (result.getNotificationType() == NotificationType.ERROR) {
+                agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
                 result = this.agentService.add(agent);
 
                 return Response.status(Status.OK)
@@ -225,11 +228,12 @@ public class AgentController {
             }
 
             agentFromDb.setHostName(agent.getHostName());
-            agentFromDb.setLastReportedTime(agent.getLastReportedTime());
+            agentFromDb.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
             agentFromDb.setOperatingSystem(agent.getOperatingSystem());
             agentFromDb.setIpAddress(agent.getIpAddress());
             agentFromDb.setRootPath(agent.getRootPath());
             agentFromDb.setRunning(agent.isRunning());
+            agentFromDb.setConnected(agent.isConnected());
             agentFromDb.setName(agent.getName());
 
             result = this.agentService.update(agentFromDb);

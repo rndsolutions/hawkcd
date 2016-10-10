@@ -8,9 +8,11 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.JobStatus;
 import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.model.enums.StageStatus;
+import net.hawkengine.services.AgentService;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IAgentService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -25,6 +27,7 @@ import java.util.List;
 
 public class StatusUpdaterTests {
     private IPipelineService pipelineService;
+    private IAgentService agentService;
     private StatusUpdaterService statusUpdaterService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private IMaterialDefinitionService materialDefinitionService;
@@ -40,13 +43,15 @@ public class StatusUpdaterTests {
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testStatusUpdater");
         IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
+        IDbRepository agentRepo = new RedisRepository(Agent.class, mockedPool);
         IDbRepository pipelineDefintionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
         IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockedPool);
         this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefintionRepo);
         this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
         this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
+        this.agentService = new AgentService(agentRepo, this.pipelineService);
         this.pipelinePreparer = new PipelinePreparer(this.pipelineService, this.pipelineDefinitionService);
-        this.statusUpdaterService = new StatusUpdaterService(this.pipelineService);
+        this.statusUpdaterService = new StatusUpdaterService(this.agentService ,this.pipelineService);
         this.expectedPipelineDefinition = new PipelineDefinition();
         this.pipelineDefinitionService.add(this.expectedPipelineDefinition);
     }

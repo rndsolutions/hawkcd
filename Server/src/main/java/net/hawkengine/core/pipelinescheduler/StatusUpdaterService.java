@@ -3,13 +3,17 @@ package net.hawkengine.core.pipelinescheduler;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.*;
+import net.hawkengine.services.AgentService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.interfaces.IAgentService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.ws.EndpointConnector;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,17 +21,25 @@ import java.util.Queue;
 
 public class StatusUpdaterService {
     private static final Logger LOGGER = Logger.getLogger(StatusUpdaterService.class.getName());
+    private IAgentService agentService;
     private IPipelineService pipelineService;
 
     public StatusUpdaterService() {
+        this.agentService = new AgentService();
         this.pipelineService = new PipelineService();
     }
 
-    public StatusUpdaterService(IPipelineService pipelineService) {
+    public StatusUpdaterService(IAgentService agentService, IPipelineService pipelineService) {
+        this.agentService = agentService;
         this.pipelineService = pipelineService;
     }
 
     public void updateStatuses() {
+        List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
+        for (Agent agent : agents) {
+            this.updateAgentStatuses(agent);
+        }
+
         List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
         for (Pipeline pipeline : pipelinesInProgress) {
             if (pipeline.shouldBeCanceled()) {
@@ -42,6 +54,17 @@ public class StatusUpdaterService {
             }
 
             this.pipelineService.update(pipeline);
+        }
+    }
+
+    public void updateAgentStatuses(Agent agent) {
+        LocalDateTime lastReportedTime = agent.getLastReportedTime();
+        LocalDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
+        long timeBetweenReports = ChronoUnit.SECONDS.between(lastReportedTime, currentTime);
+
+        if ((timeBetweenReports > 12) && agent.isConnected()) {
+            agent.setConnected(false);
+            this.agentService.update(agent);
         }
     }
 
