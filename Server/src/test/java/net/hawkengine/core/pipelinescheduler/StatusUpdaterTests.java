@@ -315,7 +315,7 @@ public class StatusUpdaterTests {
         // Arrange
         Agent agent = new Agent();
         agent.setConnected(true);
-        agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime().minusSeconds(12));
+        agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime().minusSeconds(20));
 
         // Act
         Agent actualResult = this.statusUpdaterService.updateAgentStatus(agent);
