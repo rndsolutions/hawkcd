@@ -42,7 +42,7 @@ namespace CustomActions
 
             var isntallDir = session[HawkCDServerProperties.InstallDir].TrimEnd('\\');
             var redisFolder = isntallDir + "\\redis";
-        
+
             ExecuteCommand(string.Format("redis-server --service-stop --service-name {0}", RedisServiceName), session, redisFolder);
             ExecuteCommand(string.Format("redis-server --service-uninstall --service-name {0}", RedisServiceName), session, redisFolder);
 
@@ -174,18 +174,22 @@ namespace CustomActions
         {
             try
             {
-                var proc = Process.Start(new ProcessStartInfo
+                var paths = Environment.GetEnvironmentVariable("path").Split(';');
+                foreach (var path in paths)
                 {
-                    FileName = "java",
-                    Arguments = "-version",
-                    WindowStyle = ProcessWindowStyle.Hidden
-                });
-                proc.WaitForExit();
-                return proc.ExitCode == 0;
+                    if (File.Exists(path.TrimEnd('\\') + "\\java.exe"))
+                    {
+                        return true;
+                    }
+                }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: {0}", ex);
+            }
             return false;
         }
+
         private static void ExecuteCommand(string command, Session session, string workingDirectory = null)
         {
             // /c tells cmd that we want it to execute the command that follows and then exit.
@@ -222,6 +226,7 @@ namespace CustomActions
 
             return string.Empty;
         }
+
         private static void ReplacePropertiesKeyValue(string filePath, string key, string value)
         {
             var content = File.ReadAllText(filePath);
