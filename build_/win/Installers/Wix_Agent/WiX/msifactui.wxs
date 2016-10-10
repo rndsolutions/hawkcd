@@ -5,7 +5,8 @@
             <Dialog Id="WelcomeDlg" Width="370" Height="270" Title="!(loc.WelcomeDlg_Title)">
                 <Control Id="Description" Type="Text" X="21" Y="82" Width="320" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeDlgDescription)" />
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+                	<Publish Event="NewDialog" Value="InstallDirDlg">IS_JAVA_INSTALLED=1</Publish>
+<Publish Event="NewDialog" Value="PrerequisitesDlg">IS_JAVA_INSTALLED=0</Publish>
 </Control>
 <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -47,11 +48,8 @@
                 </Control>
 <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
 <Control Id="LicenseText" Type="ScrollableText" X="20" Y="60" Width="330" Height="140" Sunken="yes" TabSkip="no">
-                <Text>{\rtf1\ansi\ansicpg1200\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset204 MS Shell Dlg 2;}{\f1\fnil\fcharset0 MS Shell Dlg 2;}}
-\viewkind4\uc1\pard\lang1026\f0\fs17 ENPS is provided subject to license and includes enhanced functionality for integration with third-party devices and systems. To the extent that you make use of such functionality, AP hereby provides you with notice that under the terms of your ENPS agreement, any workstation or terminal connected to or using all or part of ENPS, through the enhanced integration functionality or any other means, is considered a workstation or terminal for the purposes of the workstation-based licensing set forth in your agreement. Download, installation or use of ENPS software in any environment including development, testing or production constitutes understanding and acknowledgement of this notice.\par
-\par
-\lang1033\f1\par
-\lang1026\f0\par
+                <Text>{\rtf1\ansi\ansicpg1200\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset204 MS Shell Dlg 2;}}
+\viewkind4\uc1\pard\lang1026\f0\fs17\par
 }
 </Text>
 </Control>
@@ -94,7 +92,8 @@
 <Fragment>
         <UI>
             <Dialog Id="InstallDirDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="FolderLabel" Text="The installation wizard will install the files for [ProductName] in the following folder.
+                <Control Id="InstallDirHeaderText" Text="{\UI_Font_Title}Install Directory" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="FolderLabel" Text="The installation wizard will install the files for [ProductName] in the following folder.
 
 To install into a different folder, click the Browse button, and select another folder.
 
@@ -102,7 +101,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
         " Type="Text" X="10" Y="50" Width="344" Height="113"/>
 <Control Id="DestinationFolderBox" Text="!(loc.DestinationFolderGroupBox)" Type="GroupBox" X="20" Y="166" Width="309" Height="47"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">1</Publish>
+                	<Publish Event="NewDialog" Value="ServerAddressDlg">1</Publish>
                 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
                 	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
@@ -142,7 +141,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
                 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
-                    <Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+                    <Publish Event="NewDialog" Value="ServerAddressDlg">1</Publish>
                 </Control>
 <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
 <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
@@ -499,6 +498,45 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
         </UI>
     </Fragment>
 <Fragment>
+        <UI>
+            <Dialog Id="ServerAddressDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+                <Control Id="Control_2" Text="{\UI_Font_Title}Configuration" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="Control_1" Text="Enter server address or IP:" Type="Text" X="10" Y="50" Width="282" Height="17"/>
+<Control Id="ServerAddressEdit" Property="SERVER_ADDRESS" Type="Edit" X="10" Y="70" Width="212" Height="20"/>
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">1</Publish>
+                </Control>
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
+</Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="PrerequisitesDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+                <Control Id="Finish" Type="PushButton" X="300" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonFinish)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+</Control>
+<Control Id="Control_1" Type="Bitmap" X="13" Y="65" Width="15" Height="15" Text="Image_Error"/>
+<Control Id="JavaPrereqsTest" Text="JAVA is required for running [ProductName]. Please install JRE version 8 or later. We detected that JAVA_HOME is not defined. If java is installed, please make sure that JAVA_HOME is set in your environment variables. " Type="Text" X="32" Y="64" Width="329" Height="60"/>
+<Control Id="PrerequisitesHeaderText" Text="{\UI_Font_Title}Prerequisites" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="Back" Type="PushButton" X="10" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
+</Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
 <UI Id="SUFWI_UI">
 <TextStyle Id="UI_Font_Normal" FaceName="Segoe UI" Size="10"/>
 <TextStyle Id="UI_Font_Bigger" FaceName="Segoe UI" Size="12"/>
@@ -536,6 +574,8 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <DialogRef Id="FilesInUse"/>
 <DialogRef Id="ErrorDlg"/>
 <DialogRef Id="MsiRMFilesInUse"/>
+<DialogRef Id="ServerAddressDlg"/>
+<DialogRef Id="PrerequisitesDlg"/>
 <InstallUISequence>
 <Show Dialog="WelcomeDlg" Before="ProgressDlg">NOT Installed</Show>
 <Show Dialog="MaintenanceWelcomeDlg" Before="ProgressDlg">Installed AND NOT RESUME AND NOT Preselected</Show>

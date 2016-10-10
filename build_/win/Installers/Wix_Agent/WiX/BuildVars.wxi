@@ -1,8 +1,8 @@
 ﻿<Include>
 <?define ApplicationDataFolder="C:\Users\SlaviDimitrov\AppData\Roaming" ?>
 <?define ApplicationDataFolderCommon="C:\ProgramData" ?>
-<?define BuildNumber="1.1.1" ?>
-<?define Buildzone="C:\Users\SlaviDimitrov\Desktop\build" ?>
+<?define BuildNumber="1.0.11" ?>
+<?define Buildzone="C:\GitRepos\hawkcd\build_\win" ?>
 <?define CommonFilesFolder="C:\Program Files (x86)\Common Files" ?>
 <?define DesktopFolder="C:\Users\SlaviDimitrov\Desktop" ?>
 <?define DesktopFolderCommon="C:\Users\SlaviDimitrov\Desktop" ?>
@@ -10,10 +10,10 @@
 <?define MSIFactoryDrive="C:" ?>
 <?define MSIFactoryFolder="C:\Program Files (x86)\MSI Factory" ?>
 <?define MyDocuments="C:\Users\SlaviDimitrov\Documents" ?>
-<?define OutputFolder="C:\Users\SlaviDimitrov\Desktop\build\Installers\Wix_Agent\WiX" ?>
-<?define ProductBuildGUID="c66f8395-5765-40de-b1b0-100d0a20cbca" ?>
+<?define OutputFolder="C:\GitRepos\hawkcd\build_\win\Installers\Wix_Agent\WiX" ?>
+<?define ProductBuildGUID="765c642a-4ca2-4647-92b5-c557492f8461" ?>
 <?define ProgramFilesFolder="C:\Program Files (x86)" ?>
-<?define ProjectFolder="C:\Users\SlaviDimitrov\Desktop\build\InstallerProjects" ?>
+<?define ProjectFolder="C:\GitRepos\hawkcd\build_\win\InstallerProjects" ?>
 <?define RevisionNumbe="1" ?>
 <?define RevisionNumber="1" ?>
 <?define SetupFactoryDrive="C:" ?>

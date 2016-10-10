@@ -5,7 +5,8 @@
             <Dialog Id="WelcomeDlg" Width="370" Height="270" Title="!(loc.WelcomeDlg_Title)">
                 <Control Id="Description" Type="Text" X="21" Y="82" Width="320" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeDlgDescription)" />
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+                	<Publish Event="NewDialog" Value="InstallDirDlg">IS_JAVA_INSTALLED=1</Publish>
+<Publish Event="NewDialog" Value="PrerequisitesDlg">IS_JAVA_INSTALLED=0</Publish>
 </Control>
 <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -93,7 +94,8 @@
 <Fragment>
         <UI>
             <Dialog Id="InstallDirDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="FolderLabel" Text="The installation wizard will install the files for [ProductName] in the following folder.
+                <Control Id="InstallDirectoryHeaderText" Text="{\UI_Font_Title}Install Directory" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="FolderLabel" Text="The installation wizard will install the files for [ProductName] in the following folder.
 
 To install into a different folder, click the Browse button, and select another folder.
 
@@ -101,7 +103,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
         " Type="Text" X="10" Y="50" Width="344" Height="113"/>
 <Control Id="DestinationFolderBox" Text="!(loc.DestinationFolderGroupBox)" Type="GroupBox" X="20" Y="166" Width="309" Height="47"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">1</Publish>
+                	<Publish Event="NewDialog" Value="HostNameDlg">1</Publish>
                 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
                 	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
@@ -141,8 +143,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
                 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
-                    <Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
-                </Control>
+                    <Publish Event="NewDialog" Value="RedisSetupDlg">IS_DEFAULT_REDIS_PORT_IN_USE=1</Publish>
+<Publish Event="NewDialog" Value="HostNameDlg">IS_DEFAULT_REDIS_PORT_IN_USE=0</Publish>
+</Control>
 <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
 <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
 <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
@@ -498,6 +501,67 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
         </UI>
     </Fragment>
 <Fragment>
+        <UI>
+            <Dialog Id="HostNameDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+                <Control Id="ConfigurationHeaderText" Text="{\UI_Font_Title}Configuration" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="HostNameEdit" Property="HOST_NAME" Type="Edit" X="10" Y="70" Width="162" Height="20"/>
+<Control Id="HostNameLabel" Text="Enter host Name:" Type="Text" X="10" Y="50" Width="101" Height="14"/>
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_DEFAULT_REDIS_PORT_IN_USE=0</Publish>
+<Publish Event="NewDialog" Value="RedisSetupDlg">IS_DEFAULT_REDIS_PORT_IN_USE=1</Publish>
+</Control>
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
+</Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+         <UI>
+            <Dialog Id="PrerequisitesDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+                <Control Id="Finish" Type="PushButton" X="300" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonFinish)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+</Control>
+<Control Id="Control_1" Type="Bitmap" X="13" Y="65" Width="15" Height="15" Text="Image_Error"/>
+<Control Id="JavaPrereqsTest" Text="JAVA is required for running [ProductName]. Please install JRE version 8 or later. We detected that JAVA_HOME is not defined. If java is installed, please make sure that JAVA_HOME is set in your environment variables. " Type="Text" X="32" Y="64" Width="329" Height="60"/>
+<Control Id="PrerequisitesHeaderText" Text="{\UI_Font_Title}Prerequisites" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="Back" Type="PushButton" X="10" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
+</Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
+        <UI>
+            <Dialog Id="RedisSetupDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+                <Control Id="Control_2" Text="The default port [DEFAULT_REDIS_PORT] for Redis is in use. Pleas provide a port that is not in use:" Type="Text" X="10" Y="50" Width="347" Height="19"/>
+<Control Id="Control_1" Property="NEW_REDIS_PORT" Type="Edit" X="10" Y="70" Width="84" Height="20"/>
+<Control Id="RedisSetupHeaderText" Text="{\UI_Font_Title}Redis Setup" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_DEFAULT_REDIS_PORT_IN_USE=1 AND NEW_REDIS_PORT &lt;&gt; ""</Publish>
+</Control>
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+                	<Publish Event="NewDialog" Value="HostNameDlg">1</Publish>
+</Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+        </UI>
+    </Fragment>
+<Fragment>
 <UI Id="SUFWI_UI">
 <TextStyle Id="UI_Font_Normal" FaceName="Segoe UI" Size="10"/>
 <TextStyle Id="UI_Font_Bigger" FaceName="Segoe UI" Size="12"/>
@@ -535,6 +599,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <DialogRef Id="FilesInUse"/>
 <DialogRef Id="ErrorDlg"/>
 <DialogRef Id="MsiRMFilesInUse"/>
+<DialogRef Id="HostNameDlg"/>
+<DialogRef Id="PrerequisitesDlg"/>
+<DialogRef Id="RedisSetupDlg"/>
 <InstallUISequence>
 <Show Dialog="WelcomeDlg" Before="ProgressDlg">NOT Installed</Show>
 <Show Dialog="MaintenanceWelcomeDlg" Before="ProgressDlg">Installed AND NOT RESUME AND NOT Preselected</Show>

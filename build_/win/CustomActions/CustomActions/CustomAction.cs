@@ -1,12 +1,17 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
 namespace CustomActions
 {
     public class CustomActions
     {
+        const string RedisServiceName = "HawkCDRedis";
+
         #region Server Custom Actions 
 
         [CustomAction]
@@ -17,8 +22,13 @@ namespace CustomActions
             var isntallDir = session[HawkCDServerProperties.InstallDir].TrimEnd('\\');
             var redisFolder = isntallDir + "\\redis";
 
-            ExecuteCommand("redis-server --service-install redis.windows-service.conf", session, redisFolder);
-            ExecuteCommand("redis-server --service-start", session, redisFolder);
+            var servicePort = session[HawkCDServerProperties.DeafultRedisPort];
+
+            if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1")
+                servicePort = session[HawkCDServerProperties.NewRedisPort];
+
+            ExecuteCommand(string.Format("redis-server --service-install redis.windows-service.conf --service-name {0} --port {1}", RedisServiceName, servicePort), session, redisFolder);
+            ExecuteCommand(string.Format("redis-server --service-start --service-name {0}", RedisServiceName), session, redisFolder);
 
             session.Log("Ended InstallRedis");
 
@@ -32,9 +42,9 @@ namespace CustomActions
 
             var isntallDir = session[HawkCDServerProperties.InstallDir].TrimEnd('\\');
             var redisFolder = isntallDir + "\\redis";
-
-            ExecuteCommand("redis-server --service-stop", session, redisFolder);
-            ExecuteCommand("redis-server --service-uninstall", session, redisFolder);
+        
+            ExecuteCommand(string.Format("redis-server --service-stop --service-name {0}", RedisServiceName), session, redisFolder);
+            ExecuteCommand(string.Format("redis-server --service-uninstall --service-name {0}", RedisServiceName), session, redisFolder);
 
             session.Log("Ended UninstallRedis");
 
@@ -54,6 +64,15 @@ namespace CustomActions
                 session.Log("Updating config file: {0}", configFilePath);
                 session.Log("Updating key host with new value: {0}", session[HawkCDServerProperties.HostName]);
                 ReplaceYamlKeyValue(configFilePath, "host", session[HawkCDServerProperties.HostName]);
+
+
+                if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1")
+                {
+                    var servicePort = session[HawkCDServerProperties.NewRedisPort];
+                    session.Log("Updating key port with new value: {0}", servicePort);
+                    ReplaceYamlKeyValue(configFilePath, "port", servicePort);
+                }
+
             }
             else
             {
@@ -89,10 +108,84 @@ namespace CustomActions
             return ActionResult.Success;
         }
 
+        [CustomAction]
+        public static ActionResult DetectJava(Session session)
+        {
+            session.Log("Begin DetectJavaHome");
+
+            try
+            {
+                if (IsJavaInstalled())
+                {
+                    session.Log("Setting  IsJavaInstalled to: 1");
+                    session[CommonProperties.IsJavaInstalled] = "1";
+                }
+                else
+                {
+                    session.Log("Setting  IsJavaInstalled to: 0");
+                    session[CommonProperties.IsJavaInstalled] = "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
+
+            session.Log("Ended DetectJavaHome");
+
+            return ActionResult.Success;
+        }
+
+        [CustomAction]
+        public static ActionResult CheckRedisPort(Session session)
+        {
+            session.Log("Begin CheckRedisPort");
+            try
+            {
+                int port = int.Parse(session[HawkCDServerProperties.DeafultRedisPort]);
+
+                if (IsPortInUse(port))
+                {
+                    session.Log("Port {0} is in use.", port);
+                    session[HawkCDServerProperties.IsDeafultRedisPortInUse] = "1";
+                }
+                else
+                {
+                    session.Log("Port {0} is in free.", port);
+                    session[HawkCDServerProperties.IsDeafultRedisPortInUse] = "0";
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
+
+            session.Log("Ended CheckRedisPort");
+
+            return ActionResult.Success;
+        }
+
         #endregion //Server Custom Actions 
 
         #region Private Methods
-
+        private static bool IsJavaInstalled()
+        {
+            try
+            {
+                var proc = Process.Start(new ProcessStartInfo
+                {
+                    FileName = "java",
+                    Arguments = "-version",
+                    WindowStyle = ProcessWindowStyle.Hidden
+                });
+                proc.WaitForExit();
+                return proc.ExitCode == 0;
+            }
+            catch { }
+            return false;
+        }
         private static void ExecuteCommand(string command, Session session, string workingDirectory = null)
         {
             // /c tells cmd that we want it to execute the command that follows and then exit.
@@ -129,21 +222,42 @@ namespace CustomActions
 
             return string.Empty;
         }
+        private static void ReplacePropertiesKeyValue(string filePath, string key, string value)
+        {
+            var content = File.ReadAllText(filePath);
+            content = Regex.Replace(content, string.Format(@"{0}\s?=.*[^\n\r]", key), string.Format("{0}={1}", key, value));
+            File.WriteAllText(filePath, content);
+        }
 
         private static void ReplaceYamlKeyValue(string filePath, string key, string value)
         {
             var content = File.ReadAllText(filePath);
-            content = Regex.Replace(content, string.Format(@"{0}\s?:.*", key), string.Format("{0}: {1}", key, value));
+            content = Regex.Replace(content, string.Format(@"{0}\s?:.*[^\n\r]", key), string.Format("{0}: {1}", key, value));
             File.WriteAllText(filePath, content);
         }
 
-        private static void ReplacePropertiesKeyValue(string filePath, string key, string value)
+        private static bool IsPortInUse(int port)
         {
-            var content = File.ReadAllText(filePath);
-            content = Regex.Replace(content, string.Format(@"{0}\s?=.*", key), string.Format("{0}={1}", key, value));
-            File.WriteAllText(filePath, content);
-        }
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+            foreach (TcpConnectionInformation tcpi in tcpConnInfoArray)
+            {
+                if (tcpi.LocalEndPoint.Port == port)
+                {
+                    return true;
+                }
+            }
 
+            foreach (IPEndPoint tcpi in ipGlobalProperties.GetActiveTcpListeners())
+            {
+                if (tcpi.Port == port)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         #endregion //Private Methods
     }
 }

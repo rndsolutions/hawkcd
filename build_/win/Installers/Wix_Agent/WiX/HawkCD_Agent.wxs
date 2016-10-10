@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-06 at 09:13:01 -->
+     on 2016-10-10 at 17:40:22 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber)" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
@@ -22,8 +22,11 @@
 <Property Id="ARPPRODUCTICON" Value="hawk_0001.ico"/>
 <Icon Id="hawk_0001.ico" SourceFile="$(var.Buildzone)\Installers\Images\hawk.ico"/>
 <Property Id="ALLUSERS" Value="1"/>
+<Property Id="IS_JAVA_INSTALLED" Value="1" Secure="yes"/>
+<Property Id="IS_REDIS_PORT_IN_USE" Value="0" Secure="yes"/>
 <Property Id="MSIFACTUIRMOption" Value="UseRM"/>
 <Property Id="MSIFACT_INSTALLDIR" Value="INSTALLDIR"/>
+<Property Id="SERVER_ADDRESS" Value="localhost" Secure="yes"/>
 <Feature Id="Complete" Title="Complete" Level="1" Description="Complete program features." Absent="allow" AllowAdvertise="no" TypicalDefault="install" Display="collapse" InstallDefault="local">
 <ComponentRef Id="RegKey_0001"/>
 <ComponentRef Id="RegValAdd_0002"/>
@@ -37,6 +40,16 @@
 </Directory>
 </Directory>
 <UIRef Id="SUFWI_UI"/>
+<CustomAction Id="UpdateAgentConfigFile" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateAgentConfigFile"/>
+<CustomAction Id="DetectJava" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="DetectJava"/>
+<Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
+<InstallExecuteSequence>
+<Custom Action="UpdateAgentConfigFile" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
+<Custom Action="DetectJava" Before="AppSearch">1</Custom>
+</InstallExecuteSequence>
+<InstallUISequence>
+<Custom Action="DetectJava" Before="AppSearch">1</Custom>
+</InstallUISequence>
 <UIRef Id="SUFWIUI_Common" />
 <UIRef Id="SUFUI_ErrorText" />
 <UIRef Id="SUFUI_ProgressText" />
