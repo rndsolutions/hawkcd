@@ -22,6 +22,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -306,6 +308,34 @@ public class StatusUpdaterTests {
         boolean actualResult = this.statusUpdaterService.areAllPassed(expectedJobStatuses);
 
         Assert.assertFalse(actualResult);
+    }
+
+    @Test
+    public void updateAgentStatus_agentToBeDisconnected_agentSetToDisconnected() {
+        // Arrange
+        Agent agent = new Agent();
+        agent.setConnected(true);
+        agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime().minusSeconds(12));
+
+        // Act
+        Agent actualResult = this.statusUpdaterService.updateAgentStatus(agent);
+
+        // Assert
+        Assert.assertFalse(actualResult.isConnected());
+    }
+
+    @Test
+    public void updateAgentStatus_agentNotToBeDisconnected_agentIsStillConnected() {
+        // Arrange
+        Agent agent = new Agent();
+        agent.setConnected(true);
+        agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+
+        // Act
+        Agent actualResult = this.statusUpdaterService.updateAgentStatus(agent);
+
+        // Assert
+        Assert.assertTrue(actualResult.isConnected());
     }
 
     private List<Pipeline> injectDataForTestingStatusUpdater() {
