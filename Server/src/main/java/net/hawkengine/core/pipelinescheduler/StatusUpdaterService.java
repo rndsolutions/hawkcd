@@ -37,7 +37,7 @@ public class StatusUpdaterService {
     public void updateStatuses() {
         List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
         for (Agent agent : agents) {
-            this.updateAgentStatuses(agent);
+            this.updateAgentStatus(agent);
         }
 
         List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
@@ -57,15 +57,19 @@ public class StatusUpdaterService {
         }
     }
 
-    public void updateAgentStatuses(Agent agent) {
-        LocalDateTime lastReportedTime = agent.getLastReportedTime();
-        LocalDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
-        long timeBetweenReports = ChronoUnit.SECONDS.between(lastReportedTime, currentTime);
+    public Agent updateAgentStatus(Agent agent) {
+        if (agent != null) {
+            LocalDateTime lastReportedTime = agent.getLastReportedTime();
+            LocalDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
+            long timeBetweenReports = ChronoUnit.SECONDS.between(lastReportedTime, currentTime);
 
-        if ((timeBetweenReports > 12) && agent.isConnected()) {
-            agent.setConnected(false);
-            this.agentService.update(agent);
+            if (agent.isConnected() && (timeBetweenReports > 12)) {
+                agent.setConnected(false);
+                this.agentService.update(agent);
+            }
         }
+
+        return agent;
     }
 
     public boolean updateAllStatuses(Object node) {
