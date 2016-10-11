@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public class WsEndpoint extends WebSocketAdapter {
+    public class WsEndpoint extends WebSocketAdapter {
     static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
     private Gson jsonConverter;
     private UUID id;
@@ -236,8 +236,8 @@ public class WsEndpoint extends WebSocketAdapter {
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
-        String message = String.format("Session closed - User: %s [%d] %s", this.loggedUser.getEmail(), statusCode, reason == null ? "" : reason);
-        LOGGER.info(message);
+        //String message = String.format("Session closed - User: %s [%d] %s", this.loggedUser.getEmail(), statusCode, reason == null ? "" : reason);
+        //LOGGER.info(message);
         SessionPool.getInstance().remove(this);
     }
 

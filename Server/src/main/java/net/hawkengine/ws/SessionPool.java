@@ -56,11 +56,11 @@ public class SessionPool {
         return sessions;
     }
 
-    public void add(WsEndpoint session) {
+    public synchronized void add(WsEndpoint session) {
         sessions.add(session);
     }
 
-    public void remove(WsEndpoint session) {
+    public synchronized void remove(WsEndpoint session) {
         sessions.remove(session);
     }
 
@@ -87,12 +87,14 @@ public class SessionPool {
                 Class objectClass = contractDto.getResult().getClass();
                 for (WsEndpoint session : sessions) {
                     User loggedUser = session.getLoggedUser();
-                    loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
-                    List<Permission> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
-                    PermissionObject result = this.entityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
-                    if (result.getPermissionType() != PermissionType.NONE) {
-                        contractDto.setResult(result);
-                        session.send(contractDto);
+                    if (loggedUser != null){
+                        loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
+                        List<Permission> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
+                        PermissionObject result = this.entityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
+                        if (result.getPermissionType() != PermissionType.NONE) {
+                            contractDto.setResult(result);
+                            session.send(contractDto);
+                        }
                     }
                 }
             }
