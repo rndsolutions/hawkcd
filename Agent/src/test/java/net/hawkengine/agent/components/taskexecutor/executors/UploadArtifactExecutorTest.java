@@ -23,6 +23,7 @@ import net.hawkengine.agent.services.interfaces.IFileManagementService;
 
 import net.hawkengine.agent.utilities.deserializers.TaskDefinitionAdapter;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -103,6 +104,7 @@ public class UploadArtifactExecutorTest extends TestBase {
         Assert.assertNotNull(executor);
     }
 
+    @Ignore
     @Test
     public void executeTask_artifactUploadedSuccessfully_taskPassed() {
         //Arrange
@@ -163,6 +165,7 @@ public class UploadArtifactExecutorTest extends TestBase {
         Assert.assertEquals(this.correctUploadArtifactTask.getTaskDefinition().getType(), resultTask.getTaskDefinition().getType());
     }
 
+    @Ignore
     @Test
     public void executeTask_responseNotOk_taskFailed() {
         //Arrange
