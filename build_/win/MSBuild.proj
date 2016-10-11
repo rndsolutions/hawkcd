@@ -17,7 +17,10 @@
 
   <Target Name="HawkCdMergeModules">
   
-  <!-- Modify the variables used in the installer project to match the proper directories on the build server-->
+    <!-- Builds the  Custom Actions project -->
+    <MSBuild Projects="$(BuildZoneDir)\CustomActions\CustomActions.sln" />
+   
+    <!-- Modify the variables used in the installer project to match the proper directories on the build server-->
     <CreateItem Include="$(MSBuildProjectDirectory)\Installers\Wix_Agent\WiX\BuildVars.wxi;$(MSBuildProjectDirectory)\Installers\Wix_Server\WiX\BuildVars.wxi">
       <Output TaskParameter="Include" ItemName="BuildVars" />
     </CreateItem>
