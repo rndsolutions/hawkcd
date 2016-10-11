@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import net.hawkengine.core.ServerConfiguration;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.payload.UploadArtifactInfo;
 import net.hawkengine.services.FileManagementService;
 import net.hawkengine.services.interfaces.IFileManagementService;
 
@@ -13,7 +12,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/Artifacts/{pipelineName}")
 public class ArtifactController {
@@ -47,27 +48,31 @@ public class ArtifactController {
 
     @POST
     @Path("/{pipelineExecutionId}/upload-artifact")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response unzipFile(@PathParam("pipelineName") String pipelineName,
                               @PathParam("pipelineExecutionId") String pipelineExecutionID,
-                              String uploadArtifactInfoAsString) {
-        String artifactsFolder = ServerConfiguration.getConfiguration().getArtifactsDestination();
-        UploadArtifactInfo uploadArtifactInfo = this.jsonConverter.fromJson(uploadArtifactInfoAsString, UploadArtifactInfo.class);
-        if (uploadArtifactInfo.getDestination() != null){
-            String destination = this.fileManagementService.normalizePath(uploadArtifactInfo.getDestination());
-            this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID + File.separator + destination;
-        } else {
-            this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID;
+                              @QueryParam("destination") String destination,
+                              InputStream uploadedInputStream) {
+        this.zipFile = new File(this.basePath + File.separator + "Temp" + File.separator + UUID.randomUUID() + ".zip");
+
+        String errorMessage = this.fileManagementService.streamToFile(uploadedInputStream, this.zipFile.getPath());
+        if (errorMessage != null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .type(MediaType.TEXT_HTML)
+                    .build();
         }
 
-        String errorMessage = this.fileManagementService.unzipFile(uploadArtifactInfo.getZipFile().getPath(), this.outputFolder);
+        String artifactsFolder = ServerConfiguration.getConfiguration().getArtifactsDestination();
+        this.outputFolder = this.basePath + File.separator + artifactsFolder + File.separator + pipelineName + File.separator + pipelineExecutionID + File.separator + destination;
 
+        errorMessage = this.fileManagementService.unzipFile(this.zipFile.getPath(), this.outputFolder);
         if (errorMessage != null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.TEXT_HTML)
                     .build();
         }
+
         return Response.status(Response.Status.OK)
                 .build();
     }
@@ -78,7 +83,7 @@ public class ArtifactController {
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response zipFile(String directory) {
         directory = this.fileManagementService.normalizePath(directory);
-        directory =  this.basePath + File.separator + ServerConfiguration.getConfiguration().getArtifactsDestination() + File.separator + directory;
+        directory = this.basePath + File.separator + ServerConfiguration.getConfiguration().getArtifactsDestination() + File.separator + directory;
         String rootPath = this.fileManagementService.getRootPath(directory);
         String wildCardPattern = this.fileManagementService.getPattern(rootPath, directory);
 
@@ -121,7 +126,7 @@ public class ArtifactController {
     @Produces("application/force-download")
     public Response getArtifact(@PathParam("pipelineName") String pipelineName,
                                 @PathParam("pipelineExecutionId") String pipelineExecutionID,
-                                @PathParam("artifactSource") String artifactSource){
+                                @PathParam("artifactSource") String artifactSource) {
 
         artifactSource = this.fileManagementService.normalizePath(artifactSource);
 
@@ -129,7 +134,7 @@ public class ArtifactController {
 
         File fileToReturn = new File(directory);
 
-        if (!fileToReturn.exists()){
+        if (!fileToReturn.exists()) {
             return Response.status(Response.Status.NOT_FOUND)
                     .build();
         }

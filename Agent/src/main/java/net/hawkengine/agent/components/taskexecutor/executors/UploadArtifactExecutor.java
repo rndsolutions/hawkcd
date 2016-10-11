@@ -19,8 +19,12 @@ import net.hawkengine.agent.services.FileManagementService;
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
 import net.hawkengine.agent.utilities.ReportAppender;
 import net.hawkengine.agent.utilities.deserializers.TaskDefinitionAdapter;
+import org.apache.commons.io.FileUtils;
 
+import javax.ws.rs.core.MediaType;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -86,12 +90,22 @@ public class UploadArtifactExecutor extends TaskExecutor {
 
         String executionFolder = String.valueOf(workInfo.getPipelineExecutionID());
         UploadArtifactInfo uploadArtifactInfo = new UploadArtifactInfo(zipFile, taskDefinition.getDestination());
-        String uploadArtifactInfoAsString = this.jsonConverter.toJson(uploadArtifactInfo);
         String folderPath = String.format(ConfigConstants.SERVER_CREATE_ARTIFACT_API_ADDRESS, workInfo.getPipelineDefinitionName(), executionFolder);
         AgentConfiguration.getInstallInfo().setCreateArtifactApiAddress(String.format("%s/%s", AgentConfiguration.getInstallInfo().getServerAddress(), folderPath));
-        String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/upload-artifact";
+        String destination = taskDefinition.getDestination();
+        String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/upload-artifact" + "?destination=" + destination;
         WebResource webResource = this.restClient.resource(requestSource);
-        ClientResponse response = webResource.type("application/json").post(ClientResponse.class, uploadArtifactInfoAsString);
+
+        InputStream targetStream = null;
+        try {
+            targetStream = FileUtils.openInputStream(zipFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ClientResponse response = webResource
+                .type(MediaType.MULTIPART_FORM_DATA_TYPE)
+                .post(ClientResponse.class, targetStream);
 
         if (response.getStatus() != 200) {
             zipFile.delete();
