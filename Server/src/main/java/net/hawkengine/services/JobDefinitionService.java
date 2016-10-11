@@ -60,7 +60,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
-    public ServiceResult add(JobDefinition jobDefinition) {
+    public synchronized ServiceResult add(JobDefinition jobDefinition) {
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
         if (!taskDefinitions.isEmpty()) {
             taskDefinitions.stream()
@@ -87,7 +87,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
-    public ServiceResult update(JobDefinition jobDefinition) {
+    public synchronized ServiceResult update(JobDefinition jobDefinition) {
         JobDefinition result = new JobDefinition();
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
@@ -116,7 +116,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
-    public ServiceResult delete(String jobDefinitionId) {
+    public synchronized ServiceResult delete(String jobDefinitionId) {
         boolean isRemoved = false;
         JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinitionId).getObject();
         if (jobDefinitionToDelete == null) {

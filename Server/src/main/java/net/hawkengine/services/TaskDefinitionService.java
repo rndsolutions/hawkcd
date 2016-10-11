@@ -58,30 +58,30 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
-    public ServiceResult add(ExecTask taskDefintion) {
+    public synchronized ServiceResult add(ExecTask taskDefintion) {
         ServiceResult result = this.addTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult add(FetchMaterialTask taskDefintion) {
+    public synchronized ServiceResult add(FetchMaterialTask taskDefintion) {
         ServiceResult result = this.addTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult add(FetchArtifactTask taskDefinition) {
+    public synchronized ServiceResult add(FetchArtifactTask taskDefinition) {
         ServiceResult result = this.addTask(taskDefinition);
         return result;
     }
 
     @Override
-    public ServiceResult add(UploadArtifactTask taskDefinition) {
+    public synchronized ServiceResult add(UploadArtifactTask taskDefinition) {
         ServiceResult result = this.addTask(taskDefinition);
         return result;
     }
 
-    public ServiceResult addTask(TaskDefinition taskDefinition) {
+    public synchronized ServiceResult addTask(TaskDefinition taskDefinition) {
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
         taskDefinitions.add(taskDefinition);
@@ -97,30 +97,30 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
-    public ServiceResult update(ExecTask taskDefintion) {
+    public synchronized ServiceResult update(ExecTask taskDefintion) {
         ServiceResult result = this.updateTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult update(FetchMaterialTask taskDefintion) {
+    public synchronized ServiceResult update(FetchMaterialTask taskDefintion) {
         ServiceResult result = this.updateTask(taskDefintion);
         return result;
     }
 
     @Override
-    public ServiceResult update(FetchArtifactTask taskDefinition) {
+    public synchronized ServiceResult update(FetchArtifactTask taskDefinition) {
         ServiceResult result = this.updateTask(taskDefinition);
         return result;
     }
 
     @Override
-    public ServiceResult update(UploadArtifactTask taskDefinition) {
+    public synchronized ServiceResult update(UploadArtifactTask taskDefinition) {
         ServiceResult result = this.updateTask(taskDefinition);
         return result;
     }
 
-    public ServiceResult updateTask(TaskDefinition taskDefinition) {
+    public synchronized ServiceResult updateTask(TaskDefinition taskDefinition) {
         TaskDefinition result = null;
 
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
@@ -152,7 +152,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
-    public ServiceResult delete(String taskDefinitionId) {
+    public synchronized ServiceResult delete(String taskDefinitionId) {
         boolean isRemoved = false;
         TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinitionId).getObject();
         if (taskDefinitionToDelete == null) {

@@ -76,7 +76,7 @@ public class WsEndpoint extends WebSocketAdapter {
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
-        LOGGER.info("Socket Connected: " + session);
+//        LOGGER.info("Socket Connected: " + session);
 
         String tokenQuery = session.getUpgradeRequest().getQueryString();
 
@@ -86,6 +86,7 @@ public class WsEndpoint extends WebSocketAdapter {
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
             SessionPool.getInstance().add(this);
+            LOGGER.info("Session opened - User: " + this.loggedUser.getEmail());
 
             if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
 
@@ -235,7 +236,8 @@ public class WsEndpoint extends WebSocketAdapter {
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
-        LOGGER.info("Socket Closed: [" + statusCode + "] " + reason);
+        String message = String.format("Session closed - User: %s [%d] %s", this.loggedUser.getEmail(), statusCode, reason == null ? "" : reason);
+        LOGGER.info(message);
         SessionPool.getInstance().remove(this);
     }
 

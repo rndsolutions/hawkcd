@@ -52,7 +52,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult add(PipelineDefinition pipelineDefinition) {
+    public synchronized ServiceResult add(PipelineDefinition pipelineDefinition) {
         EnvironmentVariable environmentVariable = new EnvironmentVariable();
         environmentVariable.setKey("COUNT");
         environmentVariable.setValue("1");
@@ -81,7 +81,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
+    public synchronized ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
         }
@@ -98,12 +98,12 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, GitMaterial materialDefinition) {
+    public synchronized ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, GitMaterial materialDefinition) {
         return this.add(pipelineDefinition, materialDefinition);
     }
 
     @Override
-    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
+    public synchronized ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
         }
@@ -120,12 +120,12 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult update(PipelineDefinition pipelineDefinition) {
+    public synchronized ServiceResult update(PipelineDefinition pipelineDefinition) {
         return super.update(pipelineDefinition);
     }
 
     @Override
-    public ServiceResult delete(String pipelineDefinitionId) {
+    public synchronized ServiceResult delete(String pipelineDefinitionId) {
         if (this.pipelineService == null) {
             this.pipelineService = new PipelineService();
         }
@@ -153,7 +153,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition) {
+    public synchronized ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition) {
         pipelineDefinition.setPipelineGroupId("");
         pipelineDefinition.setGroupName("");
 
@@ -161,7 +161,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition, PipelineGroup pipelineGroup) {
+    public synchronized ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition, PipelineGroup pipelineGroup) {
         pipelineDefinition.setPipelineGroupId(pipelineGroup.getId());
         pipelineDefinition.setGroupName(pipelineGroup.getName());
 

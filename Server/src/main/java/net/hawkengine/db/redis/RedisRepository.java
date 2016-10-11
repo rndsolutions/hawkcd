@@ -73,7 +73,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public synchronized T add(T entry) {
+    public T add(T entry) {
         T result = null;
         try (Jedis jedis = this.jedisPool.getResource()) {
             T existingObject = this.getById(entry.getId());
@@ -89,7 +89,7 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
     }
 
     @Override
-    public synchronized T update(T entry) {
+    public T update(T entry) {
         T result = null;
         try (Jedis jedis = this.jedisPool.getResource()) {
             T existingObject = this.getById(entry.getId());

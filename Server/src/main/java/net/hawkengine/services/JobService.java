@@ -58,7 +58,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
-    public ServiceResult add(Job job) {
+    public synchronized ServiceResult add(Job job) {
         Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
         List<Job> jobs = stage.getJobs();
 
@@ -82,7 +82,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
-    public ServiceResult update(Job job) {
+    public synchronized ServiceResult update(Job job) {
         ServiceResult serviceResult = null;
         Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
         List<Job> jobs = stage.getJobs();
@@ -110,7 +110,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
-    public ServiceResult delete(String jobId) {
+    public synchronized ServiceResult delete(String jobId) {
         Stage stageToUpdate = new Stage();
         Job jobToDelete = null;
         List<Stage> stages = (List<Stage>) this.stageService.getAll().getObject();

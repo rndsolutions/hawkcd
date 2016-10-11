@@ -6,15 +6,10 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.enums.NotificationType;
-import net.hawkengine.model.enums.PermissionScope;
-import net.hawkengine.model.enums.PermissionType;
-import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.interfaces.IUserService;
 import net.hawkengine.ws.SessionPool;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.tools.ant.taskdefs.condition.Not;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,7 +38,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult add(User user) {
+    public synchronized ServiceResult add(User user) {
         ServiceResult result = this.getByEmail(user.getEmail());
         if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
@@ -55,14 +50,14 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult update(User user) {
+    public synchronized ServiceResult update(User user) {
         ServiceResult serviceResult = super.update(user);
         SessionPool.getInstance().updateUserObjects(user.getId());
         return serviceResult;
     }
 
     @Override
-    public ServiceResult delete(String userId) {
+    public synchronized ServiceResult delete(String userId) {
         return super.delete(userId);
     }
 
@@ -102,12 +97,12 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult addUserWithoutProvider(User user) {
+    public synchronized ServiceResult addUserWithoutProvider(User user) {
         return this.add(user);
     }
 
     @Override
-    public ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
+    public synchronized ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
         String hashedPassword = DigestUtils.sha256Hex(oldPassword);
         ServiceResult result = this.getByEmailAndPassword(user.getUsername(), hashedPassword);
 
@@ -122,7 +117,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public ServiceResult resetUserPassword(User user) {
+    public synchronized ServiceResult resetUserPassword(User user) {
         String hashedPassword = DigestUtils.sha256Hex(user.getPassword());
 
         ServiceResult result = this.getById(user.getId());

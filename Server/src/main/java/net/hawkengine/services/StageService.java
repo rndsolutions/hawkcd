@@ -1,6 +1,5 @@
 package net.hawkengine.services;
 
-import net.hawkengine.core.utilities.constants.ConfigurationConstants;
 import net.hawkengine.model.Pipeline;
 import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.Stage;
@@ -9,7 +8,6 @@ import net.hawkengine.services.interfaces.IFileManagementService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import net.hawkengine.services.interfaces.IStageService;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +61,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
-    public ServiceResult add(Stage stage) {
+    public synchronized ServiceResult add(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         List<Stage> stages = pipeline.getStages();
 
@@ -90,7 +88,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
-    public ServiceResult update(Stage stage) {
+    public synchronized ServiceResult update(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         List<Stage> stages = pipeline.getStages();
         int stageCollectionSize = stages.size();
@@ -118,7 +116,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
-    public ServiceResult delete(String stageId) {
+    public synchronized ServiceResult delete(String stageId) {
         Pipeline pipelineToUpdate = new Pipeline();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
         for (Pipeline pipeline : pipelines) {
