@@ -299,7 +299,7 @@
 <Fragment>
         <UI>
             <Dialog Id="InstallDirDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="InstallDirectoryHeaderText" Text="{\UI_Font_Title}Install Directory" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+                <Control Id="InstallDirectoryHeaderText" Text="{\UI_Font_Title}Install Directory" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
 <Control Id="FolderLabel" Text="The installation wizard will install the files for [ProductName] in the following folder.
 
 To install into a different folder, click the Browse button, and select another folder.
@@ -342,7 +342,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
                     <Publish Event="EnableRollback" Value="False">OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"</Publish>
                     <Publish Event="SpawnDialog" Value="OutOfDiskDlg">(OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")</Publish>
                 </Control>
-<Control Id="InstallTitle" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.VerifyReadyDlgInstallTitle)">
+<Control Id="InstallTitle" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Text="{\UI_Font_Title}Ready to install [ProductName]">
                 </Control>
 <Control Id="InstallText" Type="Text" X="25" Y="81" Width="320" Height="36" Text="Click Install to begin the installation. Click Back to review or change any of your installation settings. Click Cancel to exit.">
                 </Control>
@@ -742,7 +742,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Fragment>
         <UI>
             <Dialog Id="HostNameDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="ConfigurationHeaderText" Text="{\UI_Font_Title}Configuration" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+                <Control Id="ConfigurationHeaderText" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
 <Control Id="HostNameEdit" Property="HOST_NAME" Type="Edit" X="10" Y="70" Width="162" Height="20"/>
 <Control Id="HostNameLabel" Text="Enter host Name:" Type="Text" X="10" Y="50" Width="101" Height="14"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
@@ -771,7 +771,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 </Control>
 <Control Id="Control_1" Type="Bitmap" X="13" Y="65" Width="15" Height="15" Text="Image_Error"/>
 <Control Id="JavaPrereqsTest" Text="JAVA is required for running [ProductName]. Please install JRE version 8 or later. We detected that JAVA_HOME is not defined. If java is installed, please make sure that JAVA_HOME is set in your environment variables. " Type="Text" X="32" Y="64" Width="329" Height="60"/>
-<Control Id="PrerequisitesHeaderText" Text="{\UI_Font_Title}Prerequisites" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="PrerequisitesHeaderText" Text="{\UI_Font_Title}Prerequisites" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
 <Control Id="Back" Type="PushButton" X="10" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
                 	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
 </Control>
@@ -786,9 +786,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Fragment>
         <UI>
             <Dialog Id="RedisSetupDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="Control_2" Text="The default port [DEFAULT_REDIS_PORT] for Redis is in use. Pleas provide a port that is not in use:" Type="Text" X="10" Y="50" Width="347" Height="19"/>
+                <Control Id="Control_2" Text="The default port [DEFAULT_REDIS_PORT] for Redis is in use. Pleas provide a port that is not in use:" Type="Text" X="10" Y="50" Width="359" Height="19"/>
 <Control Id="Control_1" Property="NEW_REDIS_PORT" Type="Edit" X="10" Y="70" Width="84" Height="20"/>
-<Control Id="RedisSetupHeaderText" Text="{\UI_Font_Title}Redis Setup" Type="Text" X="2" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="RedisSetupHeaderText" Text="{\UI_Font_Title}Redis Setup" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
                 	<Publish Event="NewDialog" Value="[MSIFACT_DLG_NEXT]">IS_DEFAULT_REDIS_PORT_IN_USE=1 AND NEW_REDIS_PORT &lt;&gt; ""</Publish>
 </Control>
@@ -1568,8 +1568,8 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Id>UI_Font_Title</Id>
 <FaceName>Segoe UI</FaceName>
 <Size>10</Size>
-<UseDefaultColor>yes</UseDefaultColor>
-<Color format="hex">000000</Color>
+<UseDefaultColor>no</UseDefaultColor>
+<Color format="hex">ffffff</Color>
 <Bold>yes</Bold>
 <Italic>no</Italic>
 <Underline>no</Underline>

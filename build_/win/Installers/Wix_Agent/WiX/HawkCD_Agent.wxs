@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-10 at 17:40:22 -->
+     on 2016-10-11 at 17:20:11 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber)" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
