@@ -86,7 +86,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
-    public synchronized ServiceResult add(StageDefinition stageDefinition) {
+    public  ServiceResult add(StageDefinition stageDefinition) {
         ServiceResult result = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
         PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
@@ -129,7 +129,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
-    public synchronized ServiceResult update(StageDefinition stageDefinition) {
+    public  ServiceResult update(StageDefinition stageDefinition) {
         ServiceResult serviceResult = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
         PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
@@ -165,7 +165,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
-    public synchronized ServiceResult delete(String stageDefinitionId) {
+    public  ServiceResult delete(String stageDefinitionId) {
 
         PipelineDefinition pipeline = new PipelineDefinition();
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();

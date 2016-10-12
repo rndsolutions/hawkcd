@@ -140,20 +140,6 @@ import java.util.UUID;
                 return;
             }
 
-//            SchemaValidator schemaValidator = new SchemaValidator();
-//            for (ConversionObject conversionObject : contract.getArgs()) {
-//                Class objectClass = Class.forName(conversionObject.getPackageName());
-//                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
-//                String result = schemaValidator.validate(object);
-//
-//                if (!result.equals("OK")) {
-//                    contract.setNotificationType(true);
-//                    contract.setErrorMessage(result);
-//                    remoteEndpoint.sendString(serializer.toJson(contract));
-//                    return;
-//                }
-//            }
-
             User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
 
             this.setLoggedUser(currentUser);

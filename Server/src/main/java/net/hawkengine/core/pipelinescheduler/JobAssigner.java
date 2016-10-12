@@ -29,14 +29,15 @@ public class JobAssigner implements Runnable {
         LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, this.getClass().getSimpleName()));
         try {
             while (true) {
+                LOGGER.debug("");
                 List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
 
-                PipelineService.lock.lock();
+                //PipelineService.lock.lock();
                 this.statusUpdaterService.updateStatuses();
                 this.jobAssignerService.checkUnassignedJobs(agents);
                 this.jobAssignerService.checkAwaitingJobs(agents);
                 this.jobAssignerService.assignJobs(agents);
-                PipelineService.lock.unlock();
+                //PipelineService.lock.unlock();
 
                 Thread.sleep(POLL_INTERVAL);
             }

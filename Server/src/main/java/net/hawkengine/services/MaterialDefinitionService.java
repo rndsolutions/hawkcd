@@ -57,27 +57,27 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
-    public synchronized ServiceResult add(MaterialDefinition materialDefinition) {
+    public  ServiceResult add(MaterialDefinition materialDefinition) {
         return super.add(materialDefinition);
     }
 
     @Override
-    public synchronized ServiceResult add(GitMaterial materialDefinition) {
+    public  ServiceResult add(GitMaterial materialDefinition) {
         return super.add(materialDefinition);
     }
 
     @Override
-    public synchronized ServiceResult update(MaterialDefinition materialDefinition) {
+    public  ServiceResult update(MaterialDefinition materialDefinition) {
         return super.update(materialDefinition);
     }
 
     @Override
-    public synchronized ServiceResult update(GitMaterial materialDefinition) {
+    public  ServiceResult update(GitMaterial materialDefinition) {
         return super.update(materialDefinition);
     }
 
     @Override
-    public synchronized ServiceResult delete(String materialDefinitionId) {
+    public  ServiceResult delete(String materialDefinitionId) {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         List<String> assignedIds = new ArrayList<>();
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {

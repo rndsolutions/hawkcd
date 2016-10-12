@@ -21,7 +21,7 @@ function stop {
   #statements\
     if [[ -z $(pgrep -x -f  "java -jar $version.jar") ]]; then
       #statements
-      echo "hawkcd is not running"
+      echo "hawkcd is not running"nan
     else
       pgrep -x -f  "java -jar $version.jar" | kill $(tail)
       echo "Application server stopped"

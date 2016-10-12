@@ -126,7 +126,7 @@ public class AgentController {
             return Response.status(Status.OK).build();
         }
 
-        PipelineService.lock.lock();
+        //PipelineService.lock.lock();
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();
 
         Stage stage = pipeline.getStages().stream().filter(s -> s.getId().equals(job.getStageId())).findFirst().orElse(null);
@@ -179,7 +179,7 @@ public class AgentController {
         }
 
         this.pipelineService.update(pipeline);
-        PipelineService.lock.unlock();
+        //PipelineService.lock.unlock();
 
         return Response.status(Status.OK).build();
     }
