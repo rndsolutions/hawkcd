@@ -4,7 +4,6 @@ import net.hawkengine.core.materialhandler.MaterialTracker;
 import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.DataImporter;
-import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.ws.WsServlet;
 import org.eclipse.jetty.server.Handler;
@@ -15,6 +14,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HawkServer {
@@ -27,10 +27,16 @@ public class HawkServer {
     public HawkServer() {
         RedisManager.connect();
 
-        this.server = new Server();
-        this.pipelinePreparer = new Thread(new PipelinePreparer());
-        this.jobAssigner = new Thread(new JobAssigner());
-        this.materialTracker = new Thread(new MaterialTracker());
+        //setting server thread pool
+        final QueuedThreadPool threadPool=new QueuedThreadPool(3);
+        //threadPool.setStopTimeout();
+        threadPool.setMinThreads(10);
+        threadPool.setName("http-worker");
+        this.server = new Server(threadPool);
+
+        this.pipelinePreparer = new Thread(new PipelinePreparer(), "PipelineScheduler");
+        this.jobAssigner = new Thread(new JobAssigner(),"JobAssigner");
+        this.materialTracker = new Thread(new MaterialTracker(), "MaterialTracker");
         this.dataImporter = new DataImporter();
     }
 
