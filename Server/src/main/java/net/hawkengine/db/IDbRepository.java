@@ -14,4 +14,6 @@ public interface IDbRepository<T extends DbEntry> {
     T update(T entry);
 
     T delete(String id);
+
+    void enqueue(String name, String methodType, T entry);
 }

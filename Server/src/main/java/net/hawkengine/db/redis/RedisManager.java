@@ -9,7 +9,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisManager {
     private static JedisPool jedisPool;
 
-    static JedisPool getJedisPool() {
+    public static JedisPool getJedisPool() {
         return jedisPool;
     }
 

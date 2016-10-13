@@ -92,4 +92,10 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
 
         return result;
     }
+
+    @Override
+    public void  enqueue(String name, String methodType, T entry){
+        this.getRepository().enqueue(name,methodType,entry);
+    }
+
 }

@@ -29,10 +29,10 @@ public class HawkServer {
         RedisManager.connect();
 
         //setting server thread pool
-        final QueuedThreadPool threadPool=new QueuedThreadPool();
+        final QueuedThreadPool threadPool=new QueuedThreadPool(10);
         //threadPool.setStopTimeout();
-        threadPool.setMinThreads(3);
-        threadPool.setMaxThreads(10);
+        //threadPool.setMinThreads(3);
+        //threadPool.setMaxThreads(10);
         threadPool.setName("http-worker");
         this.server = new Server(threadPool);
 

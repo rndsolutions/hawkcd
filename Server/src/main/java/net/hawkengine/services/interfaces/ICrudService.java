@@ -13,4 +13,6 @@ public interface ICrudService<T extends DbEntry> {
     ServiceResult update(T object);
 
     ServiceResult delete(String id);
+
+    void  enqueue(String name, String methodType, T entry);
 }

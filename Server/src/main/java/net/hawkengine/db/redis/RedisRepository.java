@@ -118,4 +118,12 @@ public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
 
         return result;
     }
+
+    @Override
+    public void enqueue(String name, String methodType, T entry) {
+        T result = null;
+        try (Jedis jedis = this.jedisPool.getResource()) {
+                jedis.rpush("queue", name, methodType, this.jsonConverter.toJson(entry));
+        }
+    }
 }
