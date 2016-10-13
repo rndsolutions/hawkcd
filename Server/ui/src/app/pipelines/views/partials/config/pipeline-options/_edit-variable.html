@@ -11,8 +11,12 @@
                       <input type="text" class="form-control" ng-disabled="!pipeConfig.environmentVariableUtils.pipelines.variableToEdit.isDeletable" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.key" name="variableName" ng-pattern="/^([\w-]+)$/" required>
                       <label>Name</label>
                   </div>
-                  <div class="form-group form-md-line-input">
+                  <div class="form-group form-md-line-input" ng-if="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.isDeletable">
                       <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.value" name="variableValue">
+                      <label>Value</label>
+                  </div>
+                  <div class="form-group form-md-line-input" ng-if="!pipeConfig.environmentVariableUtils.pipelines.variableToEdit.isDeletable">
+                      <input type="number" class="form-control" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.value" name="variableValue">
                       <label>Value</label>
                   </div>
                   <div class="form-group form-md-checkboxes">
