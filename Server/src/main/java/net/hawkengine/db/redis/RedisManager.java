@@ -20,6 +20,8 @@ public class RedisManager {
         String password = config.getPassword();
 
         JedisPoolConfig poolConfig = new JedisPoolConfig();
+        poolConfig.setMaxTotal(100);
+        poolConfig.setBlockWhenExhausted(false);
         poolConfig.setTestOnBorrow(true);
 
         jedisPool = new JedisPool(poolConfig, host, port, 0, password);

@@ -56,7 +56,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     public  ServiceResult update(Agent agent) {
         ServiceResult result = super.update(agent);
         super.enqueue(AgentService.class.getSimpleName(), "update", (Agent) result.getObject());
-        EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
+        //EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
         return result;
     }
 

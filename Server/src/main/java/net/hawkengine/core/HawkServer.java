@@ -6,6 +6,7 @@ import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.DataImporter;
 import net.hawkengine.core.utilities.EndpointFinder;
 import net.hawkengine.db.redis.RedisManager;
+import net.hawkengine.ws.ConnectionWorker;
 import net.hawkengine.ws.WsServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -24,6 +25,7 @@ public class HawkServer {
     private Thread jobAssigner;
     private Thread materialTracker;
     private DataImporter dataImporter;
+    private Thread connectionWorker;
 
     public HawkServer() {
         RedisManager.connect();
@@ -40,6 +42,7 @@ public class HawkServer {
         this.jobAssigner = new Thread(new JobAssigner(),"JobAssigner");
         this.materialTracker = new Thread(new MaterialTracker(), "MaterialTracker");
         this.dataImporter = new DataImporter();
+        this.connectionWorker =  new Thread(new ConnectionWorker(), "ConnectionWorker");
     }
 
     public void configureJetty() {
@@ -92,6 +95,7 @@ public class HawkServer {
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();
+        this.connectionWorker.start();
         this.server.join();
     }
 
