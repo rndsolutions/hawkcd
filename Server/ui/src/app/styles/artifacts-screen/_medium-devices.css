@@ -19,15 +19,14 @@
   vertical-align: top;
   border-left:2px solid gray;
   text-align: center;
-  margin-top:2px;
-  height: 80px;!important;
+  height: 65px;!important;
   width:65%;
 }
 
 #right-container {
   display:inline-block!important;
   border-left:2px solid gray;
-  height: 80px!important;
+  height: 65px!important;
   width:19%;
 }
 
@@ -60,7 +59,7 @@
 
 #artifact-main-header {
   border-left:4px solid #5cb85c ;
-  height: 80px!important;
+  height: 65px!important;
 }
 
 .center-cell {
