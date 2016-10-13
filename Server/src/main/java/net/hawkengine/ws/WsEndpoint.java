@@ -83,8 +83,6 @@ import java.util.UUID;
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
             SessionPool.getInstance().add(this);
-            int userActiveSessions = SessionPool.getInstance().countActiveSessions(this.loggedUser.getEmail());
-            LOGGER.info("Session opened - User: " + this.loggedUser.getEmail() + " Active Sessions: " + userActiveSessions);
 
             if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
                 UserDto userDto = new UserDto();
@@ -133,20 +131,6 @@ import java.util.UUID;
                 EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result, this.getLoggedUser());
                 return;
             }
-
-//            SchemaValidator schemaValidator = new SchemaValidator();
-//            for (ConversionObject conversionObject : contract.getArgs()) {
-//                Class objectClass = Class.forName(conversionObject.getPackageName());
-//                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
-//                String result = schemaValidator.validate(object);
-//
-//                if (!result.equals("OK")) {
-//                    contract.setNotificationType(true);
-//                    contract.setErrorMessage(result);
-//                    remoteEndpoint.sendString(serializer.toJson(contract));
-//                    return;
-//                }
-//            }
 
             User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
 
@@ -230,13 +214,16 @@ import java.util.UUID;
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
+        reason = reason == null ? "" : reason;
+        String message = String.format("Session closed [%d] %s", statusCode, reason);
+        LOGGER.info(message);
 
-        if (this.getLoggedUser() != null) {
-            reason = reason == null ? "" : reason + " ";
-            int userActiveSessions = SessionPool.getInstance().countActiveSessions(this.loggedUser.getEmail());
-            String message = String.format("Session closed [%d] %s- User: %s Active Sessions: %s", statusCode, reason, this.loggedUser.getEmail(), userActiveSessions);
-            LOGGER.info(message);
-        }
+//        if (this.getLoggedUser() != null) {
+//            reason = reason == null ? "" : reason + " ";
+//            int userActiveSessions = SessionPool.getInstance().countActiveSessions(this.loggedUser.getEmail()) - 1;
+//            String message = String.format("Session closed [%d] %s- User: %s Active Sessions: %s", statusCode, reason, this.loggedUser.getEmail(), userActiveSessions);
+//            LOGGER.info(message);
+//        }
 
         SessionPool.getInstance().remove(this);
     }

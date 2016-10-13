@@ -56,6 +56,9 @@ public class SessionPool {
 
     public synchronized void add(WsEndpoint session) {
         sessions.add(session);
+        String email = session.getLoggedUser().getEmail();
+        int userActiveSessions = this.countActiveSessions(email);
+        LOGGER.info("Session opened - User: " + email + " Active Sessions: " + userActiveSessions);
     }
 
     public synchronized void remove(WsEndpoint session) {
