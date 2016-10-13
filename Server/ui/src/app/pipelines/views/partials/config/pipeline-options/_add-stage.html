@@ -39,7 +39,7 @@
                 <label for="arguments">Arguments</label>
               </div>
               <div class="form-group form-md-line-input">
-                <input type="text" class="form-control" ng-model="pipeConfig.newStage.jobDefinitions.taskDefinitions.workingDirectory" onmouseenter="$(this).tooltip('show')" title="/&#60AgentRootDir&#62/Pipelines/{{pipeConfig.currentPipeline}}/" class="form-control" ng-model="pipeConfig.newTask.workingDirectory">
+                <input type="text" title="Agent/Pipelines/{{pipeConfig.currentPipeline.name}}/" class="form-control" ng-model="pipeConfig.newStage.jobDefinitions.taskDefinitions.workingDirectory">
                 <label>Working Directory</label>
               </div>
               <div class="form-group form-md-radios">
