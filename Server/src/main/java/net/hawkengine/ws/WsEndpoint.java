@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
     public class WsEndpoint extends WebSocketAdapter {
-    static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
+    private static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
     private Gson jsonConverter;
     private UUID id;
     private SecurityServiceInvoker securityServiceInvoker;
@@ -76,25 +76,18 @@ import java.util.UUID;
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
-//        LOGGER.info("Socket Connected: " + session);
 
         String tokenQuery = session.getUpgradeRequest().getQueryString();
-
         if (!tokenQuery.equals("token=null")) {
             String token = tokenQuery.substring(6);
-
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             this.setLoggedUser(tokenInfo.getUser());
             SessionPool.getInstance().add(this);
-            LOGGER.info("Session opened - User: " + this.loggedUser.getEmail());
 
             if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
-
                 UserDto userDto = new UserDto();
                 userDto.setUsername(tokenInfo.getUser().getEmail());
                 userDto.setPermissions(tokenInfo.getUser().getPermissions());
-
-//                ServiceResult serviceResult = new ServiceResult(userDto, NotificationType.SUCCESS, "User details retrieved successfully");
 
                 WsContractDto contract = new WsContractDto();
                 contract.setClassName("UserInfo");
@@ -111,7 +104,6 @@ import java.util.UUID;
 
                 EndpointConnector.passResultToEndpoint("UserInfo", "getUser", result, this.getLoggedUser());
                 EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.getLoggedUser());
-                return;
             }
         }
     }
@@ -139,20 +131,6 @@ import java.util.UUID;
                 EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result, this.getLoggedUser());
                 return;
             }
-
-//            SchemaValidator schemaValidator = new SchemaValidator();
-//            for (ConversionObject conversionObject : contract.getArgs()) {
-//                Class objectClass = Class.forName(conversionObject.getPackageName());
-//                Object object = this.jsonConverter.fromJson(conversionObject.getObject(), objectClass);
-//                String result = schemaValidator.validate(object);
-//
-//                if (!result.equals("OK")) {
-//                    contract.setNotificationType(true);
-//                    contract.setErrorMessage(result);
-//                    remoteEndpoint.sendString(serializer.toJson(contract));
-//                    return;
-//                }
-//            }
 
             User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
 
@@ -236,8 +214,17 @@ import java.util.UUID;
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
-        //String message = String.format("Session closed - User: %s [%d] %s", this.loggedUser.getEmail(), statusCode, reason == null ? "" : reason);
-        //LOGGER.info(message);
+        reason = reason == null ? "" : reason;
+        String message = String.format("Session closed [%d] %s", statusCode, reason);
+        LOGGER.info(message);
+
+//        if (this.getLoggedUser() != null) {
+//            reason = reason == null ? "" : reason + " ";
+//            int userActiveSessions = SessionPool.getInstance().countActiveSessions(this.loggedUser.getEmail()) - 1;
+//            String message = String.format("Session closed [%d] %s- User: %s Active Sessions: %s", statusCode, reason, this.loggedUser.getEmail(), userActiveSessions);
+//            LOGGER.info(message);
+//        }
+
         SessionPool.getInstance().remove(this);
     }
 

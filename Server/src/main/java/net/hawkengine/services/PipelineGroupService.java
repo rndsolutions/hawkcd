@@ -47,7 +47,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    public synchronized ServiceResult add(PipelineGroup pipelineGroup) {
+    public ServiceResult add(PipelineGroup pipelineGroup) {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
         PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
         if (existingPipelineGroup != null || pipelineGroup.getName().equals("UnassignedPipelines")) {
@@ -59,12 +59,12 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    public synchronized ServiceResult update(PipelineGroup pipelineGroup) {
+    public ServiceResult update(PipelineGroup pipelineGroup) {
         return super.update(pipelineGroup);
     }
 
     @Override
-    public synchronized ServiceResult delete(String pipelineGroupId) {
+    public ServiceResult delete(String pipelineGroupId) {
         return super.delete(pipelineGroupId);
     }
 
@@ -89,7 +89,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
         return result;
     }
 
-    public synchronized List<PipelineGroup> placePipelinesIntoGroups(List<PipelineGroup> pipelineGroups, List<PipelineDefinition> pipelineDefinitions) {
+    public List<PipelineGroup> placePipelinesIntoGroups(List<PipelineGroup> pipelineGroups, List<PipelineDefinition> pipelineDefinitions) {
         PipelineGroup unassignedPipelinesGroup = new PipelineGroup();
         unassignedPipelinesGroup.setPermissionType(PermissionType.VIEWER);
         unassignedPipelinesGroup.setName("UnassignedPipelines");

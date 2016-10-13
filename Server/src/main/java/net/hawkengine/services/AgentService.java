@@ -46,21 +46,21 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     }
 
     @Override
-    public synchronized ServiceResult add(Agent agent) {
+    public ServiceResult add(Agent agent) {
         ServiceResult result = super.add(agent);
         EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "add", result);
         return result;
     }
 
     @Override
-    public synchronized ServiceResult update(Agent agent) {
+    public ServiceResult update(Agent agent) {
         ServiceResult result = super.update(agent);
         EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
         return result;
     }
 
     @Override
-    public synchronized ServiceResult delete(String agentId) {
+    public ServiceResult delete(String agentId) {
         return super.delete(agentId);
     }
 
@@ -78,7 +78,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         return result;
     }
 
-    public synchronized ServiceResult getWorkInfo(String agentId) {
+    public ServiceResult getWorkInfo(String agentId) {
         ServiceResult result = null;
         Agent agent = (Agent) this.getById(agentId).getObject();
         if (agent == null) {

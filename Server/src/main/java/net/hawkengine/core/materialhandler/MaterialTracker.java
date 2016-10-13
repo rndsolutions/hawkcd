@@ -48,6 +48,8 @@ public class MaterialTracker implements Runnable {
                         pipeline.setTriggerReason(triggerMaterials);
                         ServiceResult result = this.pipelineService.add(pipeline);
                         EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "add", result);
+                        String message = String.format("Pipeline %s triggered by %s", pipelineDefinition.getName(), triggerMaterials );
+                        LOGGER.info(message);
                     }
                 }
 
@@ -61,6 +63,8 @@ public class MaterialTracker implements Runnable {
                             isPipelineUpdated = false;
                             ServiceResult result = this.pipelineService.delete(pipeline.getId());
                             EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "delete", result);
+                            String message = String.format("Pipeline %s material could not be updated", pipeline.getPipelineDefinitionName());
+                            LOGGER.info(message);
                         } else if (material.isUpdated()) {
                             this.materialService.add(material);
                         }
@@ -68,8 +72,9 @@ public class MaterialTracker implements Runnable {
 
                     if (isPipelineUpdated) {
                         pipeline.setMaterialsUpdated(true);
-                        ServiceResult result = this.pipelineService.update(pipeline);
-//                        EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "update", result);
+                        this.pipelineService.update(pipeline);
+                        String message = String.format("Pipeline %s materials updated", pipeline.getPipelineDefinitionName());
+                        LOGGER.info(message);
                     }
                 }
 
