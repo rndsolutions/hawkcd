@@ -35,17 +35,17 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
     }
 
     @Override
-    public synchronized ServiceResult add(Material material) {
+    public ServiceResult add(Material material) {
         return super.add(material);
     }
 
     @Override
-    public synchronized ServiceResult update(Material material) {
+    public ServiceResult update(Material material) {
         return super.update(material);
     }
 
     @Override
-    public synchronized ServiceResult delete(String materialId) {
+    public ServiceResult delete(String materialId) {
         return super.delete(materialId);
     }
 
