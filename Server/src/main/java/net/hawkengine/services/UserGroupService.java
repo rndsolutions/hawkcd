@@ -45,12 +45,12 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public synchronized ServiceResult add(UserGroup userGroup) {
+    public ServiceResult add(UserGroup userGroup) {
         return super.add(userGroup);
     }
 
     @Override
-    public synchronized ServiceResult addUserGroupDto(UserGroupDto userGroupDto) {
+    public ServiceResult addUserGroupDto(UserGroupDto userGroupDto) {
         UserGroup userGroup = new UserGroup();
         userGroup.setName(userGroupDto.getName());
 
@@ -63,12 +63,12 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public synchronized ServiceResult update(UserGroup userGroup) {
+    public ServiceResult update(UserGroup userGroup) {
         return super.update(userGroup);
     }
 
     @Override
-    public synchronized ServiceResult updateUserGroupDto(UserGroupDto userGroupDto) {
+    public ServiceResult updateUserGroupDto(UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
         userGroup.setName(userGroupDto.getName());
         userGroup.setUserIds(userGroupDto.getUserIds());
@@ -87,7 +87,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public synchronized ServiceResult delete(String id) {
+    public ServiceResult delete(String id) {
         List<User> users = (List<User>) this.userService.getAll().getObject();
 
         for (User user : users) {
@@ -111,7 +111,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public synchronized ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto) {
+    public ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
 
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
@@ -137,7 +137,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    public synchronized ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto) {
+    public ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
 
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());

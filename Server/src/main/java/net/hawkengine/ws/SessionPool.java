@@ -10,6 +10,7 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.*;
 import net.hawkengine.services.filters.PermissionService;
 import net.hawkengine.services.filters.factories.SecurityServiceInvoker;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SessionPool {
+    private static final Logger LOGGER = Logger.getLogger(SessionPool.class.getClass());
     private static SessionPool instance;
 
     private List<WsEndpoint> sessions;
@@ -31,7 +33,7 @@ public class SessionPool {
     private EntityPermissionTypeServiceInvoker entityPermissionTypeServiceInvoker;
 
     private SessionPool() {
-        this.sessions =  Collections.synchronizedList(new ArrayList<WsEndpoint>());
+        this.sessions = Collections.synchronizedList(new ArrayList<WsEndpoint>());
         this.permissionService = new PermissionService();
         this.securityServiceInvoker = new SecurityServiceInvoker();
 
@@ -52,12 +54,11 @@ public class SessionPool {
         return instance;
     }
 
-    public List<WsEndpoint> getSessions() {
-        return sessions;
-    }
-
     public synchronized void add(WsEndpoint session) {
         sessions.add(session);
+        String email = session.getLoggedUser().getEmail();
+        int userActiveSessions = this.countActiveSessions(email);
+        LOGGER.info("Session opened - User: " + email + " Active Sessions: " + userActiveSessions);
     }
 
     public synchronized void remove(WsEndpoint session) {
@@ -65,7 +66,7 @@ public class SessionPool {
     }
 
     public void sendToUserSessions(WsContractDto contractDto, User user) {
-        synchronized (sessions){
+        synchronized (sessions) {
             List<WsEndpoint> userSessions = sessions
                     .stream()
                     .filter(e -> e.getLoggedUser().getId().equals(user.getId()))
@@ -77,8 +78,7 @@ public class SessionPool {
     }
 
     public void sendToAuthorizedSessions(WsContractDto contractDto) {
-
-        synchronized (sessions){
+        synchronized (sessions) {
             if (contractDto.getResult() == null) {
                 for (WsEndpoint session : sessions) {
                     session.send(contractDto);
@@ -87,7 +87,7 @@ public class SessionPool {
                 Class objectClass = contractDto.getResult().getClass();
                 for (WsEndpoint session : sessions) {
                     User loggedUser = session.getLoggedUser();
-                    if (loggedUser != null){
+                    if (loggedUser != null) {
                         loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
                         List<Permission> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
                         PermissionObject result = this.entityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
@@ -102,8 +102,7 @@ public class SessionPool {
     }
 
     public void logoutUserFromAllSessions(String email) {
-
-        synchronized (sessions){
+        synchronized (sessions) {
             List<WsEndpoint> userSessions = sessions
                     .stream()
                     .filter(e -> e.getLoggedUser().getEmail().equals(email))
@@ -119,6 +118,20 @@ public class SessionPool {
                 userSession.setLoggedUser(null);
             }
 
+            LOGGER.info("All Sessions closed - User: " + email);
+        }
+    }
+
+    public int countActiveSessions(String userEmail) {
+        synchronized (sessions) {
+            int count = 0;
+            for (WsEndpoint session : sessions) {
+                if (session.getLoggedUser().getEmail().equals(userEmail)) {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 
@@ -157,50 +170,4 @@ public class SessionPool {
         userGroupDtosResult.setObject(filteredUserGroupDtos);
         EndpointConnector.passResultToEndpoint("UserGroupService", "getAllUserGroups", userGroupDtosResult, loggedUser);
     }
-
-//    public void placeholder(WsContractDto contractDto, User user) {
-//        if (contractDto.isError()) {
-//            List<WsEndpoint> userSessions = sessions
-//                    .stream()
-//                    .filter(e -> e.getLoggedUser().getId().equals(user.getId()))
-//                    .collect(Collectors.toList());
-//            for (WsEndpoint userSession : userSessions) {
-//                userSession.send(contractDto);
-//            }
-//        } else {
-//            Class<?> objectClass = contractDto.getResult().getClass();
-//            if (objectClass == ArrayList.class) {
-//                List<?> resultAsList = (List<?>) contractDto.getResult();
-//                if (!resultAsList.isEmpty()) {
-//                    objectClass = resultAsList.get(0).getClass();
-//                    for (WsEndpoint session : sessions) {
-//                        List<Permission> permissions = session.getLoggedUser().getPermissions();
-//                        List<Object> result = new ArrayList<>();
-//                        for (Object object : resultAsList) {
-//                            DbEntry updatedObject = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (DbEntry) object);
-//                            if (updatedObject.getPermissionType() != PermissionType.NONE) {
-//                                result.add(updatedObject);
-//                            }
-//                        }
-//
-//                        contractDto.setResult(result);
-//                        session.send(contractDto);
-//                    }
-//                } else {
-//                    for (WsEndpoint session : sessions) {
-//                        session.send(contractDto);
-//                    }
-//                }
-//            } else {
-//                for (WsEndpoint session : sessions) {
-//                    List<Permission> permissions = session.getLoggedUser().getPermissions();
-//                    DbEntry result = EntityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (DbEntry) contractDto.getResult());
-//                    if (result.getPermissionType() != PermissionType.NONE) {
-//                        contractDto.setResult(result);
-//                        session.send(contractDto);
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
