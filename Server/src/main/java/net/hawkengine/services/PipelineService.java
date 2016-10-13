@@ -55,7 +55,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public synchronized ServiceResult add(Pipeline pipeline) {
+    public ServiceResult add(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
         List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getObject();
@@ -91,7 +91,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public synchronized ServiceResult update(Pipeline pipeline) {
+    public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
         EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
 
@@ -99,7 +99,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    public synchronized ServiceResult delete(String pipelineId) {
+    public ServiceResult delete(String pipelineId) {
         return super.delete(pipelineId);
     }
 

@@ -38,7 +38,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public synchronized ServiceResult add(User user) {
+    public ServiceResult add(User user) {
         ServiceResult result = this.getByEmail(user.getEmail());
         if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
@@ -50,14 +50,14 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public synchronized ServiceResult update(User user) {
+    public ServiceResult update(User user) {
         ServiceResult serviceResult = super.update(user);
         SessionPool.getInstance().updateUserObjects(user.getId());
         return serviceResult;
     }
 
     @Override
-    public synchronized ServiceResult delete(String userId) {
+    public ServiceResult delete(String userId) {
         return super.delete(userId);
     }
 
@@ -97,12 +97,12 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public synchronized ServiceResult addUserWithoutProvider(User user) {
+    public ServiceResult addUserWithoutProvider(User user) {
         return this.add(user);
     }
 
     @Override
-    public synchronized ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
+    public ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
         String hashedPassword = DigestUtils.sha256Hex(oldPassword);
         ServiceResult result = this.getByEmailAndPassword(user.getUsername(), hashedPassword);
 
@@ -117,7 +117,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    public synchronized ServiceResult resetUserPassword(User user) {
+    public ServiceResult resetUserPassword(User user) {
         String hashedPassword = DigestUtils.sha256Hex(user.getPassword());
 
         ServiceResult result = this.getById(user.getId());

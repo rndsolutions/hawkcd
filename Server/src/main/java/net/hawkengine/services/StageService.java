@@ -61,7 +61,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
-    public synchronized ServiceResult add(Stage stage) {
+    public ServiceResult add(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         List<Stage> stages = pipeline.getStages();
 
@@ -88,7 +88,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
-    public synchronized ServiceResult update(Stage stage) {
+    public ServiceResult update(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         List<Stage> stages = pipeline.getStages();
         int stageCollectionSize = stages.size();
@@ -116,7 +116,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
-    public synchronized ServiceResult delete(String stageId) {
+    public ServiceResult delete(String stageId) {
         Pipeline pipelineToUpdate = new Pipeline();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
         for (Pipeline pipeline : pipelines) {
