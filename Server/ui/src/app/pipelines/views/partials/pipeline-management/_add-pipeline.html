@@ -249,7 +249,7 @@
                                                                 <label for="span_small" class="control-label">Materials</label>
                                                                 <select name="materialSelect" id="span_small" ng-model="pipes.selectedMaterial" class="form-control select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true" required>
                                                                     <optgroup label="Your materials">
-                                                                        <option class="drop-down-fixed" value="{{material}}" ng-repeat="material in pipes.currentMaterials">{{material.name}}</option>
+                                                                        <option value="{{material}}" ng-repeat="material in pipes.currentMaterials">{{material.name}}</option>
                                                                     </optgroup>
                                                                 </select>
                                                             </div>
