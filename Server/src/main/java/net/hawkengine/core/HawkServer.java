@@ -28,7 +28,7 @@ public class HawkServer {
         RedisManager.connect();
 
         //setting server thread pool
-        final QueuedThreadPool threadPool=new QueuedThreadPool(10);
+        final QueuedThreadPool threadPool=new QueuedThreadPool(100);
         threadPool.setName("http-worker");
         this.server = new Server(threadPool);
 
