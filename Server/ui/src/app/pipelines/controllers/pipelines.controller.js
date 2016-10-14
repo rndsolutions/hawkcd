@@ -49,6 +49,12 @@ angular
                         }
                     }
                 });
+                currentPipelineGroup.pipelines.sort(function(a, b) {
+                    return a.name > b.name;
+                });
+            });
+            vm.allPipelineGroups.sort(function(a, b) {
+                return a.name > b.name;
             });
             console.log(vm.allPipelineGroups);
         }, true);
