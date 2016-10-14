@@ -153,7 +153,13 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition) {
+    public ServiceResult unassignPipelineFromGroup(String pipelineDefinitionId) {
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
+        if (pipelineDefinition == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "could not be found");
+        }
+
+
         pipelineDefinition.setPipelineGroupId("");
         pipelineDefinition.setGroupName("");
 
@@ -161,12 +167,15 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    public ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition, PipelineGroup pipelineGroup) {
-        pipelineDefinition.setPipelineGroupId(pipelineGroup.getId());
-        pipelineDefinition.setGroupName(pipelineGroup.getName());
+    public ServiceResult assignPipelineToGroup(String pipelineDefinitionId, String pipelineGroupId, String pipelineGroupName) {
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
+        if (pipelineDefinition == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "could not be found");
+        }
+
+        pipelineDefinition.setPipelineGroupId(pipelineGroupId);
+        pipelineDefinition.setGroupName(pipelineGroupName);
 
         return this.update(pipelineDefinition);
     }
-
-
 }

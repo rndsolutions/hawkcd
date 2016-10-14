@@ -3,7 +3,6 @@ package net.hawkengine.services.interfaces;
 import net.hawkengine.model.GitMaterial;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.PipelineDefinition;
-import net.hawkengine.model.PipelineGroup;
 import net.hawkengine.model.ServiceResult;
 
 public interface IPipelineDefinitionService extends ICrudService<PipelineDefinition> {
@@ -15,7 +14,7 @@ public interface IPipelineDefinitionService extends ICrudService<PipelineDefinit
 
     ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId);
 
-    ServiceResult unassignPipelineFromGroup(PipelineDefinition pipelineDefinition);
+    ServiceResult unassignPipelineFromGroup(String pipelineDefinitionId);
 
-    ServiceResult assignPipelineToGroup(PipelineDefinition pipelineDefinition, PipelineGroup pipelineGroup);
+    ServiceResult assignPipelineToGroup(String pipelineDefinitionId, String pipelineGroupId, String pipelineGroupName);
 }
