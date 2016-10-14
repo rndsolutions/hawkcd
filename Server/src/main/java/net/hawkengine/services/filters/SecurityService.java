@@ -201,28 +201,34 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     @Override
     public boolean assignPipelineToGroup(String pipelineGroup, String className, List permissions) {
-        this.authorizationService = AuthorizationServiceFactory.create(className);
-        boolean hasPermission = true; //this.authorizationService.update(pipelineDefintion, permissions);
-        if (hasPermission) {
-            this.authorizationService = AuthorizationServiceFactory.create("PipelineGroupService");
-            hasPermission = this.authorizationService.update(pipelineGroup, permissions);
-            if (hasPermission) {
-                return true;
-            }
-        }
+        PipelineDefinitionAuthorizationService service = new PipelineDefinitionAuthorizationService();
+        boolean hasPermission = service.assignUnassign(permissions);
 
-        return false;
+//        this.authorizationService = AuthorizationServiceFactory.create(className);
+//        boolean hasPermission = true; //this.authorizationService.update(pipelineDefintion, permissions);
+//        if (hasPermission) {
+//            this.authorizationService = AuthorizationServiceFactory.create("PipelineGroupService");
+//            hasPermission = true; //this.authorizationService.update(pipelineGroup, permissions);
+//            if (hasPermission) {
+//                return true;
+//            }
+//        }
+
+        return hasPermission;
     }
 
     @Override
     public boolean unassignPipelineFromGroup(String pipelineGroup, String className, List permissions) {
-        this.authorizationService = AuthorizationServiceFactory.create(className);
-        boolean hasPermission = this.authorizationService.update(pipelineGroup, permissions);
-        if (hasPermission) {
-            return true;
-        }
+        PipelineDefinitionAuthorizationService service = new PipelineDefinitionAuthorizationService();
+        boolean hasPermission = service.assignUnassign(permissions);
 
-        return false;
+//        this.authorizationService = AuthorizationServiceFactory.create(className);
+//        boolean hasPermission = true; //this.authorizationService.update(pipelineGroup, permissions);
+//        if (hasPermission) {
+//            return true;
+//        }
+
+        return hasPermission;
     }
 
     @Override
