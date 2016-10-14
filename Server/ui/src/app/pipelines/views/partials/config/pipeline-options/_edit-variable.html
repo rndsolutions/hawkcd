@@ -11,8 +11,12 @@
                       <input type="text" class="form-control" ng-disabled="!pipeConfig.environmentVariableUtils.pipelines.variableToEdit.isDeletable" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.key" name="variableName" ng-pattern="/^([\w-]+)$/" required>
                       <label>Name</label>
                   </div>
-                  <div class="form-group form-md-line-input">
+                  <div class="form-group form-md-line-input" ng-if="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.isDeletable">
                       <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.value" name="variableValue">
+                      <label>Value</label>
+                  </div>
+                  <div class="form-group form-md-line-input" ng-if="!pipeConfig.environmentVariableUtils.pipelines.variableToEdit.isDeletable">
+                      <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.pipelines.variableToEdit.value" name="variableValue" ng-pattern="/^[0-9]+$/">
                       <label>Value</label>
                   </div>
                   <div class="form-group form-md-checkboxes">
@@ -28,7 +32,7 @@
                   </div>
               </div>
               <div class="modal-footer">
-                  <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.editVariable(pipeConfig.environmentVariableUtils.pipelines.variableToEdit)" ng-class="{'disabled':editPipelineVariableForm.$invalid}">Edit Value</button>
+                  <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.editVariable(pipeConfig.environmentVariableUtils.pipelines.variableToEdit)" ng-class="{'disabled':editPipelineVariableForm.$invalid || pipeConfig.environmentVariableUtils.pipelines.variableToEdit.value == ''}">Edit Value</button>
                   <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
               </div>
           </form>

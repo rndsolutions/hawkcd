@@ -1169,6 +1169,9 @@ angular
                 },
                 getVariableForEdit: function(variable) {
                     vm.environmentVariableUtils.pipelines.variableToEdit = angular.copy(variable);
+                    if(vm.environmentVariableUtils.pipelines.variableToEdit.isDeletable == false){
+                        vm.environmentVariableUtils.pipelines.variableToEdit.value = parseInt(vm.environmentVariableUtils.pipelines.variableToEdit.value);
+                    }
                 },
                 variableToEdit: {}
             },
