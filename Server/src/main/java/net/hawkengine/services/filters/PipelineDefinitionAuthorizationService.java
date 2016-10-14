@@ -16,7 +16,6 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
-import net.hawkengine.ws.EntityPermissionTypeServiceInvoker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +87,15 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
         return this.hasPermissionToAdd(permissions, pipelineDefinition);
     }
 
+    public boolean assignUnassign(List<Permission> permissions) {
+        for (Permission permission : permissions) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
+                return true;
+            }
+        }
 
+        return false;
+    }
 
     private boolean hasPermissionToRead(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         boolean hasPermission = false;
