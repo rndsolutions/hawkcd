@@ -81,8 +81,10 @@ angular
 
         vm.loadJsTree = function (index, event) {
             if(event.currentTarget.attributes['aria-expanded'].nodeValue == 'false'){
-                $('#jstree' + index).jstree(true).settings.core.data = angular.copy(vm.allPipelineRuns()[index].artifactsFileStructure[0].children);
-                $('#jstree' + index).jstree(true).refresh();
+                if(vm.allPipelineRuns()[index].artifactsFileStructure[0]){
+                    $('#jstree' + index).jstree(true).settings.core.data = angular.copy(vm.allPipelineRuns()[index].artifactsFileStructure[0].children);
+                    $('#jstree' + index).jstree(true).refresh();
+                }
             }
         };
 
