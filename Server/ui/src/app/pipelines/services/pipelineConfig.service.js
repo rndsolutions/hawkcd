@@ -93,13 +93,14 @@ angular
             console.log(json);
         };
 
-        pipeConfigService.assignPipelineDefinition = function (pipelineDefinitionId, pipelineGroupId) {
+        pipeConfigService.assignPipelineDefinition = function (pipelineDefinitionId, pipelineGroupId, pipelineGroupName) {
             var methodName = "assignPipelineToGroup";
             var className = "PipelineDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}, " +
-            "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineGroupId + "\"}"];
+            "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineGroupId + "\"}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineGroupName + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

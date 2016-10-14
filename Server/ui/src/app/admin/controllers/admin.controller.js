@@ -427,7 +427,7 @@ angular
 
             vm.assignPipeline = function(pipeline) {
                 var pipelineGroup = vm.pipelineGroupToAssign;
-                pipeConfigService.assignPipelineDefinition(pipeline.id, pipelineGroup.id);
+                pipeConfigService.assignPipelineDefinition(pipeline.id, pipelineGroup.id, pipelineGroup.name);
             };
 
             vm.unassignPipeline = function() {
