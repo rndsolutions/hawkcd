@@ -426,14 +426,12 @@ angular
             };
 
             vm.assignPipeline = function(pipeline) {
-                var updatedPipeline = angular.copy(pipeline);
                 var pipelineGroup = vm.pipelineGroupToAssign;
-                pipeConfigService.assignPipelineDefinition(updatedPipeline, pipelineGroup);
+                pipeConfigService.assignPipelineDefinition(pipeline.id, pipelineGroup.id);
             };
 
             vm.unassignPipeline = function() {
-                var updatedPipeline = angular.copy(vm.pipelineToUnassign);
-                pipeConfigService.unassignPipelineDefinition(updatedPipeline);
+                pipeConfigService.unassignPipelineDefinition(vm.pipelineToUnassign.id);
             };
 
             vm.assignUsers = function() {

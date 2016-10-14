@@ -93,25 +93,25 @@ angular
             console.log(json);
         };
 
-        pipeConfigService.assignPipelineDefinition = function (pipelineDefinition, pipelineGroup) {
+        pipeConfigService.assignPipelineDefinition = function (pipelineDefinitionId, pipelineGroupId) {
             var methodName = "assignPipelineToGroup";
             var className = "PipelineDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}, " +
-            "{\"packageName\": \"net.hawkengine.model.PipelineGroup\", \"object\": " + JSON.stringify(pipelineGroup) + "}"];
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineGroupId + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
             console.log(json);
         };
 
-        pipeConfigService.unassignPipelineDefinition = function (pipelineDefinition) {
+        pipeConfigService.unassignPipelineDefinition = function (pipelineDefinitionId) {
             var methodName = "unassignPipelineFromGroup";
             var className = "PipelineDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
