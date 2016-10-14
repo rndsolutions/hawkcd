@@ -674,6 +674,9 @@ angular
                 return viewModel.allPipelineGroups
             }, function(newVal, oldVal) {
                 vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
+                vm.currentPipelineGroups.sort(function(a, b) {
+                    return a.name - b.name;
+                });
                 console.log(vm.currentPipelineGroups);
             }, true);
 
