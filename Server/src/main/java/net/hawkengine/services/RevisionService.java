@@ -6,11 +6,10 @@ import net.hawkengine.model.PipelineDefinition;
 import net.hawkengine.model.PipelineDefinitionRevision;
 import net.hawkengine.model.Revision;
 import net.hawkengine.model.ServiceResult;
-import net.hawkengine.services.interfaces.IRevisionService;
 
 import java.util.List;
 
-public class RevisionService extends CrudService<Revision> implements IRevisionService {
+public class RevisionService extends CrudService<Revision> {
     private static final Class CLASS_TYPE = Revision.class;
     private static final Object lock = new Object();
 
