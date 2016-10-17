@@ -19,10 +19,7 @@ import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.PipelineGroupService;
-import net.hawkengine.services.UserGroupService;
-import net.hawkengine.services.UserService;
+import net.hawkengine.services.*;
 import net.hawkengine.services.filters.SecurityService;
 import net.hawkengine.services.filters.interfaces.ISecurityService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -60,6 +57,8 @@ public class SecurityServiceTests {
     private IPipelineGroupService mockedPipelineGroupService;
     private IDbRepository<PipelineDefinition> mockedPipelineDefinitionRepository;
     private IPipelineDefinitionService mockedPipelineDefinitionService;
+    private RevisionService mockedRevisionService;
+
 
     private ISecurityService securityService;
 
@@ -91,7 +90,8 @@ public class SecurityServiceTests {
         this.mockedPipelineGroupService = new PipelineGroupService(this.mockedPipelineGroupRepository);
 
         this.mockedPipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.mockedPipelineDefinitionService = new PipelineDefinitionService(this.mockedPipelineDefinitionRepository);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.mockedPipelineDefinitionService = new PipelineDefinitionService(this.mockedPipelineDefinitionRepository, this.mockedRevisionService);
 
         this.securityService = new SecurityService(this.mockedWsObjectProcessor, this.mockedPipelineDefinitionService, this.mockedUserGroupService, this.mockedPipelineGroupService);
     }

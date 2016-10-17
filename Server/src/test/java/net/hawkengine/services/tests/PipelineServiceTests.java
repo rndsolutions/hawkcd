@@ -14,6 +14,7 @@ import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.RevisionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -21,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class PipelineServiceTests {
     private IPipelineService pipelineService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private IMaterialDefinitionService materialDefinitionService;
+    private RevisionService mockedRevisionService;
     private PipelineDefinition expectedPipelineDefinition;
 
     @BeforeClass
@@ -46,7 +49,8 @@ public class PipelineServiceTests {
         this.pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
         this.pipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.materialDefinitionIDbRepository = new RedisRepository(MaterialDefinition.class, mockedPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(this.pipelineDefinitionRepository);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.pipelineDefinitionService = new PipelineDefinitionService(this.pipelineDefinitionRepository, this.mockedRevisionService);
         this.materialDefinitionService = new MaterialDefinitionService(this.materialDefinitionIDbRepository, this.pipelineDefinitionService);
         this.pipelineService = new PipelineService(this.pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.expectedPipelineDefinition = new PipelineDefinition();

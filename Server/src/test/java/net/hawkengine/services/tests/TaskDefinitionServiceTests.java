@@ -7,10 +7,7 @@ import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.RunIf;
-import net.hawkengine.services.JobDefinitionService;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.StageDefinitionService;
-import net.hawkengine.services.TaskDefinitionService;
+import net.hawkengine.services.*;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
@@ -32,6 +29,7 @@ public class TaskDefinitionServiceTests {
     private IStageDefinitionService stageDefinitionService;
     private IJobDefinitionService jobDefinitionService;
     private ITaskDefinitionService taskDefinitionService;
+    private RevisionService mockedRevisionService;
     private PipelineDefinition pipelineDefinition;
     private StageDefinition stageDefinition;
     private JobDefinition jobDefinition;
@@ -50,7 +48,8 @@ public class TaskDefinitionServiceTests {
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testJobDefinitionService");
         IDbRepository pipelineRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineRepo);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineRepo, this.mockedRevisionService);
         this.stageDefinitionService = new StageDefinitionService(this.pipelineDefinitionService);
         this.jobDefinitionService = new JobDefinitionService(this.stageDefinitionService);
         this.taskDefinitionService = new TaskDefinitionService(this.jobDefinitionService);

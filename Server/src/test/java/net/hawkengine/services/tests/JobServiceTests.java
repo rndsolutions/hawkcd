@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class JobServiceTests {
     private IPipelineService pipelineService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private IMaterialDefinitionService materialDefinitionService;
+    private RevisionService mockedRevisionService;
     private IStageService stageService;
     private IJobService jobService;
     private PipelineDefinition pipelineDefinition;
@@ -43,7 +45,8 @@ public class JobServiceTests {
         IDbRepository pipelineRepository = new RedisRepository(Pipeline.class, mockJedisPool);
         IDbRepository pipelineDefinitionRepository = new RedisRepository(PipelineDefinition.class, mockJedisPool);
         IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockJedisPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepository);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepository, this.mockedRevisionService);
         this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
         this.pipelineService = new PipelineService(pipelineRepository, this.pipelineDefinitionService, this.materialDefinitionService);
         this.stageService = new StageService(pipelineService);

@@ -8,6 +8,7 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.JobDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.RevisionService;
 import net.hawkengine.services.StageDefinitionService;
 import net.hawkengine.services.interfaces.IJobDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -19,7 +20,6 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.jar.Attributes;
 
 import static org.mockito.Mockito.when;
 
@@ -28,6 +28,7 @@ public class JobDefinitionServiceTests {
     private IPipelineDefinitionService pipelineDefinitionService;
     private IStageDefinitionService stageDefinitionService;
     private IJobDefinitionService jobDefinitionService;
+    private RevisionService mockedRevisionService;
     private PipelineDefinition pipelineDefinition;
     private Random randomGenerator;
     private int randomMinValue = 0;
@@ -51,7 +52,8 @@ public class JobDefinitionServiceTests {
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testJobDefinitionService");
         IDbRepository pipelineRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineRepo);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineRepo, this.mockedRevisionService);
         this.stageDefinitionService = new StageDefinitionService(pipelineDefinitionService);
         this.jobDefinitionService = new JobDefinitionService(stageDefinitionService);
         this.pipelineDefinition = new PipelineDefinition();

@@ -12,6 +12,7 @@ import java.util.List;
 
 public class RevisionService extends CrudService<Revision> implements IRevisionService {
     private static final Class CLASS_TYPE = Revision.class;
+    private static final Object lock = new Object();
 
     public RevisionService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
@@ -34,22 +35,6 @@ public class RevisionService extends CrudService<Revision> implements IRevisionS
         return super.update(revision);
     }
 
-    public Revision addRevisionOfPipelineDefinition(PipelineDefinition pipelineDefinition) {
-        PipelineDefinitionRevision pipelineDefinitionRevision = new PipelineDefinitionRevision(pipelineDefinition);
-
-        Revision revision = this.getByPipelineDefinitionId(pipelineDefinition.getId());
-        if (revision != null) {
-            revision.getRevisions().add(pipelineDefinitionRevision);
-            this.update(revision);
-        } else {
-            revision = new Revision(pipelineDefinition.getId(), pipelineDefinition.getName());
-            revision.getRevisions().add(pipelineDefinitionRevision);
-            this.add(revision);
-        }
-
-        return revision;
-    }
-
     public Revision getByPipelineDefinitionId(String pipelineDefinitionId) {
         Revision result = null;
         List<Revision> revisions = (List<Revision>) this.getAll().getObject();
@@ -60,5 +45,23 @@ public class RevisionService extends CrudService<Revision> implements IRevisionS
         }
 
         return result;
+    }
+
+    public Revision addRevisionOfPipelineDefinition(PipelineDefinition pipelineDefinition) {
+        synchronized (lock) {
+            PipelineDefinitionRevision pipelineDefinitionRevision = new PipelineDefinitionRevision(pipelineDefinition);
+
+            Revision revision = this.getByPipelineDefinitionId(pipelineDefinition.getId());
+            if (revision != null) {
+                revision.getRevisions().add(pipelineDefinitionRevision);
+                this.update(revision);
+            } else {
+                revision = new Revision(pipelineDefinition.getId(), pipelineDefinition.getName());
+                revision.getRevisions().add(pipelineDefinitionRevision);
+                this.add(revision);
+            }
+
+            return revision;
+        }
     }
 }

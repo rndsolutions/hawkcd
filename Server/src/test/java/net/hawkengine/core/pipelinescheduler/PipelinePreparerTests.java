@@ -10,6 +10,7 @@ import net.hawkengine.model.enums.PipelineStatus;
 import net.hawkengine.services.MaterialDefinitionService;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.RevisionService;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -17,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class PipelinePreparerTests {
     private IMaterialDefinitionService materialDefinitionService;
     private PipelinePreparer pipelinePreparer;
     private PipelineDefinition expectedPipelineDefinition;
+    private RevisionService revisionService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -42,7 +45,9 @@ public class PipelinePreparerTests {
         IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockedPool);
         IDbRepository pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
         IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockedPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo);
+        this.revisionService = Mockito.mock(RevisionService.class);
+        Mockito.when(this.revisionService.addRevisionOfPipelineDefinition(Mockito.any())).thenReturn(null);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo, this.revisionService);
         this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
         this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.pipelinePreparer = new PipelinePreparer(this.pipelineService, this.pipelineDefinitionService);

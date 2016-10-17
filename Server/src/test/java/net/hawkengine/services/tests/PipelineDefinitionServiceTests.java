@@ -9,6 +9,7 @@ import net.hawkengine.model.*;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.PipelineService;
+import net.hawkengine.services.RevisionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
 import org.junit.Assert;
@@ -24,10 +25,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PipelineDefinitionServiceTests {
-
     private IDbRepository<PipelineDefinition> mockedRepository;
     private IPipelineDefinitionService mockedPipeLineDefinitionService;
     private IPipelineService mockedPipelineService;
+    private RevisionService mockedRevisionService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -39,7 +40,8 @@ public class PipelineDefinitionServiceTests {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionService");
         this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
         this.mockedPipelineService = Mockito.mock(PipelineService.class);
-        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository, this.mockedPipelineService);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository, this.mockedPipelineService, this.mockedRevisionService);
     }
 
     @Test

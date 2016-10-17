@@ -14,28 +14,36 @@ import java.util.stream.Collectors;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
     private static final Class CLASS_TYPE = PipelineDefinition.class;
-    private IPipelineService pipelineService;
+    private static RevisionService revisionService;
 
+    private IPipelineService pipelineService;
     private IMaterialDefinitionService materialDefinitionService;
 
     public PipelineDefinitionService() {
+        if (revisionService == null) {
+            revisionService = new RevisionService();
+        }
+
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
-    public PipelineDefinitionService(IDbRepository repository) {
+    public PipelineDefinitionService(IDbRepository repository, RevisionService mockedRevisionService) {
+        revisionService = mockedRevisionService;
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
     }
 
-    public PipelineDefinitionService(IDbRepository repository, IMaterialDefinitionService materialDefinitionService) {
+    public PipelineDefinitionService(IDbRepository repository, IMaterialDefinitionService materialDefinitionService, RevisionService mockedRevisionService) {
+        revisionService = mockedRevisionService;
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
         this.materialDefinitionService = materialDefinitionService;
     }
 
-    public PipelineDefinitionService(IDbRepository repository, IPipelineService pipelineService) {
+    public PipelineDefinitionService(IDbRepository repository, IPipelineService pipelineService, RevisionService mockedRevisionService) {
+        revisionService = mockedRevisionService;
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineService = pipelineService;
@@ -77,6 +85,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
             }
         }
 
+        revisionService.addRevisionOfPipelineDefinition(pipelineDefinition);
         return super.add(pipelineDefinition);
     }
 
@@ -121,6 +130,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     public ServiceResult update(PipelineDefinition pipelineDefinition) {
+        revisionService.addRevisionOfPipelineDefinition(pipelineDefinition);
         return super.update(pipelineDefinition);
     }
 

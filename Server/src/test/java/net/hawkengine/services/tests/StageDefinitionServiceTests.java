@@ -10,6 +10,7 @@ import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.StageDefinition;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.RevisionService;
 import net.hawkengine.services.StageDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IStageDefinitionService;
@@ -17,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.List;
 public class StageDefinitionServiceTests {
     private IStageDefinitionService mockedStageDefinitionService;
     private IPipelineDefinitionService mockedPipelineDefinitionService;
+    private RevisionService mockedRevisionService;
     private StageDefinition expectedStageDefinition;
     private PipelineDefinition expectedPipelineDefinition;
 
@@ -37,7 +40,8 @@ public class StageDefinitionServiceTests {
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testStageDefinitionService");
         IDbRepository mockedPipelineRepo = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.mockedPipelineDefinitionService = new PipelineDefinitionService(mockedPipelineRepo);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.mockedPipelineDefinitionService = new PipelineDefinitionService(mockedPipelineRepo, this.mockedRevisionService);
         this.mockedStageDefinitionService = new StageDefinitionService(this.mockedPipelineDefinitionService);
         this.expectedPipelineDefinition = new PipelineDefinition();
         this.expectedStageDefinition = new StageDefinition();

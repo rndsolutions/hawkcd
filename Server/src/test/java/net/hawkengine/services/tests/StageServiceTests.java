@@ -7,10 +7,7 @@ import net.hawkengine.db.redis.RedisRepository;
 import net.hawkengine.model.*;
 import net.hawkengine.model.enums.NotificationType;
 import net.hawkengine.model.enums.StageStatus;
-import net.hawkengine.services.MaterialDefinitionService;
-import net.hawkengine.services.PipelineDefinitionService;
-import net.hawkengine.services.PipelineService;
-import net.hawkengine.services.StageService;
+import net.hawkengine.services.*;
 import net.hawkengine.services.interfaces.IMaterialDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineService;
@@ -19,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -32,6 +30,7 @@ public class StageServiceTests {
     private IStageService stageService;
     private IPipelineDefinitionService pipelineDefinitionService;
     private IMaterialDefinitionService materialDefinitionService;
+    private RevisionService mockedRevisionService;
     private Pipeline pipeline;
     private PipelineDefinition pipelineDefinition;
     private Stage stage;
@@ -47,7 +46,8 @@ public class StageServiceTests {
         IDbRepository pipelineRepo = new RedisRepository(Pipeline.class, mockJedisPool);
         IDbRepository pipelineDefinitionRepo = new RedisRepository(PipelineDefinition.class, mockJedisPool);
         IDbRepository materialDefinitionRepo = new RedisRepository(MaterialDefinition.class, mockJedisPool);
-        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.pipelineDefinitionService = new PipelineDefinitionService(pipelineDefinitionRepo, this.mockedRevisionService);
         this.materialDefinitionService = new MaterialDefinitionService(materialDefinitionRepo, this.pipelineDefinitionService);
         this.pipelineService = new PipelineService(pipelineRepo, this.pipelineDefinitionService, this.materialDefinitionService);
         this.stageService = new StageService(this.pipelineService);

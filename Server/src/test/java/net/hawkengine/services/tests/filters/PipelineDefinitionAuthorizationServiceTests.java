@@ -16,6 +16,7 @@ import net.hawkengine.model.enums.PermissionScope;
 import net.hawkengine.model.enums.PermissionType;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
+import net.hawkengine.services.RevisionService;
 import net.hawkengine.services.filters.PipelineDefinitionAuthorizationService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
@@ -23,6 +24,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class PipelineDefinitionAuthorizationServiceTests {
 
     private IDbRepository<PipelineDefinition> mockedRepository;
     private IPipelineDefinitionService mockedPipeLineDefinitionService;
+    private RevisionService mockedRevisionService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -90,7 +93,8 @@ public class PipelineDefinitionAuthorizationServiceTests {
 
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "testPipelineDefinitionAuthorizationService");
         this.mockedRepository = new RedisRepository(PipelineDefinition.class, mockedPool);
-        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository);
+        this.mockedRevisionService = Mockito.mock(RevisionService.class);
+        this.mockedPipeLineDefinitionService = new PipelineDefinitionService(this.mockedRepository, this.mockedRevisionService);
 
         this.mockedPipeLineDefinitionService.add(this.firstPipelineDefinition);
         this.mockedPipeLineDefinitionService.add(this.secondPipelineDefinition);
