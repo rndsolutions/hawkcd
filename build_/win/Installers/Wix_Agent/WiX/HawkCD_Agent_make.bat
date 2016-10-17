@@ -27,7 +27,7 @@ echo.
 echo - Linking...
 echo.
 
-"C:\Program Files (x86)\MSI Factory\Wix\light.exe" -loc "English-US.wxl" -b "C:\Users\SlaviDimitrov\Desktop\win\Installers" -out "HawkCD_Agent.msi" "HawkCD_Agent.wixobj" "msifactui.wixobj" "Common.wixobj" "ErrorText.wixobj" "ProgressText.wixobj"
+"C:\Program Files (x86)\MSI Factory\Wix\light.exe" -loc "English-US.wxl" -b "C:\GitRepos\hawkcd\build_\win\Installers" -out "HawkCD_Agent.msi" "HawkCD_Agent.wixobj" "msifactui.wixobj" "Common.wixobj" "ErrorText.wixobj" "ProgressText.wixobj"
 if ERRORLEVEL 1 goto error
 
 goto end

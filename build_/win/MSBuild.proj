@@ -17,9 +17,20 @@
 
   <Target Name="HawkCdMergeModules">
   
-    <!-- Builds the  Custom Actions project -->
+    <!-- Builds the Custom Actions project -->
     <MSBuild Projects="$(BuildZoneDir)\CustomActions\CustomActions.sln" />
    
+    <!-- Builds the HawkCDServiceWrapper  project -->
+    <MSBuild Projects="$(BuildZoneDir)\HawkCDServiceWrapper\HawkCDServiceWrapper.sln" />
+	
+	<!-- Copy the wrapper files to server fodler -->
+	<Exec WorkingDirectory="$(BuildZoneDir)" Command="copy &quot;$(BuildZoneDir)\HawkCDServiceWrapper\HawkCDServiceWrapper\bin\Debug\HawkCDServiceWrapper.exe&quot;  &quot;$(BuildZoneDir)\Server\HawkCDServiceWrapper.exe&quot;"/>
+    <Exec WorkingDirectory="$(BuildZoneDir)" Command="copy &quot;$(BuildZoneDir)\HawkCDServiceWrapper\HawkCDServiceWrapper\bin\Debug\HawkCDServiceWrapper.exe.config&quot;  &quot;$(BuildZoneDir)\Server\HawkCDServiceWrapper.exe.config&quot;"/>
+		
+    <!-- Copy the wrapper files to agent fodler -->
+	<Exec WorkingDirectory="$(BuildZoneDir)" Command="copy &quot;$(BuildZoneDir)\HawkCDServiceWrapper\HawkCDServiceWrapper\bin\Debug\HawkCDServiceWrapper.exe&quot;  &quot;$(BuildZoneDir)\Agent\HawkCDServiceWrapper.exe&quot;"/>
+    <Exec WorkingDirectory="$(BuildZoneDir)" Command="copy &quot;$(BuildZoneDir)\HawkCDServiceWrapper\HawkCDServiceWrapper\bin\Debug\HawkCDServiceWrapper.exe.config&quot;  &quot;$(BuildZoneDir)\Agent\HawkCDServiceWrapper.exe.config&quot;"/>
+			
     <!-- Modify the variables used in the installer project to match the proper directories on the build server-->
     <CreateItem Include="$(MSBuildProjectDirectory)\Installers\Wix_Agent\WiX\BuildVars.wxi;$(MSBuildProjectDirectory)\Installers\Wix_Server\WiX\BuildVars.wxi">
       <Output TaskParameter="Include" ItemName="BuildVars" />
