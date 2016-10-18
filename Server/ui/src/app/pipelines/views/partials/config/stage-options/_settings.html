@@ -11,20 +11,20 @@
         <label>Stage Trigger</label>
         <div class="md-radio-list">
           <div class="md-radio">
-            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sManual" name="trigger"
-                   ng-value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
-            <label for="sManual">
-              <span></span>
-              <span class="check"></span>
-              <span class="box"></span> Manual </label>
-          </div>
-          <div class="md-radio">
             <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sOnSuccess" name="trigger"
                    ng-value="false" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
             <label for="sOnSuccess">
               <span></span>
               <span class="check"></span>
               <span class="box"></span> On Success </label>
+          </div>
+          <div class="md-radio">
+            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sManual" name="trigger"
+                   ng-value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
+            <label for="sManual">
+              <span></span>
+              <span class="check"></span>
+              <span class="box"></span> Manual </label>
           </div>
         </div>
       </div>

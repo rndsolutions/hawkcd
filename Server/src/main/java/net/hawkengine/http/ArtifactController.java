@@ -28,10 +28,13 @@ public class ArtifactController {
         this.fileManagementService = new FileManagementService();
         this.basePath = System.getProperty("user.dir");
         this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
-//        this.fileManagementService.deleteDirectoryRecursively(this.outputFolder);
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .create();
+        File tempFolder = new File(this.outputFolder);
+        if (!tempFolder.exists()) {
+            tempFolder.mkdir();
+        }
     }
 
     public ArtifactController(IFileManagementService fileManagementService) {
