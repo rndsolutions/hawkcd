@@ -5,6 +5,7 @@
     {
         public const string InstallDir = "INSTALLDIR";
         public const string IsJavaInstalled = "IS_JAVA_INSTALLED";
+        public const string InstallerType = "INSTALLER_TYPE";
     }
 
     public class HawkCDServerProperties : CommonProperties

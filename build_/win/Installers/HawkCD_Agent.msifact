@@ -20,6 +20,7 @@
 <IconPath>$(var.Buildzone)\Installers\Images\hawk.ico</IconPath>
 </ControlPanelSettings>
 <Property Id="ALLUSERS" Value="1" Admin="no" Hidden="no" Secure="no" SuppressModularization="no"/>
+<Property Id="INSTALLER_TYPE" Value="Agent" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <Property Id="IS_JAVA_INSTALLED" Value="1" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <Property Id="IS_REDIS_PORT_IN_USE" Value="0" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <Property Id="MSIFACTUIRMOption" Value="UseRM" Admin="no" Hidden="no" Secure="no" SuppressModularization="no"/>
@@ -1641,6 +1642,21 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <CustomTimingList>
 <CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
 <CustomTiming Sequence="5" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="UpdateServiceAppConfig" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UpdateServiceAppConfig">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; "/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="InstallService" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="InstallService">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="UpdateServiceAppConfig" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; "/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="UninstallService" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UninstallService">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="RemoveFiles" SequenceNumber="0" Condition="REMOVE~=&quot;ALL&quot; "/>
 </CustomTimingList>
 </CustomAction>
 </CustomActions>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
@@ -167,6 +169,143 @@ namespace CustomActions
             return ActionResult.Success;
         }
 
+        [CustomAction]
+        public static ActionResult UpdateServiceAppConfig(Session session)
+        {
+            session.Log("Begin UpdateServerServiceAppConfig");
+            try
+            {
+                var installerType = session[CommonProperties.InstallerType];
+                var isntallDir = session[CommonProperties.InstallDir].TrimEnd('\\');
+                var configFilePath = isntallDir + "\\HawkCDServiceWrapper.exe.config";
+
+                session.Log("Installer type is:  {0}", installerType);
+
+                if (!File.Exists(configFilePath))
+                {
+                    session.Log("File does not exist: {0}", configFilePath);
+                    return ActionResult.Failure;
+                }
+
+                var jarFile = Directory.GetFiles(isntallDir, "*.jar").FirstOrDefault();
+                jarFile = Path.GetFileName(jarFile);
+
+                string[] values = null;
+
+                if (installerType.Equals("Server", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    values = new string[]
+                    {
+                        "StartProcessName", "java.exe",
+                        "StartArgs", "-jar " + jarFile,
+                        "EventSourceName", "HawkCDServer",
+                        "ServiceName", GenerateServiceName("HawkCDServer"),
+                        "WorkingDirectory", isntallDir,
+                    };
+                }
+                else
+                {
+                    values = new string[]
+                    {
+                        "StartProcessName", "java.exe",
+                        "StartArgs", "-jar " + jarFile,
+                        "EventSourceName", "HawkCDAgent",
+                        "ServiceName", GenerateServiceName("HawkCDAgent"),
+                        "WorkingDirectory", isntallDir,
+                    };
+                }
+                session.Log("Starting to update config: {0}", configFilePath);
+                UpdateAppConfig(configFilePath, values);
+            }
+
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
+
+            session.Log("Ended UpdateServiceAppConfig");
+
+            return ActionResult.Success;
+        }
+
+        [CustomAction]
+        public static ActionResult InstallService(Session session)
+        {
+            session.Log("Begin InstallService");
+            try
+            {
+                var installerType = session[CommonProperties.InstallerType];
+                var isntallDir = session[CommonProperties.InstallDir].TrimEnd('\\');
+                var configFilePath = isntallDir + "\\HawkCDServiceWrapper.exe.config";
+                var serviceWrapperExe = isntallDir + "\\HawkCDServiceWrapper.exe";
+                if (!File.Exists(configFilePath))
+                {
+                    session.Log("File does not exist: {0}", configFilePath);
+                    return ActionResult.Failure;
+                }
+
+                var serviceName = GetServiceNameFromAppConfig(configFilePath);
+                var installCommand = string.Format("sc create {0} displayname= \"HawkCD {1} Service\" binpath= \"{2}\" start= auto", serviceName, installerType, serviceWrapperExe);
+
+                session.Log("Installing service: {0}", installCommand);
+                ExecuteCommand(installCommand, session);
+
+                session.Log("Starting service: {0}", serviceName);
+                if (!ServiceUtils.StartService(serviceName))
+                {
+                    session.Log("Starting service failed: {0}", serviceName);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
+
+            session.Log("Ended InstallService");
+
+            return ActionResult.Success;
+        }
+
+        [CustomAction]
+        public static ActionResult UninstallService(Session session)
+        {
+            session.Log("Begin InstallService");
+            try
+            {
+                var installerType = session[CommonProperties.InstallerType];
+                var isntallDir = session[CommonProperties.InstallDir].TrimEnd('\\');
+                var configFilePath = isntallDir + "\\HawkCDServiceWrapper.exe.config";
+
+                if (!File.Exists(configFilePath))
+                {
+                    session.Log("File does not exist: {0}", configFilePath);
+                    return ActionResult.Failure;
+                }
+
+                var serviceName = GetServiceNameFromAppConfig(configFilePath);
+                var installCommand = string.Format("sc delete {0} ", serviceName);
+
+                session.Log("Stopping service: {0}", serviceName);
+                if (!ServiceUtils.StopService(serviceName))
+                {
+                    session.Log("Stopping service failed: {0}", serviceName);
+                }
+
+                session.Log("Uninstall service: {0}", installCommand);
+                ExecuteCommand(installCommand, session);
+            }
+
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
+
+            session.Log("Ended InstallService");
+
+            return ActionResult.Success;
+        }
+
         #endregion //Server Custom Actions 
 
         #region Private Methods
@@ -262,6 +401,45 @@ namespace CustomActions
             }
 
             return false;
+        }
+
+        private static void UpdateAppConfig(string appConfigPath, params string[] keyValueArray)
+        {
+            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            configMap.ExeConfigFilename = appConfigPath;
+            Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+
+            for (int i = 0; i < keyValueArray.Length; i += 2)
+            {
+                config.AppSettings.Settings[keyValueArray[i]].Value = keyValueArray[i + 1];
+            }
+
+            config.Save();
+        }
+
+        private static string GetServiceNameFromAppConfig(string appConfigPath)
+        {
+            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            configMap.ExeConfigFilename = appConfigPath;
+            Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+
+            return config.AppSettings.Settings["ServiceName"].Value;
+        }
+
+        private static string GenerateServiceName(string name)
+        {
+            if (ServiceUtils.IsServiceInstalled(name))
+            {
+                for (int i = 1; i < 1000; i++)
+                {
+                    name += i.ToString();
+                    if (!ServiceUtils.IsServiceInstalled(name))
+                        return name;
+
+                }
+            }
+
+            return name;
         }
         #endregion //Private Methods
     }

@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-11 at 17:20:11 -->
+     on 2016-10-17 at 11:35:13 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber)" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
@@ -22,6 +22,7 @@
 <Property Id="ARPPRODUCTICON" Value="hawk_0001.ico"/>
 <Icon Id="hawk_0001.ico" SourceFile="$(var.Buildzone)\Installers\Images\hawk.ico"/>
 <Property Id="ALLUSERS" Value="1"/>
+<Property Id="INSTALLER_TYPE" Value="Agent" Secure="yes"/>
 <Property Id="IS_JAVA_INSTALLED" Value="1" Secure="yes"/>
 <Property Id="IS_REDIS_PORT_IN_USE" Value="0" Secure="yes"/>
 <Property Id="MSIFACTUIRMOption" Value="UseRM"/>
@@ -42,10 +43,16 @@
 <UIRef Id="SUFWI_UI"/>
 <CustomAction Id="UpdateAgentConfigFile" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateAgentConfigFile"/>
 <CustomAction Id="DetectJava" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="DetectJava"/>
+<CustomAction Id="UpdateServiceAppConfig" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateServiceAppConfig"/>
+<CustomAction Id="InstallService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="InstallService"/>
+<CustomAction Id="UninstallService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UninstallService"/>
 <Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
 <InstallExecuteSequence>
 <Custom Action="UpdateAgentConfigFile" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
+<Custom Action="UpdateServiceAppConfig" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
+<Custom Action="InstallService" After="UpdateServiceAppConfig">NOT REMOVE~="ALL" </Custom>
+<Custom Action="UninstallService" After="RemoveFiles">REMOVE~="ALL" </Custom>
 </InstallExecuteSequence>
 <InstallUISequence>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
