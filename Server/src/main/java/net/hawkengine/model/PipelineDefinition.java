@@ -12,6 +12,7 @@ public class PipelineDefinition extends DbEntry {
     private String pipelineGroupId;
     private String groupName;
     private String labelTemplate;
+    private String lastEditedBy;
     private int revisionCount;
     private Set<String> materialDefinitionIds;
     private List<EnvironmentVariable> environmentVariables;
@@ -51,6 +52,14 @@ public class PipelineDefinition extends DbEntry {
 
     public void setLabelTemplate(String labelTemplate) {
         this.labelTemplate = labelTemplate;
+    }
+
+    public String getLastEditedBy() {
+        return lastEditedBy;
+    }
+
+    public void setLastEditedBy(String lastEditedBy) {
+        this.lastEditedBy = lastEditedBy;
     }
 
     public int getRevisionCount() {
