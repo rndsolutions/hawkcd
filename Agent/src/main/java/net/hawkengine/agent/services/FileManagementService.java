@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.hawkengine.agent.services;
 
 import net.hawkengine.agent.services.interfaces.IFileManagementService;
@@ -11,7 +27,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +68,7 @@ public class FileManagementService implements IFileManagementService {
         return errorMessage;
     }
 
-    public void generateDirectory(File file){
+    public void generateDirectory(File file) {
         file.getParentFile().mkdirs();
     }
 
@@ -84,9 +103,9 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public String initiateFile(File file,InputStream stream, String filePath) {
+    public String initiateFile(File file, InputStream stream, String filePath) {
         String errorMessage = null;
-        if(!file.exists()){
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -119,9 +138,9 @@ public class FileManagementService implements IFileManagementService {
     }
 
     @Override
-    public String deleteFilesInDirectory(String directoryPath){
+    public String deleteFilesInDirectory(String directoryPath) {
         String errorMessage = null;
-        if((directoryPath == null) || (directoryPath == "")){
+        if ((directoryPath == null) || (directoryPath == "")) {
             return errorMessage = "Directory Path arguments is empty or null!";
         }
 
@@ -193,7 +212,7 @@ public class FileManagementService implements IFileManagementService {
 
         pattern = this.normalizePath(pattern);
 
-        return StringUtils.strip(pattern,"/") ;
+        return StringUtils.strip(pattern, "/");
     }
 
     @Override
@@ -210,7 +229,7 @@ public class FileManagementService implements IFileManagementService {
         scanner.setIncludes(new String[]{wildCardPattern});
         scanner.scan();
 
-        if (wildCardPattern.equals("**")){
+        if (wildCardPattern.equals("**")) {
             File directory = scanner.getBasedir();
             allFiles.add(directory);
 

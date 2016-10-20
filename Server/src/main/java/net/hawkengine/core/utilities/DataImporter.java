@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.hawkengine.core.utilities;
 
 import net.hawkengine.model.PipelineGroup;
@@ -18,22 +34,22 @@ public class DataImporter {
     private IUserService userService;
     private IPipelineGroupService pipelineGroupService;
 
-    public DataImporter(){
+    public DataImporter() {
         this.userService = new UserService();
         this.pipelineGroupService = new PipelineGroupService();
     }
 
-    public DataImporter(IUserService userService, IPipelineGroupService pipelineGroupService){
+    public DataImporter(IUserService userService, IPipelineGroupService pipelineGroupService) {
         this.userService = userService;
         this.pipelineGroupService = pipelineGroupService;
     }
 
-    public void importDefaultEntities(){
+    public void importDefaultEntities() {
         this.addDefaultAdminUser();
         this.addDefualtPipelineGroup();
     }
 
-    private ServiceResult addDefaultAdminUser(){
+    private ServiceResult addDefaultAdminUser() {
         User adminUser = new User();
         adminUser.setEmail("admin@admin.com");
         adminUser.setPassword("admin");
@@ -49,9 +65,9 @@ public class DataImporter {
         return this.userService.add(adminUser);
     }
 
-    private ServiceResult addDefualtPipelineGroup(){
+    private ServiceResult addDefualtPipelineGroup() {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getObject();
-        if (pipelineGroups.size() == 0){
+        if (pipelineGroups.size() == 0) {
 
             PipelineGroup defaultPipelineGroup = new PipelineGroup();
             defaultPipelineGroup.setName("defaultPipelineGroup");
