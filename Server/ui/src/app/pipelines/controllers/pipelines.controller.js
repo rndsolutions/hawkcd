@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService, adminMaterialService, moment) {
+    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeExecService, pipeService, authDataService, viewModel, pipeConfigService, adminMaterialService, moment) {
         var vm = this;
         vm.toggleLogo = 1;
 

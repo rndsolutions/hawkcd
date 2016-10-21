@@ -18,8 +18,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', '$rootScope', 'CONSTANTS', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', 'pipeConfig', '$auth', "$location", "$http",
-        function($scope, $rootScope, CONSTANTS, loginService, viewModel, accountService, profileService, authDataService, pipeConfig, $auth, $location, $http) {
+    .controller('AppController', ['$scope', '$rootScope', 'CONSTANTS', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', '$auth', "$location", "$http",
+        function($scope, $rootScope, CONSTANTS, loginService, viewModel, accountService, profileService, authDataService, $auth, $location, $http) {
             $scope.$on('$viewContentLoaded', function() {
                 //App.initComponents(); // init core components
                 Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive

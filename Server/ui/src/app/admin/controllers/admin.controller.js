@@ -18,7 +18,7 @@
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
+        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
             vm.breadCrumb = {
