@@ -18,7 +18,7 @@
 angular
     .module('hawk.agentsManagement')
     // add DTOptionsBuilder, DTColumnDefBuilder to func
-    .controller('AgentsController', function($rootScope, $scope, $interval, pipeStats, pipeExec, pipeConfig, agentService, websocketReceiverService, authDataService, viewModel) {
+    .controller('AgentsController', function($rootScope, $scope, $interval, agentService, websocketReceiverService, authDataService, viewModel) {
         var vm = this;
         vm.agentToDelete = {};
 

@@ -17,8 +17,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController',['$state', '$rootScope','$scope','$stateParams','$interval','pipeStats','pipeExecService','authDataService','viewModel', 'pipelineUpdater','moment','$sce','commonUtitlites',
-     function($state, $rootScope, $scope, $stateParams, $interval, pipeStats, pipeExecService, authDataService, viewModel, pipelineUpdater, moment, $sce,commonUtitlites) {
+    .controller('PipelinesHistoryController',['$state', '$rootScope','$scope','$stateParams','$interval','pipeExecService','authDataService','viewModel', 'pipelineUpdater','moment','$sce','commonUtitlites',
+     function($state, $rootScope, $scope, $stateParams, $interval, pipeExecService, authDataService, viewModel, pipelineUpdater, moment, $sce,commonUtitlites) {
         var vm = this;
 
         vm.labels = {
