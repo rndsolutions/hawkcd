@@ -5,7 +5,7 @@
 <ProductVersion>$(var.BuildNumber)</ProductVersion>
 <ProductManufacturer>RnD Solutions Ltd.</ProductManufacturer>
 <ProductID>$(var.ProductBuildGUID)</ProductID>
-<UpgradeID>EC3C72CC-B52F-4A00-A632-595710B93D88</UpgradeID>
+<UpgradeID>42BE78AA-859D-4C17-8DFD-A21CBC3083AF</UpgradeID>
 <MergeModuleIgnoreTables/>
 <Package Id="" Description="Hawk CD Agent" Manufacturer="RnD Solutions Ltd." Comments="Package Comments" InstallerVersion="3.01" Platforms="x86" Keywords="" ReadOnly="no" Compressed="yes" AdminImage="no" ShortNames="no" LanguageNeutral="yes" InstallPrivileges="elevated"/>
 <ControlPanelSettings NoRepair="no" NoRemove="no" NoModify="yes" SystemComponent="no">
@@ -26,8 +26,9 @@
 <Property Id="MSIFACTUIRMOption" Value="UseRM" Admin="no" Hidden="no" Secure="no" SuppressModularization="no"/>
 <Property Id="MSIFACT_INSTALLDIR" Value="INSTALLDIR" Admin="no" Hidden="no" Secure="no" SuppressModularization="no"/>
 <Property Id="SERVER_ADDRESS" Value="localhost" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
+<Property Id="SERVER_PORT" Value="8080" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <UpgradeCodes>
-<UpgradeCode Id="EC3C72CC-B52F-4A00-A632-595710B93D88">
+<UpgradeCode Id="42BE78AA-859D-4C17-8DFD-A21CBC3083AF">
 <UpgradeVersions>
 <UpgradeVersion Property="OLDERVERSIONBEINGUPGRADED" Minimum="0.0.0" Maximum="$(var.BuildNumber)" Languages="" RemoveFeatures="" IncludeMinimum="yes" IncludeMaximum="no" ExcludeLanguages="no" IgnoreRemoveFailure="no" MigrateFeatures="no" OnlyDetect="no"/>
 <UpgradeVersion Property="NEWERVERSIONDETECTED" Minimum="$(var.BuildNumber)" Maximum="" Languages="" RemoveFeatures="" IncludeMinimum="no" IncludeMaximum="no" ExcludeLanguages="no" IgnoreRemoveFailure="no" MigrateFeatures="no" OnlyDetect="yes"/>
@@ -739,7 +740,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Fragment>
         <UI>
             <Dialog Id="ServerAddressDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="Control_2" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
+                <Control Id="ServerPortText" Text="Server Port Number:" Type="Text" X="10" Y="110" Width="101" Height="17"/>
+<Control Id="ServerPortEdit" Property="SERVER_PORT" Type="Edit" X="10" Y="130" Width="212" Height="20"/>
+<Control Id="Control_2" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
 <Control Id="Control_1" Text="Enter server address or IP:" Type="Text" X="10" Y="50" Width="282" Height="17"/>
 <Control Id="ServerAddressEdit" Property="SERVER_ADDRESS" Type="Edit" X="10" Y="70" Width="212" Height="20"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">

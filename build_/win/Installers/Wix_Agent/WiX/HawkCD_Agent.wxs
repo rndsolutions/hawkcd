@@ -1,11 +1,11 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-23 at 18:57:55 -->
+     on 2016-10-23 at 22:58:04 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-<Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
+<Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="42BE78AA-859D-4C17-8DFD-A21CBC3083AF" Language="1033">
 <Package InstallerVersion="301" Description="Hawk CD Agent" Comments="Package Comments" Platform="x86" Manufacturer="RnD Solutions Ltd." Languages="0" Compressed="yes"/>
-<Upgrade Id="EC3C72CC-B52F-4A00-A632-595710B93D88">
+<Upgrade Id="42BE78AA-859D-4C17-8DFD-A21CBC3083AF">
 <UpgradeVersion Property="OLDERVERSIONBEINGUPGRADED" Minimum="0.0.0" Maximum="$(var.BuildNumber)" IncludeMinimum="yes"/>
 <UpgradeVersion Property="NEWERVERSIONDETECTED" Minimum="$(var.BuildNumber)" OnlyDetect="yes"/>
 </Upgrade>
@@ -30,6 +30,7 @@
 <Property Id="MSIFACTUIRMOption" Value="UseRM"/>
 <Property Id="MSIFACT_INSTALLDIR" Value="INSTALLDIR"/>
 <Property Id="SERVER_ADDRESS" Value="localhost" Secure="yes"/>
+<Property Id="SERVER_PORT" Value="8080" Secure="yes"/>
 <Feature Id="Complete" Title="Complete" Level="1" Description="Complete program features." Absent="allow" AllowAdvertise="no" TypicalDefault="install" Display="collapse" InstallDefault="local">
 <ComponentRef Id="RegKey_0001"/>
 <ComponentRef Id="RegValAdd_0002"/>

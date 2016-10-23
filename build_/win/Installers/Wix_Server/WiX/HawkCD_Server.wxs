@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-23 at 18:50:06 -->
+     on 2016-10-23 at 22:57:57 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Server - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
@@ -25,13 +25,16 @@
 <Icon Id="hawk_0001.ico" SourceFile="$(var.Buildzone)\Installers\Images\hawk.ico"/>
 <Property Id="ALLUSERS" Value="1"/>
 <Property Id="DEFAULT_REDIS_PORT" Value="6379" Secure="yes"/>
+<Property Id="DEFAULT_SERVER_PORT" Value="8080" Secure="yes"/>
 <Property Id="HOST_NAME" Value="localhost" Secure="yes"/>
 <Property Id="INSTALLER_TYPE" Value="Server" Secure="yes"/>
 <Property Id="IS_DEFAULT_REDIS_PORT_IN_USE" Value="0" Secure="yes"/>
+<Property Id="IS_DEFAULT_SERVER_PORT_IN_USE" Value="0" Secure="yes"/>
 <Property Id="IS_JAVA_INSTALLED" Value="1" Secure="yes"/>
 <Property Id="MSIFACTUIRMOption" Value="UseRM"/>
 <Property Id="MSIFACT_INSTALLDIR" Value="INSTALLDIR"/>
 <Property Id="NEW_REDIS_PORT" Secure="yes"/>
+<Property Id="NEW_SERVER_PORT" Secure="yes"/>
 <Property Id="SERVER_SHORTCUT_URL" Value="http://localhost:8080/" Secure="yes"/>
 <Property Id="INSTALLDIR">
 <RegistrySearch Id="RegSearch_0001" Root="HKLM" Key="Software\RnD\Hawk\Server" Name="InstallDir" Type="raw"/>
@@ -65,6 +68,7 @@
 <CustomAction Id="StopService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="StopService"/>
 <CustomAction Id="SetTargetDirCA" Impersonate="yes" Return="check" Execute="immediate" Property="TARGETDIR" Value="[INSTALLDIR]"/>
 <CustomAction Id="UpdateRedisConfig" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateRedisConfig"/>
+<CustomAction Id="CheckServerPort" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckServerPort"/>
 <Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
 <InstallExecuteSequence>
 <Custom Action="InstallRedis" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
@@ -79,11 +83,13 @@
 <Custom Action="RestoreConfigFiles" After="InstallFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="StopService" Before="RemoveExistingProducts">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="SetTargetDirCA" Before="CostFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
-<Custom Action="UpdateRedisConfig" Before="InstallRedis">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
+<Custom Action="UpdateRedisConfig" Before="InstallRedis">NOT REMOVE~="ALL" AND NOT OLDERVERSIONBEINGUPGRADED</Custom>
+<Custom Action="CheckServerPort" Before="AppSearch">1</Custom>
 </InstallExecuteSequence>
 <InstallUISequence>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
 <Custom Action="CheckRedisPort" Before="AppSearch">1</Custom>
+<Custom Action="CheckServerPort" Before="AppSearch">1</Custom>
 </InstallUISequence>
 <UIRef Id="SUFWIUI_Common" />
 <UIRef Id="SUFUI_ErrorText" />

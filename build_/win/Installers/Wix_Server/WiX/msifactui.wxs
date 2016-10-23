@@ -505,8 +505,16 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Fragment>
         <UI>
             <Dialog Id="HostNameDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="ConfigurationHeaderText" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
-<Control Id="HostNameEdit" Property="HOST_NAME" Type="Edit" X="10" Y="70" Width="162" Height="20"/>
+                <Control Id="Control_1" Property="NEW_EDIT_PROPERTY" Type="Edit" X="10" Y="130" Width="150" Height="20">
+<Condition Action="hide">IS_DEFAULT_SERVER_PORT_IN_USE = 0</Condition>
+<Condition Action="show">IS_DEFAULT_SERVER_PORT_IN_USE = 1</Condition>
+</Control>
+<Control Id="ServerportInUseTxt" Text="The default port [DEFAULT_SERVER_PORT] is in use. Please eneter a new one: " Type="Text" X="8" Y="109" Width="354" Height="14">
+<Condition Action="show">IS_DEFAULT_SERVER_PORT_IN_USE = 1</Condition>
+<Condition Action="hide">IS_DEFAULT_SERVER_PORT_IN_USE = 0</Condition>
+</Control>
+<Control Id="ConfigurationHeaderText" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="HostNameEdit" Property="HOST_NAME" Type="Edit" X="10" Y="70" Width="150" Height="20"/>
 <Control Id="HostNameLabel" Text="Enter host Name:" Type="Text" X="10" Y="50" Width="101" Height="14"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
                 	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_DEFAULT_REDIS_PORT_IN_USE=0</Publish>
