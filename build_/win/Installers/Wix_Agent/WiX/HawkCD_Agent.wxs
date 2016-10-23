@@ -1,9 +1,9 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-17 at 11:35:13 -->
+     on 2016-10-23 at 18:57:55 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-<Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber)" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
+<Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
 <Package InstallerVersion="301" Description="Hawk CD Agent" Comments="Package Comments" Platform="x86" Manufacturer="RnD Solutions Ltd." Languages="0" Compressed="yes"/>
 <Upgrade Id="EC3C72CC-B52F-4A00-A632-595710B93D88">
 <UpgradeVersion Property="OLDERVERSIONBEINGUPGRADED" Minimum="0.0.0" Maximum="$(var.BuildNumber)" IncludeMinimum="yes"/>
@@ -18,6 +18,8 @@
 <AdvertiseExecuteSequence/>
 <Media Id="1" DiskPrompt="Disk 1" Cabinet="setup.cab" EmbedCab="yes" CompressionLevel="mszip"/>
 <Property Id="DiskPrompt" Value="!(loc.UIDiskPrompt)"/>
+<Property Id="ARPURLINFOABOUT" Value="http://www.hawkcd.io"/>
+<Property Id="ARPHELPLINK" Value="http://docs.hawkcd.io"/>
 <Property Id="ARPNOMODIFY" Value="1"/>
 <Property Id="ARPPRODUCTICON" Value="hawk_0001.ico"/>
 <Icon Id="hawk_0001.ico" SourceFile="$(var.Buildzone)\Installers\Images\hawk.ico"/>
@@ -46,13 +48,21 @@
 <CustomAction Id="UpdateServiceAppConfig" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateServiceAppConfig"/>
 <CustomAction Id="InstallService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="InstallService"/>
 <CustomAction Id="UninstallService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UninstallService"/>
+<CustomAction Id="BackupConfigFiles" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="BackupConfigFiles"/>
+<CustomAction Id="RestoreConfigFiles" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="RestoreConfigFiles"/>
+<CustomAction Id="SetTargetDirCA" Impersonate="yes" Return="check" Execute="immediate" Property="TARGETDIR" Value="[INSTALLDIR]"/>
+<CustomAction Id="StopService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="StopService"/>
 <Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
 <InstallExecuteSequence>
-<Custom Action="UpdateAgentConfigFile" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
+<Custom Action="UpdateAgentConfigFile" After="InstallFinalize">NOT REMOVE~="ALL" AND NOT OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
 <Custom Action="UpdateServiceAppConfig" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
 <Custom Action="InstallService" After="UpdateServiceAppConfig">NOT REMOVE~="ALL" </Custom>
 <Custom Action="UninstallService" After="RemoveFiles">REMOVE~="ALL" </Custom>
+<Custom Action="BackupConfigFiles" Before="RemoveExistingProducts">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
+<Custom Action="RestoreConfigFiles" After="InstallFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
+<Custom Action="SetTargetDirCA" Before="CostFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
+<Custom Action="StopService" Before="RemoveExistingProducts">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
 </InstallExecuteSequence>
 <InstallUISequence>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>

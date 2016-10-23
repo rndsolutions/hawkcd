@@ -45,10 +45,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="CustomAction.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceUtils.cs" />
+    <Compile Include="Utils.cs" />
     <Content Include="CustomAction.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

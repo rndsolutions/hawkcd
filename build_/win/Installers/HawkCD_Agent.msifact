@@ -1,7 +1,7 @@
 <SUFWIProject FileVersion="2.1.1011.0">
 <ProjectSettings>
 <ProjectType>installer</ProjectType>
-<ProductName>HawkCD Agent - $(var.BuildNumber)</ProductName>
+<ProductName>HawkCD Agent - $(var.BuildNumber) - Alpha</ProductName>
 <ProductVersion>$(var.BuildNumber)</ProductVersion>
 <ProductManufacturer>RnD Solutions Ltd.</ProductManufacturer>
 <ProductID>$(var.ProductBuildGUID)</ProductID>
@@ -9,9 +9,9 @@
 <MergeModuleIgnoreTables/>
 <Package Id="" Description="Hawk CD Agent" Manufacturer="RnD Solutions Ltd." Comments="Package Comments" InstallerVersion="3.01" Platforms="x86" Keywords="" ReadOnly="no" Compressed="yes" AdminImage="no" ShortNames="no" LanguageNeutral="yes" InstallPrivileges="elevated"/>
 <ControlPanelSettings NoRepair="no" NoRemove="no" NoModify="yes" SystemComponent="no">
-<AboutInfoUrl/>
+<AboutInfoUrl>http://www.hawkcd.io</AboutInfoUrl>
 <ContactInfo/>
-<HelpUrl/>
+<HelpUrl>http://docs.hawkcd.io</HelpUrl>
 <HelpTelephone/>
 <UpdateInfoUrl/>
 <Size/>
@@ -200,8 +200,9 @@
             <Dialog Id="WelcomeDlg" Width="370" Height="270" Title="!(loc.WelcomeDlg_Title)">
                 <Control Id="Description" Type="Text" X="21" Y="82" Width="320" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeDlgDescription)" />
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="InstallDirDlg">IS_JAVA_INSTALLED=1</Publish>
+                	<Publish Event="NewDialog" Value="InstallDirDlg">IS_JAVA_INSTALLED=1 AND NOT OLDERVERSIONBEINGUPGRADED</Publish>
 <Publish Event="NewDialog" Value="PrerequisitesDlg">IS_JAVA_INSTALLED=0</Publish>
+<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_JAVA_INSTALLED=1 AND OLDERVERSIONBEINGUPGRADED</Publish>
 </Control>
 <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -346,8 +347,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
                 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
-                    <Publish Event="NewDialog" Value="[MSIFACT_DLG_PREV]">1</Publish>
-                </Control>
+                    <Publish Event="NewDialog" Value="[MSIFACT_DLG_PREV]"> NOT OLDERVERSIONBEINGUPGRADED</Publish>
+<Publish Event="NewDialog" Value="WelcomeDlg">OLDERVERSIONBEINGUPGRADED</Publish>
+</Control>
 <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
 <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
 <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
@@ -1635,7 +1637,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <CustomActions>
 <CustomAction Type="1" ID="UpdateAgentConfigFile" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UpdateAgentConfigFile">
 <CustomTimingList>
-<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; "/>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND NOT OLDERVERSIONBEINGUPGRADED"/>
 </CustomTimingList>
 </CustomAction>
 <CustomAction Type="1" ID="DetectJava" Impersonate="yes" Return="3" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="DetectJava">
@@ -1657,6 +1659,26 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <CustomAction Type="1" ID="UninstallService" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UninstallService">
 <CustomTimingList>
 <CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="RemoveFiles" SequenceNumber="0" Condition="REMOVE~=&quot;ALL&quot; "/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="BackupConfigFiles" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="BackupConfigFiles">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="RemoveExistingProducts" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="RestoreConfigFiles" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="RestoreConfigFiles">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="6" ID="SetTargetDirCA" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Property="TARGETDIR" Value="[INSTALLDIR]">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="CostFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="StopService" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="StopService">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="RemoveExistingProducts" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
 </CustomTimingList>
 </CustomAction>
 </CustomActions>
