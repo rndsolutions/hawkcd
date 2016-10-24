@@ -115,8 +115,8 @@ namespace CustomActions
             if (File.Exists(configFilePath))
             {
                 session.Log("Updating config file: {0}", configFilePath);
-                session.Log("Updating key host with new value: {0}", session[HawkCDServerProperties.HostName]);
-                Utils.ReplaceYamlKeyValue(configFilePath, "host", session[HawkCDServerProperties.HostName]);
+                session.Log("Updating key serverHost with new value: {0}", session[HawkCDServerProperties.HostName]);
+                Utils.ReplaceYamlKeyValue(configFilePath, "serverHost", session[HawkCDServerProperties.HostName]);
 
                 if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1")
                 {
@@ -153,6 +153,7 @@ namespace CustomActions
             if (Utils.GetInstallerType(session) == InstallerType.Server)
             {
                 Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "config.yaml"), session);
+                Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows.conf"), session);
                 Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows-service.conf"), session);
             }
             else
@@ -200,6 +201,7 @@ namespace CustomActions
                 session.Log("Updating config file: {0}", configFilePath);
                 session.Log("Updating key serverName with new value: {0}", session[HawkCDAgentProperties.ServerAddress]);
                 Utils.ReplacePropertiesKeyValue(configFilePath, "serverName", session[HawkCDAgentProperties.ServerAddress]);
+                session.Log("Updating key serverPort with new value: {0}", session[HawkCDAgentProperties.ServerPort]);
                 Utils.ReplacePropertiesKeyValue(configFilePath, "serverPort", session[HawkCDAgentProperties.ServerPort]);
             }
             else

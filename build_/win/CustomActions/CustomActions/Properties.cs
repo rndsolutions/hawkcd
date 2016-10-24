@@ -22,6 +22,6 @@
     public class HawkCDAgentProperties : CommonProperties
     {
         public const string ServerAddress = "SERVER_ADDRESS";
-        public const string ServerPort = "SERVER_Port";
+        public const string ServerPort = "SERVER_PORT";
     }
 }
