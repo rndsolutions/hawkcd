@@ -2,7 +2,9 @@
 ## Continuous Delivery Software
 
 [![Join the chat at https://gitter.im/rndsolutions/hawkcd](https://badges.gitter.im/rndsolutions/hawkcd.svg)](https://gitter.im/rndsolutions/hawkcd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-![Build Status](https://img.shields.io/badge/build%20by-hawkcd-orange.svg)
+[<img src="https://img.shields.io/badge/build%20by-hawkcd-orange.svg">](http://hawkcd.io/)
+
+
 
 
 The HawkCD intends to be one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
