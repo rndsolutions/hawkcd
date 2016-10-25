@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-23 at 22:58:04 -->
+     on 2016-10-25 at 10:42:28 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="42BE78AA-859D-4C17-8DFD-A21CBC3083AF" Language="1033">
@@ -53,6 +53,7 @@
 <CustomAction Id="RestoreConfigFiles" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="RestoreConfigFiles"/>
 <CustomAction Id="SetTargetDirCA" Impersonate="yes" Return="check" Execute="immediate" Property="TARGETDIR" Value="[INSTALLDIR]"/>
 <CustomAction Id="StopService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="StopService"/>
+<CustomAction Id="CheckIsUserAdministrator" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckIsUserAdministrator"/>
 <Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
 <InstallExecuteSequence>
 <Custom Action="UpdateAgentConfigFile" After="InstallFinalize">NOT REMOVE~="ALL" AND NOT OLDERVERSIONBEINGUPGRADED</Custom>
@@ -64,9 +65,11 @@
 <Custom Action="RestoreConfigFiles" After="InstallFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="SetTargetDirCA" Before="CostFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="StopService" Before="RemoveExistingProducts">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
+<Custom Action="CheckIsUserAdministrator" Before="AppSearch">1</Custom>
 </InstallExecuteSequence>
 <InstallUISequence>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
+<Custom Action="CheckIsUserAdministrator" Before="AppSearch">1</Custom>
 </InstallUISequence>
 <UIRef Id="SUFWIUI_Common" />
 <UIRef Id="SUFUI_ErrorText" />
