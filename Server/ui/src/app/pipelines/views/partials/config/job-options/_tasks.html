@@ -18,10 +18,9 @@
       <thead>
       <tr>
         <th width="2%"> # </th>
-        <th width="10%"> Task Type </th>
-        <th width="5%"> Conditions </th>
-        <th> Commands </th>
-        <th width="5%"> On Cancel </th>
+        <th width="10%"> Type <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskType}}">?</span></th>
+        <th width="5%"> Run If Condition <span class="badge badge-default cursor-popover" style="margin-left:5px" data-toggle="tooltip" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskCondition}}">?</span></th>
+        <th> Parameters <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskCommand}}">?</span></th>
         <th width="15%"> Controls </th>
       </tr>
       </thead>
@@ -36,7 +35,6 @@
         <td ng-if="task.type == 'FETCH_MATERIAL'"> Material: {{task.materialName}} </td>
         <td ng-if="task.type == 'FETCH_ARTIFACT'"> Pipeline: {{task.designatedPipelineDefinitionName}}, Run: <span ng-if="task.shouldUseLatestRun == true">Latest</span><span ng-if="task.shouldUseLatestRun == false">{{task.designatedPipelineExecutionId}}</span>, Source: {{task.source}}, Destination: {{task.destination}}</td>
         <td ng-if="task.type == 'UPLOAD_ARTIFACT'"> Source: {{task.source}}, Destination: {{task.destination}}</td>
-        <td> to do </td>
         <td>
           <button class="btn yellow unsortable" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTaskForUpdate(task)">Edit</button>
           <button class="btn red unsortable" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#removeTask"
