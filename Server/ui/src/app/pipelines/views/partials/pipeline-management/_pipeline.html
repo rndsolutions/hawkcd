@@ -64,18 +64,18 @@
 
         </div>
         <div class="controls">
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status == 'IN_PROGRESS' || pipe.lastRun.status == 'AWAITING' || pipe.disabled == true}" id="startbtn" ng-click="pipes.play(pipe)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status == 'IN_PROGRESS' || pipe.lastRun.status == 'AWAITING' || pipe.disabled == true}" id="startbtn" ng-click="pipes.play(pipe)" onmouseenter="$(this).tooltip('show')" title="{{pipes.popOverOptions.popOverTitles.runPipeline}}">
                 <span class="glyphicon glyphicon-play control"></span>
             </button>
             <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || true}">
                 <span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>
             </button>
 
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' || pipe.lastRun.status == 'PASSED' || pipe.lastRun.status == 'FAILED'}" ng-click="pipes.pause(pipe)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' || pipe.lastRun.status == 'PASSED' || pipe.lastRun.status == 'FAILED'}" ng-click="pipes.pause(pipe)" onmouseenter="$(this).tooltip('show')" title="{{pipes.popOverOptions.popOverTitles.pausePipeline}}">
                 <span class="glyphicon glyphicon-pause control"></span>
             </button>
 
-            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' && pipe.lastRun.status != 'PAUSED' && pipe.lastRun.status != 'AWAITING' || pipe.disabled == true}" id="stopbtn" ng-click="pipes.stop(pipe, pipe.lastRun)">
+            <button class="btn btn-default" ng-class="{'disabled' : pipe.permissionType == 'VIEWER' || pipe.permissionType == '' || pipe.lastRun.status != 'IN_PROGRESS' && pipe.lastRun.status != 'PAUSED' && pipe.lastRun.status != 'AWAITING' || pipe.disabled == true}" id="stopbtn" ng-click="pipes.stop(pipe, pipe.lastRun)" onmouseenter="$(this).tooltip('show')" title="{{pipes.popOverOptions.popOverTitles.stopPipeline}}">
                 <span class="glyphicon glyphicon-stop control"></span>
             </button>
         </div>
