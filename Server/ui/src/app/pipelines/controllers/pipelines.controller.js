@@ -25,6 +25,18 @@ angular
             empty: "No pipelines in "
         };
 
+        vm.popOverOptions = {
+            popOverTitles: {
+                pipeline: 'The Pipeline allows crafting the entire application release process from start to finish. A Pipeline consists of Stages, which in turn consist of Jobs, which consist of Tasks.',
+                automaticScheduling: 'If selected, the Pipeline will trigger automatically, creating a new run, when its Material is updated.',
+                materialPoll: 'If checked, HawkCD will poll your Material for changes automatically.',
+                materialCredentials: 'Your GitHub credentials. If the git repository is private, you will need to provide your GitHub credentials, so that HawkCD can access your repository.',
+                runPipeline: 'Run the Pipeline',
+                pausePipeline: 'Pause the Pipeline',
+                stopPipeline: 'Cancel the Pipeline'
+            }
+        };
+
         vm.formData = {};
 
         vm.allPermissions = [];

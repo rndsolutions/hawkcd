@@ -734,6 +734,10 @@ p {
     border-left:4px solid #EEF1F5!important;
 }
 
+.status-awaiting-history {
+    border-left:4px solid #ffffff!important;
+}
+
 .status-canceled {
     border-left: 4px solid lightslategrey!important;
 }
@@ -892,6 +896,14 @@ p {
 
 .width-40 {
     width: 40%!important;
+}
+
+.width-50 {
+    width: 50%!important;
+}
+
+.width-50px {
+    width: 50px!important;
 }
 
 .width-20 {
@@ -1066,4 +1078,17 @@ p {
 .modal-content {
     max-height: 90vh;
     overflow-y: scroll;
+}
+
+.cursor-popover {
+    pointer-events: all;
+    cursor: help;
+}
+
+.tooltip {
+    max-width: 280px !important;
+}
+
+.tooltip-inner {
+    white-space: pre-wrap;
 }

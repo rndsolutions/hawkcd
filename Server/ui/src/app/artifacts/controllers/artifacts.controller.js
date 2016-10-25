@@ -28,6 +28,12 @@ angular
 
         vm.query = '';
 
+        vm.popOverOptions = {
+            popOverTitles: {
+                artifact: 'Artifacts are files and folders that are stored on the Server, inside their respective Pipelines.'
+            }
+        };
+
         vm.scrollDisable = false;
 
         vm.isFirstLoad = true;

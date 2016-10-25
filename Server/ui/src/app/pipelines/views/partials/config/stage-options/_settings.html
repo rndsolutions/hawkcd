@@ -22,7 +22,7 @@
         <label>Stage Name</label>
       </div>
       <div class="form-group form-md-radios">
-        <label>Stage Trigger</label>
+        <label>Stage Trigger</label><span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.triggeredManuallyGeneral}}">?</span>
         <div class="md-radio-list">
           <div class="md-radio">
             <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sOnSuccess" name="trigger"

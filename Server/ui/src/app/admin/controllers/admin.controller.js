@@ -125,11 +125,11 @@ angular
                     edit: 'Edit'
                 },
                 userInfo: {
-                    username: 'Name of the user',
-                    dateRegistered: 'Date registered on',
-                    permissions: 'Permissions of the user',
-                    action: 'Available actions',
-                    edit: 'Reset user password. Change user email'
+                    username: 'Name of the user.',
+                    dateRegistered: 'Date registered on.',
+                    permissions: 'Permissions of the user.',
+                    action: 'Enable/Disable Users. Disabled users cannot login and use HawkCD.',
+                    edit: 'Reset user password. Change user email.'
                 },
                 tableTitles: {
                     name: 'Name',
@@ -139,11 +139,20 @@ angular
                     actions: 'Actions'
                 },
                 popOverTitles: {
-                    name: 'Name of the material',
-                    type: 'Type of the material',
-                    url: 'URL location of the material',
-                    branch: 'Current branch of the material',
-                    actions: 'Actions that can be performed on the material'
+                    materialName: 'The name of the Material. Once the Material is created the name cannot be changed.',
+                    materialType: 'Type of the material',
+                    materialUrl: 'URL to your GitHub project repository (the one you would use to clone a repository). This option requires that the URL is valid and ends with ".git"',
+                    materialBranch: 'The git branch to track from (e.g. master). If nothing is entered it will default to "master".',
+                    materialCredentials: 'Your GitHub credentials. If the git repository is private, you will need to provide your GitHub credentials, so that HawkCD can access your repository.',
+                    materialPoll: 'If checked, HawkCD will poll your Material for changes automatically.',
+                    actions: 'Actions that can be performed on the material',
+                    pipelineGroup: 'Pipeline Group can be thought as a container for Pipelines. Each Pipeline belongs to a group (unless it\'s unassigned).',
+                    material: 'A Material represents a branch of a Git repository. It is used to define which part of your project(s) the Pipeline will work with. For every Pipeline there must be at least one Material defined.',
+                    userGroup: 'User Groups aim to make managing the Permissions of multiple Users at the same time easier, because both Users and User Groups have Permissions.',
+                    user: 'Users are entities that can have individual Permissions.',
+                    permissionScope: 'Represents the object level at which specific permissions can be applied.',
+                    permissionType: 'Define permissions - what a user can do in specific Permission Scope.',
+                    permissionEntity: 'The specific object(s) for which the Permissions are applied.'
                 },
                 placements: {
                     top: 'top'

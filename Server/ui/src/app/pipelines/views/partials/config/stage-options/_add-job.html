@@ -35,25 +35,25 @@
               <option value="FETCH_MATERIAL">Fetch Material</option>
               <option value="UPLOAD_ARTIFACT">Upload Artifact</option>
             </select>
-            <label for="taskType">Task Type</label>
+            <label for="taskType">Task Type <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskType}}">?</span></label>
           </div>
 
           <div ng-if="pipeConfig.newJob.taskDefinitions.type == 'EXEC'">
             <div class="form-group form-md-line-input">
               <input type="text" class="form-control" ng-model="pipeConfig.newJob.taskDefinitions.command" required>
-              <label>Task Command</label>
+              <label>Task Command <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.execCommand}}">?</span></label>
             </div>
             <div class="form-group form-md-line-input">
               <textarea class="form-control" name="arguments" id="arguments" cols="30" rows="5" ng-model="pipeConfig.newJob.taskDefinitions.arguments" required>
               </textarea>
-              <label for="arguments">Arguments</label>
+              <label for="arguments">Arguments <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.execArguments}}">?</span></label>
             </div>
             <div class="form-group form-md-line-input">
               <input type="text" title="Agent/Pipelines/{{pipeConfig.currentPipeline.name}}/" class="form-control" ng-model="pipeConfig.newJob.taskDefinitions.workingDirectory">
-              <label>Working Directory</label>
+              <label>Working Directory <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.execWorkingDir}}">?</span></label>
             </div>
             <div class="form-group form-md-radios">
-              <label>Run If Conditions</label>
+              <label>Run If Conditions <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.runIfCondition}}">?</span></label>
               <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='PASSED'">
                 <div class="md-radio">
                   <input type="radio" id="runIfPass" name="runIf" value="PASSED" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
@@ -89,6 +89,7 @@
                     <span></span>
                     <span class="check"></span>
                     <span class="box"></span> Ignore Errors</label>
+                  <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.ignoreErrors}}">?</span>
                 </div>
               </div>
             </div>
@@ -100,7 +101,7 @@
                         ng-model="pipeConfig.newJob.taskDefinitions.pipelineObject" ng-change="pipeConfig.getRunsFromPipelineDefinition(pipeConfig.newJob.taskDefinitions.pipelineObject)" required>
                     <option ng-repeat="pipeline in pipeConfig.allPipelinesForTask" value="{{pipeline}}">{{pipeline.name}}</option>
                 </select>
-                <label for="pipeJobSelect">Pipeline</label>
+                <label for="pipeJobSelect">Pipeline <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.pipelineToBeSelected}}">?</span></label>
             </div>
 
             <div class="form-group form-md-line-input">
@@ -109,25 +110,25 @@
                 <option value="true">Latest</option>
                 <option ng-repeat="id in pipeConfig.currentPipelineRuns" value="{{id}}">{{id}}</option>
               </select>
-              <label for="runSelect">Run</label>
+              <label for="runSelect">Run <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.runToBeSelected}}">?</span></label>
             </div>
 
             <div class="form-group form-md-line-input">
               <input type="text" class="form-control"
                      title="Server/Artifacts/{{pipeConfig.selectedPipelineForTask.name}}/<ExecutionId>/"
                      ng-model="pipeConfig.newJob.taskDefinitions.source">
-              <label>Source</label>
+              <label>Source <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.fetchArtifactSource}}">?</span></label>
             </div>
 
             <div class="form-group form-md-line-input">
               <input type="text" class="form-control"
                      title="Agent/Pipelines/{{pipeConfig.selectedPipelineForTask.name}}/"
                      ng-model="pipeConfig.newJob.taskDefinitions.destination">
-              <label>Destination</label>
+              <label>Destination <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.fetchArtifactDestination}}">?</span></label>
             </div>
 
             <div class="form-group form-md-radios">
-              <label>Run If Conditions</label>
+              <label>Run If Conditions <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.runIfCondition}}">?</span></label>
               <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='Passed'">
                 <div class="md-radio">
                   <input type="radio" id="any" name="runIf" value="Any" class="md-radiobtn" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required>
@@ -162,11 +163,11 @@
               <select class="form-control" name="materialSelect" id="jobMaterialSelect" ng-model="pipeConfig.newJob.taskDefinitions.material" required>
                 <option ng-repeat="material in pipeConfig.filteredMaterialDefinitions" value="{{material}}">{{material.name}}</option>
               </select>
-              <label for="jobMaterialSelect">Material</label>
+              <label for="jobMaterialSelect">Material <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.materialToBeSelected}}">?</span></label>
             </div>
 
             <div class="form-group form-md-radios">
-              <label>Run If Conditions</label>
+              <label>Run If Conditions <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.runIfCondition}}">?</span></label>
               <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='PASSED'">
                 <div class="md-radio">
                   <input type="radio" id="pass" name="runIf" value="PASSED" class="md-radiobtn"   ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition" required ng-checked="true">
@@ -201,16 +202,16 @@
               <input type="text" class="form-control"
                      title="Agent/Pipelines/<PipelineName>/"
                      ng-model="pipeConfig.newJob.taskDefinitions.source">
-              <label>Source</label>
+              <label>Source <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.uploadArtifactSource}}">?</span></label>
             </div>
             <div class="form-group form-md-line-input">
               <input type="text" class="form-control"
                      title="Server/Artifacts/<PipelineName>/<PipelineRun>/"
                      ng-model="pipeConfig.newJob.taskDefinitions.destination">
-              <label>Destination</label>
+              <label>Destination <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.uploadArtifactDestination}}">?</span></label>
             </div>
             <div class="form-group form-md-radios">
-              <label>Run If Conditions</label>
+              <label>Run If Conditions <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.runIfCondition}}">?</span></label>
               <div class="md-radio-list" ng-init="pipeConfig.newJob.taskDefinitions.runIfCondition='PASSED'">
                 <div class="md-radio">
                   <input type="radio" id="pass" name="runIf" value="PASSED" class="md-radiobtn" ng-checked="true" ng-model="pipeConfig.newJob.taskDefinitions.runIfCondition">

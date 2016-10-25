@@ -12,7 +12,7 @@
 <!--See the License for the specific language governing permissions and-->
 <!--limitations under the License.-->
 
-<h3 class="page-title"> Agents Management
+<h3 class="page-title"> Agent Management
   <small>agents &amp; statistics</small>
 </h3>
 <div class="page-bar">
@@ -29,7 +29,7 @@
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-cogs"></i>{{agents.defaultText.agents}}
+                    <i class="fa fa-cogs"></i>{{agents.defaultText.agents}} <span class="badge badge-default cursor-popover" data-toggle="tooltip" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.agentDesc}}">?</span>
                 </div>
                 <div class="tools right">
                     <a href="javascript:;" class="collapse"> </a>
@@ -42,42 +42,21 @@
                             <tr>
                                 <th class="statusHeader"></th>
                                 <th>
-                                    <h4>{{agents.defaultText.tableHeaders.agentName}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.agent}}"
-                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
-                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
-                                                                                                    popover-animation="true">?</span></h4></th>
+                                    <h4>{{agents.defaultText.tableHeaders.agentName}}</h4></th>
                                 <th>
-                                    <h4>{{agents.defaultText.tableHeaders.status}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.status}}"
-                                                                                            popover-placement="{{agents.popOverOptions.placements.top}}"
-                                                                                            popover-trigger="{{agents.popOverOptions.triggers.click}}"
-                                                                                            popover-animation="true">?</span></h4></th>
+                                    <h4>{{agents.defaultText.tableHeaders.status}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.status}}">?</span></h4></th>
                                 <th>
-                                    <h4>{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.sandbox}}"
-                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
-                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
-                                                                                                    popover-animation="true">?</span></h4></th>
+                                    <h4>{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.sandbox}}">?</span></h4></th>
                                 <th>
-                                    <h4> {{agents.defaultText.tableHeaders.os}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.os}}"
-                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
-                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
-                                                                                                    popover-animation="true">?</span></h4></th>
+                                    <h4> {{agents.defaultText.tableHeaders.os}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.os}}">?</span></h4></th>
                                 <th>
-                                    <h4>{{agents.defaultText.tableHeaders.ip}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.ipAddress}}"
-                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
-                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
-                                                                                                    popover-animation="true">?</span></h4></th>
+                                    <h4>{{agents.defaultText.tableHeaders.ip}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.ipAddress}}">?</span></h4></th>
                                 </th>
                                 <!--<th><h4 titile="The free space of the disk the agent is running on">{{agents.defaultText.tableHeaders.freeSpace}} <span class="badge badge-default">?</span> </h4> </th>-->
                                 <th>
-                                    <h4>{{agents.defaultText.tableHeaders.resources}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.resources}}"
-                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
-                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
-                                                                                                    popover-animation="true">?</span></h4></th>
+                                    <h4>{{agents.defaultText.tableHeaders.resources}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.resources}}">?</span></h4></th>
                                 <th class="custom-datatable-btns">
-                                    <h4>{{agents.defaultText.tableHeaders.action}} <span class="badge badge-default" uib-popover="{{agents.popOverOptions.popOverTitles.actions}}"
-                                                                                                    popover-placement="{{agents.popOverOptions.placements.top}}"
-                                                                                                    popover-trigger="{{agents.popOverOptions.triggers.click}}"
-                                                                                                    popover-animation="true">?</span></h4></th>
+                                    <h4>{{agents.defaultText.tableHeaders.action}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.actions}}">?</span></h4></th>
                             </tr>
                         </thead>
                         <tbody>
