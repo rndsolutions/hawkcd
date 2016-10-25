@@ -50,13 +50,14 @@ angular
 
         vm.popOverOptions = {
             popOverTitles: {
-                agent: 'Agent Name',
-                status: 'Agent Status',
-                sandbox: 'The Install location of the agent on the server',
-                os: 'The Operation System the agent is running on',
-                ipAddress: 'The Server IP',
-                resources: 'The resource tags used by the server to distribute jobs',
-                actions: 'Actions'
+                agentDesc: 'Agents are the workers that execute Jobs and their Tasks',
+                agent: 'This is the host\'s hostname + the first few numbers of its ID',
+                status: 'Idle - the Agent is ready to accept Jobs. \n\n Running - the Agent is currently executing a Job. Further Jobs cannot be assigned to it until it completes the Job.',
+                sandbox: 'The install location of the Agent on the server',
+                os: 'The Operating System the Agent is running on',
+                ipAddress: 'The Agent\'s internal IP address',
+                resources: 'Resources are used to assign Jobs to Agents',
+                actions: 'Delete - deletes the Agent. \n\n Edit Resources - allows you to add or remove Resources to that Agent. \n\n Disable - disables the Agent, meaning it will no longer receive Jobs'
             },
             placements: {
                 top: 'top'
