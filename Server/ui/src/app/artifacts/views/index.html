@@ -13,10 +13,18 @@
 <!--limitations under the License.-->
 
 <h3 class="page-title"> Artifacts</h3>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a ui-sref="index.artifact"> <span>Artifacts</span></a>
+        </li>
+    </ul>
+</div>
 <div class="portlet light" id="artifacts-portlet" style="overflow-x: hidden" infinite-scroll="artifact.scrollCall()" infinite-scroll-distance="0">
     <div class="portlet-title right">
         <div class="caption ng-binding">
-            <i class="fa fa-cogs"></i>Artifacts
+            <i class="fa fa-cogs"></i>Artifacts <span class="badge badge-default cursor-popover" data-toggle="tooltip" data-placement="right" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{artifact.popOverOptions.popOverTitles.artifact}}">?</span>
         </div>
     </div>
     <div class="portlet-body">
