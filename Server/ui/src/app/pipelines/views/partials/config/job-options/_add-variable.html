@@ -23,11 +23,11 @@
                 <div class="modal-body">
                     <div class="form-group form-md-line-input">
                         <input type="text" class="form-control" ng-model="pipeConfig.newJobVar.name" ng-pattern="/^([\w-]+)$/" required>
-                        <label>Name</label>
+                        <label>Name <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableName}}">?</span></label>
                     </div>
                     <div class="form-group form-md-line-input">
                         <input type="text" class="form-control" ng-model="pipeConfig.newJobVar.value" required>
-                        <label>Value</label>
+                        <label>Value <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableValue}}">?</span></label>
                     </div>
                     <div class="form-group form-md-checkboxes">
                         <div class="md-checkbox-list">
@@ -37,6 +37,7 @@
                                     <span></span>
                                     <span class="check"></span>
                                     <span class="box"></span> Secured? </label>
+                                <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableSecured}}">?</span>
                             </div>
                         </div>
                     </div>
