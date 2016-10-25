@@ -87,6 +87,39 @@ angular
             }
         };
 
+        vm.popOverOptions = {
+            popOverTitles: {
+                automaticScheduling: 'If selected, the Pipeline will trigger automatically, creating a new run, when its Material is updated.',
+                triggeredManually: 'True - set by default. If selected the Stage will trigger automatically if the one before it completed successfully (has StatusPASSED). \n\n False - if selected, the execution of the Pipeline will stop at this Stage. Both Pipeline and Stage will be with Status AWAITING until the user decides to continue the process and manually triggers the Stage.',
+                jobCount: 'Number of Jobs in the Stage.',
+                triggeredManuallyGeneral: 'On Success - set by default. If selected the Stage will trigger automatically if the one before it completed successfully (has StatusPASSED). \n\n Manual - if selected, the execution of the Pipeline will stop at this Stage. Both Pipeline and Stage will be with Status AWAITING until the user decides to continue the process and manually triggers the Stage.',
+                jobResources: 'Resources, also called Tags, can be used to route Jobs to specific Agents. A Job with a specific Resource can be executed only by an Agent with the same Resource assigned. Also aJob may have more than one resource assigned.',
+                environmentVariableName: 'The word or words used to refer to the Environment Variable.',
+                environmentVariableValue: 'The value that is actually used when the Exec Task is executed.',
+                environmentVariableSecured: 'If checked, the Value is displayed by ****** and it will be known only to users able to edit the Pipeline the Environment Variable belongs to.',
+                environmentVariable: 'Environment Variables allow the User to hide long values, like directory paths and commands, behind simple words (e.g., %PATH% or %COMMAND%), simplifying the creation of Exec Tasks that reuse the same values in their Arguments.',
+                taskCommand: 'The options chosen when the Task was created.',
+                taskType: 'There are 4 types of Tasks - Exec, Fetch Material, Upload Artifact and Fetch Artifact.',
+                taskCondition: 'All Tasks have a Run If Condition option. Available options are Passed (set by default), Failed and Any. \n\n Passed - if selected, the Task will be executed only if the previous one completed successfully. If the Task is first in order, then the Run If Condition is ignored. \n\n Failed - if selected, the Task will be executed only if the previous one failed to complete successfully. \n\n Any - if selected, the Task will be executed regardless of the status of the previous one.',
+                execCommand: 'Executable name to run, usually for Linux /bin/bash, for Windows cmd',
+                execArguments: 'Arguments to be passed to the executable (e.g., Linux - -c cp -r dir dir1 , Windows /c echo %PATH%).',
+                execWorkingDir: 'The directory in which the process will run, starting at Agent/Pipelines/\<PipelineName>/.',
+                runIfCondition: 'Passed - if selected, the Task will be executed only if the previous one completed successfully. If the Task is first in order, then the Run If Condition is ignored. \n\n Failed - if selected, the Task will be executed only if the previous one failed to complete successfully. \n\n Any - if selected, the Task will be executed regardless of the status of the previous one.',
+                ignoreErrors: 'If selected, the Task\'s status is set to PASSED, regardless if it completed successfully or not.',
+                pipelineToBeSelected: 'The name of the Pipeline which previously uploaded the Artifact. The user can select any Pipeline for which he/she has at least permission type Viewer.',
+                runToBeSelected: 'The specific Pipeline run which previously uploaded the Artifact. The latest option is useful when the user wants to fetch an Artifact the will be uploaded with the current execution of the Pipeline.',
+                fetchArtifactSource: 'The path to the Artifact starting at Server/Artifacts/\<PipelineName>/<PipelineRun>/ If no Source is selected, the entire contents of the folder are fetched.',
+                fetchArtifactDestination: 'Folder(s) to be created where the Artifact is fetched. If no Destination is selected the Artifact is saved in Agent/Pipelines/\<PipelineName>/ with no additional folders.',
+                uploadArtifactSource: 'The path to the Artifact starting at Agent/Pipelines/\<PipelineName>/. If no Source is selected the entire contents of the folder are uploaded.',
+                uploadArtifactDestination: 'Folder(s) to be created where the Artifact is stored. If no Destination is selected the Artifact is saved in Server/Arttifacts/\<PipelineName>/<PipelineRun>/ with no additional folders.',
+                pipeline: 'The Pipeline allows crafting the entire application release process from start to finish. A Pipeline consists of Stages, which in turn consist of Jobs, which consist of Tasks.',
+                stage: 'A Stage can be thought of as a container for Jobs. Stages are a major component when it comes to automation release processing. Each step of building a new feature into a large project can be separated into Stages.',
+                job: 'A Job consists of multiple Tasks. Jobs are assigned to Agents and then executed by them.',
+                task: 'A Task is an action that is performed on a server/machine or inside a container where an Agent is installed.',
+                materialToBeSelected: 'The predefined material to be fetched.'
+            }
+        };
+
         $scope.$watch(function() {
             return viewModel.allMaterialDefinitions;
         }, function(newVal, oldVal) {

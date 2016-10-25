@@ -16,16 +16,16 @@
   <div class="tabbable-custom nav-justified">
     <ul class="nav nav-tabs nav-justified width-60">
       <li ui-sref-active="active">
-        <a data-target="#general" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.pipeline.general"> Pipeline Settings </a>
+        <a data-target="#general" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.pipeline.general"> Pipeline Settings <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.pipeline}}">?</span></a>
       </li>
       <li ui-sref-active="active">
-        <a data-target="#stages" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.stages"> Stages </a>
+        <a data-target="#stages" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.stages"> Stages <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.stage}}">?</span></a>
       </li>
       <!-- <li ui-sref-active="active">
         <a data-target="#materials" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.materials"> Materials </a>
       </li> -->
       <li ui-sref-active="active">
-        <a data-target="#environmentVariables" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.variables"> Environment Variables </a>
+        <a data-target="#environmentVariables"  data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.variables"> Environment Variables <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
       </li>
     </ul>
     <div class="tab-content" ui-view>
