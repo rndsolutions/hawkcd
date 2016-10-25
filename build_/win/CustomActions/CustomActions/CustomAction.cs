@@ -11,15 +11,22 @@ namespace CustomActions
         public static ActionResult InstallRedis(Session session)
         {
             session.Log("Begin InstallRedis");
+            try
+            {
+                var redisFolder = Utils.GetPathToFileInInstalDir(session, "redis");
+                var servicePort = session[HawkCDServerProperties.DeafultRedisPort];
 
-            var redisFolder = Utils.GetPathToFileInInstalDir(session, "redis");
-            var servicePort = session[HawkCDServerProperties.DeafultRedisPort];
+                if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1" && !string.IsNullOrEmpty(session[HawkCDServerProperties.NewRedisPort]))
+                    servicePort = session[HawkCDServerProperties.NewRedisPort];
 
-            if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1" && !string.IsNullOrEmpty(session[HawkCDServerProperties.NewRedisPort]))
-                servicePort = session[HawkCDServerProperties.NewRedisPort];
+                Utils.ExecuteCommand(string.Format("redis-server --service-install redis.windows-service.conf --service-name {0} --port {1}", Constants.RedisServiceName, servicePort), session, redisFolder);
+                Utils.ExecuteCommand(string.Format("redis-server --service-start --service-name {0}", Constants.RedisServiceName), session, redisFolder);
 
-            Utils.ExecuteCommand(string.Format("redis-server --service-install redis.windows-service.conf --service-name {0} --port {1}", Constants.RedisServiceName, servicePort), session, redisFolder);
-            Utils.ExecuteCommand(string.Format("redis-server --service-start --service-name {0}", Constants.RedisServiceName), session, redisFolder);
+            }
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
 
             session.Log("Ended InstallRedis");
 
@@ -30,60 +37,65 @@ namespace CustomActions
         public static ActionResult UpdateRedisConfig(Session session)
         {
             session.Log("Begin UpdateRedisConfig");
-
-            var redisConfigFilea = new string[]
+            try
+            {
+                var redisConfigFilea = new string[]
             {
                  Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows.conf"),
                  Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows-service.conf")
             };
-            
-            foreach (var redisConfigFile in redisConfigFilea)
-            {
-                if (File.Exists(redisConfigFile))
+
+                foreach (var redisConfigFile in redisConfigFilea)
                 {
-                    var lines = File.ReadAllLines(redisConfigFile);
-
-                    var updatedLines = 0;
-
-                    for (int i = 0; i < lines.Length; i++)
+                    if (File.Exists(redisConfigFile))
                     {
-                        var line = lines[i].Trim();
-                        if (line.StartsWith("save ", StringComparison.CurrentCultureIgnoreCase))
+                        var lines = File.ReadAllLines(redisConfigFile);
+
+                        var updatedLines = 0;
+
+                        for (int i = 0; i < lines.Length; i++)
                         {
-                            if (updatedLines < 3)
+                            var line = lines[i].Trim();
+                            if (line.StartsWith("save ", StringComparison.CurrentCultureIgnoreCase))
                             {
-                                if (updatedLines == 0)
+                                if (updatedLines < 3)
                                 {
-                                    line = "save 5 1";
-                                }
-                                else if (updatedLines == 1)
-                                {
-                                    line = "save 2 10";
+                                    if (updatedLines == 0)
+                                    {
+                                        line = "save 5 1";
+                                    }
+                                    else if (updatedLines == 1)
+                                    {
+                                        line = "save 2 10";
+                                    }
+                                    else
+                                    {
+                                        line = "save 1 100";
+                                    }
+
+                                    updatedLines++;
                                 }
                                 else
                                 {
-                                    line = "save 1 100";
+                                    line = "#   " + line;
                                 }
 
-                                updatedLines++;
+                                lines[i] = line;
                             }
-                            else
-                            {
-                                line = "#   " + line;
-                            }
-
-                            lines[i] = line;
                         }
-                    }
 
-                    File.WriteAllLines(redisConfigFile, lines);
-                }
-                else
-                {
-                    session.Log("Redis config file not found under: {0}", redisConfigFile);
+                        File.WriteAllLines(redisConfigFile, lines);
+                    }
+                    else
+                    {
+                        session.Log("Redis config file not found under: {0}", redisConfigFile);
+                    }
                 }
             }
-           
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
 
             session.Log("Ended UpdateRedisConfig");
 
@@ -95,10 +107,17 @@ namespace CustomActions
         {
             session.Log("Begin UninstallRedis");
 
-            var redisFolder = Utils.GetPathToFileInInstalDir(session, "redis");
+            try
+            {
+                var redisFolder = Utils.GetPathToFileInInstalDir(session, "redis");
 
-            Utils.ExecuteCommand(string.Format("redis-server --service-stop --service-name {0}", Constants.RedisServiceName), session, redisFolder);
-            Utils.ExecuteCommand(string.Format("redis-server --service-uninstall --service-name {0}", Constants.RedisServiceName), session, redisFolder);
+                Utils.ExecuteCommand(string.Format("redis-server --service-stop --service-name {0}", Constants.RedisServiceName), session, redisFolder);
+                Utils.ExecuteCommand(string.Format("redis-server --service-uninstall --service-name {0}", Constants.RedisServiceName), session, redisFolder);
+            }
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
 
             session.Log("Ended UninstallRedis");
 
@@ -109,35 +128,40 @@ namespace CustomActions
         public static ActionResult UpdateServerConfigFile(Session session)
         {
             session.Log("Begin UpdateServerConfigFile");
-
-            var configFilePath = Utils.GetPathToFileInInstalDir(session, "config.yaml");
-
-            if (File.Exists(configFilePath))
+            try
             {
-                session.Log("Updating config file: {0}", configFilePath);
-                session.Log("Updating key serverHost with new value: {0}", session[HawkCDServerProperties.HostName]);
-                Utils.ReplaceYamlKeyValue(configFilePath, "serverHost", session[HawkCDServerProperties.HostName]);
+                var configFilePath = Utils.GetPathToFileInInstalDir(session, "config.yaml");
 
-                if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1")
+                if (File.Exists(configFilePath))
                 {
-                    var servicePort = session[HawkCDServerProperties.NewRedisPort];
-                    session.Log("Updating key port with new value: {0}", servicePort);
-                    Utils.ReplaceYamlKeyValue(configFilePath, "port", servicePort);
-                }
+                    session.Log("Updating config file: {0}", configFilePath);
+                    session.Log("Updating key serverHost with new value: {0}", session[HawkCDServerProperties.HostName]);
+                    Utils.ReplaceYamlKeyValue(configFilePath, "serverHost", session[HawkCDServerProperties.HostName]);
 
-                if (session[HawkCDServerProperties.IsDeafultServerPortInUse] == "1")
+                    if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1")
+                    {
+                        var servicePort = session[HawkCDServerProperties.NewRedisPort];
+                        session.Log("Updating key port with new value: {0}", servicePort);
+                        Utils.ReplaceYamlKeyValue(configFilePath, "port", servicePort);
+                    }
+
+                    if (session[HawkCDServerProperties.IsDeafultServerPortInUse] == "1")
+                    {
+                        var servicePort = session[HawkCDServerProperties.NewServerPort];
+                        session.Log("Updating key serverPort with new value: {0}", servicePort);
+                        Utils.ReplaceYamlKeyValue(configFilePath, "serverPort", servicePort);
+                    }
+
+                }
+                else
                 {
-                    var servicePort = session[HawkCDServerProperties.NewServerPort];
-                    session.Log("Updating key serverPort with new value: {0}", servicePort);
-                    Utils.ReplaceYamlKeyValue(configFilePath, "serverPort", servicePort);
+                    session.Log("Config file does not exists: {0}", configFilePath);
                 }
-
             }
-            else
+            catch (Exception ex)
             {
-                session.Log("Config file does not exists: {0}", configFilePath);
+                session.Log("Exception: {0}", ex.ToString());
             }
-
             session.Log("Ended UpdateServerConfigFile");
 
             return ActionResult.Success;
@@ -149,18 +173,23 @@ namespace CustomActions
             var actionName = "BackupConfigFile";
 
             session.Log("Begin {0}", actionName);
-
-            if (Utils.GetInstallerType(session) == InstallerType.Server)
+            try
             {
-                Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "config.yaml"), session);
-                Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows.conf"), session);
-                Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows-service.conf"), session);
+                if (Utils.GetInstallerType(session) == InstallerType.Server)
+                {
+                    Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "config.yaml"), session);
+                    Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows.conf"), session);
+                    Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows-service.conf"), session);
+                }
+                else
+                {
+                    Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "config\\config.properties"), session);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Utils.CreateFileBackup(Utils.GetPathToFileInInstalDir(session, "config\\config.properties"), session);
+                session.Log("Exception: {0}", ex.ToString());
             }
-
             session.Log("Ended {0}", actionName);
 
             return ActionResult.Success;
@@ -172,17 +201,22 @@ namespace CustomActions
             var actionName = "RestoreConfigFiles";
 
             session.Log("Begin {0}", actionName);
-
-            if (Utils.GetInstallerType(session) == InstallerType.Server)
+            try
             {
-                Utils.ReplaceFileFromBackup(Utils.GetPathToFileInInstalDir(session, "config.yaml"), session);
-                Utils.ReplaceFileFromBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows-service.conf"), session);
+                if (Utils.GetInstallerType(session) == InstallerType.Server)
+                {
+                    Utils.ReplaceFileFromBackup(Utils.GetPathToFileInInstalDir(session, "config.yaml"), session);
+                    Utils.ReplaceFileFromBackup(Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows-service.conf"), session);
+                }
+                else
+                {
+                    Utils.ReplaceFileFromBackup(Utils.GetPathToFileInInstalDir(session, "config\\config.properties"), session);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Utils.ReplaceFileFromBackup(Utils.GetPathToFileInInstalDir(session, "config\\config.properties"), session);
+                session.Log("Exception: {0}", ex.ToString());
             }
-
             session.Log("Ended {0}", actionName);
 
             return ActionResult.Success;
@@ -192,23 +226,28 @@ namespace CustomActions
         public static ActionResult UpdateAgentConfigFile(Session session)
         {
             session.Log("Begin UpdateServerConfigFile");
-
-            var isntallDir = session[CommonProperties.InstallDir].TrimEnd('\\');
-            var configFilePath = isntallDir + "\\config\\config.properties";
-
-            if (File.Exists(configFilePath))
+            try
             {
-                session.Log("Updating config file: {0}", configFilePath);
-                session.Log("Updating key serverName with new value: {0}", session[HawkCDAgentProperties.ServerAddress]);
-                Utils.ReplacePropertiesKeyValue(configFilePath, "serverName", session[HawkCDAgentProperties.ServerAddress]);
-                session.Log("Updating key serverPort with new value: {0}", session[HawkCDAgentProperties.ServerPort]);
-                Utils.ReplacePropertiesKeyValue(configFilePath, "serverPort", session[HawkCDAgentProperties.ServerPort]);
-            }
-            else
-            {
-                session.Log("Config file does not exists: {0}", configFilePath);
-            }
+                var isntallDir = session[CommonProperties.InstallDir].TrimEnd('\\');
+                var configFilePath = isntallDir + "\\config\\config.properties";
 
+                if (File.Exists(configFilePath))
+                {
+                    session.Log("Updating config file: {0}", configFilePath);
+                    session.Log("Updating key serverName with new value: {0}", session[HawkCDAgentProperties.ServerAddress]);
+                    Utils.ReplacePropertiesKeyValue(configFilePath, "serverName", session[HawkCDAgentProperties.ServerAddress]);
+                    session.Log("Updating key serverPort with new value: {0}", session[HawkCDAgentProperties.ServerPort]);
+                    Utils.ReplacePropertiesKeyValue(configFilePath, "serverPort", session[HawkCDAgentProperties.ServerPort]);
+                }
+                else
+                {
+                    session.Log("Config file does not exists: {0}", configFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
             session.Log("Ended UpdateServerConfigFile");
 
             return ActionResult.Success;
@@ -489,5 +528,19 @@ namespace CustomActions
             return ActionResult.Success;
         }
 
+        [CustomAction]
+        public static ActionResult CheckIsUserAdministrator(Session session)
+        {
+            if (!Utils.IsUserAdministrator())
+            {
+                Record record = new Record();
+                record.FormatString = "Administrator privileges are required to run this setup. Please use admin command prompt to escalate the installer, or use the administrator account.";
+                session.Message(InstallMessage.Warning | (InstallMessage)MessageButtons.OK, record);
+
+                return ActionResult.Failure;
+            }
+
+            return ActionResult.Success;
+        }
     }
 }

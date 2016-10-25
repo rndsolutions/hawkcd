@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 
 namespace CustomActions
@@ -197,6 +198,29 @@ namespace CustomActions
             {
                 session.Log("Backup file does not exists: {0}", backupFile);
             }
+        }
+
+        public static bool IsUserAdministrator()
+        {
+            bool isAdmin;
+
+            try
+            {
+                //get the currently logged in user
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(user);
+                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                isAdmin = false;
+            }
+            catch (Exception ex)
+            {
+                isAdmin = false;
+            }
+
+            return isAdmin;
         }
     }
 }

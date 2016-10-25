@@ -1812,6 +1812,12 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <CustomTiming Sequence="5" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
 </CustomTimingList>
 </CustomAction>
+<CustomAction Type="1" ID="CheckIsUserAdministrator" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="CheckIsUserAdministrator">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
+<CustomTiming Sequence="5" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
+</CustomTimingList>
+</CustomAction>
 </CustomActions>
 <MediaItems>
 <MediaItem ID="1" DiskPrompt="Disk 1" Type="0" CompressionLevel="3" EmbedCabInMSI="yes" CabFilename="setup.cab" OutputSubFolder="" VolumeLabel=""/>
