@@ -89,6 +89,7 @@ function package_agent_nix {
   cd dist
   tar -cvzf hawkcd-agent.tar.gz Agent
   cd ../
+  exit_on_fail
 }
 function package_agent_win {
   echo "to be implemented"
@@ -102,12 +103,13 @@ function build_ui {
   fi
   #npm --prefix ./some_project
   npm --prefix $($prj_dir)/Server/ui install
+  exit_on_fail
   cd $($prj_dir)/Server/ui
   bower install
-  gulp build
-  cd ../../
-
   exit_on_fail
+  gulp build
+  exit_on_fail
+  cd ../../  
 }
 
 function compile_server {
@@ -151,6 +153,7 @@ function package_server_nix {
   #package
   tar -cvzf hawkcd.tar.gz Server
   cd ../
+  exit_on_fail
 }
 
 function build_all {
