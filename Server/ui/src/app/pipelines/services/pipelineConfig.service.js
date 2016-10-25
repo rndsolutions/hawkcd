@@ -1,3 +1,18 @@
+/* Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 
 angular
@@ -93,25 +108,26 @@ angular
             console.log(json);
         };
 
-        pipeConfigService.assignPipelineDefinition = function (pipelineDefinition, pipelineGroup) {
+        pipeConfigService.assignPipelineDefinition = function (pipelineDefinitionId, pipelineGroupId, pipelineGroupName) {
             var methodName = "assignPipelineToGroup";
             var className = "PipelineDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}, " +
-            "{\"packageName\": \"net.hawkengine.model.PipelineGroup\", \"object\": " + JSON.stringify(pipelineGroup) + "}"];
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineGroupId + "\"}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineGroupName + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
             console.log(json);
         };
 
-        pipeConfigService.unassignPipelineDefinition = function (pipelineDefinition) {
+        pipeConfigService.unassignPipelineDefinition = function (pipelineDefinitionId) {
             var methodName = "unassignPipelineFromGroup";
             var className = "PipelineDefinitionService";
             var packageName = "net.hawkengine.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

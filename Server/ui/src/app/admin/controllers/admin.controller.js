@@ -1,9 +1,24 @@
+/* Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, pipeConfig, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
+        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
             vm.breadCrumb = {
@@ -426,14 +441,12 @@ angular
             };
 
             vm.assignPipeline = function(pipeline) {
-                var updatedPipeline = angular.copy(pipeline);
                 var pipelineGroup = vm.pipelineGroupToAssign;
-                pipeConfigService.assignPipelineDefinition(updatedPipeline, pipelineGroup);
+                pipeConfigService.assignPipelineDefinition(pipeline.id, pipelineGroup.id, pipelineGroup.name);
             };
 
             vm.unassignPipeline = function() {
-                var updatedPipeline = angular.copy(vm.pipelineToUnassign);
-                pipeConfigService.unassignPipelineDefinition(updatedPipeline);
+                pipeConfigService.unassignPipelineDefinition(vm.pipelineToUnassign.id);
             };
 
             vm.assignUsers = function() {
@@ -674,6 +687,9 @@ angular
                 return viewModel.allPipelineGroups
             }, function(newVal, oldVal) {
                 vm.currentPipelineGroups = angular.copy(viewModel.allPipelineGroups);
+                vm.currentPipelineGroups.sort(function(a, b) {
+                    return a.name - b.name;
+                });
                 console.log(vm.currentPipelineGroups);
             }, true);
 

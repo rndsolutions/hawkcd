@@ -1,3 +1,17 @@
+<!--Copyright (C) 2016 R&D Solutions Ltd.-->
+
+<!--Licensed under the Apache License, Version 2.0 (the "License");-->
+<!--you may not use this file except in compliance with the License.-->
+<!--You may obtain a copy of the License at-->
+
+<!--http://www.apache.org/licenses/LICENSE-2.0-->
+
+<!--Unless required by applicable law or agreed to in writing, software-->
+<!--distributed under the License is distributed on an "AS IS" BASIS,-->
+<!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+<!--See the License for the specific language governing permissions and-->
+<!--limitations under the License.-->
+
 <div id="stageSettings" style="padding: 0 0 10px 10px" ui-sref-active="active">
   <form name="editStageForm">
 
@@ -11,20 +25,20 @@
         <label>Stage Trigger</label>
         <div class="md-radio-list">
           <div class="md-radio">
-            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sManual" name="trigger"
-                   ng-value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
-            <label for="sManual">
-              <span></span>
-              <span class="check"></span>
-              <span class="box"></span> Manual </label>
-          </div>
-          <div class="md-radio">
             <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sOnSuccess" name="trigger"
                    ng-value="false" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
             <label for="sOnSuccess">
               <span></span>
               <span class="check"></span>
               <span class="box"></span> On Success </label>
+          </div>
+          <div class="md-radio">
+            <input type="radio" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" id="sManual" name="trigger"
+                   ng-value="true" class="md-radiobtn" ng-model="pipeConfig.updatedStage.isTriggeredManually">
+            <label for="sManual">
+              <span></span>
+              <span class="check"></span>
+              <span class="box"></span> Manual </label>
           </div>
         </div>
       </div>

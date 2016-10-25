@@ -1,7 +1,7 @@
 <SUFWIProject FileVersion="2.1.1011.0">
 <ProjectSettings>
 <ProjectType>installer</ProjectType>
-<ProductName>HawkCD Server - $(var.BuildNumber)</ProductName>
+<ProductName>HawkCD Server - $(var.BuildNumber) - Alpha</ProductName>
 <ProductVersion>$(var.BuildNumber)</ProductVersion>
 <ProductManufacturer>RnD Solutions Ltd.</ProductManufacturer>
 <ProductID>$(var.ProductBuildGUID)</ProductID>
@@ -9,9 +9,9 @@
 <MergeModuleIgnoreTables/>
 <Package Id="" Description="Hawk CD Agent" Manufacturer="RnD Solutions Ltd." Comments="Package Comments" InstallerVersion="3.01" Platforms="x86" Keywords="" ReadOnly="no" Compressed="yes" AdminImage="no" ShortNames="no" LanguageNeutral="yes" InstallPrivileges="elevated"/>
 <ControlPanelSettings NoRepair="no" NoRemove="no" NoModify="yes" SystemComponent="no">
-<AboutInfoUrl/>
+<AboutInfoUrl>http://www.hawkcd.io</AboutInfoUrl>
 <ContactInfo/>
-<HelpUrl/>
+<HelpUrl>http://docs.hawkcd.io</HelpUrl>
 <HelpTelephone/>
 <UpdateInfoUrl/>
 <Size/>
@@ -21,12 +21,17 @@
 </ControlPanelSettings>
 <Property Id="ALLUSERS" Value="1" Admin="no" Hidden="no" Secure="no" SuppressModularization="no"/>
 <Property Id="DEFAULT_REDIS_PORT" Value="6379" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
+<Property Id="DEFAULT_SERVER_PORT" Value="8080" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <Property Id="HOST_NAME" Value="localhost" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
+<Property Id="INSTALLER_TYPE" Value="Server" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <Property Id="IS_DEFAULT_REDIS_PORT_IN_USE" Value="0" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
+<Property Id="IS_DEFAULT_SERVER_PORT_IN_USE" Value="0" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <Property Id="IS_JAVA_INSTALLED" Value="1" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <Property Id="MSIFACTUIRMOption" Value="UseRM" Admin="no" Hidden="no" Secure="no" SuppressModularization="no"/>
 <Property Id="MSIFACT_INSTALLDIR" Value="INSTALLDIR" Admin="no" Hidden="no" Secure="no" SuppressModularization="no"/>
 <Property Id="NEW_REDIS_PORT" Value="" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
+<Property Id="NEW_SERVER_PORT" Value="" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
+<Property Id="SERVER_SHORTCUT_URL" Value="http://localhost:8080/" Admin="no" Hidden="no" Secure="yes" SuppressModularization="no"/>
 <UpgradeCodes>
 <UpgradeCode Id="EC3C72CC-B52F-4A00-A632-595710B93D88">
 <UpgradeVersions>
@@ -190,6 +195,61 @@
 <ReserveCostList/>
 <IsolateComponentList/>
 </SetupComponent>
+<SetupComponent ID="Shortcut_0001" GUID="82E8D322-9D05-4110-805C-4B8732E894FB" DisableRegReflection="no" Transitive="no" Win64="no" Location="0" NeverOverwrite="no" NeverRemove="no" SharedSystem="no" ComponentDirIsKeyPath="no">
+<Condition/>
+<FileList/>
+<RegistryList/>
+<INIFileList/>
+<ShortcutList>
+<SetupItem Type="8" ID="Shortcut_0001" ComponentID="Shortcut_0001">
+<Arguments/>
+<Description>HawkCD Server</Description>
+<Directory>DesktopFolder</Directory>
+<HotKey>0</HotKey>
+<Icon>$(var.Buildzone)\Installers\Images\hawk.ico</Icon>
+<IconIndex>0</IconIndex>
+<Comment/>
+<ShowType>0</ShowType>
+<Target>[SERVER_SHORTCUT_URL]</Target>
+<WorkingDirectory IsProperty="no"/>
+<UseCustomIcon>yes</UseCustomIcon>
+<Advertised>no</Advertised>
+</SetupItem>
+</ShortcutList>
+<FileOpList/>
+<EnvironmentVarList/>
+<ServiceList/>
+<ODBCList/>
+<XMLList/>
+<IISList/>
+<ReserveCostList/>
+<IsolateComponentList/>
+</SetupComponent>
+<SetupComponent ID="RegValAdd_0001" GUID="09A72ECE-C514-4A0A-999F-F1C0DA707A03" DisableRegReflection="no" Transitive="no" Win64="no" Location="0" NeverOverwrite="no" NeverRemove="no" SharedSystem="no" ComponentDirIsKeyPath="no">
+<Condition/>
+<FileList/>
+<RegistryList>
+<SetupItem Type="3" ID="RegValAdd_0001" ComponentID="RegValAdd_0001" KeyPath="no">
+<Root>3</Root>
+<Key>Software\RnD\Hawk\Server</Key>
+<Actions>2</Actions>
+<Name>InstallDir</Name>
+<ValueType>0</ValueType>
+<Value>[INSTALLDIR]</Value>
+<UserPerimssions/>
+</SetupItem>
+</RegistryList>
+<INIFileList/>
+<ShortcutList/>
+<FileOpList/>
+<EnvironmentVarList/>
+<ServiceList/>
+<ODBCList/>
+<XMLList/>
+<IISList/>
+<ReserveCostList/>
+<IsolateComponentList/>
+</SetupComponent>
 </ComponentList>
 </SetupItemManager>
 <UIData>
@@ -202,8 +262,9 @@
             <Dialog Id="WelcomeDlg" Width="370" Height="270" Title="!(loc.WelcomeDlg_Title)">
                 <Control Id="Description" Type="Text" X="21" Y="82" Width="320" Height="41" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeDlgDescription)" />
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="InstallDirDlg">IS_JAVA_INSTALLED=1</Publish>
+                	<Publish Event="NewDialog" Value="InstallDirDlg">IS_JAVA_INSTALLED=1 AND NOT OLDERVERSIONBEINGUPGRADED</Publish>
 <Publish Event="NewDialog" Value="PrerequisitesDlg">IS_JAVA_INSTALLED=0</Publish>
+<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_JAVA_INSTALLED=1 AND OLDERVERSIONBEINGUPGRADED</Publish>
 </Control>
 <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -350,8 +411,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
                 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
-                    <Publish Event="NewDialog" Value="RedisSetupDlg">IS_DEFAULT_REDIS_PORT_IN_USE=1</Publish>
-<Publish Event="NewDialog" Value="HostNameDlg">IS_DEFAULT_REDIS_PORT_IN_USE=0</Publish>
+                    <Publish Event="NewDialog" Value="RedisSetupDlg">IS_DEFAULT_REDIS_PORT_IN_USE=1 AND NOT OLDERVERSIONBEINGUPGRADED</Publish>
+<Publish Event="NewDialog" Value="HostNameDlg">IS_DEFAULT_REDIS_PORT_IN_USE=0 AND NOT OLDERVERSIONBEINGUPGRADED</Publish>
+<Publish Event="NewDialog" Value="WelcomeDlg">OLDERVERSIONBEINGUPGRADED</Publish>
 </Control>
 <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
 <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
@@ -742,8 +804,16 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Fragment>
         <UI>
             <Dialog Id="HostNameDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="ConfigurationHeaderText" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
-<Control Id="HostNameEdit" Property="HOST_NAME" Type="Edit" X="10" Y="70" Width="162" Height="20"/>
+                <Control Id="Control_1" Property="NEW_EDIT_PROPERTY" Type="Edit" X="10" Y="130" Width="150" Height="20">
+<Condition Action="hide">IS_DEFAULT_SERVER_PORT_IN_USE = 0</Condition>
+<Condition Action="show">IS_DEFAULT_SERVER_PORT_IN_USE = 1</Condition>
+</Control>
+<Control Id="ServerportInUseTxt" Text="The default port [DEFAULT_SERVER_PORT] is in use. Please eneter a new one: " Type="Text" X="8" Y="109" Width="354" Height="14">
+<Condition Action="show">IS_DEFAULT_SERVER_PORT_IN_USE = 1</Condition>
+<Condition Action="hide">IS_DEFAULT_SERVER_PORT_IN_USE = 0</Condition>
+</Control>
+<Control Id="ConfigurationHeaderText" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="HostNameEdit" Property="HOST_NAME" Type="Edit" X="10" Y="70" Width="150" Height="20"/>
 <Control Id="HostNameLabel" Text="Enter host Name:" Type="Text" X="10" Y="50" Width="101" Height="14"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
                 	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_DEFAULT_REDIS_PORT_IN_USE=0</Publish>
@@ -1632,6 +1702,8 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Components>
 <ComponentID>RegKey_0001</ComponentID>
 <ComponentID>RegValAdd_0002</ComponentID>
+<ComponentID>Shortcut_0001</ComponentID>
+<ComponentID>RegValAdd_0001</ComponentID>
 </Components>
 <MergeModules>
 <MergeModuleID>Hawk_Server_Files</MergeModuleID>
@@ -1661,7 +1733,11 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <WIVersion/>
 <CustomLaunchConditions/>
 </LaunchConditions>
-<SearchProperties/>
+<SearchProperties>
+<SearchProperty Type="5" ComplianceCheck="no" SignatureId="RegSearch_0001">
+<Property Id="INSTALLDIR" Value="" Admin="no" Hidden="no" Secure="no" SuppressModularization="no" Root="HKLM" Key="Software\RnD\Hawk\Server" RegValue="InstallDir" Win64="no"/>
+</SearchProperty>
+</SearchProperties>
 <CustomActions>
 <CustomAction Type="1" ID="InstallRedis" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="InstallRedis">
 <CustomTimingList>
@@ -1670,7 +1746,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 </CustomAction>
 <CustomAction Type="1" ID="UpdateServerConfigFile" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UpdateServerConfigFile">
 <CustomTimingList>
-<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; "/>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND NOT OLDERVERSIONBEINGUPGRADED"/>
 </CustomTimingList>
 </CustomAction>
 <CustomAction Type="1" ID="DetectJava" Impersonate="yes" Return="3" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="DetectJava">
@@ -1688,6 +1764,52 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <CustomAction Type="1" ID="UninstallRedis" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UninstallRedis">
 <CustomTimingList>
 <CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="RemoveFiles" SequenceNumber="0" Condition="REMOVE~=&quot;ALL&quot; "/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="UpdateServiceAppConfig" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UpdateServiceAppConfig">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; "/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="InstallService" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="InstallService">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="UpdateServiceAppConfig" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; "/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="UninstallService" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UninstallService">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="RemoveFiles" SequenceNumber="0" Condition="REMOVE~=&quot;ALL&quot; "/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="BackupConfigFiles" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="BackupConfigFiles">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="RemoveExistingProducts" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="RestoreConfigFiles" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="RestoreConfigFiles">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="1" Exit="0" RelativeAction="InstallFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="StopService" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="StopService">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="RemoveExistingProducts" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="6" ID="SetTargetDirCA" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Property="TARGETDIR" Value="[INSTALLDIR]">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="CostFinalize" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="UpdateRedisConfig" Impersonate="yes" Return="2" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="UpdateRedisConfig">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="InstallRedis" SequenceNumber="0" Condition="NOT REMOVE~=&quot;ALL&quot; AND NOT OLDERVERSIONBEINGUPGRADED"/>
+</CustomTimingList>
+</CustomAction>
+<CustomAction Type="1" ID="CheckServerPort" Impersonate="yes" Return="3" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="0" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll" FileID="" DLLFunction="CheckServerPort">
+<CustomTimingList>
+<CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
+<CustomTiming Sequence="5" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
 </CustomTimingList>
 </CustomAction>
 </CustomActions>

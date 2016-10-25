@@ -1,8 +1,23 @@
+/* Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeStats, pipeConfig, pipeExecService, pipesService, pipeStatsService, authDataService, viewModel, pipeConfigService, adminMaterialService, moment) {
+    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeExecService, pipeService, authDataService, viewModel, pipeConfigService, adminMaterialService, moment) {
         var vm = this;
         vm.toggleLogo = 1;
 
@@ -49,6 +64,12 @@ angular
                         }
                     }
                 });
+                currentPipelineGroup.pipelines.sort(function(a, b) {
+                    return a.name > b.name;
+                });
+            });
+            vm.allPipelineGroups.sort(function(a, b) {
+                return a.name > b.name;
             });
             console.log(vm.allPipelineGroups);
         }, true);

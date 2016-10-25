@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.hawkengine.services.filters;
 
 import com.google.gson.Gson;
@@ -87,7 +103,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         List<PipelineDto> filteredEntities = new ArrayList<>();
         for (Object entity : entitiesToFilter) {
-            PipelineDto pipelineDto = (PipelineDto)entity;
+            PipelineDto pipelineDto = (PipelineDto) entity;
             boolean hasPermission = this.authorizationService.getById(pipelineDto.getId(), permissions);
             if (hasPermission) {
                 filteredEntities.add(pipelineDto);
@@ -201,28 +217,34 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
 
     @Override
     public boolean assignPipelineToGroup(String pipelineGroup, String className, List permissions) {
-        this.authorizationService = AuthorizationServiceFactory.create(className);
-        boolean hasPermission = true; //this.authorizationService.update(pipelineDefintion, permissions);
-        if (hasPermission) {
-            this.authorizationService = AuthorizationServiceFactory.create("PipelineGroupService");
-            hasPermission = this.authorizationService.update(pipelineGroup, permissions);
-            if (hasPermission) {
-                return true;
-            }
-        }
+        PipelineDefinitionAuthorizationService service = new PipelineDefinitionAuthorizationService();
+        boolean hasPermission = service.assignUnassign(permissions);
 
-        return false;
+//        this.authorizationService = AuthorizationServiceFactory.create(className);
+//        boolean hasPermission = true; //this.authorizationService.update(pipelineDefintion, permissions);
+//        if (hasPermission) {
+//            this.authorizationService = AuthorizationServiceFactory.create("PipelineGroupService");
+//            hasPermission = true; //this.authorizationService.update(pipelineGroup, permissions);
+//            if (hasPermission) {
+//                return true;
+//            }
+//        }
+
+        return hasPermission;
     }
 
     @Override
     public boolean unassignPipelineFromGroup(String pipelineGroup, String className, List permissions) {
-        this.authorizationService = AuthorizationServiceFactory.create(className);
-        boolean hasPermission = this.authorizationService.update(pipelineGroup, permissions);
-        if (hasPermission) {
-            return true;
-        }
+        PipelineDefinitionAuthorizationService service = new PipelineDefinitionAuthorizationService();
+        boolean hasPermission = service.assignUnassign(permissions);
 
-        return false;
+//        this.authorizationService = AuthorizationServiceFactory.create(className);
+//        boolean hasPermission = true; //this.authorizationService.update(pipelineGroup, permissions);
+//        if (hasPermission) {
+//            return true;
+//        }
+
+        return hasPermission;
     }
 
     @Override
@@ -240,7 +262,7 @@ public class SecurityService<T extends DbEntry> implements ISecurityService {
     public boolean changeUserPassword(String loggedUserEmail, String entity, String className, List permissions) {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         UserDto userToUpdate = this.jsonConverter.fromJson(entity, UserDto.class);
-        if (userToUpdate.getUsername().equals(loggedUserEmail)){
+        if (userToUpdate.getUsername().equals(loggedUserEmail)) {
             return true;
         }
         boolean hasPermission = this.authorizationService.update(entity, permissions);

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.hawkengine.services.filters;
 
 import com.google.gson.Gson;
@@ -16,7 +32,6 @@ import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.PipelineDefinitionService;
 import net.hawkengine.services.filters.interfaces.IAuthorizationService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
-import net.hawkengine.ws.EntityPermissionTypeServiceInvoker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +103,15 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
         return this.hasPermissionToAdd(permissions, pipelineDefinition);
     }
 
+    public boolean assignUnassign(List<Permission> permissions) {
+        for (Permission permission : permissions) {
+            if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {
+                return true;
+            }
+        }
 
+        return false;
+    }
 
     private boolean hasPermissionToRead(List<Permission> permissions, PipelineDefinition pipelineDefinition) {
         boolean hasPermission = false;

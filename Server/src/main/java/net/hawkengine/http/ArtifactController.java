@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.hawkengine.http;
 
 import com.google.gson.Gson;
@@ -28,10 +44,13 @@ public class ArtifactController {
         this.fileManagementService = new FileManagementService();
         this.basePath = System.getProperty("user.dir");
         this.outputFolder = this.basePath + File.separator + "Temp" + File.separator;
-//        this.fileManagementService.deleteDirectoryRecursively(this.outputFolder);
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .create();
+        File tempFolder = new File(this.outputFolder);
+        if (!tempFolder.exists()) {
+            tempFolder.mkdir();
+        }
     }
 
     public ArtifactController(IFileManagementService fileManagementService) {

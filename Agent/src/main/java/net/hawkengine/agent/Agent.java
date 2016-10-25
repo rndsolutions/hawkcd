@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 R&D Solutions Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.hawkengine.agent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,11 +29,10 @@ import net.hawkengine.agent.constants.MessageConstants;
 import net.hawkengine.agent.enums.JobStatus;
 import net.hawkengine.agent.interfaces.IAgent;
 import net.hawkengine.agent.models.TaskDefinition;
+import net.hawkengine.agent.models.payload.WorkInfo;
 import net.hawkengine.agent.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.agent.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.model.MaterialDefinition;
-import net.hawkengine.agent.models.payload.WorkInfo;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -68,11 +83,11 @@ public class Agent implements IAgent {
             String jobAsString = this.jsonConverter.toJson(this.jobExecutor.getCurrentJob());
             response = webResource.type("application/json").put(ClientResponse.class, jobAsString);
         } catch (Exception e) {
-            this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
+//            this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
         }
 
         if ((response != null) && (response.getStatus() == Status.OK.getStatusCode())) {
-            this.logger.info(MessageConstants.JOB_REPORT_SENT);
+//            this.logger.info(MessageConstants.JOB_REPORT_SENT);
 
             if ((this.jobExecutor.getCurrentJob() != null) && ((this.jobExecutor.getCurrentJob().getStatus() == JobStatus.PASSED) || (this.jobExecutor.getCurrentJob().getStatus() == JobStatus.FAILED))) {
                 try {
@@ -80,7 +95,7 @@ public class Agent implements IAgent {
                     String jobAsString = this.jsonConverter.toJson(this.jobExecutor.getCurrentJob());
                     response = webResource.type("application/json").put(ClientResponse.class, jobAsString);
                 } catch (Exception e) {
-                    this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
+//                    this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
                 }
 
                 if ((response != null) && (response.getStatus() == Status.OK.getStatusCode())) {
@@ -101,16 +116,16 @@ public class Agent implements IAgent {
 
         try {
             String agentAsString = this.jsonConverter.toJson(AgentConfiguration.getAgentInfo());
-            this.logger.info(MessageConstants.AGENT_REPORT_SENT);
+//            this.logger.info(MessageConstants.AGENT_REPORT_SENT);
             response = webResource.type("application/json").put(ClientResponse.class, agentAsString);
         } catch (Exception e) {
-            this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
+//            this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
         }
     }
 
     @Override
     public void checkForWork() {
-        this.logger.info(MessageConstants.AGENT_CHECKING_FOR_WORK);
+//        this.logger.info(MessageConstants.AGENT_CHECKING_FOR_WORK);
         boolean isRunning = AgentConfiguration.getAgentInfo().isRunning();
         if (!isRunning) {
             WebResource webResource = this.restClient.resource(AgentConfiguration.getInstallInfo().getCheckForWorkApiAddress());
@@ -119,7 +134,7 @@ public class Agent implements IAgent {
             try {
                 response = webResource.accept("application/json").get(ClientResponse.class);
             } catch (Exception e) {
-                this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
+//                this.logger.info(MessageConstants.AGENT_COULD_NOT_CONNECT);
             }
 
             WorkInfo workInfo = null;
