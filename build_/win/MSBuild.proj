@@ -153,6 +153,16 @@
 
 	 <Exec WorkingDirectory="$(MSIServerOutput)" Command="&quot;$(MSBuildProgramFiles32)\WiX Toolset v3.10\bin\light.exe&quot; -ext WixIISExtension -loc &quot;$(BuildZoneDir)\Installers\Localization\English-US.wxl&quot; -out &quot;$(InstallerProjectDir)\HawkCD_Server.msi&quot; &quot;Common.wixobj&quot; &quot;ErrorText.wixobj&quot; &quot;HawkCD_Server.wixobj&quot; &quot;msifactui.wixobj&quot; &quot;ProgressText.wixobj&quot;"/>
 	
+	 <GenerateBootstrapper ApplicationFile="HawkCD_Server.msi" ApplicationName="HawkCD_Server" ApplicationRequiresElevation="true" OutputPath="$(InstallerProjectDir)"
+                           ComponentsLocation="Relative" Path="C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1A\Bootstrapper"/>
+						   
+	 <Exec Command="ren &quot;$(InstallerProjectDir)\setup.exe&quot; HawkCD_Server.exe"/>
+	 
+	 <GenerateBootstrapper ApplicationFile="HawkCD_Agent.msi" ApplicationName="HawkCD_Agent" ApplicationRequiresElevation="true" OutputPath="$(InstallerProjectDir)"
+                           ComponentsLocation="Relative" Path="C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1A\Bootstrapper"/>
+	
+	<Exec Command="ren &quot;$(InstallerProjectDir)\setup.exe&quot; HawkCD_Agent.exe"/>
+	
 	</Target>
 	
 </Project>
