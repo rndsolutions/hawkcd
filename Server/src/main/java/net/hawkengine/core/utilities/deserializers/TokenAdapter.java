@@ -93,9 +93,11 @@ public class TokenAdapter {
             JsonToken jsonToken;
             try {
                 jsonToken = jsonTokenParser.verifyAndDeserialize(token);
-            } catch (SignatureException e) {
-                throw new RuntimeException(e);
+            } catch (SignatureException | IllegalArgumentException e) {
+                return null;
+//                throw new RuntimeException(e);
             }
+
             JsonObject payload = jsonToken.getPayloadAsJsonObject();
             TokenInfo t = new TokenInfo();
             String issuer = payload.getAsJsonPrimitive("iss").getAsString();
