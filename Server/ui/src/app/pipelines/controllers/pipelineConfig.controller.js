@@ -148,6 +148,7 @@ angular
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
+            vm.getPipelineForConfig(vm.state.params.pipelineName);
             // console.log(vm.allPipelines);
         }, true);
 
