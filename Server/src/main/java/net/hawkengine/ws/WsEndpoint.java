@@ -129,12 +129,8 @@ public class WsEndpoint extends WebSocketAdapter {
         WsContractDto contract = null;
         RemoteEndpoint remoteEndpoint = null;
 
-        if (this.getLoggedUserFromDatabase() == null) {
-            return;
-        }
-
-        if (this.loggedUser == null) {
-            this.getSession().close();
+        if ((this.loggedUser == null) || (this.getLoggedUserFromDatabase() == null)) {
+//            this.getSession().close();
             return;
         }
 
