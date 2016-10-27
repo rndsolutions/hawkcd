@@ -97,20 +97,18 @@ public class WsEndpoint extends WebSocketAdapter {
         if (!tokenQuery.equals("token=null")) {
             String token = tokenQuery.substring(6);
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
+            if (tokenInfo == null) {
+                return;
+            }
+
             this.setLoggedUser(tokenInfo.getUser());
             SessionPool.getInstance().add(this);
-
             if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
                 UserDto userDto = new UserDto();
                 userDto.setUsername(tokenInfo.getUser().getEmail());
                 userDto.setPermissions(tokenInfo.getUser().getPermissions());
 
-                WsContractDto contract = new WsContractDto();
-                contract.setClassName("UserInfo");
-                contract.setMethodName("getUser");
-                contract.setResult(userDto);
-                contract.setNotificationType(NotificationType.SUCCESS);
-                contract.setErrorMessage("User details retrieved successfully");
+                WsContractDto contract = new WsContractDto("UserInfo", "", "getUser", userDto, NotificationType.SUCCESS, "User details retrieved successfully");
                 SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
             } else {
                 UserDto userDto = new UserDto();
@@ -127,19 +125,13 @@ public class WsEndpoint extends WebSocketAdapter {
     @Override
     public void onWebSocketText(String message) {
         WsContractDto contract = null;
-        RemoteEndpoint remoteEndpoint = null;
 
-        if (this.getLoggedUserFromDatabase() == null) {
-            return;
-        }
-
-        if (this.loggedUser == null) {
-            this.getSession().close();
+        if (this.loggedUser == null || this.getLoggedUserFromDatabase() == null) {
+//            this.getSession().close();
             return;
         }
 
         try {
-            remoteEndpoint = this.getSession().getRemote();
             contract = this.resolve(message);
             if (contract == null) {
                 contract = new WsContractDto();
@@ -221,6 +213,7 @@ public class WsEndpoint extends WebSocketAdapter {
         } catch (RuntimeException e) {
             LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
             e.printStackTrace();
+            RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
             this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
         } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             e.printStackTrace();

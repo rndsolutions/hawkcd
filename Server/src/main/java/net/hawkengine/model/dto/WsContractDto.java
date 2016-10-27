@@ -27,6 +27,18 @@ public class WsContractDto {
     private String errorMessage;
     private ConversionObject[] args;
 
+    public WsContractDto() {
+    }
+
+    public WsContractDto(String className, String packageName, String methodName, Object result, NotificationType notificationType, String errorMessage) {
+        this.className = className;
+        this.packageName = packageName;
+        this.methodName = methodName;
+        this.result = result;
+        this.notificationType = notificationType;
+        this.errorMessage = errorMessage;
+    }
+
     public String getClassName() {
         return this.className;
     }
