@@ -22,13 +22,13 @@ import net.hawkengine.db.redis.RedisManager;
 import redis.clients.jedis.Jedis;
 
 public class Publisher {
-    Jedis jedisPool = RedisManager.getJedisPool().getResource();
+    private Jedis publisherJedis = RedisManager.getJedisPool().getResource();
 
     public Publisher() {
-
+        this.publisherJedis = RedisManager.getJedisPool().getResource();
     }
 
     public void publish(String channelName, Object object) {
-
+        this.publisherJedis.publish(channelName, "lololol");
     }
 }
