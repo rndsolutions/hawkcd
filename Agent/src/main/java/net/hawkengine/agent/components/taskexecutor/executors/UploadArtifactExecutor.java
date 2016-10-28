@@ -18,7 +18,6 @@ package net.hawkengine.agent.components.taskexecutor.executors;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.deploy.net.URLEncoder;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -42,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 
