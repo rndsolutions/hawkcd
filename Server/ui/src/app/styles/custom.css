@@ -1092,3 +1092,10 @@ p {
 .tooltip-inner {
     white-space: pre-wrap;
 }
+
+.page-footer .page-footer-inner {
+    text-align: center;
+    float: none !important;
+    display: inherit !important;
+
+}

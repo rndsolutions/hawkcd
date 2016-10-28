@@ -273,6 +273,11 @@ angular
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs], true);
                     }
+                },
+                ServerService: {
+                    getVersion: function(object) {
+                        validationService.dispatcherFlow(object, [serverUpdater.updateVersion, false);
+                    }
                 }
             };
 

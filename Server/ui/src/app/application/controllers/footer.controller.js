@@ -18,8 +18,29 @@
 angular
   .module('hawk')
   /* Setup Layout Part - Footer */
-  .controller('FooterController', ['$scope', function ($scope) {
+  .controller('FooterController', ['$scope','footerService','viewModel' function ($scope, footerService, viewModel) {
+
     $scope.$on('$includeContentLoaded', function () {
       Layout.initFooter(); // init footer
     });
+
+     var vm=this;
+     vm.serverVersion='';
+
+     $scope.$watch(function(){
+        return viewModel.serverVersion;
+     },
+        function(newVal, oldVal){
+            vm.serverVersion = angular.copy(viewModel.serverVersion);
+        }
+     );
+
+     vm.getVersion =  function(){
+        footerService.getVersion();
+     };
+
+     vm.getVersion()
+
+     $scope.version = '0.0.5-alpha.34 ';
+
   }]);

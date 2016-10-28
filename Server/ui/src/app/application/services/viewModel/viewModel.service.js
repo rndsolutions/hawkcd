@@ -48,5 +48,7 @@ angular
 
         viewModel.runManagementPipeline = {};
 
+        viewModel.serverVersion= {};
+
         return viewModel;
     }]);
