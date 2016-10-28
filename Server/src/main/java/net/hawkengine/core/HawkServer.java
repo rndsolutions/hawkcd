@@ -38,6 +38,7 @@ public class HawkServer {
     private Thread pipelinePreparer;
     private Thread jobAssigner;
     private Thread materialTracker;
+    private Thread subsciber;
     private DataImporter dataImporter;
 
     public HawkServer() {
@@ -51,6 +52,7 @@ public class HawkServer {
         this.pipelinePreparer = new Thread(new PipelinePreparer(), "PipelineScheduler");
         this.jobAssigner = new Thread(new JobAssigner(), "JobAssigner");
         this.materialTracker = new Thread(new MaterialTracker(), "MaterialTracker");
+        this.subsciber = new Thread(new MessagingSystem(), "MessagingSystem");
         this.dataImporter = new DataImporter();
     }
 
@@ -94,6 +96,7 @@ public class HawkServer {
     }
 
     public void start() throws Exception {
+        this.subsciber.start();
         this.server.start();
         this.dataImporter.importDefaultEntities();
         this.pipelinePreparer.start();
