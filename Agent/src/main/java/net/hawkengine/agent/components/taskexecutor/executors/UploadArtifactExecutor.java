@@ -40,6 +40,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -107,10 +109,17 @@ public class UploadArtifactExecutor extends TaskExecutor {
         UploadArtifactInfo uploadArtifactInfo = new UploadArtifactInfo(zipFile, taskDefinition.getDestination());
         String folderPath = String.format(ConfigConstants.SERVER_CREATE_ARTIFACT_API_ADDRESS, workInfo.getPipelineDefinitionName(), executionFolder);
         AgentConfiguration.getInstallInfo().setCreateArtifactApiAddress(String.format("%s/%s", AgentConfiguration.getInstallInfo().getServerAddress(), folderPath));
-        String destination = taskDefinition.getDestination();
+
+        String destination = null;
+        try {
+            destination = URLEncoder.encode(taskDefinition.getDestination(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+
+        }
+
         String requestSource = this.fileManagementService.urlCombine(AgentConfiguration.getInstallInfo().getCreateArtifactApiAddress()) + "/upload-artifact" + "?destination=" + destination;
         WebResource webResource = this.restClient.resource(requestSource);
-
         InputStream targetStream = null;
         try {
             targetStream = FileUtils.openInputStream(zipFile);
