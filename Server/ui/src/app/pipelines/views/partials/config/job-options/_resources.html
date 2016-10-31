@@ -18,12 +18,12 @@
       <thead>
       <tr>
         <th> Resource <span class="badge badge-default cursor-popover" data-toggle="tooltip" data-placement="right" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobResources}}">?</span></th>
-        <th width="15%"> Controls </th>
+        <th width="15%" style="min-width: 160px"> Controls </th>
       </tr>
       </thead>
       <tbody>
       <tr ng-repeat="resource in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].resources">
-        <td style="word-break: break-all">
+        <td class="job-parameters-small">
           {{resource}}
         </td>
         <td>

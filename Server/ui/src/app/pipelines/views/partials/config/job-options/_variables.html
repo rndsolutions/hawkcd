@@ -18,16 +18,16 @@
             <thead>
                 <tr>
                     <th> Name <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableName}}">?</span></th>
-                    <th> Value <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableValue}}">?</span></th>
-                    <th> Secured <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableSecured}}">?</span></th>
-                    <th> Controls </th>
+                    <th class="hidden-xs"> Value <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableValue}}">?</span></th>
+                    <th class="hidden-xs"> Secured <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableSecured}}">?</span></th>
+                    <th style="min-width: 160px"> Controls </th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="jobVar in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].environmentVariables">
-                    <td> {{jobVar.key}} </td>
-                    <td> {{jobVar.isSecured ? '******' : jobVar.value}} </td>
-                    <td> {{jobVar.isSecured ? 'Yes' : 'No'}} </td>
+                    <td class="job-parameters-small"> {{jobVar.key}} </td>
+                    <td class="hidden-xs"> {{jobVar.isSecured ? '******' : jobVar.value}} </td>
+                    <td class="hidden-xs"> {{jobVar.isSecured ? 'Yes' : 'No'}} </td>
                     <td>
                         <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editJobVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.jobs.getVariableForEdit(jobVar)">Edit</button>
                         <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJobVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.jobs.getVariableForEdit(jobVar)" ng-class="{'disabled': pipeConfig.variableDeleteButton}">Delete</button>
