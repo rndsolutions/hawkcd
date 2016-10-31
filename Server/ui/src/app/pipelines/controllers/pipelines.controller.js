@@ -50,29 +50,39 @@ angular
         vm.currentStageRuns = [];
 
         vm.allPipelines = angular.copy(viewModel.allPipelines);
+        debugger;
+
+        vm.formatDate = function(time){
+            var dateFormat = time.date.month;
+            dateFormat+= "-" + time.date.day;
+            dateFormat+= "-" + time.date.year;
+            dateFormat+= " ";
+            dateFormat+= time.time.hour
+            dateFormat+= ":" +time.time.minute;
+            return dateFormat;
+        };
 
         $scope.$watch(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
-
             vm.allPipelineGroups.forEach(function (currentPipelineGroup, groupIndex, groupArray) {
                 currentPipelineGroup.pipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                     if(currentPipeline.lastRun){
                         currentPipeline.lastRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                             if(currentStage.endTime) {
                                 currentPipeline.lastRun.lastStage = currentStage;
-                                currentPipeline.lastRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
-                                currentPipeline.lastRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
+                                var endDate = vm.formatDate(currentPipeline.lastRun.lastStage.endTime);
+                                currentPipeline.lastRun.lastStage.localEndTime = moment.utc(endDate, 'MM-DD-YYYY HH:mm').local().fromNow(); //moment.formatTimeInLocal(currentStage.endTime.time);
                             }
                         });
                         if (currentPipeline.lastRun.startTime) {
-                            currentPipeline.lastRun.localStartDate = moment.formatDateUTCToLocal(currentPipeline.lastRun.startTime);
-                            currentPipeline.lastRun.localStartTime = moment.formatTimeInLocal(currentPipeline.lastRun.startTime.time);
+                            var startTime = vm.formatDate(currentPipeline.lastRun.startTime);
+                            currentPipeline.lastRun.localStartTime = moment.utc(startTime, 'MM-DD-YYYY HH:mm').local().fromNow();//moment.formatTimeInLocal(currentPipeline.lastRun.startTime.time);
                         }
                         if (currentPipeline.lastRun.endTime) {
-                            currentPipeline.lastRun.localEndDate = moment.formatDateUTCToLocal(currentPipeline.lastRun.endTime);
-                            currentPipeline.lastRun.localEndTime = moment.formatTimeInLocal(currentPipeline.lastRun.endTime.time);
+                            var endTime = vm.formatDate(currentPipeline.lastRun.endTime);
+                            currentPipeline.lastRun.localEndTime = moment.utc(endTime, 'MM-DD-YYYY HH:mm').local().fromNow();
                         }
                     }
                 });
