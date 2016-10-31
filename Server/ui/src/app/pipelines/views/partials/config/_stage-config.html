@@ -12,21 +12,25 @@
 <!--See the License for the specific language governing permissions and-->
 <!--limitations under the License.-->
 
-<div class="col-md-9">
-  <div class="tabbable-custom nav-justified">
-    <ul class="nav nav-tabs nav-justified width-50">
-      <li ui-sref-active="active">
-        <a data-target="#stageSettings" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.stage.settings"> Stage Settings <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.stage}}">?</span></a>
-      </li>
-      <li ui-sref-active="active">
-        <a data-target="#jobs" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.jobs"> Jobs <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.job}}">?</span></a>
-      </li>
-      <li ui-sref-active="active">
-        <a data-target="#sEnvironmentVar" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.variables"> Environment Variables <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
-      </li>
-    </ul>
-    <div class="tab-content" ui-view>
+<div class="hidden-xs" ng-include src="'app/pipelines/views/partials/config/_stage-config-medium.html'"></div>
 
-    </div>
-  </div>
-</div>
+<div class="hidden-sm hidden-md hidden-lg" ng-include src="'app/pipelines/views/partials/config/_stage-config-small.html'"></div>
+
+<!--<div class="col-md-9 config-tabs">-->
+  <!--<div class="tabbable-custom nav-justified">-->
+    <!--<ul class="nav nav-tabs nav-justified width-40">-->
+      <!--<li ui-sref-active="active" style="min-width:150px;">-->
+        <!--<a data-target="#stageSettings" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.stage.settings"> Stage Settings <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.stage}}">?</span></a>-->
+      <!--</li>-->
+      <!--<li ui-sref-active="active" style="min-width:100px;">-->
+        <!--<a data-target="#jobs" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.jobs"> Jobs <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.job}}">?</span></a>-->
+      <!--</li>-->
+      <!--<li ui-sref-active="active" style="min-width:220px;">-->
+        <!--<a data-target="#sEnvironmentVar" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.variables"> Environment Variables <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>-->
+      <!--</li>-->
+    <!--</ul>-->
+    <!--<div class="tab-content" ui-view>-->
+
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
