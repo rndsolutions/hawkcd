@@ -836,11 +836,14 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Fragment>
          <UI>
             <Dialog Id="PrerequisitesDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="Finish" Type="PushButton" X="300" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonFinish)">
+                <Control Id="LaunchJavaDownloadPageBtn" Text="Download Java" Type="PushButton" X="32" Y="107" Width="100" Height="18">
+<Publish Event="DoAction" Value="LaunchJavaDownloadPage">1</Publish>
+</Control>
+<Control Id="Finish" Type="PushButton" X="300" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.UIButtonFinish)">
                     <Publish Event="EndDialog" Value="Exit">1</Publish>
 </Control>
 <Control Id="Control_1" Type="Bitmap" X="13" Y="65" Width="15" Height="15" Text="Image_Error"/>
-<Control Id="JavaPrereqsTest" Text="JAVA is required for running [ProductName]. Please install JRE version 8 or later. We detected that JAVA_HOME is not defined. If java is installed, please make sure that JAVA_HOME is set in your environment variables. " Type="Text" X="32" Y="64" Width="329" Height="60"/>
+<Control Id="JavaPrereqsTest" Text="JAVA is required for running [ProductName]. Please install JRE version 8 or later. We were not able to locate java in your path environment." Type="Text" X="32" Y="64" Width="329" Height="42"/>
 <Control Id="PrerequisitesHeaderText" Text="{\UI_Font_Title}Prerequisites" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
 <Control Id="Back" Type="PushButton" X="10" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
                 	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
@@ -1817,6 +1820,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <CustomTiming Sequence="4" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
 <CustomTiming Sequence="5" Execute="0" Exit="0" RelativeAction="AppSearch" SequenceNumber="0" Condition=""/>
 </CustomTimingList>
+</CustomAction>
+<CustomAction Type="2" ID="LaunchJavaDownloadPage" Impersonate="yes" Return="0" SuppressModularization="no" TerminalServerAware="no" HideTarget="no" Execute="immediate" Location="3" FileName="" FileID="" PropertyName="" FullPath="[SystemFolder]cmd.exe" WorkingFolder="SystemFolder" CommandLineArguments="/c start explorer &quot;http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html&quot;">
+<CustomTimingList/>
 </CustomAction>
 </CustomActions>
 <MediaItems>
