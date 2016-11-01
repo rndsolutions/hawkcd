@@ -29,7 +29,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -92,26 +91,11 @@ public class ExecTaskExecutor extends TaskExecutor {
         return task;
     }
 
-    private String getTimeStamp(){
-
-        LocalDateTime now = LocalDateTime.now();
-        // [10:51:50:564]:
-
-        String.format("","","","",now.getHour(),
-                                    now.getMinute(),
-                                    now.getMinute(),
-                                    now.getSecond(),
-                                    now.getNano() );
-
-    }
-
     private void execute(Task task, Process process, BufferedReader reader, boolean commandSwitch, StringBuilder report) throws IOException {
         String line;
-        int count=0;
         while ((line = reader.readLine()) != null) {
             LOGGER.debug(line);
-            count++;
-            ReportAppender.appendInfoMessage(count +" "+ line, report);
+            ReportAppender.appendInfoMessage(line, report);
         }
 
         try {
