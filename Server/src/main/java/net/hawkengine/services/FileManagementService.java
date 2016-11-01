@@ -191,13 +191,31 @@ public class FileManagementService implements IFileManagementService {
 
     @Override
     public List<File> getFiles(String rootPath, String wildCardPattern) {
+        List<File> allFiles = new ArrayList<>();
+        File file = new File(rootPath);
+        if (file.isFile()) {
+            allFiles.add(file);
+            return allFiles;
+        }
+
+        if (!wildCardPattern.equals("")) {
+            rootPath = rootPath.replace(wildCardPattern, "");
+        }
+
+        File rootPathDirecotry = new File(rootPath);
+        if (!rootPathDirecotry.isDirectory()) {
+            return allFiles;
+        }
 
         DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir(rootPath);
-        scanner.setIncludes(new String[]{wildCardPattern});
-        scanner.scan();
+        try {
+            scanner.setBasedir(rootPath);
+            scanner.setIncludes(new String[]{wildCardPattern});
+            scanner.scan();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
 
-        List<File> allFiles = new ArrayList<>();
         if (wildCardPattern.equals("**")) {
             File directory = scanner.getBasedir();
             allFiles.add(directory);
@@ -206,36 +224,11 @@ public class FileManagementService implements IFileManagementService {
         }
 
         String[] files = scanner.getIncludedFiles();
-        for (String file : files) {
-            allFiles.add(new File(rootPath, file));
+        for (String f : files) {
+            allFiles.add(new File(rootPath, f));
         }
 
         return allFiles;
-
-
-//        DirectoryScanner scanner = new DirectoryScanner();
-//        scanner.setBasedir(this.normalizePath(rootPath));
-//        scanner.setIncludes(new String[]{wildCardPattern});
-//        scanner.scan();
-//        String[] allPaths = scanner.getIncludedFiles();
-//
-//        List<File> allFiles = new ArrayList<File>();
-//        String[] directories = scanner.getIncludedDirectories();
-//        for (String directory : directories) {
-//            allFiles.add(new File(rootPath, directory));
-//        }
-//
-//        for (int i = 0; i < allPaths.length; i++) {
-//            File file = new File(rootPath, allPaths[i]);
-//            if (!allFiles.contains(file.getParentFile())) {
-//                allFiles.add(file);
-//            }
-//        }
-//
-//        if (allFiles.size() == 0) {
-//            return null;
-//        }
-//        return allFiles.toArray(new File[]{});
     }
 
     @Override
