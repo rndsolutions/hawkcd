@@ -18,17 +18,33 @@
 
 package net.hawkengine.ws;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.db.redis.RedisManager;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.dto.ConversionObject;
+import net.hawkengine.model.payload.PublishObject;
 import redis.clients.jedis.Jedis;
 
 public class Publisher {
-    private Jedis publisherJedis = RedisManager.getJedisPool().getResource();
+    private Jedis jedisPublisher;
+    private Gson jsonConverter;
 
     public Publisher() {
-        this.publisherJedis = RedisManager.getJedisPool().getResource();
+        this.jedisPublisher = RedisManager.getJedisPool().getResource();
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
     }
 
     public void publish(String channelName, Object object) {
-        this.publisherJedis.publish(channelName, "lololol");
+
+        // Convert object to JSON
+
+        this.jedisPublisher.publish(channelName, objectAsString);
     }
 }

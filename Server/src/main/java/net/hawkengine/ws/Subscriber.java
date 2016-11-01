@@ -18,11 +18,38 @@
 
 package net.hawkengine.ws;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
+import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.payload.PublishObject;
 import redis.clients.jedis.JedisPubSub;
 
 public class Subscriber extends JedisPubSub {
+    private Gson jsonConverter;
+
+    public Subscriber() {
+        this.jsonConverter = new GsonBuilder()
+//                .registerTypeAdapter(PublishObject.class, new PublishObjectAdapter())\
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
+    }
+
     @Override
     public void onMessage(String channel, String message) {
-        System.out.println(channel + message);
+        PublishObject publishObject = this.jsonConverter.fromJson(message, PublishObject.class);
+
+        if (channel.equals("global")) {
+            if (publishObject.getUserId() == null) {
+                SessionPool.getInstance().sendToAuthorizedSessions();
+            } else {
+                SessionPool.getInstance().sendToUserSessions();
+            }
+        } else if (channel.equals("local")) {
+            SessionPool.getInstance().sendToSingleUserSession();
+        }
     }
 }
