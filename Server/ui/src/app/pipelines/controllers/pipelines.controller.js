@@ -50,15 +50,19 @@ angular
         vm.currentStageRuns = [];
 
         vm.allPipelines = angular.copy(viewModel.allPipelines);
-        debugger;
 
         vm.formatDate = function(time){
-            var dateFormat = time.date.month;
-            dateFormat+= "-" + time.date.day;
-            dateFormat+= "-" + time.date.year;
-            dateFormat+= " ";
-            dateFormat+= time.time.hour
-            dateFormat+= ":" +time.time.minute;
+            // We subtract a month because the Server's month array starts from 1 to 12, while here it starts from 0 to 11
+            var dateFormat = {
+                years: time.date.year,
+                months: time.date.month - 1,
+                date: time.date.day,
+                hours: time.time.hour,
+                minutes: time.time.minute,
+                seconds: time.time.second,
+                milliseconds: 0
+            };
+            dateFormat = moment(dateFormat).format("M-DD-YYYY HH:mm");
             return dateFormat;
         };
 
@@ -73,12 +77,12 @@ angular
                             if(currentStage.endTime) {
                                 currentPipeline.lastRun.lastStage = currentStage;
                                 var endDate = vm.formatDate(currentPipeline.lastRun.lastStage.endTime);
-                                currentPipeline.lastRun.lastStage.localEndTime = moment.utc(endDate, 'MM-DD-YYYY HH:mm').local().fromNow(); //moment.formatTimeInLocal(currentStage.endTime.time);
+                                currentPipeline.lastRun.lastStage.localEndTime = moment.utc(endDate, 'MM-DD-YYYY HH:mm').local().fromNow();
                             }
                         });
                         if (currentPipeline.lastRun.startTime) {
                             var startTime = vm.formatDate(currentPipeline.lastRun.startTime);
-                            currentPipeline.lastRun.localStartTime = moment.utc(startTime, 'MM-DD-YYYY HH:mm').local().fromNow();//moment.formatTimeInLocal(currentPipeline.lastRun.startTime.time);
+                            currentPipeline.lastRun.localStartTime = moment.utc(startTime, 'MM-DD-YYYY HH:mm').local().fromNow();
                         }
                         if (currentPipeline.lastRun.endTime) {
                             var endTime = vm.formatDate(currentPipeline.lastRun.endTime);
