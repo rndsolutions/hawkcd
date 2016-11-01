@@ -16,10 +16,9 @@
  *
  */
 
-package net.hawkengine.core;
+package net.hawkengine.core.messagingsystem;
 
 import net.hawkengine.db.redis.RedisManager;
-import net.hawkengine.ws.Subscriber;
 import redis.clients.jedis.Jedis;
 
 public class MessagingSystem implements Runnable {

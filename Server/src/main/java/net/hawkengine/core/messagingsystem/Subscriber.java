@@ -16,7 +16,7 @@
  *
  */
 
-package net.hawkengine.ws;
+package net.hawkengine.core.messagingsystem;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,6 +25,7 @@ import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.payload.PublishObject;
+import net.hawkengine.ws.SessionPool;
 import redis.clients.jedis.JedisPubSub;
 
 public class Subscriber extends JedisPubSub {

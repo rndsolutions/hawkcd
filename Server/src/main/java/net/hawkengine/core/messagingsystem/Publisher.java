@@ -16,7 +16,7 @@
  *
  */
 
-package net.hawkengine.ws;
+package net.hawkengine.core.messagingsystem;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,8 +25,6 @@ import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.db.redis.RedisManager;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.dto.ConversionObject;
-import net.hawkengine.model.payload.PublishObject;
 import redis.clients.jedis.Jedis;
 
 public class Publisher {
