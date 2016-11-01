@@ -202,6 +202,11 @@ public class FileManagementService implements IFileManagementService {
             rootPath = rootPath.replace(wildCardPattern, "");
         }
 
+        File rootPathDirecotry = new File(rootPath);
+        if (!rootPathDirecotry.isDirectory()) {
+            return allFiles;
+        }
+
         DirectoryScanner scanner = new DirectoryScanner();
         try {
             scanner.setBasedir(rootPath);
