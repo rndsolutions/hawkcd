@@ -114,7 +114,7 @@ public class ArtifactController {
 
         List<File> files = this.fileManagementService.getFiles(rootPath, wildCardPattern);
 
-        if (files == null || files.isEmpty()) {
+        if (files == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .type(MediaType.TEXT_HTML)
                     .build();
