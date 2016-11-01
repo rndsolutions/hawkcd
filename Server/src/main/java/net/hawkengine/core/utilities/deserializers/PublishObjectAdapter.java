@@ -22,7 +22,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import net.hawkengine.model.payload.PublishObject;
+import net.hawkengine.core.messagingsystem.PublishObject;
 
 import java.lang.reflect.Type;
 

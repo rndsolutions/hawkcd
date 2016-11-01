@@ -24,8 +24,6 @@ import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
-import net.hawkengine.model.payload.PublishObject;
-import net.hawkengine.ws.SessionPool;
 import redis.clients.jedis.JedisPubSub;
 
 public class Subscriber extends JedisPubSub {
@@ -45,12 +43,12 @@ public class Subscriber extends JedisPubSub {
 
         if (channel.equals("global")) {
             if (publishObject.getUserId() == null) {
-                SessionPool.getInstance().sendToAuthorizedSessions();
+//                SessionPool.getInstance().sendToAuthorizedSessions();
             } else {
-                SessionPool.getInstance().sendToUserSessions();
+//                SessionPool.getInstance().sendToUserSessions();
             }
         } else if (channel.equals("local")) {
-            SessionPool.getInstance().sendToSingleUserSession();
+//            SessionPool.getInstance().sendToSingleUserSession();
         }
     }
 }

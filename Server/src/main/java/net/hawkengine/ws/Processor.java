@@ -16,13 +16,13 @@
  *
  */
 
-package net.hawkengine.core;
+package net.hawkengine.ws;
 
 import net.hawkengine.model.User;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.payload.Permission;
 import net.hawkengine.services.filters.PermissionService;
-import net.hawkengine.ws.Publisher;
+import net.hawkengine.core.messagingsystem.Publisher;
 
 import java.util.List;
 
@@ -38,6 +38,8 @@ public class Processor {
         // Authorize method
 
         // Determine channel
+
+        Object object = new Object();
 
         jedisPublisher.publish("channelName", object);
 

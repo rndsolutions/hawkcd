@@ -42,6 +42,7 @@ public class Publisher {
     public void publish(String channelName, Object object) {
 
         // Convert object to JSON
+        String objectAsString = "";
 
         this.jedisPublisher.publish(channelName, objectAsString);
     }
