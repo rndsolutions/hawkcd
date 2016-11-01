@@ -27,11 +27,12 @@ import net.hawkengine.model.TaskDefinition;
 import redis.clients.jedis.JedisPubSub;
 
 public class Subscriber extends JedisPubSub {
+    private Processor processor;
     private Gson jsonConverter;
 
     public Subscriber() {
+        this.processor = new Processor();
         this.jsonConverter = new GsonBuilder()
-//                .registerTypeAdapter(PublishObject.class, new PublishObjectAdapter())\
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
@@ -39,16 +40,18 @@ public class Subscriber extends JedisPubSub {
 
     @Override
     public void onMessage(String channel, String message) {
-        PublishObject publishObject = this.jsonConverter.fromJson(message, PublishObject.class);
+        PubSubMessage pubSubMessage = this.jsonConverter.fromJson(message, PubSubMessage.class);
 
-        if (channel.equals("global")) {
-            if (publishObject.getUserId() == null) {
-//                SessionPool.getInstance().sendToAuthorizedSessions();
-            } else {
-//                SessionPool.getInstance().sendToUserSessions();
-            }
-        } else if (channel.equals("local")) {
-//            SessionPool.getInstance().sendToSingleUserSession();
-        }
+        this.processor.processResponse(pubSubMessage, channel);
+
+//        if (channel.equals("global")) {
+//            if (pubSubMessage.getUserId() == null) {
+////                SessionPool.getInstance().sendToAuthorizedSessions();
+//            } else {
+////                SessionPool.getInstance().sendToUserSessions();
+//            }
+//        } else if (channel.equals("local")) {
+////            SessionPool.getInstance().sendToSingleUserSession();
+//        }
     }
 }

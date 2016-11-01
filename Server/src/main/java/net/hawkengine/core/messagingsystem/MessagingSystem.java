@@ -26,6 +26,6 @@ public class MessagingSystem implements Runnable {
     public void run() {
         Jedis jedisSubscriber = RedisManager.getJedisPool().getResource();
         Subscriber subscriber = new Subscriber();
-        jedisSubscriber.subscribe(subscriber, "update");
+        jedisSubscriber.subscribe(subscriber, "global", "local");
     }
 }

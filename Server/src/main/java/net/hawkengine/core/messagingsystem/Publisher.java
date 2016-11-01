@@ -39,10 +39,10 @@ public class Publisher {
                 .create();
     }
 
-    public void publish(String channelName, Object object) {
+    public void publish(String channelName, PubSubMessage object) {
 
         // Convert object to JSON
-        String objectAsString = "";
+        String objectAsString = this.jsonConverter.toJson(object);
 
         this.jedisPublisher.publish(channelName, objectAsString);
     }

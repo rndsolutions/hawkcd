@@ -19,12 +19,16 @@ package net.hawkengine.ws;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import net.hawkengine.core.messagingsystem.Processor;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TokenAdapter;
 import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
-import net.hawkengine.model.*;
+import net.hawkengine.model.MaterialDefinition;
+import net.hawkengine.model.ServiceResult;
+import net.hawkengine.model.TaskDefinition;
+import net.hawkengine.model.User;
 import net.hawkengine.model.dto.UserDto;
 import net.hawkengine.model.dto.WsContractDto;
 import net.hawkengine.model.enums.NotificationType;
@@ -119,12 +123,11 @@ public class WsEndpoint extends WebSocketAdapter {
 
     @Override
     public void onWebSocketText(String message) {
+        Processor processor = new Processor();
 
-//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-//        pipelineDefinition.setGroupName("name");
-//
-//        Publisher publisher = new Publisher();
-//        publisher.publish("update", pipelineDefinition);
+        WsContractDto wsContractDto = new WsContractDto();
+        User user = new User();
+        processor.processRequest(wsContractDto, user);
 
 
 
