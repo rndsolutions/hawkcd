@@ -70,11 +70,11 @@ public class ReportAppender {
 
         //message = MessageConstants.CONSOLE_WHITE + message;
         if (!message.isEmpty()){
-            String formatedMessage = String.format("%s  %s", getTimeStamp(), message);
+            String formattedMessage = String.format("%s %s", getTimeStamp(), message);
 
-            System.out.println(StringEscapeUtils.unescapeJava(formatedMessage));
+            System.out.println(StringEscapeUtils.unescapeJava(formattedMessage));
 
-            report.append(formatedMessage).append(System.lineSeparator());
+            report.append(formattedMessage).append(System.lineSeparator());
         }else {
             report.append(message).append(System.lineSeparator());
         }
