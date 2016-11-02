@@ -13,31 +13,31 @@
 <!--limitations under the License.-->
 
 <div id="jTasks">
-  <div class="table-scrollable" style="overflow-x: hidden">
-    <table class="table table-bordered table-hover">
+  <div class="table-scrollable">
+    <table class="table table-bordered table-hover table-fixed">
       <thead>
       <tr>
-        <th width="2%"> # </th>
-        <th width="10%" class="hidden-xs"> Type <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskType}}">?</span></th>
-        <th width="5%" class="hidden-xs"> Run If Condition <span class="badge badge-default cursor-popover" style="margin-left:5px" data-toggle="tooltip" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskCondition}}">?</span></th>
-        <th class="job-parameters-small"> Parameters <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskCommand}}">?</span></th>
-        <th width="15%" style="min-width: 160px"> Controls </th>
+        <th width="35px"> # </th>
+        <th class="hidden-xs" style="width:150px;"> Type <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskType}}">?</span></th>
+        <th class="hidden-xs" style="width:150px;"> Run If Condition <span class="badge badge-default cursor-popover" style="margin-left:5px" data-toggle="tooltip" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskCondition}}">?</span></th>
+        <th> Parameters <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.taskCommand}}">?</span></th>
+        <th class="config-controls"> Controls </th>
       </tr>
       </thead>
       <tbody ui-sortable="pipeConfig.sortableOptions" ng-class="{'unsortable' : pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'}" class="sortable" ng-model="pipeConfig.job.taskDefinitions">
 
       <!--ng-repeat-->
       <tr ng-repeat="task in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions">
-        <td> {{$index+1}} </td>
-        <td class="hidden-xs"> {{task.type}} </td>
-        <td class="hidden-xs"> {{task.runIfCondition}} </td>
-        <td class="job-parameters-small" ng-if="task.type == 'EXEC'"> {{task.command + ' ' + task.arguments}} </td>
-        <td class="job-parameters-small" ng-if="task.type == 'FETCH_MATERIAL'"> Material: {{task.materialName}} </td>
-        <td class="job-parameters-small" ng-if="task.type == 'FETCH_ARTIFACT'"> Pipeline: {{task.designatedPipelineDefinitionName}}, Run: <span ng-if="task.shouldUseLatestRun == true">Latest</span><span ng-if="task.shouldUseLatestRun == false">{{task.designatedPipelineExecutionId}}</span>, Source: {{task.source}}, Destination: {{task.destination}}</td>
-        <td class="job-parameters-small" ng-if="task.type == 'UPLOAD_ARTIFACT'"> Source: {{task.source}}, Destination: {{task.destination}}</td>
-        <td>
-          <button class="btn yellow unsortable" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTaskForUpdate(task)">Edit</button>
-          <button class="btn red unsortable" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#removeTask"
+        <td class="text-center-all"> {{$index+1}} </td>
+        <td class="hidden-xs text-center-all"> {{task.type}} </td>
+        <td class="hidden-xs text-center-all"> {{task.runIfCondition}} </td>
+        <td class="table-element-text" ng-if="task.type == 'EXEC'"> {{task.command + ' ' + task.arguments}} </td>
+        <td class="table-element-text" ng-if="task.type == 'FETCH_MATERIAL'"> Material: {{task.materialName}} </td>
+        <td class="table-element-text" ng-if="task.type == 'FETCH_ARTIFACT'"> Pipeline: {{task.designatedPipelineDefinitionName}}, Run: <span ng-if="task.shouldUseLatestRun == true">Latest</span><span ng-if="task.shouldUseLatestRun == false">{{task.designatedPipelineExecutionId}}</span>, Source: {{task.source}}, Destination: {{task.destination}}</td>
+        <td class="table-element-text" ng-if="task.type == 'UPLOAD_ARTIFACT'"> Source: {{task.source}}, Destination: {{task.destination}}</td>
+        <td class="text-center-all">
+          <button class="btn yellow unsortable config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#editTask" ng-click="pipeConfig.getTaskForUpdate(task)">Edit</button>
+          <button class="btn red unsortable config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-toggle="modal" data-target="#removeTask"
                   ng-click="pipeConfig.getTask(task)" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions[pipeConfig.jobIndex].taskDefinitions.length > 1">Delete</button>
         </td>
       </tr>
