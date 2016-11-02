@@ -14,23 +14,23 @@
 
 <div id="environmentVariables">
     <div class="table-scrollable">
-        <table class="table table-bordered table-hover">
+        <table class="table table-bordered table-hover table-fixed">
             <thead>
                 <tr>
-                    <th> Name <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableName}}">?</span></th>
-                    <th> Value <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableValue}}">?</span></th>
-                    <th> Secured <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableSecured}}">?</span></th>
-                    <th> Controls </th>
+                    <th class="config-names"> Name <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableName}}">?</span></th>
+                    <th class="hidden-xs"> Value <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableValue}}">?</span></th>
+                    <th class="hidden-xs" style="width:100px"> Secured <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableSecured}}">?</span></th>
+                    <th class="config-controls"> Controls </th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="pipeVar in pipeConfig.allPipelines[pipeConfig.pipelineIndex].environmentVariables">
-                    <td> {{pipeVar.key}} </td>
-                    <td> {{pipeVar.isSecured ? '******' : pipeVar.value}} </td>
-                    <td> {{pipeVar.isSecured ? 'Yes' : 'No'}} </td>
-                    <td>
-                        <button class="btn yellow" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editPipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)">Edit</button>
-                        <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removePipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)" ng-class="{'disabled': pipeConfig.variableDeleteButton || !pipeVar.isDeletable}">Delete</button>
+                    <td class="table-element-text"> {{pipeVar.key}} </td>
+                    <td class="hidden-xs table-element-text"> {{pipeVar.isSecured ? '******' : pipeVar.value}} </td>
+                    <td class="hidden-xs"> {{pipeVar.isSecured ? 'Yes' : 'No'}} </td>
+                    <td class="text-center-all">
+                        <button class="btn yellow config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editPipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)">Edit</button>
+                        <button class="btn red config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removePipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)" ng-class="{'disabled': pipeConfig.variableDeleteButton || !pipeVar.isDeletable}">Delete</button>
                     </td>
                 </tr>
             </tbody>
