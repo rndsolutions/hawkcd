@@ -20,52 +20,38 @@ package net.hawkengine.core.messagingsystem;
 
 import net.hawkengine.model.enums.NotificationType;
 
-import java.util.List;
+class PubSubMessage {
+    private String className;
+    private String methodName;
+    private ResultObjectWrapper resultObjectWrapper;
+    private NotificationType resultNotificationType;
+    private String resultMessage;
 
-public class PubSubMessage {
-    private String serviceCalled;
-    private String methodCalled;
-    private NotificationType notificationType;
-    private String message;
-    private String userId;
-    private String sessionId;
-    private List<String> updatedObjectsIds;
-
-    public PubSubMessage(String serviceCalled, String methodCalled, NotificationType notificationType, String message, String userId, String sessionId, List<String> updatedObjectsIds) {
-        this.serviceCalled = serviceCalled;
-        this.methodCalled = methodCalled;
-        this.notificationType = notificationType;
-        this.message = message;
-        this.userId = userId;
-        this.sessionId = sessionId;
-        this.updatedObjectsIds = updatedObjectsIds;
+    PubSubMessage(String className, String methodName, Object resultObject, NotificationType resultNotificationType, String resultMessage) {
+        this.className = className;
+        this.methodName = methodName;
+        this.resultObjectWrapper = new ResultObjectWrapper(resultObject);
+        this.resultNotificationType = resultNotificationType;
+        this.resultMessage = resultMessage;
     }
 
-    public String getServiceCalled() {
-        return serviceCalled;
+    public String getClassName() {
+        return className;
     }
 
-    public String getMethodCalled() {
-        return methodCalled;
+    public String getMethodName() {
+        return methodName;
     }
 
-    public NotificationType getNotificationType() {
-        return notificationType;
+    public Object getResultObject() {
+        return this.resultObjectWrapper.getResultObject();
     }
 
-    public String getMessage() {
-        return message;
+    public NotificationType getResultNotificationType() {
+        return resultNotificationType;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public List<String> getUpdatedObjectsIds() {
-        return updatedObjectsIds;
+    public String getResultMessage() {
+        return resultMessage;
     }
 }
