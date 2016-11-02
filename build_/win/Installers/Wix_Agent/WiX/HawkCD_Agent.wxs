@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-25 at 10:42:28 -->
+     on 2016-10-31 at 21:24:56 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Agent - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="42BE78AA-859D-4C17-8DFD-A21CBC3083AF" Language="1033">
@@ -42,6 +42,7 @@
 <Directory Id="INSTALLDIR" Name="Agent"/>
 </Directory>
 </Directory>
+<Directory Id="SystemFolder" Name="SystemFolder"/>
 </Directory>
 <UIRef Id="SUFWI_UI"/>
 <CustomAction Id="UpdateAgentConfigFile" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateAgentConfigFile"/>
@@ -54,6 +55,7 @@
 <CustomAction Id="SetTargetDirCA" Impersonate="yes" Return="check" Execute="immediate" Property="TARGETDIR" Value="[INSTALLDIR]"/>
 <CustomAction Id="StopService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="StopService"/>
 <CustomAction Id="CheckIsUserAdministrator" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckIsUserAdministrator"/>
+<CustomAction Id="LaunchJavaDownloadPage" Impersonate="yes" Return="asyncNoWait" Execute="immediate" ExeCommand="[SystemFolder]cmd.exe /c start explorer &quot;http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html&quot;" Directory="SystemFolder"/>
 <Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
 <InstallExecuteSequence>
 <Custom Action="UpdateAgentConfigFile" After="InstallFinalize">NOT REMOVE~="ALL" AND NOT OLDERVERSIONBEINGUPGRADED</Custom>

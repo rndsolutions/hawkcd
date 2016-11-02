@@ -21,6 +21,10 @@ import net.hawkengine.agent.enums.JobStatus;
 import net.hawkengine.agent.enums.TaskStatus;
 import net.hawkengine.agent.models.Job;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.time.LocalDateTime;
+
 public class ReportAppender {
     public static StringBuilder appendStartedMessage(String message, StringBuilder report, Class classType) {
         message = MessageConstants.CONSOLE_YELLOW + message;
@@ -63,9 +67,25 @@ public class ReportAppender {
 
 
     public static StringBuilder appendInfoMessage(String message, StringBuilder report) {
-        message = MessageConstants.CONSOLE_WHITE + message;
-        report.append(message).append(System.lineSeparator());
 
+        //message = MessageConstants.CONSOLE_WHITE + message;
+        if (!message.isEmpty()){
+            String formattedMessage = String.format("%s %s", getTimeStamp(), message);
+
+            System.out.println(StringEscapeUtils.unescapeJava(formattedMessage));
+
+            report.append(formattedMessage).append(System.lineSeparator());
+        }else {
+            report.append(message).append(System.lineSeparator());
+        }
         return report;
     }
+
+    private static String getTimeStamp(){
+        // e.g. [10:51:50:564]:
+        LocalDateTime now = LocalDateTime.now();
+        String format = String.format("[%02d:%02d:%02d]:", now.getHour(), now.getMinute(), now.getSecond());
+        return format;
+    }
+
 }
