@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelineConfigController', function($state, $interval, $scope, authDataService, viewModel, pipeConfigService) {
+    .controller('PipelineConfigController', function($state, $interval, $timeout, $scope, $window, authDataService, viewModel, pipeConfigService) {
         var vm = this;
         vm.toggleLogo = 1;
         vm.materialType = "git";
@@ -118,6 +118,16 @@ angular
                 task: 'A Task is an action that is performed on a server/machine or inside a container where an Agent is installed.',
                 materialToBeSelected: 'The predefined material to be fetched.'
             }
+        };
+
+        vm.windowWidth = $window.innerWidth;
+
+        $window.onresize = function(event) {
+            $timeout(function() {
+                vm.windowWidth = $window.innerWidth;
+                $scope.$apply();
+                // debugger;
+            });
         };
 
         $scope.$watch(function() {
