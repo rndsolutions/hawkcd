@@ -33,6 +33,7 @@ public class Subscriber extends JedisPubSub {
     public Subscriber() {
         this.processor = new Processor();
         this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(ResultObjectWrapper.class, new ResultObjectWrapperAdapter())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
@@ -42,7 +43,7 @@ public class Subscriber extends JedisPubSub {
     public void onMessage(String channel, String message) {
         PubSubMessage pubSubMessage = this.jsonConverter.fromJson(message, PubSubMessage.class);
 
-        this.processor.processResponse(pubSubMessage, channel);
+        this.processor.processResponse(pubSubMessage);
 
 //        if (channel.equals("global")) {
 //            if (pubSubMessage.getUserId() == null) {
