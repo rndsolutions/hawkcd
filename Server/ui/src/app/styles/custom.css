@@ -1082,6 +1082,56 @@ p {
         /*max-width:10px;*/
         word-break: break-all;
     }
+
+    .config-button:not(:first-child) {
+        margin-top:10%!important;
+    }
+
+    .config-button {
+        display:block;
+    }
+
+    .config-controls {
+        width:100px!important;
+        margin:0!important;
+    }
+
+    /*.config-names {*/
+        /*width:100px;*/
+    /*}*/
+
+    .small-device-label {
+        width:200px;
+    }
+}
+
+@media screen and (min-width: 767px){
+    .config-controls {
+        min-width: 180px;
+        width:180px;
+    }
+
+    .config-names {
+        min-width: 100px;
+        width:100px;
+    }
+}
+
+.config-button {
+    width:70px;
+}
+
+.table-element-text {
+    word-break: break-all;
+}
+
+.text-center-all {
+    vertical-align: middle!important;
+    text-align: center;
+}
+
+.table-fixed {
+    table-layout: fixed;
 }
 
 .padding-cog {
