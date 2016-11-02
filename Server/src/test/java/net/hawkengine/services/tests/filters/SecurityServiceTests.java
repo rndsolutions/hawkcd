@@ -29,7 +29,7 @@ import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineGroupService;
 import net.hawkengine.services.interfaces.IUserGroupService;
 import net.hawkengine.services.interfaces.IUserService;
-import net.hawkengine.ws.WsObjectProcessor;
+import net.hawkengine.core.messagingsystem.WsObjectProcessor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;

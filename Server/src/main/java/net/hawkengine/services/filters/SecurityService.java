@@ -34,7 +34,7 @@ import net.hawkengine.services.filters.interfaces.ISecurityService;
 import net.hawkengine.services.interfaces.IPipelineDefinitionService;
 import net.hawkengine.services.interfaces.IPipelineGroupService;
 import net.hawkengine.services.interfaces.IUserGroupService;
-import net.hawkengine.ws.WsObjectProcessor;
+import net.hawkengine.core.messagingsystem.WsObjectProcessor;
 
 import java.util.ArrayList;
 import java.util.List;

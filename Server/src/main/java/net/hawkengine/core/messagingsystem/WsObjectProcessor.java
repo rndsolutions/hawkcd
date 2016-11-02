@@ -1,20 +1,22 @@
 /*
- * Copyright (C) 2016 R&D Solutions Ltd.
+ *   Copyright (C) 2016 R&D Solutions Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ *
  */
 
-package net.hawkengine.ws;
+package net.hawkengine.core.messagingsystem;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +26,7 @@ import net.hawkengine.core.utilities.deserializers.WsContractDeserializer;
 import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
 import net.hawkengine.model.dto.WsContractDto;
+import net.hawkengine.ws.Command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,5 +57,19 @@ public class WsObjectProcessor {
 
         Command command = new Command(service, contract.getMethodName(), methodArgs);
         return command.execute();
+    }
+
+    public Object call(String serviceToBeCalled, String methodName, String id) {
+        try {
+            Object service = Class.forName(serviceToBeCalled).newInstance();
+            List<Object> methodArgs = new ArrayList<>();
+            methodArgs.add(id);
+            Command command = new Command(service, methodName, methodArgs);
+            return command.execute();
+        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

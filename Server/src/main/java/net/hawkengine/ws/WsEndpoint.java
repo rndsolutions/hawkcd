@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import net.hawkengine.core.messagingsystem.Processor;
+import net.hawkengine.core.messagingsystem.WsObjectProcessor;
 import net.hawkengine.core.utilities.constants.LoggerMessages;
 import net.hawkengine.core.utilities.deserializers.MaterialDefinitionAdapter;
 import net.hawkengine.core.utilities.deserializers.TaskDefinitionAdapter;
@@ -48,15 +49,16 @@ import java.util.UUID;
 public class WsEndpoint extends WebSocketAdapter {
     private static final Logger LOGGER = Logger.getLogger(WsEndpoint.class.getClass());
     private Gson jsonConverter;
-    private UUID id;
+    private String id;
     private SecurityServiceInvoker securityServiceInvoker;
     private User loggedUser;
     private PermissionService permissionService;
     private IUserService userService;
     private WsObjectProcessor wsObjectProcessor;
+    private Processor processor;
 
     public WsEndpoint() {
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -66,14 +68,11 @@ public class WsEndpoint extends WebSocketAdapter {
         this.permissionService = new PermissionService();
         this.userService = new UserService();
         this.wsObjectProcessor = new WsObjectProcessor();
+        this.processor = new Processor();
     }
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public User getLoggedUser() {
@@ -123,13 +122,13 @@ public class WsEndpoint extends WebSocketAdapter {
 
     @Override
     public void onWebSocketText(String message) {
-        Processor processor = new Processor();
-
-        WsContractDto wsContractDto = new WsContractDto();
-        User user = new User();
-        processor.processRequest(wsContractDto, user);
-
-
+//        Processor processor = new Processor();
+//
+//        WsContractDto wsContractDto = new WsContractDto();
+//        User user = new User();
+//        processor.processRequest(wsContractDto, user);
+//
+//
 
         WsContractDto contract = null;
 
@@ -151,6 +150,7 @@ public class WsEndpoint extends WebSocketAdapter {
                 return;
             }
 
+            this.processor.processRequest(contract, this.getLoggedUser(), this.getId());
 
 
 //            ServiceResult result;
