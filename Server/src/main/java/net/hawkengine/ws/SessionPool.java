@@ -81,18 +81,6 @@ public class SessionPool {
         sessions.remove(session);
     }
 
-    public void sendToUserSessions(WsContractDto contractDto, User user) {
-        synchronized (sessions) {
-            List<WsEndpoint> userSessions = sessions
-                    .stream()
-                    .filter(e -> e.getLoggedUser().getId().equals(user.getId()))
-                    .collect(Collectors.toList());
-            for (WsEndpoint userSession : userSessions) {
-                userSession.send(contractDto);
-            }
-        }
-    }
-
     public void sendToAuthorizedSessions(WsContractDto contractDto) {
         synchronized (sessions) {
             if (contractDto.getResult() == null) {
@@ -113,6 +101,27 @@ public class SessionPool {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public void sendToUserSessions(WsContractDto contractDto, User user) {
+        synchronized (sessions) {
+            List<WsEndpoint> userSessions = sessions
+                    .stream()
+                    .filter(e -> e.getLoggedUser().getId().equals(user.getId()))
+                    .collect(Collectors.toList());
+            for (WsEndpoint userSession : userSessions) {
+                userSession.send(contractDto);
+            }
+        }
+    }
+
+    public void sendToSingleUserSession(WsContractDto contractDto, String sessionId) {
+        synchronized (sessions) {
+            WsEndpoint session = sessions.stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+            if (session != null) {
+                session.send(contractDto);
             }
         }
     }
