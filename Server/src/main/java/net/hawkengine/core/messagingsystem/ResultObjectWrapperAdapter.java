@@ -28,7 +28,7 @@ public class ResultObjectWrapperAdapter implements JsonDeserializer<ResultObject
         JsonObject jsonObject = json.getAsJsonObject();
         JsonElement resultObjectAsString = jsonObject.get("resultObject");
         if (resultObjectAsString == null) {
-            return null;
+            return new ResultObjectWrapper();
         }
 
         Type resultObjectType = null;

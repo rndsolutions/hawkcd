@@ -22,6 +22,9 @@ class ResultObjectWrapper {
     private Object resultObject;
     private String resultObjectType;
 
+    ResultObjectWrapper() {
+    }
+
     ResultObjectWrapper(Object resultObject) {
         if (resultObject != null) {
             this.resultObject = resultObject;
