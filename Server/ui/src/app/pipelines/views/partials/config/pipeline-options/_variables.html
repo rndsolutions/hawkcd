@@ -27,7 +27,7 @@
                 <tr ng-repeat="pipeVar in pipeConfig.allPipelines[pipeConfig.pipelineIndex].environmentVariables">
                     <td class="table-element-text"> {{pipeVar.key}} </td>
                     <td class="hidden-xs table-element-text"> {{pipeVar.isSecured ? '******' : pipeVar.value}} </td>
-                    <td class="hidden-xs"> {{pipeVar.isSecured ? 'Yes' : 'No'}} </td>
+                    <td class="hidden-xs text-center-all"> {{pipeVar.isSecured ? 'Yes' : 'No'}} </td>
                     <td class="text-center-all">
                         <button class="btn yellow config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#editPipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)">Edit</button>
                         <button class="btn red config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removePipeVar" data-toggle="modal" ng-click="pipeConfig.environmentVariableUtils.pipelines.getVariableForEdit(pipeVar)" ng-class="{'disabled': pipeConfig.variableDeleteButton || !pipeVar.isDeletable}">Delete</button>

@@ -18,9 +18,9 @@
       <thead>
       <tr>
         <th width="35px"> # </th>
-        <th class="config-names"> Name </th>
-        <th class="hidden-xs"> Triggered Manually <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.triggeredManually}}">?</span></th>
-        <th> Jobs <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobCount}}">?</span></th>
+        <th> Name </th>
+        <th width="170px" class="hidden-xs"> Triggered Manually <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.triggeredManually}}">?</span></th>
+        <th width="70px" class="hidden-xs"> Jobs <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobCount}}">?</span></th>
         <th class="config-controls"> Controls </th>
       </tr>
       </thead>
@@ -28,10 +28,10 @@
 
       <!--ng-repeat-->
       <tr ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions">
-        <td> {{$index+1}} </td>
+        <td class="text-center-all"> {{$index+1}} </td>
         <td class="table-element-text"> {{stage.name}} </td>
-        <td class="hidden-xs"> {{stage.isTriggeredManually}} </td>
-        <td> {{stage.jobDefinitions.length}} </td>
+        <td class="hidden-xs text-center-all"> {{stage.isTriggeredManually}} </td>
+        <td class="text-center-all hidden-xs"> {{stage.jobDefinitions.length}} </td>
         <td class="text-center-all">
           <button class="btn red unsortable config-button" data-target="#removeStage" data-toggle="modal"
                   ng-click="pipeConfig.getStage(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">Delete</button>
