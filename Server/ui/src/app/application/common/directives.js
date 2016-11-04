@@ -39,9 +39,9 @@ angular
                         Layout.setSidebarMenuActiveLink('match'); // activate selected link in the sidebar menu
 
                         // auto scorll to page top
-                        setTimeout(function() {
-                            App.scrollTop(); // scroll to the top on content load
-                        }, $rootScope.settings.layout.pageAutoScrollOnLoad);
+                        // setTimeout(function() {
+                        //     App.scrollTop(); // scroll to the top on content load
+                        // }, $rootScope.settings.layout.pageAutoScrollOnLoad);
                     });
 
                     // handle errors
