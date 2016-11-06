@@ -693,6 +693,7 @@ p {
 .custom-admin-pipeline-padding {
     padding-right: 10px!important;
     float:left!important;
+    margin-top:10px;
 }
 
 .custom-admin-badge-color {
@@ -710,6 +711,10 @@ p {
     padding-left: 0.01em;
     padding-top: 0.29em;
     font-size:1.5em;
+}
+
+.custom-unassigned-pipeline-padding {
+    padding-left:15px;
 }
 
 .status-position{
@@ -954,6 +959,10 @@ p {
     padding-top: 5%;
 }
 
+.padding-top-15px {
+    padding-top: 15px;
+}
+
 .padding-bottom-5 {
     padding-bottom: 5%;
 }
@@ -1087,6 +1096,10 @@ p {
         margin-top:10%!important;
     }
 
+    .group-button {
+        margin-top: 10px;
+    }
+
     .config-button {
         display:block;
     }
@@ -1128,6 +1141,14 @@ p {
 .text-center-all {
     vertical-align: middle!important;
     text-align: center;
+}
+
+.text-center-vertical {
+    vertical-align: middle!important;
+}
+
+.tab-border-fix > .nav-tabs > li.active > a{
+    border-bottom-color: transparent;
 }
 
 .table-fixed {
