@@ -30,32 +30,29 @@
                   <th>
                       <h4>{{admin.popOverOptions.userTitles.username}}</h4></th>
                   <th>
-                      <h4>{{admin.popOverOptions.userTitles.dateRegistered}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.userInfo.dateRegistered}}">?</span></h4></th>
-                  <th>
-                      <h4> {{admin.popOverOptions.userTitles.permissions}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.userInfo.permissions}}">?</span></h4></th>
-                  <th>
-                      <h4>{{admin.popOverOptions.userTitles.action}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.userInfo.action}}">?</span></h4></th>
+                      <h4 ng-if="admin.windowWidth > 767"> {{admin.popOverOptions.userTitles.permissions}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.userInfo.permissions}}">?</span></h4>
+                      <h4 ng-if="admin.windowWidth < 768"> {{admin.popOverOptions.userTitles.controls}}</h4>
+                <th class="hidden-xs">
+                      <h4>{{admin.popOverOptions.userTitles.action}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.userInfo.action}}">?</span></h4>
                   </th>
-                  <th>
-                      <h4>{{admin.popOverOptions.userTitles.edit}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.userInfo.edit}}">?</span></h4></th>
+                  <th class="hidden-xs">
+                      <h4>{{admin.popOverOptions.userTitles.edit}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.userInfo.edit}}">?</span></h4>
                   </th>
             </tr>
             </thead>
             <tbody id="usersTable">
                 <tr ng-repeat="user in admin.users">
-                    <td>
+                    <td class="table-element-text">
                         {{user.email}}
                     </td>
                     <td>
-                        {{user.registeredOn}}
+                        <a ng-if="admin.windowWidth > 767" data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
+                        <a ng-if="admin.windowWidth < 768" data-target="#manageUser" data-toggle="modal" class="btn yellow config-button" ng-click="admin.selectUser($index)"> Edit </a>
                     </td>
-                    <td>
-                        <a data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
+                    <td class="hidden-xs">
+                      <input type="checkbox" ng-model="user.isEnabled" data-on-text="ENABLED" data-off-text="DISABLED" bootstrap-switch id="switch-box"/>
                     </td>
-                    <td>
-                      <input type="checkbox" ng-model="user.isEnabled" data-on-text="ENABLED" data-off-text="DISABLED" bootstrap-switch id="switch-box" ng-click="scope.toggleUser()"/>
-                    </td>
-                    <td>
+                    <td class="hidden-xs">
                       <div class="padding-cog">
                         <i class="fa fa-cog fa-2x text-center pointer" data-target="#resetUserInfo" data-toggle="modal" ng-click="admin.selectUser($index)"></i>
                       </div>
@@ -73,3 +70,4 @@
 <div ng-include src="'app/admin/views/partials/_manageUser.html'"></div>
 <div ng-include src="'app/admin/views/partials/_removeUser.html'"></div>
 <div ng-include src="'app/admin/views/partials/_resetUserInfo.html'"></div>
+<div ng-include src="'app/admin/views/partials/_userActions-small.html'"></div>
