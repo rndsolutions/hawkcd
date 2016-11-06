@@ -26,12 +26,10 @@ import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
 import redis.clients.jedis.JedisPubSub;
 
-public class Subscriber extends JedisPubSub {
-    private Processor processor;
+class Subscriber extends JedisPubSub {
     private Gson jsonConverter;
 
-    public Subscriber() {
-        this.processor = new Processor();
+    Subscriber() {
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(ResultObjectWrapper.class, new ResultObjectWrapperAdapter())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -42,17 +40,6 @@ public class Subscriber extends JedisPubSub {
     @Override
     public void onMessage(String channel, String message) {
         PubSubMessage pubSubMessage = this.jsonConverter.fromJson(message, PubSubMessage.class);
-
-        this.processor.processResponse(pubSubMessage);
-
-//        if (channel.equals("global")) {
-//            if (pubSubMessage.getUserId() == null) {
-////                SessionPool.getInstance().sendToAuthorizedSessions();
-//            } else {
-////                SessionPool.getInstance().sendToUserSessions();
-//            }
-//        } else if (channel.equals("local")) {
-////            SessionPool.getInstance().sendToSingleUserSession();
-//        }
+        MessagingSystem.receiveResult(pubSubMessage);
     }
 }

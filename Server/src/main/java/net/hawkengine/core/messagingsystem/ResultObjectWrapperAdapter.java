@@ -22,7 +22,7 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-public class ResultObjectWrapperAdapter implements JsonDeserializer<ResultObjectWrapper> {
+class ResultObjectWrapperAdapter implements JsonDeserializer<ResultObjectWrapper> {
     @Override
     public ResultObjectWrapper deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();

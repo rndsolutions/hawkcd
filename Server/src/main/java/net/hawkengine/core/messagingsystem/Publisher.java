@@ -27,11 +27,11 @@ import net.hawkengine.model.MaterialDefinition;
 import net.hawkengine.model.TaskDefinition;
 import redis.clients.jedis.Jedis;
 
-public class Publisher {
+class Publisher {
     private Jedis jedisPublisher;
     private Gson jsonConverter;
 
-    public Publisher() {
+    Publisher() {
         this.jedisPublisher = RedisManager.getJedisPool().getResource();
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -39,7 +39,7 @@ public class Publisher {
                 .create();
     }
 
-    public void publish(String channel, PubSubMessage message) {
+    void publish(String channel, PubSubMessage message) {
         String messageAsString = this.jsonConverter.toJson(message);
         this.jedisPublisher.publish(channel, messageAsString);
     }
