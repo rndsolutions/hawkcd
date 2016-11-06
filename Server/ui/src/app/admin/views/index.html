@@ -17,7 +17,7 @@
   <ul class="page-breadcrumb">
     <li>
       <i class="icon-home"></i>
-      <span>{{admin.breadCrumb.admin}}</span>
+      <a ui-sref="index.admin.groups"><span>{{admin.breadCrumb.admin}}</span></a>
     </li>
     <li>
       <i class="fa fa-angle-right"></i>
@@ -36,53 +36,9 @@
   </div>
   <div class="portlet-body">
     <div class="row">
-      <div class="col-md-12">
-        <div class="tabbable-custom nav-justified">
-          <ul class="nav nav-tabs nav-justified width-40">
-            <li ui-sref-active="active" style="min-width:180px;">
-              <a data-target="groups" data-toggle="tab" aria-expanded="true" ui-sref="index.admin.groups"> Pipeline Groups <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.pipelineGroup}}">?</span></a>
-            </li>
-            <li ui-sref-active="active" style="min-width:120px;">
-              <a data-target="#materials" data-toggle="tab" aria-expanded="false" ui-sref="index.admin.materials"> Materials <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.material}}">?</span></a>
-            </li>
-            <li ui-sref-active="active" style="min-width:150px;">
-              <a data-target="#userGroups" data-toggle="tab" aria-expanded="false" ui-sref="index.admin.userGroups"> User Groups <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.userGroup}}">?</span></a>
-            </li>
-            <li ui-sref-active="active" style="min-width:100px;">
-              <a data-target="#users" data-toggle="tab" aria-expanded="false" ui-sref="index.admin.users"> Users <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.user}}">?</span></a>
-            </li>
-          </ul>
-          <div class="tab-content" ui-view style="margin-top:-1px;">
+      <div ng-if="admin.windowWidth > 767" class="hidden-xs" ng-include src="'app/admin/views/index-medium.html'"></div>
 
-          </div>
-        </div>
-      </div>
-      <!--<div class="col-sm-2">-->
-        <!--<ul class="nav nav-tabs admin tabs-left">-->
-          <!--<li ui-sref-active="active">-->
-            <!--<a ui-sref="index.admin.groups"  aria-expanded="true"> <h4>{{admin.defaultText.group}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.pipelineGroup}}">?</span></h4></a>-->
-          <!--<li ui-sref-active="active">-->
-            <!--<a ui-sref="index.admin.materials" data-target="#admin-materials" data-toggle="tab" aria-expanded="false">-->
-            <!--<h4>  {{admin.defaultText.materials}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.material}}">?</span></h4></a>-->
-          <!--&lt;!&ndash;<li ui-sref-active="active">&ndash;&gt;-->
-            <!--&lt;!&ndash;<a ui-sref="index.admin.servers" data-target="#admin-servers" data-toggle="tab" aria-expanded="false">&ndash;&gt;-->
-              <!--&lt;!&ndash;<h4>{{admin.defaultText.server}} </h4></a>&ndash;&gt;-->
-          <!--<li ui-sref-active="active">-->
-            <!--<a ui-sref="index.admin.userGroups" data-target="#admin-userGroups" data-toggle="tab" aria-expanded="false">-->
-              <!--<h4>{{admin.defaultText.userGroup}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.userGroup}}">?</span></h4> </a>-->
-          <!--</li>-->
-          <!--<li ui-sref-active="active">-->
-            <!--<a ui-sref="index.admin.users" data-target="#admin-users" data-toggle="tab" aria-expanded="false">-->
-              <!--<h4>{{admin.defaultText.user}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.user}}">?</span></h4> </a>-->
-          <!--</li>-->
-        <!--</ul>-->
-      <!--</div>-->
-      <!--<div class="col-sm-10">-->
-        <!--<div class="nav-justified">-->
-          <!--<div class="tab-content" ui-view>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
+      <div ng-if="admin.windowWidth < 768" class="hidden-sm hidden-md hidden-lg" ng-include src="'app/admin/views/index-small.html'"></div>
     </div>
   </div>
 </div>
