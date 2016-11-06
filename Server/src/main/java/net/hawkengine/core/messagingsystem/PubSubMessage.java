@@ -18,40 +18,51 @@
 
 package net.hawkengine.core.messagingsystem;
 
+import net.hawkengine.model.ServiceResult;
 import net.hawkengine.model.enums.NotificationType;
 
 class PubSubMessage {
-    private String className;
-    private String methodName;
+    private String serviceCalled;
+    private String methodCalled;
     private ResultObjectWrapper resultObjectWrapper;
     private NotificationType resultNotificationType;
     private String resultMessage;
 
-    PubSubMessage(String className, String methodName, Object resultObject, NotificationType resultNotificationType, String resultMessage) {
-        this.className = className;
-        this.methodName = methodName;
+    PubSubMessage(String serviceCalled, String methodCalled, ServiceResult serviceResult) {
+        this.serviceCalled = serviceCalled;
+        this.methodCalled = methodCalled;
+        if (serviceResult != null) {
+            this.resultObjectWrapper = new ResultObjectWrapper(serviceResult.getObject());
+            this.resultNotificationType = serviceResult.getNotificationType();
+            this.resultMessage = serviceResult.getMessage();
+        }
+    }
+
+    PubSubMessage(String serviceCalled, String methodCalled, Object resultObject, NotificationType resultNotificationType, String resultMessage) {
+        this.serviceCalled = serviceCalled;
+        this.methodCalled = methodCalled;
         this.resultObjectWrapper = new ResultObjectWrapper(resultObject);
         this.resultNotificationType = resultNotificationType;
         this.resultMessage = resultMessage;
     }
 
-    public String getClassName() {
-        return className;
+    String getServiceCalled() {
+        return serviceCalled;
     }
 
-    public String getMethodName() {
-        return methodName;
+    String getMethodCalled() {
+        return methodCalled;
     }
 
-    public Object getResultObject() {
+    Object getResultObject() {
         return this.resultObjectWrapper.getResultObject();
     }
 
-    public NotificationType getResultNotificationType() {
+    NotificationType getResultNotificationType() {
         return resultNotificationType;
     }
 
-    public String getResultMessage() {
+    String getResultMessage() {
         return resultMessage;
     }
 }
