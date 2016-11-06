@@ -18,14 +18,27 @@
 
 package net.hawkengine.core.messagingsystem;
 
-import net.hawkengine.db.redis.RedisManager;
-import redis.clients.jedis.Jedis;
+import net.hawkengine.model.ServiceResult;
 
-public class MessagingSystem implements Runnable {
+public class MessagingSystem implements IMessagingSystem {
+    static final String DEFAULT_CHANNEL = "global";
+
+    private Thread listener;
+    private Publisher publisher;
+
+    public MessagingSystem() {
+        this.listener = new Thread(new Listener(), "Listener");
+        this.listener.start();
+        this.publisher = new Publisher();
+    }
+
     @Override
-    public void run() {
-        Jedis jedisSubscriber = RedisManager.getJedisPool().getResource();
-        Subscriber subscriber = new Subscriber();
-        jedisSubscriber.subscribe(subscriber, "global", "local");
+    public void sendResult(String serviceName, String methodName, ServiceResult serviceResult) {
+        PubSubMessage pubSubMessage = new PubSubMessage(serviceName, methodName, serviceResult);
+        this.publisher.publish(DEFAULT_CHANNEL, pubSubMessage);
+    }
+
+    static void receiveResult(PubSubMessage pubSubMessage) {
+        // TODO: Send to Dispatcher
     }
 }

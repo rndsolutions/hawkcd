@@ -17,7 +17,6 @@
 package net.hawkengine.core;
 
 import net.hawkengine.core.materialhandler.MaterialTracker;
-import net.hawkengine.core.messagingsystem.MessagingSystem;
 import net.hawkengine.core.pipelinescheduler.JobAssigner;
 import net.hawkengine.core.pipelinescheduler.PipelinePreparer;
 import net.hawkengine.core.utilities.DataImporter;
@@ -53,7 +52,7 @@ public class HawkServer {
         this.pipelinePreparer = new Thread(new PipelinePreparer(), "PipelineScheduler");
         this.jobAssigner = new Thread(new JobAssigner(), "JobAssigner");
         this.materialTracker = new Thread(new MaterialTracker(), "MaterialTracker");
-        this.subsciber = new Thread(new MessagingSystem(), "MessagingSystem");
+//        this.subsciber = new Thread(new Listener(), "Listener");
         this.dataImporter = new DataImporter();
     }
 
@@ -97,7 +96,7 @@ public class HawkServer {
     }
 
     public void start() throws Exception {
-        this.subsciber.start();
+//        this.subsciber.start();
         this.server.start();
         this.dataImporter.importDefaultEntities();
         this.pipelinePreparer.start();
