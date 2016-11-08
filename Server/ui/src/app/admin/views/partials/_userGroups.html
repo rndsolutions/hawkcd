@@ -52,8 +52,8 @@
                     <span class="label label-default admin-custom" ng-click="admin.selectPipeline(pipeline, $index);admin.togglePipeline = $index" data-ng-class="{'admin-selected-pipeline': admin.togglePipeline == $index}"> {{user.email}}</span>
                 </div>
                 </br>
-                <div class="pull-right">
-                    <button type="button" class="btn btn-xs green" data-target="#assignUser" data-toggle="modal" ng-click="admin.selectUserGroup(admin.userGroups.indexOf(userGroup))">Manage <i class="fa fa-plus"></i></button>
+                <div class="pull-right display-inline-block padding-top-15px">
+                    <button type="button" class="btn btn-xs green group-button" data-target="#assignUser" data-toggle="modal" ng-click="admin.selectUserGroup(admin.userGroups.indexOf(userGroup))">Manage <i class="fa fa-plus"></i></button>
                 </div>
             </div>
         </uib-accordion>
