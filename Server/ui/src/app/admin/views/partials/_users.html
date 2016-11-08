@@ -47,7 +47,7 @@
                     </td>
                     <td>
                         <a ng-if="admin.windowWidth > 767" data-target="#manageUser" data-toggle="modal" class="btn blue btn-xs" ng-click="admin.selectUser($index)"> Manage </a>
-                        <a ng-if="admin.windowWidth < 768" data-target="#manageUser" data-toggle="modal" class="btn yellow config-button" ng-click="admin.selectUser($index)"> Edit </a>
+                        <a ng-if="admin.windowWidth < 768" data-target="#editUser" data-toggle="modal" class="btn yellow config-button" ng-click="admin.selectUser($index)"> Edit </a>
                     </td>
                     <td class="hidden-xs">
                       <input type="checkbox" ng-model="user.isEnabled" data-on-text="ENABLED" data-off-text="DISABLED" bootstrap-switch id="switch-box"/>

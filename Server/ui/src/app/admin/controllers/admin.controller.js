@@ -385,6 +385,7 @@ angular
 
             vm.selectUser = function(index) {
                 vm.selectedUser = angular.copy(vm.users[index]);
+                $scope.user = angular.copy(vm.selectedUser);
                 vm.userDTO = angular.copy(vm.users[index]);
             };
 
@@ -634,7 +635,6 @@ angular
                 $('.extraRow').each(function() {
                     $(this).remove();
                 });
-                vm.selectedUser = null;
             };
 
             vm.closeGroupPermissionModal = function() {
