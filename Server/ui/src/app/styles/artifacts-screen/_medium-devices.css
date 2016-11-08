@@ -17,12 +17,12 @@
   display:inline-block;
   padding-left:1%;
   margin-top:15px;
-  width:15%;
+  width:170px;
   height: auto!important;
 }
 
 #left-container-text-medium{
-  display:block!important;
+  /*display:block!important;*/
 }
 
 #left-container-text-small{
@@ -34,20 +34,22 @@
   vertical-align: top;
   border-left:2px solid gray;
   text-align: center;
+  width: calc(100% - 430px);
+  word-break: break-all;
   height: 65px;!important;
-  width:65%;
 }
 
 #right-container {
   display:inline-block!important;
   border-left:2px solid gray;
   height: 65px!important;
-  width:19%;
+  width:250px;
+  min-width:250px;
 }
 
 .artifact-user-info-cell{
   height: auto!important;
-  width:80%!important;
+  width:100%;
   display:inline-block;
   padding-left:3px;
 }
@@ -79,6 +81,13 @@
 
 .center-cell {
   margin:auto!important;
+  line-height: 1.5em;
+  max-height: 3em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .break-word {
@@ -86,7 +95,7 @@
 }
 
 .vertical-center-top {
-  margin:10%;
+  margin:5%;
 }
 
 #list-container {

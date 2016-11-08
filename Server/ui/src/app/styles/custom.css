@@ -869,6 +869,12 @@ p {
     transform: translateY(-50%);
 }
 
+.vertical-center-label {
+    position: relative;
+    top: 47%;
+    transform: translateY(-100%);
+}
+
 .vertical-center-static {
     position: static;
     top: 50%;
@@ -977,6 +983,14 @@ p {
 
 .margin-left-1 {
     margin-left: 1%;
+}
+
+.margin-left-5px {
+    margin-left: 5px;
+}
+
+.margin-right-5px {
+    margin-right: 5px;
 }
 
 .margin-left-0 {
