@@ -59,10 +59,13 @@
 }
 
 #expander-medium{
-  width:15%!important;
+  /*width:15%!important;*/
   display:inline!important;
-  padding-left:10px;
-  position:absolute;;
+  float: right;
+  text-align: right;
+  top: 0px;
+  right: 0px;
+  position:absolute;
 }
 
 #artifact-header-container{
