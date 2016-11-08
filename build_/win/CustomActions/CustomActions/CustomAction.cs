@@ -328,7 +328,7 @@ namespace CustomActions
                 }
                 else
                 {
-                    session.Log("Port {0} is in free.", port);
+                    session.Log("Port {0} is free.", port);
                     session[HawkCDServerProperties.IsDeafultServerPortInUse] = "0";
                 }
 

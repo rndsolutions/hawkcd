@@ -505,7 +505,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Fragment>
         <UI>
             <Dialog Id="HostNameDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="Control_1" Property="NEW_EDIT_PROPERTY" Type="Edit" X="10" Y="130" Width="150" Height="20">
+                <Control Id="Control_1" Property="NEW_SERVER_PORT" Type="Edit" X="10" Y="130" Width="150" Height="20">
 <Condition Action="hide">IS_DEFAULT_SERVER_PORT_IN_USE = 0</Condition>
 <Condition Action="show">IS_DEFAULT_SERVER_PORT_IN_USE = 1</Condition>
 </Control>
