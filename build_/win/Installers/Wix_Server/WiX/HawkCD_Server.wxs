@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-10-31 at 21:25:03 -->
+     on 2016-11-06 at 11:00:05 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Server - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
@@ -72,6 +72,7 @@
 <CustomAction Id="CheckServerPort" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckServerPort"/>
 <CustomAction Id="CheckIsUserAdministrator" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckIsUserAdministrator"/>
 <CustomAction Id="LaunchJavaDownloadPage" Impersonate="yes" Return="asyncNoWait" Execute="immediate" ExeCommand="[SystemFolder]cmd.exe /c start explorer &quot;http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html&quot;" Directory="SystemFolder"/>
+<CustomAction Id="UpdateServerShortcutUrlProp" Impersonate="yes" Return="check" Execute="immediate" Property="SERVER_SHORTCUT_URL" Value="http://localhost:[NEW_SERVER_PORT]/"/>
 <Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
 <InstallExecuteSequence>
 <Custom Action="InstallRedis" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
@@ -89,6 +90,7 @@
 <Custom Action="UpdateRedisConfig" Before="InstallRedis">NOT REMOVE~="ALL" AND NOT OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="CheckServerPort" Before="AppSearch">1</Custom>
 <Custom Action="CheckIsUserAdministrator" Before="AppSearch">1</Custom>
+<Custom Action="UpdateServerShortcutUrlProp" Before="InstallInitialize">IS_DEFAULT_SERVER_PORT_IN_USE = 1</Custom>
 </InstallExecuteSequence>
 <InstallUISequence>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
