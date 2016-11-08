@@ -14,24 +14,24 @@
 
 <div id="jobs" ui-sref-active="active">
   <div class="table-scrollable">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-fixed">
       <thead>
       <tr>
-        <th> Name </th>
-        <th> Resources <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobResources}}">?</span></th>
-        <th> Controls </th>
+        <th class="config-names"> Name </th>
+        <th class="hidden-xs"> Resources <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobResources}}">?</span></th>
+        <th class="config-controls"> Controls </th>
       </tr>
       </thead>
       <tbody>
 
       <!--ng-repeat-->
       <tr ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions">
-        <td> {{job.name}} </td>
-        <td>
-          <div ng-repeat="resource in job.resources" class="label label-default job-selected-stage vertical-center margin-left-1">{{resource}}</div>
+        <td class="table-element-text"> {{job.name}} </td>
+        <td class="hidden-xs">
+          <div ng-repeat="resource in job.resources" class="label label-default job-selected-stage vertical-center margin-left-1">{{resource.substr(0, 20)}} <span ng-if="resource.length > 20">...</span></div>
         </td>
-        <td>
-          <button class="btn red" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJob" data-toggle="modal"
+        <td class="text-center-all">
+          <button class="btn red config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJob" data-toggle="modal"
                   ng-click="pipeConfig.getJob(job)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions.length > 1">Delete</button>
         </td>
       </tr>

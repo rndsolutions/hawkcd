@@ -16,7 +16,7 @@
   <div style="width: 300px">
     <form name="editJobForm">
       <div class="form-group form-md-line-input">
-        <input type="text" class="form-control" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" ng-model="pipeConfig.updatedJob.name" ng-pattern="/^([\w-]+)$/" required>
+        <input type="text" class="form-control small-device-label" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" ng-model="pipeConfig.updatedJob.name" ng-pattern="/^([\w-]+)$/" required>
         <label>Job Name</label>
       </div>
     </form>

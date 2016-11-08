@@ -1,0 +1,18 @@
+<div class="col-md-9 config-tabs">
+    <div class="tabbable-custom nav-justified">
+        <ul class="nav nav-tabs nav-justified width-100">
+            <li ui-sref-active="active" style="min-width:33.3%;margin-right:0;float:left">
+                <a data-target="#stageSettings" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.stage.settings"><span class="fa fa-cog fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Stage Settings"></span></a>
+            </li>
+            <li ui-sref-active="active" style="min-width:33.3%;margin-right:0;float:left">
+                <a data-target="#jobs" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.jobs"><span class="fa fa-tasks fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Jobs"></span></a>
+            </li>
+            <li ui-sref-active="active" style="min-width:33.3%;margin-right:0;float:left">
+                <a data-target="#sEnvironmentVar" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.variables"><span class="fa fa-arrows-h fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Environment Variables"></span></a>
+            </li>
+        </ul>
+        <div class="tab-content" ui-view style="margin-top:-5px">
+
+        </div>
+    </div>
+</div>
