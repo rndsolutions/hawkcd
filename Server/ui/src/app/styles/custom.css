@@ -1190,3 +1190,27 @@ p {
 .tooltip-inner {
     white-space: pre-wrap;
 }
+
+@media (max-width: 991px) {
+    /* Override default theme behavior to be the same on phone and tablet view for the header */
+    .page-header.navbar {
+        height: 136px !important;
+    }
+
+    .page-header.navbar .page-top {
+        display: block;
+        clear: both;
+    }
+
+    .page-header.navbar {
+        background: #17C4BB;
+    }
+
+    .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle:hover {
+        background-color: #eff1f6;
+    }
+
+    .page-header.navbar .menu-toggler.responsive-toggler {
+        background-image: url(../../assets/images/sidebar-toggler.png)!important;
+    }
+}
