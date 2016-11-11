@@ -60,8 +60,7 @@
       <a class="list-toggle-container" data-target="#{{stage.name}}">
 
         <div class="list-toggle"
-             ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
-             id="{{'stage'+$index}}" ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage)">
+             id="{{'stage'+$index}}" ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})" ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage)">
           <span class="clip stage-display-name">{{stage.name}}</span>
           <span class="badge badge-default pull-right bg-white font-green bold"> {{stage.jobDefinitions.length}}</span>
         </div>
@@ -89,6 +88,6 @@
 
 </div>
 
-<div ui-view>
+<div ui-view autoscroll="true">
 
 </div>

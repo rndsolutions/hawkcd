@@ -559,7 +559,7 @@ Page Header
   .page-header.navbar .top-menu .navbar-nav > li.dropdown-language .dropdown-toggle .langname {
     display: none; } }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   /* 767px */
   .page-header.navbar {
     height: 136px;
