@@ -125,4 +125,27 @@ angular
             });
         }
     };
-});
+})
+
+.directive('elastic', [
+    '$timeout',
+    function($timeout) {
+        return {
+            restrict: 'A',
+            link: function($scope, element) {
+                if(!$scope.initialHeight){
+                    element[0].style.height = "32px";
+                }
+                $scope.initialHeight = $scope.initialHeight || element[0].style.height || "32px";
+                var resize = function() {
+                    element[0].style.height = $scope.initialHeight;
+                    if(element[0].scrollHeight > 0){
+                        element[0].style.height = "" + element[0].scrollHeight + "px";
+                    }
+                };
+                element.on("input change", resize);
+                $timeout(resize, 0);
+            }
+        };
+    }
+]);
