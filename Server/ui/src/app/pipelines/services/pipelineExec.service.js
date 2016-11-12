@@ -25,9 +25,9 @@ angular
         pipeExecService.startPipeline = function (pipeline) {
             var methodName = "add";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.Pipeline\", \"object\": " + JSON.stringify(pipeline) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.Pipeline\", \"object\": " + JSON.stringify(pipeline) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -37,7 +37,7 @@ angular
         pipeExecService.pausePipeline = function (id) {
             var methodName = "pausePipeline";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
@@ -49,7 +49,7 @@ angular
         pipeExecService.stopPipeline = function (id) {
             var methodName = "cancelPipeline";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
@@ -61,7 +61,7 @@ angular
         pipeExecService.getAllPipelines = function () {
             var methodName = "getAll";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";
@@ -73,7 +73,7 @@ angular
         pipeExecService.getAllHistoryPipelines = function (pipelineDefinitionId, numberOfPipelines, pipelineId) {
             var methodName = "getAllPipelineHistoryDTOs";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}",
                 "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
@@ -87,7 +87,7 @@ angular
         pipeExecService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
             var methodName = "getPipelineArtifactDTOs";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + searchCriteria + "\"}",
                         "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
@@ -101,7 +101,7 @@ angular
         pipeExecService.getPipelineById = function (id) {
             var methodName = "getById";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
@@ -113,9 +113,9 @@ angular
         pipeExecService.update = function (pipeline) {
             var methodName = "update";
             var className = "PipelineService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.Pipeline\", \"object\": " + JSON.stringify(pipeline) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.Pipeline\", \"object\": " + JSON.stringify(pipeline) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

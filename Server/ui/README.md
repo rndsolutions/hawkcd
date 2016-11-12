@@ -31,11 +31,11 @@ Build an optimized version of your application in folder build -
 ```sh
 $ gulp build
 ```
-Start BrowserSync server on your source files with live reload -
+Start BrowserSync HServer on your source files with live reload -
 ```sh
 $ gulp serve-dev
 ```
-Start BrowserSync server on your optimized application without live reload -
+Start BrowserSync HServer on your optimized application without live reload -
 ```sh
 $ gulp serve-build
 ```

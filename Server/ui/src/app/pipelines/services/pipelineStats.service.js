@@ -79,7 +79,7 @@ angular
         pipeStatsService.getAllPipelineGroups = function () {
             var methodName = "getAll";
             var className = "PipelineGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";

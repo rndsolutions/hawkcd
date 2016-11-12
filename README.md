@@ -35,7 +35,7 @@ sudo apt-get install -y nodejs
 sudo npm install gulp -g
 sudo npm install bower -g
 ```
-### Build *.tar.gz - agent & server packages
+### Build *.tar.gz - agent & HServer packages
 ```bash
 
 ./build1.sh build_all

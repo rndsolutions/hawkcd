@@ -25,10 +25,10 @@ angular
         // agentService.changeAgentStatus = function (id, configState){
         //     var methodName = "update";
         //     var className = "AgentService";
-        //     var packageName = "net.hawkengine.services";
+        //     var packageName = "io.hawkcd.services";
         //     var result = "";
         //     var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}",
-        //                 "{\"packageName\": \"net.hawkengine.model.ConfigState\", \"object\": \"" + configState + "\"}"];
+        //                 "{\"packageName\": \"io.hawkcd.model.ConfigState\", \"object\": \"" + configState + "\"}"];
         //     var error = "";
         //     var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
         //     websocketSenderService.call(json);
@@ -40,7 +40,7 @@ angular
         agentService.getAllAgents = function () {
             var methodName = "getAll";
             var className = "AgentService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";
@@ -51,7 +51,7 @@ angular
         agentService.getAgentById = function (id) {
             var methodName = "getById";
             var className = "AgentService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
@@ -63,7 +63,7 @@ angular
         agentService.deleteAgent = function (id) {
             var methodName = "delete";
             var className = "AgentService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
@@ -75,9 +75,9 @@ angular
         agentService.update = function (agent) {
             var methodName = "update";
             var className = "AgentService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.Agent\", \"object\": " + JSON.stringify(agent) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.Agent\", \"object\": " + JSON.stringify(agent) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

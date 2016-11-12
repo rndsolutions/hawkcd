@@ -23,7 +23,7 @@ angular
         adminService.getAllUserGroups = function() {
             var methodName = "getAll";
             var className = "UserGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";
@@ -35,7 +35,7 @@ angular
         adminService.getAllUserGroupDTOs = function() {
             var methodName = "getAllUserGroups";
             var className = "UserGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";
@@ -47,9 +47,9 @@ angular
         adminService.updateUserGroupDTO = function(userGroup) {
             var methodName = "updateUserGroupDto";
             var className = "UserGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(userGroup) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(userGroup) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -59,7 +59,7 @@ angular
         adminService.deleteUserGroup = function(id) {
             var methodName = "delete";
             var className = "UserGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
@@ -71,7 +71,7 @@ angular
         adminService.getAllUsers = function() {
             var methodName = "getAll";
             var className = "UserService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";
@@ -83,9 +83,9 @@ angular
         adminService.addUser = function(user) {
             var methodName = "addUserWithoutProvider";
             var className = "UserService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -95,9 +95,9 @@ angular
         adminService.addUserGroup = function(userGroup) {
             var methodName = "addUserGroupDto";
             var className = "UserGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(userGroup) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(userGroup) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -107,9 +107,9 @@ angular
         adminService.updateUser = function(user) {
             var methodName = "update";
             var className = "UserService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -119,9 +119,9 @@ angular
         adminService.resetUserPassword = function(user) {
             var methodName = "resetUserPassword";
             var className = "UserService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -131,9 +131,9 @@ angular
         adminService.updateUserPassword = function(user, newUserPassword,oldPassword) {
             var methodName = "changeUserPassword";
             var className = "UserService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.dto.UserDto\", \"object\": " + JSON.stringify(user) + "}, " +
+            var args = ["{\"packageName\": \"io.hawkcd.model.dto.UserDto\", \"object\": " + JSON.stringify(user) + "}, " +
                 "{\"packageName\": \"java.lang.String\", \"object\": \"" + newUserPassword + "\"}, " +
                 "{\"packageName\": \"java.lang.String\", \"object\": \"" + oldPassword + "\"}"
             ];
@@ -146,7 +146,7 @@ angular
         adminService.deleteUser = function(id) {
             var methodName = "delete";
             var className = "UserService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";
@@ -158,10 +158,10 @@ angular
         adminService.assignUser = function(user, group) {
             var methodName = "assignUserToGroup";
             var className = "UserGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
-                "{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
+            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
+                "{\"packageName\": \"io.hawkcd.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
             ];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
@@ -172,10 +172,10 @@ angular
         adminService.unassignUser = function(user, group) {
             var methodName = "unassignUserFromGroup";
             var className = "UserGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
-                "{\"packageName\": \"net.hawkengine.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
+            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
+                "{\"packageName\": \"io.hawkcd.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
             ];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);

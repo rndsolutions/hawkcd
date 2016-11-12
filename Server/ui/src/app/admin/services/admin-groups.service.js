@@ -37,9 +37,9 @@ angular
         adminGroupService.addNewPipelineGroup = function (pipelineGroup) {
             var methodName = "add";
             var className = "PipelineGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineGroup\", \"object\": " + JSON.stringify(pipelineGroup) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.PipelineGroup\", \"object\": " + JSON.stringify(pipelineGroup) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -49,7 +49,7 @@ angular
         adminGroupService.getAllPipelineGroups = function () {
             var methodName = "getAll";
             var className = "PipelineGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";
@@ -61,7 +61,7 @@ angular
          adminGroupService.deletePipelineGroup = function (id) {
             var methodName = "delete";
             var className = "PipelineGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
             var error = "";

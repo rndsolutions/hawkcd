@@ -47,8 +47,8 @@ angular
     .constant({
         CONSTANTS: {
             'BASE_URL': '/api',
-            'SERVER_URL': window.location.origin,
-            'HOST': window.location.host,
+            'SERVER_URL': 'http://localhost:8080',
+            'HOST': 'localhost:8080',
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
@@ -67,8 +67,8 @@ angular
             'USERS': '/Users',
             'DEV': '/dev',
 
-        'MODEL': 'net.hawkengine.model',
-        'SERVICES': 'net.hawkengine.services',
+        'MODEL': 'io.hawkcd.model',
+        'SERVICES': 'io.hawkcd.services',
 
         //region agent methods
         'AGENT_GET_BY_ID': 'getAgentById',

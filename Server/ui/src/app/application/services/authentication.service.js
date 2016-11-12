@@ -23,7 +23,7 @@ angular
         authenticationService.getAllPermissions = function () {
             var methodName = "getAll";
             var className = "AuthorizationService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
             var error = "";

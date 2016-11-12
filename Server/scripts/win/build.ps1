@@ -24,7 +24,7 @@ function Build-HawkUI {
          grunt build
         cd ..
  
-    #deploy the ui assets in the serviced directory by the hawk server
+    #deploy the ui assets in the serviced directory by the hawk HServer
     Copy-Item -Path .\ui\dist\* -Recurse -Destination .\hawk -Force
 
 
