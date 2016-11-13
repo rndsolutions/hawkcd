@@ -19,6 +19,8 @@
 package io.hawkcd.core;
 
 import io.hawkcd.core.publisher.Publisher;
+import io.hawkcd.core.security.AuthorizationFactory;
+import io.hawkcd.core.security.IAuthorizationManager;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
@@ -105,21 +107,29 @@ public class RequestProcessor {
     public void prorcessRequest1(WsContractDto contract, User user, String sessionId)
                     throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-        //Make a call to a Busienss service
-        ServiceResult result = (ServiceResult)this.wsObjectProcessor.call(contract);
+        //check if caller has permission to execute the call
+        boolean isAuthorized = true;//AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract);
 
-        //Construct a message from the service call result
-        Message message = new Message(
-                contract.getClassName(),
-                contract.getMethodName(),
-                result.getObject(),
-                result.getNotificationType(),
-                result.getMessage(),
-                user
+        if (isAuthorized){
+            //Make a call to a Busienss service
+            ServiceResult result = (ServiceResult)this.wsObjectProcessor.call(contract);
+
+            //Construct a message from the service call result
+            Message message = new Message(
+                    contract.getClassName(),
+                    contract.getMethodName(),
+                    result.getObject(),
+                    result.getNotificationType(),
+                    result.getMessage(),
+                    user
             );
 
-        //broadcast the mssage to all Subscribers
-        this.publisher.publish("global", message);
+            //broadcast the mssage to all Subscribers
+            this.publisher.publish("global", message);
+        }else {
+
+            //publish anauthorized message
+        }
     }
 
     public void processResponse(Message pubSubMessage) {

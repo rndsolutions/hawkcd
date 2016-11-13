@@ -19,19 +19,22 @@
 package io.hawkcd.core.security;
 
 import io.hawkcd.model.User;
+import io.hawkcd.model.dto.WsContractDto;
 
 /**
  * Created by rado on 13.11.16.
  */
-public class SecurityManager implements  ISecurityService {
+public interface IAuthorizationManager {
 
-    @Override
-    public boolean isAuthorized(User user) {
-        return false;
-    }
+    /*
+    * Returns tue, false if the user being evaluated has rights to perform an operation
+    * @param user
+    */
+    boolean isAuthorized(User user, WsContractDto contract);
 
-    @Override
-    public void getAllUsersWithPermissions() {
-
-    }
+    /*
+    * returns all users that have access to perform the operation
+    *
+    */
+    void getAllUsersWithPermissions();
 }

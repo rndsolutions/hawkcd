@@ -8,7 +8,7 @@ public class SessionFactory {
     /*
     * Returns a new instance of the SessionManager object
     */
-    public static  ISessionManager getSessionManager() {
+    public static synchronized ISessionManager getSessionManager() {
         return new SessionManager();
     }
 }
