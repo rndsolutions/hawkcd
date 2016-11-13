@@ -40,6 +40,7 @@ import io.hawkcd.services.UserService;
 import io.hawkcd.services.filters.PermissionService;
 import io.hawkcd.services.filters.factories.SecurityServiceInvoker;
 import io.hawkcd.services.interfaces.IUserService;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -122,18 +123,13 @@ public class WSSession extends WebSocketAdapter {
         }
     }
 
+    /*
+    * All calls to the system backend are processed via this method
+    */
     @Override
     public void onWebSocketText(String message) {
-//        Processor processor = new Processor();
-//
-//        WsContractDto wsContractDto = new WsContractDto();
-//        User user = new User();
-//        processor.processRequest(wsContractDto, user);
-//
-//
 
         WsContractDto contract = null;
-
         if (this.loggedUser == null || this.getLoggedUserFromDatabase() == null) {
 //            this.getSession().close();
             return;
@@ -152,81 +148,22 @@ public class WSSession extends WebSocketAdapter {
                 return;
             }
 
-           this.requestProcessor.processRequest(contract, this.getLoggedUser(), this.getId());
+            try {
+                this.requestProcessor.prorcessRequest1(contract, this.getLoggedUser(), this.getId());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 
-
-//            ServiceResult result;
-//
-//            if (contract.getMethodName().equals("getAllPipelineHistoryDTOs") || contract.getMethodName().equals("getPipelineArtifactDTOs")) {
-//                result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//                List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//                contract.setResult(filteredEntities);
-//                contract.setNotificationType(result.getNotificationType());
-//                contract.setErrorMessage(result.getMessage());
-//                this.send(contract);
-//            } else if (contract.getClassName().equals("PipelineService") && contract.getMethodName().equals("getById")) {
-//                boolean hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//                if (hasPermission) {
-//                    result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//                    contract.setResult(result.getObject());
-//                    contract.setNotificationType(result.getNotificationType());
-//                    contract.setErrorMessage(result.getMessage());
-//                } else {
-//                    contract.setResult(null);
-//                    contract.setNotificationType(NotificationType.ERROR);
-//                    contract.setErrorMessage("Unauthorized");
-//                }
-//
-//                this.send(contract);
-//            } else if (contract.getMethodName().equals("getAll") || contract.getMethodName().equals("getAllPipelineGroupDTOs") || contract.getMethodName().equals("getAllUserGroups")) {
-//                result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//                List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//                contract.setResult(filteredEntities);
-//                contract.setNotificationType(result.getNotificationType());
-//                contract.setErrorMessage(result.getMessage());
-//                SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
-//            } else {
-//                boolean hasPermission;
-//                if (contract.getMethodName().equals("changeUserPassword")) {
-//                    hasPermission = this.securityServiceInvoker.changeUserPassword(this.loggedUser.getEmail(), contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//                    if (hasPermission) {
-//                        result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//                        contract.setResult(result.getObject());
-//                        contract.setNotificationType(result.getNotificationType());
-//                        contract.setErrorMessage(result.getMessage());
-//                        SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
-//                    }
-//                } else {
-//                    hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//                    if (hasPermission) {
-//                        result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//                        contract.setResult(result.getObject());
-//                        contract.setNotificationType(result.getNotificationType());
-//                        contract.setErrorMessage(result.getMessage());
-//                        if (result.getObject() == null) {
-//                            SessionPool.getInstance().sendToUserSessions(contract, this.loggedUser);
-//                        } else {
-//                            SessionPool.getInstance().sendToAuthorizedSessions(contract);
-//                        }
-//                    }
-//                }
-//
-//                if (!hasPermission) {
-//                    contract.setResult(null);
-//                    contract.setNotificationType(NotificationType.ERROR);
-//                    contract.setErrorMessage("Unauthorized");
-//                    SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
-//                }
-//            }
         } catch (RuntimeException e) {
             LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
             e.printStackTrace();
             RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
             this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
         }
-//        catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
@@ -274,7 +211,6 @@ public class WSSession extends WebSocketAdapter {
         String jsonResult = this.jsonConverter.toJson(contract);
         remoteEndpoint.sendStringByFuture(jsonResult);
     }
-
 
     private void errorDetails(WsContractDto contract, Gson serializer, Exception e, RemoteEndpoint endPoint) {
         contract.setNotificationType(NotificationType.ERROR);

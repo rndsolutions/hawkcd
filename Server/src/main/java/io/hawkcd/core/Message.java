@@ -20,54 +20,75 @@ package io.hawkcd.core;
 
 import io.hawkcd.core.subscriber.Envelop;
 import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.User;
 import io.hawkcd.model.enums.NotificationType;
 
 /*
-* The Message class represents a wrapper message object that's sent by Publishers to Subscribers. In addition to the message that has to be sent to users
-* it also carries matadata.
+* The Message class represents a wrapper message object that's sent by Publishers to Subscribers.
+* In addition to the message that has to be sent to users it also carries various matadata.
 */
 public class Message {
+
     private String serviceCalled;
     private String methodCalled;
+
+    //Holds the result being reterned by the service call
     private Envelop envelop;
+
     private NotificationType resultNotificationType;
     private String resultMessage;
 
-    Message(String serviceCalled, String methodCalled, ServiceResult serviceResult) {
+    //The user context in which the message is created
+    private User owner;
+
+    Message(String serviceCalled, String methodCalled, ServiceResult serviceResult, User usr) {
         this.serviceCalled = serviceCalled;
         this.methodCalled = methodCalled;
+        this.owner = usr;
         if (serviceResult != null) {
             this.envelop = new Envelop(serviceResult.getObject());
             this.resultNotificationType = serviceResult.getNotificationType();
             this.resultMessage = serviceResult.getMessage();
         }
+
     }
 
-    Message(String serviceCalled, String methodCalled, Object resultObject, NotificationType resultNotificationType, String resultMessage) {
+    Message(String serviceCalled
+                        , String methodCalled
+                        , Object resultObject
+                        , NotificationType resultNotificationType
+                        , String resultMessage
+                        , User usr)
+    {
         this.serviceCalled = serviceCalled;
         this.methodCalled = methodCalled;
         this.envelop = new Envelop(resultObject);
         this.resultNotificationType = resultNotificationType;
         this.resultMessage = resultMessage;
+        this.owner = usr;
     }
 
-    String getServiceCalled() {
+    public String getServiceCalled() {
         return serviceCalled;
     }
 
-    String getMethodCalled() {
+    public String getMethodCalled() {
         return methodCalled;
     }
 
-    Object getResultObject() {
+    public Object getResultObject() {
         return this.envelop.getResultObject();
     }
 
-    NotificationType getResultNotificationType() {
+    public NotificationType getResultNotificationType() {
         return resultNotificationType;
     }
 
-    String getResultMessage() {
+    public String getResultMessage() {
         return resultMessage;
     }
+
+    public void setOwner(User usr){ this.owner = usr;}
+
+    public  User getOwner(){return  this.owner;}
 }

@@ -22,23 +22,29 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 import io.hawkcd.core.Message;
+import io.hawkcd.core.RequestProcessor;
 import io.hawkcd.model.TaskDefinition;
+import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.model.MaterialDefinition;
+import io.hawkcd.ws.SessionPool;
 import io.hawkcd.ws.WSSession;
 import redis.clients.jedis.JedisPubSub;
 
 /*
-* Represents an application process(when running in separate VM) or thread ( when running in the same VM) that receives messages
+* Represents an application process(when running in separate VM)
+* or thread ( when running in the same VM) that receives messages broadcasted by publishers
 */
 public class Subscriber extends JedisPubSub {
+
     private Gson jsonConverter;
     private IMessageDispatcher messageDispatcher;
     private IMessageTranslator messageTranslator;
     private IMessageFilter authFilter;
+    private RequestProcessor requestProcessor;
 
-    private static final Logger LOGGER = Logger.getLogger(WSSession.class.getClass());
+    private static final Logger LOGGER = Logger.getLogger(Subscriber.class);
 
     public Subscriber() {
 
@@ -48,18 +54,21 @@ public class Subscriber extends JedisPubSub {
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
 
-        //this.messageTranslator =  new MessageTranslator();
-        //this.authFilter = new AuthFilter();
-        //this.messageDispatcher = new MessageDispatcher();
+        requestProcessor = new RequestProcessor();
     }
 
     @Override
-    public void onMessage(String channel, String message) {
-        Message ObjMessage = this.jsonConverter.fromJson(message, Message.class);
-        messageTranslator.translate(ObjMessage);
+    public void onMessage(String channel, String msg) {
+        LOGGER.debug(msg);
 
-        //this.messageTranslator(message);
-        //this.authFilter.applyFilter(mess
+        Message message = this.jsonConverter.fromJson(msg, Message.class);
 
+        WsContractDto contract = new WsContractDto(message.getServiceCalled(),
+                                        "", message.getMethodCalled()
+                                          , message.getResultObject()
+                                          , message.getResultNotificationType()
+                                          , message.getResultMessage());
+
+        SessionPool.getInstance().sendToUserSessions(contract, message.getOwner());
     }
 }

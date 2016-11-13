@@ -30,6 +30,10 @@ import io.hawkcd.ws.SessionPool;
 
 import java.util.List;
 
+
+/*
+* The class responsibility is to ptocess all reqeust passed by the WSSession object
+*/
 public class RequestProcessor {
     private WsObjectProcessor wsObjectProcessor;
     private Publisher publisher;
@@ -44,14 +48,18 @@ public class RequestProcessor {
     }
 
     public void processRequest(WsContractDto contract, User user, String sessionId) {
+
         user.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(user));
 
         List<Permission> orderedPermissions = this.permissionService.sortPermissions(user.getPermissions());
 
         try {
             boolean shouldPublish = this.shouldPublishResult(contract.getMethodName());
+
             if (shouldPublish) {
+
                 boolean hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
+
                 if (hasPermission) {
                     ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
                     if (result.getObject() == null) {
@@ -67,7 +75,8 @@ public class RequestProcessor {
                                 contract.getMethodName(),
                                 result.getObject(),
                                 result.getNotificationType(),
-                                result.getMessage());
+                                result.getMessage(),
+                                user);
 
                         this.publisher.publish("global", message);
                     }
@@ -91,6 +100,26 @@ public class RequestProcessor {
         } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void prorcessRequest1(WsContractDto contract, User user, String sessionId)
+                    throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+
+        //Make a call to a Busienss service
+        ServiceResult result = (ServiceResult)this.wsObjectProcessor.call(contract);
+
+        //Construct a message from the service call result
+        Message message = new Message(
+                contract.getClassName(),
+                contract.getMethodName(),
+                result.getObject(),
+                result.getNotificationType(),
+                result.getMessage(),
+                user
+            );
+
+        //broadcast the mssage to all Subscribers
+        this.publisher.publish("global", message);
     }
 
     public void processResponse(Message pubSubMessage) {
