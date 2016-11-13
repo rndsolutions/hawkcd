@@ -15,14 +15,13 @@
  */
 
 package io.hawkcd.ws;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-
 import io.hawkcd.core.RequestProcessor;
-import io.hawkcd.core.UserContext;
 import io.hawkcd.core.WsObjectProcessor;
+import io.hawkcd.core.session.ISessionManager;
+import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.utilities.constants.LoggerMessages;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
@@ -74,6 +73,7 @@ public class WSSession extends WebSocketAdapter {
         this.requestProcessor = new RequestProcessor();
     }
 
+
     public String getId() {
         return this.id;
     }
@@ -93,77 +93,12 @@ public class WSSession extends WebSocketAdapter {
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
-
-        String tokenQuery = session.getUpgradeRequest().getQueryString();
-        if (!tokenQuery.equals("token=null")) {
-            String token = tokenQuery.substring(6);
-            TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
-            if (tokenInfo == null) {
-                return;
-            }
-            User usr = tokenInfo.getUser();
-            this.setLoggedUser(usr);
-            SessionPool.getInstance().add(this);
-            if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
-                UserDto userDto = new UserDto();
-                userDto.setUsername(tokenInfo.getUser().getEmail());
-                userDto.setPermissions(tokenInfo.getUser().getPermissions());
-
-                WsContractDto contract = new WsContractDto("UserInfo", "", "getUser", userDto, NotificationType.SUCCESS, "User details retrieved successfully");
-                SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
-            } else {
-                UserDto userDto = new UserDto();
-                userDto.setUsername(tokenInfo.getUser().getEmail());
-                userDto.setPermissions(tokenInfo.getUser().getPermissions());
-                ServiceResult result = new ServiceResult(userDto, NotificationType.SUCCESS, "User does not exist.");
-
-                EndpointConnector.passResultToEndpoint("UserInfo", "getUser", result, this.getLoggedUser());
-                EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.getLoggedUser());
-            }
-        }
+        initialize(session);
     }
 
-    /*
-    * All calls to the system backend are processed via this method
-    */
     @Override
     public void onWebSocketText(String message) {
-
-        WsContractDto contract = null;
-        if (this.loggedUser == null || this.getLoggedUserFromDatabase() == null) {
-//            this.getSession().close();
-            return;
-        }
-
-        User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
-        this.setLoggedUser(currentUser);
-
-        try {
-            // Verify JSON
-            contract = this.resolve(message);
-            if (contract == null) {
-                contract = new WsContractDto();
-                ServiceResult result = new ServiceResult(null, NotificationType.ERROR, "Invalid Json was provided");
-                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result, this.getLoggedUser());
-                return;
-            }
-
-            try {
-                this.requestProcessor.prorcessRequest1(contract, this.getLoggedUser(), this.getId());
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        } catch (RuntimeException e) {
-            LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
-            e.printStackTrace();
-            RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
-            this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
-        }
+        execute(message);
     }
 
     @Override
@@ -222,4 +157,80 @@ public class WSSession extends WebSocketAdapter {
             e1.printStackTrace();
         }
     }
+
+    private void execute(String message) {
+        WsContractDto contract = null;
+        if (this.loggedUser == null || this.getLoggedUserFromDatabase() == null) {
+//            this.getSession().close();
+            return;
+        }
+
+        User currentUser = (User) this.userService.getById(this.loggedUser.getId()).getObject();
+        this.setLoggedUser(currentUser);
+
+        try {
+            // Verify JSON
+            contract = this.resolve(message);
+            if (contract == null) {
+                contract = new WsContractDto();
+                ServiceResult result = new ServiceResult(null, NotificationType.ERROR, "Invalid Json was provided");
+                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result, this.getLoggedUser());
+                return;
+            }
+
+            try {
+
+                this.requestProcessor.prorcessRequest1(contract, this.getLoggedUser(), this.getId());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        } catch (RuntimeException e) {
+            LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
+            e.printStackTrace();
+            RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
+            this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
+        }
+    }
+
+    private void initialize(Session session) {
+
+        String tokenQuery = session.getUpgradeRequest().getQueryString();
+
+        if (!tokenQuery.equals("token=null")) {
+            String token = tokenQuery.substring(6);
+            TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
+            if (tokenInfo == null) {
+                return;
+            }
+            User usr = tokenInfo.getUser();
+            this.setLoggedUser(usr);
+            //SessionPool.getInstance().add(this);
+
+            ISessionManager sessionManager = SessionFactory.getSessionManager();
+            sessionManager.addSession(this);
+
+            if (this.userService.getById(tokenInfo.getUser().getId()).getObject() != null) {
+                UserDto userDto = new UserDto();
+                userDto.setUsername(tokenInfo.getUser().getEmail());
+                userDto.setPermissions(tokenInfo.getUser().getPermissions());
+
+                WsContractDto contract = new WsContractDto("UserInfo", "", "getUser", userDto, NotificationType.SUCCESS, "User details retrieved successfully");
+                SessionPool.getInstance().sendToUserSessions(contract, this.getLoggedUser());
+            } else {
+                UserDto userDto = new UserDto();
+                userDto.setUsername(tokenInfo.getUser().getEmail());
+                userDto.setPermissions(tokenInfo.getUser().getPermissions());
+                ServiceResult result = new ServiceResult(userDto, NotificationType.SUCCESS, "User does not exist.");
+
+                EndpointConnector.passResultToEndpoint("UserInfo", "getUser", result, this.getLoggedUser());
+                EndpointConnector.passResultToEndpoint("UserInfo", "logoutSession", result, this.getLoggedUser());
+            }
+        } //consider closing the session
+    }
+
 }

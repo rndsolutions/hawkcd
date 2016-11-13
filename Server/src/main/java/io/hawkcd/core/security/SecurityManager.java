@@ -23,10 +23,10 @@ import io.hawkcd.model.User;
 /**
  * Created by rado on 13.11.16.
  */
-public class SecurityService implements  ISecurityService {
+public class SecurityManager implements  ISecurityService {
 
     @Override
-    public boolean hasPermissions(User user) {
+    public boolean isAuthorized(User user) {
         return false;
     }
 

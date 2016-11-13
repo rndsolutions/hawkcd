@@ -29,7 +29,7 @@ public interface ISecurityService {
     * Returns tue, false if the user being evaluated has rights to perform an operation
     * @param user
     */
-    boolean hasPermissions(User user);
+    boolean isAuthorized(User user);
 
     /*
     * returns all users that have access to perform the operation

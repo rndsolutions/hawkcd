@@ -23,6 +23,9 @@ import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 import io.hawkcd.core.Message;
 import io.hawkcd.core.RequestProcessor;
+import io.hawkcd.core.session.ISessionManager;
+import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.core.session.SessionManager;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
@@ -43,6 +46,7 @@ public class Subscriber extends JedisPubSub {
     private IMessageTranslator messageTranslator;
     private IMessageFilter authFilter;
     private RequestProcessor requestProcessor;
+    private ISessionManager sessionManager;
 
     private static final Logger LOGGER = Logger.getLogger(Subscriber.class);
 
@@ -69,6 +73,7 @@ public class Subscriber extends JedisPubSub {
                                           , message.getResultNotificationType()
                                           , message.getResultMessage());
 
-        SessionPool.getInstance().sendToUserSessions(contract, message.getOwner());
+        SessionFactory.getSessionManager().sendToAllSessions(contract);
+
     }
 }
