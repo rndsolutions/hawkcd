@@ -23,7 +23,13 @@ package io.hawkcd.core.security;
 * Defines the permission
 */
 public enum Scope {
-    Server,
-    PipelineGroup,
-    Pipeline
+    SERVER (1),
+    PIPELINE_GROUP (2),
+    PIPELINE (3);
+
+    int scope;
+
+    Scope(int i){
+        this.scope = i;
+    }
 }

@@ -23,7 +23,14 @@ package io.hawkcd.core.security;
 * Defines what user can do for a given scope and/or entity e.g. PipelineGroup, Pipeline
 */
 public enum Permission {
-    Admin,
-    Operator,
-    Viewer
+    Admin (1),
+    Operator (2),
+    Viewer (3);
+
+    int permission;
+
+    Permission ( int i){
+        this.permission = i;
+    }
+
 }
