@@ -73,7 +73,6 @@ public class WSSession extends WebSocketAdapter {
         this.requestProcessor = new RequestProcessor();
     }
 
-
     public String getId() {
         return this.id;
     }

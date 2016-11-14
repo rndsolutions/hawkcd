@@ -22,11 +22,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import io.hawkcd.core.Message;
-import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
-import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.db.redis.RedisManager;
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.TaskDefinition;
+import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
+import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import redis.clients.jedis.Jedis;
 
 /*

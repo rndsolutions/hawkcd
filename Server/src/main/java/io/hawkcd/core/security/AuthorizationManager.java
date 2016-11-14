@@ -50,19 +50,17 @@ public class AuthorizationManager implements  IAuthorizationManager {
 
                     for (Permission permission : permissions) {
                         //if ( permission.get)
-
                         //for () to:do
                     }
-
-                    System.out.println(a.toString());
-                    System.out.println(method.toString());
+                    //System.out.println(a.toString());
+                    //System.out.println(method.toString());
                 }
             }
         }
 
         //contract.getClassName();
 
-        return false;
+        return true;
     }
 
     @Override
