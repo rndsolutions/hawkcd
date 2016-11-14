@@ -121,6 +121,7 @@ angular
         vm.setAgentToEdit = function(index) {
             vm.currentAgentResources = [];
             vm.agentToEdit = vm.currentAgents[index];
+            vm.agentIndex = index;
             vm.agentToAddResource = angular.copy(vm.currentAgents[index]);
 
             vm.agentToEdit.resources.forEach(function(currentResource, index, array) {
@@ -139,6 +140,7 @@ angular
         vm.close = function() {
             vm.currentAgentResources = [];
             vm.agentToEdit = {};
+            vm.agentIndex = 0;
             vm.agentToDelete = {};
             vm.agentToAddResource = {};
             vm.agentToDisplayDetails = {};
@@ -150,6 +152,12 @@ angular
         };
 
         vm.addInputResource = function() {
+            vm.agentToAddResource.resources = vm.currentAgentResources;
+            agentService.update(vm.agentToAddResource)
+        };
+
+        vm.submitAgent = function() {
+            vm.agentToAddResource = vm.currentAgents[vm.agentIndex];
             vm.agentToAddResource.resources = vm.currentAgentResources;
             agentService.update(vm.agentToAddResource)
         };
