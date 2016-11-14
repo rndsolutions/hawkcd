@@ -21,6 +21,18 @@ import io.hawkcd.model.enums.NotificationType;
 
 public class WsContractDto {
     private String className;
+
+    @Override
+    public String toString() {
+        return "WsContractDto{" +
+                "className='" + className + '\'' +
+                ", packageName='" + packageName + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", notificationType=" + notificationType +
+                ", errorMessage='" + errorMessage + '\'' +
+                '}';
+    }
+
     private String packageName;
     private String methodName;
     private Object result;

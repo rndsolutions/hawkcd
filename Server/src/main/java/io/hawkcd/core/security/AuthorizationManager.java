@@ -18,6 +18,8 @@
 
 package io.hawkcd.core.security;
 
+import org.apache.log4j.Logger;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -31,9 +33,12 @@ import io.hawkcd.model.payload.Permission;
  * Created by rado on 13.11.16.
  */
 public class AuthorizationManager implements  IAuthorizationManager {
+    private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
     @Override
     public boolean  isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException {
+        LOGGER.debug("param: "+ user.toString());
+        LOGGER.debug("param: "+ contract.toString());
 
         String fullyQualifedName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
         Class aClass = Class.forName(fullyQualifedName);

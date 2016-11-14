@@ -56,22 +56,19 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
-            permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
+    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
     public ServiceResult getById(String pipelineGroupId) {
         return super.getById(pipelineGroupId);
     }
 
     @Override
-    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
-            permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
+    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
-            permission = {Permission.Admin})
+    @Authorization( scope = Scope.SERVER, permission = Permission.ADMIN )
     public ServiceResult add(PipelineGroup pipelineGroup) {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
         PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
@@ -84,22 +81,19 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
-            permission = Permission.Admin)
+    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
     public ServiceResult update(PipelineGroup pipelineGroup) {
         return super.update(pipelineGroup);
     }
 
     @Override
-    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
-            permission = Permission.Admin)
+    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
     public ServiceResult delete(String pipelineGroupId) {
         return super.delete(pipelineGroupId);
     }
 
     @Override
-    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
-            permission = {Permission.Viewer, Permission.Admin})
+    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
     public ServiceResult getAllPipelineGroupDTOs() {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
 //        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
@@ -119,7 +113,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
 
         return result;
     }
-
+    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
     public List<PipelineGroup> placePipelinesIntoGroups(List<PipelineGroup> pipelineGroups, List<PipelineDefinition> pipelineDefinitions) {
         PipelineGroup unassignedPipelinesGroup = new PipelineGroup();
         unassignedPipelinesGroup.setPermissionType(PermissionType.VIEWER);

@@ -29,6 +29,17 @@ import io.hawkcd.model.enums.NotificationType;
 */
 public class Message {
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "serviceCalled='" + serviceCalled + '\'' +
+                ", methodCalled='" + methodCalled + '\'' +
+                ", resultNotificationType=" + resultNotificationType +
+                ", resultMessage='" + resultMessage + '\'' +
+                ", owner=" + owner +
+                '}';
+    }
+
     private String serviceCalled;
     private String methodCalled;
 

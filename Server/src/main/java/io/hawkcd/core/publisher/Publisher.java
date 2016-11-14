@@ -21,6 +21,8 @@ package io.hawkcd.core.publisher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.log4j.Logger;
+
 import io.hawkcd.core.Message;
 import io.hawkcd.db.redis.RedisManager;
 import io.hawkcd.model.MaterialDefinition;
@@ -35,6 +37,8 @@ import redis.clients.jedis.Jedis;
 *
 */
 public class Publisher implements IPublisher {
+
+    private static final Logger LOGGER = Logger.getLogger(Publisher.class);
     private Jedis jedisPublisher;
     private Gson jsonConverter;
 
@@ -47,6 +51,7 @@ public class Publisher implements IPublisher {
     }
 
     public void publish(String channel, Message message) {
+        LOGGER.debug(message);
         String messageAsString = this.jsonConverter.toJson(message);
         this.jedisPublisher.publish(channel, messageAsString);
     }

@@ -28,6 +28,36 @@ public class User extends DbEntry {
     private String password;
     private String ghAuthCode;
     private String provider;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", ghAuthCode='" + ghAuthCode + '\'' +
+                ", provider='" + provider + '\'' +
+                ", permissions=" + permissions +
+                ", userGroupIds=" + userGroupIds +
+                ", isEnabled=" + isEnabled +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return this.email.equals(user.email);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return this.email.hashCode();
+    }
+
     private List<Permission> permissions;
     private List<String> userGroupIds;
     private boolean isEnabled;
