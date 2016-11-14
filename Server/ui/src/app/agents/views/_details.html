@@ -35,7 +35,8 @@
                                 <h4>{{agents.defaultText.tableHeaders.status}}</h4>
                             </td>
                             <td class="text-right table-element-text width-50">
-                                <h5> {{agents.agentToDisplayDetails.status}}</h5>
+                                <h5 ng-if="agents.agentToDisplayDetails.isConnected"> {{agents.agentToDisplayDetails.status}}</h5>
+                                <h5 ng-if="!agents.agentToDisplayDetails.isConnected"> Disconnected</h5>
                             </td>
                         </tr>
                         <tr>
