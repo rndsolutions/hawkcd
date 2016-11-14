@@ -2,6 +2,9 @@ package io.hawkcd.core.security;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 
@@ -21,8 +24,15 @@ public class AuthorizationManagerTest {
         contract.setPackageName("io.hawkcd.services");
         contract.setMethodName("getAll");
 
+
+        List<Permission> ps = new ArrayList<>();
+        Permission p1 = new Permission();
+        ps.add()
+
+
         User user = new User();
         user.setEmail("admin@admin.com");
+        user.setPermissions();
 
 
         //user.setPermissions();
