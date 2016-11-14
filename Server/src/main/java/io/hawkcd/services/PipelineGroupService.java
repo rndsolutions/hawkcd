@@ -16,6 +16,9 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.Permission;
+import io.hawkcd.core.security.Scope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Pipeline;
@@ -53,16 +56,22 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getById(String pipelineGroupId) {
         return super.getById(pipelineGroupId);
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = {Permission.Admin})
     public ServiceResult add(PipelineGroup pipelineGroup) {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
         PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
@@ -75,16 +84,22 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin)
     public ServiceResult update(PipelineGroup pipelineGroup) {
         return super.update(pipelineGroup);
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin)
     public ServiceResult delete(String pipelineGroupId) {
         return super.delete(pipelineGroupId);
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = {Permission.Viewer, Permission.Admin})
     public ServiceResult getAllPipelineGroupDTOs() {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
 //        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();

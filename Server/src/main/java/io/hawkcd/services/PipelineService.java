@@ -81,21 +81,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
                     permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getById(String pipelineId) {
         return super.getById(pipelineId);
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Admin, Permission.Operator})
     public ServiceResult add(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
@@ -133,7 +133,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Admin, Permission.Operator})
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
@@ -143,14 +143,14 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = Permission.Admin )
     public ServiceResult delete(String pipelineId) {
         return super.delete(pipelineId);
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAllByDefinitionId(String pipelineDefinitionId) {
         ServiceResult result = this.getAll();
@@ -167,7 +167,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAllNonupdatedPipelines() {
         ServiceResult result = this.getAll();
@@ -185,7 +185,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
@@ -203,7 +203,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAllPreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
@@ -221,7 +221,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAllPreparedAwaitingPipelines() {
         ServiceResult result = this.getAll();
@@ -239,7 +239,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getLastRun(String pipelineDefinitionId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
@@ -276,14 +276,14 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 //        return result;
 //    }
 
-    @Override@Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Override@Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines) {
         return this.getAllPipelineHistoryDTOs(pipelineDefinitionId, numberOfPipelines, null);
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
@@ -320,14 +320,14 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
         return this.getPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Viewer, Permission.Admin, Permission.Operator})
     public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAll();
@@ -365,7 +365,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Admin, Permission.Operator})
     public ServiceResult cancelPipeline(String pipelineId) {
         ServiceResult result = this.getById(pipelineId);
@@ -380,7 +380,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = { Scope.Pipeldine, Scope.PipelineGroup, Scope.Server},
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
             permission = {Permission.Admin, Permission.Operator})
     public ServiceResult pausePipeline(String pipelineId) {
         ServiceResult result = this.getById(pipelineId);

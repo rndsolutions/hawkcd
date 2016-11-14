@@ -18,8 +18,14 @@
 
 package io.hawkcd.core.security;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.List;
+
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
+import io.hawkcd.model.enums.PermissionType;
+import io.hawkcd.model.payload.Permission;
 
 /**
  * Created by rado on 13.11.16.
@@ -27,7 +33,35 @@ import io.hawkcd.model.dto.WsContractDto;
 public class AuthorizationManager implements  IAuthorizationManager {
 
     @Override
-    public boolean  isAuthorized(User user, WsContractDto contract) {
+    public boolean  isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException {
+
+        String fullyQualifedName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
+        Class aClass = Class.forName(fullyQualifedName);
+
+        final List<io.hawkcd.model.payload.Permission> permissions = user.getPermissions();
+        final PermissionType permissionType = user.getPermissionType();
+
+        for(Method method : aClass.getMethods())
+        {
+            final Annotation[] annotations = method.getAnnotations();
+
+            for (Annotation a :  annotations){
+                if (a instanceof Authorization){
+
+                    for (Permission permission : permissions) {
+                        //if ( permission.get)
+
+                        //for () to:do
+                    }
+
+                    System.out.println(a.toString());
+                    System.out.println(method.toString());
+                }
+            }
+        }
+
+        //contract.getClassName();
+
         return false;
     }
 

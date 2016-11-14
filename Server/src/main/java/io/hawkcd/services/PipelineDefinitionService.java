@@ -16,6 +16,9 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.Permission;
+import io.hawkcd.core.security.Scope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.enums.NotificationType;
@@ -67,16 +70,22 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
+    @Authorization( scope = {Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
+            permission = {Permission.Viewer, Permission.Admin , Permission.Operator })
     public ServiceResult getById(String pipelineDefinitionId) {
         return super.getById(pipelineDefinitionId);
     }
 
     @Override
+    @Authorization( scope = {Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
+            permission = {Permission.Viewer, Permission.Admin , Permission.Operator })
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
+    @Authorization( scope = {Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin)
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
         EnvironmentVariable environmentVariable = new EnvironmentVariable();
         environmentVariable.setKey("COUNT");
@@ -106,6 +115,8 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin)
     public ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
@@ -123,11 +134,15 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin)
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, GitMaterial materialDefinition) {
         return this.add(pipelineDefinition, materialDefinition);
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin)
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
@@ -145,11 +160,15 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
+            permission = {Permission.Admin})
     public ServiceResult update(PipelineDefinition pipelineDefinition) {
         return super.update(pipelineDefinition);
     }
 
     @Override
+    @Authorization( scope = { Scope.Pipeline, Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin )
     public ServiceResult delete(String pipelineDefinitionId) {
         if (this.pipelineService == null) {
             this.pipelineService = new PipelineService();
@@ -178,12 +197,13 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
+    @Authorization( scope = { Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin )
     public ServiceResult unassignPipelineFromGroup(String pipelineDefinitionId) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
         if (pipelineDefinition == null) {
             return super.createServiceResult(null, NotificationType.ERROR, "could not be found");
         }
-
 
         pipelineDefinition.setPipelineGroupId("");
         pipelineDefinition.setGroupName("");
@@ -192,6 +212,8 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
+    @Authorization( scope = {Scope.PipelineGroup, Scope.Server},
+            permission = Permission.Admin)
     public ServiceResult assignPipelineToGroup(String pipelineDefinitionId, String pipelineGroupId, String pipelineGroupName) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
         if (pipelineDefinition == null) {

@@ -108,7 +108,8 @@ public class RequestProcessor {
                     throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
         //check if caller has permission to execute the call
-        boolean isAuthorized = true;//AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract);
+        //boolean isAuthorized = true;//
+        boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract);
 
         if (isAuthorized){
             //Make a call to a Busienss service

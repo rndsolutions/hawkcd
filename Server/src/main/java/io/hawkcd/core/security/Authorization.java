@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Created by rado on 11.11.16.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target(ElementType.METHOD)
 public @interface Authorization {
     Scope [] scope();
     Permission [] permission();

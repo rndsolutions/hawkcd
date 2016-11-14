@@ -27,7 +27,7 @@ public class TokenInfo {
 
 
     public TokenInfo() {
-        this.issued = LocalDateTime.now();
+        this.issued = LocalDateTime.now(); //TODO: Shouldn't be UTC?
     }
 
     public User getUser() {

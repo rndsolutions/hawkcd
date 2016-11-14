@@ -25,5 +25,5 @@ package io.hawkcd.core.security;
 public enum Scope {
     Server,
     PipelineGroup,
-    Pipeldine
+    Pipeline
 }
