@@ -70,7 +70,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String pipelineDefinitionId) {
         return super.getById(pipelineDefinitionId);
     }
@@ -83,7 +83,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
 
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
     public ServiceResult add(PipelineDefinition pipelineDefinition) {
         EnvironmentVariable environmentVariable = new EnvironmentVariable();
         environmentVariable.setKey("COUNT");
@@ -113,7 +113,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
     public ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
@@ -131,13 +131,13 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, GitMaterial materialDefinition) {
         return this.add(pipelineDefinition, materialDefinition);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
@@ -155,13 +155,13 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(PipelineDefinition pipelineDefinition) {
         return super.update(pipelineDefinition);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(String pipelineDefinitionId) {
         if (this.pipelineService == null) {
             this.pipelineService = new PipelineService();
@@ -190,7 +190,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult unassignPipelineFromGroup(String pipelineDefinitionId) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
         if (pipelineDefinition == null) {
@@ -204,7 +204,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult assignPipelineToGroup(String pipelineDefinitionId, String pipelineGroupId, String pipelineGroupName) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
         if (pipelineDefinition == null) {

@@ -16,6 +16,7 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
@@ -23,6 +24,8 @@ import io.hawkcd.model.User;
 import io.hawkcd.model.UserGroup;
 import io.hawkcd.model.dto.UserGroupDto;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserGroupService;
 import io.hawkcd.services.interfaces.IUserService;
 import io.hawkcd.ws.EndpointConnector;
@@ -51,21 +54,25 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult getById(String id) {
         return super.getById(id);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(UserGroup userGroup) {
         return super.add(userGroup);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult addUserGroupDto(UserGroupDto userGroupDto) {
         UserGroup userGroup = new UserGroup();
         userGroup.setName(userGroupDto.getName());
@@ -79,11 +86,13 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(UserGroup userGroup) {
         return super.update(userGroup);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult updateUserGroupDto(UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
         userGroup.setName(userGroupDto.getName());
@@ -103,6 +112,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(String id) {
         List<User> users = (List<User>) this.userService.getAll().getObject();
 
@@ -127,6 +137,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
 
@@ -153,6 +164,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
 
@@ -179,6 +191,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getAllUserGroups() {
         List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getObject();
         List<UserGroupDto> userGroupDtos = new ArrayList<>();

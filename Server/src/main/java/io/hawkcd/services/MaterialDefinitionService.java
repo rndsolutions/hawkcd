@@ -16,6 +16,9 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.utilities.constants.NotificationMessages;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
@@ -49,16 +52,19 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getById(String materialDefinitionId) {
         return super.getById(materialDefinitionId);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllFromPipelineDefinition(String pipelineDefinitionId) {
         List<MaterialDefinition> materialDefinitions = new ArrayList<>();
 
@@ -76,26 +82,31 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(MaterialDefinition materialDefinition) {
         return super.add(materialDefinition);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(GitMaterial materialDefinition) {
         return super.add(materialDefinition);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(MaterialDefinition materialDefinition) {
         return super.update(materialDefinition);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(GitMaterial materialDefinition) {
         return super.update(materialDefinition);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(String materialDefinitionId) {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         List<String> assignedIds = new ArrayList<>();

@@ -30,7 +30,7 @@ public interface IAuthorizationManager {
     * Returns tue, false if the user being evaluated has rights to perform an operation
     * @param user
     */
-    boolean isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException;
+    boolean isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException, NoSuchMethodException;
 
     /*
     * returns all users that have access to perform the operation
