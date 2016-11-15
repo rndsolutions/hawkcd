@@ -17,11 +17,11 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.core.security.Permission;
-import io.hawkcd.core.security.Scope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
 import io.hawkcd.model.EnvironmentVariable;
@@ -76,7 +76,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }

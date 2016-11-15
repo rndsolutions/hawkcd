@@ -17,8 +17,6 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.core.security.Permission;
-import io.hawkcd.core.security.Scope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Pipeline;
