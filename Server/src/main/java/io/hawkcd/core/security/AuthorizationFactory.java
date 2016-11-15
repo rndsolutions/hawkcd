@@ -8,5 +8,4 @@ public class AuthorizationFactory {
     public static IAuthorizationManager getAuthorizationManager(){
         return new AuthorizationManager();
     }
-
 }
