@@ -18,52 +18,33 @@
 
 package io.hawkcd.core.security;
 
+import io.hawkcd.model.User;
+import io.hawkcd.model.dto.WsContractDto;
+import io.hawkcd.model.payload.Permission;
 import org.apache.log4j.Logger;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import io.hawkcd.model.User;
-import io.hawkcd.model.dto.WsContractDto;
-import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.model.payload.Permission;
-
-/**
- * Created by rado on 13.11.16.
- */
-public class AuthorizationManager implements  IAuthorizationManager {
+public class AuthorizationManager implements IAuthorizationManager {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
     @Override
-    public boolean  isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException {
-        LOGGER.debug("param: "+ user.toString());
-        LOGGER.debug("param: "+ contract.toString());
+    public boolean isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException, NoSuchMethodException {
+        LOGGER.debug("param: " + user.toString());
+        LOGGER.debug("param: " + contract.toString());
 
-        String fullyQualifedName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
-        Class aClass = Class.forName(fullyQualifedName);
-
-        final List<io.hawkcd.model.payload.Permission> permissions = user.getPermissions();
-        final PermissionType permissionType = user.getPermissionType();
-
-        for(Method method : aClass.getMethods())
-        {
-            final Annotation[] annotations = method.getAnnotations();
-
-            for (Annotation a :  annotations){
-                if (a instanceof Authorization){
-
-                    for (Permission permission : permissions) {
-                        //if ( permission.get)
-                        //for () to:do
-                    }
-                    //System.out.println(a.toString());
-                    //System.out.println(method.toString());
-                }
-            }
+        Authorization authorization = this.getMethodAuthorizationAnnotation(contract.getPackageName(), contract.getClassName(), contract.getMethodName());
+        if (authorization == null) {
+            return false;
         }
 
-        //contract.getClassName();
+        
+
+
+        final List<Permission> permissions = user.getPermissions();
+
+
 
         return true;
     }
@@ -71,5 +52,16 @@ public class AuthorizationManager implements  IAuthorizationManager {
     @Override
     public void getAllUsersWithPermissions() {
 
+    }
+
+    private Authorization getMethodAuthorizationAnnotation(String packageName, String className, String methodName)
+            throws ClassNotFoundException, NoSuchMethodException {
+
+        String fullyQualifiedName = String.format("%s.%s", packageName, className);
+        Class<?> aClass = Class.forName(fullyQualifiedName);
+        Method method = aClass.getMethod(methodName);
+        Authorization annotation = method.getAnnotation(Authorization.class);
+
+        return annotation;
     }
 }
