@@ -68,7 +68,7 @@
                                 <h4>{{agents.defaultText.tableHeaders.resources}}</h4>
                             </td>
                             <td class="text-right table-element-text width-50">
-                                <h5>{{agents.agentToDisplayDetails.resources}}</h5>
+                                <div ng-repeat="resource in agents.agentToDisplayDetails.resources" style="display: inline-flex" class="label label-default agent-resource text-center-vertical margin-left-5px table-element-text">{{resource.substr(0, 20)}} <span ng-if="resource.length > 20">...</span></div>
                             </td>
                         </tr>
                     </table>

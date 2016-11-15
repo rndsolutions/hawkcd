@@ -67,10 +67,10 @@
                             </td>
                             <td>
                                 <h5> {{agent.hostName + "-" +  agent.id.substr(0,8)}}</h5></td>
-                            <td ng-if="agent.isConnected">
-                                <h5> {{agent.status}}</h5></td>
-                            <td ng-if="!agent.isConnected">
-                                <h5> Disconnected</h5></td>
+                            <td ng-if="agent.isConnected" class="text-center-vertical">
+                                <div class="label label-default run-label" ng-class="{'passed': agent.status == 'Idle', 'working' : agent.status == 'Running'}"> {{agent.status}}</div></td>
+                            <td ng-if="!agent.isConnected" class="text-center-vertical">
+                                <div class="label label-default run-label" ng-class="{'canceled-run' : agent.isConnected == false}"> Disconnected</div></td>
                             <td class="table-element-text">
                                 <h5>{{agent.rootPath}} </h5></td>
                             <td>
@@ -78,8 +78,9 @@
                             <td>
                                 <h5>{{agent.ipAddress}}</h5></td>
                             <!--<td><h5>{{agent.freeSpace}}</h5></td>-->
-                            <td>
-                                <h5>{{agent.resources}}</h5></td>
+                            <td class="table-element-text text-center-vertical">
+                                <div ng-repeat="resource in agent.resources" style="display: inline-flex" class="label label-default agent-resource margin-left-5px table-element-text">{{resource.substr(0, 20)}} <span ng-if="resource.length > 20">...</span></div>
+                            </td>
                             <td>
                                 <h5>
                                     <button class="btn yellow config-button" data-toggle="modal" data-target="#editAgent" ng-click="agents.setAgentToEdit($index)">Edit</button>

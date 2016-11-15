@@ -203,6 +203,20 @@ p {
     padding-bottom:1px!important;
 }
 
+.agent-resource {
+    background-color: #337ab7 !important;
+    color: #ffffff;
+    text-transform: none;
+    text-underline: none;
+    /*padding-top:2px!important;*/
+    padding:3px!important;
+    padding-left:5px!important;
+    padding-right:5px!important;
+    font-size: 13px!important;
+    /*padding-bottom:2px!important;*/
+    /*line-height: 16px;*/
+}
+
 .run-label {
     color: #ffffff;
     text-transform: none;
