@@ -17,8 +17,18 @@
 package io.hawkcd.model.enums;
 
 public enum PermissionType {
-    ADMIN,
-    OPERATOR,
-    VIEWER,
-    NONE
+    ADMIN(1),
+    OPERATOR(2),
+    VIEWER(3),
+    NONE(4);
+
+    private final int priorityLevel;
+
+    PermissionType (int priorityLevel) {
+        this.priorityLevel = priorityLevel;
+    }
+
+    public int getPriorityLevel() {
+        return this.priorityLevel;
+    }
 }

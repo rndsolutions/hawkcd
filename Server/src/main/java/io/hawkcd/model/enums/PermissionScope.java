@@ -17,7 +17,17 @@
 package io.hawkcd.model.enums;
 
 public enum PermissionScope {
-    SERVER,
-    PIPELINE_GROUP,
-    PIPELINE
+    PIPELINE(1),
+    PIPELINE_GROUP(2),
+    SERVER(3);
+
+    private final int priorityLevel;
+
+    PermissionScope (int priorityLevel){
+        this.priorityLevel = priorityLevel;
+    }
+
+    public int getPriorityLevel() {
+        return this.priorityLevel;
+    }
 }
