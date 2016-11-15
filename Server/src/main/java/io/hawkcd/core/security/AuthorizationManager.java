@@ -18,6 +18,7 @@
 
 package io.hawkcd.core.security;
 
+import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.payload.Permission;
@@ -34,19 +35,19 @@ public class AuthorizationManager implements IAuthorizationManager {
         LOGGER.debug("param: " + user.toString());
         LOGGER.debug("param: " + contract.toString());
 
-        Authorization authorization = this.getMethodAuthorizationAnnotation(contract.getPackageName(), contract.getClassName(), contract.getMethodName());
+        Authorization authorization = this.getMethodAuthorization(contract.getPackageName(), contract.getClassName(), contract.getMethodName());
         if (authorization == null) {
             return false;
         }
 
-        
+        List<Permission> permissions = user.getPermissions();
+
+        // Custom logic get Id
+
+        String id = "";
 
 
-        final List<Permission> permissions = user.getPermissions();
-
-
-
-        return true;
+        return false;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
     }
 
-    private Authorization getMethodAuthorizationAnnotation(String packageName, String className, String methodName)
+    private Authorization getMethodAuthorization(String packageName, String className, String methodName)
             throws ClassNotFoundException, NoSuchMethodException {
 
         String fullyQualifiedName = String.format("%s.%s", packageName, className);
@@ -63,5 +64,75 @@ public class AuthorizationManager implements IAuthorizationManager {
         Authorization annotation = method.getAnnotation(Authorization.class);
 
         return annotation;
+    }
+
+    private boolean hasPermission(Permission userPermission, Authorization authorizedPermission) {
+        if (userPermission.getPermissionType().getPriorityLevel() >= authorizedPermission.type().getPriorityLevel()) {
+            if (userPermission.getPermissionScope().getPriorityLevel() >= authorizedPermission.scope().getPriorityLevel()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Boolean hasPermissionForSpecificEntity(List<Permission> userPermissions, Authorization authorizedPermission, String entityId) {
+        Boolean hasPermission = null;
+        for (Permission permission : userPermissions) {
+            if (permission.getPermittedEntityId().equals(entityId)) {
+                hasPermission = this.hasPermission(permission, authorizedPermission);
+                break;
+            }
+        }
+
+        return hasPermission;
+    }
+
+    private boolean hasPermissionForGenericEntity(List<Permission> userPermissions, Authorization authorizedPermission) {
+        boolean hasPermission = false;
+        for (Permission permission : userPermissions) {
+            hasPermission = this.hasPermission(permission, authorizedPermission);
+            if (hasPermission) {
+                break;
+            }
+        }
+
+        return hasPermission;
+    }
+
+    private void hasPermissionWithId(List<Permission> permissions, Authorization authorizedPermission, String... entityIds) {
+        for (String entityId : entityIds) {
+            // permiss.getpipe
+            this.hasPermissionForSpecificEntity(permissions, authorizedPermission, entityId);
+
+            this.hasPermissionForSpecificEntity(permissions, authorizedPermission, entityId);
+
+            this.hasPermissionForGenericEntity(permissions, authorizedPermission);
+        }
+
+
+
+
+
+        // get specific PipelineGroup permissions
+        String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
+
+
+        // get general permissions
+
+    }
+
+    private void customLogicMethod(String className, String methodName, Object object, List<Permission> permissions, Authorization authorizedPermission) {
+        if (className.equals("PipelineDefinitionService")) {
+            if (methodName.equals("updatePipelineDefinition")) {
+                
+                PipelineDefinition pipelineDefinition = (PipelineDefinition) object;
+                // get specific Pipeline permissions
+                String pipelineDefinitionId = pipelineDefinition.getId();
+
+
+            }
+        }
+
     }
 }
