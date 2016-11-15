@@ -16,12 +16,15 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.UserDto;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserService;
 import io.hawkcd.ws.SessionPool;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -43,16 +46,19 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getById(String userId) {
         return super.getById(userId);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(User user) {
         ServiceResult result = this.getByEmail(user.getEmail());
         if (result.getNotificationType() == NotificationType.ERROR) {
@@ -65,6 +71,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(User user) {
         ServiceResult serviceResult = super.update(user);
         SessionPool.getInstance().updateUserObjects(user.getId());
@@ -72,11 +79,13 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(String userId) {
         return super.delete(userId);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult getByEmailAndPassword(String email, String password) {
         List<User> users = (List<User>) this.getAll().getObject();
 
@@ -95,6 +104,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult getByEmail(String email) {
         List<User> users = (List<User>) this.getAll().getObject();
 
@@ -112,11 +122,13 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult addUserWithoutProvider(User user) {
         return this.add(user);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
         String hashedPassword = DigestUtils.sha256Hex(oldPassword);
         ServiceResult result = this.getByEmailAndPassword(user.getUsername(), hashedPassword);
@@ -132,6 +144,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult resetUserPassword(User user) {
         String hashedPassword = DigestUtils.sha256Hex(user.getPassword());
 

@@ -16,8 +16,11 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.JobDefinition;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
 import io.hawkcd.services.interfaces.IStageDefinitionService;
 
@@ -45,6 +48,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String stageDefinitionId) {
         ServiceResult serviceResult = super.createServiceResult(null, NotificationType.ERROR, "not found");
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
@@ -63,6 +67,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getByIdInPipeline(String stageDefinitionId, String pipelineDefinitionId) {
         ServiceResult serviceResult;
         PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
@@ -84,6 +89,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         List<StageDefinition> stageDefinitions = new ArrayList<>();
@@ -97,6 +103,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllInPipeline(String pipelineDefinitionId) {
         PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
         List<StageDefinition> stageDefinitions = pipelineFromDatabase.getStageDefinitions();
@@ -107,6 +114,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(StageDefinition stageDefinition) {
         ServiceResult result = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
@@ -150,6 +158,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(StageDefinition stageDefinition) {
         ServiceResult serviceResult = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
@@ -186,6 +195,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(String stageDefinitionId) {
 
         PipelineDefinition pipeline = new PipelineDefinition();

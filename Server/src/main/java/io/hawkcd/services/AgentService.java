@@ -16,6 +16,7 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Agent;
@@ -23,9 +24,7 @@ import io.hawkcd.model.Job;
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.Stage;
-import io.hawkcd.model.enums.JobStatus;
-import io.hawkcd.model.enums.NotificationType;
-import io.hawkcd.model.enums.StageStatus;
+import io.hawkcd.model.enums.*;
 import io.hawkcd.model.payload.WorkInfo;
 import io.hawkcd.services.interfaces.IAgentService;
 import io.hawkcd.services.interfaces.IJobService;
@@ -56,16 +55,19 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getById(String agentId) {
         return super.getById(agentId);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(Agent agent) {
         ServiceResult result = super.add(agent);
         EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "add", result);
@@ -73,6 +75,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(Agent agent) {
         ServiceResult result = super.update(agent);
         EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
@@ -80,6 +83,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(String agentId) {
         return super.delete(agentId);
     }

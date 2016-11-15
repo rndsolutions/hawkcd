@@ -16,10 +16,13 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.Stage;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IFileManagementService;
 import io.hawkcd.services.interfaces.IPipelineService;
 import io.hawkcd.services.interfaces.IStageService;
@@ -48,6 +51,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String stageId) {
         List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
         Stage result = null;
@@ -65,6 +69,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
         List<Stage> allStages = new ArrayList<>();
@@ -77,6 +82,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         List<Stage> stages = pipeline.getStages();
@@ -104,6 +110,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(Stage stage) {
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
         List<Stage> stages = pipeline.getStages();
@@ -132,6 +139,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(String stageId) {
         Pipeline pipelineToUpdate = new Pipeline();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();

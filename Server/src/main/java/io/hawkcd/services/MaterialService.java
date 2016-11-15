@@ -16,11 +16,14 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Material;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IMaterialService;
 
 import java.util.List;
@@ -41,31 +44,37 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getById(String materialId) {
         return super.getById(materialId);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(Material material) {
         return super.add(material);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(Material material) {
         return super.update(material);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(String materialId) {
         return super.delete(materialId);
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllFromPipelineDefinition(String pipelineDefinitionId) {
         List<Material> materials = (List<Material>) this.getAll().getObject();
         materials = materials
@@ -77,6 +86,7 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getLatestMaterial(String materialDefinitionId, String pipelineDefinitionId) {
         List<Material> materials = (List<Material>) this.getAllFromPipelineDefinition(pipelineDefinitionId).getObject();
         Material latestMaterial = materials
