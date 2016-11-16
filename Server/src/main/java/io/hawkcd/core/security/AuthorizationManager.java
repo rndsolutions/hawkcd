@@ -27,6 +27,19 @@ import org.apache.log4j.Logger;
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ *
+ * The class is responisble for authorizing User's requests
+ *
+ * Workflow:
+ * Evaluate currentUser permissions,
+ *      if method call is allowed
+ * Get all active sessions from database (cluster)
+ * Filter all users with active session
+ * Evaluate each user permissions and prepare the message object to be broadcasted
+ * Send message to all subscribers
+ *
+ */
 public class AuthorizationManager implements IAuthorizationManager {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
@@ -115,7 +128,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
 
         // get specific PipelineGroup permissions
-        String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
+        //String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
 
 
         // get general permissions
