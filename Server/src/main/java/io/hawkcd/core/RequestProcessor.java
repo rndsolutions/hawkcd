@@ -128,7 +128,7 @@ public class RequestProcessor {
 
         //check if caller has permission to execute the call
         //boolean isAuthorized = true;//
-        boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract);
+        boolean isAuthorized = true; //AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract);
 
 
 
