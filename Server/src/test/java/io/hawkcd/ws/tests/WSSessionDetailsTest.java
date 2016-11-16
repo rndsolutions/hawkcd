@@ -21,7 +21,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 @SuppressWarnings("RedundantArrayCreation")
-public class WSSessionTest {
+public class WSSessionDetailsTest {
 
     private Gson jsonConverter;
     private ConversionObjectDeserializer deserializer;
