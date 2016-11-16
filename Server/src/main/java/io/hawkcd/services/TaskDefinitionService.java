@@ -16,6 +16,7 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.ExecTask;
 import io.hawkcd.model.FetchArtifactTask;
 import io.hawkcd.model.FetchMaterialTask;
@@ -23,6 +24,8 @@ import io.hawkcd.model.JobDefinition;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.UploadArtifactTask;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.enums.TaskType;
 import io.hawkcd.services.interfaces.IJobDefinitionService;
 import io.hawkcd.services.interfaces.ITaskDefinitionService;
@@ -50,6 +53,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String taskDefinitionId) {
         List<JobDefinition> jobDefinitions = (List<JobDefinition>) this.jobDefinitionService.getAll().getObject();
         TaskDefinition result = null;
@@ -68,6 +72,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         List<JobDefinition> jobDefinitions = (List<JobDefinition>) this.jobDefinitionService.getAll().getObject();
         List<TaskDefinition> taskDefinitions = new ArrayList<>();
@@ -81,24 +86,28 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(ExecTask taskDefintion) {
         ServiceResult result = this.addTask(taskDefintion);
         return result;
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(FetchMaterialTask taskDefintion) {
         ServiceResult result = this.addTask(taskDefintion);
         return result;
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(FetchArtifactTask taskDefinition) {
         ServiceResult result = this.addTask(taskDefinition);
         return result;
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(UploadArtifactTask taskDefinition) {
         ServiceResult result = this.addTask(taskDefinition);
         return result;
@@ -120,24 +129,28 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(ExecTask taskDefintion) {
         ServiceResult result = this.updateTask(taskDefintion);
         return result;
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(FetchMaterialTask taskDefintion) {
         ServiceResult result = this.updateTask(taskDefintion);
         return result;
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(FetchArtifactTask taskDefinition) {
         ServiceResult result = this.updateTask(taskDefinition);
         return result;
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(UploadArtifactTask taskDefinition) {
         ServiceResult result = this.updateTask(taskDefinition);
         return result;
@@ -175,6 +188,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(String taskDefinitionId) {
         boolean isRemoved = false;
         TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinitionId).getObject();

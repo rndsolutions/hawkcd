@@ -17,8 +17,6 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.core.security.Permission;
-import io.hawkcd.core.security.Scope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.EnvironmentVariable;
@@ -33,10 +31,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.Stage;
 import io.hawkcd.model.StageDefinition;
 import io.hawkcd.model.dto.PipelineDto;
-import io.hawkcd.model.enums.NotificationType;
-import io.hawkcd.model.enums.PipelineStatus;
-import io.hawkcd.model.enums.StageStatus;
-import io.hawkcd.model.enums.TaskType;
+import io.hawkcd.model.enums.*;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineService;
@@ -81,19 +76,19 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization(scope = Scope.PIPELINE, permission = Permission.VIEWER)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String pipelineId) {
         return super.getById(pipelineId);
     }
 
     @Override
-    @Authorization(scope = Scope.PIPELINE, permission = Permission.VIEWER)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    @Authorization(scope = Scope.PIPELINE, permission = Permission.OPERATOR)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
     public ServiceResult add(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
@@ -130,7 +125,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.OPERATOR)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
         EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
@@ -139,13 +134,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(String pipelineId) {
         return super.delete(pipelineId);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllByDefinitionId(String pipelineDefinitionId) {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -161,7 +156,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.VIEWER)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllNonupdatedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -178,7 +173,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.VIEWER)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -195,7 +190,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.VIEWER)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -212,7 +207,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.VIEWER)
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPreparedAwaitingPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -229,7 +224,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getLastRun(String pipelineDefinitionId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -265,13 +260,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 //        return result;
 //    }
 
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines) {
         return this.getAllPipelineHistoryDTOs(pipelineDefinitionId, numberOfPipelines, null);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -307,13 +302,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
         return this.getPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
@@ -350,7 +345,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.OPERATOR )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
     public ServiceResult cancelPipeline(String pipelineId) {
         ServiceResult result = this.getById(pipelineId);
         if (result.getNotificationType() == NotificationType.ERROR) {
@@ -364,7 +359,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
     public ServiceResult pausePipeline(String pipelineId) {
         ServiceResult result = this.getById(pipelineId);
         if (result.getNotificationType() == NotificationType.ERROR) {

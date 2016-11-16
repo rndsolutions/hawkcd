@@ -17,18 +17,20 @@
  */
 
 package io.hawkcd.core.security;
+
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Created by rado on 11.11.16.
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Authorization {
-    Scope [] scope();
-    Permission [] permission();
+    PermissionScope scope();
+
+    PermissionType type();
 }
 

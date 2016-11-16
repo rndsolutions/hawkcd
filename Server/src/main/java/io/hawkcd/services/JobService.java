@@ -16,10 +16,13 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.Job;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.Stage;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IJobService;
 import io.hawkcd.services.interfaces.IStageService;
 
@@ -44,6 +47,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String jobId) {
         List<Stage> allStages = (List<Stage>) this.stageService.getAll().getObject();
         Job result = null;
@@ -61,6 +65,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         List<Stage> allStages = (List<Stage>) this.stageService.getAll().getObject();
         List<Job> allJobs = new ArrayList<>();
@@ -74,6 +79,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(Job job) {
         Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
         List<Job> jobs = stage.getJobs();
@@ -98,6 +104,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(Job job) {
         ServiceResult serviceResult = null;
         Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
@@ -126,6 +133,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(String jobId) {
         Stage stageToUpdate = new Stage();
         Job jobToDelete = null;

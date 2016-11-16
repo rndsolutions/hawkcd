@@ -17,8 +17,6 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.core.security.Permission;
-import io.hawkcd.core.security.Scope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Pipeline;
@@ -28,6 +26,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.dto.PipelineDefinitionDto;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineGroupService;
@@ -56,19 +55,19 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER )
     public ServiceResult getById(String pipelineGroupId) {
         return super.getById(pipelineGroupId);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE, permission = Permission.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    @Authorization( scope = Scope.SERVER, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(PipelineGroup pipelineGroup) {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
         PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
@@ -81,19 +80,19 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
     public ServiceResult update(PipelineGroup pipelineGroup) {
         return super.update(pipelineGroup);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
     public ServiceResult delete(String pipelineGroupId) {
         return super.delete(pipelineGroupId);
     }
 
     @Override
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER )
     public ServiceResult getAllPipelineGroupDTOs() {
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
 //        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
@@ -113,7 +112,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
 
         return result;
     }
-    @Authorization( scope = Scope.PIPELINE_GROUP, permission = Permission.ADMIN )
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public List<PipelineGroup> placePipelinesIntoGroups(List<PipelineGroup> pipelineGroups, List<PipelineDefinition> pipelineDefinitions) {
         PipelineGroup unassignedPipelinesGroup = new PipelineGroup();
         unassignedPipelinesGroup.setPermissionType(PermissionType.VIEWER);

@@ -16,11 +16,14 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.JobDefinition;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.StageDefinition;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IJobDefinitionService;
 import io.hawkcd.services.interfaces.IStageDefinitionService;
 
@@ -45,6 +48,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String jobDefinitionId) {
         List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAll().getObject();
         JobDefinition result = null;
@@ -63,6 +67,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
         List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAll().getObject();
         List<JobDefinition> jobDefinitions = new ArrayList<>();
@@ -76,6 +81,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(JobDefinition jobDefinition) {
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
         if (!taskDefinitions.isEmpty()) {
@@ -103,6 +109,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(JobDefinition jobDefinition) {
         JobDefinition result = new JobDefinition();
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
@@ -132,6 +139,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(String jobDefinitionId) {
         boolean isRemoved = false;
         JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinitionId).getObject();
@@ -173,6 +181,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllInStage(String stageDefinitionId) {
         StageDefinition currentStage = (StageDefinition) this.stageDefinitionService.getById(stageDefinitionId).getObject();
         List<JobDefinition> allJobDefinitionsInStage = currentStage.getJobDefinitions();
@@ -180,6 +189,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllInPipeline(String pipelineDefinitionId) {
         List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAllInPipeline(pipelineDefinitionId).getObject();
         List<JobDefinition> allJobsInPipeline = new ArrayList<>();

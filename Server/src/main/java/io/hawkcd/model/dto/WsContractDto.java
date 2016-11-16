@@ -16,7 +16,6 @@
 
 package io.hawkcd.model.dto;
 
-import io.hawkcd.core.UserContext;
 import io.hawkcd.model.enums.NotificationType;
 
 public class WsContractDto {
