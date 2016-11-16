@@ -104,12 +104,33 @@ public class RequestProcessor {
         }
     }
 
+    /**
+     *
+     * All WS requests flows through this method, auhtorization checks are performed,
+     * and the request is broadcasted to all subscribers
+     *
+     * Workflow:
+     * evaluate current user permissions
+     * get all active session from the cluster
+     * filter all users that have active sessions with the cluster
+     * evaluate
+     * 3
+     *
+     * @param contract
+     * @param user
+     * @param sessionId
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
     public void prorcessRequest1(WsContractDto contract, User user, String sessionId)
                     throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
         //check if caller has permission to execute the call
         //boolean isAuthorized = true;//
         boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract);
+
+
 
         if (isAuthorized){
             //Make a call to a Busienss service

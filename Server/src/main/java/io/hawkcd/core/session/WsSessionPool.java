@@ -27,6 +27,10 @@ import java.util.Collections;
 import java.util.List;
 
 
+import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.SessionDetails;
+import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.services.SessionService;
 import io.hawkcd.ws.WSSession;
 
 /**
@@ -38,9 +42,11 @@ public class WsSessionPool implements ISessionsPool {
     private List<WSSession> sessions;
     private static final Logger LOGGER = Logger.getLogger(WsSessionPool.class);
     private static WsSessionPool instance;
+    private SessionService sessionService = new SessionService();
 
-    private WsSessionPool(){
+    private WsSessionPool() {
         this.sessions = Collections.synchronizedList(new ArrayList<WSSession>());
+        this.sessionService = new SessionService();
     }
 
     public static synchronized WsSessionPool getInstance() {
@@ -52,15 +58,15 @@ public class WsSessionPool implements ISessionsPool {
 
     @Override
     public List<WSSession> getSessions() {
-        return sessions;
+        return this.sessions;
     }
 
     @Override
     @NotNull
     public WSSession getSessionByID(String id) {
 
-        final WSSession session = this.sessions.stream()
-                .filter(s -> s.getId() == id)
+         WSSession session = this.sessions.stream()
+                .filter(s -> s.getId().equals(id) )
                 .reduce((a, b) -> {
                     throw new IllegalStateException("Multiple elements: " + a + ", " + b);
                 }).get();
@@ -72,20 +78,47 @@ public class WsSessionPool implements ISessionsPool {
     @Override
     @NotNull
     public void addSession(WSSession session) {
-        LOGGER.debug(session);
-        this.sessions.add(session);
 
+        LOGGER.debug(session);
+        SessionDetails sessionDetails = session.getSessionDetails();
+
+        try {
+            ServiceResult result = this.sessionService.add(sessionDetails);
+            if (result.getNotificationType() == NotificationType.ERROR) {
+                throw new RuntimeException(result.getMessage());
+            }
+
+
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex);
+        }
+
+        this.sessions.add(session);
     }
 
     @Override
     public void removeSession(String sessionID) {
 
-        final WSSession session = this.sessions.stream().
-                    filter(x -> x.getId() == sessionID)
-                    .reduce((a, b) -> {
-                        throw new IllegalStateException("Multiple elements: " + a + ", " + b);
-                    }).get();
-        LOGGER.debug(session);
-        this.sessions.remove(session);
+         WSSession session = this.sessions.stream().
+                filter(x -> x.getId().equals(sessionID))
+                .reduce((a, b) -> {
+                    throw new IllegalStateException("Multiple elements: " + a + ", " + b);
+                }).get();
+
+        final SessionDetails sessionDetails = session.getSessionDetails();
+
+        try {
+
+            //update database
+            ServiceResult result = this.sessionService.update(sessionDetails);
+            if (result.getNotificationType() == NotificationType.ERROR)
+                throw new RuntimeException(result.getMessage());
+
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+
+            //remove the session from memory
+            this.sessions.remove(session);
+        }
     }
 }

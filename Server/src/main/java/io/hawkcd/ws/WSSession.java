@@ -22,6 +22,7 @@ import io.hawkcd.core.RequestProcessor;
 import io.hawkcd.core.WsObjectProcessor;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.model.SessionDetails;
 import io.hawkcd.utilities.constants.LoggerMessages;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
@@ -31,7 +32,6 @@ import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.User;
-import io.hawkcd.model.dto.UserDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.payload.TokenInfo;
@@ -46,6 +46,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class WSSession extends WebSocketAdapter {
@@ -59,6 +61,12 @@ public class WSSession extends WebSocketAdapter {
     private WsObjectProcessor wsObjectProcessor;
     private RequestProcessor requestProcessor;
 
+    public SessionDetails getSessionDetails() {
+        return this.sessionDetails;
+    }
+
+    private SessionDetails sessionDetails;
+
     public WSSession() {
         this.id = UUID.randomUUID().toString();
         this.jsonConverter = new GsonBuilder()
@@ -71,6 +79,7 @@ public class WSSession extends WebSocketAdapter {
         this.userService = new UserService();
         this.wsObjectProcessor = new WsObjectProcessor();
         this.requestProcessor = new RequestProcessor();
+        this.sessionDetails =  new SessionDetails(this.getId());
     }
 
     public String getId() {
@@ -103,18 +112,13 @@ public class WSSession extends WebSocketAdapter {
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
-        reason = reason == null ? "" : reason;
-        String message = String.format("Session closed [%d] %s", statusCode, reason);
-        LOGGER.info(message);
 
-//        if (this.getLoggedUser() != null) {
-//            reason = reason == null ? "" : reason + " ";
-//            int userActiveSessions = SessionPool.getInstance().countActiveSessions(this.loggedUser.getEmail()) - 1;
-//            String message = String.format("Session closed [%d] %s- User: %s Active Sessions: %s", statusCode, reason, this.loggedUser.getEmail(), userActiveSessions);
-//            LOGGER.info(message);
-//        }
+        //update sessionDetails
+        this.sessionDetails.setActive(false);
+        this.sessionDetails.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 
-        SessionPool.getInstance().remove(this);
+        final ISessionManager sessionManager = SessionFactory.getSessionManager();
+        sessionManager.closeSession(this.id);
     }
 
     @Override
@@ -158,19 +162,14 @@ public class WSSession extends WebSocketAdapter {
     }
 
     private void execute(String message) {
-        WsContractDto contract = null;
 
         if (this.getSession().isOpen())
         {
             try {
-                // Verify JSON
-                contract = this.resolve(message);
 
-                if (contract == null) { //TODO: remove this consider closing the session
-                    contract = new WsContractDto();
-                    ServiceResult result = new ServiceResult(null, NotificationType.ERROR, "Invalid Json was provided");
-                    EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result, this.getLoggedUser());
-                    return;
+                WsContractDto contract  = this.resolve(message);
+                if (contract == null) {
+                    throw new RuntimeException("Resoluiton failed for object" + contract);
                 }
 
                 try {
@@ -178,18 +177,15 @@ public class WSSession extends WebSocketAdapter {
                     this.requestProcessor.prorcessRequest1(contract, this.getLoggedUser(), this.getId());
 
                 } catch (InstantiationException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e);
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    LOGGER.error(e);
                 }
 
             } catch (RuntimeException e) {
-                LOGGER.error(String.format(LoggerMessages.WSENDPOINT_ERROR, e));
-                e.printStackTrace();
-                RemoteEndpoint remoteEndpoint = this.getSession().getRemote();
-                this.errorDetails(contract, this.jsonConverter, e, remoteEndpoint);
+                LOGGER.error(e);
             }
         }
     }
@@ -204,8 +200,14 @@ public class WSSession extends WebSocketAdapter {
             if (tokenInfo == null) {
                 return;
             }
+
             User usr = tokenInfo.getUser();
             this.setLoggedUser(usr);
+
+            //Fill in the sessionDetails
+            this.sessionDetails.setUserId(usr.getId());
+            this.sessionDetails.setUserEmail(usr.getEmail());
+            this.sessionDetails.setActive(true);
 
             ISessionManager sessionManager = SessionFactory.getSessionManager();
             sessionManager.addSession(this);
