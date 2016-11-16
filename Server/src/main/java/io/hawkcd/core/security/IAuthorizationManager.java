@@ -21,16 +21,15 @@ package io.hawkcd.core.security;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 
-/**
- * Created by rado on 13.11.16.
- */
+import java.util.List;
+
 public interface IAuthorizationManager {
 
     /*
-    * Returns tue, false if the user being evaluated has rights to perform an operation
+    * Returns true, false if the user being evaluated has rights to perform an operation
     * @param user
     */
-    boolean isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException, NoSuchMethodException;
+    boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException;
 
     /*
     * returns all users that have access to perform the operation
