@@ -1,0 +1,118 @@
+<!--Copyright (C) 2016 R&D Solutions Ltd.-->
+
+<!--Licensed under the Apache License, Version 2.0 (the "License");-->
+<!--you may not use this file except in compliance with the License.-->
+<!--You may obtain a copy of the License at-->
+
+<!--http://www.apache.org/licenses/LICENSE-2.0-->
+
+<!--Unless required by applicable law or agreed to in writing, software-->
+<!--distributed under the License is distributed on an "AS IS" BASIS,-->
+<!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+<!--See the License for the specific language governing permissions and-->
+<!--limitations under the License.-->
+
+<h3 class="page-title"> Agent Management
+    <small>agents &amp; statistics</small>
+</h3>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a ui-sref="index.agents"> <span>{{agents.defaultText.breadCrumb}}</span></a>
+        </li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>{{agents.defaultText.agents}} <span class="badge badge-default cursor-popover" data-toggle="tooltip" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.agentDesc}}">?</span>
+                </div>
+                <div class="tools right">
+                    <a href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-hover table-advance">
+                        <thead>
+                        <tr>
+                            <th class="statusHeader"></th>
+                            <th>
+                                <h4>{{agents.defaultText.tableHeaders.agentName}}</h4></th>
+                            <th class="hidden-xs hidden-md hidden-sm">
+                                <h4>{{agents.defaultText.tableHeaders.status}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.status}}">?</span></h4></th>
+                            <th class="hidden-xs hidden-md hidden-sm">
+                                <h4>{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.sandbox}}">?</span></h4></th>
+                            <th class="hidden-xs hidden-md hidden-sm">
+                                <h4> {{agents.defaultText.tableHeaders.os}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.os}}">?</span></h4></th>
+                            <th class="hidden-xs hidden-md hidden-sm">
+                                <h4>{{agents.defaultText.tableHeaders.ip}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.ipAddress}}">?</span></h4></th>
+                            <!--<th><h4 titile="The free space of the disk the agent is running on">{{agents.defaultText.tableHeaders.freeSpace}} <span class="badge badge-default">?</span> </h4> </th>-->
+                            <th class="hidden-xs hidden-md hidden-sm">
+                                <h4>{{agents.defaultText.tableHeaders.resources}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.resources}}">?</span></h4></th>
+                            <th class="custom-datatable-btns hidden-xs hidden-md hidden-sm">
+                                <h4 class="text-center-all">{{agents.defaultText.tableHeaders.action}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.actions}}">?</span></h4></th>
+                            <th class="hidden-lg" style="width:100px">
+                                <h4 class="text-center-all">{{agents.defaultText.tableHeaders.action}} </h4></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="agent in agents.currentAgents" ng-show="agent.OS!='string'">
+                            <td class="highlight">
+                                <div class="run-item-container" ng-class="{'status-position':true,'status-passed' : agent.isEnabled && !agent.isRunning && agent.isConnected, 'status-failed' : !agent.isEnabled && agent.isConnected,'status-canceled' : !agent.isConnected, 'status-working' : agent.isRunning }">
+                                </div>
+                            </td>
+                            <td class="table-element-text">
+                                <h5> {{agent.hostName + "-" +  agent.id.substr(0,8)}}</h5></td>
+                            <td class="hidden-xs hidden-md hidden-sm">
+                                <h5> {{agent.status}}</h5></td>
+                            <td class="hidden-xs hidden-md hidden-sm table-element-text">
+                                <h5>{{agent.rootPath}} </h5></td>
+                            <td class="hidden-xs hidden-md hidden-sm">
+                                <h5>{{agent.operatingSystem}}</h5></td>
+                            <td class="hidden-xs hidden-md hidden-sm">
+                                <h5>{{agent.ipAddress}}</h5></td>
+                            <!--<td><h5>{{agent.freeSpace}}</h5></td>-->
+                            <td class="hidden-xs hidden-md hidden-sm">
+                                <h5>{{agent.resources}}</h5></td>
+                            <td class="hidden-xs hidden-md hidden-sm">
+                                <h5>
+                                    <div class="btn-group btn-group-xs btn-group-solid">
+                                        <button class="btn btn-danger" data-target="#removeAgent" data-toggle="modal" ng-click="agents.setAgentToDelete(agent)">{{agents.status.delete}}
+                                        </button>
+                                        <button ng-click="agents.setAgentToAddResource(agent)" class="btn btn-info"  data-target="#addResourceAgent" data-toggle="modal"
+                                        >{{agents.status.resource}}
+                                        </button>
+                                        <button ng-click="agents.changeAgentStatus(agent)" class="btn btn-default"
+                                                ng-if="agent.isEnabled == false" ng-show="agent.isConnected != false">{{agents.status.enable}}
+                                        </button>
+                                        <button class="btn default"
+                                                ng-if="agent.isConnected == false" ng-class="{'disabled' : agent.isConnected == false}">Disconnected
+                                        </button>
+                                        <button ng-click="agents.changeAgentStatus(agent)" class="btn default"
+                                                ng-if="agent.isEnabled == true" ng-show="agent.isConnected != false">{{agents.status.disable}}
+                                        </button>
+                                    </div>
+                                </h5>
+                            </td>
+                            <td class="hidden-lg text-center-all agent-controls">
+                                <button class="btn blue config-button" data-toggle="modal" data-target="#details"
+                                        ng-click="agents.setAgentToDisplayDetails(agent)">Details</button>
+                                <button class="btn yellow config-button" data-toggle="modal" data-target="#editAgent" ng-click="agents.setAgentToEdit($index)">Edit</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div ng-include src="'app/agents/views/_details.html'"></div>
+<div ng-include src="'app/agents/views/_editAgent.html'"></div>

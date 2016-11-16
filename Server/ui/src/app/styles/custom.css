@@ -203,6 +203,20 @@ p {
     padding-bottom:1px!important;
 }
 
+.agent-resource {
+    background-color: #337ab7 !important;
+    color: #ffffff;
+    text-transform: none;
+    text-underline: none;
+    /*padding-top:2px!important;*/
+    padding:3px!important;
+    padding-left:5px!important;
+    padding-right:5px!important;
+    font-size: 13px!important;
+    /*padding-bottom:2px!important;*/
+    /*line-height: 16px;*/
+}
+
 .run-label {
     color: #ffffff;
     text-transform: none;
@@ -534,7 +548,8 @@ p {
 }
 
 .custom-datatable-btns {
-    width: 350px !important;
+    width: 300px !important;
+    min-width: 300px !important;
     overflow: hidden;
 }
 
@@ -917,6 +932,10 @@ p {
     width: 50px!important;
 }
 
+.width-150px {
+    width: 150px!important;
+}
+
 .width-20 {
     width: 20%;
 }
@@ -1110,8 +1129,16 @@ p {
         margin-top:10%!important;
     }
 
+    .agent-button:not(:first-child) {
+        margin-top:10%!important;
+    }
+
     .group-button {
         margin-top: 10px;
+    }
+
+    .agent-button {
+        display: block!important;
     }
 
     .config-button {
@@ -1130,6 +1157,11 @@ p {
     .small-device-label {
         width:200px;
     }
+
+    .agent-controls {
+        min-width: 100px!important;
+        margin:0!important;
+    }
 }
 
 @media screen and (min-width: 767px){
@@ -1142,10 +1174,15 @@ p {
         min-width: 100px;
         width:100px;
     }
+
+    .agent-controls {
+        min-width: 190px;
+        width:190px;
+    }
 }
 
 .config-button {
-    width:70px;
+    width:80px;
 }
 
 .table-element-text {
@@ -1154,11 +1191,20 @@ p {
 
 .text-center-all {
     vertical-align: middle!important;
-    text-align: center;
+    text-align: center!important;
 }
 
 .text-center-vertical {
     vertical-align: middle!important;
+}
+
+.custom-agent-input {
+    padding-top:0!important;
+}
+
+.textarea-no-resize {
+    resize: none;
+    overflow: hidden;
 }
 
 .tab-border-fix > .nav-tabs > li.active > a{
