@@ -18,49 +18,43 @@
 
 package io.hawkcd.core.security;
 
-import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
-import io.hawkcd.model.payload.Permission;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- *
  * The class is responisble for authorizing User's requests
- *
+ * <p>
  * Workflow:
  * Evaluate currentUser permissions,
- *      if method call is allowed
+ * if method call is allowed
  * Get all active sessions from database (cluster)
  * Filter all users with active session
- * Evaluate each user permissions and prepare the message object to be broadcasted
+ * Evaluate each user permissions and prepare the message object to be broadcast
  * Send message to all subscribers
- *
  */
 public class AuthorizationManager implements IAuthorizationManager {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
+    private AuthorizationService authorizationService;
+
+
     @Override
-    public boolean isAuthorized(User user, WsContractDto contract) throws ClassNotFoundException, NoSuchMethodException {
+    public boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException {
         LOGGER.debug("param: " + user.toString());
         LOGGER.debug("param: " + contract.toString());
 
-        Authorization authorization = this.getMethodAuthorization(contract.getPackageName(), contract.getClassName(), contract.getMethodName());
-        if (authorization == null) {
+        Authorization authorizationPermission = this.getMethodAuthorization(contract.getPackageName(), contract.getClassName(), contract.getMethodName());
+        if (authorizationPermission == null) {
             return false;
         }
 
-        List<Permission> permissions = user.getPermissions();
+        boolean isAuthorized = this.authorizationService.isRequestAuthorized(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationPermission);
 
-        // Custom logic get Id
-
-        String id = "";
-
-
-        return false;
+        return isAuthorized;
     }
 
     @Override
@@ -68,7 +62,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
     }
 
-    private Authorization getMethodAuthorization(String packageName, String className, String methodName)
+    Authorization getMethodAuthorization(String packageName, String className, String methodName)
             throws ClassNotFoundException, NoSuchMethodException {
 
         String fullyQualifiedName = String.format("%s.%s", packageName, className);
@@ -77,75 +71,5 @@ public class AuthorizationManager implements IAuthorizationManager {
         Authorization annotation = method.getAnnotation(Authorization.class);
 
         return annotation;
-    }
-
-    private boolean hasPermission(Permission userPermission, Authorization authorizedPermission) {
-        if (userPermission.getPermissionType().getPriorityLevel() >= authorizedPermission.type().getPriorityLevel()) {
-            if (userPermission.getPermissionScope().getPriorityLevel() >= authorizedPermission.scope().getPriorityLevel()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private Boolean hasPermissionForSpecificEntity(List<Permission> userPermissions, Authorization authorizedPermission, String entityId) {
-        Boolean hasPermission = null;
-        for (Permission permission : userPermissions) {
-            if (permission.getPermittedEntityId().equals(entityId)) {
-                hasPermission = this.hasPermission(permission, authorizedPermission);
-                break;
-            }
-        }
-
-        return hasPermission;
-    }
-
-    private boolean hasPermissionForGenericEntity(List<Permission> userPermissions, Authorization authorizedPermission) {
-        boolean hasPermission = false;
-        for (Permission permission : userPermissions) {
-            hasPermission = this.hasPermission(permission, authorizedPermission);
-            if (hasPermission) {
-                break;
-            }
-        }
-
-        return hasPermission;
-    }
-
-    private void hasPermissionWithId(List<Permission> permissions, Authorization authorizedPermission, String... entityIds) {
-        for (String entityId : entityIds) {
-            // permiss.getpipe
-            this.hasPermissionForSpecificEntity(permissions, authorizedPermission, entityId);
-
-            this.hasPermissionForSpecificEntity(permissions, authorizedPermission, entityId);
-
-            this.hasPermissionForGenericEntity(permissions, authorizedPermission);
-        }
-
-
-
-
-
-        // get specific PipelineGroup permissions
-        //String pipelineGroupId = pipelineDefinition.getPipelineGroupId();
-
-
-        // get general permissions
-
-    }
-
-    private void customLogicMethod(String className, String methodName, Object object, List<Permission> permissions, Authorization authorizedPermission) {
-        if (className.equals("PipelineDefinitionService")) {
-            if (methodName.equals("updatePipelineDefinition")) {
-                
-                PipelineDefinition pipelineDefinition = (PipelineDefinition) object;
-                // get specific Pipeline permissions
-                String pipelineDefinitionId = pipelineDefinition.getId();
-
-
-            }
-        }
-
     }
 }

@@ -28,6 +28,10 @@ public class User extends DbEntry {
     private String password;
     private String ghAuthCode;
     private String provider;
+    private List<Permission> permissions;
+    private UserPermissions userPermissions;
+    private List<String> userGroupIds;
+    private boolean isEnabled;
 
     @Override
     public String toString() {
@@ -57,10 +61,6 @@ public class User extends DbEntry {
     public int hashCode() {
         return this.email.hashCode();
     }
-
-    private List<Permission> permissions;
-    private List<String> userGroupIds;
-    private boolean isEnabled;
 
     public User() {
         this.setPermissions(new ArrayList<>());
@@ -106,6 +106,14 @@ public class User extends DbEntry {
 
     public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    public UserPermissions getUserPermissions() {
+        return userPermissions;
+    }
+
+    public void setUserPermissions(UserPermissions userPermissions) {
+        this.userPermissions = userPermissions;
     }
 
     public List<String> getUserGroupIds() {
