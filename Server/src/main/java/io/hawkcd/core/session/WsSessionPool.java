@@ -21,14 +21,23 @@ package io.hawkcd.core.session;
 import com.sun.istack.internal.NotNull;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+import org.eclipse.jetty.websocket.api.CloseStatus;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jgit.annotations.NonNull;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.SessionDetails;
+import io.hawkcd.model.User;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.SessionService;
 import io.hawkcd.ws.WSSession;
@@ -39,13 +48,13 @@ import io.hawkcd.ws.WSSession;
  */
 public class WsSessionPool implements ISessionsPool {
 
-    private List<WSSession> sessions;
+    private Set<WSSession> sessions;
     private static final Logger LOGGER = Logger.getLogger(WsSessionPool.class);
     private static WsSessionPool instance;
     private SessionService sessionService = new SessionService();
 
     private WsSessionPool() {
-        this.sessions = Collections.synchronizedList(new ArrayList<WSSession>());
+        this.sessions = Collections.synchronizedSet(new HashSet<WSSession>());
         this.sessionService = new SessionService();
     }
 
@@ -57,12 +66,11 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    public List<WSSession> getSessions() {
+    public Set<WSSession> getSessions() {
         return this.sessions;
     }
 
     @Override
-    @NotNull
     public WSSession getSessionByID(String id) {
 
          WSSession session = this.sessions.stream()
@@ -76,49 +84,85 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    @NotNull
     public void addSession(WSSession session) {
 
-        LOGGER.debug(session);
-        SessionDetails sessionDetails = session.getSessionDetails();
+        if (LOGGER.isDebugEnabled()){
+            LOGGER.debug("Session pool size: "+this.sessions.size());
+            for (WSSession sess: sessions) {
+                LOGGER.debug("Session pool size: "+  sess.getLoggedUser().getEmail());
+            }
+        }
 
+        this.sessions.add(session);
+        SessionDetails sessionDetails = session.getSessionDetails();
         try {
             ServiceResult result = this.sessionService.add(sessionDetails);
             if (result.getNotificationType() == NotificationType.ERROR) {
                 throw new RuntimeException(result.getMessage());
             }
-
-
         } catch (RuntimeException ex) {
             LOGGER.error(ex);
         }
-
-        this.sessions.add(session);
     }
 
     @Override
-    public void removeSession(String sessionID) {
-
-         WSSession session = this.sessions.stream().
-                filter(x -> x.getId().equals(sessionID))
-                .reduce((a, b) -> {
-                    throw new IllegalStateException("Multiple elements: " + a + ", " + b);
-                }).get();
-
-        final SessionDetails sessionDetails = session.getSessionDetails();
+    public void removeSession(WSSession session) {
 
         try {
+            if (session == null){
+                throw new NullPointerException("session object is null");
+            }
+            if (session.getSession()!= null){
+                if (session.getSession().isOpen()){
+                    session.getSession().close(new CloseStatus(1000,"User Logged out"));
+                }
+            }
+
+            SessionDetails sessionDetails = session.getSessionDetails();
+            sessionDetails.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+            sessionDetails.setActive(false);
 
             //update database
             ServiceResult result = this.sessionService.update(sessionDetails);
             if (result.getNotificationType() == NotificationType.ERROR)
                 throw new RuntimeException(result.getMessage());
 
+            this.sessions.remove(session);
+            LOGGER.debug("Session for user: "+ session.getLoggedUser().getEmail() +" was removed");
         } catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
-
-            //remove the session from memory
             this.sessions.remove(session);
         }
     }
+
+    @Override
+    public boolean contains(WSSession session) {
+
+        String email = session.getLoggedUser().getEmail();
+
+        WSSession ses = this.sessions
+                .stream()
+                .filter(s -> s.getLoggedUser().getEmail().equals(email) )
+                .findFirst()
+                .orElse(null);
+
+        if (ses != null ){
+            return  true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public WSSession getSessionForUser(String email) {
+
+        return this.getSessions()
+                .stream()
+                .filter(s -> s.getLoggedUser().getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+
 }
