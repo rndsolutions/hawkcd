@@ -22,6 +22,9 @@ angular
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
+
+                console.log(data);
+                debugger;
                 if (!validationService.isValid(data)) {
                     toaster.error('Invalid JSON format!');
                     return;
@@ -73,6 +76,7 @@ angular
                     resetUserPassword:function(object) {
                     },
                     logout: function(object) {
+                        debugger;
                         validationService.dispatcherFlow(object, [loginService.logoutUser])
                     }
                 },

@@ -226,17 +226,17 @@ angular
                 $rootScope.$apply();
                 return;
             }
-            if (!window.timerID) {
-                window.timerID = setInterval(function() {
-                    start(wsServerLocation)
-                }, 5000);
-            }
 
-            toaster.clear();
-            notificationService.notificationDispatcher[CONSTANTS.TOAST_ERROR]("Connection lost. Reconnecting...");
-            $rootScope.$apply();
-            console.log(CONSTANTS.WS_URL);
-            console.log(CONSTANTS.SERVER_URL);
+//            if (!window.timerID) {
+//                window.timerID = setInterval(function() {
+//                    start(wsServerLocation)
+//                }, 5000);
+//            }
+//            toaster.clear();
+//            notificationService.notificationDispatcher[CONSTANTS.TOAST_ERROR]("Connection lost. Reconnecting...");
+//            $rootScope.$apply();
+//            console.log(CONSTANTS.WS_URL);
+//            console.log(CONSTANTS.SERVER_URL);
         }
     };
     //debugger;
@@ -244,7 +244,6 @@ angular
         $rootScope.startWebsocket(wsServerLocation);
         console.log($auth.getToken());
     }
-
 }]);
 
 /* Fix for Bootstrap modal behavior */

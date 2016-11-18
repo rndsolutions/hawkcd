@@ -17,5 +17,6 @@
 package io.hawkcd.model.enums;
 
 public enum DatabaseType {
-    REDIS
+    REDIS,
+    MONGODB
 }

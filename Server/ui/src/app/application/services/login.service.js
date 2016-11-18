@@ -102,7 +102,10 @@ angular
         };
 
        this.logoutUser = function (username) {
-           $auth.removeToken();
+           //$auth.removeToken();
+            debugger;
+           $auth.logout();
+           $location.path("/authenticate");
            viewModelUpdater.flushViewModel();
        };
 

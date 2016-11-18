@@ -28,7 +28,13 @@ public interface ISessionManager {
 
     void closeSession(String sessionId);
 
+    void closeSessionForUser(String email);
+
     void sendToAllSessions(WsContractDto contractDto);
 
     void addSession(WSSession session);
+
+    boolean isUserInSession(WSSession session, String email);
+
+    void logoutUser(WSSession session);
 }

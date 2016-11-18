@@ -8,11 +8,11 @@ import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.util.JSON;
-import com.sun.istack.internal.NotNull;
 
-import org.apache.commons.codec.binary.Base64;
-import org.bson.types.ObjectId;
+import org.bson.Document;
 import org.eclipse.jgit.annotations.NonNull;
 
 import javax.ws.rs.NotFoundException;
@@ -21,9 +21,14 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.UUID;
+import static com.mongodb.client.model.Filters.*;
 
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.MaterialDefinition;
+import io.hawkcd.model.TaskDefinition;
+import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
+import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
@@ -34,7 +39,11 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
     public MongoDbRepository(Class<T> entry) {
         this.entryType = entry;
-        this.jsonConverter = new GsonBuilder().create();
+        this.jsonConverter = new GsonBuilder()
+                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
+                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
+                .create();
+
         this.mongoDatabase = MongoDbManager.getInstance().getDb();
         this.collection = this.mongoDatabase.getCollection(this.entryType.getTypeName());
     }
@@ -54,11 +63,9 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             BasicDBObject bObj=  new BasicDBObject("id",uuid);
 
             DBObject document=null;
-            BasicDBObject query = new BasicDBObject();
 
-            query.put("id",bObj);
 
-            document = (DBObject) collection.find(query);
+            document = (DBObject) collection.find(eq("id", id)).first();
 
             if (document != null) {
 //                String document = JSON.serialize(documents.next());
@@ -99,9 +106,8 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
         if (this.getById(entry.getId()) == null) {
             try {
                 String entryToJson = this.jsonConverter.toJson(entry);
-                DBObject myDoc = (DBObject) JSON.parse(entryToJson);
-
-                this.collection.insertOne(myDoc);
+                Document document = Document.parse(entryToJson);
+                this.collection.insertOne(document);
 
                 return entry;
             } catch (RuntimeException e) {
@@ -116,15 +122,19 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     @Override
     public T update(T entry) {
         try {
-            BasicDBObject newDocument = (BasicDBObject) JSON.parse(this.jsonConverter.toJson(entry));
 
-            BasicDBObject searchQuery = new BasicDBObject().append("id", entry.getId());
+            String entryToJson = this.jsonConverter.toJson(entry);
+            Document document = Document.parse(entryToJson);
+            //this.collection.insertOne(document);
 
-            this.collection.findOneAndUpdate(searchQuery, newDocument);
+            UpdateResult updateResult = this.collection.replaceOne(eq("id", document.get("id")), document);
 
-            return entry;
+            if (updateResult.getMatchedCount() == 1){ // means one record updated
+                return entry;
+            }
+
+            return null; //either none or many records updated, so consider the operation not successful.
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return null;
         }
     }

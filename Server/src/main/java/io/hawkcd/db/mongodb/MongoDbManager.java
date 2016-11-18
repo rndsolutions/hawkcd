@@ -1,20 +1,23 @@
-package net.hawkengine.db.mongodb;
+package io.hawkcd.db.mongodb;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
-import net.hawkengine.core.ServerConfiguration;
-import net.hawkengine.model.configuration.DatabaseConfig;
-import net.hawkengine.model.enums.DatabaseType;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.hawkcd.Config;
+import io.hawkcd.model.configuration.DatabaseConfig;
+import io.hawkcd.model.enums.DatabaseType;
+
 public final class MongoDbManager {
-    public static final DatabaseConfig mongoDbConfig = ServerConfiguration.getConfiguration().getDatabaseConfigs().get(DatabaseType.MONGODB);
+    public static final DatabaseConfig mongoDbConfig = Config.getConfiguration().getDatabaseConfigs().get(DatabaseType.MONGODB);
+    // ServerConfiguration.getConfiguration().getDatabaseConfigs().get(DatabaseType.MONGODB);
     private static MongoDatabase db;
     private static MongoDbManager mongoDbManager;
     private static MongoClient mongoClient;
@@ -46,7 +49,12 @@ public final class MongoDbManager {
         List<ServerAddress> seeds = new ArrayList<>();
         seeds.add(serverAddress);
         List<MongoCredential> credentials = new ArrayList<>();
-        credentials.add(MongoCredential.createCredential(mongoDbConfig.getUsername(), mongoDbConfig.getName(), mongoDbConfig.getPassword().toCharArray()));
+
+        char[] chars = null;
+        if (mongoDbConfig.getPassword() != null){
+         chars = mongoDbConfig.getPassword().toCharArray();
+        }
+        credentials.add(MongoCredential.createCredential(mongoDbConfig.getUsername(), mongoDbConfig.getName(),chars));
         mongoClient = new MongoClient(seeds, credentials);
 
     }

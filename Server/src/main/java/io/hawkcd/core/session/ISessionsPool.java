@@ -20,7 +20,9 @@ package io.hawkcd.core.session;
 
 import com.sun.xml.internal.ws.api.server.WSEndpoint;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.hawkcd.ws.WSSession;
 
@@ -29,12 +31,16 @@ import io.hawkcd.ws.WSSession;
  */
 public interface ISessionsPool  {
 
-    List<WSSession> getSessions();
+    Set<WSSession> getSessions();
 
     WSSession getSessionByID(String id);
 
     void addSession(WSSession session);
 
-    void removeSession(String sessionID);
+    void removeSession(WSSession session);
+
+    boolean contains(WSSession session);
+
+    WSSession getSessionForUser(String email);
 
 }

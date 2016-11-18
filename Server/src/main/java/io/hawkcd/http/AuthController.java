@@ -17,6 +17,8 @@
 package io.hawkcd.http;
 
 import com.google.gson.Gson;
+
+import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.utilities.deserializers.TokenAdapter;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
@@ -26,7 +28,10 @@ import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.payload.Permission;
 import io.hawkcd.services.UserService;
 import io.hawkcd.ws.SessionPool;
+import io.hawkcd.ws.WSSession;
+
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -46,7 +51,7 @@ import java.util.List;
 @Produces("application/json")
 @Path("auth")
 public class AuthController {
-
+    private static final Logger LOGGER = Logger.getLogger(AuthController.class.getClass());
     private static final String GH_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
     //TODO: move this to the config
     private static final String GH_CLIENT_ID = "2d3dbbf586d2260cbd68";
@@ -143,8 +148,8 @@ public class AuthController {
     @Produces("application/json")
     @Path("/logout")
     public Response logout(String email) throws IOException {
-        SessionPool.getInstance().logoutUserFromAllSessions(email);
-
+        LOGGER.info("User: "+ email+ " logged out");
+        SessionFactory.getSessionManager().closeSessionForUser(email);
         return Response.ok().build();
     }
 

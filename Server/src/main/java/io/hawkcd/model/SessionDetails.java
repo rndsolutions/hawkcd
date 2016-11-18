@@ -34,7 +34,6 @@ public class SessionDetails extends  DbEntry{
     private  String userEmail;
     private  boolean isActive;
 
-
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }

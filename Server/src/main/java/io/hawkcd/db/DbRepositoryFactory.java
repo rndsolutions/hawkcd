@@ -16,6 +16,7 @@
 
 package io.hawkcd.db;
 
+import io.hawkcd.db.mongodb.MongoDbRepository;
 import io.hawkcd.db.redis.RedisRepository;
 import io.hawkcd.model.enums.DatabaseType;
 
@@ -24,6 +25,8 @@ public class DbRepositoryFactory {
         switch (databaseType) {
             case REDIS:
                 return new RedisRepository(classType);
+            case MONGODB:
+                return new MongoDbRepository(classType);
             default:
                 return null;
         }

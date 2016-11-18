@@ -22,13 +22,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.logging.Logger;
 
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jgit.annotations.NonNull;
 
+import java.io.IOException;
+
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.dto.WsContractDto;
+import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
@@ -43,7 +47,7 @@ import io.hawkcd.ws.WSSession;
  */
 
 public class SessionManager implements  ISessionManager{
-
+    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(SessionManager.class.getClass());
     private  WsSessionPool sessionPool;
     private Gson jsonConverter;
 
@@ -58,7 +62,26 @@ public class SessionManager implements  ISessionManager{
 
     @Override
     public void closeSession(String sessionId) {
-        sessionPool.removeSession(sessionId);
+
+        WSSession session = this.sessionPool.getSessions()
+                .stream()
+                .filter(s -> s.getId() == sessionId)
+                .findFirst()
+                .orElse(null);
+
+        sessionPool.removeSession(session);
+    }
+
+    @Override
+    public void closeSessionForUser(String email) {
+
+        WSSession session = sessionPool.getSessions()
+                .stream()
+                .filter(s -> s.getLoggedUser().getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
+
+        sessionPool.removeSession(session);
     }
 
     @Override
@@ -69,13 +92,39 @@ public class SessionManager implements  ISessionManager{
         }
     }
 
+    /**
+     * We support only single user session/connection at a time.
+     * Upon adding a new session to the pool we check if a user with the same email has already opned a session, if so
+     * we close the previous session and keep the new one
+     * @param newSession
+     */
     @Override
-    @NotNull
-    public void addSession(WSSession session) {
+    public void addSession(WSSession newSession) {
 
-        this.sessionPool.getInstance().addSession(session);
+        String email = newSession.getLoggedUser().getEmail();
+        if (this.sessionPool.contains(newSession)){
+            WSSession sessionToClose = this.sessionPool.getSessionForUser(email);
+            this.logoutUser(sessionToClose);
+            this.closeSessionForUser(email);
+        }
+
+        this.sessionPool.getInstance().addSession(newSession);
     }
 
+    @Override
+    public boolean isUserInSession(WSSession session, String email) {
+        return false;
+    }
+
+    @Override
+    public void logoutUser(WSSession session){
+
+        WsContractDto contract = new WsContractDto();
+        contract.setClassName("UserService"); //TODO: Fix this it should be some other message
+        contract.setMethodName("logout");
+        contract.setNotificationType(NotificationType.SUCCESS);
+        this.send(session,contract);
+    }
 
     @NonNull
     void send(WSSession session, WsContractDto contract) {
@@ -83,7 +132,11 @@ public class SessionManager implements  ISessionManager{
         if (session.isConnected()){
             RemoteEndpoint remoteEndpoint = session.getRemote();
             String jsonResult = this.jsonConverter.toJson(contract);
-            remoteEndpoint.sendStringByFuture(jsonResult);
+            try {
+                remoteEndpoint.sendString(jsonResult);
+            } catch (IOException e) {
+                LOGGER.error(e);
+            }
         }
     }
 }

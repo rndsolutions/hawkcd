@@ -5,12 +5,12 @@
 //import com.mongodb.FongoDB;
 //import com.mongodb.client.MongoCollection;
 //import junit.framework.TestCase;
-//import net.hawkengine.db.mongodb.MongoDbRepository;
+//import io.hawkcd.db.mongodb.MongoDbRepository;
 //import net.hawkengine.model.Agent;
 //import org.junit.Assert;
 //import org.junit.Before;
 //import org.junit.Test;
-//
+
 //public class MongoDbImplementationTest {
 //
 //    private MongoCollection collection;

@@ -23,6 +23,7 @@ import io.hawkcd.core.WsObjectProcessor;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.model.SessionDetails;
+import io.hawkcd.model.dto.UserDto;
 import io.hawkcd.utilities.constants.LoggerMessages;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
@@ -102,6 +103,7 @@ public class WSSession extends WebSocketAdapter {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
         initialize(session);
+        LOGGER.info("Sessiong for user: " +this.loggedUser.getEmail() + " Opened");
     }
 
     @Override
@@ -113,18 +115,28 @@ public class WSSession extends WebSocketAdapter {
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
 
-        //update sessionDetails
-        this.sessionDetails.setActive(false);
-        this.sessionDetails.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-
-        final ISessionManager sessionManager = SessionFactory.getSessionManager();
-        sessionManager.closeSession(this.id);
+        switch(statusCode) {
+            case 1000:
+                LOGGER.info("Sessiong for user: " +this.loggedUser.getEmail() + "Closed upon logout request");
+                break;
+            case 1001:
+                LOGGER.info("Session terminated forecefully by user: " +this.loggedUser.getEmail());
+                SessionFactory.getSessionManager().closeSessionForUser(this.getLoggedUser().getEmail());
+                break;
+            default:
+                LOGGER.info("Unexpected Session termination for user" +this.loggedUser.getEmail());
+        }
     }
 
     @Override
     public void onWebSocketError(Throwable cause) {
         super.onWebSocketError(cause);
-        cause.printStackTrace(System.err);
+        final ISessionManager sessionManager = SessionFactory.getSessionManager();
+        if (this.getSession()!= null){
+            if (this.getSession().isOpen())
+                sessionManager.closeSession(this.id);
+        }
+        LOGGER.info("Session closed for user: " +this.loggedUser.getEmail() + "Closed with error: "+  cause.toString());
     }
 
     public WsContractDto resolve(String message) {
@@ -163,7 +175,7 @@ public class WSSession extends WebSocketAdapter {
 
     private void execute(String message) {
 
-        if (this.getSession().isOpen())
+        if (isConnected())
         {
             try {
 
@@ -211,7 +223,23 @@ public class WSSession extends WebSocketAdapter {
 
             ISessionManager sessionManager = SessionFactory.getSessionManager();
             sessionManager.addSession(this);
+
+            WsContractDto contract = extractUserDetails(tokenInfo);
+            sessionManager.sendToAllSessions(contract);
         }
+    }
+
+    private WsContractDto extractUserDetails(TokenInfo tokenInfo) {
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername(tokenInfo.getUser().getEmail());
+        userDto.setPermissions(tokenInfo.getUser().getPermissions());
+        return new WsContractDto("UserInfo",
+                                                            "",
+                                                            "getUser",
+                                                            userDto,
+                                                            NotificationType.SUCCESS,
+                                                            "User details retrieved successfully");
     }
 
 }

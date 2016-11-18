@@ -145,7 +145,7 @@ dependencies {
 
     //Mongo
 
-    compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.2.2'
+    compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.3.0'
 
     compile 'com.github.fakemongo:fongo:2.0.6'
 
