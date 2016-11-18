@@ -16,20 +16,47 @@
     <div class="tabbable-custom nav-justified tab-border-fix">
         <ul class="nav nav-tabs nav-justified width-50">
             <li ui-sref-active="active" style="min-width:150px;">
-                <a data-target="#jobSettings" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.job.settings"> Job Settings <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.job}}">?</span></a>
+                <a data-target="#jobSettings" data-toggle="tab" aria-expanded="true"
+                   ui-sref="index.pipelineConfig.job.settings"
+                   ng-click="pipeConfig.selectTabView('jobSettings')"> Job Settings <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.job}}">?</span></a>
             </li>
             <li ui-sref-active="active" style="min-width:100px;">
-                <a data-target="#jTasks" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.job.tasks"> Tasks <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.task}}">?</span></a>
+                <a data-target="#jTasks" data-toggle="tab" aria-expanded="false"
+                   ui-sref="index.pipelineConfig.job.tasks"
+                   ng-click="pipeConfig.selectTabView('jobTasks')"> Tasks <span class="badge badge-default cursor-popover"
+                                                                         data-placement="bottom" style="margin-left:5px"
+                                                                         onmouseenter="$(this).tooltip('show')"
+                                                                         title="{{pipeConfig.popOverOptions.popOverTitles.task}}">?</span></a>
             </li>
             <li ui-sref-active="active" style="min-width:210px;">
-                <a data-target="#jEnvironmentVariables" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.job.variables"> Environment Variables <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
+                <a data-target="#jEnvironmentVariables" data-toggle="tab" aria-expanded="false"
+                   ui-sref="index.pipelineConfig.job.variables"
+                   ng-click="pipeConfig.selectTabView('jobVariables')"> Environment Variables <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
             </li>
             <li ui-sref-active="active" style="min-width:150px;">
-                <a data-target="#jResources" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.job.resources"> Resources <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobResources}}">?</span></a>
+                <a data-target="#jResources" data-toggle="tab" aria-expanded="false"
+                   ui-sref="index.pipelineConfig.job.resources"
+                   ng-click="pipeConfig.selectTabView('jobResources')"> Resources <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.jobResources}}">?</span></a>
             </li>
         </ul>
-        <div class="tab-content" ui-view autoscroll="true">
-
+        <div class="tab-content" ng-init="pipeConfig.initJobTabs()">
+            <div ng-if="pipeConfig.tabView == 'jobSettings'" ng-include
+                 src="'app/pipelines/views/partials/config/job-options/_settings.html'"></div>
+            <div ng-if="pipeConfig.tabView == 'jobTasks'" ng-include
+                 src="'app/pipelines/views/partials/config/job-options/_tasks.html'"></div>
+            <div ng-if="pipeConfig.tabView == 'jobVariables'" ng-include
+                 src="'app/pipelines/views/partials/config/job-options/_variables.html'"></div>
+            <div ng-if="pipeConfig.tabView == 'jobResources'" ng-include
+                 src="'app/pipelines/views/partials/config/job-options/_resources.html'"></div>
         </div>
     </div>
 </div>
