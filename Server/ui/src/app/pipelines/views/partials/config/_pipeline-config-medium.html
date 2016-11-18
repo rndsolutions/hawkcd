@@ -14,23 +14,43 @@
 
 
 <div class="col-md-9 config-tabs">
-<div class="tabbable-custom nav-justified tab-border-fix">
-<ul class="nav nav-tabs nav-justified width-50" >
-<li ui-sref-active="active" style="min-width:200px;">
-<a data-target="#general" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.pipeline.general"> Pipeline Settings <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.pipeline}}">?</span></a>
-</li>
-<li ui-sref-active="active" style="min-width:120px;">
-<a data-target="#stages" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.stages"> Stages <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.stage}}">?</span></a>
-</li>
-<!-- <li ui-sref-active="active">
-<a data-target="#materials" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.materials"> Materials </a>
-</li> -->
-<li ui-sref-active="active" style="min-width:220px;">
-<a data-target="#environmentVariables"  data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.variables"> Environment Variables <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
-</li>
-</ul>
-<div class="tab-content" ui-view autoscroll="true">
-
-</div>
-</div>
+    <div class="tabbable-custom nav-justified tab-border-fix">
+        <ul class="nav nav-tabs nav-justified width-50">
+            <li ui-sref-active="active" style="min-width:200px;">
+                <a data-target="#general" data-toggle="tab" aria-expanded="true"
+                   ui-sref="index.pipelineConfig.pipeline.general"
+                   ng-click="pipeConfig.selectTabView('pipelineSettings')"> Pipeline Settings <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.pipeline}}">?</span></a>
+            </li>
+            <li ui-sref-active="active" style="min-width:120px;">
+                <a data-target="#stages" data-toggle="tab" aria-expanded="false"
+                   ui-sref="index.pipelineConfig.pipeline.stages"
+                   ng-click="pipeConfig.selectTabView('pipelineStages')"> Stages <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.stage}}">?</span></a>
+            </li>
+            <!-- <li ui-sref-active="active">
+            <a data-target="#materials" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.materials"> Materials </a>
+            </li> -->
+            <li ui-sref-active="active" style="min-width:220px;">
+                <a data-target="#environmentVariables" data-toggle="tab" aria-expanded="false"
+                   ui-sref="index.pipelineConfig.pipeline.variables"
+                   ng-click="pipeConfig.selectTabView('pipelineVariables')"> Environment Variables <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
+            </li>
+        </ul>
+        <div class="tab-content" ng-init="pipeConfig.initPipelineTabs()">
+            <div ng-if="pipeConfig.tabView == 'pipelineSettings'" ng-include
+                 src="'app/pipelines/views/partials/config/pipeline-options/_general-options.html'"></div>
+            <div ng-if="pipeConfig.tabView == 'pipelineStages'" ng-include
+                 src="'app/pipelines/views/partials/config/pipeline-options/_stages.html'"></div>
+            <div ng-if="pipeConfig.tabView == 'pipelineVariables'" ng-include
+                 src="'app/pipelines/views/partials/config/pipeline-options/_variables.html'"></div>
+        </div>
+    </div>
 </div>
