@@ -26,6 +26,12 @@ databaseConfigs:
     port: 6379
     username:
     password:
+  MONGODB:
+    name: hawkdb
+    host: localhost
+    port: 27017
+    username:
+    password:
 
 # Provider settings
 oAuthProviderConfigs:
