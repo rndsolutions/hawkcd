@@ -59,6 +59,14 @@ angular
 
         vm.currentStageRuns = [];
 
+        vm.currentView = '';
+
+        vm.tabView = '';
+
+        vm.isFirstPipelineLoad = true;
+        vm.isFirstStageLoad = true;
+        vm.isFirstJobLoad = true;
+
         vm.wizardInfo = {
             labels: {
                 autoSchedule: 'Auto Scheduling',
@@ -129,6 +137,123 @@ angular
                 // debugger;
             });
         };
+
+        vm.initTabView = function() {
+            if(vm.state.params.jobName){
+                vm.currentView = 'job';
+                vm.tabView = 'jobSettings';
+            } else if(vm.state.params.stageName){
+                vm.currentView = 'stage';
+                vm.tabView = 'stageSettings';
+            } else if(vm.state.params.pipelineName) {
+                vm.currentView = 'pipeline';
+                vm.tabView = 'pipelineSettings';
+            }
+        };
+
+        vm.initPipelineTabs = function() {
+            var currentState = $state.current.name;
+
+            if(currentState.indexOf('settings') !== -1){
+                vm.tabView = 'pipelineSettings';
+            } else if(currentState.indexOf('stages') !== -1){
+                vm.tabView = 'pipelineStages';
+            } else if(currentState.indexOf('variables') !== -1){
+                vm.tabView = 'pipelineVariables';
+            }
+        };
+
+        vm.initStageTabs = function() {
+            var currentState = $state.current.name;
+
+            if(currentState.indexOf('settings') !== -1){
+                vm.tabView = 'stageSettings';
+            } else if(currentState.indexOf('jobs') !== -1){
+                vm.tabView = 'stageJobs';
+            } else if(currentState.indexOf('variables') !== -1){
+                vm.tabView = 'stageVariables';
+            }
+        };
+
+        vm.initJobTabs = function() {
+            var currentState = $state.current.name;
+
+            if(currentState.indexOf('settings') !== -1){
+                vm.tabView = 'jobSettings';
+            } else if(currentState.indexOf('tasks') !== -1){
+                vm.tabView = 'jobTasks';
+            } else if(currentState.indexOf('variables') !== -1){
+                vm.tabView = 'jobVariables';
+            } else if(currentState.indexOf('resources') !== -1){
+                vm.tabView = 'jobResources';
+            }
+        };
+
+        vm.selectTabView = function(view) {
+            vm.tabView = view;
+        };
+
+        // vm.selectInitialTabView = function(view, pipelineExists, stageExists, jobExists) {
+        //     if(jobExists){
+        //         vm.tabView = view;
+        //     }
+        // };
+
+        $scope.$on('$includeContentLoaded', function(){
+            $timeout(function() {
+                if(vm.currentView == 'pipeline'){
+                    $(window).scrollTop($('#pipelineConfig').position().top);
+                } else if(vm.currentView == 'stage'){
+                    $(window).scrollTop($('#stageConfig').position().top);
+                } else if(vm.currentView == 'job'){
+                    $(window).scrollTop($('#jobConfig').position().top);
+
+                }
+            });
+        });
+
+        $scope.$on('$locationChangeSuccess', function(){
+            $timeout(function() {
+                if(vm.currentView == 'pipeline'){
+                    $(window).scrollTop($('#pipelineConfig').position().top);
+                } else if(vm.currentView == 'stage'){
+                    $(window).scrollTop($('#stageConfig').position().top);
+                } else if(vm.currentView == 'job'){
+                    $(window).scrollTop($('#jobConfig').position().top);
+
+                }
+            });
+        });
+
+        // angular.element(window.document.body).ready(function() {
+        //     debugger;
+        //     if(vm.currentView == 'pipeline'){
+        //         $(window).scrollTop($('#pipelineConfig').position().top);
+        //     } else if(vm.currentView == 'stage'){
+        //         $(window).scrollTop($('#stageConfig').position().top);
+        //     } else if(vm.currentView == 'job'){
+        //         $(window).scrollTop($('#jobConfig').position().top);
+        //
+        //     }
+        // });
+
+        // vm.scrollToPipelines = function() {
+        //     // debugger;
+        //     if($(window).scrollTop($('#pipelineConfig').position())){
+        //     }
+        // };
+        //
+        // vm.scrollToStages = function() {
+        //     // debugger;
+        //     if($(window).scrollTop($('#stageConfig').position())){
+        //     }
+        // };
+        //
+        // vm.scrollToJobs = function() {
+        //     // debugger;
+        //     if($(window).scrollTop($('#jobConfig').position())){
+        //     }
+        // };
 
         $scope.$watch(function() {
             return viewModel.allMaterialDefinitions;
@@ -328,6 +453,12 @@ angular
         vm.filteredMaterialDefinitions = [];
         vm.taskMaterial = {};
         vm.getPipelineForConfig = function(pipeName) {
+            $scope.$on('$locationChangeStart', function(event) {
+                if(!$state.params.stageName && !$state.params.jobName){
+                    vm.currentView = 'pipeline';
+                }
+            });
+
             if (vm.allPipelines != null && vm.allPipelines.length > 0) {
                 vm.allPipelines.forEach(function(currentPipeline, index, array) {
                     if (currentPipeline.name == pipeName) {
@@ -496,6 +627,7 @@ angular
         };
 
         vm.getStage = function(stage) {
+            vm.currentView = 'stage';
             vm.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function(currentStage, index, array) {
                 if (currentStage.name == stage.name) {
                     vm.stage = array[index];
@@ -516,6 +648,10 @@ angular
         };
 
         vm.getStageByName = function(stageName) {
+            // if(vm.isFirstStageLoad && stageName){
+            //     vm.currentView = 'stage';
+            //     vm.isFirstStageLoad = false;
+            // }
             vm.allPipelines[vm.pipelineIndex].stageDefinitions.forEach(function(currentStage, index, array) {
                 if (currentStage.name == stageName) {
                     vm.stage = array[index];
@@ -679,6 +815,7 @@ angular
         vm.selectedTask = {};
         vm.selectedJobTasks = [];
         vm.getJob = function(job) {
+            vm.currentView = 'job';
             if (vm.job != null) {
                 vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function(currentJob, index, array) {
                     if (currentJob.name == job.name) {
@@ -706,6 +843,10 @@ angular
         };
 
         vm.getJobByName = function(jobName) {
+            // if(vm.isFirstJobLoad && jobName){
+            //     vm.currentView = 'job';
+            //     vm.isFirstJobLoad = false;
+            // }
             if (vm.job != null) {
                 vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions.forEach(function(currentJob, index, array) {
                     if (currentJob.name == jobName) {
