@@ -18,7 +18,7 @@
 
 package io.hawkcd.core;
 
-import io.hawkcd.core.subscriber.Envelop;
+import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.enums.NotificationType;
@@ -44,7 +44,7 @@ public class Message {
     private String methodCalled;
 
     //Holds the result being reterned by the service call
-    private Envelop envelop;
+    private Envelopе envelopе;
 
     private NotificationType resultNotificationType;
     private String resultMessage;
@@ -57,7 +57,7 @@ public class Message {
         this.methodCalled = methodCalled;
         this.owner = usr;
         if (serviceResult != null) {
-            this.envelop = new Envelop(serviceResult.getObject());
+            this.envelopе = new Envelopе(serviceResult.getObject());
             this.resultNotificationType = serviceResult.getNotificationType();
             this.resultMessage = serviceResult.getMessage();
         }
@@ -73,7 +73,7 @@ public class Message {
     {
         this.serviceCalled = serviceCalled;
         this.methodCalled = methodCalled;
-        this.envelop = new Envelop(resultObject);
+        this.envelopе = new Envelopе(resultObject);
         this.resultNotificationType = resultNotificationType;
         this.resultMessage = resultMessage;
         this.owner = usr;
@@ -88,7 +88,7 @@ public class Message {
     }
 
     public Object getResultObject() {
-        return this.envelop.getResultObject();
+        return this.envelopе.getObject();
     }
 
     public NotificationType getResultNotificationType() {

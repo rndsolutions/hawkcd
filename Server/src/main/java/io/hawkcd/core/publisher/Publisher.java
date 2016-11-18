@@ -20,25 +20,21 @@ package io.hawkcd.core.publisher;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.apache.log4j.Logger;
-
 import io.hawkcd.core.Message;
 import io.hawkcd.db.redis.RedisManager;
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
+import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 
-/*
-*The class is used to publish messages across the system.
-*
-*
-*/
+/**
+ * The class is used to publish messages across the system.
+ */
 public class Publisher implements IPublisher {
-
     private static final Logger LOGGER = Logger.getLogger(Publisher.class);
+
     private Jedis jedisPublisher;
     private Gson jsonConverter;
 

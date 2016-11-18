@@ -25,14 +25,11 @@ import io.hawkcd.core.Message;
 import io.hawkcd.core.RequestProcessor;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.core.session.SessionManager;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.model.MaterialDefinition;
-import io.hawkcd.ws.SessionPool;
-import io.hawkcd.ws.WSSession;
 import redis.clients.jedis.JedisPubSub;
 
 /*
@@ -53,7 +50,7 @@ public class Subscriber extends JedisPubSub {
     public Subscriber() {
 
         this.jsonConverter = new GsonBuilder()
-                .registerTypeAdapter(Envelop.class, new EnvelopAdapter())
+                .registerTypeAdapter(Envelopе.class, new EnvelopeAdapter())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
