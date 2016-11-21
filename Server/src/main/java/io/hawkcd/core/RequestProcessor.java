@@ -18,19 +18,28 @@
 
 package io.hawkcd.core;
 
+import com.google.gson.Gson;
 import io.hawkcd.core.publisher.Publisher;
-import io.hawkcd.core.security.AuthorizationFactory;
-import io.hawkcd.core.security.IAuthorizationManager;
+import io.hawkcd.model.PermissionObject;
 import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.payload.Permission;
+import io.hawkcd.services.SessionService;
+import io.hawkcd.services.UserService;
 import io.hawkcd.services.filters.PermissionService;
 import io.hawkcd.services.filters.factories.SecurityServiceInvoker;
+import io.hawkcd.ws.EntityPermissionTypeServiceInvoker;
 import io.hawkcd.ws.SessionPool;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /*
@@ -105,10 +114,9 @@ public class RequestProcessor {
     }
 
     /**
-     *
      * All WS requests flows through this method, auhtorization checks are performed,
      * and the request is broadcasted to all subscribers
-     *
+     * <p>
      * Workflow:
      * evaluate current user permissions
      * get all active session from the cluster
@@ -123,35 +131,88 @@ public class RequestProcessor {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    public void prorcessRequest1(WsContractDto contract, User user, String sessionId)
-                    throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public void prorcessRequest1(WsContractDto contract, User user, String sessionId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
-        //check if caller has permission to execute the call
-        //boolean isAuthorized = true;//
-        boolean isAuthorized = true; //AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract);
+        // Get service to be called, get arguments
+        // Authorize current User Request
+        // Make a call to a Business service
+        // Get all Users filtered by active sessions
+        // Perform authorization check for each active User
+        // Attach User email and Id to
 
 
-
-        if (isAuthorized){
-            //Make a call to a Busienss service
-            ServiceResult result = (ServiceResult)this.wsObjectProcessor.call(contract);
-
-            //Construct a message from the service call result
-            Message message = new Message(
-                    contract.getClassName(),
-                    contract.getMethodName(),
-                    result.getObject(),
-                    result.getNotificationType(),
-                    result.getMessage(),
-                    user
-            );
-
-            //broadcast the mssage to all Subscribers
-            this.publisher.publish("global", message);
-        }else {
-
-            //publish anauthorized message
+        // 1. Get service to be called, get arguments
+        Gson jsonConverter = new Gson();
+        String fullPackageName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
+        Object service = Class.forName(fullPackageName).newInstance();
+        List<Object> methodArgs = new ArrayList<>();
+        int contractArgsLength = contract.getArgs().length;
+        for (int i = 0; i < contractArgsLength; i++) {
+            if (contract.getArgs()[i] != null) {
+                Class objectClass = Class.forName(contract.getArgs()[i].getPackageName());
+                Object object = jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);
+                methodArgs.add(object);
+            }
         }
+
+        // TODO: Logic to be removed
+        UserService userService = new UserService();
+        User userFromDb = (User) userService.getById(user.getId()).getObject();
+        List<Permission> permissions = this.permissionService.sortPermissions(userFromDb.getPermissions());
+        userFromDb.setPermissions(permissions);
+
+        // 2. Authorize current User Request
+        boolean isAuthorized = true;
+//            boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract, methodArgs);
+        if (!isAuthorized) {
+            //publish unauthorized message to local channel
+        }
+
+        // 3. Make a call to a Business service
+        // TODO: refactor wsObjectProcessor
+        ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+        // TODO: Check if the call is GetAll of some type and execute a different flow
+
+        // 4. Get all Users filtered by active sessions
+        SessionService sessionService = new SessionService();
+        List<SessionDetails> sessions = (List<SessionDetails>) sessionService.getAll().getObject();
+        List<SessionDetails> activeSessions = sessions.stream().filter(s -> s.isActive()).collect(Collectors.toList());
+
+        // 5. Perform authorization check for each active User
+        EntityPermissionTypeServiceInvoker invoker = new EntityPermissionTypeServiceInvoker();
+        PermissionObject permissionObject = (PermissionObject) result.getObject();
+        Class<?> objectClass = result.getObject().getClass();
+        Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
+
+        for (SessionDetails activeSession : activeSessions) {
+            User userToSendTo = (User) userService.getById(activeSession.getUserId()).getObject();
+            List<Permission> userPermissions = this.permissionService.sortPermissions(userFromDb.getPermissions());
+            permissionObject = invoker.invoke(objectClass, userPermissions, permissionObject);
+            permissionTypeByUser.put(userToSendTo.getEmail(), permissionObject.getPermissionType());
+        }
+
+
+
+
+        //Construct a message from the service call result
+        Message message = new Message(
+                contract.getClassName(),
+                contract.getMethodName(),
+                result.getObject(),
+                result.getNotificationType(),
+                result.getMessage(),
+                user
+        );
+
+        message.setPermissionTypeByUser(permissionTypeByUser);
+
+        // Determine channel to broadcast message
+        // TODO: Implement logic for "local" channel
+
+        //broadcast the message
+        this.publisher.publish("global", message);
+
     }
 
     public void processResponse(Message pubSubMessage) {
