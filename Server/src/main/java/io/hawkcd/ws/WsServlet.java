@@ -24,7 +24,7 @@ public class WsServlet extends WebSocketServlet {
 
     @Override
     public void configure(WebSocketServletFactory factory) {
-        factory.register(WSSession.class);
+        factory.register(WSSocket.class);
         factory.getPolicy().setIdleTimeout(0);
     }
 }

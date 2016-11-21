@@ -18,29 +18,25 @@
 
 package io.hawkcd.core.session;
 
-import com.sun.xml.internal.ws.api.server.WSEndpoint;
-
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import io.hawkcd.ws.WSSession;
+import io.hawkcd.ws.WSSocket;
 
 /**
  * Created by rado on 11.11.16.
  */
 public interface ISessionsPool  {
 
-    Set<WSSession> getSessions();
+    Set<WSSocket> getSessions();
 
-    WSSession getSessionByID(String id);
+    WSSocket getSessionByID(String id);
 
-    void addSession(WSSession session);
+    void addSession(WSSocket session);
 
-    void removeSession(WSSession session);
+    void removeSession(WSSocket session);
 
-    boolean contains(WSSession session);
+    boolean contains(WSSocket session);
 
-    WSSession getSessionForUser(String email);
+    WSSocket getSessionForUser(String email);
 
 }

@@ -43,7 +43,7 @@ public class SessionPool {
     private static final Logger LOGGER = Logger.getLogger(SessionPool.class.getClass());
     private static SessionPool instance;
 
-    private List<WSSession> sessions;
+    private List<WSSocket> sessions;
     private PermissionService permissionService;
     private SecurityServiceInvoker securityServiceInvoker;
     private AgentService agentService;
@@ -55,7 +55,7 @@ public class SessionPool {
     private EntityPermissionTypeServiceInvoker entityPermissionTypeServiceInvoker;
 
     private SessionPool() {
-        this.sessions = Collections.synchronizedList(new ArrayList<WSSession>());
+        this.sessions = Collections.synchronizedList(new ArrayList<WSSocket>());
         this.permissionService = new PermissionService();
         this.securityServiceInvoker = new SecurityServiceInvoker();
 
@@ -76,26 +76,26 @@ public class SessionPool {
         return instance;
     }
 
-    public synchronized void add(WSSession session) {
+    public synchronized void add(WSSocket session) {
         sessions.add(session);
         String email = session.getLoggedUser().getEmail();
         int userActiveSessions = this.countActiveSessions(email);
         LOGGER.info("Session opened - User: " + email + " Active Sessions: " + userActiveSessions);
     }
 
-    public synchronized void remove(WSSession session) {
+    public synchronized void remove(WSSocket session) {
         sessions.remove(session);
     }
 
     public void sendToAuthorizedSessions(WsContractDto contractDto) {
         synchronized (sessions) {
             if (contractDto.getResult() == null) {
-                for (WSSession session : sessions) {
+                for (WSSocket session : sessions) {
                     session.send(contractDto);
                 }
             } else {
                 Class objectClass = contractDto.getResult().getClass();
-                for (WSSession session : sessions) {
+                for (WSSocket session : sessions) {
                     User loggedUser = session.getLoggedUser();
                     if (loggedUser != null) {
                         loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
@@ -113,11 +113,11 @@ public class SessionPool {
 
     public void sendToUserSessions(WsContractDto contractDto, User user) {
         synchronized (sessions) {
-            List<WSSession> userSessions = sessions
+            List<WSSocket> userSessions = sessions
                     .stream()
                     .filter(e -> e.getLoggedUser().getId().equals(user.getId()))
                     .collect(Collectors.toList());
-            for (WSSession userSession : userSessions) {
+            for (WSSocket userSession : userSessions) {
                 userSession.send(contractDto);
             }
         }
@@ -125,7 +125,7 @@ public class SessionPool {
 
     public void sendToSingleUserSession(WsContractDto contractDto, String sessionId) {
         synchronized (sessions) {
-            WSSession session = sessions.stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
+            WSSocket session = sessions.stream().filter(s -> s.getId().equals(sessionId)).findFirst().orElse(null);
             if (session != null) {
                 session.send(contractDto);
             }
@@ -134,12 +134,12 @@ public class SessionPool {
 
     public void logoutUserFromAllSessions(String email) {
         synchronized (sessions) {
-            List<WSSession> userSessions = sessions
+            List<WSSocket> userSessions = sessions
                     .stream()
                     .filter(e -> e.getLoggedUser().getEmail().equals(email))
                     .collect(Collectors.toList());
 
-            for (WSSession userSession : userSessions) {
+            for (WSSocket userSession : userSessions) {
                 WsContractDto contract = new WsContractDto();
                 contract.setClassName("UserService");
                 contract.setMethodName("logout");
@@ -156,7 +156,7 @@ public class SessionPool {
     public int countActiveSessions(String userEmail) {
         synchronized (sessions) {
             int count = 0;
-            for (WSSession session : sessions) {
+            for (WSSocket session : sessions) {
                 if (session.getLoggedUser().getEmail().equals(userEmail)) {
                     count++;
                 }

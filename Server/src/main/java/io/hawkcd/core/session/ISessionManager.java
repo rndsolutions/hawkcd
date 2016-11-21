@@ -19,7 +19,7 @@
 package io.hawkcd.core.session;
 
 import io.hawkcd.model.dto.WsContractDto;
-import io.hawkcd.ws.WSSession;
+import io.hawkcd.ws.WSSocket;
 
 /**
  * Created by rado on 11.11.16.
@@ -32,9 +32,9 @@ public interface ISessionManager {
 
     void sendToAllSessions(WsContractDto contractDto);
 
-    void addSession(WSSession session);
+    void addSession(WSSocket session);
 
-    boolean isUserInSession(WSSession session, String email);
+    boolean isUserInSession(WSSocket session, String email);
 
-    void logoutUser(WSSession session);
+    void logoutUser(WSSocket session);
 }

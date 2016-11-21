@@ -34,7 +34,7 @@ import java.util.List;
 
 
 /*
-* The class responsibility is to ptocess all reqeust passed by the WSSession object
+* The class responsibility is to ptocess all reqeust passed by the WSSocket object
 */
 public class RequestProcessor {
     private WsObjectProcessor wsObjectProcessor;

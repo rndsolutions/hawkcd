@@ -24,13 +24,11 @@ import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.dto.UserDto;
-import io.hawkcd.utilities.constants.LoggerMessages;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TokenAdapter;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
 import io.hawkcd.model.MaterialDefinition;
-import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
@@ -47,12 +45,10 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public class WSSession extends WebSocketAdapter {
-    private static final Logger LOGGER = Logger.getLogger(WSSession.class.getClass());
+public class WSSocket extends WebSocketAdapter {
+    private static final Logger LOGGER = Logger.getLogger(WSSocket.class.getClass());
     private Gson jsonConverter;
     private String id;
     private SecurityServiceInvoker securityServiceInvoker;
@@ -68,7 +64,7 @@ public class WSSession extends WebSocketAdapter {
 
     private SessionDetails sessionDetails;
 
-    public WSSession() {
+    public WSSocket() {
         this.id = UUID.randomUUID().toString();
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())

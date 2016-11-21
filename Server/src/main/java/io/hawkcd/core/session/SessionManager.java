@@ -21,9 +21,6 @@ package io.hawkcd.core.session;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.logging.Logger;
-
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jgit.annotations.NonNull;
 
@@ -36,13 +33,13 @@ import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
-import io.hawkcd.ws.WSSession;
+import io.hawkcd.ws.WSSocket;
 
 /**
  * Created by rado on 13.11.16.
  *
  * The @SessionManager class is responsible for applicaiton WS session management.
- * Works directly with the WsSessionPool class to store and retreive WSSession objects
+ * Works directly with the WsSessionPool class to store and retreive WSSocket objects
  *
  */
 
@@ -63,7 +60,7 @@ public class SessionManager implements  ISessionManager{
     @Override
     public void closeSession(String sessionId) {
 
-        WSSession session = this.sessionPool.getSessions()
+        WSSocket session = this.sessionPool.getSessions()
                 .stream()
                 .filter(s -> s.getId() == sessionId)
                 .findFirst()
@@ -75,7 +72,7 @@ public class SessionManager implements  ISessionManager{
     @Override
     public void closeSessionForUser(String email) {
 
-        WSSession session = sessionPool.getSessions()
+        WSSocket session = sessionPool.getSessions()
                 .stream()
                 .filter(s -> s.getLoggedUser().getEmail().equals(email))
                 .findFirst()
@@ -87,7 +84,7 @@ public class SessionManager implements  ISessionManager{
     @Override
     public void sendToAllSessions(WsContractDto contract) {
 
-        for (WSSession s:sessionPool.getSessions()) {
+        for (WSSocket s:sessionPool.getSessions()) {
             this.send(s,contract);
         }
     }
@@ -99,11 +96,11 @@ public class SessionManager implements  ISessionManager{
      * @param newSession
      */
     @Override
-    public void addSession(WSSession newSession) {
+    public void addSession(WSSocket newSession) {
 
         String email = newSession.getLoggedUser().getEmail();
         if (this.sessionPool.contains(newSession)){
-            WSSession sessionToClose = this.sessionPool.getSessionForUser(email);
+            WSSocket sessionToClose = this.sessionPool.getSessionForUser(email);
             this.logoutUser(sessionToClose);
             this.closeSessionForUser(email);
         }
@@ -112,12 +109,12 @@ public class SessionManager implements  ISessionManager{
     }
 
     @Override
-    public boolean isUserInSession(WSSession session, String email) {
+    public boolean isUserInSession(WSSocket session, String email) {
         return false;
     }
 
     @Override
-    public void logoutUser(WSSession session){
+    public void logoutUser(WSSocket session){
 
         WsContractDto contract = new WsContractDto();
         contract.setClassName("UserService"); //TODO: Fix this it should be some other message
@@ -127,7 +124,7 @@ public class SessionManager implements  ISessionManager{
     }
 
     @NonNull
-    void send(WSSession session, WsContractDto contract) {
+    void send(WSSocket session, WsContractDto contract) {
 
         if (session.isConnected()){
             RemoteEndpoint remoteEndpoint = session.getRemote();

@@ -18,29 +18,21 @@
 
 package io.hawkcd.core.session;
 
-import com.sun.istack.internal.NotNull;
-
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.eclipse.jetty.websocket.api.CloseStatus;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jgit.annotations.NonNull;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.SessionDetails;
-import io.hawkcd.model.User;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.SessionService;
-import io.hawkcd.ws.WSSession;
+import io.hawkcd.ws.WSSocket;
 
 /**
  * Created by rado on 13.11.16.
@@ -48,13 +40,13 @@ import io.hawkcd.ws.WSSession;
  */
 public class WsSessionPool implements ISessionsPool {
 
-    private Set<WSSession> sessions;
+    private Set<WSSocket> sessions;
     private static final Logger LOGGER = Logger.getLogger(WsSessionPool.class);
     private static WsSessionPool instance;
     private SessionService sessionService = new SessionService();
 
     private WsSessionPool() {
-        this.sessions = Collections.synchronizedSet(new HashSet<WSSession>());
+        this.sessions = Collections.synchronizedSet(new HashSet<WSSocket>());
         this.sessionService = new SessionService();
     }
 
@@ -66,14 +58,14 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    public Set<WSSession> getSessions() {
+    public Set<WSSocket> getSessions() {
         return this.sessions;
     }
 
     @Override
-    public WSSession getSessionByID(String id) {
+    public WSSocket getSessionByID(String id) {
 
-         WSSession session = this.sessions.stream()
+         WSSocket session = this.sessions.stream()
                 .filter(s -> s.getId().equals(id) )
                 .reduce((a, b) -> {
                     throw new IllegalStateException("Multiple elements: " + a + ", " + b);
@@ -84,11 +76,11 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    public void addSession(WSSession session) {
+    public void addSession(WSSocket session) {
 
         if (LOGGER.isDebugEnabled()){
             LOGGER.debug("Session pool size: "+this.sessions.size());
-            for (WSSession sess: sessions) {
+            for (WSSocket sess: sessions) {
                 LOGGER.debug("Session pool size: "+  sess.getLoggedUser().getEmail());
             }
         }
@@ -106,7 +98,7 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    public void removeSession(WSSession session) {
+    public void removeSession(WSSocket session) {
 
         try {
             if (session == null){
@@ -136,11 +128,11 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    public boolean contains(WSSession session) {
+    public boolean contains(WSSocket session) {
 
         String email = session.getLoggedUser().getEmail();
 
-        WSSession ses = this.sessions
+        WSSocket ses = this.sessions
                 .stream()
                 .filter(s -> s.getLoggedUser().getEmail().equals(email) )
                 .findFirst()
@@ -154,7 +146,7 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    public WSSession getSessionForUser(String email) {
+    public WSSocket getSessionForUser(String email) {
 
         return this.getSessions()
                 .stream()

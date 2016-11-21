@@ -1,6 +1,6 @@
 package io.hawkcd.core;
 
-import io.hawkcd.ws.WSSession;
+import io.hawkcd.ws.WSSocket;
 
 /**
  * Created by rado on 11.11.16.
@@ -12,15 +12,15 @@ public class UserContext {
     /**
      * Gives an access to the current user session
      */
-    private WSSession session;
+    private WSSocket session;
 
 
-    public  UserContext(WSSession session){
+    public  UserContext(WSSocket session){
 
         this.session= session;
     }
 
-    public  WSSession getSession(){
+    public WSSocket getSession(){
         return this.session;
     }
 

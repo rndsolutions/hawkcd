@@ -27,8 +27,6 @@ import io.hawkcd.model.dto.RegisterDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.payload.Permission;
 import io.hawkcd.services.UserService;
-import io.hawkcd.ws.SessionPool;
-import io.hawkcd.ws.WSSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
