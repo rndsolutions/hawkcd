@@ -2,16 +2,16 @@ package io.hawkcd.db.mongodb;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
+
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.util.JSON;
 
+import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.eclipse.jgit.annotations.NonNull;
 
@@ -31,13 +31,14 @@ import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 
 public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
-
+    private static final Logger LOGGER = Logger.getLogger(MongoDbRepository.class);
     private MongoCollection collection;
     private Type entryType;
     private Gson jsonConverter;
     private MongoDatabase mongoDatabase;
 
     public MongoDbRepository(Class<T> entry) {
+
         this.entryType = entry;
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -59,22 +60,21 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
         T result;
         try {
 
+            //construct the filter
             UUID uuid = UUID.fromString(id);
             BasicDBObject bObj=  new BasicDBObject("id",uuid);
 
-            DBObject document=null;
-
-
-            document = (DBObject) collection.find(eq("id", id)).first();
+            //execute the query against the db
+            Document document = (Document) collection.find(eq("id", id)).first();
 
             if (document != null) {
-//                String document = JSON.serialize(documents.next());
-                result = this.jsonConverter.fromJson((JsonElement) document, this.entryType);
+                String json = document.toJson();
+                result = this.jsonConverter.fromJson(json, this.entryType);
                 return result;
             }
             return null;
         } catch (NotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
             throw e;
         }
     }
@@ -143,11 +143,18 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     public T delete(String id) {
         T result = null;
         try {
-            BasicDBObject searchQuery = new BasicDBObject().append("id", id);
-            DBObject dbObject = (DBObject) this.collection.findOneAndDelete(searchQuery);
-            String document = JSON.serialize(dbObject);
-            result = this.jsonConverter.fromJson(document, this.entryType);
-            return result;
+            //construct the filter
+            UUID uuid = UUID.fromString(id);
+            BasicDBObject query =  new BasicDBObject("id",uuid);
+
+            Document document = (Document) this.collection.findOneAndDelete(eq("id", id));
+            if (document != null){
+                String dd =  document.toJson();
+                result = this.jsonConverter.fromJson(dd, this.entryType);
+                return result;
+            }else {
+                return null;
+            }
         } catch (RuntimeException e) {
             e.printStackTrace();
             return result;
