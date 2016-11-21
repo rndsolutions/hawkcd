@@ -22,6 +22,10 @@ import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 * The Message class represents a wrapper message object that's sent by Publishers to Subscribers.
@@ -51,6 +55,7 @@ public class Message {
 
     //The user context in which the message is created
     private User owner;
+    private Map<String, PermissionType> permissionTypeByUser;
 
     Message(String serviceCalled, String methodCalled, ServiceResult serviceResult, User usr) {
         this.serviceCalled = serviceCalled;
@@ -61,6 +66,8 @@ public class Message {
             this.resultNotificationType = serviceResult.getNotificationType();
             this.resultMessage = serviceResult.getMessage();
         }
+
+        this.permissionTypeByUser = new HashMap<>();
 
     }
 
@@ -77,6 +84,7 @@ public class Message {
         this.resultNotificationType = resultNotificationType;
         this.resultMessage = resultMessage;
         this.owner = usr;
+        this.permissionTypeByUser = new HashMap<>();
     }
 
     public String getServiceCalled() {
@@ -102,4 +110,12 @@ public class Message {
     public void setOwner(User usr){ this.owner = usr;}
 
     public  User getOwner(){return  this.owner;}
+
+    public Map<String, PermissionType> getPermissionTypeByUser() {
+        return permissionTypeByUser;
+    }
+
+    public void setPermissionTypeByUser(Map<String, PermissionType> permissionTypeByUser) {
+        this.permissionTypeByUser = permissionTypeByUser;
+    }
 }
