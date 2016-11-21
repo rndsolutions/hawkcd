@@ -147,7 +147,7 @@ public class AuthController {
     @Path("/logout")
     public Response logout(String email) throws IOException {
         LOGGER.info("User: "+ email+ " logged out");
-        SessionFactory.getSessionManager().closeSessionForUser(email);
+        SessionFactory.getSessionManager().closeSessionByUserEmail(email);
         return Response.ok().build();
     }
 

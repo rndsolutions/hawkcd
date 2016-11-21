@@ -37,6 +37,6 @@ public interface ISessionsPool  {
 
     boolean contains(WSSocket session);
 
-    WSSocket getSessionForUser(String email);
+    WSSocket getSessionByUserEmail(String email);
 
 }

@@ -26,13 +26,13 @@ import io.hawkcd.ws.WSSocket;
  */
 public interface ISessionManager {
 
-    void closeSession(String sessionId);
+    void closeSessionById(String sessionId);
 
-    void closeSessionForUser(String email);
+    void closeSessionByUserEmail(String email);
 
     void sendToAllSessions(WsContractDto contractDto);
 
-    void addSession(WSSocket session);
+    void openSession(WSSocket session);
 
     boolean isUserInSession(WSSocket session, String email);
 

@@ -117,7 +117,7 @@ public class WSSocket extends WebSocketAdapter {
                 break;
             case 1001:
                 LOGGER.info("Session terminated forecefully by user: " +this.loggedUser.getEmail());
-                SessionFactory.getSessionManager().closeSessionForUser(this.getLoggedUser().getEmail());
+                SessionFactory.getSessionManager().closeSessionByUserEmail(this.getLoggedUser().getEmail());
                 break;
             default:
                 LOGGER.info("Unexpected Session termination for user" +this.loggedUser.getEmail());
@@ -130,7 +130,7 @@ public class WSSocket extends WebSocketAdapter {
         final ISessionManager sessionManager = SessionFactory.getSessionManager();
         if (this.getSession()!= null){
             if (this.getSession().isOpen())
-                sessionManager.closeSession(this.id);
+                sessionManager.closeSessionById(this.id);
         }
         LOGGER.info("Session closed for user: " +this.loggedUser.getEmail() + "Closed with error: "+  cause.toString());
     }
@@ -218,7 +218,7 @@ public class WSSocket extends WebSocketAdapter {
             this.sessionDetails.setActive(true);
 
             ISessionManager sessionManager = SessionFactory.getSessionManager();
-            sessionManager.addSession(this);
+            sessionManager.openSession(this);
 
             WsContractDto contract = extractUserDetails(tokenInfo);
             sessionManager.sendToAllSessions(contract);

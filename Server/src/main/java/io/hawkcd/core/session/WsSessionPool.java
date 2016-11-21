@@ -70,20 +70,11 @@ public class WsSessionPool implements ISessionsPool {
                 .reduce((a, b) -> {
                     throw new IllegalStateException("Multiple elements: " + a + ", " + b);
                 }).get();
-
-        LOGGER.debug(session);
         return session;
     }
 
     @Override
     public void addSession(WSSocket session) {
-
-        if (LOGGER.isDebugEnabled()){
-            LOGGER.debug("Session pool size: "+this.sessions.size());
-            for (WSSocket sess: sessions) {
-                LOGGER.debug("Session pool size: "+  sess.getLoggedUser().getEmail());
-            }
-        }
 
         this.sessions.add(session);
         SessionDetails sessionDetails = session.getSessionDetails();
@@ -120,7 +111,6 @@ public class WsSessionPool implements ISessionsPool {
                 throw new RuntimeException(result.getMessage());
 
             this.sessions.remove(session);
-            LOGGER.debug("Session for user: "+ session.getLoggedUser().getEmail() +" was removed");
         } catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             this.sessions.remove(session);
@@ -146,7 +136,7 @@ public class WsSessionPool implements ISessionsPool {
     }
 
     @Override
-    public WSSocket getSessionForUser(String email) {
+    public WSSocket getSessionByUserEmail(String email) {
 
         return this.getSessions()
                 .stream()
@@ -154,7 +144,4 @@ public class WsSessionPool implements ISessionsPool {
                 .findFirst()
                 .orElse(null);
     }
-
-
-
 }

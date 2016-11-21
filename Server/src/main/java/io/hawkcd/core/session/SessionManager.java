@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
-import org.eclipse.jgit.annotations.NonNull;
 
 import java.io.IOException;
 
@@ -58,7 +57,7 @@ public class SessionManager implements  ISessionManager{
     }
 
     @Override
-    public void closeSession(String sessionId) {
+    public void closeSessionById(String sessionId) {
 
         WSSocket session = this.sessionPool.getSessions()
                 .stream()
@@ -70,7 +69,7 @@ public class SessionManager implements  ISessionManager{
     }
 
     @Override
-    public void closeSessionForUser(String email) {
+    public void closeSessionByUserEmail(String email) {
 
         WSSocket session = sessionPool.getSessions()
                 .stream()
@@ -90,19 +89,19 @@ public class SessionManager implements  ISessionManager{
     }
 
     /**
-     * We support only single user session/connection at a time.
-     * Upon adding a new session to the pool we check if a user with the same email has already opned a session, if so
+     * We support only a single user session/connection at a time.
+     * Upon adding a new session to the pool we check if a user with the same email has already opned a session, if so,
      * we close the previous session and keep the new one
      * @param newSession
      */
     @Override
-    public void addSession(WSSocket newSession) {
+    public void openSession(WSSocket newSession) {
 
         String email = newSession.getLoggedUser().getEmail();
         if (this.sessionPool.contains(newSession)){
-            WSSocket sessionToClose = this.sessionPool.getSessionForUser(email);
+            WSSocket sessionToClose = this.sessionPool.getSessionByUserEmail(email);
             this.logoutUser(sessionToClose);
-            this.closeSessionForUser(email);
+            this.closeSessionByUserEmail(email);
         }
 
         this.sessionPool.getInstance().addSession(newSession);
@@ -113,6 +112,12 @@ public class SessionManager implements  ISessionManager{
         return false;
     }
 
+    /**
+     * Sends a notification to connected WS client about:
+     *  1. The Session will be closed on the server
+     *  2. Asks for logout
+     * @param session
+     */
     @Override
     public void logoutUser(WSSocket session){
 
@@ -123,7 +128,11 @@ public class SessionManager implements  ISessionManager{
         this.send(session,contract);
     }
 
-    @NonNull
+    /**
+     * Receives a WSSocket object and WsContractDto to write it to the stream
+     * @param session
+     * @param contract
+     */
     void send(WSSocket session, WsContractDto contract) {
 
         if (session.isConnected()){
