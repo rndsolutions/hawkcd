@@ -84,8 +84,8 @@
                         <br>
                         <br>
                         <div class="form-group text-center">
-                          <button class="btn green" ng-click="admin.updateUserPermission()" data-dismiss="modal" type="submit" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.buttonTitles.ok}}</button>
-                          <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closePermissionModal()">{{admin.defaultText.buttonTitles.cancel}}</button>
+                          <button submit-button type="button" class="btn green" ng-click="admin.updateUserPermission()" data-dismiss="modal" ng-disabled="addPipelineGroupForm.$invalid">{{admin.defaultText.buttonTitles.ok}}</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="admin.closePermissionModal()">{{admin.defaultText.buttonTitles.cancel}}</button>
                         </div>
                     </form>
                 </div>
