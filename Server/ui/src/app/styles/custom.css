@@ -1166,8 +1166,8 @@ p {
 
 @media screen and (min-width: 767px){
     .config-controls {
-        min-width: 180px;
-        width:180px;
+        min-width: 200px;
+        width:200px;
     }
 
     .config-names {
