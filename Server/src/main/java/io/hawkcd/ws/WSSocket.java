@@ -190,6 +190,8 @@ public class WSSocket extends WebSocketAdapter {
                     LOGGER.error(e);
                 } catch (ClassNotFoundException e) {
                     LOGGER.error(e);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
                 }
 
             } catch (RuntimeException e) {
