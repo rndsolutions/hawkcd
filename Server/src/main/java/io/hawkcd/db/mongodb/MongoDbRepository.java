@@ -93,10 +93,9 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
             }
 
         } catch (JsonSyntaxException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         } catch (RuntimeException e) {
-            e.printStackTrace();
-            throw e;
+            LOGGER.error(e);
         }
         return result;
     }
@@ -105,18 +104,19 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
     public T add(T entry) {
         if (this.getById(entry.getId()) == null) {
             try {
+
                 String entryToJson = this.jsonConverter.toJson(entry);
                 Document document = Document.parse(entryToJson);
                 this.collection.insertOne(document);
-
                 return entry;
+
             } catch (RuntimeException e) {
-                e.printStackTrace();
-                throw e;
+                LOGGER.error(e);
             }
         } else {
             return null;
         }
+        return  null;
     }
 
     @Override
@@ -125,16 +125,16 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
 
             String entryToJson = this.jsonConverter.toJson(entry);
             Document document = Document.parse(entryToJson);
-            //this.collection.insertOne(document);
 
             UpdateResult updateResult = this.collection.replaceOne(eq("id", document.get("id")), document);
 
             if (updateResult.getMatchedCount() == 1){ // means one record updated
                 return entry;
             }
-
             return null; //either none or many records updated, so consider the operation not successful.
+
         } catch (RuntimeException e) {
+            LOGGER.error(e);
             return null;
         }
     }
@@ -156,40 +156,9 @@ public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
                 return null;
             }
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
             return result;
         }
     }
 
-    /**
-     * Converts a UUID string value to its Hexadecimal representation
-     * @param uuid
-     * @return
-     */
-    private String convertUUIDtoHex(@NonNull String uuid){
-
-        byte[] bytes = uuid.getBytes();
-
-        StringBuilder hex = new StringBuilder(bytes.length * 2);
-        Formatter fmt = new Formatter(hex);
-
-        for (byte b : bytes) {
-            fmt.format("%x", b);
-        }
-        return hex.toString();
-//
-//        /**
-//         * group the bytes in couples
-//         * convert them to integers (base16)
-//         * and store them as bytes
-//         */
-//        for (int i = 0; i < bytes.length; i++) {
-//            bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
-//        }
-//
-//        /**
-//         * build a string from the bytes
-//         */
-//        return new String(bytes);
-    }
 }
