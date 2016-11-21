@@ -20,6 +20,8 @@ package io.hawkcd.core.subscriber;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.hawkcd.model.PermissionObject;
+import io.hawkcd.model.enums.PermissionType;
 import org.apache.log4j.Logger;
 import io.hawkcd.core.Message;
 import io.hawkcd.core.RequestProcessor;
@@ -31,6 +33,8 @@ import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.model.MaterialDefinition;
 import redis.clients.jedis.JedisPubSub;
+
+import java.util.Map;
 
 /*
 * Represents an application process(when running in separate VM)
@@ -70,7 +74,14 @@ public class Subscriber extends JedisPubSub {
                                           , message.getResultNotificationType()
                                           , message.getResultMessage());
 
-        SessionFactory.getSessionManager().sendToAllSessions(contract);
-
+        // TODO: Move logic to translator
+        // Set Permission Type for each each Session to be send to and send
+        Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
+        PermissionObject resultObject = (PermissionObject) message.getResultObject();
+        for (String userId : permissionTypeByUser.keySet()) {
+            resultObject.setPermissionType(permissionTypeByUser.get(userId));
+            contract.setResult(resultObject);
+            SessionFactory.getSessionManager().sendToAllSessions(contract);
+        }
     }
 }
