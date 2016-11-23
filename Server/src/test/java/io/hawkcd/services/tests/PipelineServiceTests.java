@@ -301,7 +301,7 @@ public class PipelineServiceTests {
         String expectedId = firstPipelines.get(0).getId();
 
         // Act
-        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1).getObject();
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getAllPipelineArtifactDTOs("", 1).getObject();
 
         // Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -318,7 +318,7 @@ public class PipelineServiceTests {
         String expectedId = firstPipelines.get(1).getId();
 
         // Act
-        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1).getObject();
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getAllPipelineArtifactDTOs("", 1).getObject();
 
         // Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -335,7 +335,7 @@ public class PipelineServiceTests {
         String expectedId = firstPipelines.get(0).getId();
 
         // Act
-        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 2).getObject();
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getAllPipelineArtifactDTOs("", 2).getObject();
 
         // Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -354,7 +354,7 @@ public class PipelineServiceTests {
         String expectedId = firstPipelines.get(0).getId();
 
         // Act
-        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("First", 1).getObject();
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getAllPipelineArtifactDTOs("First", 1).getObject();
 
         // Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -370,7 +370,7 @@ public class PipelineServiceTests {
         int expectedCollectionSize = 0;
 
         // Act
-        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("Second", 1).getObject();
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getAllPipelineArtifactDTOs("Second", 1).getObject();
 
         // Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -387,7 +387,7 @@ public class PipelineServiceTests {
         String expectedId = firstPipelines.get(0).getId();
 
         // Act
-        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1, idToStartFrom).getObject();
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getAllPipelineArtifactDTOs("", 1, idToStartFrom).getObject();
 
         // Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());
@@ -405,7 +405,7 @@ public class PipelineServiceTests {
         String expectedId = firstPipelines.get(0).getId();
 
         // Act
-        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getPipelineArtifactDTOs("", 1, "fakeId").getObject();
+        List<PipelineDto> actualResult = (List<PipelineDto>) this.pipelineService.getAllPipelineArtifactDTOs("", 1, "fakeId").getObject();
 
         // Assert
         Assert.assertEquals(expectedCollectionSize, actualResult.size());

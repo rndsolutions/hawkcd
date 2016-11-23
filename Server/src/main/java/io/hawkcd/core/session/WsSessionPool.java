@@ -31,7 +31,6 @@ import java.util.Set;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.enums.NotificationType;
-import io.hawkcd.services.SessionService;
 import io.hawkcd.ws.WSSocket;
 
 /**

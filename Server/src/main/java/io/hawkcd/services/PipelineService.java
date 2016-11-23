@@ -303,13 +303,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
-    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
-        return this.getPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
+    public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
+        return this.getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
     }
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
-    public ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
+    public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
         List<Pipeline> filteredPipelines = pipelines

@@ -36,9 +36,9 @@ public interface IPipelineService extends ICrudService<Pipeline> {
 
     ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId);
 
-    ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines);
+    ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines);
 
-    ServiceResult getPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId);
+    ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId);
 
     ServiceResult cancelPipeline(String pipelineId);
 

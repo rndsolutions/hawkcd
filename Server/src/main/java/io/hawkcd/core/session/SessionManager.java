@@ -21,9 +21,13 @@ package io.hawkcd.core.session;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.SessionDetails;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.TaskDefinition;
@@ -45,10 +49,12 @@ import io.hawkcd.ws.WSSocket;
 public class SessionManager implements  ISessionManager{
     private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(SessionManager.class.getClass());
     private  WsSessionPool sessionPool;
+    private SessionService sessionService;
     private Gson jsonConverter;
 
     public SessionManager(){
         this.sessionPool = WsSessionPool.getInstance();
+        this.sessionService = new SessionService();
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -128,6 +134,31 @@ public class SessionManager implements  ISessionManager{
         this.send(session,contract);
     }
 
+    @Override
+    public SessionDetails getSessionDetailsBySessionId(String sessionId) {
+        SessionDetails result = null;
+        WSSocket session = this.sessionPool.getSessions()
+                .stream()
+                .filter(s -> s.getId() == sessionId)
+                .findFirst()
+                .orElse(null);
+
+        if(session != null){
+            result = session.getSessionDetails();
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<SessionDetails> getAllActiveSessions() {
+        List<SessionDetails> activeSessions = ((List<SessionDetails>) this.sessionService.getAll().getObject())
+                .stream()
+                .filter(s -> s.isActive())
+                .collect(Collectors.toList());
+        return activeSessions;
+    }
+
     /**
      * Receives a WSSocket object and WsContractDto to write it to the stream
      * @param session
@@ -145,4 +176,6 @@ public class SessionManager implements  ISessionManager{
             }
         }
     }
+
+
 }

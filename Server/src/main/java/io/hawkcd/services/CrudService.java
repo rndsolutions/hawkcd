@@ -27,7 +27,7 @@ import io.hawkcd.services.interfaces.ICrudService;
 import java.util.List;
 
 public abstract class CrudService<T extends DbEntry> extends Service<T> implements ICrudService<T> {
-    static final DatabaseType DATABASE_TYPE = Config.getConfiguration().getDatabaseType();
+    public static final DatabaseType DATABASE_TYPE = Config.getConfiguration().getDatabaseType();
 
     private IDbRepository<T> repository;
 

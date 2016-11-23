@@ -1,9 +1,10 @@
-package io.hawkcd.services;
+package io.hawkcd.core.session;
 
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.SessionDetails;
+import io.hawkcd.services.CrudService;
 
 /**
  * Created by rado on 15.11.16.

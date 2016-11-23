@@ -23,6 +23,8 @@ import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.payload.Permission;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -46,18 +48,20 @@ public class AuthorizationService {
      */
     String[] isRequestAuthorized(String className, String methodName, List<Object> arguments, UserPermissions userPermissions, Authorization authorizedPermission) {
         boolean hasPermission;
+        List<String> listOfIds = new ArrayList<>();
+
         if (methodName.startsWith("getAll")) { // If no arguments are passed
 //            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission);
             return new String[0];
         } else if (methodName.startsWith("delete") || methodName.startsWith("getById") || methodName.startsWith("unassign")) { // If one String is passed as argument
 //            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
+            listOfIds.add((String) arguments.get(0));
         } else if (methodName.startsWith("assign")) { // If two Strings are passed as arguments
 //            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
 //            if (hasPermission) {
 //                hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(1).toString());
 //            }
         } else {
-            List<String> listOfIds = new ArrayList<>();
             switch (className) { // If an Object is passed as argument
                 case "PipelineGroupService":
                     PipelineGroup pipelineGroup = (PipelineGroup) arguments.get(0);
@@ -89,13 +93,29 @@ public class AuthorizationService {
                     break;
             }
 
-            String[] entityIds = listOfIds.toArray(new String[listOfIds.size()]);
-            return entityIds;
+
 //            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, entityIds);
         }
-
-        return null;
+        String[] entityIds = listOfIds.toArray(new String[listOfIds.size()]);
+        return entityIds;
     }
+
+//    String[] getEntityIds(String packageName, String className, String methodName, List<Object> arguments) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
+//        String fullyQualifiedName = String.format("%s.%s", packageName, className);
+//        Class<?> aClass = Class.forName(fullyQualifiedName);
+//        Method[] methods = aClass.getMethods();
+//        List<String> listOfIds = new ArrayList<>();
+//        for (int i = 0; i < methods.length; i++) {
+////            Class<?> aClass1 = parameters.get(i).getClass();
+////            params[i] = aClass1;
+//            if(methods[i].getName().equals(methodName)){
+//                String entityId = (String) methods[i].invoke(aClass);
+//                listOfIds.add(entityId);
+//            }
+//        }
+//        Method method = aClass.getMethod(methodName, params);
+//        Authorization annotation = method.getAnnotation(Authorization.class);
+//    }
 
 
     /**

@@ -85,7 +85,7 @@ angular
         };
 
         pipeExecService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
-            var methodName = "getPipelineArtifactDTOs";
+            var methodName = "getAllPipelineArtifactDTOs";
             var className = "PipelineService";
             var packageName = "io.hawkcd.services";
             var result = "";

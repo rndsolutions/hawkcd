@@ -16,8 +16,12 @@
 
 package io.hawkcd.model;
 
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.enums.TaskType;
 
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class UploadArtifactTask extends TaskDefinition {
     private String source;
     private String destination;

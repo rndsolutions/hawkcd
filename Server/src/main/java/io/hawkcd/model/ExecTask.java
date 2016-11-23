@@ -17,8 +17,12 @@
 package io.hawkcd.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.enums.TaskType;
 
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class ExecTask extends TaskDefinition {
     private String command;
     private String arguments;

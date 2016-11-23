@@ -51,11 +51,13 @@ public class AuthorizationManager implements IAuthorizationManager {
         LOGGER.debug("param: " + user.toString());
         LOGGER.debug("param: " + contract.toString());
 
+        // Check if user has permission to execute the method
         Authorization authorizationPermission = this.getMethodAuthorization(contract.getPackageName(), contract.getClassName(), contract.getMethodName(), parameters);
         if (authorizationPermission == null) {
             return false;
         }
 
+        // Checks specific permissions of the user
         String[] entityIds = this.authorizationService.isRequestAuthorized(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationPermission);
 
         Grant grant = new Grant(authorizationPermission);

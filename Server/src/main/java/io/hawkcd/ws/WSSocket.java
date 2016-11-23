@@ -195,7 +195,7 @@ public class WSSocket extends WebSocketAdapter {
                 }
 
             } catch (RuntimeException e) {
-                LOGGER.error(e);
+                e.printStackTrace();
             }
         }
     }

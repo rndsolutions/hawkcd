@@ -18,8 +18,11 @@
 
 package io.hawkcd.core.session;
 
+import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.ws.WSSocket;
+
+import java.util.List;
 
 /**
  * Created by rado on 11.11.16.
@@ -37,4 +40,8 @@ public interface ISessionManager {
     boolean isUserInSession(WSSocket session, String email);
 
     void logoutUser(WSSocket session);
+
+    SessionDetails getSessionDetailsBySessionId(String sessionId);
+
+    List<SessionDetails> getAllActiveSessions();
 }

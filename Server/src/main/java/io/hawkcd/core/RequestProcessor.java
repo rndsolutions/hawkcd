@@ -30,14 +30,12 @@ import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.model.payload.Permission;
-import io.hawkcd.services.SessionService;
+import io.hawkcd.core.session.SessionService;
 import io.hawkcd.services.UserService;
 import io.hawkcd.services.filters.PermissionService;
 import io.hawkcd.services.filters.factories.SecurityServiceInvoker;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
-import io.hawkcd.ws.EntityPermissionTypeServiceInvoker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,12 +52,14 @@ public class RequestProcessor {
     private Publisher publisher;
     private SecurityServiceInvoker securityServiceInvoker;
     private PermissionService permissionService;
+    private UserService userService;
 
     public RequestProcessor() {
         this.wsObjectProcessor = new WsObjectProcessor();
         this.publisher = new Publisher();
         this.securityServiceInvoker = new SecurityServiceInvoker();
         this.permissionService = new PermissionService();
+        this.userService = new UserService();
     }
 
 //    public void processRequest(WsContractDto contract, User user, String sessionId) {
@@ -129,13 +129,13 @@ public class RequestProcessor {
      * 3
      *
      * @param contract
-     * @param user
+     * @param currentUser
      * @param sessionId
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    public void prorcessRequest1(WsContractDto contract, User user, String sessionId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    public void prorcessRequest1(WsContractDto contract, User currentUser, String sessionId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
         // Get service to be called, get arguments
         // Authorize current User Request
@@ -163,14 +163,14 @@ public class RequestProcessor {
         }
 
         // TODO: Logic to be removed
-        UserService userService = new UserService();
-        User userFromDb = (User) userService.getById(user.getId()).getObject();
+//        User userFromDb = (User) userService.getById(currentUser.getId()).getObject();
 //        List<Grant> permissions = this.permissionService.sortPermissions(userFromDb.getPermissions());
 //        userFromDb.setPermissions(permissions);
 
         // 2. Authorize current User Request
 //        boolean isAuthorized = true;
-            boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(user, contract, methodArgs);
+            boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
+        // If User is unauthorized, send unauthorized message to the current User
         if (!isAuthorized) {
             // TODO: Send to current user Session
             Message message = new Message(
@@ -179,12 +179,11 @@ public class RequestProcessor {
                     null,
                     NotificationType.ERROR,
                     "Unauthorized",
-                    user
+                    currentUser
             );
             message.setTargetOwner(true);
             this.publisher.publish("global", message);
             return;
-            //publish unauthorized message to local channel
         }
 
         // 3. Make a call to a Business service
@@ -198,18 +197,18 @@ public class RequestProcessor {
                 result.getObject(),
                 result.getNotificationType(),
                 result.getMessage(),
-                user
+                currentUser
         );
 
         // Attach permission to object
         if(result.getObject() instanceof List){
-            if(((List) result.getObject()).get(0) instanceof PipelineGroupDto){
+            if(result.getObject() != null && ((List) result.getObject()).size() > 0 && ((List) result.getObject()).get(0) instanceof PipelineGroupDto){
                 List<PipelineGroupDto> pipelineGroupDtos = (List<PipelineGroupDto>) result.getObject();
                 for (PipelineGroupDto pipelineGroupDto : pipelineGroupDtos) {
                     List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
 
                     for (PipelineDefinitionDto permissionObject : permissionObjects) {
-                        PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(user.getPermissions(), permissionObject);
+                        PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(currentUser.getPermissions(), permissionObject);
 
                         if(permissionObject.getPermissionType() != PermissionType.NONE){
                             permissionObject.setPermissionType(permissionType);
@@ -223,7 +222,7 @@ public class RequestProcessor {
             List<PermissionObject> filteredResult = new ArrayList<>();
 
             for (PermissionObject permissionObject : permissionObjects) {
-                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(user.getPermissions(), permissionObject);
+                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(currentUser.getPermissions(), permissionObject);
 
                 if(permissionObject.getPermissionType() != PermissionType.NONE){
                     permissionObject.setPermissionType(permissionType);
@@ -234,9 +233,10 @@ public class RequestProcessor {
             message.setResultObject(filteredResult);
         } else {
             // 4. Get all Users filtered by active sessions
-            SessionService sessionService = new SessionService();
-            List<SessionDetails> sessions = (List<SessionDetails>) sessionService.getAll().getObject();
-            List<SessionDetails> activeSessions = sessions.stream().filter(s -> s.isActive()).collect(Collectors.toList());
+//            SessionService sessionService = new SessionService();
+//            List<SessionDetails> sessions = (List<SessionDetails>) sessionService.getAll().getObject();
+//            List<SessionDetails> activeSessions = sessions.stream().filter(s -> s.isActive()).collect(Collectors.toList());
+            List<SessionDetails> activeSessions =  SessionFactory.getSessionManager().getAllActiveSessions();
 
             // 5. Perform authorization check for each active User
 //        EntityPermissionTypeServiceInvoker invoker = new EntityPermissionTypeServiceInvoker();
@@ -255,7 +255,7 @@ public class RequestProcessor {
 
             for (SessionDetails activeSession : activeSessions) {
                 User userToSendTo = (User) userService.getById(activeSession.getUserId()).getObject();
-                List<Grant> userPermissions = this.permissionService.sortPermissions(userFromDb.getPermissions());
+                List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
                 PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(userPermissions, result.getObject());
                 permissionTypeByUser.put(userToSendTo.getId(), permissionType);
             }
