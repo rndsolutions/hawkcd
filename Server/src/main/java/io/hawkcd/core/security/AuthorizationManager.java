@@ -20,9 +20,13 @@ package io.hawkcd.core.security;
 
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
+import io.hawkcd.model.payload.Permission;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +43,7 @@ import java.util.List;
 public class AuthorizationManager implements IAuthorizationManager {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
-    private AuthorizationService authorizationService;
+    private AuthorizationService authorizationService = new AuthorizationService();
 
 
     @Override
@@ -47,29 +51,52 @@ public class AuthorizationManager implements IAuthorizationManager {
         LOGGER.debug("param: " + user.toString());
         LOGGER.debug("param: " + contract.toString());
 
-        Authorization authorizationPermission = this.getMethodAuthorization(contract.getPackageName(), contract.getClassName(), contract.getMethodName());
+        Authorization authorizationPermission = this.getMethodAuthorization(contract.getPackageName(), contract.getClassName(), contract.getMethodName(), parameters);
         if (authorizationPermission == null) {
             return false;
         }
 
-        boolean isAuthorized = this.authorizationService.isRequestAuthorized(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationPermission);
+        String[] entityIds = this.authorizationService.isRequestAuthorized(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationPermission);
 
-        return isAuthorized;
+        Grant grant = new Grant(authorizationPermission);
+
+        PermissionType permissionType = this.authorizationService.determinePermissionType2(user.getPermissions(), grant, entityIds);
+        if(permissionType != PermissionType.NONE){
+            return true;
+        }
+//        this.authorizationService.getGrant();
+
+        return false;
     }
 
     @Override
     public void getAllUsersWithPermissions() {
-
     }
 
-    Authorization getMethodAuthorization(String packageName, String className, String methodName)
+    public PermissionType determinePermissionType1(List<Grant> userGrants, Object object) {
+        PermissionType result;
+        Authorization authorization = object.getClass().getAnnotation(Authorization.class);
+        Grant grant = new Grant(authorization);
+
+        String[] entityIds = this.authorizationService.getEntityIds(object);
+        result = this.authorizationService.determinePermissionType2(userGrants, grant, entityIds);
+        return result;
+    }
+
+    private Authorization getMethodAuthorization(String packageName, String className, String methodName, List<Object> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
 
         String fullyQualifiedName = String.format("%s.%s", packageName, className);
         Class<?> aClass = Class.forName(fullyQualifiedName);
-        Method method = aClass.getMethod(methodName);
+        Class<?>[] params = new Class[parameters.size()];
+        for (int i = 0; i < params.length; i++) {
+            Class<?> aClass1 = parameters.get(i).getClass();
+            params[i] = aClass1;
+        }
+        Method method = aClass.getMethod(methodName, params);
         Authorization annotation = method.getAnnotation(Authorization.class);
 
         return annotation;
     }
+
 }

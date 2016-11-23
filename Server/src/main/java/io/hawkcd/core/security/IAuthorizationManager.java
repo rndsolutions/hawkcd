@@ -20,6 +20,7 @@ package io.hawkcd.core.security;
 
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
+import io.hawkcd.model.enums.PermissionType;
 
 import java.util.List;
 
@@ -30,6 +31,8 @@ public interface IAuthorizationManager {
     * @param user
     */
     boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException;
+
+    PermissionType determinePermissionType1(List<Grant> userGrants, Object object);
 
     /*
     * returns all users that have access to perform the operation

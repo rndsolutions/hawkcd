@@ -16,7 +16,10 @@
 
 package io.hawkcd.model;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.configuration.filetree.JsTreeFile;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.enums.PipelineStatus;
 
 import java.time.Duration;
@@ -26,6 +29,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class Pipeline extends DbEntry {
     private String pipelineDefinitionId;
     private String pipelineDefinitionName;

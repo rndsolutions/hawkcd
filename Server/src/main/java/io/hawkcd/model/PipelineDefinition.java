@@ -17,12 +17,16 @@
 package io.hawkcd.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class PipelineDefinition extends DbEntry {
     private String name;
     private String pipelineGroupId;

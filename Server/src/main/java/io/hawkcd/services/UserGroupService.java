@@ -29,7 +29,7 @@ import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserGroupService;
 import io.hawkcd.services.interfaces.IUserService;
 import io.hawkcd.ws.EndpointConnector;
-import io.hawkcd.ws.SessionPool;
+//import io.hawkcd.ws.SessionPool;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -105,7 +105,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         ServiceResult result = new ServiceResult(updatedUserGroupDto, NotificationType.SUCCESS, "UserGroup updated successfully.");
 
         for (String userId : userGroup.getUserIds()) {
-            SessionPool.getInstance().updateUserObjects(userId);
+//            SessionPool.getInstance().updateUserObjects(userId);
         }
 
         return result;
@@ -153,7 +153,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User assigned successfully.");
             EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
-            SessionPool.getInstance().updateUserObjects(user.getId());
+//            SessionPool.getInstance().updateUserObjects(user.getId());
 
             userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {
@@ -180,7 +180,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User unassigned successfully.");
             EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
-            SessionPool.getInstance().updateUserObjects(user.getId());
+//            SessionPool.getInstance().updateUserObjects(user.getId());
 
             userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {

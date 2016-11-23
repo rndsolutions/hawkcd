@@ -16,11 +16,15 @@
 
 package io.hawkcd.model.dto;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.PermissionObject;
 import io.hawkcd.model.PipelineGroup;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 
 import java.util.List;
 
+@Authorization(scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER)
 public class PipelineGroupDto extends PermissionObject {
     private String id;
     private String name;

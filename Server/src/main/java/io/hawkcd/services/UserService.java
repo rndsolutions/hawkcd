@@ -26,7 +26,7 @@ import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserService;
-import io.hawkcd.ws.SessionPool;
+//import io.hawkcd.ws.SessionPool;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class UserService extends CrudService<User> implements IUserService {
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(User user) {
         ServiceResult serviceResult = super.update(user);
-        SessionPool.getInstance().updateUserObjects(user.getId());
+//        SessionPool.getInstance().updateUserObjects(user.getId());
         return serviceResult;
     }
 

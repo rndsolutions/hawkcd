@@ -16,7 +16,10 @@
 
 package io.hawkcd.model.dto;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.configuration.filetree.JsTreeFile;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.enums.PipelineStatus;
 
 import java.time.Duration;
@@ -30,6 +33,7 @@ import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.Stage;
 
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class PipelineDto extends PermissionObject {
     private String id;
     private String pipelineDefinitionId;

@@ -16,13 +16,17 @@
 
 package io.hawkcd.model.dto;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.PermissionObject;
 import io.hawkcd.model.User;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.payload.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
 public class UserGroupDto extends PermissionObject {
     private String id;
     private String name;

@@ -40,6 +40,9 @@ public class Envelopе {
         return object;
     }
 
+    public void setObject(Object object) {
+        this.object = object;
+    }
 
     /**
      * Sets the fields of the Envelope class

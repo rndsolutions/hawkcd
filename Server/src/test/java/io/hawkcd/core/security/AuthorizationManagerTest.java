@@ -25,14 +25,14 @@ public class AuthorizationManagerTest {
         contract.setMethodName("getAll");
 
 
-        List<Permission> ps = new ArrayList<>();
-        Permission p1 = new Permission();
-        ps.add()
+//        List<Permission> ps = new ArrayList<>();
+//        Permission p1 = new Permission();
+//        ps.add()
 
 
         User user = new User();
         user.setEmail("admin@admin.com");
-        user.setPermissions();
+//        user.setPermissions();
 
 
         //user.setPermissions();

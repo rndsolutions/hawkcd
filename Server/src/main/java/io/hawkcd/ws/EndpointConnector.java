@@ -29,7 +29,7 @@ public class EndpointConnector {
         contract.setNotificationType(serviceResult.getNotificationType());
         contract.setErrorMessage(serviceResult.getMessage());
 
-        SessionPool.getInstance().sendToAuthorizedSessions(contract);
+//        SessionPool.getInstance().sendToAuthorizedSessions(contract);
     }
 
     public static void passResultToEndpoint(String className, String methodName, ServiceResult serviceResult, User user) {
@@ -40,6 +40,6 @@ public class EndpointConnector {
         contract.setNotificationType(serviceResult.getNotificationType());
         contract.setErrorMessage(serviceResult.getMessage());
 
-        SessionPool.getInstance().sendToUserSessions(contract, user);
+//        SessionPool.getInstance().sendToUserSessions(contract, user);
     }
 }

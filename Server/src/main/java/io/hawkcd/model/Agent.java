@@ -17,11 +17,15 @@
 package io.hawkcd.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Authorization(scope = PermissionScope.SERVER, type = PermissionType.VIEWER)
 public class Agent extends DbEntry {
     private String name;
     private String hostName;

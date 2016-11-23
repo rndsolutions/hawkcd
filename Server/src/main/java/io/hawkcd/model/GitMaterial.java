@@ -16,8 +16,12 @@
 
 package io.hawkcd.model;
 
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.enums.MaterialType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 
+@Authorization(scope = PermissionScope.SERVER, type = PermissionType.VIEWER)
 public class GitMaterial extends MaterialDefinition {
     private String repositoryUrl;
     private String branch;

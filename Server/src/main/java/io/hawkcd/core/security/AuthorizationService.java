@@ -19,21 +19,24 @@
 package io.hawkcd.core.security;
 
 import io.hawkcd.model.*;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.payload.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 
 /**
  * The class is responsible for authorizing User requests
  * Workflow:
- *
  */
 public class AuthorizationService {
 
     /**
      * The method extracts the object Ids necessary for the authorization based on the class and method being invoked.
+     *
      * @param className
      * @param methodName
      * @param arguments
@@ -41,17 +44,18 @@ public class AuthorizationService {
      * @param authorizedPermission
      * @return
      */
-    boolean isRequestAuthorized(String className, String methodName, List<Object> arguments, UserPermissions userPermissions, Authorization authorizedPermission) {
+    String[] isRequestAuthorized(String className, String methodName, List<Object> arguments, UserPermissions userPermissions, Authorization authorizedPermission) {
         boolean hasPermission;
         if (methodName.startsWith("getAll")) { // If no arguments are passed
-            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission);
+//            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission);
+            return new String[0];
         } else if (methodName.startsWith("delete") || methodName.startsWith("getById") || methodName.startsWith("unassign")) { // If one String is passed as argument
-            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
+//            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
         } else if (methodName.startsWith("assign")) { // If two Strings are passed as arguments
-            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
-            if (hasPermission) {
-                hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(1).toString());
-            }
+//            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
+//            if (hasPermission) {
+//                hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(1).toString());
+//            }
         } else {
             List<String> listOfIds = new ArrayList<>();
             switch (className) { // If an Object is passed as argument
@@ -86,10 +90,11 @@ public class AuthorizationService {
             }
 
             String[] entityIds = listOfIds.toArray(new String[listOfIds.size()]);
-            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, entityIds);
+            return entityIds;
+//            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, entityIds);
         }
 
-        return hasPermission;
+        return null;
     }
 
 
@@ -97,6 +102,7 @@ public class AuthorizationService {
      * The method tries to authorize against the User's Pipeline specific Permissions.
      * If none match the passed entityIds, tries to authorize against the User's PipelineGroup specific Permissions.
      * If none match the passed entityIds, tries to authorize against the User's generic Permissions.
+     *
      * @param userPermissions
      * @param authorizedPermission
      * @param entityIds
@@ -124,6 +130,7 @@ public class AuthorizationService {
 
     /**
      * The method authorizes a User against his/her specific Permissions
+     *
      * @param userPermissions
      * @param authorizedPermission
      * @param entityId
@@ -143,6 +150,7 @@ public class AuthorizationService {
 
     /**
      * The method authorizes a User against his/her generic Permissions
+     *
      * @param userPermissions
      * @param authorizedPermission
      * @return
@@ -161,6 +169,7 @@ public class AuthorizationService {
 
     /**
      * The method checks a Permission against the minimum required by a method
+     *
      * @param userPermission
      * @param authorizedPermission
      * @return
@@ -173,5 +182,67 @@ public class AuthorizationService {
         }
 
         return false;
+    }
+
+    String[] getEntityIds(Object entity) {
+        List<String> listOfIds = new ArrayList<>();
+        String className = entity.getClass().getSimpleName();
+        switch (className) { // If an Object is passed as argument
+            case "PipelineGroupService":
+                PipelineGroup pipelineGroup = (PipelineGroup) entity;
+                listOfIds.add(pipelineGroup.getId());
+                break;
+            case "PipelineDefinitionService":
+                PipelineDefinition pipelineDefinition = (PipelineDefinition) entity;
+                listOfIds.add(pipelineDefinition.getId());
+                listOfIds.add(pipelineDefinition.getPipelineGroupId());
+                break;
+            case "StageDefinitionService":
+                StageDefinition stageDefinition = (StageDefinition) entity;
+                listOfIds.add(stageDefinition.getPipelineDefinitionId());
+//                    entityIds.add(stageDefinition.getPipelineGroupId());
+                break;
+            case "JobDefinitionService":
+                JobDefinition jobDefinition = (JobDefinition) entity;
+                listOfIds.add(jobDefinition.getPipelineDefinitionId());
+//                    entityIds.add(jobDefinition.getPipelineGroupId());
+                break;
+            case "TaskDefinitionService":
+                TaskDefinition taskDefinition = (TaskDefinition) entity;
+                listOfIds.add(taskDefinition.getPipelineDefinitionId());
+//                    entityIds.add(taskDefinition.getPipelineGroupId());
+                break;
+            case "PipelineService":
+                Pipeline pipeline = (Pipeline) entity;
+                listOfIds.add(pipeline.getPipelineDefinitionId());
+                break;
+        }
+
+        String[] entityIds = listOfIds.toArray(new String[listOfIds.size()]);
+        return entityIds;
+    }
+
+    public PermissionType determinePermissionType2(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds) {
+        PermissionType result = PermissionType.NONE;
+
+        for (String entityId : entityIds) {
+            for (Grant grant : userGrants) {
+                if (grant.getPermittedEntityId().equals(entityId)) {
+                    if (grant.isGreaterThan(grantToEvaluateAgainst)) {
+                        return grant.getType();
+                    }
+                }
+            }
+        }
+
+        for (Grant grant : userGrants) {
+            if (grant.getPermittedEntityId().startsWith("ALL") || grant.getScope().equals(PermissionScope.SERVER)) {
+                if (grant.isGreaterThan(grantToEvaluateAgainst)) {
+                    return grant.getType();
+                }
+            }
+        }
+
+        return result;
     }
 }

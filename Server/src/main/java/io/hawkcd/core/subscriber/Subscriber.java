@@ -76,12 +76,16 @@ public class Subscriber extends JedisPubSub {
 
         // TODO: Move logic to translator
         // Set Permission Type for each each Session to be send to and send
-        Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
-        PermissionObject resultObject = (PermissionObject) message.getResultObject();
-        for (String userId : permissionTypeByUser.keySet()) {
-            resultObject.setPermissionType(permissionTypeByUser.get(userId));
-            contract.setResult(resultObject);
-            SessionFactory.getSessionManager().sendToAllSessions(contract);
+        if(message.isTargetOwner()){
+           SessionFactory.getSessionManager().sendToAllSessions(contract);
+        } else {
+            Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
+            PermissionObject resultObject = (PermissionObject) message.getResultObject();
+            for (String userId : permissionTypeByUser.keySet()) {
+                resultObject.setPermissionType(permissionTypeByUser.get(userId));
+                contract.setResult(resultObject);
+                SessionFactory.getSessionManager().sendToAllSessions(contract);
+            }
         }
     }
 }

@@ -16,6 +16,11 @@
 
 package io.hawkcd.model.dto;
 
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
+
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.NONE)
 public class LoginDto {
 
 

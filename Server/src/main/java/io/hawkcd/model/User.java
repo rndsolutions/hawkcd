@@ -17,18 +17,23 @@
 package io.hawkcd.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.Grant;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.payload.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
 public class User extends DbEntry {
 
     private String email;
     private String password;
     private String ghAuthCode;
     private String provider;
-    private List<Permission> permissions;
+    private List<Grant> permissions;
     private UserPermissions userPermissions;
     private List<String> userGroupIds;
     private boolean isEnabled;
@@ -100,11 +105,11 @@ public class User extends DbEntry {
         this.provider = provider;
     }
 
-    public List<Permission> getPermissions() {
+    public List<Grant> getPermissions() {
         return this.permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(List<Grant> permissions) {
         this.permissions = permissions;
     }
 

@@ -16,9 +16,14 @@
 
 package io.hawkcd.model;
 
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Authorization(scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER)
 public class PipelineGroup extends DbEntry {
     private String name;
     private List<PipelineDefinition> pipelines;

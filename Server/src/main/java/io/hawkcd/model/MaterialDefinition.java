@@ -19,7 +19,10 @@ package io.hawkcd.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.enums.MaterialType;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -27,6 +30,7 @@ import io.hawkcd.model.enums.MaterialType;
         property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT")})
+@Authorization(scope = PermissionScope.SERVER, type = PermissionType.VIEWER)
 public abstract class MaterialDefinition extends DbEntry {
     private String name;
     private String errorMessage;

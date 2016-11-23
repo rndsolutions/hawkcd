@@ -47,6 +47,9 @@ public class Message {
     private String serviceCalled;
     private String methodCalled;
 
+    //True if the message should be delivered only to the caller
+    private boolean isTargetOwner;
+
     //Holds the result being reterned by the service call
     private Envelopе envelopе;
 
@@ -95,8 +98,20 @@ public class Message {
         return methodCalled;
     }
 
+    public boolean isTargetOwner() {
+        return isTargetOwner;
+    }
+
+    public void setTargetOwner(boolean targetOwner) {
+        isTargetOwner = targetOwner;
+    }
+
     public Object getResultObject() {
         return this.envelopе.getObject();
+    }
+
+    public void setResultObject(Object object) {
+        this.envelopе.setObject(object);
     }
 
     public NotificationType getResultNotificationType() {
