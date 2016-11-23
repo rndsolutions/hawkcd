@@ -30,7 +30,6 @@ import io.hawkcd.model.enums.PermissionType;
         property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT")})
-@Authorization(scope = PermissionScope.SERVER, type = PermissionType.VIEWER)
 public abstract class MaterialDefinition extends DbEntry {
     private String name;
     private String errorMessage;

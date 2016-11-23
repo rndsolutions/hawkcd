@@ -27,7 +27,7 @@ import io.hawkcd.services.interfaces.ICrudService;
 import java.util.List;
 
 public abstract class CrudService<T extends DbEntry> extends Service<T> implements ICrudService<T> {
-    public static final DatabaseType DATABASE_TYPE = Config.getConfiguration().getDatabaseType();
+    public final DatabaseType DATABASE_TYPE = Config.getConfiguration().getDatabaseType();
 
     private IDbRepository<T> repository;
 
@@ -101,7 +101,7 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
         if (dbObject == null) {
             result = super.createServiceResult((T) result.getObject(), NotificationType.ERROR, "not found");
         } else {
-            result = super.createServiceResult((T) result.getObject(), NotificationType.SUCCESS, "deleted successfully");
+            result = super.createServiceResult((T) dbObject, NotificationType.SUCCESS, "deleted successfully");
         }
 
         result.setObject(dbObject);

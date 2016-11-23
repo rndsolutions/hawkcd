@@ -22,6 +22,9 @@ import io.hawkcd.model.*;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.payload.Permission;
+import io.hawkcd.services.PipelineGroupService;
+import io.hawkcd.services.PipelineService;
+import io.hawkcd.services.TaskDefinitionService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,14 +49,14 @@ public class AuthorizationService {
      * @param authorizedPermission
      * @return
      */
-    String[] isRequestAuthorized(String className, String methodName, List<Object> arguments, UserPermissions userPermissions, Authorization authorizedPermission) {
+    String[] extractEntityIds(String className, String methodName, List<Object> arguments, UserPermissions userPermissions, Authorization authorizedPermission) {
         boolean hasPermission;
         List<String> listOfIds = new ArrayList<>();
 
         if (methodName.startsWith("getAll")) { // If no arguments are passed
 //            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission);
             return new String[0];
-        } else if (methodName.startsWith("delete") || methodName.startsWith("getById") || methodName.startsWith("unassign")) { // If one String is passed as argument
+        } else if (methodName.startsWith("getById") || methodName.startsWith("unassign")) { // If one String is passed as argument
 //            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
             listOfIds.add((String) arguments.get(0));
         } else if (methodName.startsWith("assign")) { // If two Strings are passed as arguments
@@ -88,7 +91,13 @@ public class AuthorizationService {
 //                    entityIds.add(taskDefinition.getPipelineGroupId());
                     break;
                 case "PipelineService":
-                    Pipeline pipeline = (Pipeline) arguments.get(0);
+                    Pipeline pipeline;
+                    if(methodName.startsWith("cancel") || methodName.startsWith("pause")){
+                        PipelineService pipelineService = new PipelineService();
+                        pipeline = (Pipeline) pipelineService.getById((String) arguments.get(0)).getObject();
+                    } else {
+                        pipeline = (Pipeline) arguments.get(0);
+                    }
                     listOfIds.add(pipeline.getPipelineDefinitionId());
                     break;
             }
@@ -242,9 +251,17 @@ public class AuthorizationService {
         return entityIds;
     }
 
-    public PermissionType determinePermissionType2(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds) {
+    /**
+     * Determines the Permission Type of the user based on the entity IDs passed to it
+     * @param userGrants
+     * @param grantToEvaluateAgainst
+     * @param entityIds
+     * @return
+     */
+    public PermissionType determinePermissionTypeForUser(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds) {
         PermissionType result = PermissionType.NONE;
 
+        // Checks for specific Permissions, e.g. a user is assigned a permission for a specific entity (Pipeline/Group)
         for (String entityId : entityIds) {
             for (Grant grant : userGrants) {
                 if (grant.getPermittedEntityId().equals(entityId)) {
@@ -255,6 +272,7 @@ public class AuthorizationService {
             }
         }
 
+        // Checks for generic Permissions, e.g. a user is assigned a permission for ALL Pipelines/Groups
         for (Grant grant : userGrants) {
             if (grant.getPermittedEntityId().startsWith("ALL") || grant.getScope().equals(PermissionScope.SERVER)) {
                 if (grant.isGreaterThan(grantToEvaluateAgainst)) {

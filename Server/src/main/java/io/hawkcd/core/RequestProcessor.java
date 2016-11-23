@@ -30,7 +30,6 @@ import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.core.session.SessionService;
 import io.hawkcd.services.UserService;
 import io.hawkcd.services.filters.PermissionService;
 import io.hawkcd.services.filters.factories.SecurityServiceInvoker;
@@ -41,7 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /*
@@ -144,8 +142,133 @@ public class RequestProcessor {
         // Perform authorization check for each active User
         // Attach User email and Id to
 
-
         // 1. Get service to be called, get arguments
+        List<Object> methodArgs = extractTargetMethodArguments(contract);
+
+        // 2. Authorize current User Request
+        boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
+
+        // If User is unauthorized, send unauthorized message to the current User
+        if (!isAuthorized) {
+            sendUnauthorizedMessage(contract, currentUser);
+            return;
+        }
+
+        // 3. Make a call to a Business service
+        ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
+
+        //Construct a message from the service call result
+        Message message = new Message(
+                contract.getClassName(),
+                contract.getMethodName(),
+                result.getObject(),
+                result.getNotificationType(),
+                result.getMessage(),
+                currentUser
+        );
+
+        // Attach permission to object
+        if(result.getObject() instanceof List){
+            boolean isPipelineGroupDtoList = isPipelineGroupDtoList(result);
+            if(isPipelineGroupDtoList){
+                attachPermissionsToPipelineDtos(contract, currentUser, result, methodArgs);
+            }
+
+            List<PermissionObject> filteredResult = attachPermissionTypeToList(contract, currentUser, result, methodArgs);
+
+            message.setTargetOwner(true);
+            message.setResultObject(filteredResult);
+        } else {
+            // 4. Get all Users filtered by active sessions
+            List<SessionDetails> activeSessions =  SessionFactory.getSessionManager().getAllActiveSessions();
+
+            Map<String, PermissionType> permissionTypeByUser = getPermissionTypeByUser(contract, currentUser, methodArgs, result, activeSessions);
+
+            message.setPermissionTypeByUser(permissionTypeByUser);
+        }
+
+        //broadcast the message
+        this.publisher.publish("global", message);
+
+    }
+
+    private boolean isPipelineGroupDtoList(ServiceResult result) {
+        if(result.getObject() != null && ((List) result.getObject()).size() > 0 && ((List) result.getObject()).get(0) instanceof PipelineGroupDto){
+            return true;
+        }
+
+        return false;
+    }
+
+    private Map<String, PermissionType> getPermissionTypeByUser(WsContractDto contract, User currentUser, List<Object> methodArgs, ServiceResult result, List<SessionDetails> activeSessions) {
+        Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
+
+        for (SessionDetails activeSession : activeSessions) {
+            User userToSendTo = (User) userService.getById(activeSession.getUserId()).getObject();
+            List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
+            PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForObject(userPermissions, result.getObject(), contract, methodArgs);
+            permissionTypeByUser.put(userToSendTo.getId(), permissionType);
+        }
+        return permissionTypeByUser;
+    }
+
+    private void sendUnauthorizedMessage(WsContractDto contract, User currentUser) {
+        // TODO: Send to current user Session
+        Message message = new Message(
+                contract.getClassName(),
+                contract.getMethodName(),
+                null,
+                NotificationType.ERROR,
+                "Unauthorized",
+                currentUser
+        );
+        message.setTargetOwner(true);
+        this.publisher.publish("global", message);
+    }
+
+    /**
+     * Filters the result based on user permissions and sets PermissionType to each object in it
+     * If the PermissionType is NONE, the object will not be added to the filtered collection
+     * Exception: If the user has no permission for a Pipeline Group, but has a permission for a Pipeline that belongs to it, it will not be added to the filtered collection
+     * @param contract
+     * @param currentUser
+     * @param result
+     * @return
+     */
+    private List<PermissionObject> attachPermissionTypeToList(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
+        List<PermissionObject> permissionObjects =  (List<PermissionObject>) result.getObject();
+        List<PermissionObject> filteredResult = new ArrayList<>();
+
+        for (PermissionObject permissionObject : permissionObjects) {
+            PermissionType permissionType = AuthorizationFactory
+                    .getAuthorizationManager()
+                    .determinePermissionTypeForObject(currentUser.getPermissions(), permissionObject, contract, parameters);
+
+            if(permissionObject.getPermissionType() != PermissionType.NONE){
+                permissionObject.setPermissionType(permissionType);
+                filteredResult.add(permissionObject);
+            }
+        }
+        return filteredResult;
+    }
+
+    private void attachPermissionsToPipelineDtos(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
+        List<PipelineGroupDto> pipelineGroupDtos = (List<PipelineGroupDto>) result.getObject();
+        for (PipelineGroupDto pipelineGroupDto : pipelineGroupDtos) {
+            List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
+
+            for (PipelineDefinitionDto permissionObject : permissionObjects) {
+                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForObject(currentUser.getPermissions(), permissionObject, contract, parameters);
+
+                if(permissionObject.getPermissionType() != PermissionType.NONE){
+                    permissionObject.setPermissionType(permissionType);
+                }
+            }
+            pipelineGroupDto.setPipelines(permissionObjects);
+        }
+    }
+
+    private List<Object> extractTargetMethodArguments(WsContractDto contract) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         Gson jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
@@ -161,116 +284,7 @@ public class RequestProcessor {
                 methodArgs.add(object);
             }
         }
-
-        // TODO: Logic to be removed
-//        User userFromDb = (User) userService.getById(currentUser.getId()).getObject();
-//        List<Grant> permissions = this.permissionService.sortPermissions(userFromDb.getPermissions());
-//        userFromDb.setPermissions(permissions);
-
-        // 2. Authorize current User Request
-//        boolean isAuthorized = true;
-            boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
-        // If User is unauthorized, send unauthorized message to the current User
-        if (!isAuthorized) {
-            // TODO: Send to current user Session
-            Message message = new Message(
-                    contract.getClassName(),
-                    contract.getMethodName(),
-                    null,
-                    NotificationType.ERROR,
-                    "Unauthorized",
-                    currentUser
-            );
-            message.setTargetOwner(true);
-            this.publisher.publish("global", message);
-            return;
-        }
-
-        // 3. Make a call to a Business service
-        // TODO: refactor wsObjectProcessor
-        ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
-
-        //Construct a message from the service call result
-        Message message = new Message(
-                contract.getClassName(),
-                contract.getMethodName(),
-                result.getObject(),
-                result.getNotificationType(),
-                result.getMessage(),
-                currentUser
-        );
-
-        // Attach permission to object
-        if(result.getObject() instanceof List){
-            if(result.getObject() != null && ((List) result.getObject()).size() > 0 && ((List) result.getObject()).get(0) instanceof PipelineGroupDto){
-                List<PipelineGroupDto> pipelineGroupDtos = (List<PipelineGroupDto>) result.getObject();
-                for (PipelineGroupDto pipelineGroupDto : pipelineGroupDtos) {
-                    List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
-
-                    for (PipelineDefinitionDto permissionObject : permissionObjects) {
-                        PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(currentUser.getPermissions(), permissionObject);
-
-                        if(permissionObject.getPermissionType() != PermissionType.NONE){
-                            permissionObject.setPermissionType(permissionType);
-                            permissionObjects.add(permissionObject);
-                        }
-                    }
-                    pipelineGroupDto.setPipelines(permissionObjects);
-                }
-            }
-            List<PermissionObject> permissionObjects =  (List<PermissionObject>) result.getObject();
-            List<PermissionObject> filteredResult = new ArrayList<>();
-
-            for (PermissionObject permissionObject : permissionObjects) {
-                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(currentUser.getPermissions(), permissionObject);
-
-                if(permissionObject.getPermissionType() != PermissionType.NONE){
-                    permissionObject.setPermissionType(permissionType);
-                    filteredResult.add(permissionObject);
-                }
-            }
-            message.setTargetOwner(true);
-            message.setResultObject(filteredResult);
-        } else {
-            // 4. Get all Users filtered by active sessions
-//            SessionService sessionService = new SessionService();
-//            List<SessionDetails> sessions = (List<SessionDetails>) sessionService.getAll().getObject();
-//            List<SessionDetails> activeSessions = sessions.stream().filter(s -> s.isActive()).collect(Collectors.toList());
-            List<SessionDetails> activeSessions =  SessionFactory.getSessionManager().getAllActiveSessions();
-
-            // 5. Perform authorization check for each active User
-//        EntityPermissionTypeServiceInvoker invoker = new EntityPermissionTypeServiceInvoker();
-//        PermissionObject permissionObject = (PermissionObject) result.getObject();
-//        Class<?> objectClass = result.getObject().getClass();
-//        Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
-//
-//        for (SessionDetails activeSession : activeSessions) {
-//            User userToSendTo = (User) userService.getById(activeSession.getUserId()).getObject();
-//            List<Permission> userPermissions = this.permissionService.sortPermissions(userFromDb.getPermissions());
-//            permissionObject = invoker.invoke(objectClass, userPermissions, permissionObject);
-//            permissionTypeByUser.put(userToSendTo.getEmail(), permissionObject.getPermissionType());
-//        }
-
-            Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
-
-            for (SessionDetails activeSession : activeSessions) {
-                User userToSendTo = (User) userService.getById(activeSession.getUserId()).getObject();
-                List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
-                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionType1(userPermissions, result.getObject());
-                permissionTypeByUser.put(userToSendTo.getId(), permissionType);
-            }
-
-            message.setPermissionTypeByUser(permissionTypeByUser);
-        }
-
-
-
-        // Determine channel to broadcast message
-        // TODO: Implement logic for "local" channel
-
-        //broadcast the message
-        this.publisher.publish("global", message);
-
+        return methodArgs;
     }
 
     public void processResponse(Message pubSubMessage) {

@@ -16,11 +16,16 @@
 
 package io.hawkcd.model;
 
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class JobDefinition extends DbEntry {
     private String name;
     private String stageDefinitionId;

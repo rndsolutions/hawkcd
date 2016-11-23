@@ -17,7 +17,11 @@
 package io.hawkcd.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionType;
 
+@Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class EnvironmentVariable extends DbEntry {
     private String key;
     private String value;

@@ -24,6 +24,7 @@ import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.dto.PipelineDefinitionDto;
+import io.hawkcd.model.dto.PipelineDto;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
@@ -34,6 +35,7 @@ import io.hawkcd.services.interfaces.IPipelineService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PipelineGroupService extends CrudService<PipelineGroup> implements IPipelineGroupService {
     private static final Class CLASS_TYPE = PipelineGroup.class;
@@ -94,21 +96,54 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER )
     public ServiceResult getAllPipelineGroupDTOs() {
+//        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
+//        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
+//
+//        for (PipelineGroup pipelineGroup : pipelineGroups) {
+//            List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
+//            for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
+//                if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
+//                    pipelineDefinitionsToAdd.add(pipelineDefinition);
+//                }
+//            }
+//
+//            pipelineGroup.setPipelines(pipelineDefinitionsToAdd);
+//        }
+
         List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
 
+        List<PipelineGroupDto> pipelineGroupDtos = new ArrayList<>();
+        List<PipelineDefinitionDto> pipelineDefinitionDtos = new ArrayList<>();
+
         for (PipelineGroup pipelineGroup : pipelineGroups) {
-            List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
+            PipelineGroupDto pipelineGroupDto = new PipelineGroupDto();
+            pipelineGroupDto.constructDto(pipelineGroup);
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
-                if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
-                    pipelineDefinitionsToAdd.add(pipelineDefinition);
+                if(pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())){
+                    List<Pipeline> allPipelineRuns = (List<Pipeline>) pipelineService.getAllByDefinitionId(pipelineDefinition.getId()).getObject();
+                    PipelineDefinitionDto pipelineDefinitionDto = new PipelineDefinitionDto();
+                    pipelineDefinitionDto.constructDto(pipelineDefinition, allPipelineRuns);
+                    pipelineDefinitionDtos.add(pipelineDefinitionDto);
+
+                    pipelineGroupDto.setPipelines(pipelineDefinitionDtos);
                 }
             }
-
-            pipelineGroup.setPipelines(pipelineDefinitionsToAdd);
+            pipelineGroupDtos.add(pipelineGroupDto);
         }
 
-        ServiceResult result = new ServiceResult(pipelineGroups, NotificationType.SUCCESS, "All Pipeline Groups retrieved successfully.");
+//        for (PipelineGroup pipelineGroup : pipelineGroups) {
+//            List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();
+//            for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
+//                if (!pipelineDefinition.getPipelineGroupId().isEmpty() && pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())) {
+//                    pipelineDefinitionsToAdd.add(pipelineDefinition);
+//                }
+//            }
+//
+//            pipelineGroup.setPipelines(pipelineDefinitionsToAdd);
+//        }
+
+        ServiceResult result = new ServiceResult(pipelineGroupDtos, NotificationType.SUCCESS, "All Pipeline Groups retrieved successfully.");
 
         return result;
     }

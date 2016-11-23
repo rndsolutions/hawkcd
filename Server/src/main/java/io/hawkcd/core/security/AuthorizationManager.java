@@ -20,13 +20,10 @@ package io.hawkcd.core.security;
 
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
-import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.model.payload.Permission;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,26 +45,18 @@ public class AuthorizationManager implements IAuthorizationManager {
 
     @Override
     public boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException {
-        LOGGER.debug("param: " + user.toString());
-        LOGGER.debug("param: " + contract.toString());
-
-        // Check if user has permission to execute the method
-        Authorization authorizationPermission = this.getMethodAuthorization(contract.getPackageName(), contract.getClassName(), contract.getMethodName(), parameters);
-        if (authorizationPermission == null) {
+        Authorization authorizationAttributes = this.getMethodAuthorizationAttributes(contract.getPackageName(), contract.getClassName(), contract.getMethodName(), parameters);
+        if (authorizationAttributes == null) {
             return false;
         }
 
-        // Checks specific permissions of the user
-        String[] entityIds = this.authorizationService.isRequestAuthorized(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationPermission);
+        String[] entityIds = this.authorizationService.extractEntityIds(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationAttributes);
+        Grant grant = new Grant(authorizationAttributes);
 
-        Grant grant = new Grant(authorizationPermission);
-
-        PermissionType permissionType = this.authorizationService.determinePermissionType2(user.getPermissions(), grant, entityIds);
+        PermissionType permissionType = this.authorizationService.determinePermissionTypeForUser(user.getPermissions(), grant, entityIds);
         if(permissionType != PermissionType.NONE){
             return true;
         }
-//        this.authorizationService.getGrant();
-
         return false;
     }
 
@@ -75,17 +64,23 @@ public class AuthorizationManager implements IAuthorizationManager {
     public void getAllUsersWithPermissions() {
     }
 
-    public PermissionType determinePermissionType1(List<Grant> userGrants, Object object) {
+    /**
+     * Checks the object for minimum permissions required for the user to receive the object
+     * @param userGrants
+     * @param object
+     * @return
+     */
+    public PermissionType determinePermissionTypeForObject(List<Grant> userGrants, Object object, WsContractDto contract, List<Object> parameters) {
         PermissionType result;
         Authorization authorization = object.getClass().getAnnotation(Authorization.class);
         Grant grant = new Grant(authorization);
 
-        String[] entityIds = this.authorizationService.getEntityIds(object);
-        result = this.authorizationService.determinePermissionType2(userGrants, grant, entityIds);
+        String[] entityIds = this.authorizationService.extractEntityIds(contract.getClassName(), contract.getMethodName(), parameters, null, null);
+        result = this.authorizationService.determinePermissionTypeForUser(userGrants, grant, entityIds);
         return result;
     }
 
-    private Authorization getMethodAuthorization(String packageName, String className, String methodName, List<Object> parameters)
+    private Authorization getMethodAuthorizationAttributes(String packageName, String className, String methodName, List<Object> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
 
         String fullyQualifiedName = String.format("%s.%s", packageName, className);
