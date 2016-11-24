@@ -718,6 +718,7 @@ angular
             };
 
             vm.setMaterialForDelete = function(materialName, material) {
+                debugger;
                 vm.materialToDeleteName = materialName;
                 vm.materialToDelete = material;
             };
@@ -739,6 +740,7 @@ angular
             };
 
             vm.deleteMaterial = function(material) {
+                debugger;
                 adminMaterialService.deleteMaterialDefinition(material);
             };
 

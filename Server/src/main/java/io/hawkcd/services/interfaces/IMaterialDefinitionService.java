@@ -26,4 +26,6 @@ public interface IMaterialDefinitionService extends ICrudService<MaterialDefinit
     ServiceResult add(GitMaterial gitMaterial);
 
     ServiceResult update(GitMaterial gitMaterial);
+
+    ServiceResult delete(GitMaterial gitMaterial);
 }

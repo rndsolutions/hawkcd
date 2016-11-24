@@ -125,4 +125,25 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
 
         return super.delete(materialDefinitionId);
     }
+
+    @Override
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    public ServiceResult delete(GitMaterial materialDefinitionId) {
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
+        List<String> assignedIds = new ArrayList<>();
+        for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
+            for (String assignedId : pipelineDefinition.getMaterialDefinitionIds()) {
+                if (assignedId.equals(materialDefinitionId)) {
+                    assignedIds.add(assignedId);
+                }
+            }
+        }
+
+        if (!assignedIds.isEmpty()) {
+            String assignedIdsAsString = String.join(", ", assignedIds);
+            return super.createServiceResult(null, NotificationType.ERROR, String.format(NotificationMessages.COULD_NOT_BE_DELETED, assignedIdsAsString));
+        }
+
+        return super.delete(materialDefinitionId);
+    }
 }
