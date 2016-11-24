@@ -177,7 +177,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
             return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
         }
 
-        return super.createServiceResult(result, NotificationType.SUCCESS, "deleted successfully");
+        return super.createServiceResult(jobDefinitionToDelete, NotificationType.SUCCESS, "deleted successfully");
     }
 
     @Override
