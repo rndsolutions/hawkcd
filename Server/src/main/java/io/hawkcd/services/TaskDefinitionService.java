@@ -231,6 +231,182 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         return super.createServiceResult(taskDefinitionToDelete, NotificationType.SUCCESS, "deleted successfully");
     }
 
+    @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
+    public ServiceResult delete(ExecTask taskDefinition) {
+
+        TaskDefinition definitionToDelete;
+        boolean isRemoved = false;
+        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinition.getId()).getEntity();
+        if (taskDefinitionToDelete == null) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "does not exists");
+        }
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
+                .getById(taskDefinitionToDelete.getJobDefinitionId())
+                .getEntity();
+        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+
+        int lengthOfTaskDefinitions = taskDefinitions.size();
+        if (lengthOfTaskDefinitions > 1) {
+            for (int i = 0; i < lengthOfTaskDefinitions; i++) {
+                TaskDefinition definition = taskDefinitions.get(i);
+                if (definition.getId().equals(taskDefinitionToDelete.getId())) {
+                    taskDefinitionToDelete = definition;
+                    taskDefinitions.remove(definition);
+                    isRemoved = true;
+                    break;
+                }
+            }
+        } else {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "cannot delete the last task definition");
+        }
+
+        if (!isRemoved) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "not deleted");
+        }
+
+        jobDefinition.setTaskDefinitions(taskDefinitions);
+        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getEntity();
+        TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
+        if (result != null) {
+            return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
+        }
+
+        return super.createServiceResult(taskDefinitionToDelete, NotificationType.SUCCESS, "deleted successfully");
+    }
+
+    @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
+    public ServiceResult delete(FetchArtifactTask taskDefinition) {
+
+        TaskDefinition definitionToDelete;
+        boolean isRemoved = false;
+        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinition.getId()).getEntity();
+        if (taskDefinitionToDelete == null) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "does not exists");
+        }
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
+                .getById(taskDefinitionToDelete.getJobDefinitionId())
+                .getEntity();
+        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+
+        int lengthOfTaskDefinitions = taskDefinitions.size();
+        if (lengthOfTaskDefinitions > 1) {
+            for (int i = 0; i < lengthOfTaskDefinitions; i++) {
+                TaskDefinition definition = taskDefinitions.get(i);
+                if (definition.getId().equals(taskDefinitionToDelete.getId())) {
+                    taskDefinitionToDelete = definition;
+                    taskDefinitions.remove(definition);
+                    isRemoved = true;
+                    break;
+                }
+            }
+        } else {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "cannot delete the last task definition");
+        }
+
+        if (!isRemoved) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "not deleted");
+        }
+
+        jobDefinition.setTaskDefinitions(taskDefinitions);
+        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getEntity();
+        TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
+        if (result != null) {
+            return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
+        }
+
+        return super.createServiceResult(taskDefinitionToDelete, NotificationType.SUCCESS, "deleted successfully");
+    }
+
+    @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
+    public ServiceResult delete(FetchMaterialTask taskDefinition) {
+
+        TaskDefinition definitionToDelete;
+        boolean isRemoved = false;
+        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinition.getId()).getEntity();
+        if (taskDefinitionToDelete == null) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "does not exists");
+        }
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
+                .getById(taskDefinitionToDelete.getJobDefinitionId())
+                .getEntity();
+        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+
+        int lengthOfTaskDefinitions = taskDefinitions.size();
+        if (lengthOfTaskDefinitions > 1) {
+            for (int i = 0; i < lengthOfTaskDefinitions; i++) {
+                TaskDefinition definition = taskDefinitions.get(i);
+                if (definition.getId().equals(taskDefinitionToDelete.getId())) {
+                    taskDefinitionToDelete = definition;
+                    taskDefinitions.remove(definition);
+                    isRemoved = true;
+                    break;
+                }
+            }
+        } else {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "cannot delete the last task definition");
+        }
+
+        if (!isRemoved) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "not deleted");
+        }
+
+        jobDefinition.setTaskDefinitions(taskDefinitions);
+        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getEntity();
+        TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
+        if (result != null) {
+            return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
+        }
+
+        return super.createServiceResult(taskDefinitionToDelete, NotificationType.SUCCESS, "deleted successfully");
+    }
+
+    @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
+    public ServiceResult delete(UploadArtifactTask taskDefinition) {
+
+        TaskDefinition definitionToDelete;
+        boolean isRemoved = false;
+        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinition.getId()).getEntity();
+        if (taskDefinitionToDelete == null) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "does not exists");
+        }
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
+                .getById(taskDefinitionToDelete.getJobDefinitionId())
+                .getEntity();
+        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+
+        int lengthOfTaskDefinitions = taskDefinitions.size();
+        if (lengthOfTaskDefinitions > 1) {
+            for (int i = 0; i < lengthOfTaskDefinitions; i++) {
+                TaskDefinition definition = taskDefinitions.get(i);
+                if (definition.getId().equals(taskDefinitionToDelete.getId())) {
+                    taskDefinitionToDelete = definition;
+                    taskDefinitions.remove(definition);
+                    isRemoved = true;
+                    break;
+                }
+            }
+        } else {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "cannot delete the last task definition");
+        }
+
+        if (!isRemoved) {
+            return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "not deleted");
+        }
+
+        jobDefinition.setTaskDefinitions(taskDefinitions);
+        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getEntity();
+        TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
+        if (result != null) {
+            return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
+        }
+
+        return super.createServiceResult(taskDefinitionToDelete, NotificationType.SUCCESS, "deleted successfully");
+    }
+
     /**
      * Method return TaskDefinition, accepts JobDefinition and TaskDefinition Id, filters all
      * TaskDefinitions in the provided job. Returns null if no TaskDefinition with provided id is

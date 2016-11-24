@@ -204,8 +204,8 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
 
-            for (StageDefinition sd : stageDefinitions) {
-                if (stageDefinition.getId().equals(stageDefinition.getId())) {
+            for (StageDefinition s : stageDefinitions) {
+                if (s.getId().equals(s.getId())) {
                     pipeline = pipelineDefinition;
                 }
             }
@@ -214,30 +214,31 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         boolean isRemoved = false;
         ServiceResult serviceResult = null;
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
-        StageDefinition sd = stageDefinitions
+        StageDefinition stage = stageDefinitions
                 .stream()
                 .filter(st -> st.getId().equals(stageDefinition.getId()))
                 .findFirst()
                 .orElse(null);
 
-        if (stageDefinition == null) {
-            serviceResult = super.createServiceResult(stageDefinition, NotificationType.ERROR, "not found");
+        if (stage == null) {
+            serviceResult = super.createServiceResult(stage, NotificationType.ERROR, "not found");
         }
 
         if (stageDefinitions.size() > 1) {
-            isRemoved = stageDefinitions.remove(stageDefinition);
+            isRemoved = stageDefinitions.remove(stage);
         } else {
-            super.createServiceResult(stageDefinition, NotificationType.ERROR, "is the last Stage Definition and cannot be deleted");
+            super.createServiceResult(stage, NotificationType.ERROR, "is the last Stage Definition and cannot be deleted");
         }
 
         if (isRemoved) {
             pipeline.setStageDefinitions(stageDefinitions);
             this.pipelineDefinitionService.update(pipeline);
-            serviceResult = super.createServiceResult(stageDefinition, NotificationType.SUCCESS, "deleted successfully");
+            serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "deleted successfully");
         }
 
         return serviceResult;
     }
+
 
     private boolean isPresentWithSameName(List<StageDefinition> stageDefinitions, StageDefinition stageDefinition) {
         boolean isPresent = false;

@@ -232,7 +232,7 @@ angular
             var className = "StageDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \io.hawkcd.model.StageDefinition\", \"object\": " + JSON.stringify(stageDefinition) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.StageDefinition\", \"object\": " + JSON.stringify(stageDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

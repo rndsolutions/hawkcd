@@ -43,4 +43,12 @@ public interface ITaskDefinitionService extends ICrudService<TaskDefinition> {
     ServiceResult update(FetchArtifactTask taskDefintion);
 
     ServiceResult updateTask(TaskDefinition taskDefinition);
+
+    ServiceResult delete(ExecTask taskDefinition);
+
+    ServiceResult delete(UploadArtifactTask taskDefinition);
+
+    ServiceResult delete(FetchMaterialTask taskDefinition);
+
+    ServiceResult delete(FetchArtifactTask taskDefinition);
 }
