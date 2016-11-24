@@ -113,6 +113,11 @@ public class RequestProcessor {
                 currentUser
         );
 
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            message.setTargetOwner(true);
+            this.publisher.publish("global", message);
+        }
+
         // Attach permission to object
         if (result.getEntity() instanceof List) {
             boolean isPipelineGroupDtoList = isPipelineGroupDtoList(result);
