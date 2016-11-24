@@ -18,9 +18,7 @@ package io.hawkcd.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.hawkcd.core.security.Authorization;
-import io.hawkcd.model.enums.PermissionScope;
-import io.hawkcd.model.enums.PermissionType;
+
 import io.hawkcd.model.enums.RunIf;
 import io.hawkcd.model.enums.TaskType;
 
@@ -33,21 +31,12 @@ import io.hawkcd.model.enums.TaskType;
         @JsonSubTypes.Type(value = FetchArtifactTask.class, name = "FETCH_ARTIFACT"),
         @JsonSubTypes.Type(value = FetchMaterialTask.class, name = "FETCH_MATERIAL"),
         @JsonSubTypes.Type(value = UploadArtifactTask.class, name = "UPLOAD_ARTIFACT")})
-public abstract class TaskDefinition extends DbEntry {
-    private String name;
+public abstract class TaskDefinition extends PipelineFamiliy {
     private String jobDefinitionId;
     private String stageDefinitionId;
     private String pipelineDefinitionId;
     private TaskType type;
     private RunIf runIfCondition;
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getJobDefinitionId() {
         return this.jobDefinitionId;

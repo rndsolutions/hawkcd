@@ -80,8 +80,8 @@ public class UserService extends CrudService<User> implements IUserService {
 
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
-    public ServiceResult delete(String userId) {
-        return super.delete(userId);
+    public ServiceResult delete(User user) {
+        return super.delete(user);
     }
 
     @Override

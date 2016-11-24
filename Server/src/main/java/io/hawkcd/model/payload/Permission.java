@@ -16,10 +16,10 @@
 
 package io.hawkcd.model.payload;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.enums.PermissionScope;
 
-public class Permission extends DbEntry {
+public class Permission extends Entity {
     private PermissionScope permissionScope;
     private String permittedEntityId;
 

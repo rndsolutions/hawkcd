@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stage extends DbEntry {
+public class Stage extends Entity {
     private String stageDefinitionId;
     private String pipelineId;
     private String stageDefinitionName;

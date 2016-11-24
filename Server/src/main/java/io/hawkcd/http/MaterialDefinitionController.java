@@ -114,16 +114,16 @@ public class MaterialDefinitionController {
         }
     }
 
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{materialDefinitionId}")
-    public Response deleteMaterialDefinition(@PathParam("materialDefinitionId")
-                                                     String materialDefinitionId) {
-        ServiceResult result = this.materialDefinitionService.delete(materialDefinitionId);
-        if (result.getNotificationType() == NotificationType.ERROR) {
-            return Response.status(Status.NOT_FOUND).entity(result.getMessage()).build();
-        }
-
-        return Response.status(Status.NO_CONTENT).build();
-    }
+//    @DELETE
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Path("/{materialDefinitionId}")
+//    public Response deleteMaterialDefinition(@PathParam("materialDefinitionId")
+//                                                     String materialDefinitionId) {
+//        ServiceResult result = this.materialDefinitionService.delete(materialDefinitionId);
+//        if (result.getNotificationType() == NotificationType.ERROR) {
+//            return Response.status(Status.NOT_FOUND).entity(result.getMessage()).build();
+//        }
+//
+//        return Response.status(Status.NO_CONTENT).build();
+//    }
 }

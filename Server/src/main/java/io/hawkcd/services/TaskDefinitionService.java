@@ -189,14 +189,14 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-    public ServiceResult delete(String taskDefinitionId) {
+    public ServiceResult delete(TaskDefinition taskDefinition) {
+
         TaskDefinition definitionToDelete;
         boolean isRemoved = false;
-        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinitionId).getObject();
+        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinition.getId()).getObject();
         if (taskDefinitionToDelete == null) {
             return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "does not exists");
         }
-
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
                 .getById(taskDefinitionToDelete.getJobDefinitionId())
                 .getObject();
@@ -223,7 +223,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
 
         jobDefinition.setTaskDefinitions(taskDefinitions);
         JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
-        TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinitionId);
+        TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
         if (result != null) {
             return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
         }

@@ -16,14 +16,14 @@
 
 package io.hawkcd.services.filters.factories;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.payload.Permission;
 import io.hawkcd.services.filters.SecurityService;
 import io.hawkcd.services.filters.interfaces.ISecurityService;
 
 import java.util.List;
 
-public class SecurityServiceInvoker<T extends DbEntry> {
+public class SecurityServiceInvoker<T extends Entity> {
     private ISecurityService securityService;
 
     public SecurityServiceInvoker() {

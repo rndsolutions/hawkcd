@@ -16,13 +16,13 @@
 
 package io.hawkcd.services.interfaces;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 
 import java.util.List;
 
-public interface IService<T extends DbEntry> {
+public interface IService<T extends Entity> {
     ServiceResult createServiceResult(T object, NotificationType notificationType, String messsage);
 
     ServiceResult createServiceResultArray(List<?> object, NotificationType notificationType, String messsage);

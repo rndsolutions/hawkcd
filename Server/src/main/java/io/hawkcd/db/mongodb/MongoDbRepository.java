@@ -13,24 +13,22 @@ import com.mongodb.util.JSON;
 
 import org.apache.log4j.Logger;
 import org.bson.Document;
-import org.eclipse.jgit.annotations.NonNull;
 
 import javax.ws.rs.NotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 import java.util.UUID;
 import static com.mongodb.client.model.Filters.*;
 
 import io.hawkcd.db.IDbRepository;
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 
-public class MongoDbRepository<T extends DbEntry> implements IDbRepository<T> {
+public class MongoDbRepository<T extends Entity> implements IDbRepository<T> {
     private static final Logger LOGGER = Logger.getLogger(MongoDbRepository.class);
     private MongoCollection collection;
     private Type entryType;

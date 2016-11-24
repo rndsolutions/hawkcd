@@ -21,7 +21,7 @@ import com.google.gson.GsonBuilder;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.UserGroup;
@@ -46,7 +46,7 @@ import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.User;
 
-public class SecurityService<T extends DbEntry> implements ISecurityService {
+public class SecurityService<T extends Entity> implements ISecurityService {
     private IAuthorizationService authorizationService;
     private Gson jsonConverter;
     private IPipelineGroupService pipelineGroupService;

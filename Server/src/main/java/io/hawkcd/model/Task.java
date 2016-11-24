@@ -23,7 +23,7 @@ import io.hawkcd.model.enums.TaskType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class Task extends DbEntry {
+public class Task extends Entity {
     private TaskDefinition taskDefinition;
     private String jobId;
     private String stageId;

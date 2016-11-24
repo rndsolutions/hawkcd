@@ -16,17 +16,17 @@
 
 package io.hawkcd.services.interfaces;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 
-public interface ICrudService<T extends DbEntry> {
+public interface ICrudService<T extends Entity> {
     ServiceResult getById(String id);
 
     ServiceResult getAll();
 
-    ServiceResult add(T object);
+    ServiceResult add(T entity);
 
-    ServiceResult update(T object);
+    ServiceResult update(T entity);
 
-    ServiceResult delete(String id);
+    ServiceResult delete(T entity);
 }

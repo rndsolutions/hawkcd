@@ -16,13 +16,13 @@
 
 package io.hawkcd.services.filters.interfaces;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.payload.Permission;
 
 import java.util.List;
 
-public interface ISecurityService<T extends DbEntry> {
+public interface ISecurityService<T extends Entity> {
     List<T> getAll(List<T> entitiesToFilter, String className, List<Permission> permissions);
 
     List<PipelineGroup> getAllPipelineGroupDTOs(List<T> entitiesToFilter, String className, List<Permission> permissions);

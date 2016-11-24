@@ -162,22 +162,25 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-    public ServiceResult delete(String pipelineDefinitionId) {
+    public ServiceResult delete(PipelineDefinition pipelineDefinition) {
         if (this.pipelineService == null) {
             this.pipelineService = new PipelineService();
         }
         List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getObject();
 
         if (pipelinesFromDb != null) {
-            List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb.stream().filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId)).collect(Collectors.toList());
+            List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb
+                    .stream()
+                    .filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinition.getId()))
+                    .collect(Collectors.toList());
             for (Pipeline pipeline : pipelineWithinThePipelineDefinition) {
-                ServiceResult result = this.pipelineService.delete(pipeline.getId());
+                ServiceResult result = this.pipelineService.delete(pipeline);
                 if ((result.getNotificationType() == NotificationType.ERROR)) {
                     return result;
                 }
             }
         }
-        return super.delete(pipelineDefinitionId);
+        return super.delete(pipelineDefinition);
     }
 
     @Override

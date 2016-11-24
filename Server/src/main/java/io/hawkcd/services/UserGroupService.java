@@ -113,7 +113,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
-    public ServiceResult delete(String id) {
+    public ServiceResult delete(UserGroup userGroup) {
         List<User> users = (List<User>) this.userService.getAll().getObject();
 
         for (User user : users) {
@@ -121,7 +121,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
                 String currentUserGroupId = iter.next();
-                if (currentUserGroupId.equals(id)) {
+                if (currentUserGroupId.equals(userGroup.getId())) {
                     iter.remove();
                 }
             }
@@ -133,7 +133,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             }
         }
 
-        return super.delete(id);
+        return super.delete(userGroup);
     }
 
     @Override

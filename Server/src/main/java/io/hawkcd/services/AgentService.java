@@ -84,8 +84,8 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
-    public ServiceResult delete(String agentId) {
-        return super.delete(agentId);
+    public ServiceResult delete(Agent agent) {
+        return super.delete(agent);
     }
 
     @Override

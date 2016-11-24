@@ -18,7 +18,7 @@ package io.hawkcd.model;
 
 import java.util.ArrayList;
 
-public class Environment extends DbEntry {
+public class Environment extends Entity {
     private String environmentName;
     private ArrayList<EnvironmentVariable> environmentVariables;
     private ArrayList<String> pipelineNames;

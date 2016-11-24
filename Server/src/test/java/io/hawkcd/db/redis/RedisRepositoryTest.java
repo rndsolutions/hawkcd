@@ -2,7 +2,7 @@ package io.hawkcd.db.redis;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
 import io.hawkcd.db.IDbRepository;
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,13 +15,13 @@ public class RedisRepositoryTest {
     @Before
     public void setUp() {
         MockJedisPool mockedPool = new MockJedisPool(new JedisPoolConfig(), "test");
-        this.repository = new RedisRepository(DbEntry.class, mockedPool);
+        this.repository = new RedisRepository(Entity.class, mockedPool);
     }
 
     @Test
     public void getById() {
         //Arrange
-        DbEntry entry = new DbEntry();
+        Entity entry = new Entity();
         this.repository.add(entry);
         String expectedResult = entry.getId();
 
@@ -35,7 +35,7 @@ public class RedisRepositoryTest {
     @Test
     public void add() {
         //Arrange
-        DbEntry entry = new DbEntry();
+        Entity entry = new Entity();
         String expectedResult = entry.getId();
 
         //Act

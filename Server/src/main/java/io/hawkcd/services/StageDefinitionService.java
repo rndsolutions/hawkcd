@@ -196,7 +196,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-    public ServiceResult delete(String stageDefinitionId) {
+    public ServiceResult delete(StageDefinition stageDefinition) {
 
         PipelineDefinition pipeline = new PipelineDefinition();
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
@@ -204,8 +204,8 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
 
-            for (StageDefinition stageDefinition : stageDefinitions) {
-                if (stageDefinition.getId().equals(stageDefinitionId)) {
+            for (StageDefinition sd : stageDefinitions) {
+                if (stageDefinition.getId().equals(stageDefinition.getId())) {
                     pipeline = pipelineDefinition;
                 }
             }
@@ -214,9 +214,9 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         boolean isRemoved = false;
         ServiceResult serviceResult = null;
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
-        StageDefinition stageDefinition = stageDefinitions
+        StageDefinition sd = stageDefinitions
                 .stream()
-                .filter(st -> st.getId().equals(stageDefinitionId))
+                .filter(st -> st.getId().equals(stageDefinition.getId()))
                 .findFirst()
                 .orElse(null);
 

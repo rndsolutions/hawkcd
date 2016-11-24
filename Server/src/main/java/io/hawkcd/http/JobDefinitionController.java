@@ -124,16 +124,18 @@ public class JobDefinitionController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{jobDefinitionId}")
     public Response deleteJobDefinition(@PathParam("jobDefinitionId") String jobDefinitionId) {
-        ServiceResult result = this.jobDefinitionService.delete(jobDefinitionId);
-        if (result.getNotificationType() == NotificationType.ERROR) {
-            return Response.status(Status.BAD_REQUEST)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        }
-        return Response.status(Status.NO_CONTENT)
-                .entity(result.getMessage())
-                .type(MediaType.TEXT_HTML)
-                .build();
+//        ServiceResult result = this.jobDefinitionService.delete(jobDefinitionId);
+//        if (result.getNotificationType() == NotificationType.ERROR) {
+//            return Response.status(Status.BAD_REQUEST)
+//                    .entity(result.getMessage())
+//                    .type(MediaType.TEXT_HTML)
+//                    .build();
+//        }
+//        return Response.status(Status.NO_CONTENT)
+//                .entity(result.getMessage())
+//                .type(MediaType.TEXT_HTML)
+//                .build();
+
+        return  null;
     }
 }

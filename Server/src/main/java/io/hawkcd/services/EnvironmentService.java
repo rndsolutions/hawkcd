@@ -47,8 +47,8 @@ public class EnvironmentService extends CrudService<Environment> implements IEnv
     }
 
     @Override
-    public ServiceResult delete(String environmentId) {
-        return super.delete(environmentId);
+    public ServiceResult delete(Environment environment) {
+        return super.delete(environment);
     }
 
     @Override

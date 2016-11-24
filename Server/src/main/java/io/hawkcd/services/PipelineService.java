@@ -135,8 +135,8 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-    public ServiceResult delete(String pipelineId) {
-        return super.delete(pipelineId);
+    public ServiceResult delete(Pipeline pipeline) {
+        return super.delete(pipeline);
     }
 
     @Override

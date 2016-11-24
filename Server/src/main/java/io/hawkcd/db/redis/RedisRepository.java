@@ -21,7 +21,7 @@ import com.google.gson.GsonBuilder;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.db.IDbRepository;
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.TaskDefinition;
 import redis.clients.jedis.Jedis;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class RedisRepository<T extends DbEntry> implements IDbRepository<T> {
+public class RedisRepository<T extends Entity> implements IDbRepository<T> {
     private Type type;
     private String entryNamespace;
     private String idNamespace;

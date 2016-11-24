@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER)
-public class PipelineGroup extends DbEntry {
+public class PipelineGroup extends Entity {
     private String name;
     private List<PipelineDefinition> pipelines;
 

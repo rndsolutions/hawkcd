@@ -21,7 +21,7 @@ import com.google.gson.GsonBuilder;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.TaskDefinition;
@@ -62,8 +62,8 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
     }
 
     @Override
-    public List<DbEntry> getAll(List permissions, List pipelineDefinitions) {
-        List<DbEntry> result = new ArrayList<>();
+    public List<Entity> getAll(List permissions, List pipelineDefinitions) {
+        List<Entity> result = new ArrayList<>();
         for (PipelineDefinition pipelineDefinition : (List<PipelineDefinition>) pipelineDefinitions) {
             if (this.hasPermissionToRead(permissions, pipelineDefinition)) {
                 pipelineDefinition = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipelineDefinition);

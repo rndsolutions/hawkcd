@@ -119,19 +119,19 @@ public class PipelineDefinitionController {
         }
     }
 
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{pipelineDefinitionId}")
-    public Response deletePipeline(@PathParam("pipelineDefinitionId")
-                                           String pipelineDefinitionId) {
-        ServiceResult result = this.pipelineDefinitionService.delete(pipelineDefinitionId);
-        if (result.getNotificationType() == NotificationType.ERROR) {
-            return Response.status(Status.BAD_REQUEST)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        }
-
-        return Response.status(Status.NO_CONTENT).build();
-    }
+//    @DELETE
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Path("/{pipelineDefinitionId}")
+//    public Response deletePipeline(@PathParam("pipelineDefinitionId")
+//                                           String pipelineDefinitionId) {
+//        ServiceResult result = this.pipelineDefinitionService.delete(pipelineDefinitionId);
+//        if (result.getNotificationType() == NotificationType.ERROR) {
+//            return Response.status(Status.BAD_REQUEST)
+//                    .entity(result.getMessage())
+//                    .type(MediaType.TEXT_HTML)
+//                    .build();
+//        }
+//
+//        return Response.status(Status.NO_CONTENT).build();
+//    }
 }

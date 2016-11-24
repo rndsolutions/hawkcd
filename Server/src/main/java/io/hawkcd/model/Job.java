@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Job extends DbEntry {
+public class Job extends Entity {
     private String jobDefinitionId;
     private String jobDefinitionName;
     private String stageId;

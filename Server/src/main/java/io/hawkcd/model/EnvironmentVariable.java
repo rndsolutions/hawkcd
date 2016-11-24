@@ -22,7 +22,7 @@ import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class EnvironmentVariable extends DbEntry {
+public class EnvironmentVariable extends Entity {
     private String key;
     private String value;
     private boolean isSecured;

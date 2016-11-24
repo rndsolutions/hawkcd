@@ -104,12 +104,10 @@ public class PipelinePreparer implements Runnable {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
 
         List<StageDefinition> stages = pipelineDefinition.getStageDefinitions();
-        List<Environment> pipelineDefinitionEnvironments = pipelineDefinition.getEnvironments();
         List<EnvironmentVariable> pipelineDefinitionEnvironmentVariables = pipelineDefinition.getEnvironmentVariables();
 
         pipelineToPrepare.setPipelineDefinitionId(pipelineDefinitionId);
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
-        pipelineToPrepare.setEnvironments(pipelineDefinitionEnvironments);
         pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare));
         pipelineToPrepare.setPrepared(true);
 

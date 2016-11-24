@@ -25,7 +25,7 @@ import java.time.ZonedDateTime;
  * Created by Rado @radoslavMinchev, rminchev@rnd-solutions.net on 15.11.16.
  *
  */
-public class SessionDetails extends  DbEntry{
+public class SessionDetails extends Entity {
 
     private String sessionId;
     private String userId;

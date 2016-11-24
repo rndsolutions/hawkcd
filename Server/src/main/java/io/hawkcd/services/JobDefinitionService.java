@@ -140,9 +140,9 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-    public ServiceResult delete(String jobDefinitionId) {
+    public ServiceResult delete(JobDefinition jobDefinition) {
         boolean isRemoved = false;
-        JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinitionId).getObject();
+        JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinition.getId()).getObject();
         if (jobDefinitionToDelete == null) {
             return super.createServiceResult(jobDefinitionToDelete, NotificationType.ERROR, "does not exists");
         }
@@ -172,7 +172,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
 
         stageDefinition.setJobDefinitions(jobDefinitions);
         StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
-        JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinitionId);
+        JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinition.getId());
         if (result != null) {
             return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
         }

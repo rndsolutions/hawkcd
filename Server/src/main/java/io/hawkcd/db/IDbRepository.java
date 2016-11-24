@@ -16,11 +16,11 @@
 
 package io.hawkcd.db;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 
 import java.util.List;
 
-public interface IDbRepository<T extends DbEntry> {
+public interface IDbRepository<T extends Entity> {
     T getById(String id);
 
     List<T> getAll();

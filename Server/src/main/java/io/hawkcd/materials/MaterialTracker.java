@@ -77,7 +77,7 @@ public class MaterialTracker implements Runnable {
                         this.materialHandlerService.updateMaterial(material, pipeline);
                         if (material == null) {
                             isPipelineUpdated = false;
-                            ServiceResult result = this.pipelineService.delete(pipeline.getId());
+                            ServiceResult result = this.pipelineService.delete(pipeline);
                             EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "delete", result);
                             String message = String.format("Pipeline %s material could not be updated", pipeline.getPipelineDefinitionName());
                             LOGGER.info(message);

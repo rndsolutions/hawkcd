@@ -89,8 +89,8 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
-    public ServiceResult delete(String pipelineGroupId) {
-        return super.delete(pipelineGroupId);
+    public ServiceResult delete(PipelineGroup pipelineGroup) {
+        return super.delete(pipelineGroup);
     }
 
     @Override

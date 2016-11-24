@@ -16,14 +16,14 @@
 
 package io.hawkcd.services;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.interfaces.IService;
 
 import java.util.List;
 
-public abstract class Service<T extends DbEntry> implements IService<T> {
+public abstract class Service<T extends Entity> implements IService<T> {
     private String objectType;
 
     public String getObjectType() {

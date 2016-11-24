@@ -107,7 +107,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
 
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
-    public ServiceResult delete(String materialDefinitionId) {
+    public ServiceResult delete(MaterialDefinition materialDefinitionId) {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
         List<String> assignedIds = new ArrayList<>();
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {

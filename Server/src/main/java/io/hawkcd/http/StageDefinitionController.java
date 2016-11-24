@@ -118,19 +118,19 @@ public class StageDefinitionController {
         }
     }
 
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{stageDefinitionId}")
-    public Response deleteStage(@PathParam("stageDefinitionId") String stageDefinitionId) {
-        ServiceResult result = this.stageDefinitionService.delete(stageDefinitionId);
-        if (result.getNotificationType() == NotificationType.ERROR) {
-            return Response.status(Status.BAD_REQUEST)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        }
-        return Response.status(Status.NO_CONTENT)
-                .entity(result.getMessage())
-                .build();
-    }
+//    @DELETE
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Path("/{stageDefinitionId}")
+//    public Response deleteStage(@PathParam("stageDefinitionId") String stageDefinitionId) {
+//        ServiceResult result = this.stageDefinitionService.delete(stageDefinitionId);
+//        if (result.getNotificationType() == NotificationType.ERROR) {
+//            return Response.status(Status.BAD_REQUEST)
+//                    .entity(result.getMessage())
+//                    .type(MediaType.TEXT_HTML)
+//                    .build();
+//        }
+//        return Response.status(Status.NO_CONTENT)
+//                .entity(result.getMessage())
+//                .build();
+//    }
 }

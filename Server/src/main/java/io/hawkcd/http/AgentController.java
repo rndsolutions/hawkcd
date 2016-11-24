@@ -279,19 +279,19 @@ public class AgentController {
         }
     }
 
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{agentId}")
-    public Response deleteAgent(@PathParam("agentId") String agentId) {
-        ServiceResult result = this.agentService.delete(agentId);
-        if (result.getNotificationType() == NotificationType.ERROR) {
-            return Response.status(Status.NOT_FOUND)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        }
-        return Response.status(Status.NO_CONTENT)
-                .build();
-    }
+//    @DELETE
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("/{agentId}")
+//    public Response deleteAgent(@PathParam("agentId") String agentId) {
+////        ServiceResult result = this.agentService.delete(agentId);
+////        if (result.getNotificationType() == NotificationType.ERROR) {
+////            return Response.status(Status.NOT_FOUND)
+////                    .entity(result.getMessage())
+////                    .type(MediaType.TEXT_HTML)
+////                    .build();
+////        }
+////        return Response.status(Status.NO_CONTENT)
+////                .build();
+//    }
 }

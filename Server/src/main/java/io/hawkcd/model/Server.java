@@ -16,7 +16,7 @@
 
 package io.hawkcd.model;
 
-public class Server extends DbEntry {
+public class Server extends Entity {
     private String artifactsDir;
     private Double purgeStart;
     private Double purgeUpTo;

@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Authorization(scope = PermissionScope.SERVER, type = PermissionType.VIEWER)
-public class Agent extends DbEntry {
+public class Agent extends Entity {
     private String name;
     private String hostName;
     private String ipAddress;

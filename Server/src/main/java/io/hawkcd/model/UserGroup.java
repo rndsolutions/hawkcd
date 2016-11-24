@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
-public class UserGroup extends DbEntry {
+public class UserGroup extends Entity {
     private String name;
     private List<String> userIds;
     private List<Permission> permissions;

@@ -16,12 +16,12 @@
 
 package io.hawkcd.services.filters.interfaces;
 
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.payload.Permission;
 
 import java.util.List;
 
-public interface IAuthorizationService<T extends DbEntry> {
+public interface IAuthorizationService<T extends Entity> {
     List<T> getAll(List<Permission> permissions, List<?> entriesToFilter);
 
     boolean getById(String entityId, List<Permission> permissions);

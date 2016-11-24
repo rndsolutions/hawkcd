@@ -18,7 +18,7 @@ package io.hawkcd.model;
 
 import java.time.LocalDateTime;
 
-public class Material extends DbEntry {
+public class Material extends Entity {
     private LocalDateTime changeDate;
     private MaterialDefinition materialDefinition;
     private String pipelineDefinitionId;

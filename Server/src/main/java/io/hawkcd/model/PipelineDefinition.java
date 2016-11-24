@@ -27,42 +27,21 @@ import java.util.List;
 import java.util.Set;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class PipelineDefinition extends DbEntry {
-    private String name;
-    private String pipelineGroupId;
+public class PipelineDefinition extends PipelineFamiliy {
+
     private String groupName;
     private String labelTemplate;
     private int revisionCount;
     private Set<String> materialDefinitionIds;
-    private List<EnvironmentVariable> environmentVariables;
-    private List<Environment> environments;
     private List<StageDefinition> stageDefinitions;
     private boolean isAutoSchedulingEnabled;
-    private boolean isLocked;
 
     public PipelineDefinition() {
         this.setLabelTemplate("%COUNT%");
         this.setEnvironmentVariables(new ArrayList<>());
         this.setMaterialDefinitionIds(new HashSet<>());
-        this.setEnvironments(new ArrayList<>());
         this.setStageDefinitions(new ArrayList<>());
         this.setRevisionCount(1);
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPipelineGroupId() {
-        return this.pipelineGroupId;
-    }
-
-    public void setPipelineGroupId(String pipelineGroupId) {
-        this.pipelineGroupId = pipelineGroupId;
     }
 
     public String getLabelTemplate() {
@@ -89,22 +68,6 @@ public class PipelineDefinition extends DbEntry {
         this.materialDefinitionIds = materialDefinitionIds;
     }
 
-    public List<EnvironmentVariable> getEnvironmentVariables() {
-        return this.environmentVariables;
-    }
-
-    public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
-        this.environmentVariables = environmentVariables;
-    }
-
-    public List<Environment> getEnvironments() {
-        return this.environments;
-    }
-
-    public void setEnvironments(List<Environment> environments) {
-        this.environments = environments;
-    }
-
     public List<StageDefinition> getStageDefinitions() {
         return this.stageDefinitions;
     }
@@ -120,15 +83,6 @@ public class PipelineDefinition extends DbEntry {
     @JsonProperty("isAutoSchedulingEnabled")
     public void setAutoSchedulingEnabled(boolean autoSchedulingEnabled) {
         this.isAutoSchedulingEnabled = autoSchedulingEnabled;
-    }
-
-    public boolean isLocked() {
-        return this.isLocked;
-    }
-
-    @JsonProperty("isLocked")
-    public void setLocked(boolean locked) {
-        this.isLocked = locked;
     }
 
     public String getGroupName() {

@@ -134,17 +134,17 @@ public class JobService extends CrudService<Job> implements IJobService {
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-    public ServiceResult delete(String jobId) {
+    public ServiceResult delete(Job job) {
         Stage stageToUpdate = new Stage();
         Job jobToDelete = null;
         List<Stage> stages = (List<Stage>) this.stageService.getAll().getObject();
 
         for (Stage stage : stages) {
             List<Job> jobs = stage.getJobs();
-            for (Job job : jobs) {
-                if (job.getId().equals(jobId)) {
+            for (Job j : jobs) {
+                if (j.getId().equals(j)) {
                     stageToUpdate = stage;
-                    jobToDelete = job;
+                    jobToDelete = j;
                 }
             }
         }

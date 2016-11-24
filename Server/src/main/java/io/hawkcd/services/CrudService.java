@@ -18,7 +18,7 @@ package io.hawkcd.services;
 
 import io.hawkcd.Config;
 import io.hawkcd.db.IDbRepository;
-import io.hawkcd.model.DbEntry;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.DatabaseType;
 import io.hawkcd.model.enums.NotificationType;
@@ -26,7 +26,7 @@ import io.hawkcd.services.interfaces.ICrudService;
 
 import java.util.List;
 
-public abstract class CrudService<T extends DbEntry> extends Service<T> implements ICrudService<T> {
+public abstract class CrudService<T extends Entity> extends Service<T> implements ICrudService<T> {
     public final DatabaseType DATABASE_TYPE = Config.getConfiguration().getDatabaseType();
 
     private IDbRepository<T> repository;
@@ -63,8 +63,8 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
     }
 
     @Override
-    public ServiceResult add(T object) {
-        T dbObject = this.getRepository().add(object);
+    public ServiceResult add(T entity) {
+        T dbObject = this.getRepository().add(entity);
 
         ServiceResult result;
         if (dbObject != null) {
@@ -77,11 +77,11 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
     }
 
     @Override
-    public ServiceResult update(T object) {
-        if (object == null) {
-            return super.createServiceResult(object, NotificationType.ERROR, "not found");
+    public ServiceResult update(T entity) {
+        if (entity == null) {
+            return super.createServiceResult(entity, NotificationType.ERROR, "not found");
         }
-        T dbObject = this.getRepository().update(object);
+        T dbObject = this.getRepository().update(entity);
 
         ServiceResult result;
         if (dbObject != null) {
@@ -94,8 +94,8 @@ public abstract class CrudService<T extends DbEntry> extends Service<T> implemen
     }
 
     @Override
-    public ServiceResult delete(String id) {
-        T dbObject = this.getRepository().delete(id);
+    public ServiceResult delete(T entity) {
+        T dbObject = this.getRepository().delete(entity.getId());
 
         ServiceResult result = new ServiceResult();
         if (dbObject == null) {

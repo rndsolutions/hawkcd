@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class Pipeline extends DbEntry {
+public class Pipeline extends Entity {
     private String pipelineDefinitionId;
     private String pipelineDefinitionName;
     private int executionId;

@@ -140,14 +140,14 @@ public class StageService extends CrudService<Stage> implements IStageService {
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-    public ServiceResult delete(String stageId) {
+    public ServiceResult delete(Stage stage) {
         Pipeline pipelineToUpdate = new Pipeline();
         List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
         for (Pipeline pipeline : pipelines) {
             List<Stage> stages = pipeline.getStages();
 
-            for (Stage stage : stages) {
-                if (stage.getId().equals(stageId)) {
+            for (Stage s : stages) {
+                if (s.getId().equals(stage.getId())) {
                     pipelineToUpdate = pipeline;
                 }
             }
@@ -156,20 +156,21 @@ public class StageService extends CrudService<Stage> implements IStageService {
         boolean isRemoved = false;
         ServiceResult serviceResult = null;
         List<Stage> stages = pipelineToUpdate.getStages();
-        Stage stage = stages
+
+        Stage s = stages
                 .stream()
-                .filter(st -> st.getId().equals(stageId))
+                .filter(st -> st.getId().equals(stage.getId()))
                 .findFirst()
                 .orElse(null);
 
-        if (stage == null) {
-            serviceResult = super.createServiceResult(stage, NotificationType.ERROR, "not found");
+        if (s == null) {
+            serviceResult = super.createServiceResult(s, NotificationType.ERROR, "not found");
         }
 
         if (stages.size() > 1) {
-            isRemoved = stages.remove(stage);
+            isRemoved = stages.remove(s);
         } else {
-            return super.createServiceResult(stage, NotificationType.ERROR, "is the last Stage and cannot be deleted");
+            return super.createServiceResult(s, NotificationType.ERROR, "is the last Stage and cannot be deleted");
         }
 
         if (isRemoved) {
@@ -177,7 +178,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
             serviceResult = this.pipelineService.update(pipelineToUpdate);
             if (serviceResult.getNotificationType() == NotificationType.SUCCESS) {
 
-                serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "deleted successfully");
+                serviceResult = super.createServiceResult(s, NotificationType.SUCCESS, "deleted successfully");
             }
         }
         return serviceResult;

@@ -69,8 +69,8 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
 
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
-    public ServiceResult delete(String materialId) {
-        return super.delete(materialId);
+    public ServiceResult delete(Material material) {
+        return super.delete(material);
     }
 
     @Override

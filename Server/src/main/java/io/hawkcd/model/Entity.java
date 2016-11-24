@@ -18,14 +18,36 @@ package io.hawkcd.model;
 
 import java.util.UUID;
 
-public class DbEntry extends PermissionObject {
-    protected final String id;
+import io.hawkcd.model.enums.PermissionType;
 
-    public DbEntry() {
+public class Entity {
+    protected final String id;
+    private PermissionType permissionType;
+    private String name;
+
+    public Entity() {
         this.id = UUID.randomUUID().toString();
     }
 
     public String getId() {
         return this.id;
     }
+
+    public PermissionType getPermissionType() {
+        return permissionType;
+    }
+
+    public void setPermissionType(PermissionType permissionType) {
+        this.permissionType = permissionType;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 }

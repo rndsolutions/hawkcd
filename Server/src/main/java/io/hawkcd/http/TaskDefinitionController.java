@@ -118,19 +118,19 @@ public class TaskDefinitionController {
         }
     }
 
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{taskDefinitionId}")
-    public Response deleteTaskDefinition(@PathParam("taskDefinitionId") String taskDefinitionId) {
-        ServiceResult result = this.taskDefinitionService.delete(taskDefinitionId);
-        if (result.getNotificationType() == NotificationType.ERROR) {
-            return Response.status(Status.BAD_REQUEST)
-                    .entity(result.getMessage())
-                    .type(MediaType.TEXT_HTML)
-                    .build();
-        }
-        return Response.status(Status.NO_CONTENT)
-                .entity(result.getMessage())
-                .build();
-    }
+//    @DELETE
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Path("/{taskDefinitionId}")
+//    public Response deleteTaskDefinition(@PathParam("taskDefinitionId") String taskDefinitionId) {
+//        ServiceResult result = this.taskDefinitionService.delete(taskDefinitionId);
+//        if (result.getNotificationType() == NotificationType.ERROR) {
+//            return Response.status(Status.BAD_REQUEST)
+//                    .entity(result.getMessage())
+//                    .type(MediaType.TEXT_HTML)
+//                    .build();
+//        }
+//        return Response.status(Status.NO_CONTENT)
+//                .entity(result.getMessage())
+//                .build();
+//    }
 }
