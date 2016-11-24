@@ -16,12 +16,12 @@
 
 package io.hawkcd.model;
 
-import java.util.UUID;
-
 import io.hawkcd.model.enums.PermissionType;
 
+import java.util.UUID;
+
 public class Entity {
-    protected final String id;
+    private String id;
     private PermissionType permissionType;
     private String name;
 
@@ -31,6 +31,10 @@ public class Entity {
 
     public String getId() {
         return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public PermissionType getPermissionType() {
