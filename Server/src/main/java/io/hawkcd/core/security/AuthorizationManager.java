@@ -50,11 +50,12 @@ public class AuthorizationManager implements IAuthorizationManager {
             return false;
         }
 
-        String[] entityIds = this.authorizationService.extractEntityIds(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationAttributes);
+        String[] entityIds = this.authorizationService.extractEntityIds(parameters);
+//        String[] entityIds = this.authorizationService.extractEntityIds(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationAttributes);
         Grant grant = new Grant(authorizationAttributes);
 
         PermissionType permissionType = this.authorizationService.determinePermissionTypeForUser(user.getPermissions(), grant, entityIds);
-        if(permissionType != PermissionType.NONE){
+        if (permissionType != PermissionType.NONE) {
             return true;
         }
         return false;
@@ -66,6 +67,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
     /**
      * Checks the object for minimum permissions required for the user to receive the object
+     *
      * @param userGrants
      * @param object
      * @return
@@ -75,7 +77,7 @@ public class AuthorizationManager implements IAuthorizationManager {
         Authorization authorization = object.getClass().getAnnotation(Authorization.class);
         Grant grant = new Grant(authorization);
 
-        String[] entityIds = this.authorizationService.extractEntityIds(contract.getClassName(), contract.getMethodName(), parameters, null, null);
+        String[] entityIds = this.authorizationService.extractEntityIds(parameters);
         result = this.authorizationService.determinePermissionTypeForUser(userGrants, grant, entityIds);
         return result;
     }

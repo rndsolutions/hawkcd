@@ -22,15 +22,9 @@ import io.hawkcd.model.*;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.payload.Permission;
-import io.hawkcd.services.PipelineGroupService;
-import io.hawkcd.services.PipelineService;
-import io.hawkcd.services.TaskDefinitionService;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 
 /**
@@ -42,14 +36,24 @@ public class AuthorizationService {
     /**
      * The method extracts the object Ids necessary for the authorization based on the class and method being invoked.
      *
-     * @param className
-     * @param methodName
-     * @param arguments
-     * @param userPermissions
-     * @param authorizedPermission
+     *
      * @return
      */
-    String[] extractEntityIds(String className, String methodName, List<Object> arguments, UserPermissions userPermissions, Authorization authorizedPermission) {
+    String[] extractEntityIds(List<Object> parameters) {
+        List<String> entityIds = new ArrayList<>();
+        for (Object parameter : parameters) {
+            if (parameter instanceof PipelineFamily) {
+                PipelineFamily pipelineFamily = (PipelineFamily) parameter;
+                entityIds.add(pipelineFamily.getPipelineDefinitionId());
+                entityIds.add(pipelineFamily.getPipelineGroupId());
+            } else if (parameter instanceof PipelineGroup) {
+                Entity pipelineGroup = (Entity) parameter;
+                entityIds.add(pipelineGroup.getId());
+            }
+        }
+
+        return entityIds.toArray(new String[entityIds.size()]);
+
 //        boolean hasPermission;
 //        List<String> listOfIds = new ArrayList<>();
 //
@@ -106,7 +110,7 @@ public class AuthorizationService {
 ////            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, entityIds);
 //        }
         //String[] entityIds = listOfIds.toArray(new String[listOfIds.size()]);
-        return null;
+//        return null;
     }
 
 

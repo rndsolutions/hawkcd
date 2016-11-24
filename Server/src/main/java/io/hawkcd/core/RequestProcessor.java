@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.hawkcd.core.publisher.Publisher;
 import io.hawkcd.core.security.AuthorizationFactory;
-import io.hawkcd.core.security.Grant;
 import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineDefinitionDto;
@@ -115,21 +114,21 @@ public class RequestProcessor {
         );
 
         // Attach permission to object
-        if(result.getEntity() instanceof List){
+        if (result.getEntity() instanceof List) {
             boolean isPipelineGroupDtoList = isPipelineGroupDtoList(result);
-            if(isPipelineGroupDtoList){
+            if (isPipelineGroupDtoList) {
                 attachPermissionsToPipelineDtos(contract, currentUser, result, methodArgs);
             }
 
-            List<PermissionObject> filteredResult = attachPermissionTypeToList(contract, currentUser, result, methodArgs);
+            List<Entity> filteredResult = attachPermissionTypeToList(contract, currentUser, result, methodArgs);
 
             message.setTargetOwner(true);
             message.setResultObject(filteredResult);
         } else {
             // 4. Get all Users filtered by active sessions
-            List<SessionDetails> activeSessions =  SessionFactory.getSessionManager().getAllActiveSessions();
+            List<SessionDetails> activeSessions = SessionFactory.getSessionManager().getAllActiveSessions();
 
-            Map<String, PermissionType> permissionTypeByUser = getPermissionTypeByUser(contract, currentUser, methodArgs, result, activeSessions);
+            Map<String, PermissionType> permissionTypeByUser = this.getPermissionTypeByUser(contract, currentUser, methodArgs, result, activeSessions);
 
             message.setPermissionTypeByUser(permissionTypeByUser);
         }
@@ -140,7 +139,7 @@ public class RequestProcessor {
     }
 
     private boolean isPipelineGroupDtoList(ServiceResult result) {
-        if(result.getEntity() != null && ((List) result.getEntity()).size() > 0 && ((List) result.getEntity()).get(0) instanceof PipelineGroupDto){
+        if (result.getEntity() != null && ((List) result.getEntity()).size() > 0 && ((List) result.getEntity()).get(0) instanceof PipelineGroupDto) {
             return true;
         }
 
@@ -152,8 +151,10 @@ public class RequestProcessor {
 
         for (SessionDetails activeSession : activeSessions) {
             User userToSendTo = (User) userService.getById(activeSession.getUserId()).getEntity();
-            List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
-            PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForObject(userPermissions, result.getEntity(), contract, methodArgs);
+//            List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
+            PermissionType permissionType = AuthorizationFactory
+                    .getAuthorizationManager()
+                    .determinePermissionTypeForObject(currentUser.getPermissions(), result.getEntity(), contract, methodArgs);
             permissionTypeByUser.put(userToSendTo.getId(), permissionType);
         }
         return permissionTypeByUser;
@@ -177,25 +178,27 @@ public class RequestProcessor {
      * Filters the result based on user permissions and sets PermissionType to each object in it
      * If the PermissionType is NONE, the object will not be added to the filtered collection
      * Exception: If the user has no permission for a Pipeline Group, but has a permission for a Pipeline that belongs to it, it will not be added to the filtered collection
+     *
      * @param contract
      * @param currentUser
      * @param result
      * @return
      */
-    private List<PermissionObject> attachPermissionTypeToList(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
-        List<PermissionObject> permissionObjects =  (List<PermissionObject>) result.getEntity();
-        List<PermissionObject> filteredResult = new ArrayList<>();
+    private List<Entity> attachPermissionTypeToList(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
+        List<Entity> entities = (List<Entity>) result.getEntity();
+        List<Entity> filteredResult = new ArrayList<>();
 
-        for (PermissionObject permissionObject : permissionObjects) {
+        for (Entity entity : entities) {
             PermissionType permissionType = AuthorizationFactory
                     .getAuthorizationManager()
-                    .determinePermissionTypeForObject(currentUser.getPermissions(), permissionObject, contract, parameters);
+                    .determinePermissionTypeForObject(currentUser.getPermissions(), entity, contract, parameters);
 
-            if(permissionObject.getPermissionType() != PermissionType.NONE){
-                permissionObject.setPermissionType(permissionType);
-                filteredResult.add(permissionObject);
+            if (entity.getPermissionType() != PermissionType.NONE) {
+                entity.setPermissionType(permissionType);
+                filteredResult.add(entity);
             }
         }
+
         return filteredResult;
     }
 
@@ -207,10 +210,11 @@ public class RequestProcessor {
             for (PipelineDefinitionDto permissionObject : permissionObjects) {
                 PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForObject(currentUser.getPermissions(), permissionObject, contract, parameters);
 
-                if(permissionObject.getPermissionType() != PermissionType.NONE){
+                if (permissionObject.getPermissionType() != PermissionType.NONE) {
                     permissionObject.setPermissionType(permissionType);
                 }
             }
+
             pipelineGroupDto.setPipelines(permissionObjects);
         }
     }
