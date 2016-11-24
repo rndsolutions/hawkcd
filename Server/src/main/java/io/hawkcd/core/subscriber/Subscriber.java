@@ -20,18 +20,18 @@ package io.hawkcd.core.subscriber;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.hawkcd.model.PermissionObject;
-import io.hawkcd.model.enums.PermissionType;
-import org.apache.log4j.Logger;
 import io.hawkcd.core.Message;
 import io.hawkcd.core.RequestProcessor;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.model.Entity;
+import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.dto.WsContractDto;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
-import io.hawkcd.model.MaterialDefinition;
+import org.apache.log4j.Logger;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.Map;
@@ -80,10 +80,10 @@ public class Subscriber extends JedisPubSub {
            SessionFactory.getSessionManager().sendToAllSessions(contract);
         } else {
             Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
-            PermissionObject resultObject = (PermissionObject) message.getResultObject();
+            Entity entity = (Entity) message.getResultObject();
             for (String userId : permissionTypeByUser.keySet()) {
-                resultObject.setPermissionType(permissionTypeByUser.get(userId));
-                contract.setResult(resultObject);
+                entity.setPermissionType(permissionTypeByUser.get(userId));
+                contract.setResult(entity);
                 SessionFactory.getSessionManager().sendToAllSessions(contract);
             }
         }

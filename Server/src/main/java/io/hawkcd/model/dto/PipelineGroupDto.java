@@ -17,18 +17,21 @@
 package io.hawkcd.model.dto;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.model.PermissionObject;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER)
-public class PipelineGroupDto extends PermissionObject {
-    private String id;
-    private String name;
+public class PipelineGroupDto extends Entity {
     private List<PipelineDefinitionDto> pipelines;
+
+    public PipelineGroupDto() {
+        this.pipelines = new ArrayList<>();
+    }
 
     public List<PipelineDefinitionDto> getPipelines() {
         return pipelines;
@@ -40,7 +43,7 @@ public class PipelineGroupDto extends PermissionObject {
 
     public void constructDto(PipelineGroup pipelineGroup) {
         this.setPermissionType(pipelineGroup.getPermissionType());
-        this.id = pipelineGroup.getId();
-        this.name = pipelineGroup.getName();
+        super.setId(pipelineGroup.getId());
+        super.setName(pipelineGroup.getName());
     }
 }

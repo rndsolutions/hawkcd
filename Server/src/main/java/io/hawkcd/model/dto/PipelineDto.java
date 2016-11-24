@@ -17,6 +17,7 @@
 package io.hawkcd.model.dto;
 
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.model.*;
 import io.hawkcd.model.configuration.filetree.JsTreeFile;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
@@ -27,15 +28,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.hawkcd.model.Material;
-import io.hawkcd.model.PermissionObject;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.Stage;
-
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class PipelineDto extends PermissionObject {
-    private String id;
+public class PipelineDto extends Entity {
     private String pipelineDefinitionId;
     private String pipelineDefinitionName;
     private int executionId;
@@ -52,10 +46,6 @@ public class PipelineDto extends PermissionObject {
         this.stages = new ArrayList<>();
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void constructEmptyPipelineDto(PipelineDefinition pipelineDefinition) {
         int numberOfStageDefinitions = pipelineDefinition.getStageDefinitions().size();
         for (int i = 0; i < numberOfStageDefinitions; i++) {
@@ -65,7 +55,7 @@ public class PipelineDto extends PermissionObject {
 
     public void constructBasePipelineDto(Pipeline pipeline) {
         this.setPermissionType(pipeline.getPermissionType());
-        this.id = pipeline.getId();
+        super.setId(pipeline.getId());
         this.pipelineDefinitionId = pipeline.getPipelineDefinitionId();
         this.pipelineDefinitionName = pipeline.getPipelineDefinitionName();
         this.executionId = pipeline.getExecutionId();

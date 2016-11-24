@@ -25,19 +25,10 @@ import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER)
 public class PipelineGroup extends Entity {
-    private String name;
     private List<PipelineDefinition> pipelines;
 
     public PipelineGroup() {
         this.setPipelines(new ArrayList<>());
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String value) {
-        this.name = value;
     }
 
     public List<PipelineDefinition> getPipelines() {
