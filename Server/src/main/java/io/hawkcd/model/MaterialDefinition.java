@@ -29,21 +29,12 @@ import io.hawkcd.model.enums.MaterialType;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT")})
 public abstract class MaterialDefinition extends Entity {
-    private String name;
     private String errorMessage;
     private MaterialType type;
     private boolean isPollingForChanges;
 
     public MaterialDefinition() {
         this.setErrorMessage("");
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String value) {
-        this.name = value;
     }
 
     public String getErrorMessage() {

@@ -26,21 +26,12 @@ import java.util.List;
 
 @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
 public class UserGroup extends Entity {
-    private String name;
     private List<String> userIds;
     private List<Permission> permissions;
 
     public UserGroup() {
         this.setUserIds(new ArrayList<>());
         this.setPermissions(new ArrayList<>());
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<String> getUserIds() {

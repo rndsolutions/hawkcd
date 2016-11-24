@@ -17,7 +17,7 @@
 package io.hawkcd.model.dto;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.model.PermissionObject;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.User;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
@@ -27,31 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
-public class UserGroupDto extends PermissionObject {
-    private String id;
-    private String name;
+public class UserGroupDto extends Entity {
     private List<User> users;
     private List<String> userIds;
     private List<Permission> permissions;
 
     public UserGroupDto() {
         this.setUsers(new ArrayList<>());
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<User> getUsers() {
