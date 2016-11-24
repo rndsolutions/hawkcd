@@ -60,12 +60,13 @@ angular
             console.log(json);
         };
 
-        agentService.deleteAgent = function (id) {
+        //TODO: Send Agent to be deleted
+        agentService.deleteAgent = function (agent) {
             var methodName = "delete";
             var className = "AgentService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.Agent\", \"object\": \"" + JSON.stringify(agent) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

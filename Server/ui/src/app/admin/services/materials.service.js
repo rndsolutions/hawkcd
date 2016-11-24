@@ -162,12 +162,13 @@ angular
         };
 
 
-        adminMaterialService.deleteMaterialDefinition = function(id){
+        //TODO: Send Material Definition to be deleted
+        adminMaterialService.deleteMaterialDefinition = function(materialDefinition){
           var methodName = "delete";
           var className = "MaterialDefinitionService";
           var packageName = "io.hawkcd.services";
           var result = "";
-          var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+          var args = ["{\"packageName\": \"io.hawkcd.model.MaterialDefinition\", \"object\": \"" + JSON.stringify(materialDefinition) + "\"}"];
           var error = "";
           var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
           websocketSenderService.call(json);

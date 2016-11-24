@@ -58,12 +58,13 @@ angular
             console.log(json);
         };
 
-         adminGroupService.deletePipelineGroup = function (id) {
+        //TODO: Send the Pipeline Group to be deleted
+         adminGroupService.deletePipelineGroup = function (pipelineGroup) {
             var methodName = "delete";
             var className = "PipelineGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.PipelineGroup\", \"object\": \"" + JSON.stringify(pipelineGroup) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

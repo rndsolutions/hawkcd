@@ -198,15 +198,15 @@ angular
 
         vm.continueStage = function (stage) {
             var currentPipelineRun = angular.copy(vm.currentPipelineRun);
-            pipeExecService.pausePipeline(currentPipelineRun.id);
+            pipeExecService.pausePipeline(currentPipelineRun);
         };
 
         vm.pause = function (pipeline) {
-            pipeExecService.pausePipeline(pipeline.id);
+            pipeExecService.pausePipeline(pipeline);
         };
                                                 
         vm.stop = function(pipeline) {
-            pipeExecService.stopPipeline(pipeline.id);
+            pipeExecService.stopPipeline(pipeline);
         };
 
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {

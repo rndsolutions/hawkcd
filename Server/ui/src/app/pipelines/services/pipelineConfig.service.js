@@ -108,6 +108,7 @@ angular
             console.log(json);
         };
 
+        //TODO: Send Pipeline Definition and Pipeline Group to assign to (and possibly Pipeline Group that is assigned from)
         pipeConfigService.assignPipelineDefinition = function (pipelineDefinitionId, pipelineGroupId, pipelineGroupName) {
             var methodName = "assignPipelineToGroup";
             var className = "PipelineDefinitionService";
@@ -122,6 +123,7 @@ angular
             console.log(json);
         };
 
+        //TODO: Send Pipeline Definition to be unassigned
         pipeConfigService.unassignPipelineDefinition = function (pipelineDefinitionId) {
             var methodName = "unassignPipelineFromGroup";
             var className = "PipelineDefinitionService";
@@ -134,12 +136,13 @@ angular
             console.log(json);
         };
 
-        pipeConfigService.deletePipelineDefinition = function (id) {
+        //TODO: Send Pipeline Definition to be deleted
+        pipeConfigService.deletePipelineDefinition = function (pipelineDefinition) {
             var methodName = "delete";
             var className = "PipelineDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.PipelineDefinition\", \"object\": \"" + JSON.stringify(pipelineDefinition) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -223,12 +226,13 @@ angular
             websocketSenderService.call(json);
             console.log(json);
         };
-        pipeConfigService.deleteStageDefinition = function (id) {
+        //TODO: Send Stage Definition to be deleted
+        pipeConfigService.deleteStageDefinition = function (stageDefinition) {
             var methodName = "delete";
             var className = "StageDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \io.hawkcd.model.StageDefinition\", \"object\": \"" + JSON.stringify(stageDefinition) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -281,12 +285,13 @@ angular
             websocketSenderService.call(json);
             console.log(json);
         };
-        pipeConfigService.deleteJobDefinition = function (id) {
+        //TODO: Send Job Definition to be deleted
+        pipeConfigService.deleteJobDefinition = function (jobDefinition) {
             var methodName = "delete";
             var className = "JobDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.JobDefinition\", \"object\": \"" + JSON.stringify(jobDefinition) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -320,12 +325,13 @@ angular
             console.log(json);
         };
 
-        pipeConfigService.deleteTaskDefinition = function (id) {
+        //TODO: Send Task Definition to be deleted
+        pipeConfigService.deleteTaskDefinition = function (taskDefinition) {
             var methodName = "delete";
             var className = "TaskDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.TaskDefinition\", \"object\": \"" + JSON.stringify(taskDefinition) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -404,12 +410,12 @@ angular
             console.log(json);
         };
 
-        pipeConfigService.deleteMaterialDefinition = function (id) {
+        pipeConfigService.deleteMaterialDefinition = function (materialDefinition) {
             var methodName = "delete";
             var className = "MaterialDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.MaterialDefinition\", \"object\": \"" + JSON.stringify(materialDefinition) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

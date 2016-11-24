@@ -134,8 +134,8 @@ angular
 
         vm.materialType = "hidden";
 
-        vm.deletePipelineDefinition = function(id) {
-            pipeConfigService.deletePipelineDefinition(id);
+        vm.deletePipelineDefinition = function(pipeline) {
+            pipeConfigService.deletePipelineDefinition(pipeline);
         };
 
         //region add pipeline modal config
@@ -165,7 +165,7 @@ angular
         vm.play = function(pipelineDefinition) {
             pipelineDefinition.disabled = true;
             if(pipelineDefinition.lastRun.status == 'PAUSED'){
-                pipeExecService.pausePipeline(pipelineDefinition.lastRun.id);
+                pipeExecService.pausePipeline(pipelineDefinition.lastRun);
             } else {
                 var pipeline = {
                     "pipelineDefinitionId": pipelineDefinition.id,
@@ -179,13 +179,13 @@ angular
 
         vm.pause = function (pipelineDefinition) {
             pipelineDefinition.disabled = true;
-            pipeExecService.pausePipeline(pipelineDefinition.lastRun.id);
+            pipeExecService.pausePipeline(pipelineDefinition.lastRun);
         };
 
         //TODO Not implemented on the back-end yet
         vm.stop = function(pipelineDefinition, pipeline) {
             pipelineDefinition.disabled = true;
-            pipeExecService.stopPipeline(pipeline.id);
+            pipeExecService.stopPipeline(pipeline);
         };
         //endregion
 
