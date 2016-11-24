@@ -109,23 +109,6 @@ public class AuthorizationService {
         return entityIds;
     }
 
-//    String[] getEntityIds(String packageName, String className, String methodName, List<Object> arguments) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
-//        String fullyQualifiedName = String.format("%s.%s", packageName, className);
-//        Class<?> aClass = Class.forName(fullyQualifiedName);
-//        Method[] methods = aClass.getMethods();
-//        List<String> listOfIds = new ArrayList<>();
-//        for (int i = 0; i < methods.length; i++) {
-////            Class<?> aClass1 = parameters.get(i).getClass();
-////            params[i] = aClass1;
-//            if(methods[i].getName().equals(methodName)){
-//                String entityId = (String) methods[i].invoke(aClass);
-//                listOfIds.add(entityId);
-//            }
-//        }
-//        Method method = aClass.getMethod(methodName, params);
-//        Authorization annotation = method.getAnnotation(Authorization.class);
-//    }
-
 
     /**
      * The method tries to authorize against the User's Pipeline specific Permissions.

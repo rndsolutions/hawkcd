@@ -60,61 +60,6 @@ public class RequestProcessor {
         this.userService = new UserService();
     }
 
-//    public void processRequest(WsContractDto contract, User user, String sessionId) {
-//
-////        user.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(user));
-//
-////        List<Permission> orderedPermissions = this.permissionService.sortPermissions(user.getPermissions());
-//
-//        try {
-//            boolean shouldPublish = this.shouldPublishResult(contract.getMethodName());
-//
-//            if (shouldPublish) {
-//
-//                boolean hasPermission = this.securityServiceInvoker.process(contract.getArgs()[0].getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//
-//                if (hasPermission) {
-//                    ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//                    if (result.getObject() == null) {
-//                        contract.setResult(result.getObject());
-//                        contract.setNotificationType(result.getNotificationType());
-//                        contract.setErrorMessage(result.getMessage());
-//                        contract.setArgs(null);
-//
-//                        SessionPool.getInstance().sendToSingleUserSession(contract, sessionId);
-//                    } else {
-//                        Message message = new Message(
-//                                contract.getClassName(),
-//                                contract.getMethodName(),
-//                                result.getObject(),
-//                                result.getNotificationType(),
-//                                result.getMessage(),
-//                                user);
-//
-//                        this.publisher.publish("global", message);
-//                    }
-//                } else {
-//                    contract.setResult(null);
-//                    contract.setNotificationType(NotificationType.ERROR);
-//                    contract.setErrorMessage("Unauthorized");
-//                    contract.setArgs(null);
-//
-//                    SessionPool.getInstance().sendToSingleUserSession(contract, sessionId);
-//                }
-//            } else {
-//                ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
-//                List<?> filteredEntities = this.securityServiceInvoker.filterEntities((List<?>) result.getObject(), contract.getClassName(), orderedPermissions, contract.getMethodName());
-//                contract.setResult(filteredEntities);
-//                contract.setNotificationType(result.getNotificationType());
-//                contract.setErrorMessage(result.getMessage());
-//
-//                SessionPool.getInstance().sendToSingleUserSession(contract, sessionId);
-//            }
-//        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     /**
      * All WS requests flows through this method, auhtorization checks are performed,
      * and the request is broadcasted to all subscribers
@@ -137,6 +82,8 @@ public class RequestProcessor {
 
         // Get service to be called, get arguments
         // Authorize current User Request
+        // 1. Check if the user has rights to call the method from the service
+        // 2. Check if the user can see the result
         // Make a call to a Business service
         // Get all Users filtered by active sessions
         // Perform authorization check for each active User
