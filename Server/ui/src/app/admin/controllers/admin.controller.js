@@ -717,9 +717,9 @@ angular
                 vm.pipelineToDeleteName = pipelineName;
             };
 
-            vm.setMaterialForDelete = function(materialName, materialId) {
+            vm.setMaterialForDelete = function(materialName, material) {
                 vm.materialToDeleteName = materialName;
-                vm.materialToDeleteId = materialId;
+                vm.materialToDelete = material;
             };
 
             vm.setUserGroupToDelete = function(userGroup) {
@@ -738,8 +738,8 @@ angular
                 adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete);
             };
 
-            vm.deleteMaterial = function(materialId) {
-                adminMaterialService.deleteMaterialDefinition(materialId);
+            vm.deleteMaterial = function(material) {
+                adminMaterialService.deleteMaterialDefinition(material);
             };
 
             vm.setMaterialForEdit = function(material) {
