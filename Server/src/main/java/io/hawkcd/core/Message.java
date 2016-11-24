@@ -47,6 +47,16 @@ public class Message {
     private String serviceCalled;
     private String methodCalled;
 
+    public String getPackageName() {
+        return this.packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    private String packageName;
+
     //True if the message should be delivered only to the caller
     private boolean isTargetOwner;
 
@@ -75,6 +85,7 @@ public class Message {
     }
 
     Message(String serviceCalled
+                        , String packageName
                         , String methodCalled
                         , Object resultObject
                         , NotificationType resultNotificationType
@@ -82,6 +93,7 @@ public class Message {
                         , User usr)
     {
         this.serviceCalled = serviceCalled;
+        this.packageName = packageName;
         this.methodCalled = methodCalled;
         this.envelopе = new Envelopе(resultObject);
         this.resultNotificationType = resultNotificationType;

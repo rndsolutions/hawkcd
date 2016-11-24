@@ -20,6 +20,7 @@ package io.hawkcd.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import io.hawkcd.core.publisher.Publisher;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.session.SessionFactory;
@@ -62,56 +63,31 @@ public class RequestProcessor {
     /**
      * All WS requests flows through this method, auhtorization checks are performed,
      * and the request is broadcasted to all subscribers
-     * <p>
-     * Workflow:
-     * evaluate current user permissions
-     * get all active session from the cluster
-     * filter all users that have active sessions with the cluster
-     * evaluate
-     * 3
-     *
-     * @param contract
-     * @param currentUser
-     * @param sessionId
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassNotFoundException
+     * Get service to be called, get arguments
+     * Authorize current User Request
+     * 1. Check if the user has rights to call the method from the service
+     * 2. Check if the user can see the result
+     * Make a call to a Business service
+     * Get all Users filtered by active sessions
+     * Perform authorization check for each active User
+     * Attach User email and Ids
      */
     public void prorcessRequest1(WsContractDto contract, User currentUser, String sessionId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
-        // Get service to be called, get arguments
-        // Authorize current User Request
-        // 1. Check if the user has rights to call the method from the service
-        // 2. Check if the user can see the result
-        // Make a call to a Business service
-        // Get all Users filtered by active sessions
-        // Perform authorization check for each active User
-        // Attach User email and Id to
-
-        // 1. Get service to be called, get arguments
         List<Object> methodArgs = extractTargetMethodArguments(contract);
-
-        // 2. Authorize current User Request
         boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
 
-        // If User is unauthorized, send unauthorized message to the current User
         if (!isAuthorized) {
             sendUnauthorizedMessage(contract, currentUser);
             return;
         }
-
-        // 3. Make a call to a Business service
         ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
 
-        //Construct a message from the service call result
-        Message message = new Message(
-                contract.getClassName(),
-                contract.getMethodName(),
-                result.getEntity(),
-                result.getNotificationType(),
-                result.getMessage(),
-                currentUser
-        );
+        Message message = MessageConverter.convert(currentUser
+                , contract.getClassName()
+                , contract.getPackageName()
+                , contract.getMethodName()
+                , result);
 
         if (result.getNotificationType() == NotificationType.ERROR) {
             message.setTargetOwner(true);
@@ -138,9 +114,7 @@ public class RequestProcessor {
             message.setPermissionTypeByUser(permissionTypeByUser);
         }
 
-        //broadcast the message
         this.publisher.publish("global", message);
-
     }
 
     private boolean isPipelineGroupDtoList(ServiceResult result) {
@@ -169,6 +143,7 @@ public class RequestProcessor {
         // TODO: Send to current user Session
         Message message = new Message(
                 contract.getClassName(),
+                contract.getPackageName(),
                 contract.getMethodName(),
                 null,
                 NotificationType.ERROR,
@@ -180,14 +155,10 @@ public class RequestProcessor {
     }
 
     /**
-     * Filters the result based on user permissions and sets PermissionType to each object in it
-     * If the PermissionType is NONE, the object will not be added to the filtered collection
-     * Exception: If the user has no permission for a Pipeline Group, but has a permission for a Pipeline that belongs to it, it will not be added to the filtered collection
-     *
-     * @param contract
-     * @param currentUser
-     * @param result
-     * @return
+     * Filters the result based on user permissions and sets PermissionType to each object in it If
+     * the PermissionType is NONE, the object will not be added to the filtered collection
+     * Exception: If the user has no permission for a Pipeline Group, but has a permission for a
+     * Pipeline that belongs to it, it will not be added to the filtered collection
      */
     private List<Entity> attachPermissionTypeToList(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
         List<Entity> entities = (List<Entity>) result.getEntity();
