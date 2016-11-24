@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class JobDefinition extends PipelineFamiliy {
+public class JobDefinition extends PipelineFamily {
 
     private String stageDefinitionId;
     private List<TaskDefinition> taskDefinitions;

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class PipelineDefinition extends PipelineFamiliy {
+public class PipelineDefinition extends PipelineFamily {
 
     private String groupName;
     private String labelTemplate;

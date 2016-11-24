@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by Rado @radoslavMinchev, rminchev@rnd-solutions.net on 24.11.16.
  */
-public class PipelineFamiliy extends Entity {
+public class PipelineFamily extends Entity {
 
     private String pipelineDefinitionId;
     private String pipelineGroupId;

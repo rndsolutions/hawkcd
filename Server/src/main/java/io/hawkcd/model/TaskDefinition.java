@@ -31,7 +31,7 @@ import io.hawkcd.model.enums.TaskType;
         @JsonSubTypes.Type(value = FetchArtifactTask.class, name = "FETCH_ARTIFACT"),
         @JsonSubTypes.Type(value = FetchMaterialTask.class, name = "FETCH_MATERIAL"),
         @JsonSubTypes.Type(value = UploadArtifactTask.class, name = "UPLOAD_ARTIFACT")})
-public abstract class TaskDefinition extends PipelineFamiliy {
+public abstract class TaskDefinition extends PipelineFamily {
     private String jobDefinitionId;
     private String stageDefinitionId;
     private TaskType type;

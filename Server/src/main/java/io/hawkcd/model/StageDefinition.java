@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class StageDefinition extends PipelineFamiliy {
+public class StageDefinition extends PipelineFamily {
 
     private List<JobDefinition> jobDefinitions;
     private boolean isTriggeredManually;
