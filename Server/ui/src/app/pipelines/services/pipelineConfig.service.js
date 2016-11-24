@@ -142,7 +142,7 @@ angular
             var className = "PipelineDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"io.hawkcd.model.PipelineDefinition\", \"object\": \"" + JSON.stringify(pipelineDefinition) + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.PipelineDefinition\", \"object\": " + JSON.stringify(pipelineDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -232,7 +232,7 @@ angular
             var className = "StageDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \io.hawkcd.model.StageDefinition\", \"object\": \"" + JSON.stringify(stageDefinition) + "\"}"];
+            var args = ["{\"packageName\": \io.hawkcd.model.StageDefinition\", \"object\": " + JSON.stringify(stageDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -291,7 +291,7 @@ angular
             var className = "JobDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"io.hawkcd.model.JobDefinition\", \"object\": \"" + JSON.stringify(jobDefinition) + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.JobDefinition\", \"object\": " + JSON.stringify(jobDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -331,7 +331,7 @@ angular
             var className = "TaskDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"io.hawkcd.model.TaskDefinition\", \"object\": \"" + JSON.stringify(taskDefinition) + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.TaskDefinition\", \"object\": " + JSON.stringify(taskDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -415,7 +415,7 @@ angular
             var className = "MaterialDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"io.hawkcd.model.MaterialDefinition\", \"object\": \"" + JSON.stringify(materialDefinition) + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.MaterialDefinition\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

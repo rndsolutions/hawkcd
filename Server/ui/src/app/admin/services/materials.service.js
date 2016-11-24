@@ -168,7 +168,7 @@ angular
           var className = "MaterialDefinitionService";
           var packageName = "io.hawkcd.services";
           var result = "";
-          var args = ["{\"packageName\": \"io.hawkcd.model.MaterialDefinition\", \"object\": \"" + JSON.stringify(materialDefinition) + "\"}"];
+          var args = ["{\"packageName\": \"io.hawkcd.model.MaterialDefinition\", \"object\": " + JSON.stringify(materialDefinition) + "}"];
           var error = "";
           var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
           websocketSenderService.call(json);
