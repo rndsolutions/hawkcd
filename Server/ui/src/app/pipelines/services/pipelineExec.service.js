@@ -34,24 +34,26 @@ angular
             console.log(json);
         };
 
-        pipeExecService.pausePipeline = function (id) {
+        //TODO: Send Pipeline to be paused
+        pipeExecService.pausePipeline = function (pipeline) {
             var methodName = "pausePipeline";
             var className = "PipelineService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.Pipeline\", \"object\": \"" + JSON.stringify(pipeline) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
             console.log(json);
         };
 
-        pipeExecService.stopPipeline = function (id) {
+        //TODO: Send Pipeline to be canceled
+        pipeExecService.stopPipeline = function (pipeline) {
             var methodName = "cancelPipeline";
             var className = "PipelineService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.Pipeline\", \"object\": \"" + JSON.stringify(pipeline) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -70,6 +72,7 @@ angular
             console.log(json);
         };
 
+        //TODO: Send Pipeline Definition to display the Pipelines of, the number of Pipelines to be shown and the last Pipeline the UI has displayed
         pipeExecService.getAllHistoryPipelines = function (pipelineDefinitionId, numberOfPipelines, pipelineId) {
             var methodName = "getAllPipelineHistoryDTOs";
             var className = "PipelineService";
@@ -84,6 +87,7 @@ angular
             console.log(json);
         };
 
+        //TODO: Send the search criteria, the number of Pipelines to be shown and the last Pipeline the UI has displayed
         pipeExecService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
             var methodName = "getAllPipelineArtifactDTOs";
             var className = "PipelineService";

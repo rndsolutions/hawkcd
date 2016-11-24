@@ -56,12 +56,12 @@ angular
             console.log(json);
         };
 
-        adminService.deleteUserGroup = function(id) {
+        adminService.deleteUserGroup = function(userGroup) {
             var methodName = "delete";
             var className = "UserGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.UserGroup\", \"object\": \"" + JSON.stringify(userGroup) + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

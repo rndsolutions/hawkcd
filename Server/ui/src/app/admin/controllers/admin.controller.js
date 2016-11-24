@@ -446,7 +446,7 @@ angular
             }
 
             vm.removeUser = function() {
-                adminService.deleteUser(vm.selectedUser.id);
+                adminService.deleteUser(vm.selectedUser);
             };
 
             vm.assignPipeline = function(pipeline) {
@@ -731,11 +731,11 @@ angular
             };
 
             vm.deleteUserGroup = function() {
-                adminService.deleteUserGroup(vm.userGroupToDelete.id);
+                adminService.deleteUserGroup(vm.userGroupToDelete);
             };
 
             vm.deletePipelineGroup = function() {
-                adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete.id);
+                adminGroupService.deletePipelineGroup(vm.pipelineGroupToDelete);
             };
 
             vm.deleteMaterial = function(materialId) {

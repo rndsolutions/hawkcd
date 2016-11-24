@@ -114,8 +114,8 @@ angular
             vm.currentAgentResources.pop();
         };
 
-        vm.delete = function(id) {
-            agentService.deleteAgent(id);
+        vm.delete = function(agent) {
+            agentService.deleteAgent(agent);
         };
 
         vm.addResourceInput = function() {
