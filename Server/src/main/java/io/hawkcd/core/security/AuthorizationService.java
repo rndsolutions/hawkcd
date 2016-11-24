@@ -53,66 +53,7 @@ public class AuthorizationService {
         }
 
         return entityIds.toArray(new String[entityIds.size()]);
-
-//        boolean hasPermission;
-//        List<String> listOfIds = new ArrayList<>();
-//
-//        if (methodName.startsWith("getAll")) { // If no arguments are passed
-////            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission);
-//            return new String[0];
-//        } else if (methodName.startsWith("getById") || methodName.startsWith("unassign")) { // If one String is passed as argument
-////            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
-//            listOfIds.add((String) arguments.get(0));
-//        } else if (methodName.startsWith("assign")) { // If two Strings are passed as arguments
-////            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(0).toString());
-////            if (hasPermission) {
-////                hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, arguments.get(1).toString());
-////            }
-//        } else {
-//            switch (className) { // If an Object is passed as argument
-//                case "PipelineGroupService":
-//                    PipelineGroup pipelineGroup = (PipelineGroup) arguments.get(0);
-//                    listOfIds.add(pipelineGroup.getId());
-//                    break;
-//                case "PipelineDefinitionService":
-//                    PipelineDefinition pipelineDefinition = (PipelineDefinition) arguments.get(0);
-//                    listOfIds.add(pipelineDefinition.getId());
-//                    listOfIds.add(pipelineDefinition.getPipelineGroupId());
-//                    break;
-//                case "StageDefinitionService":
-//                    StageDefinition stageDefinition = (StageDefinition) arguments.get(0);
-//                    listOfIds.add(stageDefinition.getPipelineDefinitionId());
-////                    entityIds.add(stageDefinition.getPipelineGroupId());
-//                    break;
-//                case "JobDefinitionService":
-//                    JobDefinition jobDefinition = (JobDefinition) arguments.get(0);
-//                    listOfIds.add(jobDefinition.getPipelineDefinitionId());
-////                    entityIds.add(jobDefinition.getPipelineGroupId());
-//                    break;
-//                case "TaskDefinitionService":
-//                    TaskDefinition taskDefinition = (TaskDefinition) arguments.get(0);
-//                    listOfIds.add(taskDefinition.getPipelineDefinitionId());
-////                    entityIds.add(taskDefinition.getPipelineGroupId());
-//                    break;
-//                case "PipelineService":
-//                    Pipeline pipeline;
-//                    if(methodName.startsWith("cancel") || methodName.startsWith("pause")){
-//                        PipelineService pipelineService = new PipelineService();
-//                        pipeline = (Pipeline) pipelineService.getById((String) arguments.get(0)).getObject();
-//                    } else {
-//                        pipeline = (Pipeline) arguments.get(0);
-//                    }
-//                    listOfIds.add(pipeline.getPipelineDefinitionId());
-//                    break;
-//            }
-//
-//
-////            hasPermission = this.hasPermissionWithId(userPermissions, authorizedPermission, entityIds);
-//        }
-        //String[] entityIds = listOfIds.toArray(new String[listOfIds.size()]);
-//        return null;
     }
-
 
     /**
      * The method tries to authorize against the User's Pipeline specific Permissions.

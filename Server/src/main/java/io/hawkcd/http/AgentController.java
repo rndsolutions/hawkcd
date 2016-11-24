@@ -151,7 +151,11 @@ public class AgentController {
         PipelineService.lock.lock();
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getEntity();
 
-        Stage stage = pipeline.getStages().stream().filter(s -> s.getId().equals(job.getStageId())).findFirst().orElse(null);
+        Stage stage = pipeline.getStages()
+                    .stream()
+                    .filter(s -> s.getId().equals(job.getStageId()))
+                    .findFirst()
+                    .orElse(null);
 
         List<Job> jobs = stage.getJobs();
         int lengthOfJobs = jobs.size();
