@@ -59,7 +59,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void getAllJobDefinitions_nonExistingObjects_emptyList() {
         //Arrange
         List<JobDefinition> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.jobDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -78,7 +78,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         this.jobDefinition = new JobDefinition();
         expectedResult.add(this.jobDefinition);
         expectedResult.add(this.jobDefinition);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.jobDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -94,7 +94,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void getJobDefinitionById_existingObject_correctObject() {
         //Arrange
         this.jobDefinition = new JobDefinition();
-        this.serviceResult.setObject(this.jobDefinition);
+        this.serviceResult.setEntity(this.jobDefinition);
         Mockito.when(this.jobDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
         JobDefinition expectedResult = this.jobDefinition;
 
@@ -113,7 +113,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         String expectedResult = "JobDefinition not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.jobDefinitionService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
         //Act
@@ -129,7 +129,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void addJobDefinition_oneObject_successMessage() {
         //Arrange
         this.prepareJobDefinition();
-        this.serviceResult.setObject(this.jobDefinition);
+        this.serviceResult.setEntity(this.jobDefinition);
         Mockito.when(this.jobDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
         JobDefinition expectedResult = this.jobDefinition;
@@ -151,7 +151,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
         String expectedResult = "ERROR: JOB DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(this.jobDefinition);
+        this.serviceResult.setEntity(this.jobDefinition);
         Mockito.when(this.jobDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");
 
@@ -192,7 +192,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void addJobDefinition_withSameName_properErrorMessage() {
         //Arrange
         this.prepareJobDefinition();
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
         String expectedResult = "JobDefinition with the same name exists.";
         this.serviceResult.setMessage(expectedResult);
@@ -212,7 +212,7 @@ public class JobDefinitionControllerTests extends JerseyTest {
     public void updateJobDefinition_existingJobDefinition_updatedJobDefinition() {
         //Arrange
         this.prepareJobDefinition();
-        this.serviceResult.setObject(this.jobDefinition);
+        this.serviceResult.setEntity(this.jobDefinition);
         this.jobDefinition.setName("name-updated");
         Mockito.when(this.jobDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.jobDefinition, "application/json");

@@ -49,7 +49,7 @@ public class PipelineGroupController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPipelineGroups() {
         ServiceResult result = this.pipelineGroupService.getAll();
-        return Response.status(Status.OK).entity(result.getObject()).build();
+        return Response.status(Status.OK).entity(result.getEntity()).build();
     }
 
     @GET
@@ -65,7 +65,7 @@ public class PipelineGroupController {
                     .build();
         }
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -82,7 +82,7 @@ public class PipelineGroupController {
                         .build();
             }
 
-            return Response.status(Status.CREATED).entity(result.getObject()).build();
+            return Response.status(Status.CREATED).entity(result.getEntity()).build();
 
         } else {
             return Response.status(Status.BAD_REQUEST)
@@ -105,7 +105,7 @@ public class PipelineGroupController {
                         .build();
             }
 
-            return Response.status(Status.OK).entity(result.getObject()).build();
+            return Response.status(Status.OK).entity(result.getEntity()).build();
 
         } else {
             return Response.status(Status.BAD_REQUEST)

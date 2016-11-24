@@ -48,7 +48,7 @@ public class MaterialServiceTests {
 
         //Act
         ServiceResult actualResult = this.materialService.getById(expectedMaterial.getId());
-        Material actualMaterial = (Material) actualResult.getObject();
+        Material actualMaterial = (Material) actualResult.getEntity();
 
         //Assert
         Assert.assertNotNull(actualMaterial);
@@ -68,7 +68,7 @@ public class MaterialServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -83,7 +83,7 @@ public class MaterialServiceTests {
 
         //Act
         ServiceResult actualResult = this.materialService.getAll();
-        List<Material> actualResultObject = (List<Material>) actualResult.getObject();
+        List<Material> actualResultObject = (List<Material>) actualResult.getEntity();
         Material firstActualMaterial = actualResultObject
                 .stream()
                 .filter(p -> p.getId().equals(firstExpectedMaterial.getId()))
@@ -111,7 +111,7 @@ public class MaterialServiceTests {
 
         //Act
         ServiceResult actualResult = this.materialService.getAll();
-        List<Material> actualResultObject = (List<Material>) actualResult.getObject();
+        List<Material> actualResultObject = (List<Material>) actualResult.getEntity();
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
@@ -127,7 +127,7 @@ public class MaterialServiceTests {
 
         //Act
         ServiceResult actualResult = this.materialService.add(expectedMaterial);
-        Material actualResultObject = (Material) actualResult.getObject();
+        Material actualResultObject = (Material) actualResult.getEntity();
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
@@ -145,7 +145,7 @@ public class MaterialServiceTests {
         //Act
         this.materialService.add(expectedMaterial);
         ServiceResult actualResult = this.materialService.add(expectedMaterial);
-        Material actualResultObject = (Material) actualResult.getObject();
+        Material actualResultObject = (Material) actualResult.getEntity();
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
@@ -166,7 +166,7 @@ public class MaterialServiceTests {
         LocalDateTime expectedDate = LocalDateTime.of(2016, 7, 11, 12, 00);
         expectedMaterial.setChangeDate(expectedDate);
         ServiceResult actualResult = this.materialService.update(expectedMaterial);
-        Material actualResultObject = (Material) actualResult.getObject();
+        Material actualResultObject = (Material) actualResult.getEntity();
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
@@ -187,7 +187,7 @@ public class MaterialServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -200,11 +200,11 @@ public class MaterialServiceTests {
 
         //Act
         ServiceResult actualResult = this.materialService.delete(materialToDelete.getId());
-        Material actualResultObject = (Material) actualResult.getObject();
+        Material actualResultObject = (Material) actualResult.getEntity();
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(materialToDelete.getId(), actualResultObject.getId());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -220,7 +220,7 @@ public class MaterialServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 }

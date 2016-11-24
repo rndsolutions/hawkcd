@@ -47,7 +47,7 @@ public class PipelineController {
     public Response getPipelines() {
         ServiceResult response = this.pipelineService.getAll();
         return Response.status(Status.OK)
-                .entity(response.getObject())
+                .entity(response.getEntity())
                 .build();
     }
 
@@ -64,7 +64,7 @@ public class PipelineController {
                             .type(MediaType.TEXT_HTML)
                             .build();
         } else {
-            return Response.status(Status.OK).entity(response.getObject()).build();
+            return Response.status(Status.OK).entity(response.getEntity()).build();
         }
     }
 
@@ -102,7 +102,7 @@ public class PipelineController {
                     .build();
         } else {
             return Response.status(Status.CREATED)
-                    .entity(response.getObject())
+                    .entity(response.getEntity())
                     .build();
         }
     }
@@ -115,7 +115,7 @@ public class PipelineController {
         if (response.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
         } else {
-            return Response.status(Status.OK).entity(response.getObject()).build();
+            return Response.status(Status.OK).entity(response.getEntity()).build();
         }
     }
 

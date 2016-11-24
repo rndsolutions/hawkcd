@@ -75,14 +75,14 @@ public class PipelineDefinitionAuthorizationService implements IAuthorizationSer
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(entityId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(entityId).getEntity();
         pipelineDefinition = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipelineDefinition);
         return this.hasPermissionToRead(permissions, pipelineDefinition);
     }
 
     @Override
     public boolean delete(String entityId, List permissions) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(entityId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(entityId).getEntity();
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipelineDefinition);
     }

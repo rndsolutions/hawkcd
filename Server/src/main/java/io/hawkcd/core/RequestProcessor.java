@@ -108,14 +108,14 @@ public class RequestProcessor {
         Message message = new Message(
                 contract.getClassName(),
                 contract.getMethodName(),
-                result.getObject(),
+                result.getEntity(),
                 result.getNotificationType(),
                 result.getMessage(),
                 currentUser
         );
 
         // Attach permission to object
-        if(result.getObject() instanceof List){
+        if(result.getEntity() instanceof List){
             boolean isPipelineGroupDtoList = isPipelineGroupDtoList(result);
             if(isPipelineGroupDtoList){
                 attachPermissionsToPipelineDtos(contract, currentUser, result, methodArgs);
@@ -140,7 +140,7 @@ public class RequestProcessor {
     }
 
     private boolean isPipelineGroupDtoList(ServiceResult result) {
-        if(result.getObject() != null && ((List) result.getObject()).size() > 0 && ((List) result.getObject()).get(0) instanceof PipelineGroupDto){
+        if(result.getEntity() != null && ((List) result.getEntity()).size() > 0 && ((List) result.getEntity()).get(0) instanceof PipelineGroupDto){
             return true;
         }
 
@@ -151,9 +151,9 @@ public class RequestProcessor {
         Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
 
         for (SessionDetails activeSession : activeSessions) {
-            User userToSendTo = (User) userService.getById(activeSession.getUserId()).getObject();
+            User userToSendTo = (User) userService.getById(activeSession.getUserId()).getEntity();
             List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
-            PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForObject(userPermissions, result.getObject(), contract, methodArgs);
+            PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForObject(userPermissions, result.getEntity(), contract, methodArgs);
             permissionTypeByUser.put(userToSendTo.getId(), permissionType);
         }
         return permissionTypeByUser;
@@ -183,7 +183,7 @@ public class RequestProcessor {
      * @return
      */
     private List<PermissionObject> attachPermissionTypeToList(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
-        List<PermissionObject> permissionObjects =  (List<PermissionObject>) result.getObject();
+        List<PermissionObject> permissionObjects =  (List<PermissionObject>) result.getEntity();
         List<PermissionObject> filteredResult = new ArrayList<>();
 
         for (PermissionObject permissionObject : permissionObjects) {
@@ -200,7 +200,7 @@ public class RequestProcessor {
     }
 
     private void attachPermissionsToPipelineDtos(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
-        List<PipelineGroupDto> pipelineGroupDtos = (List<PipelineGroupDto>) result.getObject();
+        List<PipelineGroupDto> pipelineGroupDtos = (List<PipelineGroupDto>) result.getEntity();
         for (PipelineGroupDto pipelineGroupDto : pipelineGroupDtos) {
             List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
 

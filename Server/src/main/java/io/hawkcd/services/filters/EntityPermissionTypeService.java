@@ -84,7 +84,7 @@ public class EntityPermissionTypeService {
 
     public Pipeline setPermissionTypeToObject(List<Permission> permissions, Pipeline pipeline) {
         pipeline.setPermissionType(PermissionType.NONE);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
         if (pipelineDefinition == null) {
             return pipeline;
         }
@@ -109,7 +109,7 @@ public class EntityPermissionTypeService {
 
     public StageDefinition setPermissionTypeToObject(List<Permission> permissions, StageDefinition stageDefinition) {
         stageDefinition.setPermissionType(PermissionType.NONE);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getEntity();
         if (pipelineDefinition == null) {
             return stageDefinition;
         }
@@ -122,7 +122,7 @@ public class EntityPermissionTypeService {
 
     public JobDefinition setPermissionTypeToObject(List<Permission> permissions, JobDefinition jobDefinition) {
         jobDefinition.setPermissionType(PermissionType.NONE);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getEntity();
         if (pipelineDefinition == null) {
             return jobDefinition;
         }
@@ -135,7 +135,7 @@ public class EntityPermissionTypeService {
 
     public TaskDefinition setPermissionTypeToObject(List<Permission> permissions, TaskDefinition taskDefinition) {
         taskDefinition.setPermissionType(PermissionType.NONE);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getEntity();
         if (pipelineDefinition == null) {
             return taskDefinition;
         }

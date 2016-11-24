@@ -50,7 +50,7 @@ public class StageDefinitionController {
     public Response getAllStageDefinitions() {
         ServiceResult result = this.stageDefinitionService.getAll();
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -68,7 +68,7 @@ public class StageDefinitionController {
                     .build();
         }
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -85,7 +85,7 @@ public class StageDefinitionController {
                         .build();
             }
             return Response.status(Status.CREATED)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
         } else {
             return Response.status(Status.BAD_REQUEST)
@@ -108,7 +108,7 @@ public class StageDefinitionController {
                         .build();
             }
             return Response.status(Status.OK)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
         } else {
             return Response.status(Status.BAD_REQUEST)

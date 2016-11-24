@@ -54,7 +54,7 @@ public class PipelineControllerTests extends JerseyTest {
     public void getAllPipelines_request_emptyList() {
         //Arrange
         List<Pipeline> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.pipelineService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -73,7 +73,7 @@ public class PipelineControllerTests extends JerseyTest {
         this.prepearePipeline();
         expectedResult.add(this.pipeline);
         expectedResult.add(this.pipeline);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.pipelineService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -89,7 +89,7 @@ public class PipelineControllerTests extends JerseyTest {
     public void getPipelineById_existingObject_correctObject() {
         //Arrange
         this.prepearePipeline();
-        this.serviceResult.setObject(this.pipeline);
+        this.serviceResult.setEntity(this.pipeline);
         Mockito.when(this.pipelineService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
@@ -105,7 +105,7 @@ public class PipelineControllerTests extends JerseyTest {
         String expectedResult = "Pipeline not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.pipelineService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
         //Act

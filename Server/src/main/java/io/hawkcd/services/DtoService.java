@@ -26,8 +26,8 @@ public class DtoService {
     }
 
     public ServiceResult getAllPipelineGroupDTOs() {
-        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getObject();
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
+        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getEntity();
 
         for (PipelineGroup pipelineGroup : pipelineGroups) {
             List<PipelineDefinition> pipelineDefinitionsToAdd = new ArrayList<>();

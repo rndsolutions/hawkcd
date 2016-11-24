@@ -50,7 +50,7 @@ public class StageDefinitionServiceTests {
     public void stageDefinitionService_getByIdWithValidInput_oneObject() {
         this.injectDataForTestingStageDefinitionService(3);
 
-        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.getById(this.expectedStageDefinition.getId()).getObject();
+        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.getById(this.expectedStageDefinition.getId()).getEntity();
 
         Assert.assertNotNull(actualStageDefinition);
         Assert.assertEquals(this.expectedStageDefinition.getId(), actualStageDefinition.getId());
@@ -62,7 +62,7 @@ public class StageDefinitionServiceTests {
 
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.getById("invalidId");
 
-        Assert.assertNull(actualServiceResult.getObject());
+        Assert.assertNull(actualServiceResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
@@ -70,7 +70,7 @@ public class StageDefinitionServiceTests {
     public void stageDefinitionService_getByIdInPipelineWithValidInput_oneObject() {
         this.injectDataForTestingStageDefinitionService(3);
 
-        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.getByIdInPipeline(this.expectedStageDefinition.getId(), this.expectedPipelineDefinition.getId()).getObject();
+        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.getByIdInPipeline(this.expectedStageDefinition.getId(), this.expectedPipelineDefinition.getId()).getEntity();
 
         Assert.assertNotNull(actualStageDefinition);
         Assert.assertEquals(this.expectedStageDefinition.getId(), actualStageDefinition.getId());
@@ -83,7 +83,7 @@ public class StageDefinitionServiceTests {
 
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.getByIdInPipeline("invalidId", this.expectedPipelineDefinition.getId());
 
-        Assert.assertNull(actualServiceResult.getObject());
+        Assert.assertNull(actualServiceResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
         Assert.assertEquals(expectedServiceResultMessage, actualServiceResult.getMessage());
     }
@@ -93,7 +93,7 @@ public class StageDefinitionServiceTests {
         this.injectDataForTestingStageDefinitionService(1);
 
         ServiceResult serviceResult = this.mockedStageDefinitionService.getAll();
-        List<StageDefinition> actualStageDefinitions = (List<StageDefinition>) serviceResult.getObject();
+        List<StageDefinition> actualStageDefinitions = (List<StageDefinition>) serviceResult.getEntity();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_THREE_OBJECTS, actualStageDefinitions.size());
     }
@@ -103,7 +103,7 @@ public class StageDefinitionServiceTests {
         this.injectDataForTestingStageDefinitionService(1);
 
         ServiceResult serviceResult = this.mockedStageDefinitionService.getAllInPipeline(this.expectedPipelineDefinition.getId());
-        List<StageDefinition> actualStageDefinitions = (List<StageDefinition>) serviceResult.getObject();
+        List<StageDefinition> actualStageDefinitions = (List<StageDefinition>) serviceResult.getEntity();
 
         Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_TWO_OBJECTS, actualStageDefinitions.size());
     }
@@ -114,7 +114,7 @@ public class StageDefinitionServiceTests {
         StageDefinition stageDefinitionToAdd = new StageDefinition();
         stageDefinitionToAdd.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
 
-        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.add(stageDefinitionToAdd).getObject();
+        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.add(stageDefinitionToAdd).getEntity();
 
         Assert.assertNotNull(actualStageDefinition);
         Assert.assertEquals(stageDefinitionToAdd.getId(), actualStageDefinition.getId());
@@ -126,7 +126,7 @@ public class StageDefinitionServiceTests {
 
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.add(this.expectedStageDefinition);
 
-        Assert.assertNull(actualServiceResult.getObject());
+        Assert.assertNull(actualServiceResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
@@ -139,7 +139,7 @@ public class StageDefinitionServiceTests {
 
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.add(stageDefinitionToAdd);
 
-        Assert.assertNull(actualServiceResult.getObject());
+        Assert.assertNull(actualServiceResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
@@ -149,7 +149,7 @@ public class StageDefinitionServiceTests {
 
         this.expectedStageDefinition.setName("changedName");
 
-        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.update(this.expectedStageDefinition).getObject();
+        StageDefinition actualStageDefinition = (StageDefinition) this.mockedStageDefinitionService.update(this.expectedStageDefinition).getEntity();
 
         Assert.assertEquals(this.expectedStageDefinition.getName(), actualStageDefinition.getName());
     }
@@ -163,7 +163,7 @@ public class StageDefinitionServiceTests {
 
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.update(stageDefinitionToUpdate);
 
-        Assert.assertNull(actualServiceResult.getObject());
+        Assert.assertNull(actualServiceResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
@@ -183,7 +183,7 @@ public class StageDefinitionServiceTests {
 
         ServiceResult actualServiceResult = this.mockedStageDefinitionService.update(stageDefinitionToUpdate);
 
-        Assert.assertNull(actualServiceResult.getObject());
+        Assert.assertNull(actualServiceResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 

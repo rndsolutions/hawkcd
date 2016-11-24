@@ -51,7 +51,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String stageDefinitionId) {
         ServiceResult serviceResult = super.createServiceResult(null, NotificationType.ERROR, "not found");
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
@@ -70,7 +70,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getByIdInPipeline(String stageDefinitionId, String pipelineDefinitionId) {
         ServiceResult serviceResult;
-        PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getEntity();
 
         StageDefinition stage = pipelineFromDatabase
                 .getStageDefinitions()
@@ -91,7 +91,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
         List<StageDefinition> stageDefinitions = new ArrayList<>();
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
@@ -105,7 +105,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllInPipeline(String pipelineDefinitionId) {
-        PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipelineFromDatabase = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getEntity();
         List<StageDefinition> stageDefinitions = pipelineFromDatabase.getStageDefinitions();
 
         ServiceResult result = super.createServiceResultArray(stageDefinitions, NotificationType.SUCCESS, "retrieved successfully");
@@ -118,7 +118,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     public ServiceResult add(StageDefinition stageDefinition) {
         ServiceResult result = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
-        PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getEntity();
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
 
         for (StageDefinition stDefinition : stageDefinitions) {
@@ -162,7 +162,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     public ServiceResult update(StageDefinition stageDefinition) {
         ServiceResult serviceResult = null;
         String pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
-        PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipeline = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getEntity();
         List<StageDefinition> stageDefinitions = pipeline.getStageDefinitions();
 
         int stageDefinitionLength = stageDefinitions.size();
@@ -186,7 +186,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
         ServiceResult pipelineServiceResult = this.pipelineDefinitionService.update(pipeline);
 
         if (pipelineServiceResult.getNotificationType() == NotificationType.ERROR) {
-            serviceResult = super.createServiceResult((StageDefinition) serviceResult.getObject(), NotificationType.ERROR, "not updated");
+            serviceResult = super.createServiceResult((StageDefinition) serviceResult.getEntity(), NotificationType.ERROR, "not updated");
         } else {
             serviceResult = super.createServiceResult(stageDefinition, NotificationType.SUCCESS, "updated successfully");
         }
@@ -199,7 +199,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     public ServiceResult delete(StageDefinition stageDefinition) {
 
         PipelineDefinition pipeline = new PipelineDefinition();
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
 
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();

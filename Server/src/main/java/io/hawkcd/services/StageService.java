@@ -53,7 +53,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String stageId) {
-        List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+        List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getEntity();
         Stage result = null;
         for (Pipeline pipeline : allPipelines) {
             List<Stage> stages = pipeline.getStages();
@@ -71,7 +71,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
-        List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+        List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getEntity();
         List<Stage> allStages = new ArrayList<>();
 
         for (Pipeline pipeline : allPipelines) {
@@ -84,7 +84,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(Stage stage) {
-        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getEntity();
         List<Stage> stages = pipeline.getStages();
 
         for (Stage stageFromDb : stages) {
@@ -112,7 +112,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(Stage stage) {
-        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getObject();
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getEntity();
         List<Stage> stages = pipeline.getStages();
         int stageCollectionSize = stages.size();
         boolean isPresent = false;
@@ -131,7 +131,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
         ServiceResult serviceResult = this.pipelineService.update(pipeline);
 
         if (serviceResult.getNotificationType() == NotificationType.ERROR) {
-            serviceResult = super.createServiceResult((Stage) serviceResult.getObject(), NotificationType.ERROR, "not updated");
+            serviceResult = super.createServiceResult((Stage) serviceResult.getEntity(), NotificationType.ERROR, "not updated");
         } else {
             serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "updated successfully");
         }
@@ -142,7 +142,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(Stage stage) {
         Pipeline pipelineToUpdate = new Pipeline();
-        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getEntity();
         for (Pipeline pipeline : pipelines) {
             List<Stage> stages = pipeline.getStages();
 

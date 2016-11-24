@@ -45,7 +45,7 @@ public class JobController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllJobs() {
         ServiceResult response = this.jobService.getAll();
-        return Response.status(Status.OK).entity(response.getObject()).build();
+        return Response.status(Status.OK).entity(response.getEntity()).build();
     }
 
     @GET
@@ -56,7 +56,7 @@ public class JobController {
         if (response.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
         }
-        return Response.status(Status.OK).entity(response.getObject()).build();
+        return Response.status(Status.OK).entity(response.getEntity()).build();
     }
 /*
     @GET

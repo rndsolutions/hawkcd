@@ -18,7 +18,6 @@ package io.hawkcd.scheduler;
 
 import io.hawkcd.Config;
 import io.hawkcd.utilities.constants.LoggerMessages;
-import io.hawkcd.model.Environment;
 import io.hawkcd.model.enums.PipelineStatus;
 import io.hawkcd.model.Stage;
 import io.hawkcd.model.enums.TaskType;
@@ -69,7 +68,7 @@ public class PipelinePreparer implements Runnable {
         LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, PipelinePreparer.class.getSimpleName()));
         try {
             while (true) {
-                List<Pipeline> filteredPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getObject();
+                List<Pipeline> filteredPipelines = (List<Pipeline>) this.pipelineService.getAllUpdatedUnpreparedPipelinesInProgress().getEntity();
 
                 for (Pipeline pipeline : filteredPipelines) {
                     this.preparePipeline(pipeline);
@@ -87,7 +86,7 @@ public class PipelinePreparer implements Runnable {
 
     // TODO: Replace with method form PipelineService
     public List<Pipeline> getAllUpdatedPipelines() {
-        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAll().getEntity();
 
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
@@ -101,7 +100,7 @@ public class PipelinePreparer implements Runnable {
     public Pipeline preparePipeline(Pipeline pipelineToPrepare) {
         this.currentPipeline = pipelineToPrepare;
         String pipelineDefinitionId = pipelineToPrepare.getPipelineDefinitionId();
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getEntity();
 
         List<StageDefinition> stages = pipelineDefinition.getStageDefinitions();
         List<EnvironmentVariable> pipelineDefinitionEnvironmentVariables = pipelineDefinition.getEnvironmentVariables();
@@ -202,7 +201,7 @@ public class PipelinePreparer implements Runnable {
             } else if (currentTask.getType() == TaskType.FETCH_ARTIFACT) {
                 FetchArtifactTask fetchArtifactTask = (FetchArtifactTask) taskDefinitions.get(i);
                 if (fetchArtifactTask.shouldUseLatestRun()) {
-                    Pipeline currentPipeline = (Pipeline) this.pipelineService.getLastRun(fetchArtifactTask.getDesignatedPipelineDefinitionId()).getObject();
+                    Pipeline currentPipeline = (Pipeline) this.pipelineService.getLastRun(fetchArtifactTask.getDesignatedPipelineDefinitionId()).getEntity();
                     fetchArtifactTask.setDesignatedPipelineExecutionId(Integer.toString(currentPipeline.getExecutionId()));
                     currentTask.setTaskDefinition(fetchArtifactTask);
                 }

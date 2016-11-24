@@ -24,7 +24,6 @@ import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.dto.PipelineDefinitionDto;
-import io.hawkcd.model.dto.PipelineDto;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
@@ -35,7 +34,6 @@ import io.hawkcd.services.interfaces.IPipelineService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PipelineGroupService extends CrudService<PipelineGroup> implements IPipelineGroupService {
     private static final Class CLASS_TYPE = PipelineGroup.class;
@@ -71,7 +69,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(PipelineGroup pipelineGroup) {
-        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getObject();
+        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.getAll().getEntity();
         PipelineGroup existingPipelineGroup = pipelineGroups.stream().filter(p -> p.getName().equals(pipelineGroup.getName())).findFirst().orElse(null);
         if (existingPipelineGroup != null || pipelineGroup.getName().equals("UnassignedPipelines")) {
             ServiceResult result = new ServiceResult(pipelineGroup, NotificationType.ERROR, "Pipeline Group with the same name already exists.");
@@ -110,8 +108,8 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
 //            pipelineGroup.setPipelines(pipelineDefinitionsToAdd);
 //        }
 
-        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
+        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getEntity();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getEntity();
 
         List<PipelineGroupDto> pipelineGroupDtos = new ArrayList<>();
         List<PipelineDefinitionDto> pipelineDefinitionDtos = new ArrayList<>();
@@ -121,7 +119,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
             pipelineGroupDto.constructDto(pipelineGroup);
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
                 if(pipelineDefinition.getPipelineGroupId().equals(pipelineGroup.getId())){
-                    List<Pipeline> allPipelineRuns = (List<Pipeline>) pipelineService.getAllByDefinitionId(pipelineDefinition.getId()).getObject();
+                    List<Pipeline> allPipelineRuns = (List<Pipeline>) pipelineService.getAllByDefinitionId(pipelineDefinition.getId()).getEntity();
                     PipelineDefinitionDto pipelineDefinitionDto = new PipelineDefinitionDto();
                     pipelineDefinitionDto.constructDto(pipelineDefinition, allPipelineRuns);
                     pipelineDefinitionDtos.add(pipelineDefinitionDto);
@@ -188,7 +186,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
             List<PipelineDefinitionDto> pipelineDefinitionDtos = new ArrayList<>();
             for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
                 PipelineDefinitionDto pipelineDefinitionDto = new PipelineDefinitionDto();
-                List<Pipeline> definitionRuns = (List<Pipeline>) this.pipelineService.getAllByDefinitionId(pipelineDefinition.getId()).getObject();
+                List<Pipeline> definitionRuns = (List<Pipeline>) this.pipelineService.getAllByDefinitionId(pipelineDefinition.getId()).getEntity();
                 pipelineDefinitionDto.constructDto(pipelineDefinition, definitionRuns);
                 pipelineDefinitionDtos.add(pipelineDefinitionDto);
             }

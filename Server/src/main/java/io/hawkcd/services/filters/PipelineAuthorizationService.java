@@ -83,7 +83,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getObject();
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getEntity();
 //        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
         pipeline = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipeline);
 
@@ -110,13 +110,13 @@ public class PipelineAuthorizationService implements IAuthorizationService {
 
     @Override
     public boolean delete(String entityId, List permissions) {
-        Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getObject();
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(entityId).getEntity();
 
         return this.hasPermissionToUpdateAndDelete(permissions, pipeline);
     }
 
     public boolean hasPermissionToRead(List<Permission> permissions, Pipeline pipeline) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
 
         boolean hasPermission = false;
         for (Permission permission : permissions) {
@@ -150,7 +150,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     }
 
     public boolean hasPermissionToAdd(List<Permission> permissions, Pipeline pipeline) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
         boolean hasPermission = false;
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && ((permission.getPermissionType() == PermissionType.ADMIN) || (permission.getPermissionType() == PermissionType.OPERATOR))) {
@@ -189,7 +189,7 @@ public class PipelineAuthorizationService implements IAuthorizationService {
     }
 
     public boolean hasPermissionToUpdateAndDelete(List<Permission> permissions, Pipeline pipeline) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
         boolean hasPermission = false;
         for (Permission permission : permissions) {
             if ((permission.getPermissionScope() == PermissionScope.SERVER) && (permission.getPermissionType() == PermissionType.ADMIN)) {

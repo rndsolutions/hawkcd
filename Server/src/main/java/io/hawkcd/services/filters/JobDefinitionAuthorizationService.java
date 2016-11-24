@@ -68,7 +68,7 @@ public class JobDefinitionAuthorizationService implements IAuthorizationService 
     @Override
     public List getAll(List permissions, List entriesToFilter) {
         List<JobDefinition> filteredJobDefinitions = new ArrayList<>();
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
         List<PipelineDefinition> filteredPipelineDefinitions = this.pipelineDefintionAuthorizationService.getAll(permissions, pipelineDefinitions);
 
         for (PipelineDefinition filteredPipelineDefinition : filteredPipelineDefinitions) {
@@ -84,7 +84,7 @@ public class JobDefinitionAuthorizationService implements IAuthorizationService 
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(entityId).getObject();
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(entityId).getEntity();
 
         return this.pipelineDefintionAuthorizationService.getById(jobDefinition.getPipelineDefinitionId(), permissions);
     }
@@ -92,7 +92,7 @@ public class JobDefinitionAuthorizationService implements IAuthorizationService 
     @Override
     public boolean add(String entity, List permissions) {
         JobDefinition jobDefinition = this.jsonConverter.fromJson(entity, JobDefinition.class);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getEntity();
 
         String pipelineDefinitionsAsString = this.jsonConverter.toJson(pipelineDefinition);
 
@@ -102,7 +102,7 @@ public class JobDefinitionAuthorizationService implements IAuthorizationService 
     @Override
     public boolean update(String entity, List permissions) {
         JobDefinition jobDefinition = this.jsonConverter.fromJson(entity, JobDefinition.class);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(jobDefinition.getPipelineDefinitionId()).getEntity();
 
         String pipelineDefinitionsAsString = this.jsonConverter.toJson(pipelineDefinition);
 
@@ -111,7 +111,7 @@ public class JobDefinitionAuthorizationService implements IAuthorizationService 
 
     @Override
     public boolean delete(String entityId, List permissions) {
-        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(entityId).getObject();
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(entityId).getEntity();
 
         return this.pipelineDefintionAuthorizationService.delete(jobDefinition.getPipelineDefinitionId(), permissions);
     }

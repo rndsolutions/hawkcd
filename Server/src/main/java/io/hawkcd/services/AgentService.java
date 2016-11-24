@@ -90,7 +90,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
     @Override
     public ServiceResult getAllAssignableAgents() {
-        List<Agent> agents = (List<Agent>) super.getAll().getObject();
+        List<Agent> agents = (List<Agent>) super.getAll().getEntity();
         List<Agent> assignableAgents = agents
                 .stream()
                 .filter(a -> a.isConnected() && a.isEnabled() && !a.isRunning() && !a.isAssigned())
@@ -104,11 +104,11 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
     public ServiceResult getWorkInfo(String agentId) {
         ServiceResult result = null;
-        Agent agent = (Agent) this.getById(agentId).getObject();
+        Agent agent = (Agent) this.getById(agentId).getEntity();
         if (agent == null) {
             result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         } else if (agent.isAssigned()) {
-            List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
+            List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
             for (Pipeline pipeline : pipelines) {
                 WorkInfo workInfo = new WorkInfo();
                 Stage stageInProgress = pipeline.getStages()

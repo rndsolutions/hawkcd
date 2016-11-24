@@ -99,12 +99,12 @@ public abstract class CrudService<T extends Entity> extends Service<T> implement
 
         ServiceResult result = new ServiceResult();
         if (dbObject == null) {
-            result = super.createServiceResult((T) result.getObject(), NotificationType.ERROR, "not found");
+            result = super.createServiceResult((T) result.getEntity(), NotificationType.ERROR, "not found");
         } else {
             result = super.createServiceResult((T) dbObject, NotificationType.SUCCESS, "deleted successfully");
         }
 
-        result.setObject(dbObject);
+        result.setEntity(dbObject);
 
         return result;
     }

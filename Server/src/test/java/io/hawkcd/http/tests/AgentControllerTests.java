@@ -55,7 +55,7 @@ public class AgentControllerTests extends JerseyTest {
     public void getAllAgents_nonExistingAgents_emptyList() {
         //Arrange
         List<Agent> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.agentService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -73,7 +73,7 @@ public class AgentControllerTests extends JerseyTest {
         List<Agent> expectedResult = new ArrayList<>();
         expectedResult.add(this.agent);
         expectedResult.add(this.agent);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.agentService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -89,7 +89,7 @@ public class AgentControllerTests extends JerseyTest {
     public void getAgentById_oneObject_correctObject() {
         //Arrange
         this.prepareAgent();
-        this.serviceResult.setObject(this.agent);
+        this.serviceResult.setEntity(this.agent);
         Mockito.when(this.agentService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
         Agent expectedResult = this.agent;
 
@@ -108,7 +108,7 @@ public class AgentControllerTests extends JerseyTest {
         String expectedResult = "Agent not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.agentService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
@@ -127,7 +127,7 @@ public class AgentControllerTests extends JerseyTest {
         //Arrange
         this.prepareAgent();
         String expectedResult = "This agent has no job assigned.";
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.agentService.getWorkInfo(Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
@@ -143,7 +143,7 @@ public class AgentControllerTests extends JerseyTest {
     public void addAgent_oneAgent_successMessage() {
         //Arrange
         this.prepareAgent();
-        this.serviceResult.setObject(this.agent);
+        this.serviceResult.setEntity(this.agent);
         Mockito.when(this.agentService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, MediaType.APPLICATION_JSON);
         Agent expectedResult = this.agent;
@@ -162,7 +162,7 @@ public class AgentControllerTests extends JerseyTest {
         //Arrange
         this.prepareAgent();
         this.agent.setName(null);
-        this.serviceResult.setObject(this.agent);
+        this.serviceResult.setEntity(this.agent);
         Mockito.when(this.agentService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, MediaType.APPLICATION_JSON);
         String expectedResult = "ERROR: AGENT NAME IS NULL.";
@@ -205,7 +205,7 @@ public class AgentControllerTests extends JerseyTest {
         this.prepareAgent();
         String expectedResult = "Agent already exists.";
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.agentService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, "application/json");
@@ -223,7 +223,7 @@ public class AgentControllerTests extends JerseyTest {
     public void updateAgent_existingAgent_updatedAgent() {
         //Arrange
         this.prepareAgent();
-        this.serviceResult.setObject(this.agent);
+        this.serviceResult.setEntity(this.agent);
         this.agent.setName("updatedAgent");
         Mockito.when(this.agentService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, "application/json");
@@ -244,7 +244,7 @@ public class AgentControllerTests extends JerseyTest {
         this.prepareAgent();
         String expectedResult = "Agent not found.";
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
         Mockito.when(this.agentService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, "application/json");
@@ -263,7 +263,7 @@ public class AgentControllerTests extends JerseyTest {
         //Arrange
         this.prepareAgent();
         this.agent.setName(null);
-        this.serviceResult.setObject(this.agent);
+        this.serviceResult.setEntity(this.agent);
         Mockito.when(this.agentService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.agent, MediaType.APPLICATION_JSON);
         String expectedResult = "ERROR: AGENT NAME IS NULL.";

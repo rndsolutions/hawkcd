@@ -59,7 +59,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     public void getAllStageDefinitions_nonExistingObjects_emptyList() {
         //Arrange
         List<PipelineDefinition> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.stageDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -78,7 +78,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         List<StageDefinition> expectedResult = new ArrayList<>();
         expectedResult.add(this.stageDefinition);
         expectedResult.add(this.stageDefinition);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.stageDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -94,7 +94,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     public void getStageDefinitionById_existingObject_correctObject() {
         //Arrange
         this.stageDefinition = new StageDefinition();
-        this.serviceResult.setObject(this.stageDefinition);
+        this.serviceResult.setEntity(this.stageDefinition);
         Mockito.when(this.stageDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
         StageDefinition expectedResult = this.stageDefinition;
 
@@ -113,7 +113,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         String expectedResult = "StageDefinition not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.stageDefinitionService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
         //Act
@@ -129,7 +129,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     public void addStageDefinition_oneObject_successMessage() {
         //Arrange
         this.prepareStageDefinition();
-        this.serviceResult.setObject(this.stageDefinition);
+        this.serviceResult.setEntity(this.stageDefinition);
         Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
         StageDefinition expectedResult = this.stageDefinition;
@@ -151,7 +151,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         String expectedResult = "ERROR: STAGE DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(this.stageDefinition);
+        this.serviceResult.setEntity(this.stageDefinition);
         Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
 
@@ -171,7 +171,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
         String expectedResult = "StageDefinition already exists.";
         this.serviceResult.setNotificationType(NotificationType.ERROR);
         this.serviceResult.setMessage(expectedResult);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.stageDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");
 
@@ -188,7 +188,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     public void addStageDefinition_withSameName_properErrorMessage() {
         //Arrange
         this.prepareStageDefinition();
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
         String expectedResult = "StageDefinition with that name already exists.";
         this.serviceResult.setMessage(expectedResult);
@@ -209,7 +209,7 @@ public class StageDefinitionControllerTests extends JerseyTest {
     public void updateStageDefinition_existingStageDefinition_updatedStageDefinition() {
         //Arrange
         this.prepareStageDefinition();
-        this.serviceResult.setObject(this.stageDefinition);
+        this.serviceResult.setEntity(this.stageDefinition);
         this.stageDefinition.setName("name-updated");
         Mockito.when(this.stageDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stageDefinition, "application/json");

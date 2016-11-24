@@ -92,10 +92,10 @@ public class TaskDefinitionServiceTests {
         //Act
         ServiceResult res = this.pipelineDefinitionService.getAll();
         ServiceResult actualResult = this.taskDefinitionService.getById(expectedTaskDefinition.getId());
-        ExecTask actualResultObject = (ExecTask) actualResult.getObject();
+        ExecTask actualResultObject = (ExecTask) actualResult.getEntity();
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedTaskDefinition.getId(), actualResultObject.getId());
         Assert.assertEquals(expectedTaskDefinition.getName(), actualResultObject.getName());
@@ -120,7 +120,7 @@ public class TaskDefinitionServiceTests {
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(this.notFoundMessage, actualResult.getMessage());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
     }
 
     @Test
@@ -135,10 +135,10 @@ public class TaskDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = this.taskDefinitionService.getAll();
-        List<TaskDefinition> actualJobDefinitions = (List<TaskDefinition>) actualResult.getObject();
+        List<TaskDefinition> actualJobDefinitions = (List<TaskDefinition>) actualResult.getEntity();
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedJobDefinitionsCount, actualJobDefinitions.size());
         Assert.assertEquals(this.retrievalSuccessMessage, actualResult.getMessage());
@@ -162,7 +162,7 @@ public class TaskDefinitionServiceTests {
 
         //Act
         ServiceResult actualExecResult = this.taskDefinitionService.add(expectedTask);
-        ExecTask actualExecResultObject = (ExecTask) actualExecResult.getObject();
+        ExecTask actualExecResultObject = (ExecTask) actualExecResult.getEntity();
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
@@ -189,7 +189,7 @@ public class TaskDefinitionServiceTests {
 
         //Act
         ServiceResult actualExecResult = this.taskDefinitionService.add(expectedTask);
-        FetchArtifactTask actualExecResultObject = (FetchArtifactTask) actualExecResult.getObject();
+        FetchArtifactTask actualExecResultObject = (FetchArtifactTask) actualExecResult.getEntity();
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
@@ -211,7 +211,7 @@ public class TaskDefinitionServiceTests {
 
         //Act
         ServiceResult actualExecResult = this.taskDefinitionService.add(expectedTask);
-        FetchMaterialTask actualExecResultObject = (FetchMaterialTask) actualExecResult.getObject();
+        FetchMaterialTask actualExecResultObject = (FetchMaterialTask) actualExecResult.getEntity();
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
@@ -233,7 +233,7 @@ public class TaskDefinitionServiceTests {
 
         //Act
         ServiceResult actualExecResult = this.taskDefinitionService.add(expectedTask);
-        UploadArtifactTask actualExecResultObject = (UploadArtifactTask) actualExecResult.getObject();
+        UploadArtifactTask actualExecResultObject = (UploadArtifactTask) actualExecResult.getEntity();
 
         //Assert
         Assert.assertNotNull(actualExecResultObject);
@@ -253,21 +253,21 @@ public class TaskDefinitionServiceTests {
         JobDefinition mockedJobDefinition = Mockito.mock(JobDefinition.class);
         ServiceResult getByIdServiceResult = Mockito.mock(ServiceResult.class);
 
-        Mockito.when(getByIdServiceResult.getObject()).thenReturn(mockedJobDefinition);
+        Mockito.when(getByIdServiceResult.getEntity()).thenReturn(mockedJobDefinition);
         UploadArtifactTask mockedTaskDefinition = Mockito.mock(UploadArtifactTask.class);
         Mockito.when(mockedTaskDefinition.getJobDefinitionId()).thenReturn(UUID.randomUUID().toString());
         Mockito.when(mockedTaskDefinition.getId()).thenReturn(UUID.randomUUID().toString());
 
         Mockito.when(mockedJobDefinition.getTaskDefinitions()).thenReturn(new ArrayList<>()).thenReturn(new ArrayList<>());
         Mockito.when(mockedJobDefinitionService.getById(Mockito.anyString())).thenReturn(mockedServiceResult);
-        Mockito.when(mockedJobDefinitionService.getById(Mockito.anyString()).getObject()).thenReturn(mockedJobDefinition);
+        Mockito.when(mockedJobDefinitionService.getById(Mockito.anyString()).getEntity()).thenReturn(mockedJobDefinition);
         Mockito.when(mockedJobDefinitionService.update(Mockito.any(JobDefinition.class))).thenReturn(mockedServiceResult);
 
         //Act
         ServiceResult actualExecResult = taskDefinitionServiceToTest.add(mockedTaskDefinition);
 
         //Assert
-        Assert.assertNull(actualExecResult.getObject());
+        Assert.assertNull(actualExecResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualExecResult.getNotificationType());
         Assert.assertEquals("TaskDefinition not added successfully.", actualExecResult.getMessage());
     }
@@ -317,28 +317,28 @@ public class TaskDefinitionServiceTests {
         ServiceResult actualResult3 = this.taskDefinitionService.update(fetchArtifactTask);
         ServiceResult actualResult4 = this.taskDefinitionService.update(fetchMaterialTask);
 
-        ExecTask actualResultObject = (ExecTask) actualResult.getObject();
-        UploadArtifactTask actualResultObject2 = (UploadArtifactTask) actualResult2.getObject();
-        FetchArtifactTask actualResultObject3 = (FetchArtifactTask) actualResult3.getObject();
-        FetchMaterialTask actualResultObject4 = (FetchMaterialTask) actualResult4.getObject();
+        ExecTask actualResultObject = (ExecTask) actualResult.getEntity();
+        UploadArtifactTask actualResultObject2 = (UploadArtifactTask) actualResult2.getEntity();
+        FetchArtifactTask actualResultObject3 = (FetchArtifactTask) actualResult3.getEntity();
+        FetchMaterialTask actualResultObject4 = (FetchMaterialTask) actualResult4.getEntity();
 
         //Assert
         //Exec
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(execTask.getName(), actualResultObject.getName());
         Assert.assertEquals(successMessage, actualResult.getMessage());
         //UploadArtifact
         Assert.assertEquals(NotificationType.SUCCESS, actualResult2.getNotificationType());
-        Assert.assertNotNull(actualResult2.getObject());
+        Assert.assertNotNull(actualResult2.getEntity());
         Assert.assertEquals(uploadArtifactTask.getName(), actualResultObject2.getName());
         //FetchArtifact
         Assert.assertEquals(NotificationType.SUCCESS, actualResult3.getNotificationType());
-        Assert.assertNotNull(actualResult3.getObject());
+        Assert.assertNotNull(actualResult3.getEntity());
         Assert.assertEquals(fetchArtifactTask.getName(), actualResultObject3.getName());
         //FetchMaterial
         Assert.assertEquals(NotificationType.SUCCESS, actualResult4.getNotificationType());
-        Assert.assertNotNull(actualResult4.getObject());
+        Assert.assertNotNull(actualResult4.getEntity());
         Assert.assertEquals(fetchMaterialTask.getName(), actualResultObject4.getName());
     }
 
@@ -356,7 +356,7 @@ public class TaskDefinitionServiceTests {
         //Assert
         Assert.assertEquals(NotificationType.ERROR, result.getNotificationType());
         Assert.assertEquals(this.notFoundMessage, result.getMessage());
-        Assert.assertNull(result.getObject());
+        Assert.assertNull(result.getEntity());
     }
 
     @Test
@@ -380,7 +380,7 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
         Assert.assertEquals(this.deletionSuccessMessage, actualResult.getMessage());
     }
 
@@ -399,7 +399,7 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals("TaskDefinition cannot delete the last task definition.", actualResult.getMessage());
     }
 
@@ -410,7 +410,7 @@ public class TaskDefinitionServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
         Assert.assertEquals("TaskDefinition does not exists.", actualResult.getMessage());
     }
 

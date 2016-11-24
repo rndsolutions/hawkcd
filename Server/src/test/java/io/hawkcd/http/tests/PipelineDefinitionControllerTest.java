@@ -58,7 +58,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     public void getAllPipelineDefinitions_nonExistingObjects_emptyList() {
         //Arrange
         List<PipelineDefinition> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.pipelineDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -77,7 +77,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         List<PipelineDefinition> expectedResult = new ArrayList<>();
         expectedResult.add(this.pipelineDefinition);
         expectedResult.add(this.pipelineDefinition);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.pipelineDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -93,7 +93,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     public void getPipelineDefinitionById_existingObject_correctObject() {
         //Arrange
         this.preparePipelineDefinition();
-        this.serviceResult.setObject(this.pipelineDefinition);
+        this.serviceResult.setEntity(this.pipelineDefinition);
         Mockito.when(this.pipelineDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
         PipelineDefinition expectedResult = this.pipelineDefinition;
 
@@ -112,7 +112,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         String expectedResult = "PipelineDefinition not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.pipelineDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
 
         //Act
@@ -128,7 +128,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     public void addPipelineDefinition_oneObject_successMessage() {
         //Arrange
         this.preparePipelineDefinition();
-        this.serviceResult.setObject(this.pipelineDefinition);
+        this.serviceResult.setEntity(this.pipelineDefinition);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
         PipelineDefinition expectedResult = this.pipelineDefinition;
@@ -150,7 +150,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         this.pipelineDefinition.setName(null);
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(this.pipelineDefinition);
+        this.serviceResult.setEntity(this.pipelineDefinition);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
 
@@ -169,7 +169,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         this.preparePipelineDefinition();
         String expectedResult = "PipelineDefinition already exists.";
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         this.serviceResult.setMessage(expectedResult);
         Mockito.when(this.pipelineDefinitionService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");
@@ -211,7 +211,7 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
     public void updatePipelineDefinition_existingPipelineDefinition_updatedPipelineDefinition() {
         //Arrange
         this.preparePipelineDefinition();
-        this.serviceResult.setObject(this.pipelineDefinition);
+        this.serviceResult.setEntity(this.pipelineDefinition);
         this.pipelineDefinition.setName("name-updated");
         Mockito.when(this.pipelineDefinitionService.update(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.pipelineDefinition, "application/json");

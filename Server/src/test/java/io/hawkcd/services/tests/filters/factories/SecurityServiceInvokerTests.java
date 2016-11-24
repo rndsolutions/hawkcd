@@ -62,7 +62,7 @@ public class SecurityServiceInvokerTests {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
         expectedServiceResult.setMessage("GET BY ID Service Result");
 
         Mockito.when(this.mockedSecurityService.getById("entity", this.contract.getClassName(), this.permissions)).thenReturn(true);
@@ -80,7 +80,7 @@ public class SecurityServiceInvokerTests {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
         expectedServiceResult.setMessage("ADD Service Result");
 
         Mockito.when(this.mockedSecurityService.add("entity", this.contract.getClassName(), this.permissions)).thenReturn(true);
@@ -98,7 +98,7 @@ public class SecurityServiceInvokerTests {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
         expectedServiceResult.setMessage("Update Service Result");
 
         Mockito.when(this.mockedSecurityService.update("entity", this.contract.getClassName(), this.permissions)).thenReturn(true);
@@ -116,7 +116,7 @@ public class SecurityServiceInvokerTests {
         //Assert
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
         expectedServiceResult.setMessage("DELETE Service Result");
 
         Mockito.when(this.mockedSecurityService.delete("entityId", this.contract.getClassName(), this.permissions)).thenReturn(true);

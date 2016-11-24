@@ -90,9 +90,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
     public ServiceResult add(Pipeline pipeline) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
         pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getEntity();
         Pipeline lastPipeline = pipelines
                 .stream()
                 .filter(p -> p.getPipelineDefinitionId().equals(pipeline.getPipelineDefinitionId()))
@@ -143,14 +143,14 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllByDefinitionId(String pipelineDefinitionId) {
         ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
                 .filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId))
                 .collect(Collectors.toList());
 
-        result.setObject(filteredPipelines);
+        result.setEntity(filteredPipelines);
 
         return result;
     }
@@ -159,7 +159,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllNonupdatedPipelines() {
         ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
@@ -167,7 +167,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
-        result.setObject(updatedPipelines);
+        result.setEntity(updatedPipelines);
 
         return result;
     }
@@ -176,7 +176,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
@@ -184,7 +184,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
-        result.setObject(updatedPipelines);
+        result.setEntity(updatedPipelines);
 
         return result;
     }
@@ -193,7 +193,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
@@ -201,7 +201,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
-        result.setObject(updatedPipelines);
+        result.setEntity(updatedPipelines);
 
         return result;
     }
@@ -210,7 +210,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPreparedAwaitingPipelines() {
         ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
@@ -218,7 +218,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
                 .collect(Collectors.toList());
 
-        result.setObject(updatedPipelines);
+        result.setEntity(updatedPipelines);
 
         return result;
     }
@@ -227,7 +227,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getLastRun(String pipelineDefinitionId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
         Pipeline lastRun = null;
         int lastExecutionId = 0;
@@ -238,7 +238,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             }
         }
 
-        result.setObject(lastRun);
+        result.setEntity(lastRun);
 
         return result;
     }
@@ -269,7 +269,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
                 .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
@@ -296,7 +296,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             pipelineDtos.add(pipelineDto);
         }
 
-        result.setObject(pipelineDtos);
+        result.setEntity(pipelineDtos);
 
         return result;
     }
@@ -311,7 +311,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getObject();
+        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
         List<Pipeline> filteredPipelines = pipelines
                 .stream()
                 .filter(p -> p.getPipelineDefinitionName().toLowerCase().contains(searchCriteria.toLowerCase()))
@@ -339,7 +339,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             pipelineDtos.add(pipelineDto);
         }
 
-        result.setObject(pipelineDtos);
+        result.setEntity(pipelineDtos);
 
         return result;
     }
@@ -352,7 +352,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             return result;
         }
 
-        Pipeline pipeline = (Pipeline) result.getObject();
+        Pipeline pipeline = (Pipeline) result.getEntity();
         pipeline.setShouldBeCanceled(true);
         pipeline.setStatus(PipelineStatus.IN_PROGRESS);
         return this.update(pipeline);
@@ -366,7 +366,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             return result;
         }
 
-        Pipeline pipeline = (Pipeline) result.getObject();
+        Pipeline pipeline = (Pipeline) result.getEntity();
         if (pipeline.getStatus() == PipelineStatus.IN_PROGRESS) {
             pipeline.setStatus(PipelineStatus.PAUSED);
             result.setNotificationType(NotificationType.WARNING);
@@ -396,9 +396,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     private void addMaterialsToPipeline(Pipeline pipeline) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
         List<MaterialDefinition> materialDefinitions =
-                (List<MaterialDefinition>) this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId()).getObject();
+                (List<MaterialDefinition>) this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId()).getEntity();
 
         List<Material> materials = new ArrayList<>();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
@@ -412,7 +412,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     private void addStagesToPipeline(Pipeline pipeline) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
         List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
 
         List<Stage> stages = new ArrayList<>();

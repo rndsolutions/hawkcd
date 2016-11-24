@@ -45,7 +45,7 @@ public class JobAssigner implements Runnable {
         LOGGER.info(String.format(LoggerMessages.WORKER_STARTED, this.getClass().getSimpleName()));
         try {
             while (true) {
-                List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
+                List<Agent> agents = (List<Agent>) this.agentService.getAll().getEntity();
 
                 PipelineService.lock.lock();
                 this.statusUpdaterService.updateStatuses();

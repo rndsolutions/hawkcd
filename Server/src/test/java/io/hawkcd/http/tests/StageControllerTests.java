@@ -56,7 +56,7 @@ public class StageControllerTests extends JerseyTest {
     public void getAllStages_nonExistingObjects_emptyList() {
         //Arrange
         List<Stage> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.stageService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -75,7 +75,7 @@ public class StageControllerTests extends JerseyTest {
         this.stage = new Stage();
         expectedResult.add(this.stage);
         expectedResult.add(this.stage);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.stageService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -91,7 +91,7 @@ public class StageControllerTests extends JerseyTest {
     public void getStageById_existingObject_correctObject() {
         //Arrange
         this.stage = new Stage();
-        this.serviceResult.setObject(this.stage);
+        this.serviceResult.setEntity(this.stage);
         Mockito.when(this.stageService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
         Stage expectedResult = this.stage;
 
@@ -110,7 +110,7 @@ public class StageControllerTests extends JerseyTest {
         String expectedResult = "Stage not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.stageService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
         //Act
@@ -126,7 +126,7 @@ public class StageControllerTests extends JerseyTest {
     public void addNewStage_oneObject_successMessage() {
         //Arrange
         this.prepareStage();
-        this.serviceResult.setObject(this.stage);
+        this.serviceResult.setEntity(this.stage);
         Mockito.when(this.stageService.add(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.stage, "application/json");
         Stage expectedResult = this.stage;

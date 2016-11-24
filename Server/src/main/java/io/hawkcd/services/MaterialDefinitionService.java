@@ -68,10 +68,10 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     public ServiceResult getAllFromPipelineDefinition(String pipelineDefinitionId) {
         List<MaterialDefinition> materialDefinitions = new ArrayList<>();
 
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipelineDefinitionId).getEntity();
         if (pipelineDefinition != null) {
             for (String materialDefinitionId : pipelineDefinition.getMaterialDefinitionIds()) {
-                MaterialDefinition materialDefinition = (MaterialDefinition) this.getById(materialDefinitionId).getObject();
+                MaterialDefinition materialDefinition = (MaterialDefinition) this.getById(materialDefinitionId).getEntity();
                 if (materialDefinition != null) {
                     materialDefinitions.add(materialDefinition);
                 }
@@ -108,7 +108,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(MaterialDefinition materialDefinitionId) {
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
         List<String> assignedIds = new ArrayList<>();
         for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
             for (String assignedId : pipelineDefinition.getMaterialDefinitionIds()) {

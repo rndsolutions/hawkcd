@@ -68,7 +68,7 @@ public class TaskDefinitionAuthorizationService implements IAuthorizationService
     @Override
     public List getAll(List permissions, List entriesToFilter) {
         List<TaskDefinition> filteredTaskDefinitions = new ArrayList<>();
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
         List<PipelineDefinition> filteredPipelineDefinitions = this.pipelineDefintionAuthorizationService.getAll(permissions, pipelineDefinitions);
 
         for (PipelineDefinition filteredPipelineDefinition : filteredPipelineDefinitions) {
@@ -88,7 +88,7 @@ public class TaskDefinitionAuthorizationService implements IAuthorizationService
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        TaskDefinition taskDefinition = (TaskDefinition) this.taskDefinitionService.getById(entityId).getObject();
+        TaskDefinition taskDefinition = (TaskDefinition) this.taskDefinitionService.getById(entityId).getEntity();
 
         return this.pipelineDefintionAuthorizationService.getById(taskDefinition.getPipelineDefinitionId(), permissions);
     }
@@ -96,7 +96,7 @@ public class TaskDefinitionAuthorizationService implements IAuthorizationService
     @Override
     public boolean add(String entity, List permissions) {
         TaskDefinition taskDefinition = this.jsonConverter.fromJson(entity, TaskDefinition.class);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getEntity();
 
         String pipelineDefinitionsAsString = this.jsonConverter.toJson(pipelineDefinition);
 
@@ -106,7 +106,7 @@ public class TaskDefinitionAuthorizationService implements IAuthorizationService
     @Override
     public boolean update(String entity, List permissions) {
         TaskDefinition taskDefinition = this.jsonConverter.fromJson(entity, TaskDefinition.class);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(taskDefinition.getPipelineDefinitionId()).getEntity();
 
         String pipelineDefinitionsAsString = this.jsonConverter.toJson(pipelineDefinition);
 
@@ -115,7 +115,7 @@ public class TaskDefinitionAuthorizationService implements IAuthorizationService
 
     @Override
     public boolean delete(String entityId, List permissions) {
-        TaskDefinition taskDefinition = (TaskDefinition) this.taskDefinitionService.getById(entityId).getObject();
+        TaskDefinition taskDefinition = (TaskDefinition) this.taskDefinitionService.getById(entityId).getEntity();
 
         return this.pipelineDefintionAuthorizationService.delete(taskDefinition.getPipelineDefinitionId(), permissions);
     }

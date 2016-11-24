@@ -26,7 +26,6 @@ import io.hawkcd.model.User;
 import io.hawkcd.model.dto.LoginDto;
 import io.hawkcd.model.dto.RegisterDto;
 import io.hawkcd.model.enums.NotificationType;
-import io.hawkcd.model.payload.Permission;
 import io.hawkcd.services.UserService;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -124,12 +123,12 @@ public class AuthController {
                     .build();
         }
 
-        User userFromDb = (User) serviceResult.getObject();
+        User userFromDb = (User) serviceResult.getEntity();
 
         if (!userFromDb.isEnabled()) {
             serviceResult.setNotificationType(NotificationType.ERROR);
             serviceResult.setMessage("Cannot login");
-            serviceResult.setObject(null);
+            serviceResult.setEntity(null);
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 

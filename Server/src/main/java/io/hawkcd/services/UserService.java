@@ -87,7 +87,7 @@ public class UserService extends CrudService<User> implements IUserService {
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult getByEmailAndPassword(String email, String password) {
-        List<User> users = (List<User>) this.getAll().getObject();
+        List<User> users = (List<User>) this.getAll().getEntity();
 
         User user = users
                 .stream()
@@ -106,7 +106,7 @@ public class UserService extends CrudService<User> implements IUserService {
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult getByEmail(String email) {
-        List<User> users = (List<User>) this.getAll().getObject();
+        List<User> users = (List<User>) this.getAll().getEntity();
 
         User user = users
                 .stream()
@@ -136,7 +136,7 @@ public class UserService extends CrudService<User> implements IUserService {
         if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
         }
-        User userToUpdate = (User) result.getObject();
+        User userToUpdate = (User) result.getEntity();
         String hashedPasswordToUpdateUser = DigestUtils.sha256Hex(newPasword);
         userToUpdate.setPassword(hashedPasswordToUpdateUser);
 

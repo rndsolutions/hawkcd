@@ -166,7 +166,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
         if (this.pipelineService == null) {
             this.pipelineService = new PipelineService();
         }
-        List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getObject();
+        List<Pipeline> pipelinesFromDb = (List<Pipeline>) this.pipelineService.getAll().getEntity();
 
         if (pipelinesFromDb != null) {
             List<Pipeline> pipelineWithinThePipelineDefinition = pipelinesFromDb
@@ -186,7 +186,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     public ServiceResult getAllAutomaticallyScheduledPipelines() {
         ServiceResult result;
-        List<PipelineDefinition> allPipelines = (List<PipelineDefinition>) this.getAll().getObject();
+        List<PipelineDefinition> allPipelines = (List<PipelineDefinition>) this.getAll().getEntity();
         List<PipelineDefinition> scheduledPipelines = allPipelines.stream().filter(p -> p.isAutoSchedulingEnabled()).collect(Collectors.toList());
         result = super.createServiceResultArray(scheduledPipelines, NotificationType.SUCCESS, "retrieved successfully");
         return result;
@@ -195,7 +195,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult unassignPipelineFromGroup(String pipelineDefinitionId) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getEntity();
         if (pipelineDefinition == null) {
             return super.createServiceResult(null, NotificationType.ERROR, "could not be found");
         }
@@ -209,7 +209,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult assignPipelineToGroup(String pipelineDefinitionId, String pipelineGroupId, String pipelineGroupName) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.getById(pipelineDefinitionId).getEntity();
         if (pipelineDefinition == null) {
             return super.createServiceResult(null, NotificationType.ERROR, "could not be found");
         }

@@ -55,7 +55,7 @@ public class MaterialTracker implements Runnable {
         try {
             while (true) {
                 // MaterialTracker
-                List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAllAutomaticallyScheduledPipelines().getObject();
+                List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAllAutomaticallyScheduledPipelines().getEntity();
                 for (PipelineDefinition pipelineDefinition : pipelineDefinitions) {
                     String triggerMaterials = this.materialHandlerService.checkPipelineForTriggerMaterials(pipelineDefinition);
                     if (!triggerMaterials.isEmpty()) {
@@ -70,7 +70,7 @@ public class MaterialTracker implements Runnable {
                 }
 
                 // MaterialPreparer
-                List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getObject();
+                List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllNonupdatedPipelines().getEntity();
                 for (Pipeline pipeline : pipelines) {
                     boolean isPipelineUpdated = true;
                     for (Material material : pipeline.getMaterials()) {

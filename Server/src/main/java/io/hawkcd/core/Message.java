@@ -65,7 +65,7 @@ public class Message {
         this.methodCalled = methodCalled;
         this.owner = usr;
         if (serviceResult != null) {
-            this.envelopе = new Envelopе(serviceResult.getObject());
+            this.envelopе = new Envelopе(serviceResult.getEntity());
             this.resultNotificationType = serviceResult.getNotificationType();
             this.resultMessage = serviceResult.getMessage();
         }

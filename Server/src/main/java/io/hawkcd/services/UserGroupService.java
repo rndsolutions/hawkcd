@@ -94,7 +94,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult updateUserGroupDto(UserGroupDto userGroupDto) {
-        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
+        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
         userGroup.setName(userGroupDto.getName());
         userGroup.setUserIds(userGroupDto.getUserIds());
         userGroup.setPermissions(userGroupDto.getPermissions());
@@ -114,7 +114,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(UserGroup userGroup) {
-        List<User> users = (List<User>) this.userService.getAll().getObject();
+        List<User> users = (List<User>) this.userService.getAll().getEntity();
 
         for (User user : users) {
             List<String> userGroupIds = user.getUserGroupIds();
@@ -139,7 +139,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto) {
-        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
+        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
 
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
@@ -166,7 +166,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto) {
-        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getObject();
+        UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
 
         boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
@@ -193,7 +193,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
     public ServiceResult getAllUserGroups() {
-        List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getObject();
+        List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getEntity();
         List<UserGroupDto> userGroupDtos = new ArrayList<>();
 
         for (UserGroup userGroup : userGroups) {
@@ -205,7 +205,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             userGroupDto.setUserIds(userGroup.getUserIds());
 
             for (String userId : userIds) {
-                User currentUser = (User) this.userService.getById(userId).getObject();
+                User currentUser = (User) this.userService.getById(userId).getEntity();
                 userGroupDto.getUsers().add(currentUser);
             }
 
@@ -225,7 +225,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         userGroupDto.setUsers(new ArrayList<>());
         List<String> userIds = userGroupDto.getUserIds();
         for (String userId : userIds) {
-            User user = (User) this.userService.getById(userId).getObject();
+            User user = (User) this.userService.getById(userId).getEntity();
             userGroupDto.getUsers().add(user);
         }
 

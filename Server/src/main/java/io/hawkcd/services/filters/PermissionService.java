@@ -45,7 +45,7 @@ public class PermissionService {
         List<String> userGroupIds = user.getUserGroupIds();
 
         for (String userGroupId : userGroupIds) {
-            UserGroup userGroup = (UserGroup) this.userGroupService.getById(userGroupId).getObject();
+            UserGroup userGroup = (UserGroup) this.userGroupService.getById(userGroupId).getEntity();
             List<String> userIds = userGroup.getUserIds();
             boolean isPresent = false;
 

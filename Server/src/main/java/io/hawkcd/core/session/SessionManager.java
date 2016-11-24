@@ -21,7 +21,6 @@ package io.hawkcd.core.session;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.SessionDetails;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 
@@ -152,7 +151,7 @@ public class SessionManager implements  ISessionManager{
 
     @Override
     public List<SessionDetails> getAllActiveSessions() {
-        List<SessionDetails> activeSessions = ((List<SessionDetails>) this.sessionService.getAll().getObject())
+        List<SessionDetails> activeSessions = ((List<SessionDetails>) this.sessionService.getAll().getEntity())
                 .stream()
                 .filter(s -> s.isActive())
                 .collect(Collectors.toList());

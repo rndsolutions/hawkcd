@@ -123,7 +123,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -161,7 +161,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -205,7 +205,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group retrieved successfully");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -248,7 +248,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group retrieved successfully");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -296,7 +296,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group updated successfully");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -343,7 +343,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be added");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -391,7 +391,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group updated successfully");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -437,7 +437,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be deleted");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -482,7 +482,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group deleted successfully");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -525,7 +525,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be deleted");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -573,7 +573,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group added successfully");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -620,7 +620,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be added");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -676,7 +676,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User added successfully to group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -730,7 +730,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User cannot be added to group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -778,7 +778,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Group Dto updated successfully");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -824,7 +824,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User Group cannot be deleted");
-        expectedServiceResult.setObject(userGroupDto);
+        expectedServiceResult.setEntity(userGroupDto);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -883,7 +883,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User removed successfully to group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -940,7 +940,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User cannot be removed to group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -984,7 +984,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User added successfully");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -1027,7 +1027,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
         expectedServiceResult.setMessage("User cannot be added");
-        expectedServiceResult.setObject(user);
+        expectedServiceResult.setEntity(user);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -1067,7 +1067,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -1105,7 +1105,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("User Groups retrieved successfully");
-        expectedServiceResult.setObject(expectedUserGroups);
+        expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
 
@@ -1157,7 +1157,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline assigned successfully to group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -1207,7 +1207,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline assigned successfully to group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -1252,7 +1252,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline unassigned successfully from group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);
@@ -1295,7 +1295,7 @@ public class SecurityServiceTests {
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
         expectedServiceResult.setMessage("Pipeline unassigned successfully from group");
-        expectedServiceResult.setObject(null);
+        expectedServiceResult.setEntity(null);
 
         try {
             Mockito.when(this.mockedWsObjectProcessor.call(contract)).thenReturn(expectedServiceResult);

@@ -98,7 +98,7 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.getById(expectedJobDefinition.getId());
-        JobDefinition actualJobDefinition = (JobDefinition) actualResult.getObject();
+        JobDefinition actualJobDefinition = (JobDefinition) actualResult.getEntity();
 
         //Assert
         Assert.assertNotNull(actualResult);
@@ -122,7 +122,7 @@ public class JobDefinitionServiceTests {
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(this.notFoundMessage, actualResult.getMessage());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
     }
 
     @Test
@@ -132,10 +132,10 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.getAll();
-        List<JobDefinition> actualJobDefinitions = (List<JobDefinition>) actualResult.getObject();
+        List<JobDefinition> actualJobDefinitions = (List<JobDefinition>) actualResult.getEntity();
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedJobDefinitionsCount, actualJobDefinitions.size());
         Assert.assertEquals(this.retrievalSuccessMessage, actualResult.getMessage());
@@ -153,10 +153,10 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.add(jobDefinitionToAdd);
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(successMessage, actualResult.getMessage());
         Assert.assertEquals(actualResultObject.getId(), jobDefinitionToAdd.getId());
@@ -169,10 +169,10 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.add(jobDefinitionToAdd);
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(jobDefinitionToAdd, actualResultObject);
         Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
@@ -186,11 +186,11 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.update(expectedObject);
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
         String successMessage = "JobDefinition " + expectedObject.getId() + " updated successfully.";
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         Assert.assertEquals(expectedObject, actualResultObject);
         Assert.assertEquals(successMessage, actualResult.getMessage());
@@ -203,10 +203,10 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.update(expectedObject);
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(expectedObject, actualResultObject);
         Assert.assertEquals(this.existingNameErrorMessage, actualResult.getMessage());
@@ -225,10 +225,10 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.update(expectedObject);
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
 
         //Assert
-        Assert.assertNotNull(actualResult.getObject());
+        Assert.assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         Assert.assertEquals(expectedObject, actualResultObject);
         Assert.assertEquals(actualResultObject.getEnvironmentVariables(),environmentVariables);
@@ -242,7 +242,7 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.delete(expectedObject.getId());
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
 
         //Assert
         Assert.assertNull(actualResultObject);
@@ -262,12 +262,12 @@ public class JobDefinitionServiceTests {
         ServiceResult mockedResult = new ServiceResult();
         mockedResult.setNotificationType(NotificationType.ERROR);
         mockedResult.setMessage(this.notDeletedFailureMessage);
-        mockedResult.setObject(jobDefinitionToReturn);
+        mockedResult.setEntity(jobDefinitionToReturn);
         when(mockedJobDefinitionService.delete("id")).thenReturn(mockedResult);
 
         //Act
         ServiceResult actualResult = mockedJobDefinitionService.delete("id");
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
@@ -280,7 +280,7 @@ public class JobDefinitionServiceTests {
     @Test
     public void delete_notFoundId_returnActualNotDeletedObject() {
         //Arrange
-        List<JobDefinition> allJobDefinitionsInPipeline = (List<JobDefinition>) this.jobDefinitionService.getAllInPipeline(pipelineDefinition.getId()).getObject();
+        List<JobDefinition> allJobDefinitionsInPipeline = (List<JobDefinition>) this.jobDefinitionService.getAllInPipeline(pipelineDefinition.getId()).getEntity();
         int allJobDefinitionsCount = allJobDefinitionsInPipeline.size();
         ServiceResult actualResult = null;
         JobDefinition notDeletedJobDefinition = null;
@@ -295,7 +295,7 @@ public class JobDefinitionServiceTests {
                 this.jobDefinitionService.delete(currentJobDefinition.getId());
             }
         }
-        JobDefinition actualResultObject = (JobDefinition) actualResult.getObject();
+        JobDefinition actualResultObject = (JobDefinition) actualResult.getEntity();
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
@@ -315,7 +315,7 @@ public class JobDefinitionServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getObject());
+        Assert.assertNull(actualResult.getEntity());
         Assert.assertEquals("JobDefinition does not exists.", actualResult.getMessage());
     }
 
@@ -327,7 +327,7 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.getAllInStage(stageFromMockedDb.getId());
-        List<JobDefinition> actualResultObject = (List<JobDefinition>) actualResult.getObject();
+        List<JobDefinition> actualResultObject = (List<JobDefinition>) actualResult.getEntity();
 
         //Assert
         Assert.assertNotNull(actualResultObject);
@@ -343,7 +343,7 @@ public class JobDefinitionServiceTests {
 
         //Act
         ServiceResult actualResult = jobDefinitionService.getAllInPipeline(pipelineDefinition.getId());
-        List<JobDefinition> actualResultObject = (List<JobDefinition>) actualResult.getObject();
+        List<JobDefinition> actualResultObject = (List<JobDefinition>) actualResult.getEntity();
         int actualNumberOfJobDefinitions = actualResultObject.size();
 
         //Assert
@@ -367,7 +367,7 @@ public class JobDefinitionServiceTests {
          * Flow updates everything as it should be, but when it comes back to the test, all the data is not updated!
          * */
         StageDefinition stageDefinition = this.getStageDefinitionAtIndex(this.randomStageIndex);
-        List<JobDefinition> allJobDefinitionsInStage = (List<JobDefinition>) this.jobDefinitionService.getAllInStage(stageDefinition.getId()).getObject();
+        List<JobDefinition> allJobDefinitionsInStage = (List<JobDefinition>) this.jobDefinitionService.getAllInStage(stageDefinition.getId()).getEntity();
         int allJobDefinitionsCount = allJobDefinitionsInStage.size();
         ServiceResult actualResult = null;
         JobDefinition notDeletedJobDefinition = null;

@@ -50,7 +50,7 @@ public class MaterialDefinitionController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMaterialDefinitions() {
         ServiceResult result = this.materialDefinitionService.getAll();
-        return Response.status(Response.Status.OK).entity(result.getObject()).build();
+        return Response.status(Response.Status.OK).entity(result.getEntity()).build();
     }
 
     @GET
@@ -65,7 +65,7 @@ public class MaterialDefinitionController {
             return Response.status(Status.NOT_FOUND).entity(result.getMessage()).build();
         }
 
-        return Response.status(Status.OK).entity(result.getObject()).build();
+        return Response.status(Status.OK).entity(result.getEntity()).build();
     }
 
     @POST
@@ -81,7 +81,7 @@ public class MaterialDefinitionController {
                         .build();
             }
 
-            return Response.status(Status.CREATED).entity(result.getObject()).build();
+            return Response.status(Status.CREATED).entity(result.getEntity()).build();
 
         } else {
             return Response.status(Status.BAD_REQUEST)
@@ -104,7 +104,7 @@ public class MaterialDefinitionController {
                         .build();
             }
 
-            return Response.status(Status.OK).entity(result.getObject()).build();
+            return Response.status(Status.OK).entity(result.getEntity()).build();
 
         } else {
             return Response.status(Status.BAD_REQUEST)

@@ -19,7 +19,7 @@ package io.hawkcd.model;
 import io.hawkcd.model.enums.NotificationType;
 
 public class ServiceResult {
-    private Object object;
+    private Object entity;
     private NotificationType notificationType;
     private String message;
 
@@ -27,18 +27,18 @@ public class ServiceResult {
 
     }
 
-    public ServiceResult(Object object, NotificationType notificationType, String message) {
-        this.object = object;
+    public ServiceResult(Object entity, NotificationType notificationType, String message) {
+        this.entity = entity;
         this.notificationType = notificationType;
         this.message = message;
     }
 
-    public Object getObject() {
-        return this.object;
+    public Object getEntity() {
+        return this.entity;
     }
 
-    public void setObject(Object object) {
-        this.object = object;
+    public void setEntity(Object entity) {
+        this.entity = entity;
     }
 
     public NotificationType getNotificationType() {

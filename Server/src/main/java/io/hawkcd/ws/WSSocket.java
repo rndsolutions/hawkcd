@@ -88,7 +88,7 @@ public class WSSocket extends WebSocketAdapter {
     }
 
     public User getLoggedUserFromDatabase() {
-        return (User) this.userService.getById(this.loggedUser.getId()).getObject();
+        return (User) this.userService.getById(this.loggedUser.getId()).getEntity();
     }
 
     public void setLoggedUser(User loggedUser) {

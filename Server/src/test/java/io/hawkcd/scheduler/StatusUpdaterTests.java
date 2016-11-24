@@ -71,7 +71,7 @@ public class StatusUpdaterTests {
 
         this.statusUpdaterService.updateStatuses();
 
-        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAll().getObject();
+        List<Pipeline> actualPipelines = (List<Pipeline>) this.pipelineService.getAll().getEntity();
 
         for (Pipeline actualPipeline: actualPipelines) {
             Assert.assertEquals(PipelineStatus.IN_PROGRESS, actualPipeline.getStatus());
@@ -88,7 +88,7 @@ public class StatusUpdaterTests {
                 List<Job> jobs = stage.getJobs();
                 jobs.stream().filter(job -> job.getStatus() == JobStatus.FAILED).forEach(job -> {
                     String pipelineId = expectedPipelineObject.getId();
-                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
+                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getEntity();
                     Assert.assertNotEquals(PipelineStatus.FAILED, actualPipeline.getStatus());
                 });
             }
@@ -113,7 +113,7 @@ public class StatusUpdaterTests {
                 if (passedJobsIterator == jobs.size()) {
                     this.pipelineService.update(expectedPipelineObject);
                     String pipelineId = expectedPipelineObject.getId();
-                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
+                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getEntity();
                     Assert.assertEquals(PipelineStatus.PASSED, actualPipeline.getStatus());
                 }
             }
@@ -137,7 +137,7 @@ public class StatusUpdaterTests {
                 }
                 if (failedJobsIterator == 0) {
                     String pipelineId = expectedPipelineObject.getId();
-                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getObject();
+                    Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipelineId).getEntity();
                     Assert.assertEquals(expectedPipelineObject.getStatus(), actualPipeline.getStatus());
                 }
             }

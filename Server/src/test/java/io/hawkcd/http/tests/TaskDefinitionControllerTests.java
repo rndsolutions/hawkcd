@@ -60,7 +60,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     public void getTaksDefinitions_nonExistingObjects_emptyList() {
         //Arrange
         List<TaskDefinition> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.taskDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -80,7 +80,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         this.taskDefinition = new ExecTask();
         expectedResult.add(this.taskDefinition);
         expectedResult.add(this.taskDefinition);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.taskDefinitionService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -96,7 +96,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     public void getTaskDefinitionById_existingObject_correctObject() {
         ///Arrange
         this.taskDefinition = new ExecTask();
-        this.serviceResult.setObject(this.taskDefinition);
+        this.serviceResult.setEntity(this.taskDefinition);
         Mockito.when(this.taskDefinitionService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
         TaskDefinition expectedResult = this.taskDefinition;
 
@@ -115,7 +115,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         String expectedResult = "TaskDefinition not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.taskDefinitionService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
         //Act
@@ -131,7 +131,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     public void addTaskDefinition_oneObject_successMessage() {
         //Arrange
         this.prepareTaskDefinition();
-        this.serviceResult.setObject(this.taskDefinition);
+        this.serviceResult.setEntity(this.taskDefinition);
         Mockito.when(this.taskDefinitionService.addTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
         TaskDefinition expectedResult = this.taskDefinition;
@@ -153,7 +153,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
         String expectedResult = "ERROR: TASK DEFINITION NAME IS NULL.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(this.taskDefinition);
+        this.serviceResult.setEntity(this.taskDefinition);
         Mockito.when(this.taskDefinitionService.addTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");
 
@@ -212,7 +212,7 @@ public class TaskDefinitionControllerTests extends JerseyTest {
     public void updateTaskDefinition_existingTaskDefinition_updatedTaskDefinition() {
         //Arrange
         this.prepareTaskDefinition();
-        this.serviceResult.setObject(this.taskDefinition);
+        this.serviceResult.setEntity(this.taskDefinition);
         this.taskDefinition.setName("name-updated");
         Mockito.when(this.taskDefinitionService.updateTask(Mockito.anyObject())).thenReturn(this.serviceResult);
         Entity entity = Entity.entity(this.taskDefinition, "application/json");

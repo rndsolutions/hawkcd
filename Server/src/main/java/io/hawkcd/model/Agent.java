@@ -27,7 +27,6 @@ import java.util.Set;
 
 @Authorization(scope = PermissionScope.SERVER, type = PermissionType.VIEWER)
 public class Agent extends Entity {
-    private String name;
     private String hostName;
     private String ipAddress;
     private String rootPath;
@@ -42,14 +41,6 @@ public class Agent extends Entity {
 
     public Agent() {
         this.setResources(new HashSet<>());
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getHostName() {

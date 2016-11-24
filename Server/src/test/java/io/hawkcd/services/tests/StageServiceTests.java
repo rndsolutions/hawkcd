@@ -70,9 +70,9 @@ public class StageServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         assertEquals(actualResult.getMessage(), expectedMessage);
-        assertEquals(actualResult.getObject(), stageList);
+        assertEquals(actualResult.getEntity(), stageList);
     }
 
     @Test
@@ -86,12 +86,12 @@ public class StageServiceTests {
 
         //Act
         ServiceResult actualResult = this.stageService.getAll();
-        List<Stage> resultList = (List<Stage>) actualResult.getObject();
+        List<Stage> resultList = (List<Stage>) actualResult.getEntity();
         Stage actualObject = resultList.stream().findFirst().get();
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         assertEquals(actualResult.getMessage(), expectedMessage);
         assertEquals(1, resultList.size());
         assertEquals(this.stage.getId(), actualObject.getId());
@@ -106,14 +106,14 @@ public class StageServiceTests {
 
         //Act
         ServiceResult actualResult = this.stageService.getById(this.stage.getId());
-        Stage actualStage = (Stage) actualResult.getObject();
+        Stage actualStage = (Stage) actualResult.getEntity();
 
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         assertEquals(expectedMessage, actualResult.getMessage());
-        assertEquals(this.stage.getId(), ((Stage) actualResult.getObject()).getId());
+        assertEquals(this.stage.getId(), ((Stage) actualResult.getEntity()).getId());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class StageServiceTests {
 
         //Assert
         assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        assertNull(actualResult.getObject());
+        assertNull(actualResult.getEntity());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -138,15 +138,15 @@ public class StageServiceTests {
 
         //Act
         ServiceResult actualResult = this.stageService.add(this.stage);
-        Stage actualStatus = (Stage) actualResult.getObject();
-        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
+        Stage actualStatus = (Stage) actualResult.getEntity();
+        String expectedMessage = actualResult.getEntity().getClass().getSimpleName() +
                 " " + actualStatus.getId() + " created successfully.";
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         assertEquals(expectedMessage, actualResult.getMessage());
-        assertEquals(this.stage.getId(), ((Stage) actualResult.getObject()).getId());
+        assertEquals(this.stage.getId(), ((Stage) actualResult.getEntity()).getId());
 
     }
 
@@ -159,13 +159,13 @@ public class StageServiceTests {
         //Act
         this.stage.setStatus(StageStatus.PASSED);
         ServiceResult actualResult = this.stageService.update(this.stage);
-        Stage actualStatus = (Stage) actualResult.getObject();
-        String expectedMessage = actualResult.getObject().getClass().getSimpleName() +
+        Stage actualStatus = (Stage) actualResult.getEntity();
+        String expectedMessage = actualResult.getEntity().getClass().getSimpleName() +
                 " " + actualStatus.getId() + " updated successfully.";
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(StageStatus.PASSED, actualStatus.getStatus());
     }
@@ -185,7 +185,7 @@ public class StageServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 

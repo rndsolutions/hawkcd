@@ -66,7 +66,7 @@ public class StageDefinitionAuthorizationService implements IAuthorizationServic
     @Override
     public List getAll(List permissions, List entriesToFilter) {
         List<StageDefinition> filteredStageDefinitions = new ArrayList<>();
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
         List<PipelineDefinition> filteredPipelineDefinitions = this.pipelineDefintionAuthorizationService.getAll(permissions, pipelineDefinitions);
 
         for (PipelineDefinition filteredPipelineDefinition : filteredPipelineDefinitions) {
@@ -77,7 +77,7 @@ public class StageDefinitionAuthorizationService implements IAuthorizationServic
 
     @Override
     public boolean getById(String entityId, List permissions) {
-        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(entityId).getObject();
+        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(entityId).getEntity();
 
         return this.pipelineDefintionAuthorizationService.getById(stageDefinition.getPipelineDefinitionId(), permissions);
     }
@@ -85,7 +85,7 @@ public class StageDefinitionAuthorizationService implements IAuthorizationServic
     @Override
     public boolean add(String entity, List permissions) {
         StageDefinition stageDefinition = this.jsonConverter.fromJson(entity, StageDefinition.class);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getEntity();
 
         String pipelineDefinitionsAsString = this.jsonConverter.toJson(pipelineDefinition);
 
@@ -95,7 +95,7 @@ public class StageDefinitionAuthorizationService implements IAuthorizationServic
     @Override
     public boolean update(String entity, List permissions) {
         StageDefinition stageDefinition = this.jsonConverter.fromJson(entity, StageDefinition.class);
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getObject();
+        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(stageDefinition.getPipelineDefinitionId()).getEntity();
 
         String pipelineDefinitionsAsString = this.jsonConverter.toJson(pipelineDefinition);
 
@@ -104,7 +104,7 @@ public class StageDefinitionAuthorizationService implements IAuthorizationServic
 
     @Override
     public boolean delete(String entityId, List permissions) {
-        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(entityId).getObject();
+        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(entityId).getEntity();
 
         return this.pipelineDefintionAuthorizationService.delete(stageDefinition.getPipelineDefinitionId(), permissions);
     }

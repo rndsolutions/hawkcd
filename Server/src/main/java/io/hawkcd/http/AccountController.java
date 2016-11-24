@@ -46,7 +46,7 @@ public class AccountController {
     public Response getUsers() {
         ServiceResult result = this.usrService.getAll();
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -65,7 +65,7 @@ public class AccountController {
                     .build();
         } else {
             return Response.status(Status.CREATED)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
         }
     }

@@ -49,7 +49,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String jobId) {
-        List<Stage> allStages = (List<Stage>) this.stageService.getAll().getObject();
+        List<Stage> allStages = (List<Stage>) this.stageService.getAll().getEntity();
         Job result = null;
         for (Stage stage : allStages) {
             List<Job> jobs = stage.getJobs();
@@ -67,7 +67,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
-        List<Stage> allStages = (List<Stage>) this.stageService.getAll().getObject();
+        List<Stage> allStages = (List<Stage>) this.stageService.getAll().getEntity();
         List<Job> allJobs = new ArrayList<>();
 
         for (Stage stage : allStages) {
@@ -81,7 +81,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult add(Job job) {
-        Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
+        Stage stage = (Stage) this.stageService.getById(job.getStageId()).getEntity();
         List<Job> jobs = stage.getJobs();
 
         for (Job jobFromDb : jobs) {
@@ -107,7 +107,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(Job job) {
         ServiceResult serviceResult = null;
-        Stage stage = (Stage) this.stageService.getById(job.getStageId()).getObject();
+        Stage stage = (Stage) this.stageService.getById(job.getStageId()).getEntity();
         List<Job> jobs = stage.getJobs();
         int jobsSize = jobs.size();
         for (int i = 0; i < jobsSize; i++) {
@@ -124,7 +124,7 @@ public class JobService extends CrudService<Job> implements IJobService {
         }
 
         if ((serviceResult.getNotificationType() == NotificationType.ERROR)) {
-            serviceResult = super.createServiceResult((Job) serviceResult.getObject(), NotificationType.ERROR, "not updated");
+            serviceResult = super.createServiceResult((Job) serviceResult.getEntity(), NotificationType.ERROR, "not updated");
         } else {
             serviceResult = super.createServiceResult(job, NotificationType.SUCCESS, "updated successfully");
         }
@@ -137,7 +137,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     public ServiceResult delete(Job job) {
         Stage stageToUpdate = new Stage();
         Job jobToDelete = null;
-        List<Stage> stages = (List<Stage>) this.stageService.getAll().getObject();
+        List<Stage> stages = (List<Stage>) this.stageService.getAll().getEntity();
 
         for (Stage stage : stages) {
             List<Job> jobs = stage.getJobs();

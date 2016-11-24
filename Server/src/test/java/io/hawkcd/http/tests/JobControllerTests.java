@@ -54,7 +54,7 @@ public class JobControllerTests extends JerseyTest {
     public void getAllJobs_nonExistingObjects_emptyList() {
         //Arrange
         List<Job> expectedResult = new ArrayList<>();
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.jobService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -73,7 +73,7 @@ public class JobControllerTests extends JerseyTest {
         this.job = new Job();
         expectedResult.add(this.job);
         expectedResult.add(this.job);
-        this.serviceResult.setObject(expectedResult);
+        this.serviceResult.setEntity(expectedResult);
         Mockito.when(this.jobService.getAll()).thenReturn(this.serviceResult);
 
         //Act
@@ -89,7 +89,7 @@ public class JobControllerTests extends JerseyTest {
     public void getJobById_existingObject_correctObject() {
         //Arrange
         this.job = new Job();
-        this.serviceResult.setObject(this.job);
+        this.serviceResult.setEntity(this.job);
         Mockito.when(this.jobService.getById(Mockito.anyString())).thenReturn(this.serviceResult);
         Job expectedResult = this.job;
 
@@ -108,7 +108,7 @@ public class JobControllerTests extends JerseyTest {
         String expectedResult = "Job not found.";
         this.serviceResult.setMessage(expectedResult);
         this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setObject(null);
+        this.serviceResult.setEntity(null);
         Mockito.when(this.jobService.getById(Mockito.any())).thenReturn(this.serviceResult);
 
         //Act

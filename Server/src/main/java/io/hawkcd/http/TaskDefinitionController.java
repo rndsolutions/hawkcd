@@ -50,7 +50,7 @@ public class TaskDefinitionController {
     public Response getAllTaskDefinitions() {
         ServiceResult result = this.taskDefinitionService.getAll();
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -66,7 +66,7 @@ public class TaskDefinitionController {
                     .build();
         }
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -84,7 +84,7 @@ public class TaskDefinitionController {
             }
 
             return Response.status(Status.CREATED)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
         } else {
             return Response.status(Status.BAD_REQUEST)
@@ -108,7 +108,7 @@ public class TaskDefinitionController {
             }
 
             return Response.status(Status.OK)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
         } else {
             return Response.status(Status.BAD_REQUEST)

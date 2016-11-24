@@ -61,12 +61,12 @@ public class StatusUpdaterService {
     }
 
     public void updateStatuses() {
-        List<Agent> agents = (List<Agent>) this.agentService.getAll().getObject();
+        List<Agent> agents = (List<Agent>) this.agentService.getAll().getEntity();
         for (Agent agent : agents) {
             this.updateAgentStatus(agent);
         }
 
-        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getObject();
+        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
         for (Pipeline pipeline : pipelinesInProgress) {
             if (pipeline.shouldBeCanceled()) {
                 this.cancelPipeline(pipeline);

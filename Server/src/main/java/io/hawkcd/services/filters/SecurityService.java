@@ -86,7 +86,7 @@ public class SecurityService<T extends Entity> implements ISecurityService {
         this.authorizationService = AuthorizationServiceFactory.create(className);
         List<PipelineGroup> filteredPipelineGroups = (List<PipelineGroup>) this.authorizationService.getAll(permissions, pipelineGroups);
 
-        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getObject();
+        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
         this.authorizationService = AuthorizationServiceFactory.create("PipelineDefinitionService");
         List<PipelineDefinition> filteredPipelineDefinitions = (List<PipelineDefinition>) this.authorizationService.getAll(permissions, pipelineDefinitions);
 

@@ -22,7 +22,6 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.model.payload.Permission;
 import io.hawkcd.services.PipelineGroupService;
 import io.hawkcd.services.UserService;
 import io.hawkcd.services.interfaces.IPipelineGroupService;
@@ -67,7 +66,7 @@ public class DataImporter {
     }
 
     private ServiceResult addDefualtPipelineGroup() {
-        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getObject();
+        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
         if (pipelineGroups.size() == 0) {
 
             PipelineGroup defaultPipelineGroup = new PipelineGroup();

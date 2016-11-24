@@ -50,7 +50,7 @@ public class JobDefinitionController {
     public Response getAllJobDefinitions() {
         ServiceResult result = this.jobDefinitionService.getAll();
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -67,7 +67,7 @@ public class JobDefinitionController {
                     .build();
         }
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
 
     }
@@ -85,7 +85,7 @@ public class JobDefinitionController {
                         .build();
             }
             return Response.status(Status.CREATED)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
 
         } else {
@@ -109,7 +109,7 @@ public class JobDefinitionController {
                         .build();
             }
             return Response.status(Status.OK)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
 
         } else {

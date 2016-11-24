@@ -25,7 +25,7 @@ public class EndpointConnector {
         WsContractDto contract = new WsContractDto();
         contract.setClassName(className);
         contract.setMethodName(methodName);
-        contract.setResult(serviceResult.getObject());
+        contract.setResult(serviceResult.getEntity());
         contract.setNotificationType(serviceResult.getNotificationType());
         contract.setErrorMessage(serviceResult.getMessage());
 
@@ -36,7 +36,7 @@ public class EndpointConnector {
         WsContractDto contract = new WsContractDto();
         contract.setClassName(className);
         contract.setMethodName(methodName);
-        contract.setResult(serviceResult.getObject());
+        contract.setResult(serviceResult.getEntity());
         contract.setNotificationType(serviceResult.getNotificationType());
         contract.setErrorMessage(serviceResult.getMessage());
 

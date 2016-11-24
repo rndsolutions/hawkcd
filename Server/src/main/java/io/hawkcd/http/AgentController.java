@@ -76,7 +76,7 @@ public class AgentController {
     public Response getAllAgents() throws Throwable {
         ServiceResult result = this.agentService.getAll();
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -93,7 +93,7 @@ public class AgentController {
                     .build();
         }
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -109,7 +109,7 @@ public class AgentController {
                     .build();
         }
         return Response.status(Status.OK)
-                .entity(result.getObject())
+                .entity(result.getEntity())
                 .build();
     }
 
@@ -128,7 +128,7 @@ public class AgentController {
             }
 
             return Response.status(Status.CREATED)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
         } else {
             return Response.status(Status.BAD_REQUEST)
@@ -149,7 +149,7 @@ public class AgentController {
         }
 
         PipelineService.lock.lock();
-        Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getObject();
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getEntity();
 
         Stage stage = pipeline.getStages().stream().filter(s -> s.getId().equals(job.getStageId())).findFirst().orElse(null);
 
@@ -194,7 +194,7 @@ public class AgentController {
                 pipeline.setArtifactsFileStructure(new ArrayList<JsTreeFile>(Arrays.asList(artifactDirectory)));
             }
 
-            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getObject();
+            Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getEntity();
             agent.setAssigned(false);
             ServiceResult result = this.agentService.update(agent);
             EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
@@ -220,7 +220,7 @@ public class AgentController {
                         .build();
             }
             return Response.status(Status.OK)
-                    .entity(result.getObject())
+                    .entity(result.getEntity())
                     .build();
 
         } else {
@@ -239,13 +239,13 @@ public class AgentController {
         String isValid = this.schemaValidator.validate(agent);
         if (isValid.equals("OK")) {
             ServiceResult result = this.agentService.getById(agent.getId());
-            Agent agentFromDb = (Agent) result.getObject();
+            Agent agentFromDb = (Agent) result.getEntity();
             if (result.getNotificationType() == NotificationType.ERROR) {
                 agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
                 result = this.agentService.add(agent);
 
                 return Response.status(Status.OK)
-                        .entity(result.getObject())
+                        .entity(result.getEntity())
                         .build();
             }
 
@@ -268,7 +268,7 @@ public class AgentController {
             } else {
 
                 return Response.status(Status.OK)
-                        .entity(result.getObject())
+                        .entity(result.getEntity())
                         .build();
             }
         } else {

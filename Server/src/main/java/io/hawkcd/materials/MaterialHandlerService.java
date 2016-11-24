@@ -59,7 +59,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
     public String checkPipelineForTriggerMaterials(PipelineDefinition pipelineDefinition) {
         List<String> triggerMaterials = new ArrayList<>();
         List<MaterialDefinition> materialDefinitions =
-                (List<MaterialDefinition>) this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId()).getObject();
+                (List<MaterialDefinition>) this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId()).getEntity();
         for (MaterialDefinition materialDefinition : materialDefinitions) {
             if (materialDefinition.isPollingForChanges()) {
                 this.materialUpdater = MaterialUpdaterFactory.create(materialDefinition.getType());
@@ -76,7 +76,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
                     continue;
                 }
 
-                Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId(), pipelineDefinition.getId()).getObject();
+                Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(materialDefinition.getId(), pipelineDefinition.getId()).getEntity();
 
                 boolean areTheSame = false;
                 if (dbLatestVersion != null) {
@@ -108,7 +108,7 @@ public class MaterialHandlerService implements IMaterialHandlerService {
             return null;
         }
 
-        Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId(), pipeline.getPipelineDefinitionId()).getObject();
+        Material dbLatestVersion = (Material) this.materialService.getLatestMaterial(material.getMaterialDefinition().getId(), pipeline.getPipelineDefinitionId()).getEntity();
 
         boolean areTheSame = false;
         if (dbLatestVersion != null) {

@@ -50,7 +50,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String jobDefinitionId) {
-        List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAll().getObject();
+        List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAll().getEntity();
         JobDefinition result = null;
 
         for (StageDefinition stageDefinition : stageDefinitions) {
@@ -69,7 +69,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
-        List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAll().getObject();
+        List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAll().getEntity();
         List<JobDefinition> jobDefinitions = new ArrayList<>();
 
         for (StageDefinition stageDefinition : stageDefinitions) {
@@ -89,7 +89,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
                     .filter(taskDefinition -> taskDefinition.getJobDefinitionId() == null)
                     .forEach(taskDefinition -> taskDefinition.setJobDefinitionId(jobDefinition.getId()));
         }
-        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
+        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getEntity();
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(jobDefinitions, jobDefinition);
         if (hasNameCollision) {
@@ -98,7 +98,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
 
         jobDefinitions.add(jobDefinition);
         stageDefinition.setJobDefinitions(jobDefinitions);
-        StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
+        StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getEntity();
 
         JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinition.getId());
         if (result == null) {
@@ -112,7 +112,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(JobDefinition jobDefinition) {
         JobDefinition result = new JobDefinition();
-        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getObject();
+        StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService.getById(jobDefinition.getStageDefinitionId()).getEntity();
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
         boolean hasNameCollision = this.checkForNameCollision(jobDefinitions, jobDefinition);
         if (hasNameCollision) {
@@ -125,7 +125,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
             if (definition.getId().equals(jobDefinition.getId())) {
                 jobDefinitions.set(i, jobDefinition);
                 stageDefinition.setJobDefinitions(jobDefinitions);
-                StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
+                StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getEntity();
                 result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinition.getId());
                 break;
             }
@@ -142,14 +142,14 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult delete(JobDefinition jobDefinition) {
         boolean isRemoved = false;
-        JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinition.getId()).getObject();
+        JobDefinition jobDefinitionToDelete = (JobDefinition) this.getById(jobDefinition.getId()).getEntity();
         if (jobDefinitionToDelete == null) {
             return super.createServiceResult(jobDefinitionToDelete, NotificationType.ERROR, "does not exists");
         }
 
         StageDefinition stageDefinition = (StageDefinition) this.stageDefinitionService
                 .getById(jobDefinitionToDelete.getStageDefinitionId())
-                .getObject();
+                .getEntity();
         List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
 
         int lengthOfJobDefinitions = jobDefinitions.size();
@@ -171,7 +171,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
         }
 
         stageDefinition.setJobDefinitions(jobDefinitions);
-        StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getObject();
+        StageDefinition updatedStageDefinition = (StageDefinition) this.stageDefinitionService.update(stageDefinition).getEntity();
         JobDefinition result = this.extractJobDefinitionsFromStageDefinition(updatedStageDefinition, jobDefinition.getId());
         if (result != null) {
             return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");
@@ -183,7 +183,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllInStage(String stageDefinitionId) {
-        StageDefinition currentStage = (StageDefinition) this.stageDefinitionService.getById(stageDefinitionId).getObject();
+        StageDefinition currentStage = (StageDefinition) this.stageDefinitionService.getById(stageDefinitionId).getEntity();
         List<JobDefinition> allJobDefinitionsInStage = currentStage.getJobDefinitions();
         return super.createServiceResultArray(allJobDefinitionsInStage, NotificationType.SUCCESS, this.successMessage);
     }
@@ -191,7 +191,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllInPipeline(String pipelineDefinitionId) {
-        List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAllInPipeline(pipelineDefinitionId).getObject();
+        List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAllInPipeline(pipelineDefinitionId).getEntity();
         List<JobDefinition> allJobsInPipeline = new ArrayList<>();
         this.extractJobDefinitionsFromStageDefinitions(stageDefinitions, allJobsInPipeline);
         return super.createServiceResultArray(allJobsInPipeline, NotificationType.SUCCESS, this.successMessage);

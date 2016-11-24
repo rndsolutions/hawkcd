@@ -75,10 +75,10 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.getById(this.job.getId());
-        Job actualJob = (Job) actualResult.getObject();
+        Job actualJob = (Job) actualResult.getEntity();
 
         //Assert
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertEquals(this.job.getId(), actualJob.getId());
         assertEquals(expectedMessage, actualResult.getMessage());
@@ -94,7 +94,7 @@ public class JobServiceTests {
         ServiceResult actualResult = this.jobService.getById(randomId.toString());
 
         //Assert
-        assertNull(actualResult.getObject());
+        assertNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -108,10 +108,10 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.getAll();
-        List<Job> actualObject = (List<Job>) actualResult.getObject();
+        List<Job> actualObject = (List<Job>) actualResult.getEntity();
 
         //Assert
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualObject.size());
         assertEquals(expectedMessage, actualResult.getMessage());
@@ -124,10 +124,10 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.getAll();
-        List<Job> actualObject = (List<Job>) actualResult.getObject();
+        List<Job> actualObject = (List<Job>) actualResult.getEntity();
 
         //Assert
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertTrue(actualObject.isEmpty());
         assertEquals(expectedMessage, actualResult.getMessage());
@@ -141,7 +141,7 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.add(this.job);
-        Job actualObject = (Job) actualResult.getObject();
+        Job actualObject = (Job) actualResult.getEntity();
 
         //Assert
         assertNotNull(actualObject);
@@ -160,7 +160,7 @@ public class JobServiceTests {
         ServiceResult actualResult = this.jobService.add(this.job);
 
         //Assert
-        assertNull(actualResult.getObject());
+        assertNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
@@ -175,10 +175,10 @@ public class JobServiceTests {
 
         //Act
         ServiceResult actualResult = this.jobService.update(this.job);
-        Job job = (Job) actualResult.getObject();
+        Job job = (Job) actualResult.getEntity();
 
         //Assert
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
         assertEquals(expectedMessage, actualResult.getMessage());
         assertEquals(this.job.getStatus(), job.getStatus());
@@ -194,7 +194,7 @@ public class JobServiceTests {
         ServiceResult actualResult = this.jobService.update(this.job);
 
         //Assert
-        assertNull(actualResult.getObject());
+        assertNull(actualResult.getEntity());
         assertEquals(expectedMessage, actualResult.getMessage());
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
@@ -211,7 +211,7 @@ public class JobServiceTests {
 
         //Assert
         Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getObject());
+        assertNotNull(actualResult.getEntity());
         assertEquals(expectedMessage, actualResult.getMessage());
     }
 
@@ -226,7 +226,7 @@ public class JobServiceTests {
 
         //Assert
         assertEquals(NotificationType.ERROR, result.getNotificationType());
-        assertNull(result.getObject());
+        assertNull(result.getEntity());
         assertEquals(expectedMessage, result.getMessage());
     }
 

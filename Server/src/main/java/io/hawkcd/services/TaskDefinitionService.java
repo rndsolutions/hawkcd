@@ -55,7 +55,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getById(String taskDefinitionId) {
-        List<JobDefinition> jobDefinitions = (List<JobDefinition>) this.jobDefinitionService.getAll().getObject();
+        List<JobDefinition> jobDefinitions = (List<JobDefinition>) this.jobDefinitionService.getAll().getEntity();
         TaskDefinition result = null;
 
         for (JobDefinition jobDefinition : jobDefinitions) {
@@ -74,7 +74,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAll() {
-        List<JobDefinition> jobDefinitions = (List<JobDefinition>) this.jobDefinitionService.getAll().getObject();
+        List<JobDefinition> jobDefinitions = (List<JobDefinition>) this.jobDefinitionService.getAll().getEntity();
         List<TaskDefinition> taskDefinitions = new ArrayList<>();
 
         for (JobDefinition jobDefinition : jobDefinitions) {
@@ -114,11 +114,11 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     public ServiceResult addTask(TaskDefinition taskDefinition) {
-        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getEntity();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
         taskDefinitions.add(taskDefinition);
         jobDefinition.setTaskDefinitions(taskDefinitions);
-        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
+        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getEntity();
 
         TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
         if (result == null) {
@@ -159,7 +159,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     public ServiceResult updateTask(TaskDefinition taskDefinition) {
         TaskDefinition result = null;
 
-        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getObject();
+        JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService.getById(taskDefinition.getJobDefinitionId()).getEntity();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
         int lengthOfTaskDefinitions = taskDefinitions.size();
         for (int i = 0; i < lengthOfTaskDefinitions; i++) {
@@ -174,7 +174,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
 
                 taskDefinitions.set(i, taskDefinition);
                 jobDefinition.setTaskDefinitions(taskDefinitions);
-                JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
+                JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getEntity();
                 result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
                 break;
             }
@@ -193,13 +193,13 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
 
         TaskDefinition definitionToDelete;
         boolean isRemoved = false;
-        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinition.getId()).getObject();
+        TaskDefinition taskDefinitionToDelete = (TaskDefinition) this.getById(taskDefinition.getId()).getEntity();
         if (taskDefinitionToDelete == null) {
             return super.createServiceResult(taskDefinitionToDelete, NotificationType.ERROR, "does not exists");
         }
         JobDefinition jobDefinition = (JobDefinition) this.jobDefinitionService
                 .getById(taskDefinitionToDelete.getJobDefinitionId())
-                .getObject();
+                .getEntity();
         List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
 
         int lengthOfTaskDefinitions = taskDefinitions.size();
@@ -222,7 +222,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
         }
 
         jobDefinition.setTaskDefinitions(taskDefinitions);
-        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getObject();
+        JobDefinition updatedJobDefinition = (JobDefinition) this.jobDefinitionService.update(jobDefinition).getEntity();
         TaskDefinition result = this.extractTaskDefinitionFromJobDefinition(updatedJobDefinition, taskDefinition.getId());
         if (result != null) {
             return super.createServiceResult(result, NotificationType.ERROR, "not deleted successfully");

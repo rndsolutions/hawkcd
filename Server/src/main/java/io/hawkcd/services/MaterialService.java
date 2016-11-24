@@ -76,7 +76,7 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllFromPipelineDefinition(String pipelineDefinitionId) {
-        List<Material> materials = (List<Material>) this.getAll().getObject();
+        List<Material> materials = (List<Material>) this.getAll().getEntity();
         materials = materials
                 .stream()
                 .filter(m -> m.getPipelineDefinitionId().equals(pipelineDefinitionId))
@@ -88,7 +88,7 @@ public class MaterialService extends CrudService<Material> implements IMaterialS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getLatestMaterial(String materialDefinitionId, String pipelineDefinitionId) {
-        List<Material> materials = (List<Material>) this.getAllFromPipelineDefinition(pipelineDefinitionId).getObject();
+        List<Material> materials = (List<Material>) this.getAllFromPipelineDefinition(pipelineDefinitionId).getEntity();
         Material latestMaterial = materials
                 .stream()
                 .filter(m -> m.getMaterialDefinition().getId().equals(materialDefinitionId))

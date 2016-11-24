@@ -56,7 +56,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.getById(expectedMaterialDefinition.getId());
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
@@ -72,7 +72,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.getById(wrongId);
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
@@ -90,7 +90,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.getAll();
-        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
@@ -107,7 +107,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.getAll();
-        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinitions.size(), actualMaterialDefinitions.size());
@@ -124,14 +124,14 @@ public class MaterialDefinitionServiceTests {
         Set<String> materialDefinitionIds = new HashSet<>();
         materialDefinitionIds.add(expectedMaterialDefinition.getId());
         pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
-        pipelineDefinitionById.setObject(pipelineDefinition);
+        pipelineDefinitionById.setEntity(pipelineDefinition);
 
         Mockito.when(this.mockedPipelineDefinitionService.getById(Mockito.anyString())).thenReturn(pipelineDefinitionById);
         Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId());
-        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(1, actualMaterialDefinitions.size());
@@ -146,14 +146,14 @@ public class MaterialDefinitionServiceTests {
 
         ServiceResult pipelineDefinitionById = new ServiceResult();
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinitionById.setObject(pipelineDefinition);
+        pipelineDefinitionById.setEntity(pipelineDefinition);
 
         Mockito.when(this.mockedPipelineDefinitionService.getById(Mockito.anyString())).thenReturn(pipelineDefinitionById);
         Mockito.when(this.mockedRepository.getById(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.getAllFromPipelineDefinition(pipelineDefinition.getId());
-        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getObject();
+        List<MaterialDefinition> actualMaterialDefinitions = (List<MaterialDefinition>) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(0, actualMaterialDefinitions.size());
@@ -169,7 +169,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.add(expectedMaterialDefinition);
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
@@ -185,7 +185,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.add(materialDefinition);
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
@@ -201,7 +201,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.update(expectedMaterialDefinition);
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
@@ -217,7 +217,7 @@ public class MaterialDefinitionServiceTests {
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.update(materialDefinition);
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
@@ -233,13 +233,13 @@ public class MaterialDefinitionServiceTests {
         List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
         PipelineDefinition pipelineDefinition = new PipelineDefinition();
         pipelineDefinitions.add(pipelineDefinition);
-        allPipelineDefinitions.setObject(pipelineDefinitions);
+        allPipelineDefinitions.setEntity(pipelineDefinitions);
         Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
         Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
@@ -252,13 +252,13 @@ public class MaterialDefinitionServiceTests {
         MaterialDefinition expectedMaterialDefinition = new GitMaterial();
 
         ServiceResult allPipelineDefinitions = new ServiceResult();
-        allPipelineDefinitions.setObject(new ArrayList<PipelineDefinition>());
+        allPipelineDefinitions.setEntity(new ArrayList<PipelineDefinition>());
         Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
         Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(null);
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);
@@ -277,14 +277,14 @@ public class MaterialDefinitionServiceTests {
         materialDefinitionIds.add(expectedMaterialDefinition.getId());
         pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
         pipelineDefinitions.add(pipelineDefinition);
-        allPipelineDefinitions.setObject(pipelineDefinitions);
+        allPipelineDefinitions.setEntity(pipelineDefinitions);
         Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
 
         String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(NotificationMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
 
         // Act
         ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getObject();
+        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
 
         // Assert
         Assert.assertNull(actualMaterialDefinition);

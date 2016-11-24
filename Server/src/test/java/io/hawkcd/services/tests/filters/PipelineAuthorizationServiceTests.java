@@ -177,7 +177,7 @@ public class PipelineAuthorizationServiceTests {
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
         getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
-        getByIdPipelineServiceResult.setObject(this.firstPipeline);
+        getByIdPipelineServiceResult.setEntity(this.firstPipeline);
 
         Mockito.when(this.mockedPipelineService.getById(this.firstPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.getById(this.firstPipeline.getId(), permissions);
@@ -195,7 +195,7 @@ public class PipelineAuthorizationServiceTests {
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
         getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
-        getByIdPipelineServiceResult.setObject(this.secondPipeline);
+        getByIdPipelineServiceResult.setEntity(this.secondPipeline);
 
         Mockito.when(this.mockedPipelineService.getById(this.secondPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.getById(this.secondPipeline.getId(), permissions);
@@ -271,7 +271,7 @@ public class PipelineAuthorizationServiceTests {
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
         getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
-        getByIdPipelineServiceResult.setObject(this.fifthPipeline);
+        getByIdPipelineServiceResult.setEntity(this.fifthPipeline);
 
         Mockito.when(this.mockedPipelineService.getById(this.fifthPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.delete(this.fifthPipeline.getId(), permissions);
@@ -289,7 +289,7 @@ public class PipelineAuthorizationServiceTests {
         ServiceResult getByIdPipelineServiceResult = new ServiceResult();
         getByIdPipelineServiceResult.setNotificationType(NotificationType.SUCCESS);
         getByIdPipelineServiceResult.setMessage("Pipeline retrieved successfully");
-        getByIdPipelineServiceResult.setObject(this.thirdPipeline);
+        getByIdPipelineServiceResult.setEntity(this.thirdPipeline);
 
         Mockito.when(this.mockedPipelineService.getById(this.thirdPipeline.getId())).thenReturn(getByIdPipelineServiceResult);
         boolean hasPermission = this.authorizationService.delete(this.thirdPipeline.getId(), permissions);

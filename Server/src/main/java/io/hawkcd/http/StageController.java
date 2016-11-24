@@ -45,7 +45,7 @@ public class StageController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllStages() {
         ServiceResult response = this.stageService.getAll();
-        return Response.status(Status.OK).entity(response.getObject()).build();
+        return Response.status(Status.OK).entity(response.getEntity()).build();
     }
 
     @GET
@@ -56,7 +56,7 @@ public class StageController {
         if (response.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.NOT_FOUND).entity(response.getMessage()).build();
         }
-        return Response.status(Status.OK).entity(response.getObject()).build();
+        return Response.status(Status.OK).entity(response.getEntity()).build();
     }
 
     /*
@@ -74,7 +74,7 @@ public class StageController {
         if (result.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Status.BAD_REQUEST).entity(result.getMessage()).build();
         }
-        return Response.status(Status.CREATED).entity(result.getObject()).build();
+        return Response.status(Status.CREATED).entity(result.getEntity()).build();
     }
 
     /*

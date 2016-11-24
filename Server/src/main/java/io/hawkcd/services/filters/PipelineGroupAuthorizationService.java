@@ -75,7 +75,7 @@ public class PipelineGroupAuthorizationService implements IAuthorizationService 
 
     @Override
     public boolean getById(String entitId, List permissions) {
-        PipelineGroup pipelineGroup = (PipelineGroup) this.pipelineGroupService.getById(entitId).getObject();
+        PipelineGroup pipelineGroup = (PipelineGroup) this.pipelineGroupService.getById(entitId).getEntity();
         pipelineGroup = this.entityPermissionTypeService.setPermissionTypeToObject(permissions, pipelineGroup);
 
         return this.hasPermissionToRead(permissions, pipelineGroup);

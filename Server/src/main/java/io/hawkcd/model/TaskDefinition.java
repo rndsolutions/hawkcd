@@ -34,7 +34,6 @@ import io.hawkcd.model.enums.TaskType;
 public abstract class TaskDefinition extends PipelineFamiliy {
     private String jobDefinitionId;
     private String stageDefinitionId;
-    private String pipelineDefinitionId;
     private TaskType type;
     private RunIf runIfCondition;
 
@@ -52,14 +51,6 @@ public abstract class TaskDefinition extends PipelineFamiliy {
 
     public void setStageDefinitionId(String stageDefinitionId) {
         this.stageDefinitionId = stageDefinitionId;
-    }
-
-    public String getPipelineDefinitionId() {
-        return this.pipelineDefinitionId;
-    }
-
-    public void setPipelineDefinitionId(String pipelineDefinitionId) {
-        this.pipelineDefinitionId = pipelineDefinitionId;
     }
 
     public TaskType getType() {

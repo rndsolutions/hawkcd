@@ -233,7 +233,7 @@ public class PipelinePreparerTests {
         pipeline.setPipelineDefinitionId(actualPipelineDefinition.getId());
         this.pipelineService.add(pipeline);
 
-        Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipeline.getId()).getObject();
+        Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipeline.getId()).getEntity();
         List<StageDefinition> actualStageDefinitions = actualPipelineDefinition.getStageDefinitions();
         List<Stage> preparedStages = this.pipelinePreparer.preparePipelineStages(actualStageDefinitions, actualPipeline);
 
@@ -252,7 +252,7 @@ public class PipelinePreparerTests {
         pipeline.setPipelineDefinitionId(actualPipelineDefinition.getId());
         this.pipelineService.add(pipeline);
 
-        Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipeline.getId()).getObject();
+        Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipeline.getId()).getEntity();
 
         List<StageDefinition> actualStageDefinitions = actualPipelineDefinition.getStageDefinitions();
         List<Stage> preparedStages = this.pipelinePreparer.preparePipelineStages(actualStageDefinitions, actualPipeline);
@@ -293,7 +293,7 @@ public class PipelinePreparerTests {
 
         this.pipelineService.add(pipeline);
 
-        Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipeline.getId()).getObject();
+        Pipeline actualPipeline = (Pipeline) this.pipelineService.getById(pipeline.getId()).getEntity();
 
         for (StageDefinition stageDefinition: actualPipelineDefinition.getStageDefinitions()) {
             for (JobDefinition jobDefinition: stageDefinition.getJobDefinitions()) {
@@ -334,7 +334,7 @@ public class PipelinePreparerTests {
         this.pipelineService.add(secondPipeline);
 
         ServiceResult serviceResult = this.pipelineService.getAll();
-        List<Pipeline> actualObjects = (List<Pipeline>) serviceResult.getObject();
+        List<Pipeline> actualObjects = (List<Pipeline>) serviceResult.getEntity();
 
         actualObjects
                 .stream()
