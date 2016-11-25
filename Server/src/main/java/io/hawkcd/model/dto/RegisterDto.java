@@ -16,8 +16,7 @@
 
 package io.hawkcd.model.dto;
 
-import io.hawkcd.core.security.Grant;
-import io.hawkcd.model.payload.Permission;
+import io.hawkcd.core.security.AuthorizationGrant;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class RegisterDto {
     private String email;
     private String password;
     private String confirmPassword;
-    private List<Grant> permissions;
+    private List<AuthorizationGrant> permissions;
 
     public String getEmail() {
         return this.email;
@@ -51,11 +50,11 @@ public class RegisterDto {
         this.confirmPassword = confirmPassword;
     }
 
-    public List<Grant> getPermissions() {
+    public List<AuthorizationGrant> getPermissions() {
         return this.permissions;
     }
 
-    public void setPermissions(List<Grant> permissions) {
+    public void setPermissions(List<AuthorizationGrant> permissions) {
         this.permissions = permissions;
     }
 }

@@ -18,20 +18,28 @@
 
 package io.hawkcd.core.security;
 
+import io.hawkcd.core.Message;
+import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.PipelineFamily;
 import io.hawkcd.model.PipelineGroup;
+import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.User;
+import io.hawkcd.model.dto.GithubAuthDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
+import io.hawkcd.services.UserService;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The class is responisble for authorizing User's requests
@@ -47,6 +55,12 @@ import java.util.List;
 public class AuthorizationManager implements IAuthorizationManager {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
+    private  UserService userService;
+
+    public  AuthorizationManager(){
+        this.userService = new UserService();
+    }
+
     @Override
     public boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
@@ -56,7 +70,7 @@ public class AuthorizationManager implements IAuthorizationManager {
             return false;
         }
         String[] entityIds = this.extractEntityIds(parameters);
-        Grant grant = new Grant(authorizationAttributes);
+        AuthorizationGrant grant = new AuthorizationGrant(authorizationAttributes);
 
         PermissionType permissionType = this.determinePermissionTypeForUser(user.getPermissions(), grant, entityIds);
         if (permissionType != PermissionType.NONE) {
@@ -69,6 +83,7 @@ public class AuthorizationManager implements IAuthorizationManager {
     public void getAllUsersWithPermissions() {
         throw new NotImplementedException();
     }
+
 
     private Authorization getMethodAuthorizationAttributes(WsContractDto contractDto, List<Object> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
@@ -86,15 +101,42 @@ public class AuthorizationManager implements IAuthorizationManager {
         return annotation;
     }
 
+    public Message getAllUsersWithPermissionsMap(ServiceResult result){
+
+        Message message = new Message(null,null,result,null);
+
+        Map<String, PermissionType> userMap =  new HashMap<>();
+
+        message.setPermissionTypeByUser(userMap);
+
+        Entity entity = (Entity)message.getEnvelop();
+
+        List<SessionDetails> allActiveSessions = SessionFactory.getSessionManager().getAllActiveSessions();
+
+        for (SessionDetails sessionDetail : allActiveSessions) {
+            User user = (User) userService.getByEmail(sessionDetail.getUserEmail()).getEntity();
+
+            List<AuthorizationGrant> userGrant = user.getPermissions();
+
+            Authorization authorization = entity.getClass().getAnnotation(Authorization.class);
+            AuthorizationGrant entityGrant = new AuthorizationGrant(authorization);
+
+            PermissionType permissionType = this.determinePermissionTypeForUser(userGrant, entityGrant, entity.getId());
+
+            userMap.put(user.getId(),permissionType);
+        }
+        return message;
+    }
+
     /**
      * Determines the Permission Type of the user based on the entity IDs passed to it
      */
-    public PermissionType determinePermissionTypeForUser(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds) {
+    public PermissionType determinePermissionTypeForUser(List<AuthorizationGrant> userGrants, AuthorizationGrant grantToEvaluateAgainst, String... entityIds) {
         PermissionType result = PermissionType.NONE;
 
         // Checks for specific Permissions, e.g. a user is assigned a permission for a specific entity (Pipeline/Group)
         for (String entityId : entityIds) {
-            for (Grant grant : userGrants) {
+            for (AuthorizationGrant grant : userGrants) {
                 if (grant.getPermittedEntityId().equals(entityId)) {
                     if (grant.isGreaterThan(grantToEvaluateAgainst)) {
                         return grant.getType();
@@ -104,7 +146,7 @@ public class AuthorizationManager implements IAuthorizationManager {
         }
 
         // Checks for generic Permissions, e.g. a user is assigned a permission for ALL Pipelines/Groups
-        for (Grant grant : userGrants) {
+        for (AuthorizationGrant grant : userGrants) {
             if (grant.getPermittedEntityId().startsWith("ALL") || grant.getScope().equals(PermissionScope.SERVER)) {
                 if (grant.isGreaterThan(grantToEvaluateAgainst)) {
                     return grant.getType();
@@ -118,10 +160,10 @@ public class AuthorizationManager implements IAuthorizationManager {
     /**
      * Checks the object for minimum permissions required for the user to receive the object
      */
-    public PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters) {
+    public PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Object> parameters) {
         PermissionType result;
         Authorization authorization = object.getClass().getAnnotation(Authorization.class);
-        Grant grant = new Grant(authorization);
+        AuthorizationGrant grant = new AuthorizationGrant(authorization);
 
         String[] entityIds = this.extractEntityIds(parameters);
         result = this.determinePermissionTypeForUser(userGrants, grant, entityIds);

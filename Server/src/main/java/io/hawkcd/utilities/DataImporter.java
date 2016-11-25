@@ -16,7 +16,7 @@
 
 package io.hawkcd.utilities;
 
-import io.hawkcd.core.security.Grant;
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
@@ -53,11 +53,11 @@ public class DataImporter {
         User adminUser = new User();
         adminUser.setEmail("admin@admin.com");
         adminUser.setPassword("admin");
-        Grant adminUserPermission = new Grant(PermissionScope.SERVER, PermissionType.ADMIN);
+        AuthorizationGrant adminUserPermission = new AuthorizationGrant(PermissionScope.SERVER, PermissionType.ADMIN);
         adminUserPermission.setPermittedEntityId("SERVER");
 //        adminUserPermission.setPermissionType(PermissionType.ADMIN);
 //        adminUserPermission.setPermissionScope(PermissionScope.SERVER);
-        List<Grant> permissions = new ArrayList<>();
+        List<AuthorizationGrant> permissions = new ArrayList<>();
         permissions.add(adminUserPermission);
 
         adminUser.setPermissions(permissions);

@@ -3,7 +3,7 @@ package io.hawkcd.core.security;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 
-public class Grant {
+public class AuthorizationGrant {
     PermissionScope permissionScope;
     PermissionType permissionType;
     String permittedEntityId;
@@ -16,12 +16,12 @@ public class Grant {
         this.permittedEntityId = permittedEntityId;
     }
 
-    public Grant(PermissionScope scope, PermissionType type) {
+    public AuthorizationGrant(PermissionScope scope, PermissionType type) {
         this.permissionScope = scope;
         this.permissionType = type;
     }
 
-    public Grant(Authorization authorization) {
+    public AuthorizationGrant(Authorization authorization) {
         this.permissionScope = authorization.scope();
         this.permissionType = authorization.type();
     }
@@ -42,7 +42,7 @@ public class Grant {
         this.permissionType = type;
     }
 
-    public boolean isGreaterThan(Grant grant) {
+    public boolean isGreaterThan(AuthorizationGrant grant) {
         boolean result = (this.getScope().getPriorityLevel() <= grant.getScope().getPriorityLevel())
                 && (this.getType().getPriorityLevel() <= grant.getType().getPriorityLevel());
         return result;

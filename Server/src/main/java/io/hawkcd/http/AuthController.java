@@ -18,7 +18,7 @@ package io.hawkcd.http;
 
 import com.google.gson.Gson;
 
-import io.hawkcd.core.security.Grant;
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.utilities.deserializers.TokenAdapter;
 import io.hawkcd.model.ServiceResult;
@@ -158,7 +158,7 @@ public class AuthController {
     @Path("/register")
     public Response register(RegisterDto newUser) {
 
-        List<Grant> userPermissions = new ArrayList<>();
+        List<AuthorizationGrant> userPermissions = new ArrayList<>();
 
         User user = new User();
         user.setEmail(newUser.getEmail());
