@@ -32,7 +32,7 @@ public interface IAuthorizationManager {
     */
     boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException;
 
-    PermissionType determinePermissionTypeForObject(List<Grant> userGrants, Object object, WsContractDto contract, List<Object> parameters);
+    PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters);
 
     /*
     * returns all users that have access to perform the operation

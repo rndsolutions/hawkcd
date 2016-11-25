@@ -21,6 +21,7 @@ package io.hawkcd.core.subscriber;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.hawkcd.core.Message;
+import io.hawkcd.core.MessageConverter;
 import io.hawkcd.core.RequestProcessor;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
@@ -67,20 +68,14 @@ public class Subscriber extends JedisPubSub {
         LOGGER.debug(msg);
 
         Message message = this.jsonConverter.fromJson(msg, Message.class);
+        WsContractDto contract = MessageConverter.convert(message);
 
-        WsContractDto contract = new WsContractDto(message.getServiceCalled(),
-                                        "", message.getMethodCalled()
-                                          , message.getResultObject()
-                                          , message.getResultNotificationType()
-                                          , message.getResultMessage());
-
-        // TODO: Move logic to translator
-        // Set Permission Type for each each Session to be send to and send
         if(message.isTargetOwner()){
+            //TODO: Send to current user session
            SessionFactory.getSessionManager().sendToAllSessions(contract);
         } else {
             Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
-            Entity entity = (Entity) message.getResultObject();
+            Entity entity = (Entity) message.getEnvelop();
             for (String userId : permissionTypeByUser.keySet()) {
                 entity.setPermissionType(permissionTypeByUser.get(userId));
                 contract.setResult(entity);

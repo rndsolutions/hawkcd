@@ -18,6 +18,7 @@ package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.core.session.SessionManager;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.EnvironmentVariable;
@@ -129,9 +130,8 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
-
+        
         //SessionFactory.getSessionManager().sendToAllSessions();
-
         //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
 
         return result;

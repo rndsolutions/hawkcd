@@ -118,11 +118,11 @@ public class Message {
         isTargetOwner = targetOwner;
     }
 
-    public Object getResultObject() {
+    public Object getEnvelop() {
         return this.envelopе.getObject();
     }
 
-    public void setResultObject(Object object) {
+    public void setEnvelop(Object object) {
         this.envelopе.setObject(object);
     }
 

@@ -72,7 +72,7 @@ public class AuthorizationManager implements IAuthorizationManager {
      * @param object
      * @return
      */
-    public PermissionType determinePermissionTypeForObject(List<Grant> userGrants, Object object, WsContractDto contract, List<Object> parameters) {
+    public PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters) {
         PermissionType result;
         Authorization authorization = object.getClass().getAnnotation(Authorization.class);
         Grant grant = new Grant(authorization);

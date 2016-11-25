@@ -158,6 +158,11 @@ public class SessionManager implements  ISessionManager{
         return activeSessions;
     }
 
+    @Override
+    public void sendToAllAuthorizedSession(WsContractDto contractDto) {
+
+    }
+
     /**
      * Receives a WSSocket object and WsContractDto to write it to the stream
      * @param session

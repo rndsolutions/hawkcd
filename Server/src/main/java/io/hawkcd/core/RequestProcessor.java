@@ -63,8 +63,10 @@ public class RequestProcessor {
     /**
      * All WS requests flows through this method, auhtorization checks are performed,
      * and the request is broadcasted to all subscribers
+     *
+     * WF:
      * Get service to be called, get arguments
-     * Authorize current User Request
+     * Authorize current User
      * 1. Check if the user has rights to call the method from the service
      * 2. Check if the user can see the result
      * Make a call to a Business service
@@ -72,7 +74,7 @@ public class RequestProcessor {
      * Perform authorization check for each active User
      * Attach User email and Ids
      */
-    public void prorcessRequest1(WsContractDto contract, User currentUser, String sessionId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    public void prorcessRequest(WsContractDto contract, User currentUser, String sessionId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
         List<Object> methodArgs = extractTargetMethodArguments(contract);
         boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
@@ -81,6 +83,7 @@ public class RequestProcessor {
             sendUnauthorizedMessage(contract, currentUser);
             return;
         }
+
         ServiceResult result = (ServiceResult) this.wsObjectProcessor.call(contract);
 
         Message message = MessageConverter.convert(currentUser
@@ -101,20 +104,26 @@ public class RequestProcessor {
                 attachPermissionsToPipelineDtos(contract, currentUser, result, methodArgs);
             }
 
-            List<Entity> filteredResult = attachPermissionTypeToList(contract, currentUser, result, methodArgs);
+            List<Entity> filteredResult = attachPermissionTypeToList(message, methodArgs);
 
             message.setTargetOwner(true);
-            message.setResultObject(filteredResult);
+            message.setEnvelop(filteredResult);
         } else {
-            // 4. Get all Users filtered by active sessions
-            List<SessionDetails> activeSessions = SessionFactory.getSessionManager().getAllActiveSessions();
-
-            Map<String, PermissionType> permissionTypeByUser = this.getPermissionTypeByUser(contract, currentUser, methodArgs, result, activeSessions);
-
-            message.setPermissionTypeByUser(permissionTypeByUser);
+          message = attachePermissionsToEntity(methodArgs, result, message);
         }
-
         this.publisher.publish("global", message);
+    }
+
+    private Message attachePermissionsToEntity(List<Object> methodArgs, ServiceResult result, Message message) {
+
+        List<SessionDetails> activeSessions = SessionFactory.getSessionManager().getAllActiveSessions();
+
+        Map<String, PermissionType> permissionTypeByUser = this.getPermissionTypeByUser(message.getOwner(),
+                methodArgs, message.getEnvelop(), activeSessions);
+
+        message.setPermissionTypeByUser(permissionTypeByUser);
+
+        return message;
     }
 
     private boolean isPipelineGroupDtoList(ServiceResult result) {
@@ -125,7 +134,7 @@ public class RequestProcessor {
         return false;
     }
 
-    private Map<String, PermissionType> getPermissionTypeByUser(WsContractDto contract, User currentUser, List<Object> methodArgs, ServiceResult result, List<SessionDetails> activeSessions) {
+    private Map<String, PermissionType> getPermissionTypeByUser(User currentUser, List<Object> methodArgs, Object entity, List<SessionDetails> activeSessions) {
         Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
 
         for (SessionDetails activeSession : activeSessions) {
@@ -133,7 +142,7 @@ public class RequestProcessor {
 //            List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
             PermissionType permissionType = AuthorizationFactory
                     .getAuthorizationManager()
-                    .determinePermissionTypeForObject(currentUser.getPermissions(), result.getEntity(), contract, methodArgs);
+                    .determinePermissionTypeForEntity(currentUser.getPermissions(), entity, methodArgs);
             permissionTypeByUser.put(userToSendTo.getId(), permissionType);
         }
         return permissionTypeByUser;
@@ -160,14 +169,14 @@ public class RequestProcessor {
      * Exception: If the user has no permission for a Pipeline Group, but has a permission for a
      * Pipeline that belongs to it, it will not be added to the filtered collection
      */
-    private List<Entity> attachPermissionTypeToList(WsContractDto contract, User currentUser, ServiceResult result, List<Object> parameters) {
-        List<Entity> entities = (List<Entity>) result.getEntity();
+    private List<Entity> attachPermissionTypeToList(Message message, List<Object> parameters) {
+        List<Entity> entities = (List<Entity>) message.getEnvelop();
         List<Entity> filteredResult = new ArrayList<>();
 
         for (Entity entity : entities) {
             PermissionType permissionType = AuthorizationFactory
                     .getAuthorizationManager()
-                    .determinePermissionTypeForObject(currentUser.getPermissions(), entity, contract, parameters);
+                    .determinePermissionTypeForEntity(message.getOwner().getPermissions(), entity, parameters);
 
             if (entity.getPermissionType() != PermissionType.NONE) {
                 entity.setPermissionType(permissionType);
@@ -184,7 +193,7 @@ public class RequestProcessor {
             List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
 
             for (PipelineDefinitionDto permissionObject : permissionObjects) {
-                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForObject(currentUser.getPermissions(), permissionObject, contract, parameters);
+                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForEntity(currentUser.getPermissions(), permissionObject, parameters);
 
                 if (permissionObject.getPermissionType() != PermissionType.NONE) {
                     permissionObject.setPermissionType(permissionType);
@@ -215,7 +224,7 @@ public class RequestProcessor {
     }
 
     public void processResponse(Message pubSubMessage) {
-        WsContractDto contract = new WsContractDto(pubSubMessage.getServiceCalled(), "", pubSubMessage.getMethodCalled(), pubSubMessage.getResultObject(), pubSubMessage.getResultNotificationType(), pubSubMessage.getResultMessage());
+        WsContractDto contract = new WsContractDto(pubSubMessage.getServiceCalled(), "", pubSubMessage.getMethodCalled(), pubSubMessage.getEnvelop(), pubSubMessage.getResultNotificationType(), pubSubMessage.getResultMessage());
         //this.get
 //        SessionPool.getInstance().sendToAuthorizedSessions(contract);
     }

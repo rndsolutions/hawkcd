@@ -44,4 +44,7 @@ public interface ISessionManager {
     SessionDetails getSessionDetailsBySessionId(String sessionId);
 
     List<SessionDetails> getAllActiveSessions();
+
+    void sendToAllAuthorizedSession(WsContractDto contractDto);
+
 }
