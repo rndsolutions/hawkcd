@@ -34,6 +34,8 @@ public interface IAuthorizationManager {
 
     PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters);
 
+    PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object);
+
     PermissionType determinePermissionTypeForUser(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds);
 
     String[] extractEntityIds(List<Object> parameters);

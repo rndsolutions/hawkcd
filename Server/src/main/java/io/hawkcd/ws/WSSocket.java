@@ -186,10 +186,13 @@ public class WSSocket extends WebSocketAdapter {
 
                 } catch (InstantiationException e) {
                     LOGGER.error(e);
+                    e.printStackTrace();
                 } catch (IllegalAccessException e) {
                     LOGGER.error(e);
+                    e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     LOGGER.error(e);
+                    e.printStackTrace();
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }

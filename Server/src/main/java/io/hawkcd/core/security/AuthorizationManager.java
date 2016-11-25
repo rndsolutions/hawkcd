@@ -22,6 +22,7 @@ import io.hawkcd.model.Entity;
 import io.hawkcd.model.PipelineFamily;
 import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.User;
+import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
@@ -92,6 +93,9 @@ public class AuthorizationManager implements IAuthorizationManager {
     public PermissionType determinePermissionTypeForUser(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds) {
         PermissionType result = PermissionType.NONE;
 
+        if (grantToEvaluateAgainst.getType() == PermissionType.NONE) {
+            return PermissionType.VIEWER;
+        }
         // Checks for specific Permissions, e.g. a user is assigned a permission for a specific entity (Pipeline/Group)
         for (String entityId : entityIds) {
             for (Grant grant : userGrants) {
@@ -128,6 +132,16 @@ public class AuthorizationManager implements IAuthorizationManager {
         return result;
     }
 
+    public PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object) {
+        PermissionType result;
+        Authorization authorization = object.getClass().getAnnotation(Authorization.class);
+        Grant grant = new Grant(authorization);
+
+        String[] entityIds = this.extractEntityIds(object);
+        result = this.determinePermissionTypeForUser(userGrants, grant, entityIds);
+        return result;
+    }
+
     /**
      * The method extracts the object Ids necessary for the authorization based on the class and
      * method being invoked.
@@ -148,4 +162,17 @@ public class AuthorizationManager implements IAuthorizationManager {
         return entityIds.toArray(new String[entityIds.size()]);
     }
 
+    public String[] extractEntityIds(Object parameter) {
+        List<String> entityIds = new ArrayList<>();
+        if (parameter instanceof PipelineFamily) {
+            PipelineFamily pipelineFamily = (PipelineFamily) parameter;
+            entityIds.add(pipelineFamily.getPipelineDefinitionId());
+            entityIds.add(pipelineFamily.getPipelineGroupId());
+        } else if (parameter instanceof PipelineGroup || parameter instanceof PipelineGroupDto) {
+            Entity pipelineGroup = (Entity) parameter;
+            entityIds.add(pipelineGroup.getId());
+        }
+
+        return entityIds.toArray(new String[entityIds.size()]);
+    }
 }

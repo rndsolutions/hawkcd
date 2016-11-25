@@ -76,7 +76,7 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAll() {
         return super.getAll();
     }

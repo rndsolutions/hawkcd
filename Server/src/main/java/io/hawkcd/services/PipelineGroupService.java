@@ -61,7 +61,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.NONE )
     public ServiceResult getAll() {
         return super.getAll();
     }
@@ -92,7 +92,7 @@ public class PipelineGroupService extends CrudService<PipelineGroup> implements 
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.NONE )
     public ServiceResult getAllPipelineGroupDTOs() {
 //        List<PipelineGroup> pipelineGroups = (List<PipelineGroup>) super.getAll().getObject();
 //        List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) pipelineDefinitionService.getAll().getObject();
