@@ -163,12 +163,20 @@ public class SessionManager implements  ISessionManager{
 
     }
 
+    @Override
+    public WSSocket getSessionByUserId(String id) {
+        return  this.sessionPool.getSessions()
+                .stream().filter(s -> s.getLoggedUser().getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
     /**
      * Receives a WSSocket object and WsContractDto to write it to the stream
      * @param session
      * @param contract
      */
-    void send(WSSocket session, WsContractDto contract) {
+    public void send(WSSocket session, WsContractDto contract) {
 
         if (session.isConnected()){
             RemoteEndpoint remoteEndpoint = session.getRemote();

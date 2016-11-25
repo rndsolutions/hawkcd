@@ -20,6 +20,7 @@ package io.hawkcd.core.subscriber;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageConverter;
 import io.hawkcd.core.RequestProcessor;
@@ -32,7 +33,10 @@ import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
+
 import org.apache.log4j.Logger;
+
+import io.hawkcd.ws.WSSocket;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.Map;
@@ -45,7 +49,6 @@ public class Subscriber extends JedisPubSub {
 
     private Gson jsonConverter;
     private IMessageDispatcher messageDispatcher;
-    private IMessageTranslator messageTranslator;
     private IMessageFilter authFilter;
     private RequestProcessor requestProcessor;
     private ISessionManager sessionManager;
@@ -66,20 +69,25 @@ public class Subscriber extends JedisPubSub {
     @Override
     public void onMessage(String channel, String msg) {
         LOGGER.debug(msg);
-
         Message message = this.jsonConverter.fromJson(msg, Message.class);
-        WsContractDto contract = MessageConverter.convert(message);
+        ISessionManager sessionManager = SessionFactory.getSessionManager();
 
-        if(message.isTargetOwner()){
-            //TODO: Send to current user session
-           SessionFactory.getSessionManager().sendToAllSessions(contract);
-        } else {
+        if (message.isTargetOwner()) { // When is list and targets the user executed the request
+
+            WsContractDto contract = MessageConverter.convert(message);
+            WSSocket session = sessionManager.getSessionByUserId(message.getOwner().getId());
+            sessionManager.send(session, contract);
+        } else { // when is single message meant to be broadcasted
+
             Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
-            Entity entity = (Entity) message.getEnvelop();
-            for (String userId : permissionTypeByUser.keySet()) {
-                entity.setPermissionType(permissionTypeByUser.get(userId));
-                contract.setResult(entity);
-                SessionFactory.getSessionManager().sendToAllSessions(contract);
+            WsContractDto contract = MessageTranslator.translateMessageToContract(message);
+
+            for (Map.Entry<String, PermissionType> entry : permissionTypeByUser.entrySet()) {
+                WSSocket session = sessionManager.getSessionByUserId(entry.getKey());
+                if (session != null) {
+                    ((Entity) contract.getResult()).setPermissionType(entry.getValue());
+                    sessionManager.send(session, contract);
+                }
             }
         }
     }

@@ -97,6 +97,7 @@ public class WsSessionPool implements ISessionsPool {
             if (session.getSession()!= null){
                 if (session.getSession().isOpen()){
                     session.getSession().close(new CloseStatus(1000,"User Logged out"));
+                    this.sessions.remove(session);
                 }
             }
 

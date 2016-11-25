@@ -17,13 +17,9 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.Message;
-import io.hawkcd.core.MessageConverter;
 import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
-import io.hawkcd.core.security.AuthorizationManager;
-import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.core.session.SessionManager;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.EnvironmentVariable;
@@ -35,10 +31,8 @@ import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.Stage;
 import io.hawkcd.model.StageDefinition;
-import io.hawkcd.model.User;
 import io.hawkcd.model.dto.PipelineDto;
 import io.hawkcd.model.enums.*;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
@@ -49,7 +43,6 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -143,7 +136,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         String methodName = ste[1].getMethodName();
         String className = this.getClass().getSimpleName();
 
-        Message message = AuthorizationFactory.getAuthorizationManager().getAllUsersWithPermissionsMap(result,className,methodName);
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
 
         PublisherFactory.createPublisher().publish("global",message);
 

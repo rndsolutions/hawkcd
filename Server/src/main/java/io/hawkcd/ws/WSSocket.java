@@ -226,7 +226,7 @@ public class WSSocket extends WebSocketAdapter {
             sessionManager.openSession(this);
 
             WsContractDto contract = extractUserDetails(tokenInfo);
-            sessionManager.sendToAllSessions(contract);
+            sessionManager.send(this,contract);
         }
     }
 
