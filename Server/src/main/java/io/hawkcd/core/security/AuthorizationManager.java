@@ -32,6 +32,7 @@ import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.UserService;
 
+import io.hawkcd.services.UserService;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 

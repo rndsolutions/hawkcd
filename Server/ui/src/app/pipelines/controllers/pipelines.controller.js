@@ -210,6 +210,7 @@ angular
         vm.getPipeName = function(input) {
             vm.pipeName = input.name;
             vm.pipeId = input.id;
+            vm.pipelineToDelete = input;
         };
 
         vm.addPipeline = function(formData) {
