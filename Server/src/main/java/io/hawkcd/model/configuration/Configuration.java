@@ -24,6 +24,7 @@ import java.util.Map;
 public final class Configuration {
     private String serverHost;
     private int serverPort;
+    private boolean isSingleNode;
     private DatabaseType databaseType;
     private Map<DatabaseType, DatabaseConfig> databaseConfigs;
     private Map<OAuthProviderType, ProviderConfig> oAuthProviderConfigs;
@@ -46,6 +47,14 @@ public final class Configuration {
 
     public void setServerPort(int serverPort) {
         this.serverPort = serverPort;
+    }
+
+    public boolean isSingleNode() {
+        return isSingleNode;
+    }
+
+    public void setIsSingleNode(boolean singleNode) {
+        isSingleNode = singleNode;
     }
 
     public DatabaseType getDatabaseType() {
