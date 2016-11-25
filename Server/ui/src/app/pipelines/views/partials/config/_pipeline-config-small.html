@@ -1,0 +1,36 @@
+<!--Copyright (C) 2016 R&D Solutions Ltd.-->
+
+<!--Licensed under the Apache License, Version 2.0 (the "License");-->
+<!--you may not use this file except in compliance with the License.-->
+<!--You may obtain a copy of the License at-->
+
+<!--http://www.apache.org/licenses/LICENSE-2.0-->
+
+<!--Unless required by applicable law or agreed to in writing, software-->
+<!--distributed under the License is distributed on an "AS IS" BASIS,-->
+<!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+<!--See the License for the specific language governing permissions and-->
+<!--limitations under the License.-->
+
+
+<div class="col-md-9 config-tabs">
+<div class="tabbable-custom nav-justified tab-border-fix">
+<ul class="nav nav-tabs nav-justified width-100" >
+<li ui-sref-active="active" style="min-width:33.3%;margin-right:0;float:left">
+<a data-target="#general" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.pipeline.general"><span class="fa fa-cog fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Pipeline Settings"></span></a>
+</li>
+<li ui-sref-active="active" style="min-width:33.3%;margin-right:0;float:left">
+<a data-target="#stages" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.stages"><span class="fa fa-caret-square-o-right fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Stages"></span></a>
+</li>
+<!-- <li ui-sref-active="active">
+<a data-target="#materials" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.materials"> Materials </a>
+</li> -->
+<li ui-sref-active="active" style="min-width:33.3%;margin-right:0;float:left">
+<a data-target="#environmentVariables"  data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.pipeline.variables"><span class="fa fa-arrows-h fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Environment Variables"></span></a>
+</li>
+</ul>
+<div class="tab-content" ui-view style="margin-top:-5px">
+
+</div>
+</div>
+</div>

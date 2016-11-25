@@ -203,6 +203,20 @@ p {
     padding-bottom:1px!important;
 }
 
+.agent-resource {
+    background-color: #337ab7 !important;
+    color: #ffffff;
+    text-transform: none;
+    text-underline: none;
+    /*padding-top:2px!important;*/
+    padding:3px!important;
+    padding-left:5px!important;
+    padding-right:5px!important;
+    font-size: 13px!important;
+    /*padding-bottom:2px!important;*/
+    /*line-height: 16px;*/
+}
+
 .run-label {
     color: #ffffff;
     text-transform: none;
@@ -534,7 +548,8 @@ p {
 }
 
 .custom-datatable-btns {
-    width: 350px !important;
+    width: 300px !important;
+    min-width: 300px !important;
     overflow: hidden;
 }
 
@@ -693,6 +708,7 @@ p {
 .custom-admin-pipeline-padding {
     padding-right: 10px!important;
     float:left!important;
+    margin-top:10px;
 }
 
 .custom-admin-badge-color {
@@ -710,6 +726,10 @@ p {
     padding-left: 0.01em;
     padding-top: 0.29em;
     font-size:1.5em;
+}
+
+.custom-unassigned-pipeline-padding {
+    padding-left:15px;
 }
 
 .status-position{
@@ -864,6 +884,12 @@ p {
     transform: translateY(-50%);
 }
 
+.vertical-center-label {
+    position: relative;
+    top: 47%;
+    transform: translateY(-100%);
+}
+
 .vertical-center-static {
     position: static;
     top: 50%;
@@ -904,6 +930,10 @@ p {
 
 .width-50px {
     width: 50px!important;
+}
+
+.width-150px {
+    width: 150px!important;
 }
 
 .width-20 {
@@ -954,6 +984,10 @@ p {
     padding-top: 5%;
 }
 
+.padding-top-15px {
+    padding-top: 15px;
+}
+
 .padding-bottom-5 {
     padding-bottom: 5%;
 }
@@ -968,6 +1002,14 @@ p {
 
 .margin-left-1 {
     margin-left: 1%;
+}
+
+.margin-left-5px {
+    margin-left: 5px;
+}
+
+.margin-right-5px {
+    margin-right: 5px;
 }
 
 .margin-left-0 {
@@ -998,6 +1040,12 @@ p {
 }
 @media screen and (max-width: 2560px){
   @import "login-styles/login.css";
+}
+
+@media screen and (max-width: 991px){
+    .config-tabs {
+        padding-top: 5%;
+    }
 }
 
 .padding-top-1 {
@@ -1069,6 +1117,102 @@ p {
 
 @media screen and (min-width: 768px) and (max-width: 991px){
   @import "artifacts-screen/_medium-devices.css";
+}
+
+@media screen and (max-width: 767px){
+    .job-parameters-small {
+        /*max-width:10px;*/
+        word-break: break-all;
+    }
+
+    .config-button:not(:first-child) {
+        margin-top:10%!important;
+    }
+
+    .agent-button:not(:first-child) {
+        margin-top:10%!important;
+    }
+
+    .group-button {
+        margin-top: 10px;
+    }
+
+    .agent-button {
+        display: block!important;
+    }
+
+    .config-button {
+        display:block;
+    }
+
+    .config-controls {
+        width:100px!important;
+        margin:0!important;
+    }
+
+    /*.config-names {*/
+        /*width:100px;*/
+    /*}*/
+
+    .small-device-label {
+        width:200px;
+    }
+
+    .agent-controls {
+        min-width: 100px!important;
+        margin:0!important;
+    }
+}
+
+@media screen and (min-width: 767px){
+    .config-controls {
+        min-width: 180px;
+        width:180px;
+    }
+
+    .config-names {
+        min-width: 100px;
+        width:100px;
+    }
+
+    .agent-controls {
+        min-width: 190px;
+        width:190px;
+    }
+}
+
+.config-button {
+    width:80px;
+}
+
+.table-element-text {
+    word-break: break-all;
+}
+
+.text-center-all {
+    vertical-align: middle!important;
+    text-align: center!important;
+}
+
+.text-center-vertical {
+    vertical-align: middle!important;
+}
+
+.custom-agent-input {
+    padding-top:0!important;
+}
+
+.textarea-no-resize {
+    resize: none;
+    overflow: hidden;
+}
+
+.tab-border-fix > .nav-tabs > li.active > a{
+    border-bottom-color: transparent;
+}
+
+.table-fixed {
+    table-layout: fixed;
 }
 
 .padding-cog {

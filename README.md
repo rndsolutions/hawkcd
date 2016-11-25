@@ -7,7 +7,7 @@
 
 
 
-The HawkCD intends to be one stop solution for managing Continuous Delivery processes for the Enterprise.  It  enables and encourages collaboration between delivery team members including but not limited to  Developers, QA, Ops and Release Managers.   
+HawkCD is an open source  cross-platform application release automation server. It has been built with the Continuous Delivery practices and principles in mind to help agile software development teams orchestrate and automate their software Build, Test and Deploy workflows in the SDLC  
 
 ###Setting up build enviroment 
 

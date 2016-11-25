@@ -1,0 +1,35 @@
+<!--Copyright (C) 2016 R&D Solutions Ltd.-->
+
+<!--Licensed under the Apache License, Version 2.0 (the "License");-->
+<!--you may not use this file except in compliance with the License.-->
+<!--You may obtain a copy of the License at-->
+
+<!--http://www.apache.org/licenses/LICENSE-2.0-->
+
+<!--Unless required by applicable law or agreed to in writing, software-->
+<!--distributed under the License is distributed on an "AS IS" BASIS,-->
+<!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
+<!--See the License for the specific language governing permissions and-->
+<!--limitations under the License.-->
+
+<div class="col-md-12 config-tabs">
+    <div class="tabbable-custom nav-justified tab-border-fix">
+        <ul class="nav nav-tabs nav-justified width-100">
+            <li ui-sref-active="active" style="width:25%;margin-right:0;float:left">
+                <a data-target="groups" data-toggle="tab" aria-expanded="true" ui-sref="index.admin.groups"><span class="fa fa-object-group fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Pipeline Groups"></span></a>
+            </li>
+            <li ui-sref-active="active" style="width:25%;margin-right:0;float:left">
+                <a data-target="#materials" data-toggle="tab" aria-expanded="false" ui-sref="index.admin.materials"><span class="fa fa-code-fork fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Materials"></span></a>
+            </li>
+            <li ui-sref-active="active" style="width:25%;margin-right:0;float:left">
+                <a data-target="#userGroups" data-toggle="tab" aria-expanded="false" ui-sref="index.admin.userGroups"><span class="fa fa-users fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="User Groups"></span></a>
+            </li>
+            <li ui-sref-active="active" style="width:25%;margin-right:0;float:left">
+                <a data-target="#users" data-toggle="tab" aria-expanded="false" ui-sref="index.admin.users"><span class="fa fa-user fa-2x" data-placement="bottom" onmouseenter="$(this).tooltip('show')" title="Users"></span></a>
+            </li>
+        </ul>
+        <div class="tab-content" ui-view style="margin-top:-5px;">
+
+        </div>
+    </div>
+</div>

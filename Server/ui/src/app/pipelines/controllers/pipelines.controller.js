@@ -51,28 +51,42 @@ angular
 
         vm.allPipelines = angular.copy(viewModel.allPipelines);
 
+        vm.formatDate = function(time){
+            // We subtract a month because the Server's month array starts from 1 to 12, while here it starts from 0 to 11
+            var dateFormat = {
+                years: time.date.year,
+                months: time.date.month - 1,
+                date: time.date.day,
+                hours: time.time.hour,
+                minutes: time.time.minute,
+                seconds: time.time.second,
+                milliseconds: 0
+            };
+            dateFormat = moment(dateFormat).format("M-DD-YYYY HH:mm");
+            return dateFormat;
+        };
+
         $scope.$watch(function() {
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
-
             vm.allPipelineGroups.forEach(function (currentPipelineGroup, groupIndex, groupArray) {
                 currentPipelineGroup.pipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                     if(currentPipeline.lastRun){
                         currentPipeline.lastRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                             if(currentStage.endTime) {
                                 currentPipeline.lastRun.lastStage = currentStage;
-                                currentPipeline.lastRun.lastStage.localEndDate = moment.formatDateUTCToLocal(currentStage.endTime);
-                                currentPipeline.lastRun.lastStage.localEndTime = moment.formatTimeInLocal(currentStage.endTime.time);
+                                var endDate = vm.formatDate(currentPipeline.lastRun.lastStage.endTime);
+                                currentPipeline.lastRun.lastStage.localEndTime = moment.utc(endDate, 'MM-DD-YYYY HH:mm').local().fromNow();
                             }
                         });
                         if (currentPipeline.lastRun.startTime) {
-                            currentPipeline.lastRun.localStartDate = moment.formatDateUTCToLocal(currentPipeline.lastRun.startTime);
-                            currentPipeline.lastRun.localStartTime = moment.formatTimeInLocal(currentPipeline.lastRun.startTime.time);
+                            var startTime = vm.formatDate(currentPipeline.lastRun.startTime);
+                            currentPipeline.lastRun.localStartTime = moment.utc(startTime, 'MM-DD-YYYY HH:mm').local().fromNow();
                         }
                         if (currentPipeline.lastRun.endTime) {
-                            currentPipeline.lastRun.localEndDate = moment.formatDateUTCToLocal(currentPipeline.lastRun.endTime);
-                            currentPipeline.lastRun.localEndTime = moment.formatTimeInLocal(currentPipeline.lastRun.endTime.time);
+                            var endTime = vm.formatDate(currentPipeline.lastRun.endTime);
+                            currentPipeline.lastRun.localEndTime = moment.utc(endTime, 'MM-DD-YYYY HH:mm').local().fromNow();
                         }
                     }
                 });

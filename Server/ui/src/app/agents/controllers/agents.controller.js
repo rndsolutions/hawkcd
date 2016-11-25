@@ -18,7 +18,7 @@
 angular
     .module('hawk.agentsManagement')
     // add DTOptionsBuilder, DTColumnDefBuilder to func
-    .controller('AgentsController', function($rootScope, $scope, $interval, agentService, websocketReceiverService, authDataService, viewModel) {
+    .controller('AgentsController', function($rootScope, $scope, $interval, $window, $timeout, agentService, websocketReceiverService, authDataService, viewModel) {
         var vm = this;
         vm.agentToDelete = {};
 
@@ -76,7 +76,16 @@ angular
 
         vm.currentAgents = [];
 
+        vm.windowWidth = $window.innerWidth;
+
         vm.currentAgents = angular.copy(viewModel.allAgents);
+
+        $window.onresize = function(event) {
+            $timeout(function() {
+                vm.windowWidth = $window.innerWidth;
+                $scope.$apply();
+            });
+        };
 
         $scope.$watch(function() {
             return viewModel.allAgents
@@ -96,6 +105,10 @@ angular
             vm.agentToDelete = agent;
         };
 
+        vm.setAgentToDisplayDetails = function(agent) {
+            vm.agentToDisplayDetails = agent;
+        };
+
         vm.setAgentToAddResource = function(agent) {
             vm.currentAgentResources = [];
             agent.resources.forEach(function(currentResource, index, array) {
@@ -105,7 +118,46 @@ angular
             vm.agentToAddResource = angular.copy(agent);
         };
 
+        vm.setAgentToEdit = function(index) {
+            vm.currentAgentResources = [];
+            vm.agentToEdit = vm.currentAgents[index];
+            vm.agentIndex = index;
+            vm.agentToAddResource = angular.copy(vm.currentAgents[index]);
+
+            vm.agentToEdit.resources.forEach(function(currentResource, index, array) {
+                vm.currentAgentResources.push(currentResource);
+            });
+        };
+
+        vm.addResource = function() {
+            vm.currentAgentResources.push('');
+        };
+
+        vm.removeResource = function(index) {
+            vm.currentAgentResources.splice(index, 1);
+        };
+
+        vm.close = function() {
+            vm.currentAgentResources = [];
+            vm.agentToEdit = {};
+            vm.agentIndex = 0;
+            vm.agentToDelete = {};
+            vm.agentToAddResource = {};
+            vm.agentToDisplayDetails = {};
+        };
+
+        vm.growTextArea = function(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight)+"px";
+        };
+
         vm.addInputResource = function() {
+            vm.agentToAddResource.resources = vm.currentAgentResources;
+            agentService.update(vm.agentToAddResource)
+        };
+
+        vm.submitAgent = function() {
+            vm.agentToAddResource = vm.currentAgents[vm.agentIndex];
             vm.agentToAddResource.resources = vm.currentAgentResources;
             agentService.update(vm.agentToAddResource)
         };
@@ -330,14 +382,5 @@ angular
         //     console.log(data);
         // });
 
-        //Reloads the data at a given interval. Parameter is false, because it is not the initial loading
-        var intervalAgents = $interval(function() {
-            //vm.getAllAgents();
-        }, 4000);
-
-        $scope.$on('$destroy', function() {
-            $interval.cancel(intervalAgents);
-            intervalAgents = undefined;
-        });
         //vm.getAllAgents();
     });

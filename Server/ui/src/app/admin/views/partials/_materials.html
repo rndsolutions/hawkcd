@@ -23,19 +23,19 @@
                     <th>
                         <h4>{{admin.popOverOptions.tableTitles.name}}</h4>
                     </th>
-                    <th>
+                    <th class="hidden-xs">
                         <h4>{{admin.popOverOptions.tableTitles.type}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.materialType}}">?</span>
                         </h4>
                     </th>
-                    <th>
+                    <th class="hidden-xs">
                         <h4>{{admin.popOverOptions.tableTitles.url}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.materialUrl}}">?</span>
                         </h4>
                     </th>
-                    <th>
+                    <th class="hidden-xs">
                         <h4>{{admin.popOverOptions.tableTitles.branch}} <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.materialBranch}}">?</span>
                         </h4>
                     </th>
-                    <th>
+                    <th class="config-controls">
                         <h4>{{admin.popOverOptions.tableTitles.actions}}</h4>
                     </th>
                 </tr>
@@ -45,13 +45,13 @@
                 <!--ng-repeat-->
                 <tr ng-repeat="material in admin.currentMaterials">
                     <td class="highlight"><div ng-class="{'success':true,'status-position':true}"></div></td>
-                    <td><h5> {{material.name}} </h5></td>
-                    <td> <i class="fa fa-github-square" ng-if="material.type == 'GIT'"></i> </td>
-                    <td><h5> {{material.repositoryUrl}} </h5></td>
-                    <td><h5> {{material.branch}} </h5></td>
-                    <td><h5><div class="btn-group btn-group-xs btn-group-solid">
-                        <button class="btn btn-info" data-target="#editMaterial" data-toggle="modal" ng-click="admin.setMaterialForEdit(material)">Edit</button>
-                        <button class="btn btn-danger" data-target="#removeMaterial" data-toggle="modal" ng-if="true" ng-click="admin.setMaterialForDelete(material.name,material)">Delete</button>
+                    <td class="text-center-vertical"><h5> {{material.name}} </h5></td>
+                    <td class="hidden-xs text-center-vertical"> <i class="fa fa-github-square" ng-if="material.type == 'GIT'"></i> </td>
+                    <td class="hidden-xs text-center-vertical table-element-text"><h5> {{material.repositoryUrl}} </h5></td>
+                    <td class="hidden-xs text-center-vertical"><h5> {{material.branch}} </h5></td>
+                    <td><h5><div class="text-center-all">
+                        <button class="btn yellow config-button" data-target="#editMaterial" data-toggle="modal" ng-click="admin.setMaterialForEdit(material)">Edit</button>
+                        <button class="btn red config-button" data-target="#removeMaterial" data-toggle="modal" ng-if="true" ng-click="admin.setMaterialForDelete(material.name,material.id)">Delete</button>
                     </div></h5></td>
                 </tr>
                 <!--end ng-repeat-->

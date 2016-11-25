@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelineConfigController', function($state, $interval, $scope, authDataService, viewModel, pipeConfigService) {
+    .controller('PipelineConfigController', function($state, $interval, $timeout, $scope, $window, authDataService, viewModel, pipeConfigService) {
         var vm = this;
         vm.toggleLogo = 1;
         vm.materialType = "git";
@@ -120,6 +120,16 @@ angular
             }
         };
 
+        vm.windowWidth = $window.innerWidth;
+
+        $window.onresize = function(event) {
+            $timeout(function() {
+                vm.windowWidth = $window.innerWidth;
+                $scope.$apply();
+                // debugger;
+            });
+        };
+
         $scope.$watch(function() {
             return viewModel.allMaterialDefinitions;
         }, function(newVal, oldVal) {
@@ -148,6 +158,7 @@ angular
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
+            vm.getPipelineForConfig(vm.state.params.pipelineName);
             // console.log(vm.allPipelines);
         }, true);
 

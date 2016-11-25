@@ -224,10 +224,18 @@ public class FileManagementService implements IFileManagementService {
             return allFiles;
         }
 
+        if (!wildCardPattern.equals("")) {
+            rootPath = rootPath.replace(wildCardPattern, "");
+        }
+
         DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir(rootPath);
-        scanner.setIncludes(new String[]{wildCardPattern});
-        scanner.scan();
+        try {
+            scanner.setBasedir(rootPath);
+            scanner.setIncludes(new String[]{wildCardPattern});
+            scanner.scan();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
 
         if (wildCardPattern.equals("**")) {
             File directory = scanner.getBasedir();
