@@ -18,7 +18,7 @@
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, $filter, DTOptionsBuilder, DTColumnDefBuilder, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
+        function($state, $interval, $scope, $filter, $window, $timeout, DTOptionsBuilder, DTColumnDefBuilder, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
             vm.breadCrumb = {
@@ -122,6 +122,7 @@ angular
                     dateRegistered: 'Registered On',
                     permissions: 'Permissions',
                     action: 'Action',
+                    controls: 'Controls',
                     edit: 'Edit'
                 },
                 userInfo: {
@@ -239,6 +240,16 @@ angular
 
             vm.materialType = 'git';
             vm.formData = {};
+
+            vm.windowWidth = $window.innerWidth;
+
+            $window.onresize = function(event) {
+                $timeout(function() {
+                    vm.windowWidth = $window.innerWidth;
+                    $scope.$apply();
+                    // debugger;
+                });
+            };
 
             vm.addMaterial = function(formData) {
                 var material = {};
@@ -366,8 +377,15 @@ angular
                 user.isClicked = true;
             };
 
+            vm.toggleUser = function(user) {
+                var userToUpdate = angular.copy(user);
+                userToUpdate.isEnabled = !userToUpdate.isEnabled;
+                adminService.updateUser(userToUpdate);
+            };
+
             vm.selectUser = function(index) {
                 vm.selectedUser = angular.copy(vm.users[index]);
+                $scope.user = angular.copy(vm.selectedUser);
                 vm.userDTO = angular.copy(vm.users[index]);
             };
 
@@ -451,6 +469,7 @@ angular
 
             vm.assignPipeline = function(pipeline) {
                 var pipelineGroup = vm.pipelineGroupToAssign;
+                debugger;
                 pipeConfigService.assignPipelineDefinition(pipeline.id, pipelineGroup.id, pipelineGroup.name);
             };
 
@@ -616,7 +635,6 @@ angular
                 $('.extraRow').each(function() {
                     $(this).remove();
                 });
-                vm.selectedUser = null;
             };
 
             vm.closeGroupPermissionModal = function() {

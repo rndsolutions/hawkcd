@@ -27,9 +27,10 @@
     </div>
     <div class="panel-body">
         <div class="info">
-            <p><strong>Started:</strong>
-                <span ng-if="pipe.lastRun.localStartTime != null">{{pipe.lastRun.localStartTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.localStartTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.localStartTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipe.lastRun.localStartDate.date}}/{{pipe.lastRun.localStartDate.months}}/{{pipe.lastRun.localStartDate.years}}</span></p>
-            <p><strong>Finished:</strong><span ng-if="pipe.lastRun.lastStage.localEndTime != null"> {{pipe.lastRun.lastStage.localEndTime.hour.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.lastStage.localEndTime.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}}:{{pipe.lastRun.lastStage.localEndTime.second.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}} on {{pipe.lastRun.lastStage.localEndDate.date}}/{{pipe.lastRun.lastStage.localEndDate.months}}/{{pipe.lastRun.lastStage.localEndDate.years}}</span></p>
+            <p><strong>Started: </strong>
+                <span ng-if="pipe.lastRun.localStartTime != null">{{pipe.lastRun.localStartTime}}
+                </span></p>
+            <p><strong>Finished: </strong><span ng-if="pipe.lastRun.lastStage.localEndTime != null">{{pipe.lastRun.lastStage.localEndTime}}</span></p>
             <div style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap; "><strong>Reason:</strong> {{pipe.lastRun.triggerReason}}</div>
             <strong>Status:</strong>
             <div class="label label-default run-label vertical-center-static margin-left-1 text-center" ng-class="{'passed': pipe.lastRun.status == 'PASSED', 'failed' : pipe.lastRun.status == 'FAILED', 'working' : pipe.lastRun.status == 'IN_PROGRESS', 'canceled-run' : pipe.lastRun.status == 'CANCELED', 'awaiting' : pipe.lastRun.status == 'AWAITING'}" ng-if="pipe.lastRun.status"> {{pipe.lastRun.status}}</div>

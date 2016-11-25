@@ -14,26 +14,26 @@
 
 <div id="stages">
   <div class="table-scrollable">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-fixed">
       <thead>
       <tr>
-        <th> # </th>
+        <th width="35px"> # </th>
         <th> Name </th>
-        <th> Triggered Manually <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.triggeredManually}}">?</span></th>
-        <th> Jobs <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobCount}}">?</span></th>
-        <th> Controls </th>
+        <th width="170px" class="hidden-xs"> Triggered Manually <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.triggeredManually}}">?</span></th>
+        <th width="70px" class="hidden-xs"> Jobs <span class="badge badge-default cursor-popover" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.jobCount}}">?</span></th>
+        <th class="config-controls"> Controls </th>
       </tr>
       </thead>
       <tbody ui-sortable="pipeConfig.stageSortableOptions" ng-class="{'unsortable' : pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'}" class="sortable" ng-model="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions">
 
       <!--ng-repeat-->
       <tr ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions">
-        <td> {{$index+1}} </td>
-        <td> {{stage.name}} </td>
-        <td> {{stage.isTriggeredManually}} </td>
-        <td> {{stage.jobDefinitions.length}} </td>
-        <td>
-          <button class="btn red unsortable" data-target="#removeStage" data-toggle="modal"
+        <td class="text-center-all"> {{$index+1}} </td>
+        <td class="table-element-text"> {{stage.name}} </td>
+        <td class="hidden-xs text-center-all"> {{stage.isTriggeredManually}} </td>
+        <td class="text-center-all hidden-xs"> {{stage.jobDefinitions.length}} </td>
+        <td class="text-center-all">
+          <button class="btn red unsortable config-button" data-target="#removeStage" data-toggle="modal"
                   ng-click="pipeConfig.getStage(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">Delete</button>
         </td>
       </tr>
