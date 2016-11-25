@@ -115,18 +115,7 @@ public class RequestProcessor {
             message = attachePermissionsToEntity(message, methodArgs);
         }
 
-
-        if (Config.getConfiguration().isSingleNode()) {
-            WsContractDto ctr = null;
-            if(message.isTargetOwner()){ // if this is list
-                ctr = MessageConverter.convert(message);
-            }else { // if single message
-                ctr = MessageTranslator.translateMessageToContract(message);
-            }
-            SessionFactory.getSessionManager().sendToAllSessions(ctr);
-        } else {
-            PublisherFactory.createPublisher().publish("global", message);
-        }
+        MessageDispatcher.dispatchMessage(message);
     }
 
     /**

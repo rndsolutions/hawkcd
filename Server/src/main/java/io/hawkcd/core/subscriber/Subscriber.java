@@ -48,7 +48,6 @@ import java.util.Map;
 public class Subscriber extends JedisPubSub {
 
     private Gson jsonConverter;
-    private IMessageDispatcher messageDispatcher;
     private IMessageFilter authFilter;
     private RequestProcessor requestProcessor;
     private ISessionManager sessionManager;
@@ -73,7 +72,6 @@ public class Subscriber extends JedisPubSub {
         ISessionManager sessionManager = SessionFactory.getSessionManager();
 
         if (message.isTargetOwner()) { // When is list and targets the user executed the request
-
             WsContractDto contract = MessageConverter.convert(message);
             WSSocket session = sessionManager.getSessionByUserId(message.getOwner().getId());
             sessionManager.send(session, contract);
