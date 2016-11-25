@@ -376,42 +376,42 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
-    public ServiceResult cancelPipeline(String pipelineId) {
-        ServiceResult result = this.getById(pipelineId);
+    public ServiceResult cancelPipeline(Pipeline pipeline) {
+        ServiceResult result = this.getById(pipeline.getId());
         if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
         }
 
-        Pipeline pipeline = (Pipeline) result.getEntity();
-        pipeline.setShouldBeCanceled(true);
-        pipeline.setStatus(PipelineStatus.IN_PROGRESS);
-        return this.update(pipeline);
+        Pipeline pipelineToBeCanceled = (Pipeline) result.getEntity();
+        pipelineToBeCanceled.setShouldBeCanceled(true);
+        pipelineToBeCanceled.setStatus(PipelineStatus.IN_PROGRESS);
+        return this.update(pipelineToBeCanceled);
     }
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
-    public ServiceResult pausePipeline(String pipelineId) {
-        ServiceResult result = this.getById(pipelineId);
+    public ServiceResult pausePipeline(Pipeline pipeline) {
+        ServiceResult result = this.getById(pipeline.getId());
         if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
         }
 
-        Pipeline pipeline = (Pipeline) result.getEntity();
-        if (pipeline.getStatus() == PipelineStatus.IN_PROGRESS) {
-            pipeline.setStatus(PipelineStatus.PAUSED);
+        Pipeline pipelineToBeCanceled = (Pipeline) result.getEntity();
+        if (pipelineToBeCanceled.getStatus() == PipelineStatus.IN_PROGRESS) {
+            pipelineToBeCanceled.setStatus(PipelineStatus.PAUSED);
             result.setNotificationType(NotificationType.WARNING);
-            String message = String.format("Pipeline %s set to PAUSED.", pipeline.getPipelineDefinitionName());
+            String message = String.format("Pipeline %s set to PAUSED.", pipelineToBeCanceled.getPipelineDefinitionName());
             result.setMessage(message);
             LOGGER.info(message);
-            List<Stage> stages = pipeline.getStages();
+            List<Stage> stages = pipelineToBeCanceled.getStages();
             for (Stage stage : stages) {
                 if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                     stage.setStatus(StageStatus.PAUSED);
                 }
             }
         } else {
-            pipeline.setStatus(PipelineStatus.IN_PROGRESS);
-            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipeline.getPipelineDefinitionName());
+            pipelineToBeCanceled.setStatus(PipelineStatus.IN_PROGRESS);
+            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipelineToBeCanceled.getPipelineDefinitionName());
             LOGGER.info(message);
             List<Stage> stages = pipeline.getStages();
             for (Stage stage : stages) {
@@ -422,7 +422,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             }
         }
 
-        return this.update(pipeline);
+        return this.update(pipelineToBeCanceled);
     }
 
     private void addMaterialsToPipeline(Pipeline pipeline) {
