@@ -43,7 +43,7 @@ public interface IAuthorizationManager {
 
     String[] extractEntityIds(List<Object> parameters);
 
-    Message getAllUsersWithPermissionsMap(ServiceResult serviceResult);
+    Message getAllUsersWithPermissionsMap(ServiceResult result, String className, String methodName);
 
     /*
     * returns all users that have access to perform the operation

@@ -18,20 +18,28 @@
 
 package io.hawkcd.core.security;
 
+import io.hawkcd.core.Message;
+import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.PipelineFamily;
 import io.hawkcd.model.PipelineGroup;
+import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.User;
+import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
+import io.hawkcd.services.UserService;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The class is responisble for authorizing User's requests
@@ -47,7 +55,7 @@ import java.util.List;
 public class AuthorizationManager implements IAuthorizationManager {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
-    private  UserService userService;
+    private UserService userService;
 
     public  AuthorizationManager(){
         this.userService = new UserService();
@@ -93,9 +101,9 @@ public class AuthorizationManager implements IAuthorizationManager {
         return annotation;
     }
 
-    public Message getAllUsersWithPermissionsMap(ServiceResult result){
+    public Message getAllUsersWithPermissionsMap(ServiceResult result, String className, String methodName){
 
-        Message message = new Message(null,null,result,null);
+        Message message = new Message(className,methodName,result,null);
 
         Map<String, PermissionType> userMap =  new HashMap<>();
 
@@ -142,7 +150,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
         // Checks for generic Permissions, e.g. a user is assigned a permission for ALL Pipelines/Groups
         for (AuthorizationGrant grant : userGrants) {
-            if (grant.getPermittedEntityId().startsWith("ALL") || grant.getScope().equals(PermissionScope.SERVER)) {
+            if (grant.getPermittedEntityId().startsWith("ALL") || (grant.getScope() == PermissionScope.SERVER)) {
                 if (grant.isGreaterThan(grantToEvaluateAgainst)) {
                     return grant.getType();
                 }
@@ -165,10 +173,10 @@ public class AuthorizationManager implements IAuthorizationManager {
         return result;
     }
 
-    public PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object) {
+    public PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object) {
         PermissionType result;
         Authorization authorization = object.getClass().getAnnotation(Authorization.class);
-        Grant grant = new Grant(authorization);
+        AuthorizationGrant grant = new AuthorizationGrant(authorization);
 
         String[] entityIds = this.extractEntityIds(object);
         result = this.determinePermissionTypeForUser(userGrants, grant, entityIds);
