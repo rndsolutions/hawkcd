@@ -102,7 +102,14 @@ public class AuthorizationManager implements IAuthorizationManager {
         return annotation;
     }
 
-    public Message getAllUsersWithPermissionsMap(ServiceResult result, String className, String methodName){
+    /**
+     *
+     * @param result
+     * @param className
+     * @param methodName
+     * @return
+     */
+    public Message constructAuthorizedMessage(ServiceResult result, String className, String methodName){
 
         Message message = new Message(className,methodName,result,null);
 

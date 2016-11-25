@@ -86,7 +86,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         String methodName = ste[1].getMethodName();
         String className = this.getClass().getSimpleName();
 
-        Message message = AuthorizationFactory.getAuthorizationManager().getAllUsersWithPermissionsMap(result,className,methodName);
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
 
         PublisherFactory.createPublisher().publish("global",message);
 

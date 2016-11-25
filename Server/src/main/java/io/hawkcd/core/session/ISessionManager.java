@@ -47,4 +47,7 @@ public interface ISessionManager {
 
     void sendToAllAuthorizedSession(WsContractDto contractDto);
 
+    WSSocket getSessionByUserId(String id);
+
+    void send(WSSocket session, WsContractDto contractDto);
 }
