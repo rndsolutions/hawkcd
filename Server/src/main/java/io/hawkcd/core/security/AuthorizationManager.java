@@ -18,12 +18,19 @@
 
 package io.hawkcd.core.security;
 
+import io.hawkcd.model.Entity;
+import io.hawkcd.model.PipelineFamily;
+import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
+import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,21 +47,18 @@ import java.util.List;
 public class AuthorizationManager implements IAuthorizationManager {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationManager.class);
 
-    private AuthorizationService authorizationService = new AuthorizationService();
-
-
     @Override
-    public boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException {
-        Authorization authorizationAttributes = this.getMethodAuthorizationAttributes(contract.getPackageName(), contract.getClassName(), contract.getMethodName(), parameters);
+    public boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters)
+            throws ClassNotFoundException, NoSuchMethodException {
+
+        Authorization authorizationAttributes = this.getMethodAuthorizationAttributes(contract, parameters);
         if (authorizationAttributes == null) {
             return false;
         }
-
-        String[] entityIds = this.authorizationService.extractEntityIds(parameters);
-//        String[] entityIds = this.authorizationService.extractEntityIds(contract.getClassName(), contract.getMethodName(), parameters, user.getUserPermissions(), authorizationAttributes);
+        String[] entityIds = this.extractEntityIds(parameters);
         Grant grant = new Grant(authorizationAttributes);
 
-        PermissionType permissionType = this.authorizationService.determinePermissionTypeForUser(user.getPermissions(), grant, entityIds);
+        PermissionType permissionType = this.determinePermissionTypeForUser(user.getPermissions(), grant, entityIds);
         if (permissionType != PermissionType.NONE) {
             return true;
         }
@@ -63,39 +67,85 @@ public class AuthorizationManager implements IAuthorizationManager {
 
     @Override
     public void getAllUsersWithPermissions() {
+        throw new NotImplementedException();
     }
 
-    /**
-     * Checks the object for minimum permissions required for the user to receive the object
-     *
-     * @param userGrants
-     * @param object
-     * @return
-     */
-    public PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters) {
-        PermissionType result;
-        Authorization authorization = object.getClass().getAnnotation(Authorization.class);
-        Grant grant = new Grant(authorization);
-
-        String[] entityIds = this.authorizationService.extractEntityIds(parameters);
-        result = this.authorizationService.determinePermissionTypeForUser(userGrants, grant, entityIds);
-        return result;
-    }
-
-    private Authorization getMethodAuthorizationAttributes(String packageName, String className, String methodName, List<Object> parameters)
+    private Authorization getMethodAuthorizationAttributes(WsContractDto contractDto, List<Object> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
 
-        String fullyQualifiedName = String.format("%s.%s", packageName, className);
+        String fullyQualifiedName = String.format("%s.%s", contractDto.getPackageName(), contractDto.getClassName());
         Class<?> aClass = Class.forName(fullyQualifiedName);
         Class<?>[] params = new Class[parameters.size()];
         for (int i = 0; i < params.length; i++) {
             Class<?> aClass1 = parameters.get(i).getClass();
             params[i] = aClass1;
         }
-        Method method = aClass.getMethod(methodName, params);
+        Method method = aClass.getMethod(contractDto.getMethodName(), params);
         Authorization annotation = method.getAnnotation(Authorization.class);
 
         return annotation;
+    }
+
+    /**
+     * Determines the Permission Type of the user based on the entity IDs passed to it
+     */
+    public PermissionType determinePermissionTypeForUser(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds) {
+        PermissionType result = PermissionType.NONE;
+
+        // Checks for specific Permissions, e.g. a user is assigned a permission for a specific entity (Pipeline/Group)
+        for (String entityId : entityIds) {
+            for (Grant grant : userGrants) {
+                if (grant.getPermittedEntityId().equals(entityId)) {
+                    if (grant.isGreaterThan(grantToEvaluateAgainst)) {
+                        return grant.getType();
+                    }
+                }
+            }
+        }
+
+        // Checks for generic Permissions, e.g. a user is assigned a permission for ALL Pipelines/Groups
+        for (Grant grant : userGrants) {
+            if (grant.getPermittedEntityId().startsWith("ALL") || grant.getScope().equals(PermissionScope.SERVER)) {
+                if (grant.isGreaterThan(grantToEvaluateAgainst)) {
+                    return grant.getType();
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Checks the object for minimum permissions required for the user to receive the object
+     */
+    public PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters) {
+        PermissionType result;
+        Authorization authorization = object.getClass().getAnnotation(Authorization.class);
+        Grant grant = new Grant(authorization);
+
+        String[] entityIds = this.extractEntityIds(parameters);
+        result = this.determinePermissionTypeForUser(userGrants, grant, entityIds);
+        return result;
+    }
+
+    /**
+     * The method extracts the object Ids necessary for the authorization based on the class and
+     * method being invoked.
+     */
+    public String[] extractEntityIds(List<Object> parameters) {
+        List<String> entityIds = new ArrayList<>();
+        for (Object parameter : parameters) {
+            if (parameter instanceof PipelineFamily) {
+                PipelineFamily pipelineFamily = (PipelineFamily) parameter;
+                entityIds.add(pipelineFamily.getPipelineDefinitionId());
+                entityIds.add(pipelineFamily.getPipelineGroupId());
+            } else if (parameter instanceof PipelineGroup) {
+                Entity pipelineGroup = (Entity) parameter;
+                entityIds.add(pipelineGroup.getId());
+            }
+        }
+
+        return entityIds.toArray(new String[entityIds.size()]);
     }
 
 }

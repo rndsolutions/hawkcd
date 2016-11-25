@@ -74,7 +74,8 @@ public class RequestProcessor {
      * Perform authorization check for each active User
      * Attach User email and Ids
      */
-    public void prorcessRequest(WsContractDto contract, User currentUser, String sessionId) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    public void prorcessRequest(WsContractDto contract, User currentUser, String sessionId)
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
         List<Object> methodArgs = extractTargetMethodArguments(contract);
         boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
@@ -109,17 +110,22 @@ public class RequestProcessor {
             message.setTargetOwner(true);
             message.setEnvelop(filteredResult);
         } else {
-          message = attachePermissionsToEntity(methodArgs, result, message);
+          message = attachePermissionsToEntity(message, methodArgs);
         }
         this.publisher.publish("global", message);
     }
 
-    private Message attachePermissionsToEntity(List<Object> methodArgs, ServiceResult result, Message message) {
+    /**
+     * Loops through
+     * @param message
+     * @param methodArgs
+     * @return
+     */
+    private Message attachePermissionsToEntity(Message message, List<Object> methodArgs) {
 
         List<SessionDetails> activeSessions = SessionFactory.getSessionManager().getAllActiveSessions();
 
-        Map<String, PermissionType> permissionTypeByUser = this.getPermissionTypeByUser(message.getOwner(),
-                methodArgs, message.getEnvelop(), activeSessions);
+        Map<String, PermissionType> permissionTypeByUser = this.getPermissionTypeByUser(message, methodArgs, activeSessions);
 
         message.setPermissionTypeByUser(permissionTypeByUser);
 
@@ -134,7 +140,7 @@ public class RequestProcessor {
         return false;
     }
 
-    private Map<String, PermissionType> getPermissionTypeByUser(User currentUser, List<Object> methodArgs, Object entity, List<SessionDetails> activeSessions) {
+    private Map<String, PermissionType> getPermissionTypeByUser(Message message, List<Object> methodArgs, List<SessionDetails> activeSessions) {
         Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
 
         for (SessionDetails activeSession : activeSessions) {
@@ -142,7 +148,7 @@ public class RequestProcessor {
 //            List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
             PermissionType permissionType = AuthorizationFactory
                     .getAuthorizationManager()
-                    .determinePermissionTypeForEntity(currentUser.getPermissions(), entity, methodArgs);
+                    .determinePermissionTypeForEntity(userToSendTo.getPermissions(), message.getEnvelop(), methodArgs);
             permissionTypeByUser.put(userToSendTo.getId(), permissionType);
         }
         return permissionTypeByUser;

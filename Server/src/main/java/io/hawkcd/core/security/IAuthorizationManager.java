@@ -34,6 +34,10 @@ public interface IAuthorizationManager {
 
     PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters);
 
+    PermissionType determinePermissionTypeForUser(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds);
+
+    String[] extractEntityIds(List<Object> parameters);
+
     /*
     * returns all users that have access to perform the operation
     *
