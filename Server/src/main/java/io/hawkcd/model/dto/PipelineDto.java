@@ -30,7 +30,6 @@ import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class PipelineDto extends PipelineFamily {
-    private String pipelineDefinitionId;
     private String pipelineDefinitionName;
     private int executionId;
     private List<Material> materials;
@@ -58,7 +57,6 @@ public class PipelineDto extends PipelineFamily {
         super.setId(pipeline.getId());
         super.setPipelineDefinitionId(pipeline.getPipelineDefinitionId());
         super.setPipelineGroupId(pipeline.getPipelineGroupId());
-        this.pipelineDefinitionId = pipeline.getPipelineDefinitionId();
         this.pipelineDefinitionName = pipeline.getPipelineDefinitionName();
         this.executionId = pipeline.getExecutionId();
         this.status = pipeline.getStatus();

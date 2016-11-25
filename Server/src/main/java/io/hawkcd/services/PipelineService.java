@@ -18,6 +18,7 @@ package io.hawkcd.services;
 
 import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageConverter;
+import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.AuthorizationManager;
@@ -138,9 +139,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
 
-        Message message = AuthorizationFactory.getAuthorizationManager().getAllUsersWithPermissionsMap(result);
-        
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String methodName = ste[1].getMethodName();
+        String className = this.getClass().getSimpleName();
 
+        Message message = AuthorizationFactory.getAuthorizationManager().getAllUsersWithPermissionsMap(result,className,methodName);
+
+        PublisherFactory.createPublisher().publish("global",message);
 
         //MessageConverter.
         //Create Message

@@ -16,7 +16,10 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.Message;
+import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Agent;
@@ -78,7 +81,15 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(Agent agent) {
         ServiceResult result = super.update(agent);
-        EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
+
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String methodName = ste[1].getMethodName();
+        String className = this.getClass().getSimpleName();
+
+        Message message = AuthorizationFactory.getAuthorizationManager().getAllUsersWithPermissionsMap(result,className,methodName);
+
+        PublisherFactory.createPublisher().publish("global",message);
+
         return result;
     }
 

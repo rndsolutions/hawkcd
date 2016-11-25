@@ -38,7 +38,16 @@ public class Publisher implements IPublisher {
     private Jedis jedisPublisher;
     private Gson jsonConverter;
 
-    public Publisher() {
+    private static Publisher instance;
+
+    public static synchronized Publisher getInstance() {
+        if (instance == null) {
+            instance = new Publisher();
+        }
+        return instance;
+    }
+
+    private Publisher() {
         this.jedisPublisher = RedisManager.getJedisPool().getResource();
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())

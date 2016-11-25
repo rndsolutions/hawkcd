@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import io.hawkcd.core.publisher.Publisher;
+import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.model.*;
@@ -54,7 +55,6 @@ public class RequestProcessor {
 
     public RequestProcessor() {
         this.wsObjectProcessor = new WsObjectProcessor();
-        this.publisher = new Publisher();
         this.securityServiceInvoker = new SecurityServiceInvoker();
         this.permissionService = new PermissionService();
         this.userService = new UserService();
@@ -112,7 +112,7 @@ public class RequestProcessor {
         } else {
           message = attachePermissionsToEntity(message, methodArgs);
         }
-        this.publisher.publish("global", message);
+        PublisherFactory.createPublisher().publish("global", message);
     }
 
     /**
