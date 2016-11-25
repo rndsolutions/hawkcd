@@ -16,7 +16,7 @@
 
 package io.hawkcd.services.filters;
 
-import io.hawkcd.core.security.Grant;
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.model.User;
 import io.hawkcd.model.UserGroup;
 import io.hawkcd.model.enums.PermissionScope;
@@ -60,7 +60,7 @@ public class PermissionService {
 
                 for (Permission userGroupPermissionFromDb : userGroupPermissionsFromDb) {
                     boolean isPermissionPresent = false;
-                    for (Grant userPersmission : user.getPermissions()) {
+                    for (AuthorizationGrant userPersmission : user.getPermissions()) {
                         if (userGroupPermissionFromDb.getPermittedEntityId().equals(userPersmission.getPermittedEntityId())) {
                             isPermissionPresent = true;
                             break;
@@ -76,33 +76,33 @@ public class PermissionService {
         return userGroupPermissions;
     }
 
-    public List<Grant> sortPermissions(List<Grant> permissions) {
-        List<Grant> sortedPermissions = new ArrayList<>();
+    public List<AuthorizationGrant> sortPermissions(List<AuthorizationGrant> permissions) {
+        List<AuthorizationGrant> sortedPermissions = new ArrayList<>();
 
-        List<Grant> adminPermissions = permissions
+        List<AuthorizationGrant> adminPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getScope() == PermissionScope.SERVER)
                 .sorted((p1, p2) -> p2.getType().compareTo(p1.getType()))
                 .collect(Collectors.toList());
-        List<Grant> pipelineGroupGlobalPermissions = permissions
+        List<AuthorizationGrant> pipelineGroupGlobalPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getScope() == PermissionScope.PIPELINE_GROUP)
                 .filter(permission -> permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString()))
                 .sorted((p1, p2) -> p2.getType().compareTo(p1.getType()))
                 .collect(Collectors.toList());
-        List<Grant> pipelineGlobalPermissions = permissions
+        List<AuthorizationGrant> pipelineGlobalPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getScope() == PermissionScope.PIPELINE)
                 .filter(permission -> permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()))
                 .sorted((p1, p2) -> p2.getType().compareTo(p1.getType()))
                 .collect(Collectors.toList());
-        List<Grant> pipelineGroupPermissions = permissions
+        List<AuthorizationGrant> pipelineGroupPermissions = permissions
                 .stream()
                 .filter(permission -> permission.getScope() == PermissionScope.PIPELINE_GROUP)
                 .filter(permission -> !permission.getPermittedEntityId().equals(PermissionScope.PIPELINE_GROUP.toString()))
                 .sorted((p1, p2) -> p2.getType().compareTo(p1.getType()))
                 .collect(Collectors.toList());
-        List<Grant> pipelinePermissions = permissions
+        List<AuthorizationGrant> pipelinePermissions = permissions
                 .stream()
                 .filter(permission -> permission.getScope() == PermissionScope.PIPELINE)
                 .filter(permission -> !permission.getPermittedEntityId().equals(PermissionScope.PIPELINE.toString()))

@@ -16,7 +16,11 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.Message;
+import io.hawkcd.core.MessageConverter;
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationFactory;
+import io.hawkcd.core.security.AuthorizationManager;
 import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.core.session.SessionManager;
 import io.hawkcd.db.DbRepositoryFactory;
@@ -30,8 +34,10 @@ import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.PipelineDefinition;
 import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.Stage;
 import io.hawkcd.model.StageDefinition;
+import io.hawkcd.model.User;
 import io.hawkcd.model.dto.PipelineDto;
 import io.hawkcd.model.enums.*;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
@@ -42,6 +48,7 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -130,8 +137,22 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
+
+        Message message = AuthorizationFactory.getAuthorizationManager().getAllUsersWithPermissionsMap(result);
         
-        //SessionFactory.getSessionManager().sendToAllSessions();
+
+
+        //MessageConverter.
+        //Create Message
+        //Extracts users from all active sessions
+        //Build the user permission Map and fill in the Message class
+        //if(isSingleNode){ publish } {else { sendToAllAuthorizedSEssions}}
+
+
+
+
+        //AuthorizationFactory.getAuthorizationManager().
+
         //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
 
         return result;

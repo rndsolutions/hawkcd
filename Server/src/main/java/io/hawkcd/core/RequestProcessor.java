@@ -145,7 +145,7 @@ public class RequestProcessor {
 
         for (SessionDetails activeSession : activeSessions) {
             User userToSendTo = (User) userService.getById(activeSession.getUserId()).getEntity();
-//            List<Grant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
+//            List<AuthorizationGrant> userPermissions = this.permissionService.sortPermissions(currentUser.getPermissions());
             PermissionType permissionType = AuthorizationFactory
                     .getAuthorizationManager()
                     .determinePermissionTypeForEntity(userToSendTo.getPermissions(), message.getEnvelop(), methodArgs);

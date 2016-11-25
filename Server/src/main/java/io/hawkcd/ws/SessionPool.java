@@ -16,7 +16,7 @@
 //
 //package io.hawkcd.ws;
 //
-//import io.hawkcd.core.security.Grant;
+//import io.hawkcd.core.security.AuthorizationGrant;
 //import io.hawkcd.model.PermissionObject;
 //import io.hawkcd.model.ServiceResult;
 //import io.hawkcd.model.User;
@@ -100,7 +100,7 @@
 //                    User loggedUser = session.getLoggedUser();
 //                    if (loggedUser != null) {
 //                        loggedUser.getPermissions().addAll(this.permissionService.getUniqueUserGroupPermissions(loggedUser));
-//                        List<Grant> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
+//                        List<AuthorizationGrant> permissions = this.permissionService.sortPermissions(loggedUser.getPermissions());
 //                        PermissionObject result = this.entityPermissionTypeServiceInvoker.invoke(objectClass, permissions, (PermissionObject) contractDto.getResult());
 //                        if (result.getPermissionType() != PermissionType.NONE) {
 //                            contractDto.setResult(result);

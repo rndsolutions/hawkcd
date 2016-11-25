@@ -17,18 +17,17 @@
 package io.hawkcd.model.dto;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.core.security.Grant;
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.model.PermissionObject;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.model.payload.Permission;
 
 import java.util.List;
 
 @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
 public class UserDto extends PermissionObject {
     private String username;
-    private List<Grant> permissions;
+    private List<AuthorizationGrant> permissions;
 
     public String getUsername() {
         return this.username;
@@ -38,11 +37,11 @@ public class UserDto extends PermissionObject {
         this.username = username;
     }
 
-    public List<Grant> getPermissions() {
+    public List<AuthorizationGrant> getPermissions() {
         return this.permissions;
     }
 
-    public void setPermissions(List<Grant> permissions) {
+    public void setPermissions(List<AuthorizationGrant> permissions) {
         this.permissions = permissions;
     }
 }

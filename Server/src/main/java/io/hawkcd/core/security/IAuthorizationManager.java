@@ -18,11 +18,14 @@
 
 package io.hawkcd.core.security;
 
+import io.hawkcd.core.Message;
+import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.PermissionType;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IAuthorizationManager {
 
@@ -32,13 +35,15 @@ public interface IAuthorizationManager {
     */
     boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException;
 
-    PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object, List<Object> parameters);
+    PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Object> parameters);
 
-    PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object);
+    PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object);
 
-    PermissionType determinePermissionTypeForUser(List<Grant> userGrants, Grant grantToEvaluateAgainst, String... entityIds);
+    PermissionType determinePermissionTypeForUser(List<AuthorizationGrant> userGrants, AuthorizationGrant grantToEvaluateAgainst, String... entityIds);
 
     String[] extractEntityIds(List<Object> parameters);
+
+    Message getAllUsersWithPermissionsMap(ServiceResult serviceResult);
 
     /*
     * returns all users that have access to perform the operation

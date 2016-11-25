@@ -70,7 +70,7 @@ public class Message {
     private User owner;
     private Map<String, PermissionType> permissionTypeByUser;
 
-    Message(String serviceCalled, String methodCalled, ServiceResult serviceResult, User usr) {
+    public Message(String serviceCalled, String methodCalled, ServiceResult serviceResult, User usr) {
         this.serviceCalled = serviceCalled;
         this.methodCalled = methodCalled;
         this.owner = usr;
