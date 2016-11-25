@@ -20,6 +20,7 @@ import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.PipelineDefinition;
+import io.hawkcd.model.PipelineFamily;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class PipelineDefinitionDto extends Entity {
+public class PipelineDefinitionDto extends PipelineFamily {
     private PipelineDto lastRun;
     private List<Integer> pipelineExecutionIds;
 
@@ -39,6 +40,8 @@ public class PipelineDefinitionDto extends Entity {
 
     public void constructDto(PipelineDefinition pipelineDefinition, List<Pipeline> pipelines) {
         super.setId(pipelineDefinition.getId());
+        super.setPipelineDefinitionId(pipelineDefinition.getId());
+        super.setPipelineGroupId(pipelineDefinition.getPipelineGroupId());
         super.setName(pipelineDefinition.getName());
         pipelines = pipelines.stream().sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId())).collect(Collectors.toList());
         if (!pipelines.isEmpty()) {

@@ -30,13 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class Pipeline extends Entity {
-    private String pipelineDefinitionId;
+public class Pipeline extends PipelineFamily {
     private String pipelineDefinitionName;
     private int executionId;
     private List<Material> materials;
-    private List<EnvironmentVariable> environmentVariables;
-    private List<Environment> environments;
     private List<Stage> stages;
     private PipelineStatus status;
     private LocalDateTime startTime;
@@ -52,18 +49,9 @@ public class Pipeline extends Entity {
         this.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         this.setEnvironmentVariables(new ArrayList<>());
         this.setMaterials(new ArrayList<>());
-        this.setEnvironments(new ArrayList<>());
         this.setStages(new ArrayList<>());
         this.setArtifactsFileStructure(new ArrayList<>());
         this.status = PipelineStatus.IN_PROGRESS;
-    }
-
-    public String getPipelineDefinitionId() {
-        return this.pipelineDefinitionId;
-    }
-
-    public void setPipelineDefinitionId(String pipelineDefinitionId) {
-        this.pipelineDefinitionId = pipelineDefinitionId;
     }
 
     public String getPipelineDefinitionName() {
@@ -88,22 +76,6 @@ public class Pipeline extends Entity {
 
     public void setMaterials(List<Material> materials) {
         this.materials = materials;
-    }
-
-    public List<EnvironmentVariable> getEnvironmentVariables() {
-        return this.environmentVariables;
-    }
-
-    public void setEnvironmentVariables(List<EnvironmentVariable> environmentVariables) {
-        this.environmentVariables = environmentVariables;
-    }
-
-    public List<Environment> getEnvironments() {
-        return this.environments;
-    }
-
-    public void setEnvironments(List<Environment> environments) {
-        this.environments = environments;
     }
 
     public List<Stage> getStages() {

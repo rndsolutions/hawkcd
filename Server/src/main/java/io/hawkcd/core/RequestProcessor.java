@@ -182,9 +182,9 @@ public class RequestProcessor {
         for (Entity entity : entities) {
             PermissionType permissionType = AuthorizationFactory
                     .getAuthorizationManager()
-                    .determinePermissionTypeForEntity(message.getOwner().getPermissions(), entity, parameters);
+                    .determinePermissionTypeForEntity(message.getOwner().getPermissions(), entity);
 
-            if (entity.getPermissionType() != PermissionType.NONE) {
+            if (permissionType != PermissionType.NONE) {
                 entity.setPermissionType(permissionType);
                 filteredResult.add(entity);
             }
@@ -199,7 +199,7 @@ public class RequestProcessor {
             List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
 
             for (PipelineDefinitionDto permissionObject : permissionObjects) {
-                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForEntity(currentUser.getPermissions(), permissionObject, parameters);
+                PermissionType permissionType = AuthorizationFactory.getAuthorizationManager().determinePermissionTypeForEntity(currentUser.getPermissions(), permissionObject);
 
                 if (permissionObject.getPermissionType() != PermissionType.NONE) {
                     permissionObject.setPermissionType(permissionType);

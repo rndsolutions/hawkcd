@@ -18,6 +18,7 @@ package io.hawkcd.model.dto;
 
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.Entity;
+import io.hawkcd.model.PipelineFamily;
 import io.hawkcd.model.PipelineGroup;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;

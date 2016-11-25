@@ -18,28 +18,20 @@
 
 package io.hawkcd.core.security;
 
-import io.hawkcd.core.Message;
-import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.PipelineFamily;
 import io.hawkcd.model.PipelineGroup;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.User;
-import io.hawkcd.model.dto.GithubAuthDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.services.UserService;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The class is responisble for authorizing User's requests
@@ -134,6 +126,9 @@ public class AuthorizationManager implements IAuthorizationManager {
     public PermissionType determinePermissionTypeForUser(List<AuthorizationGrant> userGrants, AuthorizationGrant grantToEvaluateAgainst, String... entityIds) {
         PermissionType result = PermissionType.NONE;
 
+        if (grantToEvaluateAgainst.getType() == PermissionType.NONE) {
+            return PermissionType.VIEWER;
+        }
         // Checks for specific Permissions, e.g. a user is assigned a permission for a specific entity (Pipeline/Group)
         for (String entityId : entityIds) {
             for (AuthorizationGrant grant : userGrants) {
@@ -170,6 +165,16 @@ public class AuthorizationManager implements IAuthorizationManager {
         return result;
     }
 
+    public PermissionType determinePermissionTypeForEntity(List<Grant> userGrants, Object object) {
+        PermissionType result;
+        Authorization authorization = object.getClass().getAnnotation(Authorization.class);
+        Grant grant = new Grant(authorization);
+
+        String[] entityIds = this.extractEntityIds(object);
+        result = this.determinePermissionTypeForUser(userGrants, grant, entityIds);
+        return result;
+    }
+
     /**
      * The method extracts the object Ids necessary for the authorization based on the class and
      * method being invoked.
@@ -185,6 +190,20 @@ public class AuthorizationManager implements IAuthorizationManager {
                 Entity pipelineGroup = (Entity) parameter;
                 entityIds.add(pipelineGroup.getId());
             }
+        }
+
+        return entityIds.toArray(new String[entityIds.size()]);
+    }
+
+    public String[] extractEntityIds(Object parameter) {
+        List<String> entityIds = new ArrayList<>();
+        if (parameter instanceof PipelineFamily) {
+            PipelineFamily pipelineFamily = (PipelineFamily) parameter;
+            entityIds.add(pipelineFamily.getPipelineDefinitionId());
+            entityIds.add(pipelineFamily.getPipelineGroupId());
+        } else if (parameter instanceof PipelineGroup || parameter instanceof PipelineGroupDto) {
+            Entity pipelineGroup = (Entity) parameter;
+            entityIds.add(pipelineGroup.getId());
         }
 
         return entityIds.toArray(new String[entityIds.size()]);

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-public class PipelineDto extends Entity {
+public class PipelineDto extends PipelineFamily {
     private String pipelineDefinitionId;
     private String pipelineDefinitionName;
     private int executionId;
@@ -56,6 +56,8 @@ public class PipelineDto extends Entity {
     public void constructBasePipelineDto(Pipeline pipeline) {
         this.setPermissionType(pipeline.getPermissionType());
         super.setId(pipeline.getId());
+        super.setPipelineDefinitionId(pipeline.getPipelineDefinitionId());
+        super.setPipelineGroupId(pipeline.getPipelineGroupId());
         this.pipelineDefinitionId = pipeline.getPipelineDefinitionId();
         this.pipelineDefinitionName = pipeline.getPipelineDefinitionName();
         this.executionId = pipeline.getExecutionId();
