@@ -182,7 +182,7 @@ public class WSSocket extends WebSocketAdapter {
 
                 try {
 
-                    this.requestProcessor.prorcessRequest(contract, this.getLoggedUser(), this.getId());
+                    this.requestProcessor.processRequest(contract, this.getLoggedUser(), this.getId());
 
                 } catch (InstantiationException e) {
                     LOGGER.error(e);
