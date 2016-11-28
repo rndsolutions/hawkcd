@@ -21,10 +21,10 @@
       </div>
       <div class="modal-body">
         <div>
-          Are you sure you want to delete Job: <strong class="uppercase">{{pipeConfig.currentJob.name}}</strong>
+          Are you sure you want to delete Job: <strong class="uppercase">{{pipeConfig.jobToDelete.name}}</strong>
           <br>
           <hr>
-          <button class="btn btn-danger" ng-click="pipeConfig.deleteJob(pipeConfig.currentJob)" data-dismiss="modal">DELETE</button>
+          <button class="btn btn-danger" ng-click="pipeConfig.deleteJob(pipeConfig.jobToDelete)" data-dismiss="modal">DELETE</button>
           <button class="btn" data-dismiss="modal">CANCEL</button>
         </div>
       </div>

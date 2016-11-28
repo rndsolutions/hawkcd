@@ -443,6 +443,8 @@ angular
             vm.oldResource = "";
             vm.newResource = "";
             vm.resourceToDelete = "";
+            vm.stageToDelete = {};
+            vm.jobToDelete = {};
         };
 
         vm.closeTabsModal = function() {
@@ -645,6 +647,14 @@ angular
             vm.updatedStage.isTriggeredManually = vm.stage.isTriggeredManually;
 
             vm.currentStage = stage;
+        };
+
+        vm.setStageToDelete = function(stage) {
+            vm.stageToDelete = stage;
+        };
+
+        vm.setJobToDelete = function(job) {
+            vm.jobToDelete = job;
         };
 
         vm.getStageByName = function(stageName) {
