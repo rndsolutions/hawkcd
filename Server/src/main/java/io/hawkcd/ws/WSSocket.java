@@ -177,12 +177,12 @@ public class WSSocket extends WebSocketAdapter {
 
                 WsContractDto contract  = this.resolve(message);
                 if (contract == null) {
-                    throw new RuntimeException("Resoluiton failed for object" + contract);
+                    throw new RuntimeException("Resolution failed for object" + contract);
                 }
 
                 try {
 
-                    this.requestProcessor.processRequest(contract, this.getLoggedUser(), this.getId());
+                    this.requestProcessor.processRequest(contract, this.getLoggedUser());
 
                 } catch (InstantiationException e) {
                     LOGGER.error(e);
