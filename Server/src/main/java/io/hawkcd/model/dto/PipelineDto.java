@@ -18,7 +18,7 @@ package io.hawkcd.model.dto;
 
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.model.*;
-import io.hawkcd.model.configuration.filetree.JsTreeFile;
+import io.hawkcd.model.payload.JsTreeFile;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.model.enums.PipelineStatus;

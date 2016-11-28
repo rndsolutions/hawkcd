@@ -19,7 +19,7 @@ package io.hawkcd.http;
 import io.hawkcd.utilities.SchemaValidator;
 import io.hawkcd.utilities.constants.ConfigurationConstants;
 import io.hawkcd.model.Stage;
-import io.hawkcd.model.configuration.filetree.JsTreeFile;
+import io.hawkcd.model.payload.JsTreeFile;
 import io.hawkcd.model.enums.JobStatus;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.TaskType;

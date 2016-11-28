@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.hawkcd.model.configuration.filetree;
+package io.hawkcd.model.payload;
 
 import java.util.List;
 

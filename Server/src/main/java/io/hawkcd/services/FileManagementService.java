@@ -16,7 +16,7 @@
 
 package io.hawkcd.services;
 
-import io.hawkcd.model.configuration.filetree.JsTreeFile;
+import io.hawkcd.model.payload.JsTreeFile;
 import io.hawkcd.services.interfaces.IFileManagementService;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
