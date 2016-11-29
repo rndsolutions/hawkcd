@@ -81,7 +81,7 @@
                             <td class="table-element-text text-center-vertical">
                                 <div ng-repeat="resource in agent.resources" style="display: inline-flex" class="label label-default agent-resource margin-left-5px table-element-text">{{resource.substr(0, 20)}} <span ng-if="resource.length > 20">...</span></div>
                             </td>
-                            <td>
+                            <td class="text-center-all">
                                 <h5>
                                     <button class="btn yellow config-button" data-toggle="modal" data-target="#editAgent" ng-click="agents.setAgentToEdit($index)">Edit</button>
                                 </h5>
