@@ -215,7 +215,7 @@ public class AuthorizationManager implements IAuthorizationManager {
     /**
      * Loops through
      */
-    public Message attachPermissionsToEntity(Message message, List<Object> methodArgs) {
+    public Message attachPermissionTypeMapToMessage(Message message, List<Object> methodArgs) {
 
         List<SessionDetails> activeSessions = SessionFactory.getSessionManager().getAllActiveSessions();
 

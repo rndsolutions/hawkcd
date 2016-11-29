@@ -99,7 +99,7 @@ public class RequestProcessor {
             message.setTargetOwner(true);
             message.setEnvelope(filteredResult);
         } else {
-            message = this.authorizationManager.attachPermissionsToEntity(message, methodArgs);
+            message = this.authorizationManager.attachPermissionTypeMapToMessage(message, methodArgs);
         }
 
 

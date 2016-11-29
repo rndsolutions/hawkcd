@@ -73,12 +73,11 @@ public class Subscriber extends JedisPubSub {
         ISessionManager sessionManager = SessionFactory.getSessionManager();
 
         if (message.isTargetOwner()) { // When is list and targets the user executed the request
-
             WsContractDto contract = MessageConverter.convert(message);
+            
             WSSocket session = sessionManager.getSessionByUserId(message.getOwner().getId());
             sessionManager.send(session, contract);
-        } else { // when is single message meant to be broadcasted
-
+        } else { // when is single message meant to be broadcast
             Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
             WsContractDto contract = MessageTranslator.translateMessageToContract(message);
 

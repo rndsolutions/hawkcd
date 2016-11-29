@@ -80,13 +80,13 @@ public class WSSocket extends WebSocketAdapter {
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
-        initialize(session);
+        this.initialize(session);
         LOGGER.info("Session for user: " + this.loggedUser.getEmail() + " Opened");
     }
 
     @Override
     public void onWebSocketText(String message) {
-        execute(message);
+        this.execute(message);
     }
 
     @Override
@@ -180,12 +180,12 @@ public class WSSocket extends WebSocketAdapter {
                 return;
             }
 
-            User usr = tokenInfo.getUser();
-            this.setLoggedUser(usr);
+            User user = tokenInfo.getUser();
+            this.setLoggedUser(user);
 
             //Fill in the sessionDetails
-            this.sessionDetails.setUserId(usr.getId());
-            this.sessionDetails.setUserEmail(usr.getEmail());
+            this.sessionDetails.setUserId(user.getId());
+            this.sessionDetails.setUserEmail(user.getEmail());
             this.sessionDetails.setActive(true);
 
             ISessionManager sessionManager = SessionFactory.getSessionManager();

@@ -45,7 +45,7 @@ public interface IAuthorizationManager {
 
     Message constructAuthorizedMessage(ServiceResult result, String className, String methodName);
 
-    Message attachPermissionsToEntity(Message message, List<Object> methodArgs);
+    Message attachPermissionTypeMapToMessage(Message message, List<Object> methodArgs);
 
     List<Entity> attachPermissionTypeToList(Message message, List<Object> parameters);
 
