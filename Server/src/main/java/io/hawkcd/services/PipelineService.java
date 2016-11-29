@@ -303,7 +303,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<PipelineDto> pipelineDtos = new ArrayList<>();
         for (Pipeline pipeline : filteredPipelines) {
             PipelineDto pipelineDto = new PipelineDto();
-            pipelineDto.constructArtifactPipelineDto(pipeline);
+            pipelineDto.constructHistoryPipelineDto(pipeline);
             pipelineDtos.add(pipelineDto);
         }
 
@@ -346,7 +346,11 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<PipelineDto> pipelineDtos = new ArrayList<>();
         for (Pipeline pipeline : filteredPipelines) {
             PipelineDto pipelineDto = new PipelineDto();
-            pipelineDto.constructArtifactPipelineDto(pipeline);
+            boolean isScrollCall = false;
+            if(pipelineId.length() > 0){
+                isScrollCall = true;
+            }
+            pipelineDto.constructArtifactPipelineDto(pipeline, isScrollCall);
             pipelineDtos.add(pipelineDto);
         }
 

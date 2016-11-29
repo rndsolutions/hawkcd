@@ -185,16 +185,19 @@ angular
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllHistoryPipelines]);
                     },
                     getAllPipelineArtifactDTOs: function (object) {
-                        // if(object.args[2].object == "\"\""){
-                        //     for(var i = 0; i < viewModel.artifactPipelines.length - 1; i++){
-                        //         if(viewModel.artifactPipelines[i].searchCriteria){
-                        //             object.result[0].searchCriteria = viewModel.artifactPipelines[i].searchCriteria;
-                        //             break;
-                        //         }
-                        //     }
-                        //     viewModel.artifactPipelines = [];
-                        // }
-                        viewModel.artifactPipelines = [];
+                        if(object.result[0]){
+                            if(object.result[0].isScrollCall){
+                                for(var i = 0; i < viewModel.artifactPipelines.length - 1; i++){
+                                    if(viewModel.artifactPipelines[i].searchCriteria){
+                                        object.result[0].searchCriteria = viewModel.artifactPipelines[i].searchCriteria;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                viewModel.artifactPipelines = [];
+                            }
+                        }
+                        // viewModel.artifactPipelines = [];
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllArtifactPipelines]);
                     },
                     add: function(object) {
