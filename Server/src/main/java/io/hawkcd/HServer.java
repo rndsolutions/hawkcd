@@ -16,11 +16,12 @@
 
 package io.hawkcd;
 
+import io.hawkcd.core.config.Config;
 import io.hawkcd.materials.MaterialTracker;
 import io.hawkcd.core.subscriber.SubscriberComponent;
 import io.hawkcd.scheduler.JobAssigner;
 import io.hawkcd.scheduler.PipelinePreparer;
-import io.hawkcd.utilities.DataImporter;
+import io.hawkcd.utilities.Initializer;
 import io.hawkcd.db.redis.RedisManager;
 import io.hawkcd.ws.WsServlet;
 import org.eclipse.jetty.server.Handler;
@@ -40,7 +41,7 @@ public class HServer {
     private Thread jobAssigner;
     private Thread materialTracker;
     private Thread subsciber;
-    private DataImporter dataImporter;
+    private Initializer initializer;
 
     public HServer() {
         RedisManager.connect();
@@ -54,7 +55,7 @@ public class HServer {
         this.jobAssigner = new Thread(new JobAssigner(), "JobAssigner");
         this.materialTracker = new Thread(new MaterialTracker(), "MaterialTracker");
         this.subsciber = new Thread(new SubscriberComponent(), "SubscriberComponent");
-        this.dataImporter = new DataImporter();
+        this.initializer = new Initializer();
     }
 
     public void configureJetty() {
@@ -99,7 +100,7 @@ public class HServer {
     public void start() throws Exception {
 //        this.subsciber.start();
         this.server.start();
-        this.dataImporter.importDefaultEntities();
+        this.initializer.initialize();
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();

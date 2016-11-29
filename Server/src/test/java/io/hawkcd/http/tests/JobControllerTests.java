@@ -1,6 +1,6 @@
 package io.hawkcd.http.tests;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.http.JobController;
 import io.hawkcd.model.Job;
 import io.hawkcd.model.ServiceResult;

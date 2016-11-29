@@ -1,6 +1,6 @@
 package io.hawkcd.http.tests;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.http.JobDefinitionController;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.RunIf;

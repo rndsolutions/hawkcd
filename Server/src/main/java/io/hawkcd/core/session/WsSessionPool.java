@@ -101,18 +101,11 @@ public class WsSessionPool implements ISessionsPool {
                 }
             }
 
-            SessionDetails sessionDetails = session.getSessionDetails();
-            sessionDetails.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-            sessionDetails.setActive(false);
-
-            //update database
-            ServiceResult result = this.sessionService.update(sessionDetails);
-            if (result.getNotificationType() == NotificationType.ERROR)
-                throw new RuntimeException(result.getMessage());
-
+            sessionService.delete(session.getSessionDetails());
             this.sessions.remove(session);
+
         } catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
+            LOGGER.error(ex);
             this.sessions.remove(session);
         }
     }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.model.configuration.DatabaseConfig;
 import io.hawkcd.model.enums.DatabaseType;
 

@@ -16,10 +16,11 @@
 
 package io.hawkcd;
 
+import io.hawkcd.core.config.Config;
 import org.apache.log4j.Logger;
 
 public class Main {
-    private static final String FAILED_TO_LOAD_CONFIG_ERROR = "Failed to load configuration file: ";
+    private static final String FAILED_TO_LOAD_CONFIG_ERROR = "Failed to load config file: ";
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
     public static void main(String[] args) {

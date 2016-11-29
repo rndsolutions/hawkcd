@@ -1,6 +1,6 @@
 package io.hawkcd.http.tests;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.http.MaterialDefinitionController;
 import io.hawkcd.model.GitMaterial;
 import io.hawkcd.model.MaterialDefinition;

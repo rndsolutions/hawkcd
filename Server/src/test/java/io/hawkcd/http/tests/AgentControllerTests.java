@@ -1,6 +1,6 @@
 package io.hawkcd.http.tests;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.http.AgentController;
 import io.hawkcd.model.Agent;
 import io.hawkcd.model.Environment;

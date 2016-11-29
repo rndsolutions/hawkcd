@@ -21,14 +21,9 @@ package io.hawkcd.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.glassfish.grizzly.http.server.ServerConfiguration;
-
-import io.hawkcd.Config;
 import io.hawkcd.core.publisher.Publisher;
-import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.core.subscriber.MessageTranslator;
 import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineDefinitionDto;
 import io.hawkcd.model.dto.PipelineGroupDto;
@@ -74,11 +69,11 @@ public class RequestProcessor {
      * 1. Check if the user has rights to call the method from the service
      * 2. Check if the user can see the result
      * Make a call to a Business service
-     * Get all Users filtered by active sessions
+     * Get all Users filtered by active
      * Perform authorization check for each active User
      * Attach User email and Ids
      */
-    public void prorcessRequest(WsContractDto contract, User currentUser, String sessionId)
+    public void processRequest(WsContractDto contract, User currentUser, String sessionId)
             throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
         List<Object> methodArgs = extractTargetMethodArguments(contract);

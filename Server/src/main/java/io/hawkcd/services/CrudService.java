@@ -16,7 +16,7 @@
 
 package io.hawkcd.services;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;

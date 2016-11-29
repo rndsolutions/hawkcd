@@ -1,6 +1,6 @@
 package io.hawkcd.core;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.session.SessionFactory;
 import io.hawkcd.core.subscriber.MessageTranslator;

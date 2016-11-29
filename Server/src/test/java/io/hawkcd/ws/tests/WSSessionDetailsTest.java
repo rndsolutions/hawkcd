@@ -3,13 +3,12 @@ package io.hawkcd.ws.tests;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.deserializers.ConversionObjectDeserializer;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
 import io.hawkcd.model.dto.WsContractDto;
 //import io.hawkcd.ws.WSSession;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

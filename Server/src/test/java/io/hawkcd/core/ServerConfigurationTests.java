@@ -1,6 +1,6 @@
 package io.hawkcd.core;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.ConfigurationConstants;
 import io.hawkcd.model.configuration.Configuration;
 import io.hawkcd.model.configuration.DatabaseConfig;

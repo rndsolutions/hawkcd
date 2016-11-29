@@ -22,6 +22,7 @@ import io.hawkcd.model.enums.OAuthProviderType;
 import java.util.Map;
 
 public final class Configuration {
+    private String serverId;
     private String serverHost;
     private int serverPort;
     private boolean isSingleNode;
@@ -112,4 +113,13 @@ public final class Configuration {
     public void setMaterialTrackerPollInterval(int materialTrackerPollInterval) {
         this.materialTrackerPollInterval = materialTrackerPollInterval;
     }
+
+    public String getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
+    }
+
 }

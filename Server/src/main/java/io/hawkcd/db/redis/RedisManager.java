@@ -16,7 +16,7 @@
 
 package io.hawkcd.db.redis;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.model.configuration.DatabaseConfig;
 import io.hawkcd.model.enums.DatabaseType;
 import redis.clients.jedis.JedisPool;

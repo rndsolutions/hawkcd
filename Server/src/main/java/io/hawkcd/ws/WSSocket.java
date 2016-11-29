@@ -19,18 +19,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import io.hawkcd.core.RequestProcessor;
+import io.hawkcd.core.ServerFactory;
 import io.hawkcd.core.WsObjectProcessor;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.model.SessionDetails;
+import io.hawkcd.model.*;
 import io.hawkcd.model.dto.UserDto;
+import io.hawkcd.utilities.constants.ConfigurationConstants;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TokenAdapter;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
-import io.hawkcd.model.MaterialDefinition;
-import io.hawkcd.model.TaskDefinition;
-import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.payload.TokenInfo;
@@ -45,6 +45,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class WSSocket extends WebSocketAdapter {
@@ -57,15 +59,13 @@ public class WSSocket extends WebSocketAdapter {
     private IUserService userService;
     private WsObjectProcessor wsObjectProcessor;
     private RequestProcessor requestProcessor;
-
-    public SessionDetails getSessionDetails() {
-        return this.sessionDetails;
-    }
-
     private SessionDetails sessionDetails;
+    private Server server;
 
-    public WSSocket() {
+    public WSSocket() throws UnknownHostException {
         this.id = UUID.randomUUID().toString();
+        ServerFactory.getServerService().getById(Config.getConfiguration().getServerId());
+        //ServerFactory.getServerService().setServer(this.server);
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
@@ -77,6 +77,11 @@ public class WSSocket extends WebSocketAdapter {
         this.wsObjectProcessor = new WsObjectProcessor();
         this.requestProcessor = new RequestProcessor();
         this.sessionDetails =  new SessionDetails(this.getId());
+
+    }
+
+    public SessionDetails getSessionDetails() {
+        return this.sessionDetails;
     }
 
     public String getId() {
@@ -87,12 +92,12 @@ public class WSSocket extends WebSocketAdapter {
         return this.loggedUser;
     }
 
-    public User getLoggedUserFromDatabase() {
-        return (User) this.userService.getById(this.loggedUser.getId()).getEntity();
-    }
-
     public void setLoggedUser(User loggedUser) {
         this.loggedUser = loggedUser;
+    }
+
+    public User getLoggedUserFromDatabase() {
+        return (User) this.userService.getById(this.loggedUser.getId()).getEntity();
     }
 
     @Override
@@ -177,12 +182,12 @@ public class WSSocket extends WebSocketAdapter {
 
                 WsContractDto contract  = this.resolve(message);
                 if (contract == null) {
-                    throw new RuntimeException("Resoluiton failed for object" + contract);
+                    throw new RuntimeException("Resolution failed for object" + contract);
                 }
 
                 try {
 
-                    this.requestProcessor.prorcessRequest(contract, this.getLoggedUser(), this.getId());
+                    this.requestProcessor.processRequest(contract, this.getLoggedUser(), this.getId());
 
                 } catch (InstantiationException e) {
                     LOGGER.error(e);
@@ -220,7 +225,6 @@ public class WSSocket extends WebSocketAdapter {
             //Fill in the sessionDetails
             this.sessionDetails.setUserId(usr.getId());
             this.sessionDetails.setUserEmail(usr.getEmail());
-            this.sessionDetails.setActive(true);
 
             ISessionManager sessionManager = SessionFactory.getSessionManager();
             sessionManager.openSession(this);
@@ -243,4 +247,16 @@ public class WSSocket extends WebSocketAdapter {
                                                             "User details retrieved successfully");
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WSSocket wsSocket = (WSSocket) o;
+        return Objects.equals(loggedUser, wsSocket.loggedUser);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(loggedUser);
+    }
 }

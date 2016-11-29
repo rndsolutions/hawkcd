@@ -16,6 +16,8 @@
 
 package io.hawkcd.model;
 
+import io.hawkcd.core.ServerFactory;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -31,8 +33,10 @@ public class SessionDetails extends Entity {
     private String userId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private  String userEmail;
-    private  boolean isActive;
+    private String userEmail;
+    private boolean isActive;
+
+    private String nodeId;
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
@@ -43,6 +47,7 @@ public class SessionDetails extends Entity {
     }
 
     public SessionDetails(String sessionIdd){
+        this.nodeId = ServerFactory.getServerService().getServer().getId();
         this.sessionId =  sessionIdd;
         this.startTime = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
         this.isActive =  true;
@@ -70,6 +75,14 @@ public class SessionDetails extends Entity {
 
     public boolean isActive() {
         return this.isActive;
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 
     @Override

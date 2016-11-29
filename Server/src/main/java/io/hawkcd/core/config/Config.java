@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package io.hawkcd;
+package io.hawkcd.core.config;
 
 import io.hawkcd.model.configuration.Configuration;
 import io.hawkcd.model.configuration.DatabaseConfig;
 import io.hawkcd.model.enums.DatabaseType;
+import io.hawkcd.utilities.constants.ConfigurationConstants;
 import org.apache.commons.io.FileUtils;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.representer.Represent;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.hawkcd.utilities.constants.ConfigurationConstants;
-
 public class Config {
     private static Configuration configuration;
-
     public static Configuration getConfiguration() {
         return configuration;
     }
@@ -62,7 +65,6 @@ public class Config {
                 errorMessage = String.format(ConfigurationConstants.FAILED_TO_CREATE_CONFIG, configFile.getName());
             }
         }
-
         return errorMessage;
     }
 
@@ -72,6 +74,7 @@ public class Config {
         try (FileInputStream fileInputStream = new FileInputStream(configFile)) {
             Yaml yaml = new Yaml();
             configuration = yaml.loadAs(fileInputStream, Configuration.class);
+
         } catch (FileNotFoundException e) {
             errorMessage = String.format(ConfigurationConstants.FAILED_TO_LOCATE_CONFIG, configFile.getName());
         } catch (YAMLException e) {
@@ -87,6 +90,40 @@ public class Config {
         }
 
         return errorMessage;
+    }
+
+    private static class NullRepresenter extends Representer {
+        public NullRepresenter() {
+            super();
+            // null representer is exceptional and it is stored as an instance
+            // variable.
+            this.nullRepresenter = new RepresentNull();
+        }
+        private class RepresentNull implements Represent {
+            public Node representData(Object data) {
+                // possible values are here http://yaml.org/type/null.html
+                return representScalar(Tag.NULL, "");
+            }
+        }
+    }
+
+    public static void addServerId(String serverId) throws IOException {
+
+        FileWriter writer = new FileWriter(ConfigurationConstants.CONFIG_FILE_NAME);
+
+        DumperOptions options=new DumperOptions();
+        options.setIndent(1);
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+        Yaml yaml=new Yaml(new NullRepresenter(),options);
+        String conf = yaml.dump(configuration);
+        yaml.dump(conf, writer);
+
+        //remove |- literal from the config file
+        File file = new File(ConfigurationConstants.CONFIG_FILE_NAME);
+        String s1 = FileUtils.readFileToString(file);
+        String substring = s1.substring(1, s1.length() - 1);
+        FileUtils.writeStringToFile(file,substring);
     }
 
     public static String validateConfiguration(Configuration configuration) {
@@ -139,3 +176,6 @@ public class Config {
         return errorMessage.toString();
     }
 }
+
+
+

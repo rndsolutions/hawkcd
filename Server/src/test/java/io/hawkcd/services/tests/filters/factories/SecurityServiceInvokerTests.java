@@ -1,6 +1,6 @@
 package io.hawkcd.services.tests.filters.factories;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.TestsConstants;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.dto.WsContractDto;

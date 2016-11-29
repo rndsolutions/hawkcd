@@ -3,7 +3,7 @@ package io.hawkcd.services.tests.filters;
 import com.fiftyonred.mock_jedis.MockJedisPool;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.TestsConstants;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;

@@ -16,7 +16,7 @@
 
 package io.hawkcd.materials;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.LoggerMessages;
 import io.hawkcd.model.Material;
 import io.hawkcd.model.Pipeline;

@@ -16,7 +16,7 @@
 
 package io.hawkcd.scheduler;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.LoggerMessages;
 import io.hawkcd.model.enums.PipelineStatus;
 import io.hawkcd.model.Stage;
