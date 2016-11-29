@@ -598,6 +598,7 @@ p {
 
 .job-name {
     font-size: 17px;
+    font-weight: 300;
 }
 
 .job-name:hover {
@@ -900,6 +901,10 @@ p {
     display:inline-block;
 }
 
+.display-inline {
+    display:inline!important;
+}
+
 .height-100px {
     height: 100px;
 }
@@ -966,6 +971,10 @@ p {
 
 .padding-right-5 {
     padding-right: 5%;
+}
+
+.padding-right-none {
+    padding-right: 0px!important;
 }
 
 .padding-left-1 {

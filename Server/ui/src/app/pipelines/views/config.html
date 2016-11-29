@@ -12,28 +12,28 @@
 <!--See the License for the specific language governing permissions and-->
 <!--limitations under the License.-->
 
-<h3 class="page-title"> {{pipeConfig.state.params.pipelineName}}
+<h3 class="page-title clip"> {{pipeConfig.state.params.pipelineName}}
     <small>Config</small>
 </h3>
 
 <div class="page-bar ">
-    <ul class="page-breadcrumb ">
-        <li>
+    <ul class="page-breadcrumb width-100">
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%">
             <i class="icon-home"></i>
             <a ui-sref="index.pipelines"> <span>Pipelines</span></a>
         </li>
-        <li>
-            <i class="fa fa-angle-right "></i>
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%">
+            <i class="fa fa-angle-right"></i>
             <a
                     ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName})">
                 {{pipeConfig.state.params.pipelineName}}</a>
         </li>
-        <li ng-if="pipeConfig.state.params.stageName">
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%" ng-if="pipeConfig.state.params.stageName">
             <i class="fa fa-angle-right "></i>
             <a ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName, stageName:pipeConfig.state.params.stageName})">
                 {{pipeConfig.state.params.stageName}}</a>
         </li>
-        <li ng-if="pipeConfig.state.params.jobName">
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%" ng-if="pipeConfig.state.params.jobName">
             <i class="fa fa-angle-right "></i>
             <a
                     ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName, stageName:pipeConfig.state.params.stageName, jobName:pipeConfig.state.params.jobName})">
@@ -51,8 +51,7 @@
 
         <div class="list-head-title-container">
             <span class="badge badge-default pull-right bg-white font-green bold">{{pipeConfig.pipeline.stageDefinitions.length}}</span>
-            <h3 class="list-title">{{pipeConfig.state.params.pipelineName.substring(0,22)}} <span
-                    ng-if="pipeConfig.state.params.pipelineName.length > 27">...</span></h3>
+            <h3 class="list-title clip padding-right-none text-nowrap">{{pipeConfig.state.params.pipelineName}}</h3>
         </div>
 
     </div>
@@ -62,12 +61,13 @@
              ng-init="pipeConfig.getStageByName(pipeConfig.state.params.stageName)">
             <a class="list-toggle-container" data-target="#{{stage.name}}">
 
-                <div class="list-toggle"
+                <div class="list-toggle text-nowrap clip"
                      id="{{'stage'+$index}}"
                      ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
                      ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage);pipeConfig.selectTabView('stageSettings')">
-                    <span class="clip stage-display-name">{{stage.name}}</span>
                     <span class="badge badge-default pull-right bg-white font-green bold"> {{stage.jobDefinitions.length}}</span>
+                    <span class="stage-display-name">{{stage.name}}</span>
+
                 </div>
             </a>
 
@@ -80,11 +80,9 @@
                         ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name, jobName:job.name})"
                         ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage);pipeConfig.getJob(job);pipeConfig.selectTabView('jobSettings')"
                         ng-init="pipeConfig.getJobByName(pipeConfig.state.params.jobName)">
-                        <div class="list-item-content job-padding">
-                            <h3 class="clip">
-                                <a class="job-name">{{job.name}}</a>
+                        <div class="list-item-content job-padding clip text-nowrap">
                                 <span class="badge badge-default pull-right bg-white font-green bold"> {{job.taskDefinitions.length}}</span>
-                            </h3>
+                                <span class="job-name">{{job.name}}</span>
                         </div>
                     </li>
                 </ul>
