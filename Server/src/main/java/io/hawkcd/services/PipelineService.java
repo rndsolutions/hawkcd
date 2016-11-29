@@ -22,23 +22,12 @@ import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
-import io.hawkcd.model.EnvironmentVariable;
-import io.hawkcd.model.FetchMaterialTask;
-import io.hawkcd.model.Job;
-import io.hawkcd.model.JobDefinition;
-import io.hawkcd.model.Material;
-import io.hawkcd.model.MaterialDefinition;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.Stage;
-import io.hawkcd.model.StageDefinition;
+import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineDto;
 import io.hawkcd.model.enums.*;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineService;
-import io.hawkcd.ws.EndpointConnector;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -46,9 +35,6 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-
-import io.hawkcd.model.Task;
-import io.hawkcd.model.TaskDefinition;
 
 
 /*
@@ -118,7 +104,6 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             });
             pipelineDefinition.setEnvironmentVariables(environmentVariables);
             ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
-            EndpointConnector.passResultToEndpoint("PipelineDefinitionService", "update", result);
         }
 
         this.addMaterialsToPipeline(pipeline);

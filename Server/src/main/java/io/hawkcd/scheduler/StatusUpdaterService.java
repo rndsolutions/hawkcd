@@ -16,15 +16,13 @@
 
 package io.hawkcd.scheduler;
 
-import io.hawkcd.utilities.constants.LoggerMessages;
-import io.hawkcd.model.Agent;
-import io.hawkcd.model.Stage;
-import io.hawkcd.model.enums.StageStatus;
+import io.hawkcd.model.*;
+import io.hawkcd.model.enums.*;
 import io.hawkcd.services.AgentService;
 import io.hawkcd.services.PipelineService;
 import io.hawkcd.services.interfaces.IAgentService;
 import io.hawkcd.services.interfaces.IPipelineService;
-import io.hawkcd.ws.EndpointConnector;
+import io.hawkcd.utilities.constants.LoggerMessages;
 import org.apache.log4j.Logger;
 
 import java.time.LocalDateTime;
@@ -35,15 +33,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-
-import io.hawkcd.model.Job;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.Task;
-import io.hawkcd.model.enums.JobStatus;
-import io.hawkcd.model.enums.NotificationType;
-import io.hawkcd.model.enums.PipelineStatus;
-import io.hawkcd.model.enums.TaskStatus;
 
 public class StatusUpdaterService {
     private static final Logger LOGGER = Logger.getLogger(StatusUpdaterService.class.getName());
@@ -72,7 +61,6 @@ public class StatusUpdaterService {
                 this.cancelPipeline(pipeline);
                 LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
                 ServiceResult result = new ServiceResult(null, NotificationType.WARNING, "Pipeline " + pipeline.getPipelineDefinitionName() + " was successfully canceled");
-                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", result);
             } else if (pipeline.getStatus() == PipelineStatus.PAUSED) {
                 this.pausePipeline(pipeline);
             } else {
@@ -185,7 +173,6 @@ public class StatusUpdaterService {
                 LOGGER.info(stagePaused);
                 String notificationMessage = pipelinePaused + System.lineSeparator() + stagePaused;
                 ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, notificationMessage);
-                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", notification);
             }
         }
 

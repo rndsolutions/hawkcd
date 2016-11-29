@@ -28,7 +28,6 @@ import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserGroupService;
 import io.hawkcd.services.interfaces.IUserService;
-import io.hawkcd.ws.EndpointConnector;
 //import io.hawkcd.ws.SessionPool;
 
 import java.util.ArrayList;
@@ -152,8 +151,6 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
             ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User assigned successfully.");
-            EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
-//            SessionPool.getInstance().updateUserObjects(user.getId());
 
             userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {
@@ -179,8 +176,6 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
             ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User unassigned successfully.");
-            EndpointConnector.passResultToEndpoint("UserService", "update", userResult);
-//            SessionPool.getInstance().updateUserObjects(user.getId());
 
             userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {

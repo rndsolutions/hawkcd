@@ -28,7 +28,6 @@ import io.hawkcd.services.PipelineService;
 import io.hawkcd.services.interfaces.IMaterialService;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineService;
-import io.hawkcd.ws.EndpointConnector;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -63,7 +62,6 @@ public class MaterialTracker implements Runnable {
                         pipeline.setPipelineDefinitionId(pipelineDefinition.getId());
                         pipeline.setTriggerReason(triggerMaterials);
                         ServiceResult result = this.pipelineService.add(pipeline);
-                        EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "add", result);
                         String message = String.format("Pipeline %s triggered by %s", pipelineDefinition.getName(), triggerMaterials);
                         LOGGER.info(message);
                     }
@@ -78,7 +76,6 @@ public class MaterialTracker implements Runnable {
                         if (material == null) {
                             isPipelineUpdated = false;
                             ServiceResult result = this.pipelineService.delete(pipeline);
-                            EndpointConnector.passResultToEndpoint(PipelineService.class.getSimpleName(), "delete", result);
                             String message = String.format("Pipeline %s material could not be updated", pipeline.getPipelineDefinitionName());
                             LOGGER.info(message);
                         } else if (material.isUpdated()) {

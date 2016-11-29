@@ -19,25 +19,17 @@ package io.hawkcd.materials;
 import io.hawkcd.Config;
 import io.hawkcd.materials.materialupdaters.IMaterialUpdater;
 import io.hawkcd.materials.materialupdaters.MaterialUpdaterFactory;
-import io.hawkcd.model.Material;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.MaterialType;
-import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.services.MaterialDefinitionService;
 import io.hawkcd.services.MaterialService;
-import io.hawkcd.services.PipelineDefinitionService;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
 import io.hawkcd.services.interfaces.IMaterialService;
-import io.hawkcd.ws.EndpointConnector;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.hawkcd.model.GitMaterial;
 
 public class MaterialHandlerService implements IMaterialHandlerService {
     private IMaterialDefinitionService materialDefinitionService;
@@ -69,7 +61,6 @@ public class MaterialHandlerService implements IMaterialHandlerService {
                 String newError = materialDefinition.getErrorMessage();
                 if (!oldError.equals(newError)) {
                     ServiceResult result = this.materialDefinitionService.update(latestVersion);
-                    EndpointConnector.passResultToEndpoint(MaterialDefinitionService.class.getSimpleName(), "update", result);
                 }
 
                 if (!latestVersion.getErrorMessage().isEmpty()) {
@@ -101,7 +92,6 @@ public class MaterialHandlerService implements IMaterialHandlerService {
         String newError = material.getMaterialDefinition().getErrorMessage();
         if (!oldError.equals(newError)) {
             ServiceResult result = this.materialDefinitionService.update(latestVersion);
-            EndpointConnector.passResultToEndpoint(PipelineDefinitionService.class.getSimpleName(), "update", result);
         }
 
         if (!material.getMaterialDefinition().getErrorMessage().isEmpty()) {
