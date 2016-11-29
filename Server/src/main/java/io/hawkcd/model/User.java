@@ -33,7 +33,6 @@ public class User extends Entity {
     private String ghAuthCode;
     private String provider;
     private List<AuthorizationGrant> permissions;
-    private UserPermissions userPermissions;
     private List<String> userGroupIds;
     private boolean isEnabled;
 
@@ -110,14 +109,6 @@ public class User extends Entity {
 
     public void setPermissions(List<AuthorizationGrant> permissions) {
         this.permissions = permissions;
-    }
-
-    public UserPermissions getUserPermissions() {
-        return userPermissions;
-    }
-
-    public void setUserPermissions(UserPermissions userPermissions) {
-        this.userPermissions = userPermissions;
     }
 
     public List<String> getUserGroupIds() {
