@@ -40,6 +40,7 @@ public class PipelineDto extends PipelineFamily {
     private String triggerReason;
     private List<JsTreeFile> artifactsFileStructure;
     private List<StageDto> stages;
+    private boolean isScrollCall;
 
     public PipelineDto() {
         this.stages = new ArrayList<>();
@@ -78,8 +79,9 @@ public class PipelineDto extends PipelineFamily {
         this.materials = pipeline.getMaterials();
     }
 
-    public void constructArtifactPipelineDto(Pipeline pipeline) {
+    public void constructArtifactPipelineDto(Pipeline pipeline, boolean isScrollCall) {
         this.constructHistoryPipelineDto(pipeline);
         this.artifactsFileStructure = pipeline.getArtifactsFileStructure();
+        this.isScrollCall = isScrollCall;
     }
 }
