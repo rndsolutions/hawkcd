@@ -27,42 +27,20 @@ import io.hawkcd.model.enums.PermissionType;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-* The Message class represents a wrapper message object that's sent by Publishers to Subscribers.
-* In addition to the message that has to be sent to users it also carries various matadata.
-*/
+/**
+ * The Message class represents a wrapper message object that's sent by Publishers to Subscribers.
+ * In addition to the message that has to be sent to users it also carries various matadata.
+ */
 public class Message {
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "serviceCalled='" + serviceCalled + '\'' +
-                ", methodCalled='" + methodCalled + '\'' +
-                ", resultNotificationType=" + resultNotificationType +
-                ", resultMessage='" + resultMessage + '\'' +
-                ", owner=" + owner +
-                '}';
-    }
-
     private String serviceCalled;
     private String methodCalled;
-
-    public String getPackageName() {
-        return this.packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
     private String packageName;
 
     //True if the message should be delivered only to the caller
     private boolean isTargetOwner;
 
-    //Holds the result being reterned by the service call
+    //Holds the result being returned by the service call
     private Envelopе envelopе;
-
     private NotificationType resultNotificationType;
     private String resultMessage;
 
@@ -84,22 +62,40 @@ public class Message {
 
     }
 
-    Message(String serviceCalled
-                        , String packageName
-                        , String methodCalled
-                        , Object resultObject
-                        , NotificationType resultNotificationType
-                        , String resultMessage
-                        , User usr)
-    {
+    Message(String serviceCalled,
+            String packageName,
+            String methodCalled,
+            Object resultObject,
+            NotificationType resultNotificationType,
+            String resultMessage,
+            User user) {
         this.serviceCalled = serviceCalled;
         this.packageName = packageName;
         this.methodCalled = methodCalled;
         this.envelopе = new Envelopе(resultObject);
         this.resultNotificationType = resultNotificationType;
         this.resultMessage = resultMessage;
-        this.owner = usr;
+        this.owner = user;
         this.permissionTypeByUser = new HashMap<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "serviceCalled='" + serviceCalled + '\'' +
+                ", methodCalled='" + methodCalled + '\'' +
+                ", resultNotificationType=" + resultNotificationType +
+                ", resultMessage='" + resultMessage + '\'' +
+                ", owner=" + owner +
+                '}';
+    }
+
+    public String getPackageName() {
+        return this.packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public String getServiceCalled() {
@@ -118,11 +114,11 @@ public class Message {
         isTargetOwner = targetOwner;
     }
 
-    public Object getEnvelop() {
+    public Object getEnvelope() {
         return this.envelopе.getObject();
     }
 
-    public void setEnvelop(Object object) {
+    public void setEnvelope(Object object) {
         this.envelopе.setObject(object);
     }
 
@@ -134,9 +130,13 @@ public class Message {
         return resultMessage;
     }
 
-    public void setOwner(User usr){ this.owner = usr;}
+    public void setOwner(User usr) {
+        this.owner = usr;
+    }
 
-    public  User getOwner(){return  this.owner;}
+    public User getOwner() {
+        return this.owner;
+    }
 
     public Map<String, PermissionType> getPermissionTypeByUser() {
         return permissionTypeByUser;

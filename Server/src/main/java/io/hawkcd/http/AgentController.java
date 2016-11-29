@@ -16,19 +16,18 @@
 
 package io.hawkcd.http;
 
-import io.hawkcd.utilities.SchemaValidator;
-import io.hawkcd.utilities.constants.ConfigurationConstants;
-import io.hawkcd.model.Stage;
-import io.hawkcd.model.configuration.filetree.JsTreeFile;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.JobStatus;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.TaskType;
+import io.hawkcd.model.payload.JsTreeFile;
 import io.hawkcd.services.AgentService;
 import io.hawkcd.services.FileManagementService;
 import io.hawkcd.services.PipelineService;
 import io.hawkcd.services.interfaces.IFileManagementService;
 import io.hawkcd.services.interfaces.IPipelineService;
-import io.hawkcd.ws.EndpointConnector;
+import io.hawkcd.utilities.SchemaValidator;
+import io.hawkcd.utilities.constants.ConfigurationConstants;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -40,12 +39,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import io.hawkcd.model.Agent;
-import io.hawkcd.model.Job;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.Task;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -195,13 +188,12 @@ public class AgentController {
                         ConfigurationConstants.PROPERTY_ARTIFACTS_DESTINATION + File.separator +
                         pipeline.getPipelineDefinitionName() + File.separator + pipeline.getExecutionId();
                 JsTreeFile artifactDirectory = this.fileManagementService.getFileNames(new File(artifactsDirectory));
-                pipeline.setArtifactsFileStructure(new ArrayList<JsTreeFile>(Arrays.asList(artifactDirectory)));
+                pipeline.setArtifactsFileStructure(new ArrayList<>(Arrays.asList(artifactDirectory)));
             }
 
             Agent agent = (Agent) this.agentService.getById(job.getAssignedAgentId()).getEntity();
             agent.setAssigned(false);
             ServiceResult result = this.agentService.update(agent);
-            EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
         }
 
         this.pipelineService.update(pipeline);

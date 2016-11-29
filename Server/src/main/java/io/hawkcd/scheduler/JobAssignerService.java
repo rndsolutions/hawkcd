@@ -16,27 +16,21 @@
 
 package io.hawkcd.scheduler;
 
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.JobStatus;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PipelineStatus;
 import io.hawkcd.model.enums.StageStatus;
 import io.hawkcd.services.AgentService;
 import io.hawkcd.services.JobService;
-import io.hawkcd.model.Agent;
-import io.hawkcd.model.Stage;
 import io.hawkcd.services.PipelineService;
 import io.hawkcd.services.interfaces.IAgentService;
 import io.hawkcd.services.interfaces.IJobService;
 import io.hawkcd.services.interfaces.IPipelineService;
-import io.hawkcd.ws.EndpointConnector;
 import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.hawkcd.model.Job;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.ServiceResult;
 
 public class JobAssignerService {
     private static final Logger LOGGER = Logger.getLogger(JobAssignerService.class.getName());
@@ -81,7 +75,6 @@ public class JobAssignerService {
                 String message = String.format("Pipeline %s set to AWAITING.", pipeline.getPipelineDefinitionName());
                 LOGGER.info(message);
                 ServiceResult notification = new ServiceResult(null, NotificationType.WARNING, message);
-                EndpointConnector.passResultToEndpoint("NotificationService", "sendMessage", notification);
             }
         }
     }
@@ -127,7 +120,6 @@ public class JobAssignerService {
                             if (agent != null) {
                                 this.jobService.update(job);
                                 ServiceResult result = this.agentService.update(agent);
-                                EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "update", result);
                             }
                         }
                     }

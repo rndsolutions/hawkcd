@@ -16,7 +16,7 @@ public class MessageTranslator{
     public static WsContractDto translateMessageToContract(Message message) {
         WsContractDto contract = MessageConverter.convert(message);
         Map<String, PermissionType> permissionTypeByUser = message.getPermissionTypeByUser();
-        Entity entity = (Entity) message.getEnvelop();
+        Entity entity = (Entity) message.getEnvelope();
 
         for (String userId : permissionTypeByUser.keySet()) {
             entity.setPermissionType(permissionTypeByUser.get(userId));

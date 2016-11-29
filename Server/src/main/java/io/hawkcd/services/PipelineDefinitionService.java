@@ -19,26 +19,16 @@ package io.hawkcd.services;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
-import io.hawkcd.model.EnvironmentVariable;
 import io.hawkcd.services.interfaces.IPipelineService;
-import io.hawkcd.ws.EndpointConnector;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.hawkcd.model.GitMaterial;
-import io.hawkcd.model.JobDefinition;
-import io.hawkcd.model.MaterialDefinition;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.StageDefinition;
-import io.hawkcd.model.TaskDefinition;
 
 public class PipelineDefinitionService extends CrudService<PipelineDefinition> implements IPipelineDefinitionService {
     private static final Class CLASS_TYPE = PipelineDefinition.class;
@@ -124,7 +114,6 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
             return super.createServiceResult(null, NotificationType.ERROR, "could not be created");
         }
 
-        EndpointConnector.passResultToEndpoint("MaterialDefinitionService", "add", serviceResult);
         pipelineDefinition.getMaterialDefinitionIds().add(materialDefinition.getId());
 
         return this.add(pipelineDefinition);

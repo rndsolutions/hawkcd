@@ -16,7 +16,7 @@
 
 package io.hawkcd.services.interfaces;
 
-import io.hawkcd.model.configuration.filetree.JsTreeFile;
+import io.hawkcd.model.payload.JsTreeFile;
 
 import java.io.File;
 import java.io.InputStream;

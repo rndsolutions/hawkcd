@@ -33,7 +33,6 @@ import io.hawkcd.model.payload.WorkInfo;
 import io.hawkcd.services.interfaces.IAgentService;
 import io.hawkcd.services.interfaces.IJobService;
 import io.hawkcd.services.interfaces.IPipelineService;
-import io.hawkcd.ws.EndpointConnector;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,7 +73,6 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(Agent agent) {
         ServiceResult result = super.add(agent);
-        EndpointConnector.passResultToEndpoint(AgentService.class.getSimpleName(), "add", result);
         return result;
     }
 

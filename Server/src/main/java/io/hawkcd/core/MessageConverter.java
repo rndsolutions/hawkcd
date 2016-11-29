@@ -26,7 +26,7 @@ public class MessageConverter {
         return new WsContractDto(message.getServiceCalled()
                 , message.getPackageName()
                 , message.getMethodCalled()
-                , message.getEnvelop()
+                , message.getEnvelope()
                 , message.getResultNotificationType()
                 , message.getResultMessage());
     }

@@ -19,18 +19,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import io.hawkcd.core.RequestProcessor;
-import io.hawkcd.core.ServerFactory;
 import io.hawkcd.core.WsObjectProcessor;
-import io.hawkcd.core.config.Config;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.model.*;
+import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.dto.UserDto;
-import io.hawkcd.utilities.constants.ConfigurationConstants;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TokenAdapter;
 import io.hawkcd.utilities.deserializers.WsContractDeserializer;
+import io.hawkcd.model.MaterialDefinition;
+import io.hawkcd.model.TaskDefinition;
+import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.payload.TokenInfo;
@@ -53,35 +53,24 @@ public class WSSocket extends WebSocketAdapter {
     private static final Logger LOGGER = Logger.getLogger(WSSocket.class.getClass());
     private Gson jsonConverter;
     private String id;
-    private SecurityServiceInvoker securityServiceInvoker;
     private User loggedUser;
-    private PermissionService permissionService;
-    private IUserService userService;
-    private WsObjectProcessor wsObjectProcessor;
     private RequestProcessor requestProcessor;
-    private SessionDetails sessionDetails;
-    private Server server;
 
-    public WSSocket() throws UnknownHostException {
+    public SessionDetails getSessionDetails() {
+        return this.sessionDetails;
+    }
+
+    private SessionDetails sessionDetails;
+
+    public WSSocket() {
         this.id = UUID.randomUUID().toString();
-        ServerFactory.getServerService().getById(Config.getConfiguration().getServerId());
-        //ServerFactory.getServerService().setServer(this.server);
         this.jsonConverter = new GsonBuilder()
                 .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
-        this.securityServiceInvoker = new SecurityServiceInvoker();
-        this.permissionService = new PermissionService();
-        this.userService = new UserService();
-        this.wsObjectProcessor = new WsObjectProcessor();
         this.requestProcessor = new RequestProcessor();
-        this.sessionDetails =  new SessionDetails(this.getId());
-
-    }
-
-    public SessionDetails getSessionDetails() {
-        return this.sessionDetails;
+        this.sessionDetails = new SessionDetails(this.getId());
     }
 
     public String getId() {
@@ -96,15 +85,11 @@ public class WSSocket extends WebSocketAdapter {
         this.loggedUser = loggedUser;
     }
 
-    public User getLoggedUserFromDatabase() {
-        return (User) this.userService.getById(this.loggedUser.getId()).getEntity();
-    }
-
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
         initialize(session);
-        LOGGER.info("Sessiong for user: " +this.loggedUser.getEmail() + " Opened");
+        LOGGER.info("Session for user: " + this.loggedUser.getEmail() + " Opened");
     }
 
     @Override
@@ -116,28 +101,29 @@ public class WSSocket extends WebSocketAdapter {
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
 
-        switch(statusCode) {
+        switch (statusCode) {
             case 1000:
-                LOGGER.info("Sessiong for user: " +this.loggedUser.getEmail() + "Closed upon logout request");
+                LOGGER.info("Session for user: " + this.loggedUser.getEmail() + "Closed upon logout request");
                 break;
             case 1001:
-                LOGGER.info("Session terminated forecefully by user: " +this.loggedUser.getEmail());
+                LOGGER.info("Session terminated forcefully by user: " + this.loggedUser.getEmail());
                 SessionFactory.getSessionManager().closeSessionByUserEmail(this.getLoggedUser().getEmail());
                 break;
             default:
-                LOGGER.info("Unexpected Session termination for user" +this.loggedUser.getEmail());
+                LOGGER.info("Unexpected Session termination for user" + this.loggedUser.getEmail());
         }
     }
 
     @Override
     public void onWebSocketError(Throwable cause) {
         super.onWebSocketError(cause);
+
         final ISessionManager sessionManager = SessionFactory.getSessionManager();
-        if (this.getSession()!= null){
+        if (this.getSession() != null) {
             if (this.getSession().isOpen())
                 sessionManager.closeSessionById(this.id);
         }
-        LOGGER.info("Session closed for user: " +this.loggedUser.getEmail() + "Closed with error: "+  cause.toString());
+        LOGGER.info("Session closed for user: " + this.loggedUser.getEmail() + "Closed with error: " + cause.toString());
     }
 
     public WsContractDto resolve(String message) {
@@ -163,31 +149,16 @@ public class WSSocket extends WebSocketAdapter {
         remoteEndpoint.sendStringByFuture(jsonResult);
     }
 
-    private void errorDetails(WsContractDto contract, Gson serializer, Exception e, RemoteEndpoint endPoint) {
-        contract.setNotificationType(NotificationType.ERROR);
-        contract.setErrorMessage(e.getMessage());
-        try {
-            String errDetails = serializer.toJson(contract);
-            endPoint.sendString(errDetails);
-        } catch (IOException | RuntimeException e1) {
-            e1.printStackTrace();
-        }
-    }
-
     private void execute(String message) {
-
-        if (isConnected())
-        {
+        if (isConnected()) {
             try {
-
-                WsContractDto contract  = this.resolve(message);
+                WsContractDto contract = this.resolve(message);
                 if (contract == null) {
                     throw new RuntimeException("Resolution failed for object" + contract);
                 }
 
                 try {
-
-                    this.requestProcessor.processRequest(contract, this.getLoggedUser(), this.getId());
+                    this.requestProcessor.processRequest(contract, this.getLoggedUser());
 
                 } catch (InstantiationException e) {
                     LOGGER.error(e);
@@ -209,9 +180,7 @@ public class WSSocket extends WebSocketAdapter {
     }
 
     private void initialize(Session session) {
-
         String tokenQuery = session.getUpgradeRequest().getQueryString();
-
         if (!tokenQuery.equals("token=null")) {
             String token = tokenQuery.substring(6);
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
@@ -230,7 +199,7 @@ public class WSSocket extends WebSocketAdapter {
             sessionManager.openSession(this);
 
             WsContractDto contract = extractUserDetails(tokenInfo);
-            sessionManager.send(this,contract);
+            sessionManager.send(this, contract);
         }
     }
 
@@ -239,12 +208,13 @@ public class WSSocket extends WebSocketAdapter {
         UserDto userDto = new UserDto();
         userDto.setUsername(tokenInfo.getUser().getEmail());
         userDto.setPermissions(tokenInfo.getUser().getPermissions());
-        return new WsContractDto("UserInfo",
-                                                            "",
-                                                            "getUser",
-                                                            userDto,
-                                                            NotificationType.SUCCESS,
-                                                            "User details retrieved successfully");
+        return new WsContractDto(
+                "UserInfo",
+                "",
+                "getUser",
+                userDto,
+                NotificationType.SUCCESS,
+                "User details retrieved successfully");
     }
 
     @Override

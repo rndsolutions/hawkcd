@@ -20,20 +20,13 @@ package io.hawkcd.core.security;
 
 import io.hawkcd.core.Message;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.model.Entity;
-import io.hawkcd.model.PipelineFamily;
-import io.hawkcd.model.PipelineGroup;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.SessionDetails;
-import io.hawkcd.model.User;
+import io.hawkcd.model.*;
+import io.hawkcd.model.dto.PipelineDefinitionDto;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.UserService;
-
-import io.hawkcd.services.UserService;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
@@ -80,12 +73,6 @@ public class AuthorizationManager implements IAuthorizationManager {
         return false;
     }
 
-    @Override
-    public void getAllUsersWithPermissions() {
-        throw new NotImplementedException();
-    }
-
-
     private Authorization getMethodAuthorizationAttributes(WsContractDto contractDto, List<Object> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
 
@@ -117,7 +104,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
         message.setPermissionTypeByUser(userMap);
 
-        Entity entity = (Entity)message.getEnvelop();
+        Entity entity = (Entity)message.getEnvelope();
 
         List<SessionDetails> allActiveSessions = SessionFactory.getSessionManager().getAllActiveSessions();
 
@@ -192,7 +179,7 @@ public class AuthorizationManager implements IAuthorizationManager {
     }
 
     /**
-     * The method extracts the object Ids necessary for the authorization based on the class and
+     * The method extracts the object Ids necessary for the authorization, based on the class and
      * method being invoked.
      */
     public String[] extractEntityIds(List<Object> parameters) {
@@ -223,6 +210,70 @@ public class AuthorizationManager implements IAuthorizationManager {
         }
 
         return entityIds.toArray(new String[entityIds.size()]);
+    }
+
+    /**
+     * Loops through
+     */
+    public Message attachPermissionsToEntity(Message message, List<Object> methodArgs) {
+
+        List<SessionDetails> activeSessions = SessionFactory.getSessionManager().getAllActiveSessions();
+
+        Map<String, PermissionType> permissionTypeByUser = this.getPermissionTypeByUser(message, methodArgs, activeSessions);
+
+        message.setPermissionTypeByUser(permissionTypeByUser);
+
+        return message;
+    }
+
+    private Map<String, PermissionType> getPermissionTypeByUser(Message message, List<Object> methodArgs, List<SessionDetails> activeSessions) {
+        Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
+
+        for (SessionDetails activeSession : activeSessions) {
+            User userToSendTo = (User) userService.getById(activeSession.getUserId()).getEntity();
+            PermissionType permissionType = this.determinePermissionTypeForEntity(userToSendTo.getPermissions(), message.getEnvelope(), methodArgs);
+            permissionTypeByUser.put(userToSendTo.getId(), permissionType);
+        }
+        return permissionTypeByUser;
+    }
+
+    /**
+     * Filters the result based on user permissions and sets PermissionType to each object in it If
+     * the PermissionType is NONE, the object will not be added to the filtered collection
+     * Exception: If the user has no permission for a Pipeline Group, but has a permission for a
+     * Pipeline that belongs to it, it will not be added to the filtered collection
+     */
+    public List<Entity> attachPermissionTypeToList(Message message, List<Object> parameters) {
+        List<Entity> entities = (List<Entity>) message.getEnvelope();
+        List<Entity> filteredResult = new ArrayList<>();
+
+        for (Entity entity : entities) {
+            PermissionType permissionType = this.determinePermissionTypeForEntity(message.getOwner().getPermissions(), entity);
+
+            if (permissionType != PermissionType.NONE) {
+                entity.setPermissionType(permissionType);
+                filteredResult.add(entity);
+            }
+        }
+
+        return filteredResult;
+    }
+
+    public List<PipelineGroupDto> attachPermissionsToPipelineDtos(List<PipelineGroupDto> pipelineGroupDtos, User currentUser) {
+        for (PipelineGroupDto pipelineGroupDto : pipelineGroupDtos) {
+            List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
+
+            for (PipelineDefinitionDto permissionObject : permissionObjects) {
+                PermissionType permissionType = this.determinePermissionTypeForEntity(currentUser.getPermissions(), permissionObject);
+
+                if (permissionObject.getPermissionType() != PermissionType.NONE) {
+                    permissionObject.setPermissionType(permissionType);
+                }
+            }
+
+            pipelineGroupDto.setPipelines(permissionObjects);
+        }
+        return pipelineGroupDtos;
     }
 
 }
