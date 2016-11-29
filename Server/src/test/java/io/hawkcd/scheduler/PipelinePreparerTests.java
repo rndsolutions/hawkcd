@@ -2,7 +2,7 @@ package io.hawkcd.scheduler;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.TestsConstants;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.db.redis.RedisRepository;

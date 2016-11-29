@@ -1,6 +1,6 @@
 package io.hawkcd.materials;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.materials.materialupdaters.IMaterialUpdater;
 import io.hawkcd.materials.materialupdaters.MaterialUpdater;
 import io.hawkcd.materials.materialupdaters.MaterialUpdaterFactory;

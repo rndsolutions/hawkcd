@@ -16,7 +16,7 @@
 
 package io.hawkcd.materials.materialservices;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.model.GitMaterial;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;

@@ -1,7 +1,7 @@
 package io.hawkcd.services.tests;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.db.redis.RedisRepository;
 import io.hawkcd.model.EnvironmentVariable;

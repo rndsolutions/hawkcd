@@ -1,6 +1,6 @@
 package io.hawkcd.materials.materialupdaters;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.materials.materialservices.GitService;
 import io.hawkcd.materials.materialservices.IGitService;
 import io.hawkcd.model.GitMaterial;

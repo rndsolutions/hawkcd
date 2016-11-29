@@ -2,7 +2,7 @@ package io.hawkcd.utilities;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.TestsConstants;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.db.redis.RedisRepository;
@@ -26,7 +26,7 @@ public class DataImporterTests {
     private IDbRepository<User> mockedUserRepository;
     private IPipelineGroupService pipelineGroupService;
     private IUserService userService;
-    private DataImporter dataImporter;
+    private Initializer initializer;
 
     @BeforeClass
     public static void setUpClass() {
@@ -42,13 +42,13 @@ public class DataImporterTests {
         this.pipelineGroupService = new PipelineGroupService(this.mockedPipelineGroupRepository);
         this.userService = new UserService(this.mockedUserRepository);
 
-        this.dataImporter = new DataImporter(this.userService, this.pipelineGroupService);
+        this.initializer = new Initializer(this.userService, this.pipelineGroupService);
     }
 
     @Test
     public void importData_validInput_addedEntities() {
         //Act
-        this.dataImporter.importDefaultEntities();
+        this.initializer.initialize();
 
         //Assert
         List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
@@ -61,8 +61,8 @@ public class DataImporterTests {
     @Test
     public void importData_twoTimesCalled_addedEntitiesOneTime() {
         //Act
-        this.dataImporter.importDefaultEntities();
-        this.dataImporter.importDefaultEntities();
+        this.initializer.initialize();
+        this.initializer.initialize();
 
         //Assert
         List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
@@ -75,9 +75,9 @@ public class DataImporterTests {
     @Test
     public void initialize_validConstructor_notNull() {
         //Act
-        this.dataImporter = new DataImporter();
+        this.initializer = new Initializer();
 
         //Assert
-        Assert.assertNotNull(this.dataImporter);
+        Assert.assertNotNull(this.initializer);
     }
 }

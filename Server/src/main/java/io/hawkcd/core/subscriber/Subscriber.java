@@ -48,7 +48,6 @@ import java.util.Map;
 public class Subscriber extends JedisPubSub {
 
     private Gson jsonConverter;
-    private IMessageDispatcher messageDispatcher;
     private IMessageFilter authFilter;
     private RequestProcessor requestProcessor;
     private ISessionManager sessionManager;

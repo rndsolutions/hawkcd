@@ -40,7 +40,7 @@ public class GitMaterialUpdater extends MaterialUpdater<GitMaterial> {
     public GitMaterial getLatestMaterialVersion(GitMaterial gitMaterial) {
         boolean repositoryExists = this.gitService.repositoryExists(gitMaterial);
         if (!repositoryExists) {
-//            String directoryToDelete = Config.getConfiguration().getMaterialsDestination() + File.separator + gitMaterial.getName();
+//            String directoryToDelete = config.getConfiguration().getMaterialsDestination() + File.separator + gitMaterial.getName();
             this.fileManagementService.deleteDirectoryRecursively(gitMaterial.getDestination());
             this.gitService.cloneRepository(gitMaterial);
 

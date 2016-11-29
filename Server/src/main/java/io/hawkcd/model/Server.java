@@ -15,34 +15,42 @@
  */
 
 package io.hawkcd.model;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
+/**
+ * Represents the HawkCD server
+ */
 public class Server extends Entity {
-    private String artifactsDir;
-    private Double purgeStart;
-    private Double purgeUpTo;
 
-    public String getArtifactsDir() {
-        return this.artifactsDir;
+    private String hostName;
+    private String ip;
+    private LocalDateTime startTime;
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setArtifactsDir(String value) {
-        this.artifactsDir = value;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public Double getPurgeStart() {
-        return this.purgeStart;
+    public String getIp() {
+        return ip;
     }
 
-    public void setPurgeStart(Double value) {
-        this.purgeStart = value;
+    public String getHostName() {
+        return hostName;
     }
 
-    public Double getPurgeUpTo() {
-        return this.purgeUpTo;
+    public Server() throws UnknownHostException {
+        InetAddress localHost = Inet4Address.getLocalHost();
+        this.ip = localHost.getHostAddress();
+        this.hostName = localHost.getHostName();
+        this.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
     }
-
-    public void setPurgeUpTo(Double value) {
-        this.purgeUpTo = value;
-    }
-
 }

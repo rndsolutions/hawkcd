@@ -1,6 +1,6 @@
 package io.hawkcd.services.tests;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.NotificationMessages;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.GitMaterial;

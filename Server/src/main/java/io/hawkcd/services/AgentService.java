@@ -17,6 +17,7 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.Message;
+import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
@@ -86,7 +87,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
 
         Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
 
-        PublisherFactory.createPublisher().publish("global",message);
+        MessageDispatcher.dispatchMessage(message);
 
         return result;
     }

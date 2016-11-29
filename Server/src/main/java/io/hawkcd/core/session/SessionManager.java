@@ -181,11 +181,8 @@ public class SessionManager implements  ISessionManager{
         if (session.isConnected()){
             RemoteEndpoint remoteEndpoint = session.getRemote();
             String jsonResult = this.jsonConverter.toJson(contract);
-            try {
-                remoteEndpoint.sendString(jsonResult);
-            } catch (IOException e) {
-                LOGGER.error(e);
-            }
+
+                remoteEndpoint.sendStringByFuture(jsonResult);
         }
     }
 

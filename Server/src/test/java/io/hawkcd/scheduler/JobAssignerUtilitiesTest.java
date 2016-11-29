@@ -1,6 +1,6 @@
 package io.hawkcd.scheduler;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.constants.TestsConstants;
 import io.hawkcd.model.Agent;
 import io.hawkcd.model.Job;

@@ -19,7 +19,7 @@ package io.hawkcd.http;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import io.hawkcd.Config;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.services.FileManagementService;
