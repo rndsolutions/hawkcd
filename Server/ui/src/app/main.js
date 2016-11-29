@@ -47,8 +47,8 @@ angular
     .constant({
         CONSTANTS: {
             'BASE_URL': '/api',
-            'SERVER_URL': 'http://localhost:8080',
-            'HOST': 'localhost:8080',
+            'SERVER_URL': window.location.origin,
+            'HOST': window.location.host,
             'CONFIG': '/config',
             'EXEC': '/exec',
             'STATS': '/stats',
