@@ -49,5 +49,7 @@ public interface ISessionManager {
 
     WSSocket getSessionByUserId(String id);
 
+    void updateSessionLoggedUser(String... userIds);
+
     void send(WSSocket session, WsContractDto contractDto);
 }

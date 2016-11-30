@@ -190,7 +190,7 @@ public class SessionManager implements ISessionManager {
         }
     }
 
-    public void updateSessionLoggedUser(List<String> userIds) {
+    public void updateSessionLoggedUser(String... userIds) {
         for (String userId : userIds) {
             WSSocket session = this.sessionPool.getSessionByID(userId);
             if (session == null) {

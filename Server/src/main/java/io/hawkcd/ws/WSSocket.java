@@ -181,7 +181,7 @@ public class WSSocket extends WebSocketAdapter {
             }
 
             User user = tokenInfo.getUser();
-            this.setLoggedUser(user);
+//            this.setLoggedUser(user);
 
             //Fill in the sessionDetails
             this.sessionDetails.setUserId(user.getId());
@@ -189,9 +189,10 @@ public class WSSocket extends WebSocketAdapter {
 
             ISessionManager sessionManager = SessionFactory.getSessionManager();
             sessionManager.openSession(this);
+            sessionManager.updateSessionLoggedUser(user.getId());
 
-            WsContractDto contract = extractUserDetails(user);
-            sessionManager.send(this, contract);
+//            WsContractDto contract = extractUserDetails(user);
+//            sessionManager.send(this, contract);
         }
     }
 
