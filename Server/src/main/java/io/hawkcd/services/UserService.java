@@ -16,7 +16,10 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.Message;
+import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
@@ -26,10 +29,12 @@ import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserService;
-//import io.hawkcd.ws.SessionPool;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+
+//import io.hawkcd.ws.SessionPool;
 
 public class UserService extends CrudService<User> implements IUserService {
     private static final Class CLASS_TYPE = User.class;
@@ -74,7 +79,18 @@ public class UserService extends CrudService<User> implements IUserService {
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(User user) {
         ServiceResult serviceResult = super.update(user);
-//        SessionPool.getInstance().updateUserObjects(user.getId());
+
+//        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+//        String methodName = ste[1].getMethodName();
+//        String className = this.getClass().getSimpleName();
+
+        List<String> ids = new ArrayList<>();
+        ids.add(user.getId());
+        Envelopе envelopе = new Envelopе(ids);
+        Message message = new Message(envelopе);
+        message.setUserUpdate(true);
+        MessageDispatcher.dispatchOutgoingMessage(message);
+
         return serviceResult;
     }
 
