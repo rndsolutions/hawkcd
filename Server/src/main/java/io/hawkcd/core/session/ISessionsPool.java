@@ -18,9 +18,9 @@
 
 package io.hawkcd.core.session;
 
-import java.util.Set;
-
 import io.hawkcd.ws.WSSocket;
+
+import java.util.Set;
 
 /**
  * Created by rado on 11.11.16.
@@ -39,4 +39,5 @@ public interface ISessionsPool  {
 
     WSSocket getSessionByUserEmail(String email);
 
+    WSSocket getSessionByUserId(String userId);
 }

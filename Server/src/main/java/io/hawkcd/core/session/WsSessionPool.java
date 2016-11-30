@@ -18,20 +18,16 @@
 
 package io.hawkcd.core.session;
 
-import org.apache.log4j.Logger;
-import org.eclipse.jetty.websocket.api.CloseStatus;
-
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.ws.WSSocket;
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.websocket.api.CloseStatus;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by rado on 13.11.16.
@@ -126,6 +122,16 @@ public class WsSessionPool implements ISessionsPool {
         }else {
             return false;
         }
+    }
+
+    @Override
+    public WSSocket getSessionByUserId(String userId) {
+
+        return this.getSessions()
+                .stream()
+                .filter(s -> s.getLoggedUser().getId().equals(userId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
