@@ -16,17 +16,16 @@
 'use strict';
 
 angular
-    .module('hawk')
-    .factory('loggedUserUpdater', ['viewModel', 'viewModelUpdater', 'loggerService', function (viewModel, viewModelUpdater, loggerService) {
-        var loggedUserUpdater = this;
+    .module('hawk.pipelinesManagement')
+    .factory('loggerService', ['$rootScope', function ($rootScope) {
+        var loggerService = this;
 
-        loggedUserUpdater.getUser = function (user) {
-            viewModel.user = user;
-            viewModelUpdater.refreshViewModel();
-
-            loggerService.log('loggedUserUpdater.getUser : ');
-            loggerService.log(user);
+        loggerService.log = function (message) {
+            if($rootScope.localStorageDebug == "true"){
+                console.log(message);
+            }
         };
 
-        return loggedUserUpdater;
+        return loggerService;
+
     }]);
