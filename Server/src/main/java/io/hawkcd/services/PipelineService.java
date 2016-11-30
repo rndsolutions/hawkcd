@@ -18,7 +18,6 @@ package io.hawkcd.services;
 
 import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
-import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.db.DbRepositoryFactory;
@@ -124,7 +123,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
 
-        MessageDispatcher.dispatchMessage(message);
+        MessageDispatcher.dispatchIncomingMessage(message);
 
         //PublisherFactory.createPublisher().publish("global",message);
 

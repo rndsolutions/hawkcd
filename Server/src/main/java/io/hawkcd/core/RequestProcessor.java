@@ -20,13 +20,9 @@ package io.hawkcd.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.hawkcd.core.config.Config;
 import io.hawkcd.core.publisher.Publisher;
-import io.hawkcd.core.publisher.PublisherFactory;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.IAuthorizationManager;
-import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.core.subscriber.MessageTranslator;
 import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
@@ -102,7 +98,7 @@ public class RequestProcessor {
             message = this.authorizationManager.attachPermissionTypeMapToMessage(message, methodArgs);
         }
 
-        MessageDispatcher.dispatchMessage(message);
+        MessageDispatcher.dispatchIncomingMessage(message);
     }
 
     private boolean isPipelineGroupDtoList(ServiceResult result) {
