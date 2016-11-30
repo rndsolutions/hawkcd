@@ -29,7 +29,6 @@ import io.hawkcd.model.dto.UserDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.payload.TokenInfo;
-import io.hawkcd.services.UserService;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TokenAdapter;
@@ -44,9 +43,9 @@ import java.util.UUID;
 
 public class WSSocket extends WebSocketAdapter {
     private static final Logger LOGGER = Logger.getLogger(WSSocket.class.getClass());
+
     private String id;
     private Gson jsonConverter;
-    private UserService userService;
     private User loggedUser;
     private RequestProcessor requestProcessor;
     private SessionDetails sessionDetails;
@@ -58,7 +57,6 @@ public class WSSocket extends WebSocketAdapter {
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
-        this.userService = new UserService();
         this.requestProcessor = new RequestProcessor();
         this.sessionDetails = new SessionDetails(this.getId());
     }
@@ -143,18 +141,6 @@ public class WSSocket extends WebSocketAdapter {
         remoteEndpoint.sendStringByFuture(jsonResult);
     }
 
-    public void updateLoggedUser(String userId) {
-        
-
-        User user = (User) this.userService.getById(userId).getEntity();
-        if (user == null) {
-            // Close the session
-        }
-
-
-
-    }
-
     private void execute(String message) {
         if (isConnected()) {
             try {
@@ -204,16 +190,16 @@ public class WSSocket extends WebSocketAdapter {
             ISessionManager sessionManager = SessionFactory.getSessionManager();
             sessionManager.openSession(this);
 
-            WsContractDto contract = extractUserDetails(tokenInfo);
+            WsContractDto contract = extractUserDetails(user);
             sessionManager.send(this, contract);
         }
     }
 
-    private WsContractDto extractUserDetails(TokenInfo tokenInfo) {
+    public WsContractDto extractUserDetails(User user) {
 
         UserDto userDto = new UserDto();
-        userDto.setUsername(tokenInfo.getUser().getEmail());
-        userDto.setPermissions(tokenInfo.getUser().getPermissions());
+        userDto.setUsername(user.getEmail());
+        userDto.setPermissions(user.getPermissions());
         return new WsContractDto(
                 "UserInfo",
                 "",

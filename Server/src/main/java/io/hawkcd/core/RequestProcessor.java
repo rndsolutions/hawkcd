@@ -102,18 +102,7 @@ public class RequestProcessor {
             message = this.authorizationManager.attachPermissionTypeMapToMessage(message, methodArgs);
         }
 
-
-        if (Config.getConfiguration().isSingleNode()) {
-            WsContractDto ctr;
-            if(message.isTargetOwner()){ // if this is list
-                ctr = MessageConverter.convert(message);
-            }else { // if single message
-                ctr = MessageTranslator.translateMessageToContract(message);
-            }
-            SessionFactory.getSessionManager().sendToAllSessions(ctr);
-        } else {
-            PublisherFactory.createPublisher().publish("global", message);
-        }
+        MessageDispatcher.dispatchMessage(message);
     }
 
     private boolean isPipelineGroupDtoList(ServiceResult result) {

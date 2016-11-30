@@ -27,3 +27,4 @@
   serverHost: localhost
   serverId:
   serverPort: 8080
+  isSingleNode: true
