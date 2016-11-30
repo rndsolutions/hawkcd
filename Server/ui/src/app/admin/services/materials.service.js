@@ -17,7 +17,7 @@
 
 angular
     .module('hawk')
-    .factory('adminMaterialService', ['jsonHandlerService', 'websocketSenderService', 'websocketReceiverService', 'pipeConfigService', function(jsonHandlerService, websocketSenderService,websocketReceiverService, pipeConfigService) {
+    .factory('adminMaterialService', ['jsonHandlerService', 'websocketSenderService', 'pipeConfigService', 'loggerService', function(jsonHandlerService, websocketSenderService, pipeConfigService, loggerService) {
         var adminMaterialService = this;
 
         adminMaterialService.getAllMaterialDefinitions = function() {

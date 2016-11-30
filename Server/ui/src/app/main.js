@@ -176,10 +176,27 @@ angular
 ])
 
 /* Init global settings and run the app */
-.run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", "CONSTANTS", "notificationService", function($rootScope, settings, $state, websocketReceiverService, agentService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location, CONSTANTS, notificationService) {
+.run(["$rootScope", "settings", "$state", "websocketReceiverService", "agentService", "loggerService", "adminGroupService", "adminService", "adminMaterialService", "pipeConfigService", "pipeExecService", "authenticationService", "toaster", "$auth", "$location", "CONSTANTS", "notificationService", function($rootScope, settings, $state, websocketReceiverService, agentService, loggerService, adminGroupService, adminService, adminMaterialService, pipeConfigService, pipeExecService, authenticationService, toaster, $auth, $location, CONSTANTS, notificationService) {
     $rootScope.$state = $state; // state to be accessed from view
     $rootScope.$settings = settings; // state to be accessed from view
     $rootScope.$on('$stateChange');
+
+    $rootScope.$on("$locationChangeSuccess", function(event, newUrl, oldUrl) {
+        $rootScope.localStorageDebug = localStorage.getItem('hawkDebug');
+
+        var debugMode = newUrl.split('debug=')[1];
+        if(!debugMode && !$rootScope.localStorageDebug || $rootScope.localStorageDebug == 'undefined'){
+            debugMode = "false";
+        } else if(!debugMode){
+            debugMode = $rootScope.localStorageDebug;
+        }
+
+        localStorage.setItem('hawkDebug', debugMode);
+        $rootScope.localStorageDebug = localStorage.getItem('hawkDebug');
+
+
+
+    });
 
     var wsServerLocation = 'ws://' + CONSTANTS.HOST + '/ws/v1';
 
@@ -202,25 +219,14 @@ angular
                 window.clearInterval(window.timerID);
                 window.timerID = 0;
             }
-
-            // pipeConfigService.getAllJobDefinitions();
-            // pipeConfigService.getAllStageDefinitions();
-            //pipeStatsService.getAgentById();
-
-            //adminGroupService.getAllPipelineGroups();
-            pipeConfigService.getAllPipelineDefinitions();
-            pipeConfigService.getAllPipelineGroupDTOs();
-            agentService.getAllAgents();
-            adminService.getAllUserGroupDTOs();
-            adminService.getAllUsers();
-            adminMaterialService.getAllMaterialDefinitions();
         };
 
         $rootScope.socket.onclose = function(event) {
             if (!$auth.isAuthenticated()) {
                 $auth.logout();
                 $location.path('/authenticate');
-                console.log(event);
+                loggerService.log('Connection to Server closed:');
+                loggerService.log(event);
                 toaster.clear();
                 notificationService.notificationDispatcher[CONSTANTS.TOAST_WARNING](event.reason);
                 $rootScope.$apply();
@@ -242,7 +248,11 @@ angular
     //debugger;
     if ($auth.isAuthenticated()) {
         $rootScope.startWebsocket(wsServerLocation);
-        console.log($auth.getToken());
+        if(localStorage.hawkDebug == "true"){
+            console.log('Connected to Server, your token is:');
+            console.log($auth.getToken());
+
+        }
     }
 }]);
 
