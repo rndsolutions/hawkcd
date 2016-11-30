@@ -98,13 +98,14 @@ public class HServer {
     }
 
     public void start() throws Exception {
-//        this.subsciber.start();
         this.server.start();
         this.initializer.initialize();
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();
-        this.subsciber.start();
+        if (!Config.getConfiguration().isSingleNode()){
+            this.subsciber.start();
+        }
         this.server.join();
     }
 
