@@ -38,6 +38,7 @@ public class Message {
 
     //True if the message should be delivered only to the caller
     private boolean isTargetOwner;
+    private boolean isUserUpdate;
 
     //Holds the result being returned by the service call
     private Envelopе envelopе;
@@ -47,6 +48,11 @@ public class Message {
     //The user context in which the message is created
     private User owner;
     private Map<String, PermissionType> permissionTypeByUser;
+
+    public Message(Envelopе envelopе) {
+        this.envelopе = envelopе;
+        this.permissionTypeByUser = new HashMap<>();
+    }
 
     public Message(String serviceCalled, String methodCalled, ServiceResult serviceResult, User usr) {
         this.serviceCalled = serviceCalled;
@@ -59,7 +65,6 @@ public class Message {
         }
 
         this.permissionTypeByUser = new HashMap<>();
-
     }
 
     Message(String serviceCalled,
@@ -112,6 +117,14 @@ public class Message {
 
     public void setTargetOwner(boolean targetOwner) {
         isTargetOwner = targetOwner;
+    }
+
+    public boolean isUserUpdate() {
+        return isUserUpdate;
+    }
+
+    public void setUserUpdate(boolean userUpdate) {
+        isUserUpdate = userUpdate;
     }
 
     public Object getEnvelope() {

@@ -181,7 +181,7 @@ public class WSSocket extends WebSocketAdapter {
             }
 
             User user = tokenInfo.getUser();
-//            this.setLoggedUser(user);
+            this.setLoggedUser(user);
 
             //Fill in the sessionDetails
             this.sessionDetails.setUserId(user.getId());

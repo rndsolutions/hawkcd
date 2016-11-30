@@ -34,6 +34,7 @@ import io.hawkcd.ws.WSSocket;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -67,7 +68,7 @@ public class SessionManager implements ISessionManager {
 
         WSSocket session = this.sessionPool.getSessions()
                 .stream()
-                .filter(s -> s.getId() == sessionId)
+                .filter(s -> s.getId().equals(sessionId))
                 .findFirst()
                 .orElse(null);
 
@@ -77,7 +78,7 @@ public class SessionManager implements ISessionManager {
     @Override
     public void closeSessionByUserEmail(String email) {
 
-        WSSocket session = sessionPool.getSessions()
+        WSSocket session = this.sessionPool.getSessions()
                 .stream()
                 .filter(s -> s.getLoggedUser().getEmail().equals(email))
                 .findFirst()
@@ -88,8 +89,8 @@ public class SessionManager implements ISessionManager {
 
     @Override
     public void sendToAllSessions(WsContractDto contract) {
-
-        for (WSSocket s : sessionPool.getSessions()) {
+        Set<WSSocket> sessions = this.sessionPool.getSessions();
+        for (WSSocket s : sessions) {
             this.send(s, contract);
         }
     }
@@ -182,7 +183,7 @@ public class SessionManager implements ISessionManager {
      */
     public void send(WSSocket session, WsContractDto contract) {
 
-        if (session.isConnected()) {
+        if (session != null && session.isConnected()) {
             RemoteEndpoint remoteEndpoint = session.getRemote();
             String jsonResult = this.jsonConverter.toJson(contract);
 
@@ -192,14 +193,16 @@ public class SessionManager implements ISessionManager {
 
     public void updateSessionLoggedUser(String... userIds) {
         for (String userId : userIds) {
-            WSSocket session = this.sessionPool.getSessionByID(userId);
+            WSSocket session = this.sessionPool.getSessionByUserId(userId);
             if (session == null) {
                 continue;
             }
 
             User user = (User) this.userService.getById(userId).getEntity();
             if (user == null) {
+                this.logoutUser(session);
                 this.closeSessionById(session.getId());
+                continue;
             }
 
             session.setLoggedUser(user);
