@@ -43,7 +43,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminGroupService.getAllPipelineGroups = function () {
@@ -55,10 +54,8 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
-        //TODO: Send the Pipeline Group to be deleted
          adminGroupService.deletePipelineGroup = function (pipelineGroup) {
             var methodName = "delete";
             var className = "PipelineGroupService";
@@ -68,7 +65,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         return adminGroupService;

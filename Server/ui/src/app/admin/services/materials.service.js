@@ -29,7 +29,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminMaterialService.addMaterial = function(newMaterial) {
@@ -98,7 +97,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminMaterialService.getMaterialDefinitionById = function (id) {
@@ -110,7 +108,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminMaterialService.addGitMaterialDefinition = function (materialDefinition) {
@@ -122,7 +119,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminMaterialService.addNugetMaterialDefinition = function (materialDefinition) {
@@ -134,7 +130,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminMaterialService.updateGitMaterialDefinition = function (materialDefinition) {
@@ -146,7 +141,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminMaterialService.updateNugetMaterialDefinition = function (materialDefinition) {
@@ -158,11 +152,8 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
-
-        //TODO: Send Material Definition to be deleted
         adminMaterialService.deleteMaterialDefinition = function(materialDefinition){
           var methodName = "delete";
           var className = "MaterialDefinitionService";
@@ -172,8 +163,7 @@ angular
           var error = "";
           var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
           websocketSenderService.call(json);
-          console.log(json);
-        }
+        };
 
         return adminMaterialService;
     }]);

@@ -18,7 +18,7 @@
 angular
     .module('hawk.adminManagement')
     .controller('AdminController',
-        function($state, $interval, $scope, $filter, $window, $timeout, DTOptionsBuilder, DTColumnDefBuilder, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
+        function($state, $interval, $scope, $filter, $window, $timeout, loggerService, DTOptionsBuilder, DTColumnDefBuilder, accountService, adminService, pipeConfigService, profileService, adminGroupService, filterUsers, authDataService, viewModel, $rootScope, adminMaterialService) {
             var vm = this;
 
             vm.breadCrumb = {
@@ -175,7 +175,6 @@ angular
             vm.currentActiveScreen = '';
 
             vm.state = $state;
-            console.log($state.current);
 
             vm.currentPipelineGroups = [];
 
@@ -268,6 +267,9 @@ angular
                 }
                 adminMaterialService.addGitMaterialDefinition(material);
 
+                loggerService.log('AdminController.addMaterial :');
+                loggerService.log(material);
+
                 vm.materialType = 'hidden';
                 vm.formData = {};
                 vm.closeModal();
@@ -280,6 +282,8 @@ angular
                 }
                 formData.material.destination = formData.material.destination !== formData.material.name ? formData.material.name : formData.material.destination;
                 adminMaterialService.updateGitMaterialDefinition(formData.material);
+                loggerService.log('AdminController.editMaterial :');
+                loggerService.log(formData.material);
                 vm.closeEditModal();
             };
 
@@ -292,12 +296,16 @@ angular
                 return viewModel.userGroups
             }, function(newVal, oldVal) {
                 vm.userGroups = angular.copy(viewModel.userGroups);
+                loggerService.log('User Group watcher :');
+                loggerService.log(vm.userGroups);
             }, true);
 
             $scope.$watch(function() {
                 return viewModel.allPipelines
             }, function(newVal, oldVal) {
                 vm.allPipelines = angular.copy(viewModel.allPipelines);
+                loggerService.log('Pipelines watcher :');
+                loggerService.log(vm.allPipelines);
             }, true);
 
             $scope.$watch(function() {
@@ -326,6 +334,8 @@ angular
                             });
                         }
                     });
+                    loggerService.log('Users watcher :');
+                    loggerService.log(vm.users);
                 }
             }, true);
 
@@ -395,6 +405,8 @@ angular
 
             vm.addUserGroup = function() {
                 adminService.addUserGroup(vm.newUserGroup);
+                loggerService.log('AdminController.addUserGroup :');
+                loggerService.log(vm.newUserGroup);
             };
 
             vm.selectAssignedPipelineToAssign = function(pipeline, index) {
@@ -415,6 +427,8 @@ angular
 
             vm.addUser = function() {
                 adminService.addUser(vm.newUser);
+                loggerService.log('AdminController.addUser :');
+                loggerService.log(vm.newUser);
             };
 
             vm.userDTO = {};
@@ -441,12 +455,16 @@ angular
             vm.changeUserEmail = function(updatedUser, userDTO, form) {
                 updatedUser.email = userDTO.email;
                 adminService.updateUser(updatedUser);
+                loggerService.log('AdminController.changeUserEmail :');
+                loggerService.log(updatedUser);
                 vm.closeUserSettingsModal(form);
             }
 
             vm.changeUserPassword = function(updatedUser, userDTO, form) {
                 updatedUser.password = userDTO.newPassword;
                 adminService.resetUserPassword(updatedUser);
+                loggerService.log('AdminController.changeUserPassword :');
+                loggerService.log(updatedUser);
                 vm.closeUserSettingsModal(form);
             }
 
@@ -465,16 +483,21 @@ angular
 
             vm.removeUser = function() {
                 adminService.deleteUser(vm.selectedUser);
+                loggerService.log('AdminController.removeUser :');
+                loggerService.log(vm.selectedUser);
             };
 
             vm.assignPipeline = function(pipeline) {
                 var pipelineGroup = vm.pipelineGroupToAssign;
-                debugger;
                 pipeConfigService.assignPipelineDefinition(pipeline.id, pipelineGroup.id, pipelineGroup.name);
+                loggerService.log('AdminController.assignPipeline :');
+                loggerService.log(vm.pipelineToUnassign);
             };
 
             vm.unassignPipeline = function() {
                 pipeConfigService.unassignPipelineDefinition(vm.pipelineToUnassign.id);
+                loggerService.log('AdminController.unassignPipeline :');
+                loggerService.log(vm.pipelineToUnassign);
             };
 
             vm.assignUsers = function() {
@@ -657,7 +680,7 @@ angular
             });
 
             $('#user-checkbox').on('switchChange.bootstrapSwitch', function(event, state) {
-                console.log(state);
+
             });
 
             vm.range = function(start, end) {
@@ -717,14 +740,16 @@ angular
                 vm.currentPipelineGroups.sort(function(a, b) {
                     return a.name - b.name;
                 });
-                console.log(vm.currentPipelineGroups);
+                loggerService.log('admin.controller - Pipeline Group watcher:');
+                loggerService.log(vm.currentPipelineGroups);
             }, true);
 
             $scope.$watch(function() {
                 return viewModel.allMaterialDefinitions
             }, function(newVal, oldVal) {
                 vm.currentMaterials = angular.copy(viewModel.allMaterialDefinitions);
-                console.log(vm.currentMaterials);
+                loggerService.log('admin.controller - Material Definition watcher:');
+                loggerService.log(vm.currentMaterials);
             }, true);
 
             vm.addNewPipelineGroup = function() {
@@ -774,314 +799,6 @@ angular
                 vm.userGroupToManage = userGroup;
             };
 
-            // function getAllUsers() {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //        var token = window.localStorage.getItem("accessToken");
-            //        adminService.getAllUsers(token)
-            //         .then(function (res) {
-            //             vm.allUsers = res;
-            //             console.log(res);
-            //         }, function (err) {
-            //             console.log(err);
-            //         })
-            //     } else {
-            //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //        authDataService.getNewToken(currentRefreshToken)
-            //            .then(function (res) {
-            //                var token = res.access_token;
-            //                adminService.getAllUsers(token)
-            //                 .then(function (res) {
-            //                     vm.allUsers = res;
-            //                     console.log(res);
-            //                 }, function (err) {
-            //                     console.log(err);
-            //                 })
-            //            }, function (err) {
-            //                console.log(err);
-            //            })
-            //     }
-            // }
-            //
-            // vm.addUser = function () {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //        var token = window.localStorage.getItem("accessToken");
-            //        adminService.registerUser(vm.newUser, token)
-            //         .then(function (res) {
-            //             console.log('User with email ' + vm.newUser.Email + ' successfully created.')
-            //             getAllUsers();
-            //             vm.newUser = {};
-            //             console.log(res);
-            //         }, function (err) {
-            //             vm.newUser = {};
-            //             console.log(err);
-            //         })
-            //     } else {
-            //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //        authDataService.getNewToken(currentRefreshToken)
-            //            .then(function (res) {
-            //                var token = res.access_token;
-            //                adminService.registerUser(vm.newUser, token)
-            //                 .then(function (res) {
-            //                     console.log('User with email ' + vm.newUser.Email + ' successfully created.')
-            //                     getAllUsers();
-            //                     vm.newUser = {};
-            //                     console.log(res);
-            //                 }, function (err) {
-            //                     vm.newUser = {};
-            //                     console.log(err);
-            //                 })
-            //            }, function (err) {
-            //                console.log(err);
-            //            })
-            //     }
-            // }
-            //
-            // vm.currentUserId = {};
-            // vm.user = {};
-            //
-            // vm.getCurrentUser = function () {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //        var token = window.localStorage.getItem("accessToken");
-            //        profileService.getUserInfo(token)
-            //         .then(function (res) {
-            //             vm.currentUserId = res.Id;
-            //             console.log(res);
-            //         }, function (err) {
-            //             console.log(err);
-            //         })
-            //     } else {
-            //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //        authDataService.getNewToken(currentRefreshToken)
-            //            .then(function (res) {
-            //                var token = res.access_token;
-            //                profileService.getUserInfo(token)
-            //                 .then(function (res) {
-            //                     vm.currentUserId = res.Id;
-            //                     console.log(res);
-            //                 }, function (err) {
-            //                     console.log(err);
-            //                 })
-            //            }, function (err) {
-            //                console.log(err);
-            //            })
-            //     }
-            // }
-            //
-            // vm.getCurrentUser();
-            //
-            // vm.getUser = function (id) {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //        var token = window.localStorage.getItem("accessToken");
-            //        adminService.getUser(id, token)
-            //         .then(function (res) {
-            //             vm.user = res;
-            //             console.log(res);
-            //         }, function (err) {
-            //             console.log(err);
-            //         })
-            //     } else {
-            //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //        authDataService.getNewToken(currentRefreshToken)
-            //            .then(function (res) {
-            //                var token = res.access_token;
-            //                adminService.getUser(id, token)
-            //                 .then(function (res) {
-            //                     vm.user = res;
-            //                     console.log(res);
-            //                 }, function (err) {
-            //                     console.log(err);
-            //                 })
-            //            }, function (err) {
-            //                console.log(err);
-            //            })
-            //     }
-            // }
-            //
-            // vm.deleteUser = function (id) {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //        var token = window.localStorage.getItem("accessToken");
-            //        adminService.deleteUser(id, token)
-            //         .then(function (res) {
-            //             getAllUsers();
-            //             console.log(res);
-            //         }, function (err) {
-            //             console.log(err);
-            //         })
-            //     } else {
-            //        var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //        authDataService.getNewToken(currentRefreshToken)
-            //            .then(function (res) {
-            //                var token = res.access_token;
-            //                adminService.deleteUser(id, token)
-            //                 .then(function (res) {
-            //                     getAllUsers();
-            //                     console.log(res);
-            //                 }, function (err) {
-            //                     console.log(err);
-            //                 })
-            //            }, function (err) {
-            //                console.log(err);
-            //            })
-            //     }
-            // }
-            //
-            // getAllUsers();
-            //
-            //
-            // //region Group Management
-            //
-            // vm.allGroupDefs = [];
-            //
-            // vm.getAllGroupDefs = function () {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //         var token = window.localStorage.getItem("accessToken");
-            //         pipeConfig.getAllGroups(token)
-            //             .then(function (res) {
-            //
-            //                 //Result and current are different
-            //                 if (res.length != vm.allGroupDefs.length) {
-            //                     vm.allGroupDefs = res;
-            //                 }
-            //                 //Check again for difference
-            //                 else {
-            //                     //Check if there is a new pipeline group or a new pipeline in existing group
-            //                     var areEqual = adminGroupService.checkIfDataIsDifferent(vm.allGroupDefs, res);
-            //
-            //                     if (!areEqual) {
-            //                         vm.allGroupDefs = res;
-            //                     }
-            //                 }
-            //             }, function (err) {
-            //                 console.log(err);
-            //             })
-            //     } else {
-            //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //         authDataService.getNewToken(currentRefreshToken)
-            //             .then(function (res) {
-            //                 var token = res.access_token;
-            //                 pipeConfig.getAllGroups(token)
-            //                     .then(function (res) {
-            //
-            //                         //Result and current are different
-            //                         if (res.length != vm.allGroupDefs.length) {
-            //                             vm.allGroupDefs = res;
-            //                         }
-            //                         //Check again for difference
-            //                         else {
-            //                             //Check if there is a new pipeline group or a new pipeline in existing group
-            //                             var areEqual = adminGroupService.checkIfDataIsDifferent(vm.allGroupDefs, res);
-            //
-            //                             if (!areEqual) {
-            //                                 vm.allGroupDefs = res;
-            //                             }
-            //                         }
-            //                     }, function (err) {
-            //                         console.log(err);
-            //                     })
-            //             }, function (err) {
-            //
-            //             })
-            //
-            //     }
-            // };
-            //
-            // vm.addNewPipelineGroup = function () {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //         var token = window.localStorage.getItem("accessToken");
-            //         pipeConfig.createGroup(vm.newPipelineGroup, token)
-            //             .then(function (res) {
-            //                 vm.newPipelineGroup.Name = '';
-            //                 vm.getAllGroupDefs();
-            //             }, function (err) {})
-            //     } else {
-            //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //         authDataService.getNewToken(currentRefreshToken)
-            //             .then(function (res) {
-            //                 var token = res.access_token;
-            //                 pipeConfig.createGroup(vm.newPipelineGroup, token)
-            //                     .then(function (res) {
-            //                         vm.newPipelineGroup.Name = '';
-            //                         vm.getAllGroupDefs();
-            //                     }, function (err) {
-            //
-            //                     })
-            //             }, function (err) {
-            //                 console.log(err);
-            //             })
-            //     }
-            // };
-            //
-
-            //
-            // vm.deleteGroup = function () {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //         var token = window.localStorage.getItem("accessToken");
-            //         pipeConfig.deleteGroup(vm.groupForDeleteName, token)
-            //             .then(function (res) {
-            //                 vm.getAllGroupDefs();
-            //                 console.log(res);
-            //             }, function (err) {
-            //                 console.log(err);
-            //             })
-            //     } else {
-            //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //         authDataService.getNewToken(currentRefreshToken)
-            //             .then(function (res) {
-            //                 var token = res.access_token;
-            //                 pipeConfig.deleteGroup(vm.groupForDeleteName, token)
-            //                     .then(function (res) {
-            //                         vm.getAllGroupDefs();
-            //                         console.log(res);
-            //                     }, function (err) {
-            //                         console.log(err);
-            //                     })
-            //             }, function (err) {
-            //                 console.log(err);
-            //             })
-            //     }
-            // };
-            //
-            // vm.deletePipeline = function () {
-            //     var tokenIsValid = authDataService.checkTokenExpiration();
-            //     if (tokenIsValid) {
-            //         var token = window.localStorage.getItem("accessToken");
-            //         pipeConfig.deletePipeline(vm.pipelineToDeleteName, token)
-            //             .then(function (res) {
-            //                 vm.getAllGroupDefs();
-            //                 console.log(res);
-            //             }, function (err) {
-            //                 console.log(err);
-            //             })
-            //     } else {
-            //         var currentRefreshToken = window.localStorage.getItem("refreshToken");
-            //         authDataService.getNewToken(currentRefreshToken)
-            //             .then(function (res) {
-            //                 var token = res.access_token;
-            //                 pipeConfig.deletePipeline(vm.pipelineToDeleteName,token)
-            //                     .then(function (res) {
-            //                         vm.getAllGroupDefs();
-            //                         console.log(res);
-            //                     }, function (err) {
-            //                         console.log(err);
-            //                     })
-            //             }, function (err) {
-            //                 console.log(err);
-            //             })
-            //     }
-            // };
-            //
-            //
-            // vm.getAllGroupDefs();
-            //endregion
-
             //region User Management
             //DATATABLE options
             vm.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withDisplayLength(6);
@@ -1121,25 +838,12 @@ angular
 
             //endregion
 
-            // vm.allGroupDefs = [];
-
-            // vm.allGroupDefs = viewModel.allPipelineGroups;
-
-            // $scope.$watch(function () { return viewModel.allPipelineGroups }, function (newVal, oldVal) {
-            //     vm.allGroupDefs = viewModel.allPipelineGroups;
-            //     console.log(vm.allGroupDefs);
-            // });
-
             //region Packages
             vm.packageTab = {
                 header: 'NuGet Repository'
             };
 
             //endregion
-
-            // var intervallGroups = $interval(function () {
-            //     vm.getAllGroupDefs();
-            // }, 4000);
 
             $scope.$on('$destroy', function() {});
 

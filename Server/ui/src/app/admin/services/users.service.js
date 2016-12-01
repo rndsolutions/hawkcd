@@ -29,7 +29,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.getAllUserGroupDTOs = function() {
@@ -41,7 +40,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.updateUserGroupDTO = function(userGroup) {
@@ -53,7 +51,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.deleteUserGroup = function(userGroup) {
@@ -65,7 +62,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.getAllUsers = function() {
@@ -77,7 +73,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.addUser = function(user) {
@@ -89,7 +84,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.addUserGroup = function(userGroup) {
@@ -101,7 +95,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.updateUser = function(user) {
@@ -113,7 +106,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.resetUserPassword = function(user) {
@@ -125,7 +117,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.updateUserPassword = function(user, newUserPassword,oldPassword) {
@@ -140,7 +131,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.deleteUser = function(id) {
@@ -152,7 +142,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.assignUser = function(user, group) {
@@ -166,7 +155,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminService.unassignUser = function(user, group) {
@@ -180,83 +168,7 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
-
-        // var usersEndPoint = CONSTANTS.BASE_URL + CONSTANTS.ACCOUNT + CONSTANTS.USERS + '/';
-        // var registerEndPoint = CONSTANTS.BASE_URL + CONSTANTS.ACCOUNT + '/Register';
-        //
-        // var token = window.localStorage['accessToken'];
-        //
-        // adminService.registerUser = function (user, token) {
-        //     var defer = $q.defer();
-        //
-        //     $http.post(registerEndPoint, user, {
-        //             headers: {
-        //                 'Authorization': 'bearer ' + token
-        //             }
-        //         })
-        //         .success(function (res) {
-        //             defer.resolve(res);
-        //         })
-        //         .error(function (err, status) {
-        //             defer.reject(err);
-        //         });
-        //
-        //     return defer.promise;
-        // };
-        //
-        // adminService.getAllUsers = function(token) {
-        //     var defer = $q.defer();
-        //
-        //     $http.get(usersEndPoint, {
-        //             headers: {
-        //                 'Authorization': 'bearer ' + token
-        //             }
-        //         })
-        //         .success(function(res) {
-        //             defer.resolve(res);
-        //         })
-        //         .error(function(err, status) {
-        //             defer.reject(err);
-        //         });
-        //
-        //     return defer.promise;
-        // };
-        // adminService.getUser = function(id, token) {
-        //     var defer = $q.defer();
-        //
-        //     $http.get(usersEndPoint + id, {
-        //             headers: {
-        //                 'Authorization': 'bearer ' + token
-        //             }
-        //         })
-        //         .success(function(res) {
-        //             defer.resolve(res);
-        //         })
-        //         .error(function(err, status) {
-        //             defer.reject(err);
-        //         });
-        //
-        //     return defer.promise;
-        // };
-        // adminService.deleteUser = function(id, token) {
-        //     var defer = $q.defer();
-        //
-        //     $http.delete(usersEndPoint + id, {
-        //             headers: {
-        //                 'Authorization': 'bearer ' + token
-        //             }
-        //         })
-        //         .success(function(res) {
-        //             defer.resolve(res);
-        //         })
-        //         .error(function(err, status) {
-        //             defer.reject(err);
-        //         });
-        //
-        //     return defer.promise;
-        // };
 
         return adminService;
     }]);

@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('agentService', ['jsonHandlerService', 'websocketSenderService', '$rootScope', '$timeout', function (jsonHandlerService, websocketSenderService, $rootScope, $timeout) {
+    .factory('agentService', ['jsonHandlerService', 'websocketSenderService', '$rootScope', '$timeout', 'loggerService', function (jsonHandlerService, websocketSenderService, $rootScope, $timeout, loggerService) {
         var agentService = this;
 
         agentService.getAllAgents = function () {
