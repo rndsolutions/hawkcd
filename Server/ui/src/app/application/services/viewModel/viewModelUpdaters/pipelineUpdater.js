@@ -17,7 +17,7 @@
 
 angular
     .module('hawk')
-    .factory('pipelineUpdater', ['viewModel', 'commonUtitlites', 'moment', function (viewModel, commonUtitlites, moment) {
+    .factory('pipelineUpdater', ['viewModel', 'commonUtitlites', 'moment', 'loggerService', function (viewModel, commonUtitlites, moment, loggerService) {
         var pipelineUpdater = this;
 
         pipelineUpdater.truncateGitFromUrl = function(repoUrl, commitId) {
@@ -33,6 +33,7 @@ angular
 
         pipelineUpdater.flushAllHistoryPipelines = function () {
             viewModel.historyPipelines = [];
+            loggerService.log('History Pipelines flushed.');
         };
 
         pipelineUpdater.getAllArtifactPipelines = function (pipelines) {
@@ -58,6 +59,7 @@ angular
 
         pipelineUpdater.flushAllArtifactPipelines = function () {
             viewModel.artifactPipelines = [];
+            loggerService.log('Artifact Pipelines flushed.');
         };
 
         pipelineUpdater.getRunManagementPipeline = function (pipeline) {
@@ -66,6 +68,7 @@ angular
 
         pipelineUpdater.flushRunManagementPipeline = function () {
             viewModel.runManagementPipeline = {};
+            loggerService.log('Run Management Pipeline flushed.');
         };
 
         pipelineUpdater.getAllPipelines = function (pipelines) {
