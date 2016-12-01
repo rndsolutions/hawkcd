@@ -19,6 +19,8 @@ package io.hawkcd.services;
 import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationGrant;
+import io.hawkcd.core.security.AuthorizationGrantService;
 import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
@@ -34,10 +36,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-//import io.hawkcd.ws.SessionPool;
-
 public class UserService extends CrudService<User> implements IUserService {
     private static final Class CLASS_TYPE = User.class;
+    private AuthorizationGrantService authorizationGrantService = new AuthorizationGrantService();
 
     public UserService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
@@ -51,19 +52,19 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.VIEWER)
     public ServiceResult getById(String userId) {
         return super.getById(userId);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.NONE)
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult add(User user) {
         ServiceResult result = this.getByEmail(user.getEmail());
         if (result.getNotificationType() == NotificationType.ERROR) {
@@ -76,9 +77,23 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(User user) {
+        User userFromDb = (User) this.getById(user.getId()).getEntity();
+        if (userFromDb == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "not found");
+        }
+
+        List<AuthorizationGrant> currentPermissions = userFromDb.getPermissions();
+        boolean foundDuplicates = this.authorizationGrantService.filterAuthorizationGrantDuplicates(currentPermissions, user.getPermissions());
+        currentPermissions = this.authorizationGrantService.sortAuthorizationGrants(currentPermissions);
+        user.setPermissions(currentPermissions);
         ServiceResult serviceResult = super.update(user);
+
+        if (foundDuplicates) {
+            serviceResult.setNotificationType(NotificationType.WARNING);
+            serviceResult.setMessage("Some grants were not added");
+        }
 
 //        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 //        String methodName = ste[1].getMethodName();
@@ -95,13 +110,13 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult delete(User user) {
         return super.delete(user);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult getByEmailAndPassword(String email, String password) {
         List<User> users = (List<User>) this.getAll().getEntity();
 
@@ -120,7 +135,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult getByEmail(String email) {
         List<User> users = (List<User>) this.getAll().getEntity();
 
@@ -138,13 +153,13 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult addUserWithoutProvider(User user) {
         return this.add(user);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
         String hashedPassword = DigestUtils.sha256Hex(oldPassword);
         ServiceResult result = this.getByEmailAndPassword(user.getUsername(), hashedPassword);
@@ -160,7 +175,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult resetUserPassword(User user) {
         String hashedPassword = DigestUtils.sha256Hex(user.getPassword());
 
