@@ -33,7 +33,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.getPipelineDefinitionById = function (id) {
@@ -45,7 +44,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.getAllPipelineGroupDTOs = function () {
@@ -57,7 +55,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.addPipelineDefinition = function (pipelineDefinition) {
@@ -69,7 +66,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.addPipelineDefinitionWithMaterial = function (pipelineDefinition,materialDefinition) {
@@ -81,7 +77,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.addPipelineDefinitionWithExistingMaterial = function (pipelineDefinition,materialDefinition) {
@@ -93,7 +88,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.updatePipelineDefinition = function (pipelineDefinition) {
@@ -105,7 +99,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send Pipeline Definition and Pipeline Group to assign to (and possibly Pipeline Group that is assigned from)
@@ -120,7 +113,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send Pipeline Definition to be unassigned
@@ -133,7 +125,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send Pipeline Definition to be deleted
@@ -146,7 +137,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.createPipeline = function (pipeline, token) {
@@ -191,7 +181,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         pipeConfigService.getStageDefinitionById = function (id) {
             var methodName = "getById";
@@ -202,7 +191,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         pipeConfigService.addStageDefinition = function (stageDefinition) {
             var methodName = "add";
@@ -213,7 +201,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         pipeConfigService.updateStageDefinition = function (stageDefinition) {
             var methodName = "update";
@@ -224,7 +211,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         //TODO: Send Stage Definition to be deleted
         pipeConfigService.deleteStageDefinition = function (stageDefinition) {
@@ -236,7 +222,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         //endregion
 
@@ -250,7 +235,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         pipeConfigService.getJobDefinitionById = function (id) {
             var methodName = "getById";
@@ -261,7 +245,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         pipeConfigService.addJobDefinition = function (jobDefinition) {
             var methodName = "add";
@@ -272,7 +255,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         pipeConfigService.updateJobDefinition = function (jobDefinition) {
             var methodName = "update";
@@ -283,7 +265,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         //TODO: Send Job Definition to be deleted
         pipeConfigService.deleteJobDefinition = function (jobDefinition) {
@@ -295,7 +276,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
         //endregion
 
@@ -310,7 +290,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.updateTaskDefinition = function (taskDefinition) {
@@ -322,7 +301,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send Task Definition to be deleted
@@ -335,7 +313,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.getAllMaterialDefinitions = function () {
@@ -347,7 +324,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.getMaterialDefinitionById = function (id) {
@@ -359,7 +335,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.addGitMaterialDefinition = function (materialDefinition) {
@@ -371,7 +346,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.addNugetMaterialDefinition = function (materialDefinition) {
@@ -383,7 +357,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.updateGitMaterialDefinition = function (materialDefinition) {
@@ -395,7 +368,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.updateNugetMaterialDefinition = function (materialDefinition) {
@@ -407,7 +379,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.deleteMaterialDefinition = function (materialDefinition) {
@@ -419,7 +390,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeConfigService.getAllTasks = function (pipeName, stageName, jobName, token) {
