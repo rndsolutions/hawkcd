@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeExecService, pipeService, authDataService, viewModel, pipeConfigService, adminMaterialService, moment) {
+    .controller('PipelinesController', function($rootScope, $scope, $log, $interval, pipeExecService, pipeService, authDataService, viewModel, pipeConfigService, adminMaterialService, moment, loggerService) {
         var vm = this;
         vm.toggleLogo = 1;
 
@@ -97,14 +97,16 @@ angular
             vm.allPipelineGroups.sort(function(a, b) {
                 return a.name > b.name;
             });
-            console.log(vm.allPipelineGroups);
+            loggerService.log('Pipeline Groups watcher :');
+            loggerService.log(vm.allPipelineGroups);
         }, true);
 
         $scope.$watch(function() {
             return viewModel.allMaterialDefinitions
         }, function(newVal, oldVal) {
             vm.allMaterialDefinitions = angular.copy(viewModel.allMaterialDefinitions);
-            console.log(vm.allMaterialDefinitions);
+            loggerService.log('Materials watcher :');
+            loggerService.log(vm.allMaterialDefinitions);
         }, true);
 
         vm.currentMaterials = [];
@@ -150,6 +152,8 @@ angular
 
         vm.deletePipelineDefinition = function(pipeline) {
             pipeConfigService.deletePipelineDefinition(pipeline);
+            loggerService.log('PipelinesController.deletePipelineDefinition :');
+            loggerService.log(pipeline);
         };
 
         //region add pipeline modal config
@@ -188,18 +192,24 @@ angular
                 };
 
                 pipeExecService.startPipeline(pipeline);
+                loggerService.log('PipelinesController.play :');
+                loggerService.log(pipeline);
             }
         };
 
         vm.pause = function (pipelineDefinition) {
             pipelineDefinition.disabled = true;
             pipeExecService.pausePipeline(pipelineDefinition.lastRun);
+            loggerService.log('PipelinesController.pause :');
+            loggerService.log(pipelineDefinition.lastRun);
         };
 
         //TODO Not implemented on the back-end yet
         vm.stop = function(pipelineDefinition, pipeline) {
             pipelineDefinition.disabled = true;
             pipeExecService.stopPipeline(pipeline);
+            loggerService.log('PipelinesController.stop :');
+            loggerService.log(pipeline);
         };
         //endregion
 
@@ -265,10 +275,16 @@ angular
                 }
                 addPipelineDTO.materialDefinition = material;
                 pipeConfigService.addPipelineDefinitionWithMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
+                loggerService.log('PipelinesController.addPipelineDefinitionWithMaterial :');
+                loggerService.log(addPipelineDTO.pipelineDefinition);
+                loggerService.log(addPipelineDTO.materialDefinition);
             }
             if (vm.materialType == 'existing') {
                 addPipelineDTO.materialDefinition = vm.materialObject.id;
                 pipeConfigService.addPipelineDefinitionWithExistingMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
+                loggerService.log('PipelinesController.addPipelineDefinitionWithExistingMaterial :');
+                loggerService.log(addPipelineDTO.pipelineDefinition);
+                loggerService.log(addPipelineDTO.materialDefinition);
             }
 
             vm.selectedMaterial = {};
