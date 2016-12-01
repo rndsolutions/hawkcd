@@ -17,7 +17,7 @@
 
 angular
     .module('hawk')
-    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'authenticationService', 'authDataService', 'viewModel', 'viewModelUpdater', '$location', '$state', '$auth', function ($http, $q, CONSTANTS, authenticationService, authDataService, viewModel, viewModelUpdater, $location, $state, $auth) {
+    .factory('loginService', ['$http', '$q', 'CONSTANTS', 'loggerService', 'authenticationService', 'authDataService', 'viewModel', 'viewModelUpdater', '$location', '$state', '$auth', function ($http, $q, CONSTANTS, loggerService, authenticationService, authDataService, viewModel, viewModelUpdater, $location, $state, $auth) {
         var loginService = this;
         var tokenEndPoint = '/Token';
 
@@ -95,9 +95,9 @@ angular
                     $auth.logout();
                     localStorage.clear();
                     $location.path("/authenticate");
-                    console.log(res);
+                    loggerService.log(res);
                 }, function(err) {
-                    console.log(err);
+                    loggerService.log(err);
                 });
         };
 
