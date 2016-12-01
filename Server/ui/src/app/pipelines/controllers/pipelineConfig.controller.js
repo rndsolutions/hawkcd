@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelineConfigController', function($state, $interval, $timeout, $scope, $window, authDataService, viewModel, pipeConfigService) {
+    .controller('PipelineConfigController', function($state, $interval, $timeout, $scope, $window, authDataService, viewModel, pipeConfigService, loggerService) {
         var vm = this;
         vm.toggleLogo = 1;
         vm.materialType = "git";
@@ -134,32 +134,17 @@ angular
             return viewModel.allMaterialDefinitions;
         }, function(newVal, oldVal) {
             vm.allMaterials = angular.copy(viewModel.allMaterialDefinitions);
+            loggerService.log('Material watcher :');
+            loggerService.log(vm.allPipelines);
         }, true);
-
-        $scope.$watch(function() {
-            return viewModel.allPermissions;
-        }, function(newVal, oldVal) {
-            vm.allPermissions = angular.copy(viewModel.allPermissions);
-            // console.log(vm.allPermissions);
-        }, true);
-
-        // $scope.$watchCollection(function() { return viewModel.allPipelines }, function(newVal, oldVal) {
-        //     vm.allPipelines = angular.copy(viewModel.allPipelines);
-        //     vm.allPipelines.forEach(function(currentPipeline, pipelineIndex, pipelineArray) {
-        //         if (currentPipeline.id == vm.pipeline.id) {
-        //             vm.getPipelineForConfig(currentPipeline.name);
-        //             //$state.go('index.pipelineConfig.pipeline.general', {groupName:vm.pipeline.groupName, pipelineName:currentPipeline.name});
-        //         }
-        //     });
-        //     console.log(vm.allPipelines);
-        // });
 
         $scope.$watch(function() {
             return viewModel.allPipelines
         }, function(newVal, oldVal) {
             vm.allPipelines = angular.copy(viewModel.allPipelines);
             vm.getPipelineForConfig(vm.state.params.pipelineName);
-            // console.log(vm.allPipelines);
+            loggerService.log('Pipeline watcher :');
+            loggerService.log(vm.allPipelines);
         }, true);
 
         $scope.$watch(function() {
@@ -175,60 +160,6 @@ angular
                 });
             });
         });
-
-        // $scope.$watch(function() {
-        //     return viewModel.allPipelineRuns
-        // }, function(newVal, oldVal) {
-        //     vm.allPipelineRuns = angular.copy(viewModel.allPipelineRuns);
-        //     // console.log(vm.allPipelineRuns);
-        // }, true);
-
-        // $scope.$watchCollection(function () { return viewModel.allMaterialDefinitions }, function (newVal, oldVal) {
-        //     vm.allMaterials = viewModel.allMaterialDefinitions;
-        //     console.log(vm.allMaterials);
-        // });
-
-        // $scope.$watch(function () {return viewModel.allStages}, function (newVal, oldVal) {
-        //     vm.allStages = viewModel.allStages;
-        //     viewModel.allStages.forEach(function (currentStage, index, array) {
-        //         if (currentStage.name == vm.stage.name) {
-        //             vm.stage = array[index];
-        //         }
-        //     });
-        //     console.log(vm.allStages);
-        // }, true);
-        //
-        // $scope.$watch(function () {return viewModel.allJobs}, function (newVal, oldVal) {
-        //     viewModel.allJobs.forEach(function (currentJob, index, array) {
-        //         if (currentJob.name == vm.job.name) {
-        //             vm.job = array[index];
-        //         }
-        //     });
-        //     vm.allJobs = viewModel.allJobs;
-        //
-        //     console.log(vm.allJobs);
-        // }, true);
-
-        // $scope.$watch(function () { return viewModel.allPipelineRuns }, function (newVal, oldVal) {
-        //     vm.allPipelineRuns = viewModel.allPipelineRuns;
-        //     vm.allPipelineRuns.forEach(function (currentPipelineRun, index, array) {
-        //         vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
-        //             if(currentPipelineRun.pipelineDefinitionId == currentPipeline.id){
-        //                 vm.allPipelines[pipelineIndex].stages = currentPipelineRun.stages;
-        //             }
-        //         });
-        //     });
-        //     viewModel.allPipelineGroups.forEach(function (currentPipelineGroup, index, array) {
-        //         viewModel.allPipelineGroups.pipelines.forEach(function (currentPipelineFromGroup, pipelineFromGroupIndex, array) {
-        //             vm.allPipelines.forEach(function (currentPipeline, pipelineIndex, array) {
-        //                 if(currentPipelineFromGroup.id == currentPipeline.id) {
-        //                     viewModel.allPipelineGroups[index].pipelines[pipelineFromGroupIndex] = vm.allPipelines[pipelineIndex];
-        //                 }
-        //             });
-        //         });
-        //     });
-        //     console.log(vm.allPipelineRuns);
-        // }, true);
 
         vm.stageDeleteButton = false;
         vm.jobDeleteButton = false;
@@ -334,6 +265,8 @@ angular
                         vm.pipeline = array[index];
                         vm.allPipelineVars = vm.pipeline.environmentVariables;
                         vm.pipelineIndex = index;
+                        loggerService.log('PipelineConfigController.getPipelineForConfig :');
+                        loggerService.log(vm.pipeline);
 
                         currentPipeline.materialDefinitionIds.forEach(function(currentDefinition, definitionIndex, definitionArray) {
                             vm.allMaterials.forEach(function(currentMaterial, materialIndex, materialArray) {
@@ -395,8 +328,6 @@ angular
                     });
                 }
             });
-
-            // console.log(vm.currentPipelineRuns);
         };
 
         vm.getRunsFromPipelineDefinitionForUpdate = function (name) {
@@ -411,8 +342,6 @@ angular
                     });
                 }
             });
-
-            // console.log(vm.currentPipelineRuns);
         };
 
         vm.selectRunFromPipelineDefinition = function (pipelineRun) {
@@ -442,10 +371,6 @@ angular
                 }
             });
         };
-
-        vm.checkMethod = function () {
-            console.log(vm.updatedTask.pipelineRun);
-        }
 
         vm.getRunForTaskUpdate = function (executionId) {
             vm.currentPipelineRuns = [];
@@ -501,6 +426,9 @@ angular
                     vm.stage = array[index];
                     vm.allStageVars = vm.stage.environmentVariables;
                     vm.stageIndex = index;
+
+                    loggerService.log('PipelineConfigController.getStage :');
+                    loggerService.log(vm.stage);
                 }
             });
             vm.stageDeleteButton = false;
@@ -520,6 +448,9 @@ angular
                 if (currentStage.name == stageName) {
                     vm.stage = array[index];
                     vm.stageIndex = index;
+
+                    loggerService.log('PipelineConfigController.getStageByName :');
+                    loggerService.log(vm.stage);
                 }
             });
             vm.stageDeleteButton = false;
@@ -644,6 +575,8 @@ angular
                 };
             }
             pipeConfigService.addStageDefinition(stage);
+            loggerService.log('PipelineConfigController.addStage :');
+            loggerService.log(stage);
             stageForm.$setPristine();
             stageForm.$setUntouched();
             stageForm.stageName.$setViewValue('');
@@ -670,10 +603,14 @@ angular
                 stageName: stage.name
             });
             pipeConfigService.updateStageDefinition(newStage);
+            loggerService.log('PipelineConfigController.editStage :');
+            loggerService.log(newStage);
         };
 
         vm.deleteStage = function(stage) {
             pipeConfigService.deleteStageDefinition(stage);
+            loggerService.log('PipelineConfigController.deleteStage :');
+            loggerService.log(stage);
         };
 
         vm.selectedTask = {};
@@ -686,6 +623,9 @@ angular
                         vm.allJobVars = vm.job.environmentVariables;
                         vm.jobIndex = index;
                         vm.selectedJobTasks = angular.copy(array[index].taskDefinitions);
+
+                        loggerService.log('PipelineConfigController.getJob :');
+                        loggerService.log(vm.job);
                     }
                 });
 
@@ -711,6 +651,9 @@ angular
                     if (currentJob.name == jobName) {
                         vm.job = array[index];
                         vm.jobIndex = index;
+
+                        loggerService.log('PipelineConfigController.getJobByName :');
+                        loggerService.log(vm.job);
                     }
                 });
 
@@ -806,7 +749,8 @@ angular
                 };
             }
             pipeConfigService.addJobDefinition(job);
-
+            loggerService.log('PipelineConfigController.addJob :');
+            loggerService.log(job);
         };
 
         vm.editJob = function(job) {
@@ -819,10 +763,14 @@ angular
                 jobName: job.name
             });
             pipeConfigService.updateJobDefinition(newJob);
+            loggerService.log('PipelineConfigController.editJob :');
+            loggerService.log(newJob);
         };
 
         vm.deleteJob = function(job) {
             pipeConfigService.deleteJobDefinition(job);
+            loggerService.log('PipelineConfigController.deleteJob :');
+            loggerService.log(job);
         };
 
         vm.assignMaterialToPipeline = function(material) {
@@ -847,6 +795,8 @@ angular
                     material.password = newMaterial.password;
                 }
                 pipeConfigService.addGitMaterialDefinition(material);
+                loggerService.log('PipelineConfigController.addMaterial :');
+                loggerService.log(material);
             }
 
             if (vm.materialType == 'NUGET') {
@@ -861,6 +811,8 @@ angular
                     "includePrerelease": newMaterial.includePrerelease
                 };
                 pipeConfigService.addNugetMaterialDefinition(material);
+                loggerService.log('PipelineConfigController.addMaterial :');
+                loggerService.log(material);
                 //TODO
                 // if (nugetMaterial.credentials) {
                 //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
@@ -894,6 +846,9 @@ angular
                     if (currentMaterial.name == material.name) {
                         vm.material = array[index];
                         vm.materialIndex = index;
+
+                        loggerService.log('PipelineConfigController.getMaterial :');
+                        loggerService.log(vm.material);
                     }
                 });
             }
@@ -929,6 +884,8 @@ angular
                     material.password = newMaterial.password;
                 }
                 pipeConfigService.updateGitMaterialDefinition(material);
+                loggerService.log('PipelineConfigController.editMaterial :');
+                loggerService.log(material);
             }
 
             if (newMaterial.type == 'NUGET') {
@@ -943,6 +900,8 @@ angular
                     includePrerelease: newMaterial.includePrerelease
                 };
                 pipeConfigService.updateNugetMaterialDefinition(material);
+                loggerService.log('PipelineConfigController.editMaterial :');
+                loggerService.log(material);
                 //TODO
                 // if (nugetMaterial.credentials) {
                 //   nuget.MaterialSpecificDetails.username = nugetMaterial.username;
@@ -953,6 +912,8 @@ angular
 
         vm.deleteMaterial = function(material) {
             pipeConfigService.deleteMaterialDefinition(material);
+            loggerService.log('PipelineConfigController.deleteMaterial :');
+            loggerService.log(material);
         };
 
         vm.getTask = function(task) {
@@ -961,6 +922,9 @@ angular
                     if (currentTask.id == task.id) {
                         vm.task = array[index];
                         vm.taskIndex = index;
+
+                        loggerService.log('PipelineConfigController.getTask :');
+                        loggerService.log(vm.task);
                     }
                 });
             }
@@ -978,6 +942,9 @@ angular
                     if (currentTask.id == task.id) {
                         vm.task = array[index];
                         vm.taskIndex = index;
+
+                        loggerService.log('PipelineConfigController.getTaskForUpdate :');
+                        loggerService.log(vm.task);
                     }
                 });
             }
@@ -1054,6 +1021,8 @@ angular
                 }
             }
             pipeConfigService.addTaskDefinition(task);
+            loggerService.log('PipelineConfigController.addTask :');
+            loggerService.log(task);
         };
 
         vm.editTask = function(newTask) {
@@ -1119,16 +1088,22 @@ angular
                 }
             }
             pipeConfigService.updateTaskDefinition(updatedTask);
+            loggerService.log('PipelineConfigController.editTask :');
+            loggerService.log(updatedTask);
         };
 
         vm.deleteTask = function(task) {
             pipeConfigService.deleteTaskDefinition(task);
+            loggerService.log('PipelineConfigController.deleteTask :');
+            loggerService.log(task);
         };
 
         vm.addResource = function() {
-            var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
-            taskToUpdate.resources.push(vm.resourceToAdd);
-            pipeConfigService.updateJobDefinition(taskToUpdate);
+            var jobToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            jobToUpdate.resources.push(vm.resourceToAdd);
+            pipeConfigService.updateJobDefinition(jobToUpdate);
+            loggerService.log('PipelineConfigController.addResource :');
+            loggerService.log(jobToUpdate);
         };
 
         vm.getResourceToUpdate = function(resource) {
@@ -1137,10 +1112,12 @@ angular
         };
 
         vm.editResource = function() {
-            var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
-            var resourceIndex = taskToUpdate.resources.indexOf(vm.oldResource);
-            taskToUpdate.resources[resourceIndex] = vm.newResource;
-            pipeConfigService.updateJobDefinition(taskToUpdate);
+            var jobToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            var resourceIndex = jobToUpdate.resources.indexOf(vm.oldResource);
+            jobToUpdate.resources[resourceIndex] = vm.newResource;
+            pipeConfigService.updateJobDefinition(jobToUpdate);
+            loggerService.log('PipelineConfigController.editResource :');
+            loggerService.log(jobToUpdate);
         };
 
         vm.getResourceToDelete = function(resource) {
@@ -1148,14 +1125,18 @@ angular
         };
 
         vm.removeResource = function() {
-            var taskToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
-            var resourceIndex = taskToUpdate.resources.indexOf(vm.resourceToDelete);
-            taskToUpdate.resources.splice(resourceIndex, 1);
-            pipeConfigService.updateJobDefinition(taskToUpdate);
+            var jobToUpdate = angular.copy(vm.allPipelines[vm.pipelineIndex].stageDefinitions[vm.stageIndex].jobDefinitions[vm.jobIndex]);
+            var resourceIndex = jobToUpdate.resources.indexOf(vm.resourceToDelete);
+            jobToUpdate.resources.splice(resourceIndex, 1);
+            pipeConfigService.updateJobDefinition(jobToUpdate);
+            loggerService.log('PipelineConfigController.removeResource :');
+            loggerService.log();
         };
 
         vm.createPipelineDefinition = function(pipeline) {
             pipeConfigService.addPipelineDefinition(pipeline);
+            loggerService.log('PipelineConfigController.createPipelineDefinition :');
+            loggerService.log(pipeline);
         };
 
         vm.getStageRunsFromPipeline = function(pipeline) {
@@ -1206,6 +1187,8 @@ angular
                     };
                     vm.pipeline.environmentVariables.push(variableToAdd);
                     pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.pipelines.addVariable :');
+                    loggerService.log(vm.pipeline);
                     vm.close();
                 },
                 editVariable: function(variable) {
@@ -1215,6 +1198,8 @@ angular
                         }
                     });
                     pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.pipelines.editVariable :');
+                    loggerService.log(vm.pipeline);
                     vm.close();
                 },
                 deleteVariable: function(variable) {
@@ -1224,6 +1209,8 @@ angular
                         }
                     });
                     pipeConfigService.updatePipelineDefinition(vm.pipeline);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.pipelines.deleteVariable :');
+                    loggerService.log(vm.pipeline);
                     vm.close();
                 },
                 getVariableForEdit: function(variable) {
@@ -1243,6 +1230,8 @@ angular
                     };
                     vm.stage.environmentVariables.push(variableToAdd);
                     pipeConfigService.updateStageDefinition(vm.stage);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.stages.addVariable :');
+                    loggerService.log(vm.stage);
                     vm.close();
                 },
                 editVariable: function(variable) {
@@ -1252,6 +1241,8 @@ angular
                         }
                     });
                     pipeConfigService.updateStageDefinition(vm.stage);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.stages.editVariable :');
+                    loggerService.log(vm.stage);
                     vm.close();
                 },
                 deleteVariable: function(variable) {
@@ -1261,6 +1252,8 @@ angular
                         }
                     });
                     pipeConfigService.updateStageDefinition(vm.stage);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.stages.deleteVariable :');
+                    loggerService.log(vm.stage);
                     vm.close();
                 },
                 getVariableForEdit: function(variable) {
@@ -1277,6 +1270,8 @@ angular
                     };
                     vm.job.environmentVariables.push(variableToAdd);
                     pipeConfigService.updateJobDefinition(vm.job);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.jobs.addVariable :');
+                    loggerService.log(vm.job);
                     vm.close();
                 },
                 editVariable: function(variable) {
@@ -1286,6 +1281,8 @@ angular
                         }
                     });
                     pipeConfigService.updateJobDefinition(vm.job);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.jobs.editVariable :');
+                    loggerService.log(vm.job);
                     vm.close();
                 },
                 deleteVariable: function(variable) {
@@ -1295,6 +1292,9 @@ angular
                         }
                     });
                     pipeConfigService.updateJobDefinition(vm.job);
+                    loggerService.log('PipelineConfigController.environmentVariableUtils.jobs.deleteVariable :');
+                    loggerService.log(vm.job);
+                    vm.close();
                 },
                 getVariableForEdit: function(variable) {
                     vm.environmentVariableUtils.jobs.variableToEdit = angular.copy(variable);

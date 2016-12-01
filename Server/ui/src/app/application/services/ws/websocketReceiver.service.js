@@ -17,13 +17,15 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
-        function($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
+    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
+        function($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
 
-                console.log(data);
+
+                loggerService.log('Received JSON from Server:');
+                loggerService.log(data);
                 if (!validationService.isValid(data)) {
                     toaster.error('Invalid JSON format!');
                     return;
