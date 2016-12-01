@@ -151,9 +151,14 @@ angular
             templateUrl: "app/main.html",
             resolve: {
                 auth: function(authDataService, pipeStatsService, agentService, $location,
-                    $auth, $rootScope, $timeout) {
+                    $auth, $rootScope, $timeout, loggerService) {
 
-                    console.log("isAuthenticated: " + $auth.isAuthenticated());
+                    if($auth.isAuthenticated){
+                        loggerService.log('User authentication successful');
+                    } else {
+                        loggerService.log('User authentication failed');
+
+                    }
 
                     if (!$auth.isAuthenticated()) {
                         $timeout(function() {
