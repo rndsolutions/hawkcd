@@ -31,7 +31,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send Pipeline to be paused
@@ -44,7 +43,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send Pipeline to be canceled
@@ -57,7 +55,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeExecService.getAllPipelines = function () {
@@ -69,7 +66,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send Pipeline Definition to display the Pipelines of, the number of Pipelines to be shown and the last Pipeline the UI has displayed
@@ -84,7 +80,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         //TODO: Send the search criteria, the number of Pipelines to be shown and the last Pipeline the UI has displayed
@@ -99,7 +94,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeExecService.getPipelineById = function (id) {
@@ -111,7 +105,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeExecService.update = function (pipeline) {
@@ -123,7 +116,6 @@ angular
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         pipeExecService.scheduleLatestPipeline = function (pipeName, token) {
