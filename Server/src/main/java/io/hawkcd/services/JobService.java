@@ -65,7 +65,7 @@ public class JobService extends CrudService<Job> implements IJobService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAll() {
         List<Stage> allStages = (List<Stage>) this.stageService.getAll().getEntity();
         List<Job> allJobs = new ArrayList<>();

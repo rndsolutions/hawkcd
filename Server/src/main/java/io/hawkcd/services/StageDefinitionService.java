@@ -17,7 +17,7 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.model.JobDefinition;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
@@ -26,11 +26,6 @@ import io.hawkcd.services.interfaces.IStageDefinitionService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.StageDefinition;
-import io.hawkcd.model.TaskDefinition;
 
 public class StageDefinitionService extends CrudService<StageDefinition> implements IStageDefinitionService {
     private static final Class CLASS_TYPE = StageDefinition.class;
@@ -89,7 +84,7 @@ public class StageDefinitionService extends CrudService<StageDefinition> impleme
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAll() {
         List<PipelineDefinition> pipelineDefinitions = (List<PipelineDefinition>) this.pipelineDefinitionService.getAll().getEntity();
         List<StageDefinition> stageDefinitions = new ArrayList<>();

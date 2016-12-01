@@ -17,12 +17,7 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
-import io.hawkcd.model.ExecTask;
-import io.hawkcd.model.FetchArtifactTask;
-import io.hawkcd.model.FetchMaterialTask;
-import io.hawkcd.model.JobDefinition;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.UploadArtifactTask;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
@@ -32,8 +27,6 @@ import io.hawkcd.services.interfaces.ITaskDefinitionService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.hawkcd.model.TaskDefinition;
 
 public class TaskDefinitionService extends CrudService<TaskDefinition> implements ITaskDefinitionService {
     private static final Class CLASS_TYPE = TaskDefinition.class;
@@ -72,7 +65,7 @@ public class TaskDefinitionService extends CrudService<TaskDefinition> implement
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAll() {
         List<JobDefinition> jobDefinitions = (List<JobDefinition>) this.jobDefinitionService.getAll().getEntity();
         List<TaskDefinition> taskDefinitions = new ArrayList<>();

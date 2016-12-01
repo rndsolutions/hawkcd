@@ -59,7 +59,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.NONE )
     public ServiceResult getAll() {
         return super.getAll();
     }
@@ -186,7 +186,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.NONE )
     public ServiceResult getAllUserGroups() {
         List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getEntity();
         List<UserGroupDto> userGroupDtos = new ArrayList<>();

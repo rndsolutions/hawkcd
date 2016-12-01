@@ -67,7 +67,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAll() {
         List<StageDefinition> stageDefinitions = (List<StageDefinition>) this.stageDefinitionService.getAll().getEntity();
         List<JobDefinition> jobDefinitions = new ArrayList<>();

@@ -57,7 +57,7 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.NONE )
     public ServiceResult getAll() {
         return super.getAll();
     }
@@ -89,7 +89,7 @@ public class UserService extends CrudService<User> implements IUserService {
         Envelopе envelopе = new Envelopе(ids);
         Message message = new Message(envelopе);
         message.setUserUpdate(true);
-        MessageDispatcher.dispatchOutgoingMessage(message);
+        MessageDispatcher.dispatchIncomingMessage(message);
 
         return serviceResult;
     }

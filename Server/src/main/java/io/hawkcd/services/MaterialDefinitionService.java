@@ -58,7 +58,7 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.NONE )
     public ServiceResult getAll() {
         return super.getAll();
     }

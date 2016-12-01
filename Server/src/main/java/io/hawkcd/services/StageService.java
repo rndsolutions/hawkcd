@@ -69,7 +69,7 @@ public class StageService extends CrudService<Stage> implements IStageService {
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAll() {
         List<Pipeline> allPipelines = (List<Pipeline>) this.pipelineService.getAll().getEntity();
         List<Stage> allStages = new ArrayList<>();
