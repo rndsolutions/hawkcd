@@ -1,24 +1,23 @@
 package io.hawkcd.core.security;
 
+import io.hawkcd.model.enums.PermissionEntity;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 
 public class AuthorizationGrant {
-    PermissionScope permissionScope;
-    PermissionType permissionType;
-    String permittedEntityId;
-
-    public String getPermittedEntityId() {
-        return permittedEntityId;
-    }
-
-    public void setPermittedEntityId(String permittedEntityId) {
-        this.permittedEntityId = permittedEntityId;
-    }
+    private PermissionScope permissionScope;
+    private PermissionType permissionType;
+    private PermissionEntity permissionEntity;
+    private String permittedEntityId;
 
     public AuthorizationGrant(PermissionScope scope, PermissionType type) {
         this.permissionScope = scope;
         this.permissionType = type;
+    }
+
+    public AuthorizationGrant(PermissionScope permissionScope, PermissionType permissionType, PermissionEntity permissionEntity) {
+        this(permissionScope, permissionType);
+        this.permissionEntity = permissionEntity;
     }
 
     public AuthorizationGrant(Authorization authorization) {
@@ -26,25 +25,38 @@ public class AuthorizationGrant {
         this.permissionType = authorization.type();
     }
 
-    public PermissionScope getScope() {
-        return permissionScope;
+    public PermissionScope getPermissionScope() {
+        return this.permissionScope;
     }
 
-    public void setScope(PermissionScope scope) {
-        this.permissionScope = scope;
+    public PermissionType getPermissionType() {
+        return this.permissionType;
     }
 
-    public PermissionType getType() {
-        return permissionType;
+    public PermissionEntity getPermissionEntity() {
+        return this.permissionEntity;
     }
 
-    public void setType(PermissionType type) {
-        this.permissionType = type;
+    public String getPermittedEntityId() {
+        return this.permittedEntityId;
     }
 
-    public boolean isGreaterThan(AuthorizationGrant grant) {
-        boolean result = (this.getScope().getPriorityLevel() <= grant.getScope().getPriorityLevel())
-                && (this.getType().getPriorityLevel() <= grant.getType().getPriorityLevel());
+    public void setPermittedEntityId(String permittedEntityId) {
+        this.permittedEntityId = permittedEntityId;
+    }
+
+    boolean isGreaterThan(AuthorizationGrant grant) {
+        boolean result = this.getPermissionScope().getPriorityLevel() <= grant.getPermissionScope().getPriorityLevel() &&
+                this.getPermissionType().getPriorityLevel() <= grant.getPermissionType().getPriorityLevel();
+
+        return result;
+    }
+
+    boolean isDuplicateWith(AuthorizationGrant grant) {
+        boolean result = this.getPermissionScope().getPriorityLevel() == grant.getPermissionScope().getPriorityLevel() &&
+                this.getPermissionEntity().getPriorityLevel() == grant.getPermissionEntity().getPriorityLevel() &&
+                this.getPermittedEntityId().equals(grant.getPermittedEntityId());
+
         return result;
     }
 }

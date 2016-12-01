@@ -23,7 +23,7 @@ public enum PermissionScope {
 
     private final int priorityLevel;
 
-    PermissionScope (int priorityLevel){
+    PermissionScope(int priorityLevel){
         this.priorityLevel = priorityLevel;
     }
 

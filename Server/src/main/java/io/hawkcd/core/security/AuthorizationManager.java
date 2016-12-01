@@ -51,7 +51,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
     private UserService userService;
 
-    public  AuthorizationManager(){
+    public AuthorizationManager() {
         this.userService = new UserService();
     }
 
@@ -90,21 +90,20 @@ public class AuthorizationManager implements IAuthorizationManager {
     }
 
     /**
-     *
      * @param result
      * @param className
      * @param methodName
      * @return
      */
-    public Message constructAuthorizedMessage(ServiceResult result, String className, String methodName){
+    public Message constructAuthorizedMessage(ServiceResult result, String className, String methodName) {
 
-        Message message = new Message(className,methodName,result,null);
+        Message message = new Message(className, methodName, result, null);
 
-        Map<String, PermissionType> userMap =  new HashMap<>();
+        Map<String, PermissionType> userMap = new HashMap<>();
 
         message.setPermissionTypeByUser(userMap);
 
-        Entity entity = (Entity)message.getEnvelope();
+        Entity entity = (Entity) message.getEnvelope();
 
         List<SessionDetails> allActiveSessions = SessionFactory.getSessionManager().getAllActiveSessions();
 
@@ -118,7 +117,7 @@ public class AuthorizationManager implements IAuthorizationManager {
 
             PermissionType permissionType = this.determinePermissionTypeForUser(userGrant, entityGrant, entity.getId());
 
-            userMap.put(user.getId(),permissionType);
+            userMap.put(user.getId(), permissionType);
         }
         return message;
     }
@@ -129,7 +128,7 @@ public class AuthorizationManager implements IAuthorizationManager {
     public PermissionType determinePermissionTypeForUser(List<AuthorizationGrant> userGrants, AuthorizationGrant grantToEvaluateAgainst, String... entityIds) {
         PermissionType result = PermissionType.NONE;
 
-        if (grantToEvaluateAgainst.getType() == PermissionType.NONE) {
+        if (grantToEvaluateAgainst.getPermissionType() == PermissionType.NONE) {
             return PermissionType.VIEWER;
         }
         // Checks for specific Permissions, e.g. a user is assigned a permission for a specific entity (Pipeline/Group)
@@ -137,7 +136,7 @@ public class AuthorizationManager implements IAuthorizationManager {
             for (AuthorizationGrant grant : userGrants) {
                 if (grant.getPermittedEntityId().equals(entityId)) {
                     if (grant.isGreaterThan(grantToEvaluateAgainst)) {
-                        return grant.getType();
+                        return grant.getPermissionType();
                     }
                 }
             }
@@ -145,9 +144,9 @@ public class AuthorizationManager implements IAuthorizationManager {
 
         // Checks for generic Permissions, e.g. a user is assigned a permission for ALL Pipelines/Groups
         for (AuthorizationGrant grant : userGrants) {
-            if (grant.getPermittedEntityId().startsWith("ALL") || (grant.getScope() == PermissionScope.SERVER)) {
+            if (grant.getPermittedEntityId().startsWith("ALL") || (grant.getPermissionScope() == PermissionScope.SERVER)) {
                 if (grant.isGreaterThan(grantToEvaluateAgainst)) {
-                    return grant.getType();
+                    return grant.getPermissionType();
                 }
             }
         }
@@ -261,17 +260,17 @@ public class AuthorizationManager implements IAuthorizationManager {
 
     public List<PipelineGroupDto> attachPermissionsToPipelineDtos(List<PipelineGroupDto> pipelineGroupDtos, User currentUser) {
         for (PipelineGroupDto pipelineGroupDto : pipelineGroupDtos) {
-            List<PipelineDefinitionDto> permissionObjects = pipelineGroupDto.getPipelines();
+            List<PipelineDefinitionDto> pipelineDefinitionDtos = pipelineGroupDto.getPipelines();
 
-            for (PipelineDefinitionDto permissionObject : permissionObjects) {
-                PermissionType permissionType = this.determinePermissionTypeForEntity(currentUser.getPermissions(), permissionObject);
+            for (PipelineDefinitionDto pipelineDefinitionDto : pipelineDefinitionDtos) {
+                PermissionType permissionType = this.determinePermissionTypeForEntity(currentUser.getPermissions(), pipelineDefinitionDto);
 
-                if (permissionObject.getPermissionType() != PermissionType.NONE) {
-                    permissionObject.setPermissionType(permissionType);
+                if (pipelineDefinitionDto.getPermissionType() != PermissionType.NONE) {
+                    pipelineDefinitionDto.setPermissionType(permissionType);
                 }
             }
 
-            pipelineGroupDto.setPipelines(permissionObjects);
+            pipelineGroupDto.setPipelines(pipelineDefinitionDtos);
         }
         return pipelineGroupDtos;
     }
