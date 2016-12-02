@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AuthorizationGrantService implements IAuthorizationGrantService{
+public class AuthorizationGrantService implements IAuthorizationGrantService {
 
     @Override
     public List<AuthorizationGrant> sortAuthorizationGrants(List<AuthorizationGrant> grants) {
@@ -17,17 +17,22 @@ public class AuthorizationGrantService implements IAuthorizationGrantService{
         return sortedGrants;
     }
 
-    // Does not work properly
     @Override
-    public List<AuthorizationGrant> filterAuthorizationGrantDuplicates(List<AuthorizationGrant> currentGrants, List<AuthorizationGrant> updatedGrants) {
+    public List<AuthorizationGrant> filterAuthorizationGrantsForDuplicates(List<AuthorizationGrant> grants) {
         List<AuthorizationGrant> filteredGrants = new ArrayList<>();
-        for (AuthorizationGrant currentGrant : currentGrants) {
-            for (AuthorizationGrant updatedGrant : updatedGrants) {
-                boolean isDuplicate = currentGrant.isDuplicateWith(updatedGrant);
-                if (!isDuplicate) {
-                    filteredGrants.add(updatedGrant);
+        for (AuthorizationGrant grant : grants) {
+            boolean foundDuplicate = false;
+            for (AuthorizationGrant filteredGrant : filteredGrants) {
+                foundDuplicate = grant.isDuplicateWith(filteredGrant);
+                if (foundDuplicate) {
+                    break;
                 }
             }
+
+            if (!foundDuplicate) {
+                filteredGrants.add(grant);
+            }
+
         }
 
         return filteredGrants;

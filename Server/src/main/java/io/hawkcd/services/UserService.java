@@ -79,25 +79,10 @@ public class UserService extends CrudService<User> implements IUserService {
     @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(User user) {
-        User userFromDb = (User) this.getById(user.getId()).getEntity();
-        if (userFromDb == null) {
-            return super.createServiceResult(null, NotificationType.ERROR, "not found");
-        }
-
-        List<AuthorizationGrant> currentPermissions = userFromDb.getPermissions();
-        boolean foundDuplicates = this.authorizationGrantService.filterAuthorizationGrantDuplicates(currentPermissions, user.getPermissions());
-        currentPermissions = this.authorizationGrantService.sortAuthorizationGrants(currentPermissions);
-        user.setPermissions(currentPermissions);
+        List<AuthorizationGrant> filteredGrants = this.authorizationGrantService.filterAuthorizationGrantsForDuplicates(user.getPermissions());
+        filteredGrants = this.authorizationGrantService.sortAuthorizationGrants(filteredGrants);
+        user.setPermissions(filteredGrants);
         ServiceResult serviceResult = super.update(user);
-
-        if (foundDuplicates) {
-            serviceResult.setNotificationType(NotificationType.WARNING);
-            serviceResult.setMessage("Some grants were not added");
-        }
-
-//        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-//        String methodName = ste[1].getMethodName();
-//        String className = this.getClass().getSimpleName();
 
         List<String> ids = new ArrayList<>();
         ids.add(user.getId());
