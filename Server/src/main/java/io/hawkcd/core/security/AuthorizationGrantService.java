@@ -1,5 +1,7 @@
 package io.hawkcd.core.security;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,6 +15,7 @@ public class AuthorizationGrantService implements IAuthorizationGrantService {
                 .stream()
                 .sorted(Comparator.comparingInt(g -> g.getPermissionEntity().getPriorityLevel()))
                 .collect(Collectors.toList());
+        sortedGrants = Lists.reverse(sortedGrants);
 
         return sortedGrants;
     }
