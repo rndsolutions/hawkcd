@@ -153,7 +153,8 @@ angular
                     user: 'Users are entities that can have individual Permissions.',
                     permissionScope: 'Represents the object level at which specific permissions can be applied.',
                     permissionType: 'Define permissions - what a user can do in specific Permission Scope.',
-                    permissionEntity: 'The specific object(s) for which the Permissions are applied.'
+                    permissionEntity: 'The specific object(s) for which the Permissions are applied.',
+                    permissionEntityWarning: 'Permissions that have duplicate Scope and Entity will be omitted, because they conflict with each other.'
                 },
                 placements: {
                     top: 'top'
