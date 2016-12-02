@@ -613,16 +613,32 @@ angular
             vm.addPermission = function() {
                 vm.newPermission = {
                     "permissionScope": "SERVER",
-                    "permittedEntityId": "SERVER",
+                    "permittedEntityId": "",
+                    "permissionEntity": "SERVER",
                     "permissionType": "ADMIN"
                 };
                 vm.selectedUser.permissions.push(vm.newPermission);
             };
 
+            vm.checkEntityType = function (permission) {
+                debugger;
+                if(permission.permissionScope == 'PIPELINE_GROUP' && permission.permittedEntityId == ''){
+                    permission.permissionEntity = 'ALL_PIPELINE_GROUPS';
+                } else if(permission.permissionScope == 'PIPELINE' && permission.permittedEntityId == ''){
+                    permission.permissionEntity = 'ALL_PIPELINES';
+                } else if(permission.permissionScope == 'SERVER'){
+                    permission.permissionEntity = 'SERVER';
+                    permission.permittedEntityId = '';
+                } else {
+                    permission.permissionEntity = 'SPECIFIC_ENTITY';
+                }
+            };
+
             vm.addGroupPermission = function() {
                 vm.newPermission = {
                     "permissionScope": "SERVER",
-                    "permittedEntityId": "SERVER",
+                    "permittedEntityId": "",
+                    "permissionEntity": "SERVER",
                     "permissionType": "ADMIN"
                 };
                 vm.selectedUserGroup.permissions.push(vm.newPermission);

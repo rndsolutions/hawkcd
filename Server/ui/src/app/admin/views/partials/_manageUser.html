@@ -36,7 +36,7 @@
                                 <tr ng-repeat="permission in admin.selectedUser.permissions">
                                     <td class="text-center">
                                         <label for="scopeSelect">
-                                        <select name="scopeSelect" class="form-control" id="scopeSelect" ng-model="permission.permissionScope">
+                                        <select name="scopeSelect" class="form-control" id="scopeSelect" ng-change="admin.checkEntityType(permission)" ng-model="permission.permissionScope">
                                             <option ng-repeat="option in admin.data.scopeOptions" value="{{option.value}}">
                                                 {{option.name}}
                                             </option>
@@ -55,16 +55,16 @@
                                     </td>
                                     <td class="text-center">
                                         <label for="pipelineGroupSelect">
-                                        <select name="pipelineGroupSelect" class="form-control" id="pipelineGroupSelect" ng-if="permission.permissionScope == 'PIPELINE_GROUP'" ng-model="permission.permittedEntityId">
-                                            <option value="PIPELINE_GROUP">All Pipeline Groups</option>
+                                        <select name="pipelineGroupSelect" class="form-control" id="pipelineGroupSelect" ng-change="admin.checkEntityType(permission)" ng-if="permission.permissionScope == 'PIPELINE_GROUP'" ng-model="permission.permittedEntityId">
+                                            <option value="">All Pipeline Groups</option>
                                             <option ng-repeat="pipelineGroup in admin.currentPipelineGroups" value="{{pipelineGroup.id}}">
                                                 {{pipelineGroup.name}}
                                             </option>
                                         </select>
                                         </label>
                                         <label for="pipelineSelect">
-                                        <select name="pipelineSelect" class="form-control" id="pipelineSelect" ng-if="permission.permissionScope == 'PIPELINE'" ng-model="permission.permittedEntityId">
-                                            <option value="PIPELINE">All Pipelines</option>
+                                        <select name="pipelineSelect" class="form-control" id="pipelineSelect" ng-change="admin.checkEntityType(permission)" ng-if="permission.permissionScope == 'PIPELINE'" ng-model="permission.permittedEntityId">
+                                            <option value="">All Pipelines</option>
                                             <option ng-repeat="pipeline in admin.allPipelines" value="{{pipeline.id}}">
                                                 {{pipeline.name}}
                                             </option>
