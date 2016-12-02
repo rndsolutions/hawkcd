@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!-- Created with MSI Factory version 2.1.1011.0
-     on 2016-11-06 at 11:00:05 -->
+     on 2016-12-02 at 09:28:54 -->
 <?include BuildVars.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Product Id="$(var.ProductBuildGUID)" Name="HawkCD Server - $(var.BuildNumber) - Alpha" Version="$(var.BuildNumber)" Manufacturer="RnD Solutions Ltd." UpgradeCode="EC3C72CC-B52F-4A00-A632-595710B93D88" Language="1033">
@@ -24,17 +24,23 @@
 <Property Id="ARPPRODUCTICON" Value="hawk_0001.ico"/>
 <Icon Id="hawk_0001.ico" SourceFile="$(var.Buildzone)\Installers\Images\hawk.ico"/>
 <Property Id="ALLUSERS" Value="1"/>
-<Property Id="DEFAULT_REDIS_PORT" Value="6379" Secure="yes"/>
 <Property Id="DEFAULT_SERVER_PORT" Value="8080" Secure="yes"/>
 <Property Id="HOST_NAME" Value="localhost" Secure="yes"/>
 <Property Id="INSTALLER_TYPE" Value="Server" Secure="yes"/>
-<Property Id="IS_DEFAULT_REDIS_PORT_IN_USE" Value="0" Secure="yes"/>
 <Property Id="IS_DEFAULT_SERVER_PORT_IN_USE" Value="0" Secure="yes"/>
 <Property Id="IS_JAVA_INSTALLED" Value="1" Secure="yes"/>
+<Property Id="IS_SINGLE_INSTANCE_INSTALLATION" Value="1" Secure="yes"/>
+<Property Id="MONGODB_HOST_NAME" Value="localhost" Secure="yes"/>
+<Property Id="MONGODB_PASSWORD" Secure="yes"/>
+<Property Id="MONGODB_PORT" Value="27017" Secure="yes"/>
+<Property Id="MONGODB_USER_NAME" Secure="yes"/>
 <Property Id="MSIFACTUIRMOption" Value="UseRM"/>
 <Property Id="MSIFACT_INSTALLDIR" Value="INSTALLDIR"/>
-<Property Id="NEW_REDIS_PORT" Secure="yes"/>
 <Property Id="NEW_SERVER_PORT" Secure="yes"/>
+<Property Id="REDIS_HOST_NAME" Value="localhost" Secure="yes"/>
+<Property Id="REDIS_PASSWORD" Secure="yes"/>
+<Property Id="REDIS_PORT" Value="6379" Secure="yes"/>
+<Property Id="REDIS_USER_NAME" Secure="yes"/>
 <Property Id="SERVER_SHORTCUT_URL" Value="http://localhost:8080/" Secure="yes"/>
 <Property Id="INSTALLDIR">
 <RegistrySearch Id="RegSearch_0001" Root="HKLM" Key="Software\RnD\Hawk\Server" Name="InstallDir" Type="raw"/>
@@ -56,11 +62,8 @@
 <Directory Id="SystemFolder" Name="SystemFolder"/>
 </Directory>
 <UIRef Id="SUFWI_UI"/>
-<CustomAction Id="InstallRedis" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="InstallRedis"/>
 <CustomAction Id="UpdateServerConfigFile" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateServerConfigFile"/>
 <CustomAction Id="DetectJava" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="DetectJava"/>
-<CustomAction Id="CheckRedisPort" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckRedisPort"/>
-<CustomAction Id="UninstallRedis" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UninstallRedis"/>
 <CustomAction Id="UpdateServiceAppConfig" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateServiceAppConfig"/>
 <CustomAction Id="InstallService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="InstallService"/>
 <CustomAction Id="UninstallService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UninstallService"/>
@@ -68,18 +71,14 @@
 <CustomAction Id="RestoreConfigFiles" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="RestoreConfigFiles"/>
 <CustomAction Id="StopService" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="StopService"/>
 <CustomAction Id="SetTargetDirCA" Impersonate="yes" Return="check" Execute="immediate" Property="TARGETDIR" Value="[INSTALLDIR]"/>
-<CustomAction Id="UpdateRedisConfig" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="UpdateRedisConfig"/>
 <CustomAction Id="CheckServerPort" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckServerPort"/>
 <CustomAction Id="CheckIsUserAdministrator" Impersonate="yes" Return="check" Execute="immediate" BinaryKey="CustomActions.CA.dll" DllEntry="CheckIsUserAdministrator"/>
 <CustomAction Id="LaunchJavaDownloadPage" Impersonate="yes" Return="asyncNoWait" Execute="immediate" ExeCommand="[SystemFolder]cmd.exe /c start explorer &quot;http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html&quot;" Directory="SystemFolder"/>
 <CustomAction Id="UpdateServerShortcutUrlProp" Impersonate="yes" Return="check" Execute="immediate" Property="SERVER_SHORTCUT_URL" Value="http://localhost:[NEW_SERVER_PORT]/"/>
 <Binary Id="CustomActions.CA.dll" SourceFile="$(var.Buildzone)\CustomActions\CustomActions\bin\Debug\CustomActions.CA.dll"/>
 <InstallExecuteSequence>
-<Custom Action="InstallRedis" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
 <Custom Action="UpdateServerConfigFile" After="InstallFinalize">NOT REMOVE~="ALL" AND NOT OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
-<Custom Action="CheckRedisPort" Before="AppSearch">1</Custom>
-<Custom Action="UninstallRedis" Before="RemoveFiles">REMOVE~="ALL" </Custom>
 <Custom Action="UpdateServiceAppConfig" After="InstallFinalize">NOT REMOVE~="ALL" </Custom>
 <Custom Action="InstallService" After="UpdateServiceAppConfig">NOT REMOVE~="ALL" </Custom>
 <Custom Action="UninstallService" After="RemoveFiles">REMOVE~="ALL" </Custom>
@@ -87,14 +86,12 @@
 <Custom Action="RestoreConfigFiles" After="InstallFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="StopService" Before="RemoveExistingProducts">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="SetTargetDirCA" Before="CostFinalize">NOT REMOVE~="ALL" AND OLDERVERSIONBEINGUPGRADED</Custom>
-<Custom Action="UpdateRedisConfig" Before="InstallRedis">NOT REMOVE~="ALL" AND NOT OLDERVERSIONBEINGUPGRADED</Custom>
 <Custom Action="CheckServerPort" Before="AppSearch">1</Custom>
 <Custom Action="CheckIsUserAdministrator" Before="AppSearch">1</Custom>
 <Custom Action="UpdateServerShortcutUrlProp" Before="InstallInitialize">IS_DEFAULT_SERVER_PORT_IN_USE = 1</Custom>
 </InstallExecuteSequence>
 <InstallUISequence>
 <Custom Action="DetectJava" Before="AppSearch">1</Custom>
-<Custom Action="CheckRedisPort" Before="AppSearch">1</Custom>
 <Custom Action="CheckServerPort" Before="AppSearch">1</Custom>
 <Custom Action="CheckIsUserAdministrator" Before="AppSearch">1</Custom>
 </InstallUISequence>

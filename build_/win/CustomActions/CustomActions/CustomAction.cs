@@ -7,127 +7,13 @@ namespace CustomActions
 {
     public class CustomActions
     {
-        [CustomAction]
-        public static ActionResult InstallRedis(Session session)
-        {
-            session.Log("Begin InstallRedis");
-            try
-            {
-                var redisFolder = Utils.GetPathToFileInInstalDir(session, "redis");
-                var servicePort = session[HawkCDServerProperties.DeafultRedisPort];
-
-                if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1" && !string.IsNullOrEmpty(session[HawkCDServerProperties.NewRedisPort]))
-                    servicePort = session[HawkCDServerProperties.NewRedisPort];
-
-                Utils.ExecuteCommand(string.Format("redis-server --service-install redis.windows-service.conf --service-name {0} --port {1}", Constants.RedisServiceName, servicePort), session, redisFolder);
-                Utils.ExecuteCommand(string.Format("redis-server --service-start --service-name {0}", Constants.RedisServiceName), session, redisFolder);
-
-            }
-            catch (Exception ex)
-            {
-                session.Log("Exception: {0}", ex.ToString());
-            }
-
-            session.Log("Ended InstallRedis");
-
-            return ActionResult.Success;
-        }
-
-        [CustomAction]
-        public static ActionResult UpdateRedisConfig(Session session)
-        {
-            session.Log("Begin UpdateRedisConfig");
-            try
-            {
-                var redisConfigFilea = new string[]
-            {
-                 Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows.conf"),
-                 Utils.GetPathToFileInInstalDir(session, "redis\\redis.windows-service.conf")
-            };
-
-                foreach (var redisConfigFile in redisConfigFilea)
-                {
-                    if (File.Exists(redisConfigFile))
-                    {
-                        var lines = File.ReadAllLines(redisConfigFile);
-
-                        var updatedLines = 0;
-
-                        for (int i = 0; i < lines.Length; i++)
-                        {
-                            var line = lines[i].Trim();
-                            if (line.StartsWith("save ", StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                if (updatedLines < 3)
-                                {
-                                    if (updatedLines == 0)
-                                    {
-                                        line = "save 5 1";
-                                    }
-                                    else if (updatedLines == 1)
-                                    {
-                                        line = "save 2 10";
-                                    }
-                                    else
-                                    {
-                                        line = "save 1 100";
-                                    }
-
-                                    updatedLines++;
-                                }
-                                else
-                                {
-                                    line = "#   " + line;
-                                }
-
-                                lines[i] = line;
-                            }
-                        }
-
-                        File.WriteAllLines(redisConfigFile, lines);
-                    }
-                    else
-                    {
-                        session.Log("Redis config file not found under: {0}", redisConfigFile);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                session.Log("Exception: {0}", ex.ToString());
-            }
-
-            session.Log("Ended UpdateRedisConfig");
-
-            return ActionResult.Success;
-        }
-
-        [CustomAction]
-        public static ActionResult UninstallRedis(Session session)
-        {
-            session.Log("Begin UninstallRedis");
-
-            try
-            {
-                var redisFolder = Utils.GetPathToFileInInstalDir(session, "redis");
-
-                Utils.ExecuteCommand(string.Format("redis-server --service-stop --service-name {0}", Constants.RedisServiceName), session, redisFolder);
-                Utils.ExecuteCommand(string.Format("redis-server --service-uninstall --service-name {0}", Constants.RedisServiceName), session, redisFolder);
-            }
-            catch (Exception ex)
-            {
-                session.Log("Exception: {0}", ex.ToString());
-            }
-
-            session.Log("Ended UninstallRedis");
-
-            return ActionResult.Success;
-        }
+        #region Server
 
         [CustomAction]
         public static ActionResult UpdateServerConfigFile(Session session)
         {
             session.Log("Begin UpdateServerConfigFile");
+
             try
             {
                 var configFilePath = Utils.GetPathToFileInInstalDir(session, "config.yaml");
@@ -135,23 +21,40 @@ namespace CustomActions
                 if (File.Exists(configFilePath))
                 {
                     session.Log("Updating config file: {0}", configFilePath);
-                    session.Log("Updating key serverHost with new value: {0}", session[HawkCDServerProperties.HostName]);
-                    Utils.ReplaceYamlKeyValue(configFilePath, "serverHost", session[HawkCDServerProperties.HostName]);
 
-                    if (session[HawkCDServerProperties.IsDeafultRedisPortInUse] == "1")
+                    var isSingleInstanceInstallation = session[HawkCDServerProperties.IsSingleInstanceInstallation].Equals("1");
+                    var isDeafultServerPortInUse = session[HawkCDServerProperties.IsDeafultServerPortInUse].Equals("1");
+
+                    Utils.SetYamlValue(configFilePath, "serverHost", session[HawkCDServerProperties.HostName], session);
+                    Utils.SetYamlValue(configFilePath, "isSingleNode", isSingleInstanceInstallation.ToString().ToLower(), session);
+
+                    Utils.SetYamlValue(configFilePath, "databaseConfigs.MONGODB.host", session[HawkCDServerProperties.MongoDbHostName], session);
+                    Utils.SetYamlValue(configFilePath, "databaseConfigs.MONGODB.port", session[HawkCDServerProperties.MongoDbPort], session);
+
+                    if (!string.IsNullOrEmpty(session[HawkCDServerProperties.MongoDbUserName]))
                     {
-                        var servicePort = session[HawkCDServerProperties.NewRedisPort];
-                        session.Log("Updating key port with new value: {0}", servicePort);
-                        Utils.ReplaceYamlKeyValue(configFilePath, "port", servicePort);
+                        Utils.SetYamlValue(configFilePath, "databaseConfigs.MONGODB.username", session[HawkCDServerProperties.MongoDbUserName], session);
+                        Utils.SetYamlValue(configFilePath, "databaseConfigs.MONGODB.password", session[HawkCDServerProperties.MongoDbPassword], session);
                     }
 
-                    if (session[HawkCDServerProperties.IsDeafultServerPortInUse] == "1")
+                    if (!isSingleInstanceInstallation)
+                    {
+                        Utils.SetYamlValue(configFilePath, "databaseConfigs.REDIS.host", session[HawkCDServerProperties.RedisHostName], session);
+                        Utils.SetYamlValue(configFilePath, "databaseConfigs.REDIS.port", session[HawkCDServerProperties.RedisPort], session);
+
+                        if (!string.IsNullOrEmpty(session[HawkCDServerProperties.RedisUserName]))
+                        {
+                            Utils.SetYamlValue(configFilePath, "databaseConfigs.REDIS.username", session[HawkCDServerProperties.RedisUserName], session);
+                            Utils.SetYamlValue(configFilePath, "databaseConfigs.REDIS.password", session[HawkCDServerProperties.RedisPassword], session);
+                        }
+                    }
+
+                    if (isDeafultServerPortInUse)
                     {
                         var servicePort = session[HawkCDServerProperties.NewServerPort];
                         session.Log("Updating key serverPort with new value: {0}", servicePort);
-                        Utils.ReplaceYamlKeyValue(configFilePath, "serverPort", servicePort);
+                        Utils.SetYamlValue(configFilePath, "serverPort", servicePort, session);
                     }
-
                 }
                 else
                 {
@@ -166,6 +69,76 @@ namespace CustomActions
 
             return ActionResult.Success;
         }
+
+        [CustomAction]
+        public static ActionResult CheckServerPort(Session session)
+        {
+            session.Log("Begin CheckServerPort");
+            try
+            {
+                int port = int.Parse(session[HawkCDServerProperties.DeafultServerPort]);
+
+                if (Utils.IsPortInUse(port))
+                {
+                    session.Log("Port {0} is in use.", port);
+                    session[HawkCDServerProperties.IsDeafultServerPortInUse] = "1";
+                }
+                else
+                {
+                    session.Log("Port {0} is free.", port);
+                    session[HawkCDServerProperties.IsDeafultServerPortInUse] = "0";
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
+
+            session.Log("Ended CheckServerPort");
+
+            return ActionResult.Success;
+        }
+
+        #endregion
+
+        #region Agent
+
+        [CustomAction]
+        public static ActionResult UpdateAgentConfigFile(Session session)
+        {
+            session.Log("Begin UpdateServerConfigFile");
+            try
+            {
+                var isntallDir = session[CommonProperties.InstallDir].TrimEnd('\\');
+                var configFilePath = isntallDir + "\\config\\config.properties";
+
+                if (File.Exists(configFilePath))
+                {
+                    session.Log("Updating config file: {0}", configFilePath);
+                    session.Log("Updating key serverName with new value: {0}", session[HawkCDAgentProperties.ServerAddress]);
+                    Utils.ReplacePropertiesKeyValue(configFilePath, "serverName", session[HawkCDAgentProperties.ServerAddress]);
+                    session.Log("Updating key serverPort with new value: {0}", session[HawkCDAgentProperties.ServerPort]);
+                    Utils.ReplacePropertiesKeyValue(configFilePath, "serverPort", session[HawkCDAgentProperties.ServerPort]);
+                }
+                else
+                {
+                    session.Log("Config file does not exists: {0}", configFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log("Exception: {0}", ex.ToString());
+            }
+            session.Log("Ended UpdateServerConfigFile");
+
+            return ActionResult.Success;
+        }
+
+        #endregion
+
+        #region Server and Agent
 
         [CustomAction]
         public static ActionResult BackupConfigFiles(Session session)
@@ -223,37 +196,6 @@ namespace CustomActions
         }
 
         [CustomAction]
-        public static ActionResult UpdateAgentConfigFile(Session session)
-        {
-            session.Log("Begin UpdateServerConfigFile");
-            try
-            {
-                var isntallDir = session[CommonProperties.InstallDir].TrimEnd('\\');
-                var configFilePath = isntallDir + "\\config\\config.properties";
-
-                if (File.Exists(configFilePath))
-                {
-                    session.Log("Updating config file: {0}", configFilePath);
-                    session.Log("Updating key serverName with new value: {0}", session[HawkCDAgentProperties.ServerAddress]);
-                    Utils.ReplacePropertiesKeyValue(configFilePath, "serverName", session[HawkCDAgentProperties.ServerAddress]);
-                    session.Log("Updating key serverPort with new value: {0}", session[HawkCDAgentProperties.ServerPort]);
-                    Utils.ReplacePropertiesKeyValue(configFilePath, "serverPort", session[HawkCDAgentProperties.ServerPort]);
-                }
-                else
-                {
-                    session.Log("Config file does not exists: {0}", configFilePath);
-                }
-            }
-            catch (Exception ex)
-            {
-                session.Log("Exception: {0}", ex.ToString());
-            }
-            session.Log("Ended UpdateServerConfigFile");
-
-            return ActionResult.Success;
-        }
-
-        [CustomAction]
         public static ActionResult DetectJava(Session session)
         {
             session.Log("Begin DetectJavaHome");
@@ -277,69 +219,6 @@ namespace CustomActions
             }
 
             session.Log("Ended DetectJavaHome");
-
-            return ActionResult.Success;
-        }
-
-        [CustomAction]
-        public static ActionResult CheckRedisPort(Session session)
-        {
-            session.Log("Begin CheckRedisPort");
-            try
-            {
-                int port = int.Parse(session[HawkCDServerProperties.DeafultRedisPort]);
-
-                if (Utils.IsPortInUse(port))
-                {
-                    session.Log("Port {0} is in use.", port);
-                    session[HawkCDServerProperties.IsDeafultRedisPortInUse] = "1";
-                }
-                else
-                {
-                    session.Log("Port {0} is in free.", port);
-                    session[HawkCDServerProperties.IsDeafultRedisPortInUse] = "0";
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                session.Log("Exception: {0}", ex.ToString());
-            }
-
-            session.Log("Ended CheckRedisPort");
-
-            return ActionResult.Success;
-        }
-
-
-        [CustomAction]
-        public static ActionResult CheckServerPort(Session session)
-        {
-            session.Log("Begin CheckServerPort");
-            try
-            {
-                int port = int.Parse(session[HawkCDServerProperties.DeafultServerPort]);
-
-                if (Utils.IsPortInUse(port))
-                {
-                    session.Log("Port {0} is in use.", port);
-                    session[HawkCDServerProperties.IsDeafultServerPortInUse] = "1";
-                }
-                else
-                {
-                    session.Log("Port {0} is free.", port);
-                    session[HawkCDServerProperties.IsDeafultServerPortInUse] = "0";
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                session.Log("Exception: {0}", ex.ToString());
-            }
-
-            session.Log("Ended CheckServerPort");
 
             return ActionResult.Success;
         }
@@ -542,5 +421,7 @@ namespace CustomActions
 
             return ActionResult.Success;
         }
+
+        #endregion
     }
 }

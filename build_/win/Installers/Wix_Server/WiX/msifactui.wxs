@@ -37,7 +37,7 @@
             <Dialog Id="LicenseAgreementDlg" Width="370" Height="270" Title="!(loc.LicenseAgreementDlg_Title)">
                 <Control Id="LicenseAcceptedCheckBox" Type="CheckBox" X="20" Y="207" Width="330" Height="18" CheckBoxValue="1" Property="LicenseAccepted" Text="!(loc.LicenseAgreementDlgLicenseAcceptedCheckBox)" />
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
-                	<Publish Event="NewDialog" Value="WelcomeDlg">1</Publish>
+                	<Publish Event="NewDialog" Value="PrerequisitesDlg">1</Publish>
                  </Control>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
                     <Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
@@ -144,8 +144,8 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
                 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
-                    <Publish Event="NewDialog" Value="RedisSetupDlg">IS_DEFAULT_REDIS_PORT_IN_USE=1 AND NOT OLDERVERSIONBEINGUPGRADED</Publish>
-<Publish Event="NewDialog" Value="HostNameDlg">IS_DEFAULT_REDIS_PORT_IN_USE=0 AND NOT OLDERVERSIONBEINGUPGRADED</Publish>
+                    <Publish Event="NewDialog" Value="RedisSetupDlg">IS_SINGLE_INSTANCE_INSTALLATION = 0</Publish>
+<Publish Event="NewDialog" Value="MongoDBSetupDlg">IS_SINGLE_INSTANCE_INSTALLATION = 1</Publish>
 <Publish Event="NewDialog" Value="WelcomeDlg">OLDERVERSIONBEINGUPGRADED</Publish>
 </Control>
 <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
@@ -517,8 +517,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <Control Id="HostNameEdit" Property="HOST_NAME" Type="Edit" X="10" Y="70" Width="150" Height="20"/>
 <Control Id="HostNameLabel" Text="Enter host Name:" Type="Text" X="10" Y="50" Width="101" Height="14"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_DEFAULT_REDIS_PORT_IN_USE=0</Publish>
-<Publish Event="NewDialog" Value="RedisSetupDlg">IS_DEFAULT_REDIS_PORT_IN_USE=1</Publish>
+                	<Publish Event="NewDialog" Value="ServerInstanceTypeDlg">1</Publish>
 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
                 	<Publish Event="NewDialog" Value="InstallDirDlg">1</Publish>
@@ -555,15 +554,22 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
     </Fragment>
 <Fragment>
         <UI>
-            <Dialog Id="RedisSetupDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
-                <Control Id="Control_2" Text="The default port [DEFAULT_REDIS_PORT] for Redis is in use. Pleas provide a port that is not in use:" Type="Text" X="10" Y="50" Width="359" Height="19"/>
-<Control Id="Control_1" Property="NEW_REDIS_PORT" Type="Edit" X="10" Y="70" Width="84" Height="20"/>
-<Control Id="RedisSetupHeaderText" Text="{\UI_Font_Title}Redis Setup" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
+            <Dialog Id="MongoDBSetupDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+                <Control Id="MongoDBPassword" Property="MONGODB_PASSWORD" Type="Edit" X="10" Y="202" Width="150" Height="20" Password="yes"/>
+<Control Id="MongoDBUPasswordTxt" Text="Password:" Type="Text" X="10" Y="185" Width="101" Height="14"/>
+<Control Id="MongoDBUserNameEdit" Property="MONGODB_USER_NAME" Type="Edit" X="10" Y="160" Width="150" Height="20"/>
+<Control Id="MongoDBUserNameTxt" Text="User Name:" Type="Text" X="10" Y="145" Width="101" Height="14"/>
+<Control Id="MongoDBPortEdit" Type="Edit" X="10" Y="110" Width="150" Height="20" Property="MONGODB_PORT"/>
+<Control Id="MongoDbPortTxt" Text="Port:" Type="Text" X="10" Y="95" Width="101" Height="14"/>
+<Control Id="MongoDBHostNameEdit" Type="Edit" X="10" Y="65" Width="150" Height="20" Property="MONGODB_HOST_NAME"/>
+<Control Id="MongoDbHeaderTitle" Text="{\UI_Font_Title}Mongo DB Setup" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="MongoDbHostNameTxt" Text="Host Name:" Type="Text" X="10" Y="50" Width="125" Height="14"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
-                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_DEFAULT_REDIS_PORT_IN_USE=1 AND NEW_REDIS_PORT &lt;&gt; ""</Publish>
+                	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">IS_SINGLE_INSTANCE_INSTALLATION = 1</Publish>
+<Publish Event="NewDialog" Value="RedisSetupDlg">IS_SINGLE_INSTANCE_INSTALLATION = 0</Publish>
 </Control>
 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
-                	<Publish Event="NewDialog" Value="HostNameDlg">1</Publish>
+                	<Publish Event="NewDialog" Value="ServerInstanceTypeDlg">1</Publish>
 </Control>
 <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
@@ -574,6 +580,59 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 </Dialog>
         </UI>
     </Fragment>
+<Fragment>
+	<UI>
+		<Dialog Id="RedisSetupDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+			<Control Id="RedisSetupHeader" Text="{\UI_Font_Title}Redis Setup" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="RedisPassword" Property="REDIS_PASSWORD" Type="Edit" X="10" Y="202" Width="150" Height="20" Password="yes"/>
+<Control Id="RedisUPasswordTxt" Text="Password:" Type="Text" X="10" Y="185" Width="101" Height="14"/>
+<Control Id="RedisUserNameEdit" Property="REDIS_USER_NAME" Type="Edit" X="10" Y="160" Width="150" Height="20"/>
+<Control Id="RedisUserNameTxt" Text="User Name:" Type="Text" X="10" Y="145" Width="101" Height="14"/>
+<Control Id="RedisPortEdit" Type="Edit" X="10" Y="110" Width="150" Height="20" Property="REDIS_PORT"/>
+<Control Id="RedisPortTxt" Text="Port:" Type="Text" X="10" Y="95" Width="101" Height="14"/>
+<Control Id="RedisHostNameEdit" Type="Edit" X="10" Y="65" Width="150" Height="20" Property="REDIS_HOST_NAME"/>
+<Control Id="RedisHostNameTxt" Text="Host Name:" Type="Text" X="10" Y="50" Width="125" Height="14"/>
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+				<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">1</Publish>
+			</Control>
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+				<Publish Event="NewDialog" Value="MongoDBSetupDlg">1</Publish>
+			</Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+				<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+			</Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+	</UI>
+</Fragment>
+<Fragment>
+	<UI>
+		<Dialog Id="ServerInstanceTypeDlg" Width="370" Height="270" Title="!(loc.InstallDirDlg_Title)">
+			<Control Id="Control_1" Type="RadioButtonGroup" X="10" Y="73" Width="83" Height="50" Property="IS_SINGLE_INSTANCE_INSTALLATION">
+<RadioButtonGroup Property="IS_SINGLE_INSTANCE_INSTALLATION">
+<RadioButton Text="Yes" Value="1" X="4" Y="6" Width="65" Height="17"/>
+<RadioButton Text="No" Value="0" X="4" Y="28" Width="65" Height="17"/>
+</RadioButtonGroup>
+</Control>
+<Control Id="ServerInstanceTypeSetupTxt" Text="Is this a single instance installation? " Type="Text" X="10" Y="50" Width="290" Height="17"/>
+<Control Id="ServerInstanceTypeSetupHeader" Text="{\UI_Font_Title}Server Instance Type Setup" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
+<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
+				<Publish Event="NewDialog" Value="MongoDBSetupDlg">1</Publish>
+</Control>
+<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.UIButtonBack)">
+				<Publish Event="NewDialog" Value="HostNameDlg">1</Publish>
+			</Control>
+<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.UIButtonCancel)">
+				<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+			</Control>
+<Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="Image_TopBanner" />
+<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+</Dialog>
+	</UI>
+</Fragment>
 <Fragment>
 <UI Id="SUFWI_UI">
 <TextStyle Id="UI_Font_Normal" FaceName="Segoe UI" Size="10"/>
@@ -614,7 +673,9 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
 <DialogRef Id="MsiRMFilesInUse"/>
 <DialogRef Id="HostNameDlg"/>
 <DialogRef Id="PrerequisitesDlg"/>
+<DialogRef Id="MongoDBSetupDlg"/>
 <DialogRef Id="RedisSetupDlg"/>
+<DialogRef Id="ServerInstanceTypeDlg"/>
 <InstallUISequence>
 <Show Dialog="WelcomeDlg" Before="ProgressDlg">NOT Installed</Show>
 <Show Dialog="MaintenanceWelcomeDlg" Before="ProgressDlg">Installed AND NOT RESUME AND NOT Preselected</Show>

@@ -505,7 +505,7 @@ You can choose not to install [ProductName] by clicking Cancel to exit.
                 <Control Id="ServerPortText" Text="Server Port Number:" Type="Text" X="10" Y="110" Width="101" Height="17"/>
 <Control Id="ServerPortEdit" Property="SERVER_PORT" Type="Edit" X="10" Y="130" Width="212" Height="20"/>
 <Control Id="Control_2" Text="{\UI_Font_Title}Configuration" Type="Text" X="5" Y="27" Width="300" Height="15" Transparent="yes"/>
-<Control Id="Control_1" Text="Enter HServer address or IP:" Type="Text" X="10" Y="50" Width="282" Height="17"/>
+<Control Id="Control_1" Text="Enter server address or IP:" Type="Text" X="10" Y="50" Width="282" Height="17"/>
 <Control Id="ServerAddressEdit" Property="SERVER_ADDRESS" Type="Edit" X="10" Y="70" Width="212" Height="20"/>
 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.UIButtonNext)">
                 	<Publish Event="NewDialog" Value="VerifyReadyDlgInstall">1</Publish>

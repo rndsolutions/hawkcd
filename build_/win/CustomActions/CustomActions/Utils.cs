@@ -78,11 +78,42 @@ namespace CustomActions
             File.WriteAllText(filePath, content);
         }
 
-        public static void ReplaceYamlKeyValue(string filePath, string key, string value)
+        public static bool SetYamlValue(string filePath, string propertyPath, string value, Session session)
         {
-            var content = File.ReadAllText(filePath);
-            content = Regex.Replace(content, string.Format(@"{0}\s?:.*[^\n\r]", key), string.Format("{0}: {1}", key, value));
-            File.WriteAllText(filePath, content);
+            var liens = File.ReadAllLines(filePath);
+            var props = propertyPath.Split('.');
+            var wasUpdated = false;
+
+            for (int i = 0; i < props.Length; i++)
+            {
+                for (int j = 0; j < liens.Length; j++)
+                {
+                    if (liens[j].IndexOf(props[i] + ":", StringComparison.InvariantCultureIgnoreCase) != -1)
+                    {
+                        if (i == props.Length - 1)
+                        {
+                            liens[j] = liens[j].Remove(liens[j].IndexOf(":")) + ": " + value;
+                            wasUpdated = true;
+                            break;
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                    }
+                }
+            }
+
+            if (wasUpdated)
+            {
+                session.Log("Property {0} was updated with value: {1} ", propertyPath, value);
+
+                File.WriteAllLines(filePath, liens);
+            }
+            else
+                session.Log("Property {0} was not found in config file: {1} ", propertyPath, filePath);
+
+            return wasUpdated;
         }
 
         public static bool IsPortInUse(int port)
