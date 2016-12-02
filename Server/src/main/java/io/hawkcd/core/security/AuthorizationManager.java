@@ -240,7 +240,7 @@ public class AuthorizationManager implements IAuthorizationManager {
      * Filters the result based on user permissions and sets PermissionType to each object in it If
      * the PermissionType is NONE, the object will not be added to the filtered collection
      * Exception: If the user has no permission for a Pipeline Group, but has a permission for a
-     * Pipeline that belongs to it, it will not be added to the filtered collection
+     * Pipeline that belongs to it, it will be added to the filtered collection.
      */
     public List<Entity> attachPermissionTypeToList(Message message, List<Object> parameters) {
         List<Entity> entities = (List<Entity>) message.getEnvelope();
@@ -252,6 +252,9 @@ public class AuthorizationManager implements IAuthorizationManager {
             if (permissionType != PermissionType.NONE) {
                 entity.setPermissionType(permissionType);
                 filteredResult.add(entity);
+            } else if (entity instanceof PipelineGroupDto && ((PipelineGroupDto) entity).getPipelines().size() > 0) {
+                entity.setPermissionType(PermissionType.VIEWER);
+                filteredResult.add(entity);
             }
         }
 
@@ -261,18 +264,18 @@ public class AuthorizationManager implements IAuthorizationManager {
     public List<PipelineGroupDto> attachPermissionsToPipelineDtos(List<PipelineGroupDto> pipelineGroupDtos, User currentUser) {
         for (PipelineGroupDto pipelineGroupDto : pipelineGroupDtos) {
             List<PipelineDefinitionDto> pipelineDefinitionDtos = pipelineGroupDto.getPipelines();
-
+            List<PipelineDefinitionDto> filteredPipelineDefinitionDtos = new ArrayList<>();
             for (PipelineDefinitionDto pipelineDefinitionDto : pipelineDefinitionDtos) {
                 PermissionType permissionType = this.determinePermissionTypeForEntity(currentUser.getPermissions(), pipelineDefinitionDto);
 
-                if (pipelineDefinitionDto.getPermissionType() != PermissionType.NONE) {
+                if (permissionType != PermissionType.NONE) {
                     pipelineDefinitionDto.setPermissionType(permissionType);
+                    filteredPipelineDefinitionDtos.add(pipelineDefinitionDto);
                 }
             }
 
-            pipelineGroupDto.setPipelines(pipelineDefinitionDtos);
+            pipelineGroupDto.setPipelines(filteredPipelineDefinitionDtos);
         }
         return pipelineGroupDtos;
     }
-
 }
