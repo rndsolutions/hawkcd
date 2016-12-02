@@ -191,36 +191,36 @@ public class MaterialServiceTests {
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
-    @Test
-    public void delete_existingObject_false() {
-        //Arrange
-        Material materialToDelete = new Material();
-        this.materialService.add(materialToDelete);
-        String expectedMessage = Material.class.getSimpleName() + " deleted successfully.";
+//    @Test
+//    public void delete_existingObject_false() {
+//        //Arrange
+//        Material materialToDelete = new Material();
+//        this.materialService.add(materialToDelete);
+//        String expectedMessage = Material.class.getSimpleName() + " deleted successfully.";
+//
+//        //Act
+//        ServiceResult actualResult = this.materialService.delete(materialToDelete.getId());
+//        Material actualResultObject = (Material) actualResult.getEntity();
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
+//        Assert.assertNotNull(actualResult.getEntity());
+//        Assert.assertEquals(materialToDelete.getId(), actualResultObject.getId());
+//        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+//    }
 
-        //Act
-        ServiceResult actualResult = this.materialService.delete(materialToDelete.getId());
-        Material actualResultObject = (Material) actualResult.getEntity();
-
-        //Assert
-        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        Assert.assertNotNull(actualResult.getEntity());
-        Assert.assertEquals(materialToDelete.getId(), actualResultObject.getId());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-    }
-
-    @Test
-    public void delete_nonExistingObject_true() {
-        //Arrange
-        Material materialToDelete = new Material();
-        String expectedMessage = Material.class.getSimpleName() + " not found.";
-
-        //Act
-        ServiceResult actualResult = this.materialService.delete(materialToDelete.getId());
-
-        //Assert
-        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getEntity());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-    }
+//    @Test
+//    public void delete_nonExistingObject_true() {
+//        //Arrange
+//        Material materialToDelete = new Material();
+//        String expectedMessage = Material.class.getSimpleName() + " not found.";
+//
+//        //Act
+//        ServiceResult actualResult = this.materialService.delete(materialToDelete.getId());
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
+//        Assert.assertNull(actualResult.getEntity());
+//        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+//    }
 }

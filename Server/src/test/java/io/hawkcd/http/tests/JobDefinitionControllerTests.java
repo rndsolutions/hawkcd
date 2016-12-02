@@ -2,6 +2,7 @@ package io.hawkcd.http.tests;
 
 import io.hawkcd.core.config.Config;
 import io.hawkcd.http.JobDefinitionController;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.RunIf;
 import io.hawkcd.model.enums.TaskType;
@@ -18,13 +19,6 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.hawkcd.model.ExecTask;
-import io.hawkcd.model.JobDefinition;
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.StageDefinition;
-import io.hawkcd.model.TaskDefinition;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -286,54 +280,53 @@ public class JobDefinitionControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    public void deleteJobDefinition_jobDefinition_successMessage() {
-        //Arrange
-        this.prepareJobDefinition();
-        Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//    @Test
+//    public void deleteJobDefinition_jobDefinition_successMessage() {
+//        //Arrange
+//        this.prepareJobDefinition();
+//        Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/job-definitions/" + this.jobDefinition.getId()).request().delete();
+//
+//        //Assert
+//        assertEquals(204, response.getStatus());
+//    }
 
-        //Act
-        Response response = target("/job-definitions/" + this.jobDefinition.getId()).request().delete();
+//    @Test
+//    public void deleteJobDefinition_nonExistingJobDefinition_errorMessage() {
+//        //Arrange
+//        String expectedMessage = "JobDefinition not found.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedMessage);
+//        Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/job-definitions/wrongId").request().delete();
+//        String actualMessage = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(400, response.getStatus());
+//        assertEquals(expectedMessage, actualMessage);
+//    }
 
-        //Assert
-        assertEquals(204, response.getStatus());
-    }
-
-    @Test
-    public void deleteJobDefinition_nonExistingJobDefinition_errorMessage() {
-        //Arrange
-        String expectedMessage = "JobDefinition not found.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/job-definitions/wrongId").request().delete();
-        String actualMessage = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    public void deleteJobDefinition_lastJobDefinition_errorMessage() {
-        //Arrange
-        this.prepareJobDefinition();
-        String expectedMessage = this.jobDefinition.getId() + " cannot delete the last job definition.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/job-definitions/" + this.jobDefinition.getId()).request().delete();
-        String actualMessage = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
+//    @Test
+//    public void deleteJobDefinition_lastJobDefinition_errorMessage() {
+//        //Arrange
+//        this.prepareJobDefinition();
+//        String expectedMessage = this.jobDefinition.getId() + " cannot delete the last job definition.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedMessage);
+//        Mockito.when(this.jobDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/job-definitions/" + this.jobDefinition.getId()).request().delete();
+//        String actualMessage = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(400, response.getStatus());
+//        assertEquals(expectedMessage, actualMessage);
+//    }
 
     private void prepareJobDefinition() {
         PipelineDefinition pipelineDefinition = new PipelineDefinition();

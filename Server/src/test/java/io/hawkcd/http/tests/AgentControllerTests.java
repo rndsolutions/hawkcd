@@ -7,20 +7,18 @@ import io.hawkcd.model.Environment;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.AgentService;
-
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -278,36 +276,36 @@ public class AgentControllerTests extends JerseyTest {
     }
 
 
-    @Test
-    public void deleteAgent_agentObject_successMessage() {
-        //Arrange
-        this.prepareAgent();
-        Mockito.when(this.agentService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//    @Test
+//    public void deleteAgent_agentObject_successMessage() {
+//        //Arrange
+//        this.prepareAgent();
+//        Mockito.when(this.agentService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/agents/" + this.agent.getId()).request().delete();
+//
+//        //Assert
+//        assertEquals(204, response.getStatus());
+//    }
 
-        //Act
-        Response response = target("/agents/" + this.agent.getId()).request().delete();
-
-        //Assert
-        assertEquals(204, response.getStatus());
-    }
-
-    @Test
-    public void deleteAgent_nonExistingAgent_errorMessage() {
-        //Arrange
-        String expectedResult = "Agent not found.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedResult);
-        Mockito.when(this.agentService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/agents/nonExistingAgent").request().delete();
-        String actualResult = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(404, response.getStatus());
-        assertEquals(expectedResult, actualResult);
-
-    }
+//    @Test
+//    public void deleteAgent_nonExistingAgent_errorMessage() {
+//        //Arrange
+//        String expectedResult = "Agent not found.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedResult);
+//        Mockito.when(this.agentService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/agents/nonExistingAgent").request().delete();
+//        String actualResult = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(404, response.getStatus());
+//        assertEquals(expectedResult, actualResult);
+//
+//    }
 
     private void prepareAgent() {
         this.agent = new Agent();

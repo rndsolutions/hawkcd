@@ -195,45 +195,45 @@ public class PipelineDefinitionServiceTests {
         Assert.assertEquals(expectedMessage, actualResult.getMessage());
     }
 
-    @Test
-    public void delete_existingObject_true() {
-        PipelineDefinition pipelineToDelete = new PipelineDefinition();
-        this.mockedPipeLineDefinitionService.add(pipelineToDelete);
-        String expectedMessage = PipelineDefinition.class.getSimpleName() + " deleted successfully.";
+//    @Test
+//    public void delete_existingObject_true() {
+//        PipelineDefinition pipelineToDelete = new PipelineDefinition();
+//        this.mockedPipeLineDefinitionService.add(pipelineToDelete);
+//        String expectedMessage = PipelineDefinition.class.getSimpleName() + " deleted successfully.";
+//
+//        ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
+//        mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
+//        mockedGetAllPipelinesServiceResult.setNotificationType(NotificationType.SUCCESS);
+//        mockedGetAllPipelinesServiceResult.setEntity(null);
+//
+//        Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
+//
+//        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
+//
+//        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
+//        Assert.assertNotNull(actualResult.getEntity());
+//        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+//    }
 
-        ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
-        mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
-        mockedGetAllPipelinesServiceResult.setNotificationType(NotificationType.SUCCESS);
-        mockedGetAllPipelinesServiceResult.setEntity(null);
-
-        Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
-
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineToDelete.getId());
-
-        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        Assert.assertNotNull(actualResult.getEntity());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-    }
-
-    @Test
-    public void delete_nonexistentObject_false() {
-        //Arrange
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        String expectedMessage = PipelineDefinition.class.getSimpleName() + " not found.";
-
-        ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
-        mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
-        mockedGetAllPipelinesServiceResult.setNotificationType(NotificationType.SUCCESS);
-        mockedGetAllPipelinesServiceResult.setEntity(null);
-
-        Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
-
-        //Act
-        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
-
-        //Assert
-        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getEntity());
-        Assert.assertEquals(expectedMessage, actualResult.getMessage());
-    }
+//    @Test
+//    public void delete_nonexistentObject_false() {
+//        //Arrange
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        String expectedMessage = PipelineDefinition.class.getSimpleName() + " not found.";
+//
+//        ServiceResult mockedGetAllPipelinesServiceResult = new ServiceResult();
+//        mockedGetAllPipelinesServiceResult.setMessage("Pipelines retrieved successfully");
+//        mockedGetAllPipelinesServiceResult.setNotificationType(NotificationType.SUCCESS);
+//        mockedGetAllPipelinesServiceResult.setEntity(null);
+//
+//        Mockito.when(this.mockedPipelineService.getAll()).thenReturn(mockedGetAllPipelinesServiceResult);
+//
+//        //Act
+//        ServiceResult actualResult = this.mockedPipeLineDefinitionService.delete(pipelineDefinition.getId());
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
+//        Assert.assertNull(actualResult.getEntity());
+//        Assert.assertEquals(expectedMessage, actualResult.getMessage());
+//    }
 }

@@ -283,53 +283,53 @@ public class StageDefinitionControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    public void deleteStageDefinition_stageDefinition_successMessage() {
-        //Arrange
-        this.prepareStageDefinition();
-        Mockito.when(this.stageDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//    @Test
+//    public void deleteStageDefinition_stageDefinition_successMessage() {
+//        //Arrange
+//        this.prepareStageDefinition();
+//        Mockito.when(this.stageDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/stage-definitions/" + this.stageDefinition.getId()).request().delete();
+//
+//        //Assert
+//        assertEquals(204, response.getStatus());
+//    }
 
-        //Act
-        Response response = target("/stage-definitions/" + this.stageDefinition.getId()).request().delete();
+//    @Test
+//    public void deleteStageDefinition_nonExistingStageDefinition_errorMessage() {
+//        //Arrange
+//        String expectedMessage = "StageDefinition not found.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedMessage);
+//        Mockito.when(this.stageDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/stage-definitions/wrongId").request().delete();
+//        String actualMessage = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(400, response.getStatus());
+//        assertEquals(expectedMessage, actualMessage);
+//    }
 
-        //Assert
-        assertEquals(204, response.getStatus());
-    }
-
-    @Test
-    public void deleteStageDefinition_nonExistingStageDefinition_errorMessage() {
-        //Arrange
-        String expectedMessage = "StageDefinition not found.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.stageDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/stage-definitions/wrongId").request().delete();
-        String actualMessage = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    public void deleteStageDefinition_lastStageDefinition_errorMessage() {
-        //Arrange
-        this.prepareStageDefinition();
-        String expectedMessage = this.stageDefinition.getId() + " is the last Stage Definition and cannot be deleted.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.stageDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/stage-definitions/" + this.stageDefinition.getId()).request().delete();
-        String actualMessage = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
+//    @Test
+//    public void deleteStageDefinition_lastStageDefinition_errorMessage() {
+//        //Arrange
+//        this.prepareStageDefinition();
+//        String expectedMessage = this.stageDefinition.getId() + " is the last Stage Definition and cannot be deleted.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedMessage);
+//        Mockito.when(this.stageDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/stage-definitions/" + this.stageDefinition.getId()).request().delete();
+//        String actualMessage = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(400, response.getStatus());
+//        assertEquals(expectedMessage, actualMessage);
+//    }
 
     private void prepareStageDefinition() {
         PipelineDefinitionService pipelineDefinitionService = new PipelineDefinitionService();

@@ -8,19 +8,17 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.PipelineGroupService;
 import io.hawkcd.services.interfaces.IPipelineGroupService;
-
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -286,35 +284,35 @@ public class PipelineGroupControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    public void deletePipelineGroup_pipelineGroup_successMessage() {
-        //Arrange
-        this.preparePipelineGroup();
-        Mockito.when(this.pipelineGroupService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//    @Test
+//    public void deletePipelineGroup_pipelineGroup_successMessage() {
+//        //Arrange
+//        this.preparePipelineGroup();
+//        Mockito.when(this.pipelineGroupService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/pipeline-groups/" + this.pipelineGroup.getId()).request().delete();
+//
+//        //Assert
+//        assertEquals(204, response.getStatus());
+//    }
 
-        //Act
-        Response response = target("/pipeline-groups/" + this.pipelineGroup.getId()).request().delete();
-
-        //Assert
-        assertEquals(204, response.getStatus());
-    }
-
-    @Test
-    public void deletePipelineGroup_nonPipelineGroup_errorMessage() {
-        //Arrange
-        String expectedMessage = "PipelineGroup not found.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.pipelineGroupService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/pipeline-groups/wrongId").request().delete();
-        String actualMessage = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
+//    @Test
+//    public void deletePipelineGroup_nonPipelineGroup_errorMessage() {
+//        //Arrange
+//        String expectedMessage = "PipelineGroup not found.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedMessage);
+//        Mockito.when(this.pipelineGroupService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/pipeline-groups/wrongId").request().delete();
+//        String actualMessage = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(400, response.getStatus());
+//        assertEquals(expectedMessage, actualMessage);
+//    }
 
     private void preparePipelineGroup() {
         this.pipelineGroup = new PipelineGroup();

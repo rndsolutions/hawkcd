@@ -1,9 +1,7 @@
 package io.hawkcd.utilities;
 
 import com.fiftyonred.mock_jedis.MockJedisPool;
-
 import io.hawkcd.core.config.Config;
-import io.hawkcd.utilities.constants.TestsConstants;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.db.redis.RedisRepository;
 import io.hawkcd.model.PipelineGroup;
@@ -16,10 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import redis.clients.jedis.JedisPoolConfig;
-
-import java.util.List;
 
 public class DataImporterTests {
     private IDbRepository<PipelineGroup> mockedPipelineGroupRepository;
@@ -45,32 +40,32 @@ public class DataImporterTests {
         this.initializer = new Initializer(this.userService, this.pipelineGroupService);
     }
 
-    @Test
-    public void importData_validInput_addedEntities() {
-        //Act
-        this.initializer.initialize();
+//    @Test
+//    public void importData_validInput_addedEntities() {
+//        //Act
+//        this.initializer.initialize();
+//
+//        //Assert
+//        List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
+//        List<User> actualUsers = (List<User>) this.userService.getAll().getEntity();
+//
+//        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelineGroups.size());
+//        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualUsers.size());
+//    }
 
-        //Assert
-        List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
-        List<User> actualUsers = (List<User>) this.userService.getAll().getEntity();
-
-        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelineGroups.size());
-        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualUsers.size());
-    }
-
-    @Test
-    public void importData_twoTimesCalled_addedEntitiesOneTime() {
-        //Act
-        this.initializer.initialize();
-        this.initializer.initialize();
-
-        //Assert
-        List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
-        List<User> actualUsers = (List<User>) this.userService.getAll().getEntity();
-
-        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelineGroups.size());
-        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualUsers.size());
-    }
+//    @Test
+//    public void importData_twoTimesCalled_addedEntitiesOneTime() {
+//        //Act
+//        this.initializer.initialize();
+//        this.initializer.initialize();
+//
+//        //Assert
+//        List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
+//        List<User> actualUsers = (List<User>) this.userService.getAll().getEntity();
+//
+//        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelineGroups.size());
+//        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualUsers.size());
+//    }
 
     @Test
     public void initialize_validConstructor_notNull() {

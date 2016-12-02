@@ -187,23 +187,23 @@ public class StageDefinitionServiceTests {
         Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
     }
 
-    @Test
-    public void stageDefinitionService_deleteWithValidId_noError() {
-        this.injectDataForTestingStageDefinitionService(1);
+//    @Test
+//    public void stageDefinitionService_deleteWithValidId_noError() {
+//        this.injectDataForTestingStageDefinitionService(1);
+//
+//        ServiceResult actualServiceResult = this.mockedStageDefinitionService.delete(this.expectedStageDefinition.getId());
+//
+//        Assert.assertEquals(NotificationType.SUCCESS, actualServiceResult.getNotificationType());
+//    }
 
-        ServiceResult actualServiceResult = this.mockedStageDefinitionService.delete(this.expectedStageDefinition.getId());
-
-        Assert.assertEquals(NotificationType.SUCCESS, actualServiceResult.getNotificationType());
-    }
-
-    @Test
-    public void stageDefinitionService_deleteWithInvalidId_noError() {
-        this.injectDataForTestingStageDefinitionService(1);
-
-        ServiceResult actualServiceResult = this.mockedStageDefinitionService.delete("someInvalidName");
-
-        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
-    }
+//    @Test
+//    public void stageDefinitionService_deleteWithInvalidId_noError() {
+//        this.injectDataForTestingStageDefinitionService(1);
+//
+//        ServiceResult actualServiceResult = this.mockedStageDefinitionService.delete("someInvalidName");
+//
+//        Assert.assertEquals(NotificationType.ERROR, actualServiceResult.getNotificationType());
+//    }
 
     private void injectDataForTestingStageDefinitionService(int numberOfStagesToAdd) {
         List<StageDefinition> expectedStageDefinitions = new ArrayList<>();

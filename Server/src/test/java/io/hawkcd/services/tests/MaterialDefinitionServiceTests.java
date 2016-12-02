@@ -1,7 +1,6 @@
 package io.hawkcd.services.tests;
 
 import io.hawkcd.core.config.Config;
-import io.hawkcd.utilities.constants.NotificationMessages;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.GitMaterial;
 import io.hawkcd.model.MaterialDefinition;
@@ -224,71 +223,71 @@ public class MaterialDefinitionServiceTests {
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
-    @Test
-    public void delete_withValidId_deletedObject() {
-        // Arrange
-        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+//    @Test
+//    public void delete_withValidId_deletedObject() {
+//        // Arrange
+//        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+//
+//        ServiceResult allPipelineDefinitions = new ServiceResult();
+//        List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        pipelineDefinitions.add(pipelineDefinition);
+//        allPipelineDefinitions.setEntity(pipelineDefinitions);
+//        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
+//        Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
+//
+//        // Act
+//        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
+//        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
+//
+//        // Assert
+//        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
+//        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
+//    }
 
-        ServiceResult allPipelineDefinitions = new ServiceResult();
-        List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        pipelineDefinitions.add(pipelineDefinition);
-        allPipelineDefinitions.setEntity(pipelineDefinitions);
-        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
-        Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(expectedMaterialDefinition);
+//    @Test
+//    public void delete_withInvalidId_null() {
+//        // Arrange
+//        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+//
+//        ServiceResult allPipelineDefinitions = new ServiceResult();
+//        allPipelineDefinitions.setEntity(new ArrayList<PipelineDefinition>());
+//        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
+//        Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(null);
+//
+//        // Act
+//        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
+//        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
+//
+//        // Assert
+//        Assert.assertNull(actualMaterialDefinition);
+//        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
+//    }
 
-        // Act
-        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
-
-        // Assert
-        Assert.assertEquals(expectedMaterialDefinition.getId(), actualMaterialDefinition.getId());
-        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-    }
-
-    @Test
-    public void delete_withInvalidId_null() {
-        // Arrange
-        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
-
-        ServiceResult allPipelineDefinitions = new ServiceResult();
-        allPipelineDefinitions.setEntity(new ArrayList<PipelineDefinition>());
-        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
-        Mockito.when(this.mockedRepository.delete(Mockito.anyString())).thenReturn(null);
-
-        // Act
-        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
-
-        // Assert
-        Assert.assertNull(actualMaterialDefinition);
-        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-    }
-
-    @Test
-    public void delete_assignedToOnePipeline_correctMessage() {
-        // Arrange
-        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
-
-        ServiceResult allPipelineDefinitions = new ServiceResult();
-        List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
-        PipelineDefinition pipelineDefinition = new PipelineDefinition();
-        Set<String> materialDefinitionIds = new HashSet<>();
-        materialDefinitionIds.add(expectedMaterialDefinition.getId());
-        pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
-        pipelineDefinitions.add(pipelineDefinition);
-        allPipelineDefinitions.setEntity(pipelineDefinitions);
-        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
-
-        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(NotificationMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
-
-        // Act
-        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
-        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
-
-        // Assert
-        Assert.assertNull(actualMaterialDefinition);
-        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertEquals(actualResult.getMessage(), expectedMessage);
-    }
+//    @Test
+//    public void delete_assignedToOnePipeline_correctMessage() {
+//        // Arrange
+//        MaterialDefinition expectedMaterialDefinition = new GitMaterial();
+//
+//        ServiceResult allPipelineDefinitions = new ServiceResult();
+//        List<PipelineDefinition> pipelineDefinitions = new ArrayList<>();
+//        PipelineDefinition pipelineDefinition = new PipelineDefinition();
+//        Set<String> materialDefinitionIds = new HashSet<>();
+//        materialDefinitionIds.add(expectedMaterialDefinition.getId());
+//        pipelineDefinition.setMaterialDefinitionIds(materialDefinitionIds);
+//        pipelineDefinitions.add(pipelineDefinition);
+//        allPipelineDefinitions.setEntity(pipelineDefinitions);
+//        Mockito.when(this.mockedPipelineDefinitionService.getAll()).thenReturn(allPipelineDefinitions);
+//
+//        String expectedMessage = MaterialDefinition.class.getSimpleName() + " " + String.format(NotificationMessages.COULD_NOT_BE_DELETED, expectedMaterialDefinition.getId()) + ".";
+//
+//        // Act
+//        ServiceResult actualResult = this.materialDefinitionService.delete(expectedMaterialDefinition.getId());
+//        MaterialDefinition actualMaterialDefinition = (MaterialDefinition) actualResult.getEntity();
+//
+//        // Assert
+//        Assert.assertNull(actualMaterialDefinition);
+//        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
+//        Assert.assertEquals(actualResult.getMessage(), expectedMessage);
+//    }
 }

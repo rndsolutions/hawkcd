@@ -235,24 +235,24 @@ public class PipelineServiceTests {
 
     }
 
-    @Test
-    public void delete_existingObject_true() {
-        Pipeline pipelineToAdd = new Pipeline();
-        pipelineToAdd.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
+//    @Test
+//    public void delete_existingObject_true() {
+//        Pipeline pipelineToAdd = new Pipeline();
+//        pipelineToAdd.setPipelineDefinitionId(this.expectedPipelineDefinition.getId());
+//
+//        this.pipelineService.add(pipelineToAdd);
+//
+//        ServiceResult actualResult = this.pipelineService.delete(pipelineToAdd.getId());
+//
+//        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
+//    }
 
-        this.pipelineService.add(pipelineToAdd);
-
-        ServiceResult actualResult = this.pipelineService.delete(pipelineToAdd.getId());
-
-        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-    }
-
-    @Test
-    public void delete_nonexistentObject_false() {
-        ServiceResult actualResult = this.pipelineService.delete("someInvalidId");
-
-        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-    }
+//    @Test
+//    public void delete_nonexistentObject_false() {
+//        ServiceResult actualResult = this.pipelineService.delete("someInvalidId");
+//
+//        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
+//    }
 
     @Test
     public void getAllPipelinesInProgress_onePipelinePassed_twoObjects() {

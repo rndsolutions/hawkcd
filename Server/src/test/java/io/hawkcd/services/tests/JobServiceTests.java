@@ -199,36 +199,36 @@ public class JobServiceTests {
         Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
     }
 
-    @Test
-    public void delete_existingJob_successMessage() {
-        //Arrange
-        this.insertIntoDb();
-        this.jobService.add(this.job);
-        String expectedMessage = "Job " + this.job.getId() + " deleted successfully.";
+//    @Test
+//    public void delete_existingJob_successMessage() {
+//        //Arrange
+//        this.insertIntoDb();
+//        this.jobService.add(this.job);
+//        String expectedMessage = "Job " + this.job.getId() + " deleted successfully.";
+//
+//        //Act
+//        ServiceResult actualResult = this.jobService.delete(this.job.getId());
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
+//        assertNotNull(actualResult.getEntity());
+//        assertEquals(expectedMessage, actualResult.getMessage());
+//    }
 
-        //Act
-        ServiceResult actualResult = this.jobService.delete(this.job.getId());
-
-        //Assert
-        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getEntity());
-        assertEquals(expectedMessage, actualResult.getMessage());
-    }
-
-    @Test
-    public void delete_nonExistingJob_errorMessage() {
-        //Arrange
-        this.insertIntoDb();
-        String expectedMessage = "Job not found.";
-
-        //Act
-        ServiceResult result = this.jobService.delete(this.job.getId());
-
-        //Assert
-        assertEquals(NotificationType.ERROR, result.getNotificationType());
-        assertNull(result.getEntity());
-        assertEquals(expectedMessage, result.getMessage());
-    }
+//    @Test
+//    public void delete_nonExistingJob_errorMessage() {
+//        //Arrange
+//        this.insertIntoDb();
+//        String expectedMessage = "Job not found.";
+//
+//        //Act
+//        ServiceResult result = this.jobService.delete(this.job.getId());
+//
+//        //Assert
+//        assertEquals(NotificationType.ERROR, result.getNotificationType());
+//        assertNull(result.getEntity());
+//        assertEquals(expectedMessage, result.getMessage());
+//    }
 
     private void insertIntoDb() {
         this.pipelineDefinition = new PipelineDefinition();

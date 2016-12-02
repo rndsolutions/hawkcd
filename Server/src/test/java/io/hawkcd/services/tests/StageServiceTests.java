@@ -170,24 +170,24 @@ public class StageServiceTests {
         assertEquals(StageStatus.PASSED, actualStatus.getStatus());
     }
 
-    @Test
-    public void delete_oneStage_successMessage() {
-        //Arrange
-        this.insertIntoDb();
-        Stage stageTwo = new Stage();
-        stageTwo.setPipelineId(this.pipeline.getId());
-        this.stageService.add(stageTwo);
-        this.stageService.add(this.stage);
-        String expectedMessage = "Stage " + this.stage.getId() + " deleted successfully.";
-
-        //Act
-        ServiceResult actualResult = this.stageService.delete(this.stage.getId());
-
-        //Assert
-        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        assertNotNull(actualResult.getEntity());
-        assertEquals(expectedMessage, actualResult.getMessage());
-    }
+//    @Test
+//    public void delete_oneStage_successMessage() {
+//        //Arrange
+//        this.insertIntoDb();
+//        Stage stageTwo = new Stage();
+//        stageTwo.setPipelineId(this.pipeline.getId());
+//        this.stageService.add(stageTwo);
+//        this.stageService.add(this.stage);
+//        String expectedMessage = "Stage " + this.stage.getId() + " deleted successfully.";
+//
+//        //Act
+//        ServiceResult actualResult = this.stageService.delete(this.stage.getId());
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
+//        assertNotNull(actualResult.getEntity());
+//        assertEquals(expectedMessage, actualResult.getMessage());
+//    }
 
     private void insertIntoDb() {
         this.pipelineDefinition = new PipelineDefinition();

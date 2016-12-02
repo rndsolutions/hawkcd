@@ -289,35 +289,35 @@ public class PipelineDefinitionControllerTest extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    public void deletePipelineDefinition_pipelineDefintionId_successMessage() {
-        //Arrange
-        this.preparePipelineDefinition();
-        Mockito.when(this.pipelineDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//    @Test
+//    public void deletePipelineDefinition_pipelineDefintionId_successMessage() {
+//        //Arrange
+//        this.preparePipelineDefinition();
+//        Mockito.when(this.pipelineDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/pipeline-definitions/" + this.pipelineDefinition.getId()).request().delete();
+//
+//        //Assert
+//        assertEquals(204, response.getStatus());
+//    }
 
-        //Act
-        Response response = target("/pipeline-definitions/" + this.pipelineDefinition.getId()).request().delete();
-
-        //Assert
-        assertEquals(204, response.getStatus());
-    }
-
-    @Test
-    public void deletePipelineDefinition_nonExistingPipelineDefinition_properErrorMessage() {
-        //Arrange
-        String expectedMessage = "PipelineDefinition not found.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.pipelineDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/pipeline-definitions/wrongId").request().delete();
-        String actualMessage = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(400, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
+//    @Test
+//    public void deletePipelineDefinition_nonExistingPipelineDefinition_properErrorMessage() {
+//        //Arrange
+//        String expectedMessage = "PipelineDefinition not found.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedMessage);
+//        Mockito.when(this.pipelineDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/pipeline-definitions/wrongId").request().delete();
+//        String actualMessage = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(400, response.getStatus());
+//        assertEquals(expectedMessage, actualMessage);
+//    }
 
 
     private void preparePipelineDefinition() {

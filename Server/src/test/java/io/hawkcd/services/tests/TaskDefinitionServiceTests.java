@@ -359,60 +359,60 @@ public class TaskDefinitionServiceTests {
         Assert.assertNull(result.getEntity());
     }
 
-    @Test
-    public void delete_validId_correctObject() {
-        //Assert
-        UploadArtifactTask expectedTask = new UploadArtifactTask();
-        expectedTask.setName("myName");
-        expectedTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        expectedTask.setJobDefinitionId(this.jobDefinition.getId());
-        expectedTask.setStageDefinitionId(this.stageDefinition.getId());
-        UploadArtifactTask anotherTask = new UploadArtifactTask();
-        anotherTask.setName("anotherName");
-        anotherTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        anotherTask.setJobDefinitionId(this.jobDefinition.getId());
-        anotherTask.setStageDefinitionId(this.stageDefinition.getId());
-        this.addTaskToPipeline(expectedTask);
-        this.addTaskToPipeline(anotherTask);
+//    @Test
+//    public void delete_validId_correctObject() {
+//        //Assert
+//        UploadArtifactTask expectedTask = new UploadArtifactTask();
+//        expectedTask.setName("myName");
+//        expectedTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
+//        expectedTask.setJobDefinitionId(this.jobDefinition.getId());
+//        expectedTask.setStageDefinitionId(this.stageDefinition.getId());
+//        UploadArtifactTask anotherTask = new UploadArtifactTask();
+//        anotherTask.setName("anotherName");
+//        anotherTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
+//        anotherTask.setJobDefinitionId(this.jobDefinition.getId());
+//        anotherTask.setStageDefinitionId(this.stageDefinition.getId());
+//        this.addTaskToPipeline(expectedTask);
+//        this.addTaskToPipeline(anotherTask);
+//
+//        //Act
+//        ServiceResult actualResult = this.taskDefinitionService.delete(expectedTask.getId());
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
+//        Assert.assertNull(actualResult.getEntity());
+//        Assert.assertEquals(this.deletionSuccessMessage, actualResult.getMessage());
+//    }
 
-        //Act
-        ServiceResult actualResult = this.taskDefinitionService.delete(expectedTask.getId());
+//    @Test
+//    public void delete_lastTask_correctErrorMessage() {
+//        //Assert
+//        UploadArtifactTask expectedTask = new UploadArtifactTask();
+//        expectedTask.setName("myName");
+//        expectedTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
+//        expectedTask.setJobDefinitionId(this.jobDefinition.getId());
+//        expectedTask.setStageDefinitionId(this.stageDefinition.getId());
+//        this.addTaskToPipeline(expectedTask);
+//
+//        //Act
+//        ServiceResult actualResult = this.taskDefinitionService.delete(expectedTask.getId());
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
+//        Assert.assertNotNull(actualResult.getEntity());
+//        Assert.assertEquals("TaskDefinition cannot delete the last task definition.", actualResult.getMessage());
+//    }
 
-        //Assert
-        Assert.assertEquals(NotificationType.SUCCESS, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getEntity());
-        Assert.assertEquals(this.deletionSuccessMessage, actualResult.getMessage());
-    }
-
-    @Test
-    public void delete_lastTask_correctErrorMessage() {
-        //Assert
-        UploadArtifactTask expectedTask = new UploadArtifactTask();
-        expectedTask.setName("myName");
-        expectedTask.setPipelineDefinitionId(this.pipelineDefinition.getId());
-        expectedTask.setJobDefinitionId(this.jobDefinition.getId());
-        expectedTask.setStageDefinitionId(this.stageDefinition.getId());
-        this.addTaskToPipeline(expectedTask);
-
-        //Act
-        ServiceResult actualResult = this.taskDefinitionService.delete(expectedTask.getId());
-
-        //Assert
-        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNotNull(actualResult.getEntity());
-        Assert.assertEquals("TaskDefinition cannot delete the last task definition.", actualResult.getMessage());
-    }
-
-    @Test
-    public void delete_invalidId_correctErrorMessage() {
-        //Act
-        ServiceResult actualResult = this.taskDefinitionService.delete("12345");
-
-        //Assert
-        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
-        Assert.assertNull(actualResult.getEntity());
-        Assert.assertEquals("TaskDefinition does not exists.", actualResult.getMessage());
-    }
+//    @Test
+//    public void delete_invalidId_correctErrorMessage() {
+//        //Act
+//        ServiceResult actualResult = this.taskDefinitionService.delete("12345");
+//
+//        //Assert
+//        Assert.assertEquals(NotificationType.ERROR, actualResult.getNotificationType());
+//        Assert.assertNull(actualResult.getEntity());
+//        Assert.assertEquals("TaskDefinition does not exists.", actualResult.getMessage());
+//    }
 
     private void injectDataForTestingStageDefinitionService() {
         this.pipelineDefinition.setName("mockedPipelineDefinition");

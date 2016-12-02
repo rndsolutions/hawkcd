@@ -274,35 +274,35 @@ public class MaterialDefinitionControllerTests extends JerseyTest {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    public void deleteMaterialDefinition_materialDefinition_successMessage() {
-        //Arrange
-        this.prepareMaterialDefinition();
-        Mockito.when(this.materialDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//    @Test
+//    public void deleteMaterialDefinition_materialDefinition_successMessage() {
+//        //Arrange
+//        this.prepareMaterialDefinition();
+//        Mockito.when(this.materialDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/materials/" + this.materialDefinition.getId()).request().delete();
+//
+//        //Assert
+//        assertEquals(204, response.getStatus());
+//    }
 
-        //Act
-        Response response = target("/materials/" + this.materialDefinition.getId()).request().delete();
-
-        //Assert
-        assertEquals(204, response.getStatus());
-    }
-
-    @Test
-    public void deleteMaterialDefinition_nonMaterialDefinition_errorMessage() {
-        //Arrange
-        String expectedMessage = "MaterialDefinition not found.";
-        this.serviceResult.setNotificationType(NotificationType.ERROR);
-        this.serviceResult.setMessage(expectedMessage);
-        Mockito.when(this.materialDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
-
-        //Act
-        Response response = target("/materials/wrongId").request().delete();
-        String actualMessage = response.readEntity(String.class);
-
-        //Assert
-        assertEquals(404, response.getStatus());
-        assertEquals(expectedMessage, actualMessage);
-    }
+//    @Test
+//    public void deleteMaterialDefinition_nonMaterialDefinition_errorMessage() {
+//        //Arrange
+//        String expectedMessage = "MaterialDefinition not found.";
+//        this.serviceResult.setNotificationType(NotificationType.ERROR);
+//        this.serviceResult.setMessage(expectedMessage);
+//        Mockito.when(this.materialDefinitionService.delete(Mockito.anyString())).thenReturn(this.serviceResult);
+//
+//        //Act
+//        Response response = target("/materials/wrongId").request().delete();
+//        String actualMessage = response.readEntity(String.class);
+//
+//        //Assert
+//        assertEquals(404, response.getStatus());
+//        assertEquals(expectedMessage, actualMessage);
+//    }
 
     private void prepareMaterialDefinition() {
         this.materialDefinition = new GitMaterial();
