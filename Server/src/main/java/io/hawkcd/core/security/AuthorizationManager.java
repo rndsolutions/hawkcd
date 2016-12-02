@@ -24,7 +24,7 @@ import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineDefinitionDto;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
-import io.hawkcd.model.enums.PermissionScope;
+import io.hawkcd.model.enums.PermissionEntity;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.UserService;
 import org.apache.log4j.Logger;
@@ -131,10 +131,10 @@ public class AuthorizationManager implements IAuthorizationManager {
         if (grantToEvaluateAgainst.getPermissionType() == PermissionType.NONE) {
             return PermissionType.VIEWER;
         }
-        // Checks for specific Permissions, e.g. a user is assigned a permission for a specific entity (Pipeline/Group)
+        // Checks for specific Permissions, e.g. a user has a grant for a specific entity (Pipeline/Group)
         for (String entityId : entityIds) {
             for (AuthorizationGrant grant : userGrants) {
-                if (grant.getPermittedEntityId().equals(entityId)) {
+                if (grant.getPermissionEntity() == PermissionEntity.SPECIFIC_ENTITY && grant.getPermittedEntityId().equals(entityId)) {
                     if (grant.isGreaterThan(grantToEvaluateAgainst)) {
                         return grant.getPermissionType();
                     }
@@ -142,9 +142,9 @@ public class AuthorizationManager implements IAuthorizationManager {
             }
         }
 
-        // Checks for generic Permissions, e.g. a user is assigned a permission for ALL Pipelines/Groups
+        // Checks for generic Permissions, e.g. a user is assigned a permission for ALL Pipelines/Groups or Server
         for (AuthorizationGrant grant : userGrants) {
-            if (grant.getPermittedEntityId().startsWith("ALL") || (grant.getPermissionScope() == PermissionScope.SERVER)) {
+            if (grant.getPermissionEntity() != PermissionEntity.SPECIFIC_ENTITY) {
                 if (grant.isGreaterThan(grantToEvaluateAgainst)) {
                     return grant.getPermissionType();
                 }
