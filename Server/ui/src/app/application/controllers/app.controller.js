@@ -167,13 +167,13 @@ angular
                     });
             }
 
-            $('#log-form').keydown(function(e) {
-                var key = e.which;
-                if (key == 13) {
-                    // As ASCII code for ENTER key is "13"
-                    $scope.login(); // Submit form code
-                }
-            });
+            // $('#log-form').keydown(function(e) {
+            //     var key = e.which;
+            //     if (key == 13) {
+            //         // As ASCII code for ENTER key is "13"
+            //         $scope.login(); // Submit form code
+            //     }
+            // });
 
             $scope.login = function() {
               $scope.mismatchCredentials = {};

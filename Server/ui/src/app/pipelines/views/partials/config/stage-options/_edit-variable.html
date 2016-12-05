@@ -15,36 +15,54 @@
 <div id="editStageVar" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="pipeConfig.close()"></button>
-                <h4 class="modal-title">Edit Value</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group form-md-line-input">
-                    <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.stages.variableToEdit.key" ng-pattern="/^([\w-]+)$/" required>
-                    <label>Name <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableName}}">?</span></label>
+            <form name="editStageVariableForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                            ng-click="pipeConfig.close()"></button>
+                    <h4 class="modal-title">Edit Value</h4>
                 </div>
-                <div class="form-group form-md-line-input">
-                    <input type="text" class="form-control" ng-model="pipeConfig.environmentVariableUtils.stages.variableToEdit.value">
-                    <label>Value <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableValue}}">?</span></label>
-                </div>
-                <div class="form-group form-md-checkboxes">
-                    <div class="md-checkbox-list">
-                        <div class="md-checkbox">
-                            <input type="checkbox" class="md-check" ng-model="pipeConfig.environmentVariableUtils.stages.variableToEdit.isSecured" id="editStageVarSecured">
-                            <label for="editStageVarSecured">
-                                <span></span>
-                                <span class="check"></span>
-                                <span class="box"></span> Secured? </label>
-                            <span class="badge badge-default cursor-popover" data-placement="right" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableSecured}}">?</span>
+                <div class="modal-body">
+                    <div class="form-group form-md-line-input">
+                        <input type="text" class="form-control"
+                               ng-model="pipeConfig.environmentVariableUtils.stages.variableToEdit.key"
+                               ng-pattern="/^([\w-]+)$/" required>
+                        <label>Name <span class="badge badge-default cursor-popover" data-placement="right"
+                                          onmouseenter="$(this).tooltip('show')"
+                                          title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableName}}">?</span></label>
+                    </div>
+                    <div class="form-group form-md-line-input">
+                        <input type="text" class="form-control"
+                               ng-model="pipeConfig.environmentVariableUtils.stages.variableToEdit.value">
+                        <label>Value <span class="badge badge-default cursor-popover" data-placement="right"
+                                           onmouseenter="$(this).tooltip('show')"
+                                           title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableValue}}">?</span></label>
+                    </div>
+                    <div class="form-group form-md-checkboxes">
+                        <div class="md-checkbox-list">
+                            <div class="md-checkbox">
+                                <input type="checkbox" class="md-check"
+                                       ng-model="pipeConfig.environmentVariableUtils.stages.variableToEdit.isSecured"
+                                       id="editStageVarSecured">
+                                <label for="editStageVarSecured">
+                                    <span></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> Secured? </label>
+                                <span class="badge badge-default cursor-popover" data-placement="right"
+                                      onmouseenter="$(this).tooltip('show')"
+                                      title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariableSecured}}">?</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.environmentVariableUtils.stages.editVariable(pipeConfig.environmentVariableUtils.stages.variableToEdit)">Edit Value</button>
-                <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
-            </div>
+                <div class="modal-footer">
+                    <button submit-button type="button" class="btn btn-danger" data-dismiss="modal"
+                            ng-class="{'disabled': editStageVariableForm.$invalid}"
+                            ng-click="pipeConfig.environmentVariableUtils.stages.editVariable(pipeConfig.environmentVariableUtils.stages.variableToEdit)">
+                        Edit Value
+                    </button>
+                    <button type="button" class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -38,8 +38,8 @@
                         </div>
                         <br>
                         <div class="form-group text-center">
-                            <button class="btn green" ng-click="admin.addNewPipelineGroup();admin.close()" data-dismiss="modal" type="submit" ng-class="{'disabled':addPipelineGroupForm.$invalid}">{{admin.defaultText.buttonTitles.ok}}</button>
-                            <button class="btn btn-default" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
+                            <button submit-button type="button" class="btn green" ng-click="admin.addNewPipelineGroup();admin.close()" data-dismiss="modal" ng-class="{'disabled':addPipelineGroupForm.$invalid}">{{admin.defaultText.buttonTitles.ok}}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
                         </div>
                     </form>
                 </div>

@@ -89,8 +89,8 @@
                         <br>
                         <br>
                         <div class="form-group text-center">
-                          <button class="btn green" ng-click="admin.updateUserGroupPermission()" data-dismiss="modal" type="submit" ng-class="{disabled: manageUserGroup.$invalid}">{{admin.defaultText.buttonTitles.ok}}</button>
-                          <button class="btn btn-default" data-dismiss="modal" ng-click="admin.closeGroupPermissionModal()">{{admin.defaultText.buttonTitles.cancel}}</button>
+                          <button submit-button type="button" class="btn green" ng-click="admin.updateUserGroupPermission()" data-dismiss="modal" ng-class="{disabled: manageUserGroup.$invalid}">{{admin.defaultText.buttonTitles.ok}}</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="admin.closeGroupPermissionModal()">{{admin.defaultText.buttonTitles.cancel}}</button>
                         </div>
                     </form>
                 </div>

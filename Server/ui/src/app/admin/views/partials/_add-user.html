@@ -58,14 +58,12 @@
                     Passwords does not match!
                   </p>
                 </div>
-
+                    <div class="modal-footer form-group text-center">
+                        <button submit-button type="button" class="btn green" data-dismiss="modal" ng-class="{'disabled':addUserForm.$invalid}" ng-click="admin.addUser();admin.close()">{{admin.defaultText.buttonTitles.ok}}</button>
+                        <button type="button" class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
+                    </div>
                 </form>
             </div>
-            <div class="form-group text-center">
-                <button class="btn green" data-dismiss="modal" ng-class="{'disabled':addUserForm.$invalid}" ng-click="admin.addUser();admin.close()">{{admin.defaultText.buttonTitles.ok}}</button>
-                <button class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
-            </div>
-            <br>
         </div>
     </div>
 </div>
