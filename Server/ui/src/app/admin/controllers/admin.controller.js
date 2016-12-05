@@ -659,7 +659,8 @@ angular
             };
 
             vm.updateUserGroupPermission = function() {
-                adminService.updateUserGroupDTO(vm.selectedUserGroup);
+                // adminService.updateUserGroupDTO(vm.selectedUserGroup);
+                adminService.updateUserGroupPermissions(vm.selectedUserGroup.id, vm.selectedUserGroup.permissions);
                 vm.closeGroupPermissionModal();
             };
 

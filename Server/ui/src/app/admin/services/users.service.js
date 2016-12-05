@@ -170,5 +170,18 @@ angular
             websocketSenderService.call(json);
         };
 
+        adminService.updateUserGroupPermissions = function(userGroupId, permissions) {
+            var methodName = "updatePermissions";
+            var className = "UserGroupService";
+            var packageName = "io.hawkcd.services";
+            var result = "";
+            var args = ["{\"objectType\": \"java.lang.String\", \"object\": \"" + userGroupId + "\"}, " +
+            "{\"packageName\": \"io.hawkcd.core.security.AuthorizationGrant\", \"object\": " + JSON.stringify(permissions) + "}"
+            ];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+        };
+
         return adminService;
     }]);

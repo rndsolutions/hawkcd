@@ -100,6 +100,9 @@ angular
                     unassignUserFromGroup: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
+                    updatePermissions: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupPermissions], true);
+                    },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUserGroupDTOs], true);
                     }

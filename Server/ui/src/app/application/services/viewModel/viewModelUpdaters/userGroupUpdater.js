@@ -36,6 +36,14 @@ angular
             });
         };
 
+        userGroupUpdater.updateUserGroupPermissions = function (userGroup) {
+            viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
+                if(currentUserGroup.id == userGroup.id){
+                    viewModel.userGroups[userGroupIndex].permissions = userGroup.permissions;
+                }
+            });
+        };
+
         userGroupUpdater.addUserGroup = function (userGroup) {
             viewModel.userGroups.push(userGroup);
         };
