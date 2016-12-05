@@ -53,9 +53,9 @@ public class WsObjectProcessor {
         int contractArgsLength = contract.getArgs().length;
         for (int i = 0; i < contractArgsLength; i++) {
             if (contract.getArgs()[i] != null) {
-                Class objectClass = Class.forName(contract.getArgs()[i].getPackageName());
-                Object object = this.jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);
-                methodArgs.add(object);
+//                Class objectClass = Class.forName(contract.getArgs()[i].getPackageName());
+//                Object object = this.jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);
+//                methodArgs.add(object);
             }
         }
 
