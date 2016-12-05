@@ -16,12 +16,17 @@
 
 package io.hawkcd.services.interfaces;
 
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.UserGroup;
 import io.hawkcd.model.dto.UserGroupDto;
 
+import java.util.ArrayList;
+
 public interface IUserGroupService extends ICrudService<UserGroup> {
+    ServiceResult updatePermissions(String userGroupId, ArrayList<AuthorizationGrant> grants);
+
     ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto);
 
     ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto);

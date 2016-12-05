@@ -17,6 +17,7 @@
 package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
@@ -88,6 +89,27 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(UserGroup userGroup) {
         return super.update(userGroup);
+    }
+
+    @Override
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
+    public ServiceResult updatePermissions(String userGroupId, ArrayList<AuthorizationGrant> grants) {
+        UserGroup userGroup = (UserGroup) this.getById(userGroupId).getEntity();
+        if (userGroup == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        // Insert old and new grants into HashSet
+
+        // Filter grants
+
+        userGroup.setPermissions(grants);
+        ServiceResult result = super.update(userGroup);
+        if (result.getEntity() != null) {
+            // Update all users from HashSet
+        }
+
+        return result;
     }
 
     @Override
