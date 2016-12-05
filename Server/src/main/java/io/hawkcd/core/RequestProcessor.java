@@ -23,6 +23,8 @@ import com.google.gson.GsonBuilder;
 import io.hawkcd.core.publisher.Publisher;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.IAuthorizationManager;
+import io.hawkcd.core.subscriber.EnvelopeAdapter;
+import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
@@ -130,12 +132,11 @@ public class RequestProcessor {
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();
         List<Object> methodArgs = new ArrayList<>();
-        int contractArgsLength = contract.getArgs().length;
+        int contractArgsLength = contract.getArgs().size();
         for (int i = 0; i < contractArgsLength; i++) {
-            if (contract.getArgs()[i] != null) {
-//                Class<?> objectClass = Class.forName(contract.getArgs()[i].getPackageName());
-//                Object object = jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);
-//                methodArgs.add(object);
+            if (contract.getArgs().get(i).getObject() != null) {
+                Object object = contract.getArgs().get(i).getObject();
+                methodArgs.add(object);
             }
         }
         return methodArgs;

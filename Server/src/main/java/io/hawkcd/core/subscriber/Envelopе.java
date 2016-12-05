@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class Envelopе {
     private Object object;
-    private String objectType;
+    private String packageName;
 
     public Envelopе(){
     }
@@ -46,9 +46,9 @@ public class Envelopе {
 
     /**
      * Sets the fields of the Envelope class
-     * Field objectType is set to the Type of the passed Object, if it is not a List.
-     * If it is a List, objectType is set to the Type of the members in the List.
-     * If the List is empty, objectType is set to Type Object.
+     * Field packageName is set to the Type of the passed Object, if it is not a List.
+     * If it is a List, packageName is set to the Type of the members in the List.
+     * If the List is empty, packageName is set to Type Object.
      * @param object
      */
     private void setFields(Object object) {
@@ -56,12 +56,20 @@ public class Envelopе {
         if (object instanceof List) {
             List<?> list = (List<?>) object;
             if (!list.isEmpty()) {
-                this.objectType = list.get(0).getClass().getCanonicalName();
+                this.packageName = list.get(0).getClass().getCanonicalName();
             } else {
-                this.objectType = Object.class.getCanonicalName();
+                this.packageName = Object.class.getCanonicalName();
             }
         } else {
-            this.objectType = object.getClass().getCanonicalName();
+            this.packageName = object.getClass().getCanonicalName();
         }
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 }

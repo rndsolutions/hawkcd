@@ -50,12 +50,13 @@ public class WsObjectProcessor {
         String fullPackageName = String.format("%s.%s", contract.getPackageName(), contract.getClassName());
         Object service = Class.forName(fullPackageName).newInstance();
         List<Object> methodArgs = new ArrayList<>();
-        int contractArgsLength = contract.getArgs().length;
+        int contractArgsLength = contract.getArgs().size();
         for (int i = 0; i < contractArgsLength; i++) {
-            if (contract.getArgs()[i] != null) {
-//                Class objectClass = Class.forName(contract.getArgs()[i].getPackageName());
-//                Object object = this.jsonConverter.fromJson(contract.getArgs()[i].getObject(), objectClass);
-//                methodArgs.add(object);
+            if (contract.getArgs().get(i) != null) {
+                if(contract.getArgs().get(i).getObject() != null){
+                    Object object = contract.getArgs().get(i).getObject();
+                    methodArgs.add(object);
+                }
             }
         }
 

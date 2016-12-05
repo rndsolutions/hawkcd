@@ -55,7 +55,6 @@ public class WSSocket extends WebSocketAdapter {
     public WSSocket() {
         this.id = UUID.randomUUID().toString();
         this.jsonConverter = new GsonBuilder()
-                .registerTypeAdapter(WsContractDto.class, new WsContractDeserializer())
                 .registerTypeAdapter(Envelopе.class, new EnvelopeAdapter())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
