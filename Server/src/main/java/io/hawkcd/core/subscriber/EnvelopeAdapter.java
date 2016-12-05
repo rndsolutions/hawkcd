@@ -29,7 +29,7 @@ public class EnvelopeAdapter implements JsonDeserializer<Envelopе> {
     public Envelopе deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonElement objectAsJsonElement = jsonObject.get("object");
-        if (objectAsJsonElement == null || !objectAsJsonElement.isJsonArray() && objectAsJsonElement.getAsString().equals("")) {
+        if (objectAsJsonElement == null || !objectAsJsonElement.isJsonArray() && !objectAsJsonElement.isJsonObject() && objectAsJsonElement.getAsString().equals("")) {
             return new Envelopе();
         }
 
