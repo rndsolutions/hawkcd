@@ -15,7 +15,7 @@
 <div id="assignPipeline" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <br name="assignPipelineForm">
+            <form name="assignPipelineForm">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="admin.close()"></button>
                     <h4 class="modal-title">Unassigned Pipelines</h4>
@@ -47,8 +47,8 @@
                 </div>
                 </br>
                 <div class="form-group text-center">
-                    <button class="btn btn-danger" data-dismiss="modal" ng-click="admin.assignPipeline(admin.pipelineToAssign)" ng-disabled="admin.pipelineToAssign == null">{{admin.defaultText.buttonTitles.ok}}</button>
-                    <button class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
+                    <button submit-button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="admin.assignPipeline(admin.pipelineToAssign)" ng-disabled="admin.pipelineToAssign == null">{{admin.defaultText.buttonTitles.ok}}</button>
+                    <button type="button" class="btn" data-dismiss="modal" ng-click="admin.close()">{{admin.defaultText.buttonTitles.cancel}}</button>
                 </div>
                 <br>
             </form>

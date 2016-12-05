@@ -22,7 +22,7 @@
             <h1 style="color: white; text-align: center">Welcome!</h1>
         </div>
         <br>
-        <form id="log-form" class="login-form login-form-custom" name="loginForm" ng-show="showLoginForm" novalidate>
+        <form id="log-form" class="login-form login-form-custom" name="loginForm" ng-show="showLoginForm">
             <div class="form-header">
                 <div class="form-title font-green heading-three">Sign In</div>
             </div>
@@ -57,7 +57,7 @@
                   </p>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn green uppercase btn-login" ng-class="{'disabled':loginForm.username.$invalid || password.length < 3}" ng-click="login()">Login</button>
+                    <button type="button" submit-button class="btn green uppercase btn-login" ng-class="{'disabled':loginForm.username.$invalid || password.length < 3}" ng-click="login()">Login</button>
                     <div class="display-inline">
                         <label class="rememberme check login-remember-fix">
                             <div class="checker"><span><input type="checkbox" name="remember" value="1"></span>
@@ -91,7 +91,7 @@
                 <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" ng-model="forgotPassword.email" name="email" ng-pattern="/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/" required> </div>
             <div class="form-actions">
                 <button type="button" id="back-btn" class="btn btn-default"  ng-click="showLogin();cancelForgotPassword()">Back</button>
-                <button type="submit" class="btn btn-success uppercase pull-right" ng-disabled="forgetForm.$invalid" id="submit-forgot-password">Submit</button>
+                <button type="button" submit-button class="btn btn-success uppercase pull-right" ng-disabled="forgetForm.$invalid" id="submit-forgot-password">Submit</button>
             </div>
         </form>
         <!-- END FORGOT PASSWORD FORM -->
@@ -144,7 +144,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn green btn-block uppercase btn-login" id="register-user" ng-disabled="registerForm.$invalid" ng-click="register()">Register</button>
+                <button type="button" submit-button class="btn green btn-block uppercase btn-login" id="register-user" ng-disabled="registerForm.$invalid" ng-click="register()">Register</button>
             </div>
             </br>
 

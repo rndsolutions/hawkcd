@@ -484,12 +484,12 @@
                                                 <br>
                                                 <hr>
                                                 <div id="buttons-row" class="row">
-                                                    <button class="btn green button-previous pull-left" ng-hide="pipes.bar == 1" ng-click="pipes.back()">
+                                                    <button type="button" class="btn green button-previous pull-left" ng-hide="pipes.bar == 1" ng-click="pipes.back()">
                                                         <i class="fa fa-angle-left"></i> {{pipes.wizardInfo.buttons.back}}</button>
-                                                    <button class="btn green button-next pull-right" ng-disabled="pipelineCreateForm.$invalid || (pipes.bar == 2 && pipes.materialType === 'hidden') || (pipes.bar == 2 && pipes.materialType == 'existing' && pipes.selectedMaterial.$$hashKey != null)" ng-hide="pipes.bar == 3" ng-click="pipes.next()">{{pipes.wizardInfo.buttons.continue}}
+                                                    <button submit-button-pipeline type="button" class="btn green button-next pull-right" ng-disabled="pipelineCreateForm.$invalid || (pipes.bar == 2 && pipes.materialType === 'hidden') || (pipes.bar == 2 && pipes.materialType == 'existing' && pipes.selectedMaterial.$$hashKey != null)" ng-hide="pipes.bar == 3" ng-click="pipes.next()">{{pipes.wizardInfo.buttons.continue}}
                                                         <i class="fa fa-angle-right"></i>
                                                     </button>
-                                                    <button class="btn green button-submit pull-right" type="submit" data-dismiss="modal" ng-hide="pipes.bar != 3" ng-click="pipes.addPipeline(pipes.formData); pipes.close()">
+                                                    <button type="button" class="btn green button-submit pull-right" data-dismiss="modal" ng-hide="pipes.bar != 3" ng-click="pipes.addPipeline(pipes.formData); pipes.close()">
                                                         {{pipes.wizardInfo.buttons.submit}}
                                                         <i class="fa fa-check"></i>
                                                     </button>

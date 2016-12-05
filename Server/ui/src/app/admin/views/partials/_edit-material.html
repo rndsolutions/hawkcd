@@ -97,9 +97,9 @@
                     </div>
                     <div id="buttons-row" class="row">
                       <div class="btn-container">
-                        <button class="btn green button-next" ng-class="{'disabled': editMaterialForm.$invalid}" ng-click="admin.editMaterial(admin.formData)" data-dismiss="modal">{{admin.defaultText.buttonTitles.ok}}
+                        <button submit-button type="button" class="btn green button-next" ng-class="{'disabled': editMaterialForm.$invalid}" ng-click="admin.editMaterial(admin.formData)" data-dismiss="modal">{{admin.defaultText.buttonTitles.ok}}
                         </button>
-                        <button class="btn green button-next"  ng-click="admin.closeEditModal()" data-dismiss="modal">{{admin.defaultText.buttonTitles.cancel}}
+                        <button type="button" class="btn green button-next"  ng-click="admin.closeEditModal()" data-dismiss="modal">{{admin.defaultText.buttonTitles.cancel}}
                         </button>
                       </div>
                     </div>

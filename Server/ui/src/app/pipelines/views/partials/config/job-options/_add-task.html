@@ -230,23 +230,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.addTask(pipeConfig.newTask);pipeConfig.close()" ng-class="{'disabled' : addTaskForm.$invalid}">Add Task</button>
-                    <button class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
+                    <button submit-button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="pipeConfig.addTask(pipeConfig.newTask, addTaskForm);pipeConfig.close()" ng-class="{'disabled' : addTaskForm.$invalid}">Add Task</button>
+                    <button type="button" class="btn" data-dismiss="modal" ng-click="pipeConfig.close()">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<script>
-  $(document).ready(function(){
-    $('[data-toggle=tooltip]').hover(function(){
-      // on mouseenter
-      $(this).tooltip('show');
-    }, function(){
-      // on mouseleave
-      $(this).tooltip('hide');
-    });
-  });
-
-</script>
