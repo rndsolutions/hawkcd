@@ -175,7 +175,7 @@ angular
             var className = "UserGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"objectType\": \"java.lang.String\", \"object\": \"" + userGroupId + "\"}, " +
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + userGroupId + "\"}, " +
             "{\"packageName\": \"io.hawkcd.core.security.AuthorizationGrant\", \"object\": " + JSON.stringify(permissions) + "}"
             ];
             var error = "";
