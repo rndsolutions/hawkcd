@@ -33,7 +33,7 @@ public class User extends Entity {
     private String ghAuthCode;
     private String provider;
     private List<AuthorizationGrant> permissions;
-    private List<String> userGroupIds;
+    private String userGroupId;
     private boolean isEnabled;
 
     @Override
@@ -44,7 +44,7 @@ public class User extends Entity {
                 ", ghAuthCode='" + ghAuthCode + '\'' +
                 ", provider='" + provider + '\'' +
                 ", permissions=" + permissions +
-                ", userGroupIds=" + userGroupIds +
+                ", userGroupId=" + userGroupId +
                 ", isEnabled=" + isEnabled +
                 '}';
     }
@@ -67,7 +67,6 @@ public class User extends Entity {
 
     public User() {
         this.setPermissions(new ArrayList<>());
-        this.setUserGroupIds(new ArrayList<>());
         this.setEnabled(true);
     }
 
@@ -111,12 +110,12 @@ public class User extends Entity {
         this.permissions = permissions;
     }
 
-    public List<String> getUserGroupIds() {
-        return this.userGroupIds;
+    public String getUserGroupId() {
+        return this.userGroupId;
     }
 
-    public void setUserGroupIds(List<String> userGroupIds) {
-        this.userGroupIds = userGroupIds;
+    public void setUserGroupId(String userGroupId) {
+        this.userGroupId = userGroupId;
     }
 
     public boolean isEnabled() {

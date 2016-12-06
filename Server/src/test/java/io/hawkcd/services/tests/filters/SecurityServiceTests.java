@@ -854,7 +854,7 @@ public class SecurityServiceTests {
 
         User userToAdd = new User();
         userToAdd.setPassword("123");
-        userToAdd.getUserGroupIds().add(firstUserGroup.getId());
+        userToAdd.getUserGroupId().add(firstUserGroup.getId());
         this.firstUserGroup.getUserIds().add(userToAdd.getId());
         this.mockedUserService.add(userToAdd);
         this.mockedUserGroupService.update(this.firstUserGroup);
@@ -911,7 +911,7 @@ public class SecurityServiceTests {
 
         User userToAdd = new User();
         userToAdd.setPassword("123");
-        userToAdd.getUserGroupIds().add(firstUserGroup.getId());
+        userToAdd.getUserGroupId().add(firstUserGroup.getId());
         this.firstUserGroup.getUserIds().add(userToAdd.getId());
         this.mockedUserService.add(userToAdd);
         this.mockedUserGroupService.update(this.firstUserGroup);
