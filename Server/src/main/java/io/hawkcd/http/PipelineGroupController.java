@@ -22,6 +22,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.PipelineGroupService;
 import io.hawkcd.services.interfaces.IPipelineGroupService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.Response.Status;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/pipeline-groups")
+@Api(value = "/pipeline-groups", description = "Web Services to browse entities")
 public class PipelineGroupController {
     private IPipelineGroupService pipelineGroupService;
     private SchemaValidator schemaValidator;

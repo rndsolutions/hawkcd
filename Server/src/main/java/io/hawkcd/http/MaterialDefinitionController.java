@@ -22,6 +22,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.MaterialDefinitionService;
 import io.hawkcd.services.interfaces.IMaterialDefinitionService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.Response.Status;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/materials")
+@Api(value = "/materials", description = "Web Services to browse entities")
 public class MaterialDefinitionController {
 
     private IMaterialDefinitionService materialDefinitionService;

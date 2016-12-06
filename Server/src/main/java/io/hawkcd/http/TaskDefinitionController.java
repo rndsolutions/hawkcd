@@ -22,15 +22,17 @@ import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.TaskDefinitionService;
 import io.hawkcd.services.interfaces.ITaskDefinitionService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-@Path("/task-definitions")
 @Consumes("application/json")
 @Produces("application/json")
+@Path("/task-definitions")
+@Api(value = "/task-definitions", description = "Web Services to browse entities")
 public class TaskDefinitionController {
     private ITaskDefinitionService taskDefinitionService;
     private SchemaValidator schemaValidator;

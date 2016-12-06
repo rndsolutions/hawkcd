@@ -24,6 +24,7 @@ import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.model.TaskDefinition;
 import io.hawkcd.services.FileManagementService;
 import io.hawkcd.services.interfaces.IFileManagementService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Path("/Artifacts/{pipelineName}")
+@Api(value = "/Artifacts/{pipelineName}", description = "Web Services to browse entities")
 public class ArtifactController {
     private IFileManagementService fileManagementService;
     private String basePath;

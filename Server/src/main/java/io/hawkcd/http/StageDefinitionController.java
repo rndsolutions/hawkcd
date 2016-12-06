@@ -22,6 +22,7 @@ import io.hawkcd.model.StageDefinition;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.StageDefinitionService;
 import io.hawkcd.services.interfaces.IStageDefinitionService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.Response.Status;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/stage-definitions")
+@Api(value = "/stage-definitions", description = "Web Services to browse entities")
 public class StageDefinitionController {
     private IStageDefinitionService stageDefinitionService;
     private SchemaValidator schemaValidator;

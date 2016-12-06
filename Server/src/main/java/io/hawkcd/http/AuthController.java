@@ -28,6 +28,7 @@ import io.hawkcd.model.dto.RegisterDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.UserService;
 
+import io.swagger.annotations.Api;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
@@ -48,6 +49,7 @@ import java.util.List;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("auth")
+@Api(value = "/auth", description = "Web Services to browse entities")
 public class AuthController {
     private static final Logger LOGGER = Logger.getLogger(AuthController.class.getClass());
     private static final String GH_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";

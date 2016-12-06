@@ -20,6 +20,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.UserService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.Response.Status;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/account")
+@Api(value = "/account", description = "Web Services to browse entities")
 public class AccountController {
 
     private UserService usrService;

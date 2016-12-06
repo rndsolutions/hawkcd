@@ -21,6 +21,8 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.PipelineService;
 import io.hawkcd.services.interfaces.IPipelineService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -29,6 +31,7 @@ import javax.ws.rs.core.Response.Status;
 
 @Consumes("application/json")
 @Produces("application/json")
+@Api(value = "/pipelines", description = "Web Services to browse entities")
 @Path("/pipelines")
 public class PipelineController {
     private IPipelineService pipelineService;
@@ -43,6 +46,7 @@ public class PipelineController {
     }
 
     @GET
+    @ApiOperation(value = "Return one entity", notes = "Returns one entity at random", response = Pipeline.class)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPipelines() {
         ServiceResult response = this.pipelineService.getAll();
