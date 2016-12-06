@@ -17,11 +17,11 @@
 package io.hawkcd.model.dto;
 
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.User;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.model.payload.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
 public class UserGroupDto extends Entity {
     private List<User> users;
     private List<String> userIds;
-    private List<Permission> permissions;
+    private List<AuthorizationGrant> permissions;
 
     public UserGroupDto() {
         this.setUsers(new ArrayList<>());
@@ -52,11 +52,11 @@ public class UserGroupDto extends Entity {
         this.userIds = userIds;
     }
 
-    public List<Permission> getPermissions() {
+    public List<AuthorizationGrant> getPermissions() {
         return this.permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(List<AuthorizationGrant> permissions) {
         this.permissions = permissions;
     }
 }

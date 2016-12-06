@@ -77,10 +77,37 @@ public class UserService extends CrudService<User> implements IUserService {
     }
 
     @Override
-    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
+//    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(User user) {
-        List<AuthorizationGrant> filteredGrants = this.authorizationGrantService.filterAuthorizationGrantsForDuplicates(user.getPermissions());
-        filteredGrants = this.authorizationGrantService.sortAuthorizationGrants(filteredGrants);
+//        List<AuthorizationGrant> filteredGrants = this.authorizationGrantService.filterAuthorizationGrantsForDuplicates(user.getPermissions());
+//        filteredGrants = this.authorizationGrantService.sortAuthorizationGrants(filteredGrants);
+//        user.setPermissions(filteredGrants);
+//        ServiceResult serviceResult = super.update(user);
+//
+//        List<String> ids = new ArrayList<>();
+//        ids.add(user.getId());
+//        Envelopе envelopе = new Envelopе(ids);
+//        Message message = new Message(envelopе);
+//        message.setUserUpdate(true);
+//        MessageDispatcher.dispatchOutgoingMessage(message);
+
+        // Internal update, notify all Users
+
+        // Notify the specific User
+
+
+        return null;
+    }
+
+    @Override
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
+    public ServiceResult updatePermissions(String userId, ArrayList<AuthorizationGrant> grants) {
+        User user = (User) this.getById(userId).getEntity();
+        if (user == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        List<AuthorizationGrant> filteredGrants = AuthorizationGrantService.getUpdatedGrants(user.getUserGroupId(), grants);
         user.setPermissions(filteredGrants);
         ServiceResult serviceResult = super.update(user);
 
@@ -89,7 +116,7 @@ public class UserService extends CrudService<User> implements IUserService {
         Envelopе envelopе = new Envelopе(ids);
         Message message = new Message(envelopе);
         message.setUserUpdate(true);
-        MessageDispatcher.dispatchIncomingMessage(message);
+        MessageDispatcher.dispatchOutgoingMessage(message);
 
         return serviceResult;
     }

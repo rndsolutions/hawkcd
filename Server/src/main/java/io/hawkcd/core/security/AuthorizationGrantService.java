@@ -1,16 +1,79 @@
 package io.hawkcd.core.security;
 
 import com.google.common.collect.Lists;
+import io.hawkcd.model.User;
+import io.hawkcd.model.UserGroup;
+import io.hawkcd.services.UserGroupService;
+import io.hawkcd.services.UserService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AuthorizationGrantService implements IAuthorizationGrantService {
+public class AuthorizationGrantService {
+    private static UserGroupService userGroupService = new UserGroupService();
+    private static UserService userService = new UserService();
 
-    @Override
-    public List<AuthorizationGrant> sortAuthorizationGrants(List<AuthorizationGrant> grants) {
+    public static List<AuthorizationGrant> getUpdatedGrants(String userGroupId, List<AuthorizationGrant> grants) {
+        List<AuthorizationGrant> updatedGrants = new ArrayList<>();
+        updatedGrants.addAll(grants);
+
+        UserGroup userGroup = (UserGroup) userGroupService.getById(userGroupId).getEntity();
+        if (userGroup != null) {
+            updatedGrants.addAll(userGroup.getPermissions());
+        }
+
+        updatedGrants = filterAuthorizationGrantsForDuplicates(updatedGrants);
+        updatedGrants = sortAuthorizationGrants(updatedGrants);
+
+        return updatedGrants;
+    }
+
+    public static List<AuthorizationGrant> getUpdatedGrants(String userId) {
+        User user = (User) userService.getById(userId).getEntity();
+        if (user == null) {
+            return null;
+        }
+
+        List<AuthorizationGrant> updatedGrants = new ArrayList<>();
+        updatedGrants.addAll(user.getPermissions());
+
+        UserGroup userGroup = (UserGroup) userGroupService.getById(user.getUserGroupId()).getEntity();
+        if (userGroup != null) {
+            updatedGrants.addAll(userGroup.getPermissions());
+        }
+
+        updatedGrants = filterAuthorizationGrantsForDuplicates(updatedGrants);
+        updatedGrants = sortAuthorizationGrants(updatedGrants);
+
+        return updatedGrants;
+    }
+
+    public static void refreshUserGrants(Collection<String> userIds) {
+        for (String userId : userIds) {
+            User user = (User) userService.getById(userId).getEntity();
+            if (user == null) {
+                continue;
+            }
+
+            List<AuthorizationGrant> newGrants = new ArrayList<>();
+            newGrants.addAll(user.getPermissions());
+
+            UserGroup userGroup = (UserGroup) userGroupService.getById(user.getUserGroupId()).getEntity();
+            if (userGroup != null) {
+                newGrants.addAll(userGroup.getPermissions());
+            }
+
+            newGrants = filterAuthorizationGrantsForDuplicates(newGrants);
+            newGrants = sortAuthorizationGrants(newGrants);
+            user.setPermissions(newGrants);
+            userService.update(user);
+        }
+    }
+
+    public static List<AuthorizationGrant> sortAuthorizationGrants(List<AuthorizationGrant> grants) {
         List<AuthorizationGrant> sortedGrants = grants
                 .stream()
                 .sorted(Comparator.comparingInt(g -> g.getPermissionEntity().getPriorityLevel()))
@@ -20,8 +83,7 @@ public class AuthorizationGrantService implements IAuthorizationGrantService {
         return sortedGrants;
     }
 
-    @Override
-    public List<AuthorizationGrant> filterAuthorizationGrantsForDuplicates(List<AuthorizationGrant> grants) {
+    public static List<AuthorizationGrant> filterAuthorizationGrantsForDuplicates(List<AuthorizationGrant> grants) {
         List<AuthorizationGrant> filteredGrants = new ArrayList<>();
         for (AuthorizationGrant grant : grants) {
             boolean foundDuplicate = false;

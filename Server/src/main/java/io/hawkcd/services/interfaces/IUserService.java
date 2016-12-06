@@ -16,9 +16,12 @@
 
 package io.hawkcd.services.interfaces;
 
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.UserDto;
+
+import java.util.ArrayList;
 
 public interface IUserService extends ICrudService<User> {
 
@@ -27,6 +30,8 @@ public interface IUserService extends ICrudService<User> {
     ServiceResult getByEmail(String email);
 
     ServiceResult addUserWithoutProvider(User user);
+
+    ServiceResult updatePermissions(String userId, ArrayList<AuthorizationGrant> grants);
 
     ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword);
 

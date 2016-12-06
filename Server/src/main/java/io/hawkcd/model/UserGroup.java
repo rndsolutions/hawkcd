@@ -17,9 +17,9 @@
 package io.hawkcd.model;
 
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
-import io.hawkcd.model.payload.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
 public class UserGroup extends Entity {
     private List<String> userIds;
-    private List<Permission> permissions;
+    private List<AuthorizationGrant> permissions;
 
     public UserGroup() {
         this.setUserIds(new ArrayList<>());
@@ -42,11 +42,11 @@ public class UserGroup extends Entity {
         this.userIds = userIds;
     }
 
-    public List<Permission> getPermissions() {
+    public List<AuthorizationGrant> getPermissions() {
         return this.permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(List<AuthorizationGrant> permissions) {
         this.permissions = permissions;
     }
 }
