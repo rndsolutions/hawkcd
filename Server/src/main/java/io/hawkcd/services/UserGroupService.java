@@ -18,6 +18,8 @@ package io.hawkcd.services;
 
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationGrant;
+import io.hawkcd.core.security.AuthorizationGrantService;
+import io.hawkcd.core.security.IAuthorizationGrantService;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
@@ -29,22 +31,24 @@ import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserGroupService;
 import io.hawkcd.services.interfaces.IUserService;
-//import io.hawkcd.ws.SessionPool;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UserGroupService extends CrudService<UserGroup> implements IUserGroupService {
     private static final Class CLASS_TYPE = UserGroup.class;
 
     private IUserService userService;
+    private static IAuthorizationGrantService authorizationGrantService;
 
     public UserGroupService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
-        this.userService = new UserService();
         super.setObjectType(CLASS_TYPE.getSimpleName());
+
+        this.userService = new UserService();
     }
 
     public UserGroupService(IDbRepository repository, IUserService userService) {
@@ -88,6 +92,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult update(UserGroup userGroup) {
+
         return super.update(userGroup);
     }
 
@@ -99,14 +104,34 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
         }
 
-        // Insert old and new grants into HashSet
+        List<AuthorizationGrant> filteredGrants = AuthorizationGrantService.filterAuthorizationGrantsForDuplicates(grants);
+        filteredGrants = AuthorizationGrantService.sortAuthorizationGrants(filteredGrants);
 
-        // Filter grants
-
-        userGroup.setPermissions(grants);
+        userGroup.setPermissions(filteredGrants);
         ServiceResult result = super.update(userGroup);
         if (result.getEntity() != null) {
-            // Update all users from HashSet
+            AuthorizationGrantService.refreshUserGrants(userGroup.getUserIds());
+        }
+
+        return result;
+    }
+
+    @Override
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
+    public ServiceResult updateUsers(String userGroupId, ArrayList<String> userIds) {
+        UserGroup userGroup = (UserGroup) this.getById(userGroupId).getEntity();
+        if (userGroup == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        Set<String> usersToBeUpdatedById = new HashSet<>();
+        usersToBeUpdatedById.addAll(userGroup.getUserIds());
+        usersToBeUpdatedById.addAll(userIds);
+
+        userGroup.setUserIds(userIds);
+        ServiceResult result = super.update(userGroup);
+        if (result.getEntity() != null) {
+            AuthorizationGrantService.refreshUserGrants(usersToBeUpdatedById);
         }
 
         return result;
@@ -135,24 +160,24 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult delete(UserGroup userGroup) {
-        List<User> users = (List<User>) this.userService.getAll().getEntity();
-
-        for (User user : users) {
-            List<String> userGroupIds = user.getUserGroupIds();
-
-            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
-                String currentUserGroupId = iter.next();
-                if (currentUserGroupId.equals(userGroup.getId())) {
-                    iter.remove();
-                }
-            }
-
-            user.setUserGroupIds(userGroupIds);
-            ServiceResult removeGroupFromAllUsers = this.userService.update(user);
-            if (removeGroupFromAllUsers.getNotificationType() == NotificationType.ERROR) {
-                return removeGroupFromAllUsers;
-            }
-        }
+//        List<User> users = (List<User>) this.userService.getAll().getEntity();
+//
+//        for (User user : users) {
+//            String userGroupIds = user.getUserGroupId();
+//
+//            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
+//                String currentUserGroupId = iter.next();
+//                if (currentUserGroupId.equals(userGroup.getId())) {
+//                    iter.remove();
+//                }
+//            }
+//
+//            user.setUserGroupId(userGroupIds);
+//            ServiceResult removeGroupFromAllUsers = this.userService.update(user);
+//            if (removeGroupFromAllUsers.getNotificationType() == NotificationType.ERROR) {
+//                return removeGroupFromAllUsers;
+//            }
+//        }
 
         return super.delete(userGroup);
     }
@@ -162,7 +187,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     public ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
 
-        boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
+        boolean userHasGroupId = user.getUserGroupId().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
 
         ServiceResult userGroupResult;
@@ -187,7 +212,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     public ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
 
-        boolean userHasGroupId = user.getUserGroupIds().contains(userGroup.getId());
+        boolean userHasGroupId = user.getUserGroupId().contains(userGroup.getId());
         boolean groupHasUserId = userGroup.getUserIds().contains(user.getId());
 
         ServiceResult userGroupResult = null;
