@@ -214,13 +214,12 @@ angular
 
         $scope.$on('$locationChangeSuccess', function(){
             $timeout(function() {
-                if(vm.currentView == 'pipeline'){
+                if(vm.currentView == 'pipeline' && $('#pipelineConfig').position()){
                     $(window).scrollTop($('#pipelineConfig').position().top);
-                } else if(vm.currentView == 'stage'){
+                } else if(vm.currentView == 'stage' && $('#stageConfig').position()){
                     $(window).scrollTop($('#stageConfig').position().top);
-                } else if(vm.currentView == 'job'){
+                } else if(vm.currentView == 'job' && $('#jobConfig').position()){
                     $(window).scrollTop($('#jobConfig').position().top);
-
                 }
             });
         });
