@@ -511,13 +511,10 @@ angular
                     assignedUsers.push(currentUser.id);
                 });
                 assignedUsers.forEach(function(currentUser, userIndex, userArray) {
-                    var isFound = false;
-                    if (currentUser.isClicked) {
-                        if (currentUser.isAssigned) {
-                            assignedUsers.push(currentUser.id);
-                        } else {
-                            assignedUsers.splice(userIndex, 1);
-                        }
+                    if (currentUser.isAssigned) {
+                        assignedUsers.push(currentUser.id);
+                    } else {
+                        assignedUsers.splice(userIndex, 1);
                     }
                 });
                 adminService.assignUsers(vm.selectedUserGroup.id, assignedUsers);
