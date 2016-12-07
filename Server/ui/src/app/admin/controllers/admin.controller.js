@@ -507,14 +507,12 @@ angular
 
             vm.assignUsers = function() {
                 var assignedUsers = [];
-                vm.selectedUserGroup.newUsers.forEach(function (currentUser, userIndex, userArray) {
-                    assignedUsers.push(currentUser.id);
-                });
-                assignedUsers.forEach(function(currentUser, userIndex, userArray) {
+                // vm.selectedUserGroup.newUsers.forEach(function (currentUser, userIndex, userArray) {
+                //     assignedUsers.push(currentUser);
+                // });
+                vm.selectedUserGroup.newUsers.forEach(function(currentUser, userIndex, userArray) {
                     if (currentUser.isAssigned) {
                         assignedUsers.push(currentUser.id);
-                    } else {
-                        assignedUsers.splice(userIndex, 1);
                     }
                 });
                 adminService.assignUsers(vm.selectedUserGroup.id, assignedUsers);
