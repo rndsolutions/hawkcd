@@ -65,6 +65,9 @@ angular
                     update: function(object) {
                         validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
                     },
+                    updatePermissions: function(object) {
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
+                    },
                     changeUserPassword: function(object) {
                         validationService.dispatcherFlow(object, [userUpdater.updateUser], true)
                     },
@@ -93,7 +96,7 @@ angular
                     updateUserGroupDto: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
-                    updateUserGroup: function(object) {
+                    update: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupWithoutUsers], true);
                     },
                     assignUserToGroup: function(object) {

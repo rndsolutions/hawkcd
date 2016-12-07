@@ -39,10 +39,13 @@ angular
         userGroupUpdater.updateUserGroupWithoutUsers = function (userGroup) {
             viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
                 if(currentUserGroup.id == userGroup.id){
-                    viewModel.users.forEach(function (currentUser, currentUserIndex, userArray) {
-                        if(currentUser.userGroupId == userGroup.id){
-                            userGroup.users.push(currentUser);
-                        }
+                    userGroup.users = [];
+                    userGroup.userIds.forEach(function (currentUserId, userIdIndex, userIdArray) {
+                        viewModel.users.forEach(function (currentUser, currentUserIndex, userArray) {
+                            if(currentUser.id == currentUserId){
+                                userGroup.users.push(currentUser);
+                            }
+                        });
                     });
                     viewModel.userGroups[userGroupIndex] = userGroup;
                 }
