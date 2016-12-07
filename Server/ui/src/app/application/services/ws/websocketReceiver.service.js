@@ -93,6 +93,9 @@ angular
                     updateUserGroupDto: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
+                    updateUserGroup: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupWithoutUsers], true);
+                    },
                     assignUserToGroup: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
