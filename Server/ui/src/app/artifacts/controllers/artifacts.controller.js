@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.artifactManagement')
-    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, pipelineUpdater, moment, commonUtitlites, filterRuns, artifactService, pipeExecService) {
+    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, pipelineUpdater, moment, commonUtitlites, filterRuns, artifactService) {
         var vm = this;
 
         vm.allPipelines = [];
@@ -38,7 +38,7 @@ angular
 
         vm.isFirstLoad = true;
 
-        pipeExecService.getAllArtifactPipelines('', 10, '');
+        artifactService.getAllArtifactPipelines('', 10, '');
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
             return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
@@ -55,7 +55,7 @@ angular
                 viewModel.artifactPipelines[0].searchCriteria = angular.copy(vm.query);
             }
             vm.searchCriteria = angular.copy(vm.query);
-            pipeExecService.getAllArtifactPipelines(vm.query, 10, '');
+            artifactService.getAllArtifactPipelines(vm.query, 10, '');
         };
 
         // $scope.$watch(function() {
@@ -93,7 +93,7 @@ angular
         vm.scrollCall = function() {
             if(vm.allPipelineRuns()[0]){
                 if(vm.allPipelineRuns()[0].disabled == false){
-                    pipeExecService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
+                    artifactService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
                 }
                 vm.isFirstLoad = false;
                 vm.allPipelineRuns()[0].disabled = true;
