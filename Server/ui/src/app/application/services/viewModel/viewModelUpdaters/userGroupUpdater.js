@@ -48,5 +48,21 @@ angular
             viewModel.userGroups.push(userGroup);
         };
 
+        userGroupUpdater.updateUsers = function (userGroup) {
+            var usersToAdd = [];
+            userGroup.userIds.forEach(function (currentUserId, userIdIndex, userIdArray) {
+                viewModel.users.forEach(function (currentUser, userIndex, userArray) {
+                    if(currentUserId == currentUser.id){
+                        usersToAdd.push(currentUser);
+                    }
+                });
+            });
+            viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
+                if(currentUserGroup.id == userGroup.id) {
+                    currentUserGroup.users = usersToAdd;
+                }
+            });
+        };
+
         return userGroupUpdater;
     }]);

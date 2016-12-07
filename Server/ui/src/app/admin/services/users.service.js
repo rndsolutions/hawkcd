@@ -183,5 +183,18 @@ angular
             websocketSenderService.call(json);
         };
 
+        adminService.assignUsers = function(userGroupId, users) {
+            var methodName = "assignUsers";
+            var className = "UserGroupService";
+            var packageName = "io.hawkcd.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \""+ userGroupId +"\"}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": " + users + "}"
+            ];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+        };
+
         return adminService;
     }]);
