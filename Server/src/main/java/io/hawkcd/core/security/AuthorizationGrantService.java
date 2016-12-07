@@ -61,9 +61,11 @@ public class AuthorizationGrantService {
             List<AuthorizationGrant> newGrants = new ArrayList<>();
             newGrants.addAll(user.getPermissions());
 
-            UserGroup userGroup = (UserGroup) userGroupService.getById(user.getUserGroupId()).getEntity();
-            if (userGroup != null) {
-                newGrants.addAll(userGroup.getPermissions());
+            if(user.getUserGroupId() != null){
+                UserGroup userGroup = (UserGroup) userGroupService.getById(user.getUserGroupId()).getEntity();
+                if (userGroup != null) {
+                    newGrants.addAll(userGroup.getPermissions());
+                }
             }
 
             newGrants = filterAuthorizationGrantsForDuplicates(newGrants);

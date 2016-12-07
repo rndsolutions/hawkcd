@@ -19,6 +19,7 @@ package io.hawkcd.services;
 import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.core.security.AuthorizationGrantService;
 import io.hawkcd.core.subscriber.Envelopе;
@@ -79,24 +80,23 @@ public class UserService extends CrudService<User> implements IUserService {
     @Override
 //    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(User user) {
-//        List<AuthorizationGrant> filteredGrants = this.authorizationGrantService.filterAuthorizationGrantsForDuplicates(user.getPermissions());
-//        filteredGrants = this.authorizationGrantService.sortAuthorizationGrants(filteredGrants);
-//        user.setPermissions(filteredGrants);
-//        ServiceResult serviceResult = super.update(user);
-//
-//        List<String> ids = new ArrayList<>();
-//        ids.add(user.getId());
-//        Envelopе envelopе = new Envelopе(ids);
-//        Message message = new Message(envelopе);
-//        message.setUserUpdate(true);
-//        MessageDispatcher.dispatchOutgoingMessage(message);
+        ServiceResult result = super.update(user);
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String methodName = ste[1].getMethodName();
+        String className = this.getClass().getSimpleName();
 
-        // Internal update, notify all Users
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
 
-        // Notify the specific User
+        MessageDispatcher.dispatchIncomingMessage(message);
 
+        List<String> ids = new ArrayList<>();
+        ids.add(user.getId());
+        Envelopе envelopе = new Envelopе(ids);
+        message = new Message(envelopе);
+        message.setUserUpdate(true);
+        MessageDispatcher.dispatchOutgoingMessage(message);
 
-        return null;
+        return result;
     }
 
     @Override
