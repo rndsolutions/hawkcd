@@ -105,8 +105,8 @@ angular
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUserGroupDTOs], true);
                     },
-                    updateUsers: function(object) {
-                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUsers], true);
+                    assignUsers: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.assignUsers], true);
                     }
                 },
                 AgentService: {

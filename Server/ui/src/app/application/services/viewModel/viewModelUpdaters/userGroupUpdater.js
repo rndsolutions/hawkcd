@@ -48,7 +48,7 @@ angular
             viewModel.userGroups.push(userGroup);
         };
 
-        userGroupUpdater.updateUsers = function (userGroup) {
+        userGroupUpdater.assignUsers = function (userGroup) {
             var usersToAdd = [];
             userGroup.userIds.forEach(function (currentUserId, userIdIndex, userIdArray) {
                 viewModel.users.forEach(function (currentUser, userIndex, userArray) {
