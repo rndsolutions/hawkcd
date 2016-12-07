@@ -81,28 +81,12 @@ public class UserService extends CrudService<User> implements IUserService {
     @Override
 //    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(User user) {
-//        List<AuthorizationGrant> filteredGrants = this.authorizationGrantService.filterAuthorizationGrantsForDuplicates(user.getPermissions());
-//        filteredGrants = this.authorizationGrantService.sortAuthorizationGrants(filteredGrants);
-//        user.setPermissions(filteredGrants);
-//        ServiceResult serviceResult = super.update(user);
-//
-//        List<String> ids = new ArrayList<>();
-//        ids.add(user.getId());
-//        Envelopе envelopе = new Envelopе(ids);
-//        Message message = new Message(envelopе);
-//        message.setUserUpdate(true);
-//        MessageDispatcher.dispatchOutgoingMessage(message);
-
-        // Internal update, notify all Users
-
-        // Notify the specific User
         ServiceResult result = super.update(user);
-
         final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
         String methodName = ste[1].getMethodName();
         String className = this.getClass().getSimpleName();
 
-        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result, className, methodName);
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
 
         MessageDispatcher.dispatchIncomingMessage(message);
 
@@ -111,9 +95,9 @@ public class UserService extends CrudService<User> implements IUserService {
         Envelopе envelopе = new Envelopе(ids);
         message = new Message(envelopе);
         message.setUserUpdate(true);
-        MessageDispatcher.dispatchIncomingMessage(message);
+        MessageDispatcher.dispatchOutgoingMessage(message);
 
-        return null;
+        return result;
     }
 
     @Override

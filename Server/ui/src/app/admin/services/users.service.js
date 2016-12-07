@@ -25,7 +25,7 @@ angular
             var className = "UserGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -36,7 +36,7 @@ angular
             var className = "UserGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -69,7 +69,7 @@ angular
             var className = "UserService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -177,6 +177,19 @@ angular
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + userGroupId + "\"}, " +
             "{\"packageName\": \"io.hawkcd.core.security.AuthorizationGrant\", \"object\": " + JSON.stringify(permissions) + "}"
+            ];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+        };
+
+        adminService.assignUsers = function(userGroupId, users) {
+            var methodName = "assignUsers";
+            var className = "UserGroupService";
+            var packageName = "io.hawkcd.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \""+ userGroupId +"\"}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": " + JSON.stringify(users) + "}"
             ];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);

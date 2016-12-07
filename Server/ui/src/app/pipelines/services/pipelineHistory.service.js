@@ -16,23 +16,17 @@
 'use strict';
 
 angular
-    .module('hawk.artifactManagement')
-    .factory('artifactService', ['CONSTANTS', function(CONSTANTS) {
-        var artifactService = this;
+    .module('hawk.pipelinesManagement')
+    .factory('pipeHistoryService', ['jsonHandlerService', 'websocketSenderService', function (jsonHandlerService, websocketSenderService) {
+        var pipeHistoryService = this;
 
-        var fileEndpoint = CONSTANTS.SERVER_URL + '/';
-
-        artifactService.getFile = function (filePath) {
-            window.location.replace(fileEndpoint + filePath);
-        };
-
-        //TODO: Send the search criteria, the number of Pipelines to be shown and the last Pipeline the UI has displayed
-        artifactService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
-            var methodName = "getAllPipelineArtifactDTOs";
+        //TODO: Send Pipeline Definition to display the Pipelines of, the number of Pipelines to be shown and the last Pipeline the UI has displayed
+        pipeHistoryService.getAllHistoryPipelines = function (pipelineDefinitionId, numberOfPipelines, pipelineId) {
+            var methodName = "getAllPipelineHistoryDTOs";
             var className = "PipelineService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + searchCriteria + "\"}",
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}",
                 "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
                 "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineId + "\"}"];
             var error = "";
@@ -40,5 +34,5 @@ angular
             websocketSenderService.call(json);
         };
 
-        return artifactService;
+        return pipeHistoryService;
     }]);

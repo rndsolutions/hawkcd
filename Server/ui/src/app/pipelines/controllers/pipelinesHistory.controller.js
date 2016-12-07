@@ -17,8 +17,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .controller('PipelinesHistoryController',['$state', '$rootScope','$scope','$stateParams','$interval','pipeExecService','authDataService','viewModel', 'pipelineUpdater','moment','$sce','commonUtitlites', 'loggerService',
-     function($state, $rootScope, $scope, $stateParams, $interval, pipeExecService, authDataService, viewModel, pipelineUpdater, moment, $sce,commonUtitlites, loggerService) {
+    .controller('PipelinesHistoryController',['$state', '$rootScope','$scope','$stateParams','$interval','pipeHistoryService','authDataService','viewModel', 'pipelineUpdater','moment','$sce','commonUtitlites', 'loggerService',
+     function($state, $rootScope, $scope, $stateParams, $interval, pipeHistoryService, authDataService, viewModel, pipelineUpdater, moment, $sce,commonUtitlites, loggerService) {
         var vm = this;
 
         vm.labels = {
@@ -57,7 +57,7 @@ angular
 
         };
 
-        pipeExecService.getAllHistoryPipelines(vm.pipelineId, 10);
+        pipeHistoryService.getAllHistoryPipelines(vm.pipelineId, 10);
 
         vm.getLastRunAction = function(pipelineRun) {
             return moment.getLastRunAction(pipelineRun)
@@ -98,7 +98,7 @@ angular
              if(vm.allPipelineRuns[0]){
                  if(vm.allPipelineRuns[0].disabled == false){
                      loggerService.log('PipelinesHistoryController.scrollCall');
-                     pipeExecService.getAllHistoryPipelines(vm.pipelineId, 10, vm.allPipelineRuns[vm.allPipelineRuns.length - 1].id);
+                     pipeHistoryService.getAllHistoryPipelines(vm.pipelineId, 10, vm.allPipelineRuns[vm.allPipelineRuns.length - 1].id);
                  }
                  vm.allPipelineRuns[0].disabled = true;
              }

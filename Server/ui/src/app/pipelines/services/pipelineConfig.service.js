@@ -29,7 +29,7 @@ angular
             var className = "PipelineDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -51,7 +51,7 @@ angular
             var className = "PipelineGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -320,7 +320,7 @@ angular
             var className = "MaterialDefinitionService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
