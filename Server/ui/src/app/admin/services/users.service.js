@@ -25,7 +25,7 @@ angular
             var className = "UserGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -36,7 +36,7 @@ angular
             var className = "UserGroupService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -69,7 +69,7 @@ angular
             var className = "UserService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);

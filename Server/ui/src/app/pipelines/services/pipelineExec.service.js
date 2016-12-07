@@ -62,7 +62,7 @@ angular
             var className = "PipelineService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
