@@ -601,7 +601,6 @@ angular
             };
 
             vm.checkEntityType = function (permission) {
-                debugger;
                 if(permission.permissionScope == 'PIPELINE_GROUP' && permission.permittedEntityId == ''){
                     permission.permissionEntity = 'ALL_PIPELINE_GROUPS';
                 } else if(permission.permissionScope == 'PIPELINE' && permission.permittedEntityId == ''){
