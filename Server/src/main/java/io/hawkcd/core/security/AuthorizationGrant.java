@@ -9,6 +9,7 @@ public class AuthorizationGrant {
     private PermissionType permissionType;
     private PermissionEntity permissionEntity;
     private String permittedEntityId;
+    private boolean isInherited;
 
     public AuthorizationGrant(PermissionScope scope, PermissionType type) {
         this.permissionScope = scope;
@@ -43,6 +44,14 @@ public class AuthorizationGrant {
 
     public void setPermittedEntityId(String permittedEntityId) {
         this.permittedEntityId = permittedEntityId;
+    }
+
+    public boolean isInherited() {
+        return this.isInherited;
+    }
+
+    public void setInherited(boolean inherited) {
+        this.isInherited = inherited;
     }
 
     boolean isGreaterThan(AuthorizationGrant grant) {
