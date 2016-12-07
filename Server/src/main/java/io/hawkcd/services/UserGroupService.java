@@ -16,10 +16,9 @@
 
 package io.hawkcd.services;
 
-import io.hawkcd.core.security.Authorization;
-import io.hawkcd.core.security.AuthorizationGrant;
-import io.hawkcd.core.security.AuthorizationGrantService;
-import io.hawkcd.core.security.IAuthorizationGrantService;
+import io.hawkcd.core.Message;
+import io.hawkcd.core.MessageDispatcher;
+import io.hawkcd.core.security.*;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
@@ -90,7 +89,16 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(UserGroup userGroup) {
-        return super.update(userGroup);
+        ServiceResult result = super.update(userGroup);
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String methodName = ste[1].getMethodName();
+        String className = this.getClass().getSimpleName();
+
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
+
+        MessageDispatcher.dispatchIncomingMessage(message);
+
+        return result;
     }
 
     @Override
