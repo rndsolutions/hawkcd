@@ -189,7 +189,7 @@ angular
             var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \""+ userGroupId +"\"}, " +
-            "{\"packageName\": \"java.lang.String\", \"object\": " + users + "}"
+            "{\"packageName\": \"java.lang.String\", \"object\": " + JSON.stringify(users) + "}"
             ];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
