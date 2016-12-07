@@ -95,7 +95,7 @@ public class UserService extends CrudService<User> implements IUserService {
         Envelopе envelopе = new Envelopе(ids);
         message = new Message(envelopе);
         message.setUserUpdate(true);
-        MessageDispatcher.dispatchOutgoingMessage(message);
+        MessageDispatcher.dispatchIncomingMessage(message);
 
         return result;
     }

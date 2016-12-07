@@ -131,7 +131,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         // Get a List of Users to be assigned
         List<String> userToBeAssigned = new ArrayList<>();
         for (String newUser : newUsers) {
-            if (oldUsers.contains(newUser)) {
+            if (!oldUsers.contains(newUser)) {
                 userToBeAssigned.add(newUser);
             }
         }
