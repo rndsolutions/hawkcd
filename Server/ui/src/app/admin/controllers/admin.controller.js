@@ -630,7 +630,7 @@ angular
             };
 
             vm.updateUserPermission = function() {
-                adminService.updateUser(vm.selectedUser);
+                adminService.updateUserPermissions(vm.selectedUser.id, vm.selectedUser.permissions);
                 vm.closePermissionModal();
             };
 

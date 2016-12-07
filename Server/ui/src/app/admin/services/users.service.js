@@ -97,12 +97,13 @@ angular
             websocketSenderService.call(json);
         };
 
-        adminService.updateUser = function(user) {
-            var methodName = "update";
+        adminService.updateUserPermissions = function(userId, grants) {
+            var methodName = "updatePermissions";
             var className = "UserService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}"];
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + userId + "\"}, " +
+            "{\"packageName\": \"io.hawkcd.core.security.AuthorizationGrant\", \"object\": " + JSON.stringify(grants) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
