@@ -19,6 +19,7 @@ package io.hawkcd.services;
 import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.core.security.AuthorizationGrantService;
 import io.hawkcd.core.subscriber.Envelopе;
@@ -26,6 +27,7 @@ import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
+import io.hawkcd.model.UserGroup;
 import io.hawkcd.model.dto.UserDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
@@ -94,7 +96,22 @@ public class UserService extends CrudService<User> implements IUserService {
         // Internal update, notify all Users
 
         // Notify the specific User
+        ServiceResult result = super.update(user);
 
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String methodName = ste[1].getMethodName();
+        String className = this.getClass().getSimpleName();
+
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result, className, methodName);
+
+        MessageDispatcher.dispatchIncomingMessage(message);
+
+        List<String> ids = new ArrayList<>();
+        ids.add(user.getId());
+        Envelopе envelopе = new Envelopе(ids);
+        message = new Message(envelopе);
+        message.setUserUpdate(true);
+        MessageDispatcher.dispatchIncomingMessage(message);
 
         return null;
     }
@@ -197,6 +214,46 @@ public class UserService extends CrudService<User> implements IUserService {
             return result;
         }
         user.setPassword(hashedPassword);
+        return this.update(user);
+    }
+
+    @Override
+    public ServiceResult assignUserToGroup(String userId, UserGroup userGroup) {
+        User user = (User) this.getById(userId).getEntity();
+        if (user == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        List<AuthorizationGrant> updatedGrants = user.getPermissions();
+        updatedGrants.addAll(userGroup.getPermissions());
+        updatedGrants = AuthorizationGrantService.filterAuthorizationGrantsForDuplicates(updatedGrants);
+        updatedGrants = AuthorizationGrantService.sortAuthorizationGrants(updatedGrants);
+
+        user.setPermissions(updatedGrants);
+        user.setUserGroupId(userGroup.getId());
+
+        return this.update(user);
+    }
+
+    @Override
+    public ServiceResult unassignUserFromGroup(String userId) {
+        User user = (User) this.getById(userId).getEntity();
+        if (user == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        List<AuthorizationGrant> oldGrants = user.getPermissions();
+        List<AuthorizationGrant> newGrants = new ArrayList<>();
+
+        for (AuthorizationGrant oldGrant : oldGrants) {
+            if (!oldGrant.isInherited()) {
+                newGrants.add(oldGrant);
+            }
+        }
+
+        user.setPermissions(newGrants);
+        user.setUserGroupId(null);
+
         return this.update(user);
     }
 }
