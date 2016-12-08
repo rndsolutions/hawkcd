@@ -154,7 +154,9 @@ angular
                     permissionScope: 'Represents the object level at which specific permissions can be applied.',
                     permissionType: 'Define permissions - what a user can do in specific Permission Scope.',
                     permissionEntity: 'The specific object(s) for which the Permissions are applied.',
-                    permissionEntityWarning: 'Permissions that have duplicate Scope and Entity will be omitted, because they conflict with each other.'
+                    permissionEntityWarning: 'Permissions that have duplicate Scope and Entity will be omitted, because they conflict with each other. This does not apply to inherited permissions. They can be overridden, because User permissions are more specific.',
+                    assignUserWarning: 'Users that have already been assigned to a User Group will be unassigned from it, then assigned to this one, because Users can only have 1 User Group.',
+                    inheritedPermissionWarning: 'This permission is inherited from a User Group.'
                 },
                 placements: {
                     top: 'top'
@@ -609,6 +611,7 @@ angular
                 } else {
                     permission.permissionEntity = 'SPECIFIC_ENTITY';
                 }
+                debugger;
             };
 
             vm.addGroupPermission = function() {
