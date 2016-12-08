@@ -93,7 +93,7 @@ public class UserService extends CrudService<User> implements IUserService {
 
         // Internal update, notify all Users
 
-        // Notify the specific User
+        // Notify the specific PrincipalUser
 
 
         return null;

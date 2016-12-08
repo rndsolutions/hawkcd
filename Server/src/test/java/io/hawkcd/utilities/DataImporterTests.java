@@ -47,7 +47,7 @@ public class DataImporterTests {
 //
 //        //Assert
 //        List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
-//        List<User> actualUsers = (List<User>) this.userService.getAll().getEntity();
+//        List<PrincipalUser> actualUsers = (List<PrincipalUser>) this.userService.getAll().getEntity();
 //
 //        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelineGroups.size());
 //        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualUsers.size());
@@ -61,7 +61,7 @@ public class DataImporterTests {
 //
 //        //Assert
 //        List<PipelineGroup> actualPipelineGroups = (List<PipelineGroup>) this.pipelineGroupService.getAll().getEntity();
-//        List<User> actualUsers = (List<User>) this.userService.getAll().getEntity();
+//        List<PrincipalUser> actualUsers = (List<PrincipalUser>) this.userService.getAll().getEntity();
 //
 //        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualPipelineGroups.size());
 //        Assert.assertEquals(TestsConstants.TESTS_COLLECTION_SIZE_ONE_OBJECT, actualUsers.size());

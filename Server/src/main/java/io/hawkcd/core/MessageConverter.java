@@ -11,14 +11,22 @@ public class MessageConverter {
 
     public static WsContractDto convert(String className, String packageName, String methodName, ServiceResult sReslult) {
 
-        WsContractDto contract = new WsContractDto(className
+        return new WsContractDto(className
                 , packageName
                 , methodName
                 , sReslult.getEntity()
                 , sReslult.getNotificationType()
                 , sReslult.getMessage());
+    }
 
-        return null;
+    public static WsContractDto convert(String className, String packageName, String methodName) {
+
+        return new WsContractDto(className
+                , packageName
+                , methodName
+                , null
+                , null
+                , null);
     }
 
     public static WsContractDto convert(Message message) {

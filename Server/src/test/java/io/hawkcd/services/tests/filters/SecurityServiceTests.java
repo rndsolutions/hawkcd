@@ -122,7 +122,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Groups retrieved successfully");
+        expectedServiceResult.setMessage("PrincipalUser Groups retrieved successfully");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         try {
@@ -160,7 +160,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Groups retrieved successfully");
+        expectedServiceResult.setMessage("PrincipalUser Groups retrieved successfully");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
@@ -204,7 +204,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Group retrieved successfully");
+        expectedServiceResult.setMessage("PrincipalUser Group retrieved successfully");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         try {
@@ -247,7 +247,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Group retrieved successfully");
+        expectedServiceResult.setMessage("PrincipalUser Group retrieved successfully");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
@@ -295,7 +295,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Group updated successfully");
+        expectedServiceResult.setMessage("PrincipalUser Group updated successfully");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -342,7 +342,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User Group cannot be added");
+        expectedServiceResult.setMessage("PrincipalUser Group cannot be added");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
@@ -390,7 +390,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Group updated successfully");
+        expectedServiceResult.setMessage("PrincipalUser Group updated successfully");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -436,7 +436,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User Group cannot be deleted");
+        expectedServiceResult.setMessage("PrincipalUser Group cannot be deleted");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
@@ -481,7 +481,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Group deleted successfully");
+        expectedServiceResult.setMessage("PrincipalUser Group deleted successfully");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -524,7 +524,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User Group cannot be deleted");
+        expectedServiceResult.setMessage("PrincipalUser Group cannot be deleted");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
@@ -572,7 +572,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Group added successfully");
+        expectedServiceResult.setMessage("PrincipalUser Group added successfully");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -619,7 +619,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User Group cannot be added");
+        expectedServiceResult.setMessage("PrincipalUser Group cannot be added");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();
@@ -675,7 +675,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User added successfully to group");
+        expectedServiceResult.setMessage("PrincipalUser added successfully to group");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -729,7 +729,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User cannot be added to group");
+        expectedServiceResult.setMessage("PrincipalUser cannot be added to group");
         expectedServiceResult.setEntity(null);
 
         List<Permission> permissions = new ArrayList<>();
@@ -777,7 +777,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Group Dto updated successfully");
+        expectedServiceResult.setMessage("PrincipalUser Group Dto updated successfully");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -823,7 +823,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User Group cannot be deleted");
+        expectedServiceResult.setMessage("PrincipalUser Group cannot be deleted");
         expectedServiceResult.setEntity(userGroupDto);
 
         List<Permission> permissions = new ArrayList<>();
@@ -882,7 +882,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User removed successfully to group");
+        expectedServiceResult.setMessage("PrincipalUser removed successfully to group");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -939,7 +939,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User cannot be removed to group");
+        expectedServiceResult.setMessage("PrincipalUser cannot be removed to group");
         expectedServiceResult.setEntity(null);
 
         List<Permission> permissions = new ArrayList<>();
@@ -983,7 +983,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User added successfully");
+        expectedServiceResult.setMessage("PrincipalUser added successfully");
         expectedServiceResult.setEntity(null);
 
         try {
@@ -1026,7 +1026,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.ERROR);
-        expectedServiceResult.setMessage("User cannot be added");
+        expectedServiceResult.setMessage("PrincipalUser cannot be added");
         expectedServiceResult.setEntity(user);
 
         List<Permission> permissions = new ArrayList<>();
@@ -1066,7 +1066,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Groups retrieved successfully");
+        expectedServiceResult.setMessage("PrincipalUser Groups retrieved successfully");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         try {
@@ -1104,7 +1104,7 @@ public class SecurityServiceTests {
 
         ServiceResult expectedServiceResult = new ServiceResult();
         expectedServiceResult.setNotificationType(NotificationType.SUCCESS);
-        expectedServiceResult.setMessage("User Groups retrieved successfully");
+        expectedServiceResult.setMessage("PrincipalUser Groups retrieved successfully");
         expectedServiceResult.setEntity(expectedUserGroups);
 
         List<Permission> permissions = new ArrayList<>();

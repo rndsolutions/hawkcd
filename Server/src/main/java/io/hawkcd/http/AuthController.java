@@ -81,13 +81,13 @@ public class AuthController {
 //        //read user email
 //        String email = (String) ghUserDetails.get("email");
 //
-//        ArrayList<User> all = (ArrayList<User>) this.userService.getAll().getObject();
+//        ArrayList<PrincipalUser> all = (ArrayList<PrincipalUser>) this.userService.getAll().getObject();
 //
 //        boolean isUserRegistered = false;
 //        //loop through users to check if the user already exists
 //
-//        User user = null;
-//        for(User usr:all){
+//        PrincipalUser user = null;
+//        for(PrincipalUser usr:all){
 //            String uEmail = usr.getEmail();
 //            if ( uEmail.equals(email)){
 //                isUserRegistered = true;
@@ -98,7 +98,7 @@ public class AuthController {
 //
 //        if (!isUserRegistered){
 //            //register a new user
-//            user =  new User();
+//            user =  new PrincipalUser();
 //            user.setEmail(email);
 //            user.setProvider("GitHub");
 //            userService.add(user);
@@ -117,7 +117,6 @@ public class AuthController {
     @Path("/login")
     public Response login(LoginDto login) throws IOException {
         String hashedPassword = DigestUtils.sha256Hex(login.getPassword());
-
         ServiceResult serviceResult = this.userService.getByEmailAndPassword(login.getEmail(), hashedPassword);
         if (serviceResult.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -148,7 +147,7 @@ public class AuthController {
     @Produces("application/json")
     @Path("/logout")
     public Response logout(String email) throws IOException {
-        LOGGER.info("User: "+ email+ " logged out");
+        LOGGER.info("PrincipalUser: "+ email+ " logged out");
         SessionFactory.getSessionManager().closeSessionByUserEmail(email);
         return Response.ok().build();
     }
