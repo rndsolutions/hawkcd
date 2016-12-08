@@ -37,6 +37,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService extends CrudService<User> implements IUserService {
     private static final Class CLASS_TYPE = User.class;
@@ -108,7 +109,8 @@ public class UserService extends CrudService<User> implements IUserService {
             return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
         }
 
-        List<AuthorizationGrant> filteredGrants = AuthorizationGrantService.getUpdatedGrants(user.getUserGroupId(), grants);
+        List<AuthorizationGrant> filteredGrants = grants.stream().filter(g -> !g.isInherited()).collect(Collectors.toList());
+        filteredGrants = AuthorizationGrantService.getUpdatedGrants(user.getUserGroupId(), filteredGrants);
         user.setPermissions(filteredGrants);
         ServiceResult serviceResult = super.update(user);
 
@@ -208,7 +210,7 @@ public class UserService extends CrudService<User> implements IUserService {
             return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
         }
 
-        List<AuthorizationGrant> updatedGrants = user.getPermissions();
+        List<AuthorizationGrant> updatedGrants = user.getPermissions().stream().filter(g -> !g.isInherited()).collect(Collectors.toList());
         updatedGrants.addAll(userGroup.getPermissions());
         updatedGrants = AuthorizationGrantService.filterAuthorizationGrantsForDuplicates(updatedGrants);
         updatedGrants = AuthorizationGrantService.sortAuthorizationGrants(updatedGrants);
