@@ -110,7 +110,7 @@ public class UserService extends CrudService<User> implements IUserService {
         }
 
         List<AuthorizationGrant> filteredGrants = grants.stream().filter(g -> !g.isInherited()).collect(Collectors.toList());
-        filteredGrants = AuthorizationGrantService.getUpdatedGrants(user.getUserGroupId(), grants);
+        filteredGrants = AuthorizationGrantService.getUpdatedGrants(user.getUserGroupId(), filteredGrants);
         user.setPermissions(filteredGrants);
         ServiceResult serviceResult = super.update(user);
 
