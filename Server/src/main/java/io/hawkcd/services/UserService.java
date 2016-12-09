@@ -20,14 +20,11 @@ import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
-import io.hawkcd.core.security.AuthorizationGrant;
-import io.hawkcd.core.security.AuthorizationGrantService;
 import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
-import io.hawkcd.model.UserGroup;
 import io.hawkcd.model.dto.UserDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
@@ -37,11 +34,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserService extends CrudService<User> implements IUserService {
     private static final Class CLASS_TYPE = User.class;
-    private AuthorizationGrantService authorizationGrantService = new AuthorizationGrantService();
 
     public UserService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
@@ -87,7 +82,7 @@ public class UserService extends CrudService<User> implements IUserService {
         String methodName = ste[1].getMethodName();
         String className = this.getClass().getSimpleName();
 
-        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result, className, methodName);
 
         MessageDispatcher.dispatchIncomingMessage(message);
 
@@ -99,29 +94,6 @@ public class UserService extends CrudService<User> implements IUserService {
         MessageDispatcher.dispatchIncomingMessage(message);
 
         return result;
-    }
-
-    @Override
-    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
-    public ServiceResult updatePermissions(String userId, ArrayList<AuthorizationGrant> grants) {
-        User user = (User) this.getById(userId).getEntity();
-        if (user == null) {
-            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
-        }
-
-        List<AuthorizationGrant> filteredGrants = grants.stream().filter(g -> !g.isInherited()).collect(Collectors.toList());
-        filteredGrants = AuthorizationGrantService.getUpdatedGrants(user.getUserGroupId(), filteredGrants);
-        user.setPermissions(filteredGrants);
-        ServiceResult serviceResult = super.update(user);
-
-        List<String> ids = new ArrayList<>();
-        ids.add(user.getId());
-        Envelopе envelopе = new Envelopе(ids);
-        Message message = new Message(envelopе);
-        message.setUserUpdate(true);
-        MessageDispatcher.dispatchOutgoingMessage(message);
-
-        return serviceResult;
     }
 
     @Override
@@ -175,7 +147,7 @@ public class UserService extends CrudService<User> implements IUserService {
 
     @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
-    public ServiceResult changeUserPassword(UserDto user, String newPasword, String oldPassword) {
+    public ServiceResult changeUserPassword(UserDto user, String newPassword, String oldPassword) {
         String hashedPassword = DigestUtils.sha256Hex(oldPassword);
         ServiceResult result = this.getByEmailAndPassword(user.getUsername(), hashedPassword);
 
@@ -183,7 +155,7 @@ public class UserService extends CrudService<User> implements IUserService {
             return result;
         }
         User userToUpdate = (User) result.getEntity();
-        String hashedPasswordToUpdateUser = DigestUtils.sha256Hex(newPasword);
+        String hashedPasswordToUpdateUser = DigestUtils.sha256Hex(newPassword);
         userToUpdate.setPassword(hashedPasswordToUpdateUser);
 
         return this.update(userToUpdate);
@@ -200,46 +172,6 @@ public class UserService extends CrudService<User> implements IUserService {
             return result;
         }
         user.setPassword(hashedPassword);
-        return this.update(user);
-    }
-
-    @Override
-    public ServiceResult assignUserToGroup(String userId, UserGroup userGroup) {
-        User user = (User) this.getById(userId).getEntity();
-        if (user == null) {
-            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
-        }
-
-        List<AuthorizationGrant> updatedGrants = user.getPermissions().stream().filter(g -> !g.isInherited()).collect(Collectors.toList());
-        updatedGrants.addAll(userGroup.getPermissions());
-        updatedGrants = AuthorizationGrantService.filterAuthorizationGrantsForDuplicates(updatedGrants);
-        updatedGrants = AuthorizationGrantService.sortAuthorizationGrants(updatedGrants);
-
-        user.setPermissions(updatedGrants);
-        user.setUserGroupId(userGroup.getId());
-
-        return this.update(user);
-    }
-
-    @Override
-    public ServiceResult unassignUserFromGroup(String userId) {
-        User user = (User) this.getById(userId).getEntity();
-        if (user == null) {
-            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
-        }
-
-        List<AuthorizationGrant> oldGrants = user.getPermissions();
-        List<AuthorizationGrant> newGrants = new ArrayList<>();
-
-        for (AuthorizationGrant oldGrant : oldGrants) {
-            if (!oldGrant.isInherited()) {
-                newGrants.add(oldGrant);
-            }
-        }
-
-        user.setPermissions(newGrants);
-        user.setUserGroupId(null);
-
         return this.update(user);
     }
 }
