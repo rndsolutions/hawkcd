@@ -18,7 +18,8 @@
         package io.hawkcd.core.security;
 
         import io.hawkcd.core.Message;
-import io.hawkcd.model.Entity;
+        import io.hawkcd.core.subscriber.Envelopе;
+        import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.PipelineGroupDto;
@@ -33,9 +34,9 @@ public interface IAuthorizationManager {
     * Returns true, false if the user being evaluated has rights to perform an operation
     * @param user
     */
-    boolean isAuthorized(User user, WsContractDto contract, List<Object> parameters) throws ClassNotFoundException, NoSuchMethodException;
+    boolean isAuthorized(User user, WsContractDto contract, List<Envelopе> parameters) throws ClassNotFoundException, NoSuchMethodException;
 
-    PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Object> parameters);
+    PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Envelopе> parameters);
 
     PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object);
 
@@ -45,9 +46,11 @@ public interface IAuthorizationManager {
 
     Message constructAuthorizedMessage(ServiceResult result, String className, String methodName);
 
-    Message attachPermissionTypeMapToMessage(Message message, List<Object> methodArgs);
+    Message attachPermissionTypeMapToMessage(Message message, List<Envelopе> methodArgs);
 
-    List<Entity> attachPermissionTypeToList(Message message, List<Object> parameters);
+    List<Entity> attachPermissionTypeToList(List<Entity> entities, List<AuthorizationGrant> userGrants);
 
     List<PipelineGroupDto> attachPermissionsToPipelineDtos(List<PipelineGroupDto> pipelineGroupDtos, User currentUser);
+
+    List<Entity> filterResponse(List<Entity> entities, User currentUser);
 }

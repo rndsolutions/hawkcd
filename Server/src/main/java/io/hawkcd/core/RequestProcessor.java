@@ -18,21 +18,16 @@
 
 package io.hawkcd.core;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.hawkcd.core.publisher.Publisher;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.IAuthorizationManager;
-import io.hawkcd.core.subscriber.EnvelopeAdapter;
 import io.hawkcd.core.subscriber.Envelopе;
-import io.hawkcd.model.*;
-import io.hawkcd.model.dto.PipelineGroupDto;
+import io.hawkcd.model.Entity;
+import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
-import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
-import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,11 +59,21 @@ public class RequestProcessor {
     public void processRequest(WsContractDto contract, User currentUser)
             throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
-        List<Object> methodArgs = extractTargetMethodArguments(contract);
+        List<Envelopе> methodArgs = contract.getArgs();
         boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
 
         if (!isAuthorized) {
-            sendUnauthorizedMessage(contract, currentUser);
+            Message message = new Message(
+                    contract.getClassName(),
+                    contract.getPackageName(),
+                    contract.getMethodName(),
+                    contract.getResult(),
+                    NotificationType.ERROR,
+                    "Unauthorized",
+                    currentUser,
+                    true
+            );
+            Publisher.getInstance().publish("global", message);
             return;
         }
 
@@ -86,59 +91,16 @@ public class RequestProcessor {
         }
 
         // Attach permission to object
-        if (result.getEntity() instanceof List) {
-            boolean isPipelineGroupDtoList = isPipelineGroupDtoList(result);
-            if (isPipelineGroupDtoList) {
-                List<PipelineGroupDto> pipelineGroupDtosWithPermissions = this.authorizationManager
-                        .attachPermissionsToPipelineDtos((List<PipelineGroupDto>) result.getEntity(), currentUser);
-                result.setEntity(pipelineGroupDtosWithPermissions);
-            }
-            List<Entity> filteredResult = this.authorizationManager.attachPermissionTypeToList(message, methodArgs);
+
+        if(result.getEntity() instanceof List){
+            List<Entity> filteredEntities = AuthorizationFactory.getAuthorizationManager().filterResponse((List<Entity>) result.getEntity(), currentUser);
+            result.setEntity(filteredEntities);
             message.setTargetOwner(true);
-            message.setEnvelope(filteredResult);
+            message.setEnvelope(result.getEntity());
         } else {
             message = this.authorizationManager.attachPermissionTypeMapToMessage(message, methodArgs);
         }
 
         MessageDispatcher.dispatchIncomingMessage(message);
-    }
-
-    private boolean isPipelineGroupDtoList(ServiceResult result) {
-        if (result.getEntity() != null && ((List) result.getEntity()).size() > 0 && ((List) result.getEntity()).get(0) instanceof PipelineGroupDto) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void sendUnauthorizedMessage(WsContractDto contract, User currentUser) {
-        // TODO: Send to current user Session
-        Message message = new Message(
-                contract.getClassName(),
-                contract.getPackageName(),
-                contract.getMethodName(),
-                null,
-                NotificationType.ERROR,
-                "Unauthorized",
-                currentUser
-        );
-        message.setTargetOwner(true);
-        Publisher.getInstance().publish("global", message);
-    }
-
-    private List<Object> extractTargetMethodArguments(WsContractDto contract) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Gson jsonConverter = new GsonBuilder()
-                .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
-                .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
-                .create();
-        List<Object> methodArgs = new ArrayList<>();
-        int contractArgsLength = contract.getArgs().size();
-        for (int i = 0; i < contractArgsLength; i++) {
-            if (contract.getArgs().get(i).getObject() != null) {
-                Object object = contract.getArgs().get(i).getObject();
-                methodArgs.add(object);
-            }
-        }
-        return methodArgs;
     }
 }
