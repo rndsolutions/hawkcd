@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public interface IUserGroupService extends ICrudService<UserGroup> {
     ServiceResult updatePermissions(String userGroupId, ArrayList<AuthorizationGrant> grants);
 
-    ServiceResult updateUsers(String userGroupId, ArrayList<String> userIds);
+    ServiceResult assignUsers(String userGroupId, ArrayList<String> userIds);
 
     ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto);
 

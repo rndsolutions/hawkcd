@@ -28,8 +28,12 @@ public class EnvelopeAdapter implements JsonDeserializer<Envelopе> {
     @Override
     public Envelopе deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
+        if (jsonObject == null) {
+            return null;
+        }
+        
         JsonElement objectAsJsonElement = jsonObject.get("object");
-        if (objectAsJsonElement == null || !objectAsJsonElement.isJsonArray() && !objectAsJsonElement.isJsonObject() && objectAsJsonElement.getAsString().equals("")) {
+        if (objectAsJsonElement == null || !objectAsJsonElement.isJsonArray() && !objectAsJsonElement.isJsonObject() && !objectAsJsonElement.isJsonPrimitive()) {
             return new Envelopе();
         }
 

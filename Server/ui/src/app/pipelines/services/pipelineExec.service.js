@@ -20,8 +20,6 @@ angular
     .factory('pipeExecService', ['jsonHandlerService', 'websocketSenderService', function (jsonHandlerService, websocketSenderService) {
         var pipeExecService = this;
 
-        //region /pipelines
-
         pipeExecService.startPipeline = function (pipeline) {
             var methodName = "add";
             var className = "PipelineService";
@@ -62,35 +60,7 @@ angular
             var className = "PipelineService";
             var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
-            var error = "";
-            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
-            websocketSenderService.call(json);
-        };
-
-        //TODO: Send Pipeline Definition to display the Pipelines of, the number of Pipelines to be shown and the last Pipeline the UI has displayed
-        pipeExecService.getAllHistoryPipelines = function (pipelineDefinitionId, numberOfPipelines, pipelineId) {
-            var methodName = "getAllPipelineHistoryDTOs";
-            var className = "PipelineService";
-            var packageName = "io.hawkcd.services";
-            var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}",
-                "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
-                "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineId + "\"}"];
-            var error = "";
-            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
-            websocketSenderService.call(json);
-        };
-
-        //TODO: Send the search criteria, the number of Pipelines to be shown and the last Pipeline the UI has displayed
-        pipeExecService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
-            var methodName = "getAllPipelineArtifactDTOs";
-            var className = "PipelineService";
-            var packageName = "io.hawkcd.services";
-            var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + searchCriteria + "\"}",
-                        "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
-                        "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineId + "\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
@@ -117,32 +87,6 @@ angular
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
         };
-
-        pipeExecService.scheduleLatestPipeline = function (pipeName, token) {
-
-        };
-        pipeExecService.schedulePipelineWithRevision = function (pipeName, changes) {
-
-        };
-        pipeExecService.resumePipeline = function (pipeId) {
-
-        };
-        pipeExecService.restartPipeline = function (pipeId) {
-
-        };
-        pipeExecService.cancelPipeline = function (pipeId) {
-
-        };
-        //endregion
-
-        //region /stages
-        pipeExecService.scheduleStage = function (pipeName, pipeRunId, stageName) {
-
-        };
-        pipeExecService.scheduleStageWithJobs = function (pipeName, pipeRunId, stageName, jobsForExec, token) {
-
-        };
-        //endregion
 
         return pipeExecService;
     }]);

@@ -16,10 +16,9 @@
 
 package io.hawkcd.services;
 
-import io.hawkcd.core.security.Authorization;
-import io.hawkcd.core.security.AuthorizationGrant;
-import io.hawkcd.core.security.AuthorizationGrantService;
-import io.hawkcd.core.security.IAuthorizationGrantService;
+import io.hawkcd.core.Message;
+import io.hawkcd.core.MessageDispatcher;
+import io.hawkcd.core.security.*;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
@@ -33,9 +32,7 @@ import io.hawkcd.services.interfaces.IUserGroupService;
 import io.hawkcd.services.interfaces.IUserService;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class UserGroupService extends CrudService<UserGroup> implements IUserGroupService {
     private static final Class CLASS_TYPE = UserGroup.class;
@@ -58,25 +55,25 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult getById(String id) {
         return super.getById(id);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.NONE)
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult add(UserGroup userGroup) {
         return super.add(userGroup);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult addUserGroupDto(UserGroupDto userGroupDto) {
         UserGroup userGroup = new UserGroup();
         userGroup.setName(userGroupDto.getName());
@@ -90,10 +87,18 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(UserGroup userGroup) {
+        ServiceResult result = super.update(userGroup);
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String methodName = ste[1].getMethodName();
+        String className = this.getClass().getSimpleName();
 
-        return super.update(userGroup);
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
+
+        MessageDispatcher.dispatchIncomingMessage(message);
+
+        return result;
     }
 
     @Override
@@ -102,6 +107,10 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         UserGroup userGroup = (UserGroup) this.getById(userGroupId).getEntity();
         if (userGroup == null) {
             return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        for (AuthorizationGrant grant : grants) {
+            grant.setInherited(true);
         }
 
         List<AuthorizationGrant> filteredGrants = AuthorizationGrantService.filterAuthorizationGrantsForDuplicates(grants);
@@ -118,27 +127,67 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
     @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
-    public ServiceResult updateUsers(String userGroupId, ArrayList<String> userIds) {
-        UserGroup userGroup = (UserGroup) this.getById(userGroupId).getEntity();
-        if (userGroup == null) {
+    public ServiceResult assignUsers(String userGroupId, ArrayList<String> userIds) {
+        UserGroup userGroupToBeUpdated = (UserGroup) this.getById(userGroupId).getEntity();
+        if (userGroupToBeUpdated == null) {
             return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
         }
 
-        Set<String> usersToBeUpdatedById = new HashSet<>();
-        usersToBeUpdatedById.addAll(userGroup.getUserIds());
-        usersToBeUpdatedById.addAll(userIds);
+        List<String> oldUsers = userGroupToBeUpdated.getUserIds();
+        List<String> newUsers = userIds;
 
-        userGroup.setUserIds(userIds);
-        ServiceResult result = super.update(userGroup);
-        if (result.getEntity() != null) {
-            AuthorizationGrantService.refreshUserGrants(usersToBeUpdatedById);
+        // Get a List of Users to be assigned
+        List<String> userToBeAssigned = new ArrayList<>();
+        for (String newUser : newUsers) {
+            if (!oldUsers.contains(newUser)) {
+                userToBeAssigned.add(newUser);
+            }
+        }
+
+        // Get a List of Users to be unassigned
+        List<String> userToBeUnassigned = new ArrayList<>();
+        for (String oldUser : oldUsers) {
+            if (!newUsers.contains(oldUser)) {
+                userToBeUnassigned.add(oldUser);
+            }
+        }
+
+
+
+        userGroupToBeUpdated.setUserIds(userIds);
+        ServiceResult result = super.update(userGroupToBeUpdated);
+        UserGroup updatedUserGroup = (UserGroup) result.getEntity();
+
+        if (updatedUserGroup != null) {
+
+            // Update old userGroups of Users to be assigned
+            for (String userId : userToBeAssigned) {
+                User user = (User) this.userService.getById(userId).getEntity();
+                if (user != null) {
+                    if (user.getUserGroupId() != null) {
+                        UserGroup userGroup = (UserGroup) this.getById(user.getUserGroupId()).getEntity();
+                        userGroup.getUserIds().remove(userId);
+                        this.update(userGroup);
+                    }
+                }
+            }
+
+            // Update Users to be assigned
+            for (String userId : userToBeAssigned) {
+                this.userService.assignUserToGroup(userId, updatedUserGroup);
+            }
+
+            // Update Users to be unassigned
+            for (String userId : userToBeUnassigned) {
+                this.userService.unassignUserFromGroup(userId);
+            }
         }
 
         return result;
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult updateUserGroupDto(UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
         userGroup.setName(userGroupDto.getName());
@@ -158,7 +207,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult delete(UserGroup userGroup) {
 //        List<PrincipalUser> users = (List<PrincipalUser>) this.userService.getAll().getEntity();
 //
@@ -183,7 +232,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult assignUserToGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
 
@@ -208,7 +257,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult unassignUserFromGroup(User user, UserGroupDto userGroupDto) {
         UserGroup userGroup = (UserGroup) this.getById(userGroupDto.getId()).getEntity();
 
@@ -233,7 +282,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization( scope = PermissionScope.SERVER, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.NONE)
     public ServiceResult getAllUserGroups() {
         List<UserGroup> userGroups = (List<UserGroup>) this.getAll().getEntity();
         List<UserGroupDto> userGroupDtos = new ArrayList<>();

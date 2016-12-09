@@ -17,8 +17,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
-        function($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
+    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
+        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
@@ -65,6 +65,9 @@ angular
                     update: function(object) {
                         validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
                     },
+                    updatePermissions: function(object) {
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
+                    },
                     changeUserPassword: function(object) {
                         validationService.dispatcherFlow(object, [userUpdater.updateUser], true)
                     },
@@ -77,7 +80,6 @@ angular
                     resetUserPassword:function(object) {
                     },
                     logout: function(object) {
-                        debugger;
                         validationService.dispatcherFlow(object, [loginService.logoutUser])
                     }
                 },
@@ -94,6 +96,9 @@ angular
                     updateUserGroupDto: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
+                    update: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupWithoutUsers], true);
+                    },
                     assignUserToGroup: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
@@ -105,6 +110,9 @@ angular
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUserGroupDTOs], true);
+                    },
+                    assignUsers: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.assignUsers], true);
                     }
                 },
                 AgentService: {

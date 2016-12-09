@@ -154,7 +154,9 @@ angular
                     permissionScope: 'Represents the object level at which specific permissions can be applied.',
                     permissionType: 'Define permissions - what a user can do in specific Permission Scope.',
                     permissionEntity: 'The specific object(s) for which the Permissions are applied.',
-                    permissionEntityWarning: 'Permissions that have duplicate Scope and Entity will be omitted, because they conflict with each other.'
+                    permissionEntityWarning: 'Permissions that have duplicate Scope and Entity will be omitted, because they conflict with each other. This does not apply to inherited permissions. They can be overridden, because User permissions are more specific.',
+                    assignUserWarning: 'Users that have already been assigned to a User Group will be unassigned from it, then assigned to this one, because Users can only have 1 User Group.',
+                    inheritedPermissionWarning: 'This permission is inherited from a User Group.'
                 },
                 placements: {
                     top: 'top'
@@ -385,7 +387,11 @@ angular
             };
 
             vm.toggleClicked = function(user) {
-                user.isClicked = true;
+                if(user.isClicked === undefined){
+                    user.isClicked = true;
+                } else {
+                    user.isClicked = !user.isClicked;
+                }
             };
 
             vm.toggleUser = function(user) {
@@ -502,43 +508,16 @@ angular
             };
 
             vm.assignUsers = function() {
-                vm.selectedUserGroup.users = angular.copy(vm.selectedUserGroup.newUsers);
-                // vm.selectedUserGroup.users.forEach(function (currentUser, userIndex, userArray) {
-                //     if(currentUser.isAssigned){
-                //         adminService.assignUser(angular.copy(currentUser), vm.selectedUserGroup);
-                //     }
+                var assignedUsers = [];
+                // vm.selectedUserGroup.newUsers.forEach(function (currentUser, userIndex, userArray) {
+                //     assignedUsers.push(currentUser);
                 // });
-                vm.selectedUserGroup.users.forEach(function(currentUser, userIndex, userArray) {
-                    var isFound = false;
-                    if (currentUser.isClicked) {
-                        if (currentUser.isAssigned) {
-                            currentUser.userGroupIds.forEach(function(currentUserGroupId, userGroupIdIndex, userGroupIdArray) {
-                                if (currentUserGroupId == vm.selectedUserGroup.id) {
-                                    isFound = true;
-                                }
-                            });
-                            if (!isFound) {
-                                var updatedUser = angular.copy(currentUser);
-                                updatedUser.userGroupIds.push(vm.selectedUserGroup.id);
-                                adminService.assignUser(updatedUser, vm.selectedUserGroup);
-                            }
-                            isFound = false;
-                        } else {
-                            currentUser.userGroupIds.forEach(function(currentUserGroupId, userGroupIdIndex, userGroupIdArray) {
-                                if (currentUserGroupId == vm.selectedUserGroup.id) {
-                                    isFound = true;
-                                }
-                            });
-                            if (isFound) {
-                                var index = currentUser.userGroupIds.indexOf(vm.selectedUserGroup.id);
-                                var updatedUser = angular.copy(currentUser);
-                                updatedUser.userGroupIds.splice(index, 1);
-                                adminService.unassignUser(updatedUser, vm.selectedUserGroup);
-                            }
-                            isFound = false;
-                        }
+                vm.selectedUserGroup.newUsers.forEach(function(currentUser, userIndex, userArray) {
+                    if (currentUser.isAssigned) {
+                        assignedUsers.push(currentUser.id);
                     }
                 });
+                adminService.assignUsers(vm.selectedUserGroup.id, assignedUsers);
                 vm.close();
             };
 
@@ -622,7 +601,6 @@ angular
             };
 
             vm.checkEntityType = function (permission) {
-                debugger;
                 if(permission.permissionScope == 'PIPELINE_GROUP' && permission.permittedEntityId == ''){
                     permission.permissionEntity = 'ALL_PIPELINE_GROUPS';
                 } else if(permission.permissionScope == 'PIPELINE' && permission.permittedEntityId == ''){
@@ -633,6 +611,7 @@ angular
                 } else {
                     permission.permissionEntity = 'SPECIFIC_ENTITY';
                 }
+                debugger;
             };
 
             vm.addGroupPermission = function() {
@@ -654,7 +633,7 @@ angular
             };
 
             vm.updateUserPermission = function() {
-                adminService.updateUser(vm.selectedUser);
+                adminService.updateUserPermissions(vm.selectedUser.id, vm.selectedUser.permissions);
                 vm.closePermissionModal();
             };
 

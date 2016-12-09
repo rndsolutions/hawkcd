@@ -137,7 +137,7 @@ angular
                     pageTitle: 'Authenticate'
                 },
                 resolve: {
-                    auth: function(authDataService, pipeStatsService, agentService, $location) {
+                    auth: function(authDataService, agentService, $location) {
                         if (authDataService.authenticationData.IsAuthenticated) {
                             //pipeStatsService.getAgentById();
                             // $location.path('/pipelines');
@@ -150,7 +150,7 @@ angular
             url: "/",
             templateUrl: "app/main.html",
             resolve: {
-                auth: function(authDataService, pipeStatsService, agentService, $location,
+                auth: function(authDataService, agentService, $location,
                     $auth, $rootScope, $timeout, loggerService) {
 
                     if($auth.isAuthenticated){
