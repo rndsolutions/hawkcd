@@ -24,9 +24,13 @@ public class AuthorizationGrantService {
             }
         }
 
-        updatedGrants.addAll(grants);
+//        updatedGrants.addAll(grants);
 
-        UserGroup userGroup = (UserGroup) userGroupService.getById(userGroupId).getEntity();
+        UserGroup userGroup = null;
+        if (userGroupId != null) {
+            userGroup = (UserGroup) userGroupService.getById(userGroupId).getEntity();
+        }
+
         if (userGroup != null) {
             updatedGrants.addAll(userGroup.getPermissions());
         }
