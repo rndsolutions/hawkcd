@@ -123,24 +123,14 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult delete(UserGroup userGroup) {
-//        List<User> users = (List<User>) this.userService.getAll().getEntity();
-//
-//        for (User user : users) {
-//            String userGroupIds = user.getUserGroupId();
-//
-//            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
-//                String currentUserGroupId = iter.next();
-//                if (currentUserGroupId.equals(userGroup.getId())) {
-//                    iter.remove();
-//                }
-//            }
-//
-//            user.setUserGroupId(userGroupIds);
-//            ServiceResult removeGroupFromAllUsers = this.userService.update(user);
-//            if (removeGroupFromAllUsers.getNotificationType() == NotificationType.ERROR) {
-//                return removeGroupFromAllUsers;
-//            }
-//        }
+        UserGroup userGroupToDelete = (UserGroup) this.getById(userGroup.getId()).getEntity();
+        if (userGroupToDelete == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        if (!userGroupToDelete.getUserIds().isEmpty()) {
+            return super.createServiceResult(null, NotificationType.ERROR, "has Users assigned to it.");
+        }
 
         return super.delete(userGroup);
     }
