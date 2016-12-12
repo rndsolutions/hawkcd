@@ -38,7 +38,6 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     private static final Class CLASS_TYPE = UserGroup.class;
 
     private IUserService userService;
-    private static IAuthorizationGrantService authorizationGrantService;
 
     public UserGroupService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
@@ -87,7 +86,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     }
 
     @Override
-    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
+//    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult update(UserGroup userGroup) {
         ServiceResult result = super.update(userGroup);
         final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
@@ -97,91 +96,6 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
         Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
 
         MessageDispatcher.dispatchIncomingMessage(message);
-
-        return result;
-    }
-
-    @Override
-    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
-    public ServiceResult updatePermissions(String userGroupId, ArrayList<AuthorizationGrant> grants) {
-        UserGroup userGroup = (UserGroup) this.getById(userGroupId).getEntity();
-        if (userGroup == null) {
-            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
-        }
-
-        for (AuthorizationGrant grant : grants) {
-            grant.setInherited(true);
-        }
-
-        List<AuthorizationGrant> filteredGrants = AuthorizationGrantService.filterAuthorizationGrantsForDuplicates(grants);
-        filteredGrants = AuthorizationGrantService.sortAuthorizationGrants(filteredGrants);
-
-        userGroup.setPermissions(filteredGrants);
-        ServiceResult result = super.update(userGroup);
-        if (result.getEntity() != null) {
-            AuthorizationGrantService.refreshUserGrants(userGroup.getUserIds());
-        }
-
-        return result;
-    }
-
-    @Override
-    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
-    public ServiceResult assignUsers(String userGroupId, ArrayList<String> userIds) {
-        UserGroup userGroupToBeUpdated = (UserGroup) this.getById(userGroupId).getEntity();
-        if (userGroupToBeUpdated == null) {
-            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
-        }
-
-        List<String> oldUsers = userGroupToBeUpdated.getUserIds();
-        List<String> newUsers = userIds;
-
-        // Get a List of Users to be assigned
-        List<String> userToBeAssigned = new ArrayList<>();
-        for (String newUser : newUsers) {
-            if (!oldUsers.contains(newUser)) {
-                userToBeAssigned.add(newUser);
-            }
-        }
-
-        // Get a List of Users to be unassigned
-        List<String> userToBeUnassigned = new ArrayList<>();
-        for (String oldUser : oldUsers) {
-            if (!newUsers.contains(oldUser)) {
-                userToBeUnassigned.add(oldUser);
-            }
-        }
-
-
-
-        userGroupToBeUpdated.setUserIds(userIds);
-        ServiceResult result = super.update(userGroupToBeUpdated);
-        UserGroup updatedUserGroup = (UserGroup) result.getEntity();
-
-        if (updatedUserGroup != null) {
-
-            // Update old userGroups of Users to be assigned
-            for (String userId : userToBeAssigned) {
-                User user = (User) this.userService.getById(userId).getEntity();
-                if (user != null) {
-                    if (user.getUserGroupId() != null) {
-                        UserGroup userGroup = (UserGroup) this.getById(user.getUserGroupId()).getEntity();
-                        userGroup.getUserIds().remove(userId);
-                        this.update(userGroup);
-                    }
-                }
-            }
-
-            // Update Users to be assigned
-            for (String userId : userToBeAssigned) {
-                this.userService.assignUserToGroup(userId, updatedUserGroup);
-            }
-
-            // Update Users to be unassigned
-            for (String userId : userToBeUnassigned) {
-                this.userService.unassignUserFromGroup(userId);
-            }
-        }
 
         return result;
     }
@@ -209,24 +123,14 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
     @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult delete(UserGroup userGroup) {
-//        List<User> users = (List<User>) this.userService.getAll().getEntity();
-//
-//        for (User user : users) {
-//            String userGroupIds = user.getUserGroupId();
-//
-//            for (Iterator<String> iter = userGroupIds.listIterator(); iter.hasNext(); ) {
-//                String currentUserGroupId = iter.next();
-//                if (currentUserGroupId.equals(userGroup.getId())) {
-//                    iter.remove();
-//                }
-//            }
-//
-//            user.setUserGroupId(userGroupIds);
-//            ServiceResult removeGroupFromAllUsers = this.userService.update(user);
-//            if (removeGroupFromAllUsers.getNotificationType() == NotificationType.ERROR) {
-//                return removeGroupFromAllUsers;
-//            }
-//        }
+        UserGroup userGroupToDelete = (UserGroup) this.getById(userGroup.getId()).getEntity();
+        if (userGroupToDelete == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "does not exist.");
+        }
+
+        if (!userGroupToDelete.getUserIds().isEmpty()) {
+            return super.createServiceResult(null, NotificationType.ERROR, "has Users assigned to it.");
+        }
 
         return super.delete(userGroup);
     }
