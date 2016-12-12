@@ -78,9 +78,6 @@ public abstract class CrudService<T extends Entity> extends Service<T> implement
 
     @Override
     public ServiceResult update(T entity) {
-        if (entity == null) {
-            return super.createServiceResult(entity, NotificationType.ERROR, "not found");
-        }
         T dbObject = this.getRepository().update(entity);
 
         ServiceResult result;

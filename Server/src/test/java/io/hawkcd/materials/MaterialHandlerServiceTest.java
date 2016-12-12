@@ -67,15 +67,6 @@ public class MaterialHandlerServiceTest {
     }
 
     @Test
-    public void materialHandlerService_instantiated_notNull() {
-        // Act
-        this.materialHandlerService = new MaterialHandlerService();
-
-        // Assert
-        Assert.assertNotNull(this.materialHandlerService);
-    }
-
-    @Test
     public void checkPipelineForTriggerMaterials_oneTriggerMaterial_correctMessage() {
         // Arrange
         PipelineDefinition pipelineDefinition = new PipelineDefinition();

@@ -314,7 +314,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
-        return this.getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, null);
+        return this.getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, "");
     }
 
     @Override

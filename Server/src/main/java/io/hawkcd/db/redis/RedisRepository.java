@@ -59,6 +59,10 @@ public class RedisRepository<T extends Entity> implements IDbRepository<T> {
 
     @Override
     public T getById(String id) {
+        if (id == null) {
+            return null;
+        }
+
         T result;
         try (Jedis jedis = this.jedisPool.getResource()) {
             String entryKey = String.format("%s:%s", this.entryNamespace, id);
@@ -88,6 +92,10 @@ public class RedisRepository<T extends Entity> implements IDbRepository<T> {
 
     @Override
     public T add(T entry) {
+        if (entry == null) {
+            return null;
+        }
+
         T result = null;
         try (Jedis jedis = this.jedisPool.getResource()) {
             T existingObject = this.getById(entry.getId());
@@ -104,6 +112,10 @@ public class RedisRepository<T extends Entity> implements IDbRepository<T> {
 
     @Override
     public T update(T entry) {
+        if (entry == null) {
+            return null;
+        }
+
         T result = null;
         try (Jedis jedis = this.jedisPool.getResource()) {
             T existingObject = this.getById(entry.getId());
@@ -120,7 +132,11 @@ public class RedisRepository<T extends Entity> implements IDbRepository<T> {
 
     @Override
     public T delete(String id) {
-        T result = null;
+        if (id == null) {
+            return null;
+        }
+
+        T result;
         try (Jedis jedis = this.jedisPool.getResource()) {
             result = this.getById(id);
             if (result != null) {
