@@ -18,12 +18,6 @@
 
 package io.hawkcd.core.publisher;
 
-import sun.net.idn.Punycode;
-
-/**
- * Created by rado on 14.11.16.
- */
-
 public class PublisherFactory {
 
     public static IPublisher createPublisher() {

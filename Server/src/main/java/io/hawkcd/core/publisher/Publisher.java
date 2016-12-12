@@ -44,6 +44,7 @@ public class Publisher implements IPublisher {
         if (instance == null) {
             instance = new Publisher();
         }
+
         return instance;
     }
 
