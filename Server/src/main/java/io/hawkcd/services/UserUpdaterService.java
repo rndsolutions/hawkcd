@@ -9,12 +9,13 @@ import io.hawkcd.model.UserGroup;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
+import io.hawkcd.services.interfaces.IUserUpdaterService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class UserUpdaterService {
+public class UserUpdaterService implements IUserUpdaterService {
     private UserGroupService userGroupService;
     private UserService userService;
     private AuthorizationGrantService authorizationGrantService;
@@ -25,6 +26,7 @@ public class UserUpdaterService {
         this.authorizationGrantService = new AuthorizationGrantService();
     }
 
+    @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult updateUserPermissions(String userId, ArrayList<AuthorizationGrant> grants) {
         User user = (User) this.userService.getById(userId).getEntity();
@@ -46,6 +48,7 @@ public class UserUpdaterService {
         return result;
     }
 
+    @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult updateUserGroupPermissions(String userGroupId, ArrayList<AuthorizationGrant> grants) {
         UserGroup userGroup = (UserGroup) this.userGroupService.getById(userGroupId).getEntity();
@@ -64,6 +67,7 @@ public class UserUpdaterService {
         return result;
     }
 
+    @Override
     @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
     public ServiceResult assignUsers(String userGroupId, ArrayList<String> userIds) {
         UserGroup userGroupToUpdate = (UserGroup) this.userGroupService.getById(userGroupId).getEntity();
