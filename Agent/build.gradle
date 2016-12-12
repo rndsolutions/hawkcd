@@ -19,7 +19,7 @@ apply plugin: 'java'
 jar {
     manifest {
         attributes(
-                'Main-Class': 'net.hawkengine.agent.Main',
+                'Main-Class': 'io.hawkcd.agent.Main',
         )
     }
 }
