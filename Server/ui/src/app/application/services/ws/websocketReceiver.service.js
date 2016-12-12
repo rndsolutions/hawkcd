@@ -65,22 +65,27 @@ angular
                     update: function(object) {
                         validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
                     },
-                    updatePermissions: function(object) {
-                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
-                    },
                     changeUserPassword: function(object) {
                         validationService.dispatcherFlow(object, [userUpdater.updateUser], true)
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUsers], true);
                     },
-                    assignUserToGroup: function(object) {
-                        validationService.dispatcherFlow(object, [userUpdater.updateUser, adminService.getAllUserGroupDTOs], true);
-                    },
                     resetUserPassword:function(object) {
                     },
                     logout: function(object) {
                         validationService.dispatcherFlow(object, [loginService.logoutUser])
+                    }
+                },
+                UserUpdaterService: {
+                    assignUsers: function(object) {
+
+                    },
+                    updateUserPermissions: function(object) {
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
+                    },
+                    updateUserGroupPermissions: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupPermissions], true);
                     }
                 },
                 UserGroupService: {
@@ -98,15 +103,6 @@ angular
                     },
                     update: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupWithoutUsers], true);
-                    },
-                    assignUserToGroup: function(object) {
-                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
-                    },
-                    unassignUserFromGroup: function(object) {
-                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
-                    },
-                    updatePermissions: function(object) {
-                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupPermissions], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUserGroupDTOs], true);

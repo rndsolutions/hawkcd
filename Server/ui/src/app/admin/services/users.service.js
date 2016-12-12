@@ -22,7 +22,7 @@ angular
 
         adminService.getAllUserGroups = function() {
             var methodName = "getAll";
-            var className = "UserGroupService";
+            var className = "UserUpdaterService";
             var packageName = "io.hawkcd.services";
             var result = "";
             var args = [];
@@ -98,8 +98,8 @@ angular
         };
 
         adminService.updateUserPermissions = function(userId, grants) {
-            var methodName = "updatePermissions";
-            var className = "UserService";
+            var methodName = "updateUserPermissions";
+            var className = "UserUpdaterService";
             var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + userId + "\"}, " +
@@ -145,35 +145,9 @@ angular
             websocketSenderService.call(json);
         };
 
-        adminService.assignUser = function(user, group) {
-            var methodName = "assignUserToGroup";
-            var className = "UserGroupService";
-            var packageName = "io.hawkcd.services";
-            var result = "";
-            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
-                "{\"packageName\": \"io.hawkcd.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
-            ];
-            var error = "";
-            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
-            websocketSenderService.call(json);
-        };
-
-        adminService.unassignUser = function(user, group) {
-            var methodName = "unassignUserFromGroup";
-            var className = "UserGroupService";
-            var packageName = "io.hawkcd.services";
-            var result = "";
-            var args = ["{\"packageName\": \"io.hawkcd.model.User\", \"object\": " + JSON.stringify(user) + "}, " +
-                "{\"packageName\": \"io.hawkcd.model.dto.UserGroupDto\", \"object\": " + JSON.stringify(group) + "}"
-            ];
-            var error = "";
-            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
-            websocketSenderService.call(json);
-        };
-
         adminService.updateUserGroupPermissions = function(userGroupId, permissions) {
-            var methodName = "updatePermissions";
-            var className = "UserGroupService";
+            var methodName = "updateUserGroupPermissions";
+            var className = "UserUpdaterService";
             var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + userGroupId + "\"}, " +
@@ -186,7 +160,7 @@ angular
 
         adminService.assignUsers = function(userGroupId, users) {
             var methodName = "assignUsers";
-            var className = "UserGroupService";
+            var className = "UserUpdaterService";
             var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \""+ userGroupId +"\"}, " +

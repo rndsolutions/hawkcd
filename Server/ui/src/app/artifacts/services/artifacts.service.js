@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.artifactManagement')
-    .factory('artifactService', ['CONSTANTS', function(CONSTANTS) {
+    .factory('artifactService', ['CONSTANTS', 'websocketSenderService', 'jsonHandlerService', function(CONSTANTS, websocketSenderService, jsonHandlerService) {
         var artifactService = this;
 
         var fileEndpoint = CONSTANTS.SERVER_URL + '/';
