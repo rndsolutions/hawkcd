@@ -317,19 +317,19 @@ public class StatusUpdaterTests {
         Assert.assertFalse(actualResult);
     }
 
-    @Test
-    public void updateAgentStatus_agentToBeDisconnected_agentSetToDisconnected() {
-        // Arrange
-        Agent agent = new Agent();
-        agent.setConnected(true);
-        agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime().minusSeconds(20));
-
-        // Act
-        Agent actualResult = this.statusUpdaterService.updateAgentStatus(agent);
-
-        // Assert
-        Assert.assertFalse(actualResult.isConnected());
-    }
+//    @Test
+//    public void updateAgentStatus_agentToBeDisconnected_agentSetToDisconnected() {
+//        // Arrange
+//        Agent agent = new Agent();
+//        agent.setConnected(true);
+//        agent.setLastReportedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime().minusSeconds(20));
+//
+//        // Act
+//        Agent actualResult = this.statusUpdaterService.updateAgentStatus(agent);
+//
+//        // Assert
+//        Assert.assertFalse(actualResult.isConnected());
+//    }
 
     @Test
     public void updateAgentStatus_agentNotToBeDisconnected_agentIsStillConnected() {
