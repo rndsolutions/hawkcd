@@ -17,17 +17,37 @@
     <div class="tabbable-custom nav-justified tab-border-fix">
         <ul class="nav nav-tabs nav-justified width-40">
             <li ui-sref-active="active" style="min-width:160px;">
-                <a data-target="#stageSettings" data-toggle="tab" aria-expanded="true" ui-sref="index.pipelineConfig.stage.settings"> Stage Settings <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.stage}}">?</span></a>
+                <a data-target="#stageSettings" data-toggle="tab" aria-expanded="true"
+                   ui-sref="index.pipelineConfig.stage.settings"
+                   ng-click="pipeConfig.selectTabView('stageSettings')"> Stage Settings <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.stage}}">?</span></a>
             </li>
             <li ui-sref-active="active" style="min-width:100px;">
-                <a data-target="#jobs" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.jobs"> Jobs <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.job}}">?</span></a>
+                <a data-target="#jobs" data-toggle="tab" aria-expanded="false"
+                   ui-sref="index.pipelineConfig.stage.jobs"
+                   ng-click="pipeConfig.selectTabView('stageJobs')"> Jobs <span class="badge badge-default cursor-popover"
+                                                                         data-placement="bottom" style="margin-left:5px"
+                                                                         onmouseenter="$(this).tooltip('show')"
+                                                                         title="{{pipeConfig.popOverOptions.popOverTitles.job}}">?</span></a>
             </li>
             <li ui-sref-active="active" style="min-width:220px;">
-                <a data-target="#sEnvironmentVar" data-toggle="tab" aria-expanded="false" ui-sref="index.pipelineConfig.stage.variables"> Environment Variables <span class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
+                <a data-target="#sEnvironmentVar" data-toggle="tab" aria-expanded="false"
+                   ui-sref="index.pipelineConfig.stage.variables"
+                   ng-click="pipeConfig.selectTabView('stageVariables')"> Environment Variables <span
+                        class="badge badge-default cursor-popover" data-placement="bottom" style="margin-left:5px"
+                        onmouseenter="$(this).tooltip('show')"
+                        title="{{pipeConfig.popOverOptions.popOverTitles.environmentVariable}}">?</span></a>
             </li>
         </ul>
-        <div class="tab-content" ui-view>
-
+        <div class="tab-content" ng-init="pipeConfig.initStageTabs()">
+            <div ng-if="pipeConfig.tabView == 'stageSettings'" ng-include
+                 src="'app/pipelines/views/partials/config/stage-options/_settings.html'"></div>
+            <div ng-if="pipeConfig.tabView == 'stageJobs'" ng-include
+                 src="'app/pipelines/views/partials/config/stage-options/_jobs.html'"></div>
+            <div ng-if="pipeConfig.tabView == 'stageVariables'" ng-include
+                 src="'app/pipelines/views/partials/config/stage-options/_variables.html'"></div>
         </div>
     </div>
 </div>
