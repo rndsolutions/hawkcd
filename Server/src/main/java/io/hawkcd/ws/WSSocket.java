@@ -34,7 +34,6 @@ import io.hawkcd.model.payload.TokenInfo;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TokenAdapter;
-import io.hawkcd.utilities.deserializers.WsContractDeserializer;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
@@ -97,7 +96,7 @@ public class WSSocket extends WebSocketAdapter {
 
         switch (statusCode) {
             case 1000:
-                LOGGER.info("Session for user: " + this.loggedUser.getEmail() + "Closed upon logout request");
+                LOGGER.info("Session for user: " + this.loggedUser.getEmail() + " Closed upon logout request");
                 break;
             case 1001:
                 LOGGER.info("Session terminated forcefully by user: " + this.loggedUser.getEmail());
@@ -175,8 +174,8 @@ public class WSSocket extends WebSocketAdapter {
 
     private void initialize(Session session) {
         String tokenQuery = session.getUpgradeRequest().getQueryString();
-        if (!tokenQuery.equals("token=null")) {
-            String token = tokenQuery.substring(6);
+        if (!tokenQuery.equals("api_key=null")) {
+            String token = tokenQuery.substring(8);
             TokenInfo tokenInfo = TokenAdapter.verifyToken(token);
             if (tokenInfo == null) {
                 return;
