@@ -79,6 +79,10 @@ public class TokenAdapter {
     }
 
     public static TokenInfo verifyToken(String token) {
+        if (token == null) {
+            return null;
+        }
+
         try {
             final Verifier hmacVerifier = new HmacSHA256Verifier(SIGNING_KEY.getBytes());
 
