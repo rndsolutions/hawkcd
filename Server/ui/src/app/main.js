@@ -210,7 +210,7 @@ angular
 
     //TODO: Replace localStorage with $auth.isAuthenitcated()
     $rootScope.startWebsocket = function start(wsServerLocation) {
-        $rootScope.socket = new WebSocket(wsServerLocation.concat('?token=' + $auth.getToken()));
+        $rootScope.socket = new WebSocket(wsServerLocation.concat('?api_key=' + $auth.getToken()));
 
         $rootScope.socket.onmessage = function(event) {
             // console.log(event.data);
