@@ -42,7 +42,7 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
         MultivaluedMap<String, String> pathParameters = requestContext.getUriInfo().getQueryParameters();
         //requestContext.
         //TODO: Consider checking the user against the database
-        String api_key = pathParameters.get("token").stream().findFirst().orElse(null);
+        String api_key = pathParameters.get("api_key").stream().findFirst().orElse(null);
         TokenInfo tokenInfo = null;
         if (api_key != null) {
             tokenInfo = TokenAdapter.verifyToken(api_key);
@@ -56,6 +56,7 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
             e.printStackTrace();
         }
 
+        requestContext.setProperty("user", tokenInfo.getUser());
         requestContext.setSecurityContext(httpSecurityContext);
 
         // we may stop the processing here

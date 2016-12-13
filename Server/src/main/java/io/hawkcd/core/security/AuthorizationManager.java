@@ -81,7 +81,7 @@ public class AuthorizationManager implements IAuthorizationManager {
         Class<?> aClass = Class.forName(fullyQualifiedName);
         Class<?>[] params = new Class[parameters.size()];
         for (int i = 0; i < params.length; i++) {
-            Class<?> aClass1 = parameters.get(i).getClass();
+            Class<?> aClass1 = parameters.get(i).getObject().getClass();
             params[i] = aClass1;
         }
         Method method = aClass.getMethod(contractDto.getMethodName(), params);
@@ -284,9 +284,11 @@ public class AuthorizationManager implements IAuthorizationManager {
 
         if (entities != null && entities.size() > 0 && (entities.get(0) instanceof PipelineGroupDto)) {
             entitiesWithPermissions = (List<Entity>)(List<?>)this.attachPermissionsToPipelineDtos((List<PipelineGroupDto>)(List<?>) entities, currentUser);
+            entitiesWithPermissions = this.attachPermissionTypeToList(entitiesWithPermissions, currentUser.getPermissions());
+        } else{
+            entitiesWithPermissions = this.attachPermissionTypeToList(entities, currentUser.getPermissions());
         }
 
-        entitiesWithPermissions = this.attachPermissionTypeToList(entitiesWithPermissions, currentUser.getPermissions());
 
         return entitiesWithPermissions;
     }
