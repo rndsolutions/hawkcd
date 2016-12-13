@@ -18,6 +18,9 @@ package io.hawkcd.http;
 
 import com.google.gson.Gson;
 import io.hawkcd.core.security.AuthorizationGrant;
+import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.http.security.HttpSecurityContext;
+import io.hawkcd.http.security.Secured;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.LoginDto;
@@ -29,11 +32,11 @@ import io.swagger.annotations.Api;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -155,13 +158,13 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     @Path("/logout")
-    public Response logout(@Context HttpServletRequest httpRequest) throws IOException {
-        String userPrincipal = (String) httpRequest.getAttribute("email");
-
-
-//        LOGGER.info("PrincipalUser: "+ email+ " logged out");
-//        SessionFactory.getSessionManager().closeSessionByUserEmail(email);
-        return Response.serverError().build();
+    @Secured
+    public Response logout(@Context ContainerRequestContext requestContext) {
+        HttpSecurityContext securityContext = (HttpSecurityContext) requestContext.getSecurityContext();
+        String userEmail = securityContext.getUserPrincipal().getUser().getEmail();
+        LOGGER.info("PrincipalUser: " + userEmail + " logged out");
+        SessionFactory.getSessionManager().closeSessionByUserEmail(userEmail);
+        return Response.ok().build();
     }
 
 
@@ -169,6 +172,7 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
+    @Secured
     public Response register(RegisterDto newUser) {
 
         List<AuthorizationGrant> userPermissions = new ArrayList<>();

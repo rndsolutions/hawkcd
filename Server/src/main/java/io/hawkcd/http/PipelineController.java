@@ -16,7 +16,7 @@
 
 package io.hawkcd.http;
 
-import io.hawkcd.http.security.HttpSecurityContext;
+import io.hawkcd.http.security.Secured;
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
@@ -31,7 +31,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
 
 @Consumes("application/json")
 @Produces("application/json")
@@ -64,6 +63,7 @@ public class PipelineController {
     @GET
     @ApiOperation(value = "Return one entity", notes = "Returns one entity at random", response = Pipeline.class)
     @Produces(MediaType.APPLICATION_JSON)
+    @Secured
     public Response getAll(@Context ContainerRequestContext sc) {
 
             ServiceResult response = this.pipelineService.getAll();
@@ -76,6 +76,7 @@ public class PipelineController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{pipelineDefinitionId}")
+    @Secured
     public Response getPipelineById(@PathParam("pipelineDefinitionId") String pipelineDefinitionId) {
         ServiceResult response = this.pipelineService.getById(pipelineDefinitionId);
         if (response.getNotificationType() == NotificationType.ERROR) {
@@ -131,6 +132,7 @@ public class PipelineController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Secured
     public Response update(Pipeline pipeline) {
         ServiceResult response = this.pipelineService.update(pipeline);
         if (response.getNotificationType() == NotificationType.ERROR) {

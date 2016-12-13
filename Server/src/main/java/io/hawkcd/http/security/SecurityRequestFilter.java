@@ -30,11 +30,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
-
 @Provider
 @Priority(Priorities.AUTHENTICATION)
+@Secured
 public class SecurityRequestFilter implements ContainerRequestFilter {
-
     @Context
     private ResourceInfo resourceInfo;
 
@@ -49,7 +48,6 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
             tokenInfo = TokenAdapter.verifyToken(api_key);
         }
 
-        requestContext.setProperty("email", tokenInfo.getUser().getEmail());
         HttpSecurityContext httpSecurityContext = null;
         try {
             //sets app specific SecurityContext
@@ -57,11 +55,12 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+
         requestContext.setSecurityContext(httpSecurityContext);
 
         // we may stop the processing here
         try {
-            if (!httpSecurityContext.isAuthorized()) { // if true, the user is not authorized thus stop the request processing
+            if (!httpSecurityContext.getMethodName().equals("logout") && !httpSecurityContext.isAuthorized()) { // if true, the user is not authorized thus stop the request processing
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             }
         } catch (IllegalAccessException e) {
