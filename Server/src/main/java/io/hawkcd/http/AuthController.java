@@ -17,25 +17,24 @@
 package io.hawkcd.http;
 
 import com.google.gson.Gson;
-
 import io.hawkcd.core.security.AuthorizationGrant;
-import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.utilities.deserializers.TokenAdapter;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.LoginDto;
 import io.hawkcd.model.dto.RegisterDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.UserService;
-
+import io.hawkcd.utilities.deserializers.TokenAdapter;
 import io.swagger.annotations.Api;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -57,6 +56,16 @@ public class AuthController {
     private static final String GH_CLIENT_ID = "2d3dbbf586d2260cbd68";
     //TODO: move this to the config
     private static final String GH_CLIENT_SERCRET = "";
+
+    /**
+     * Holds the name of the business service PACKAGE the resource endpoints expose
+     */
+    public static final String SERVICE_PACKAGE_NAME = "io.hawkcd.services";
+
+    /**
+     * Holds the name of the business service the resource endpoints expose
+     */
+    public static final String SERVICE_CLASS_NAME = "UserService";
 
     private UserService userService;
 
@@ -146,10 +155,13 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     @Path("/logout")
-    public Response logout(String email) throws IOException {
-        LOGGER.info("PrincipalUser: "+ email+ " logged out");
-        SessionFactory.getSessionManager().closeSessionByUserEmail(email);
-        return Response.ok().build();
+    public Response logout(@Context HttpServletRequest httpRequest) throws IOException {
+        String userPrincipal = (String) httpRequest.getAttribute("email");
+
+
+//        LOGGER.info("PrincipalUser: "+ email+ " logged out");
+//        SessionFactory.getSessionManager().closeSessionByUserEmail(email);
+        return Response.serverError().build();
     }
 
 

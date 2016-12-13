@@ -43,16 +43,17 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
         MultivaluedMap<String, String> pathParameters = requestContext.getUriInfo().getQueryParameters();
         //requestContext.
         //TODO: Consider checking the user against the database
-        String api_key = pathParameters.get("api_key").stream().findFirst().orElse(null);
+        String api_key = pathParameters.get("token").stream().findFirst().orElse(null);
         TokenInfo tokenInfo = null;
-        if (api_key != null){
+        if (api_key != null) {
             tokenInfo = TokenAdapter.verifyToken(api_key);
         }
 
+        requestContext.setProperty("email", tokenInfo.getUser().getEmail());
         HttpSecurityContext httpSecurityContext = null;
         try {
             //sets app specific SecurityContext
-            httpSecurityContext = new HttpSecurityContext(tokenInfo.getUser(),this.resourceInfo);
+            httpSecurityContext = new HttpSecurityContext(tokenInfo.getUser(), this.resourceInfo);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -60,7 +61,7 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
 
         // we may stop the processing here
         try {
-            if (!httpSecurityContext.isAuthorized()){ // if true, the user is not authorized thus stop the request processing
+            if (!httpSecurityContext.isAuthorized()) { // if true, the user is not authorized thus stop the request processing
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             }
         } catch (IllegalAccessException e) {
