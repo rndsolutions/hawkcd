@@ -17,7 +17,6 @@ import io.hawkcd.model.enums.DatabaseType;
 
 public final class MongoDbManager {
     public static final DatabaseConfig mongoDbConfig = Config.getConfiguration().getDatabaseConfigs().get(DatabaseType.MONGODB);
-    // ServerConfiguration.getConfiguration().getDatabaseConfigs().get(DatabaseType.MONGODB);
     private static MongoDatabase db;
     private static MongoDbManager mongoDbManager;
     private static MongoClient mongoClient;
@@ -50,13 +49,13 @@ public final class MongoDbManager {
         seeds.add(serverAddress);
         List<MongoCredential> credentials = new ArrayList<>();
 
-        char[] chars = null;
-        if (mongoDbConfig.getPassword() != null){
-         chars = mongoDbConfig.getPassword().toCharArray();
+        if((mongoDbConfig.getUsername() != null && mongoDbConfig.getUsername().length() > 0) &&
+                mongoDbConfig.getPassword() != null && mongoDbConfig.getPassword().length() > 0){
+            credentials.add(MongoCredential.createCredential(mongoDbConfig.getUsername(), mongoDbConfig.getName(), mongoDbConfig.getPassword().toCharArray()));
+            mongoClient = new MongoClient(seeds, credentials);
+        } else{
+            mongoClient = new MongoClient(seeds);
         }
-        credentials.add(MongoCredential.createCredential(mongoDbConfig.getUsername(), mongoDbConfig.getName(),chars));
-        mongoClient = new MongoClient(seeds, credentials);
-
     }
 
     private void insertAdminCredentials(String userName, String password, String[] roles, String databaseName) {
