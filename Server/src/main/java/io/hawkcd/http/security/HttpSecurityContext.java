@@ -17,13 +17,11 @@ import java.util.List;
  * Created by rado on 07.12.16.
  */
 public class HttpSecurityContext implements SecurityContext {
-
     private PrincipalUser principalUser;
     private ResourceInfo resourceInfo;
     private Field servicePackageNameField;
     private Field serviceClassNameField;
     private String methodName;
-
 
     public HttpSecurityContext(User user, ResourceInfo resourceInfo) throws NoSuchFieldException {
         this.principalUser = new PrincipalUser(user);

@@ -19,7 +19,7 @@ package io.hawkcd.http;
 import com.google.gson.Gson;
 import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.http.security.HttpSecurityContext;
+import io.hawkcd.http.security.PrincipalUser;
 import io.hawkcd.http.security.Secured;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
@@ -160,10 +160,11 @@ public class AuthController {
     @Path("/logout")
     @Secured
     public Response logout(@Context ContainerRequestContext requestContext) {
-        HttpSecurityContext securityContext = (HttpSecurityContext) requestContext.getSecurityContext();
-        String userEmail = securityContext.getUserPrincipal().getUser().getEmail();
+        PrincipalUser principalUser = (PrincipalUser) requestContext.getSecurityContext().getUserPrincipal();
+        String userEmail = principalUser.getUser().getEmail();
         LOGGER.info("PrincipalUser: " + userEmail + " logged out");
         SessionFactory.getSessionManager().closeSessionByUserEmail(userEmail);
+
         return Response.ok().build();
     }
 
