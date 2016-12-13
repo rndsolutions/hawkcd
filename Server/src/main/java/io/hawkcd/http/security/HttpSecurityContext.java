@@ -1,6 +1,5 @@
 package io.hawkcd.http.security;
 
-import com.google.common.reflect.ClassPath;
 import io.hawkcd.core.MessageConverter;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.subscriber.Envelopе;
@@ -8,11 +7,9 @@ import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.print.DocFlavor;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Field;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +34,7 @@ public class HttpSecurityContext implements SecurityContext {
     }
 
     @Override
-    public Principal getUserPrincipal() {
+    public PrincipalUser getUserPrincipal() {
         return this.principalUser;
     }
 
@@ -54,6 +51,10 @@ public class HttpSecurityContext implements SecurityContext {
     @Override
     public String getAuthenticationScheme() {
         throw new NotImplementedException();
+    }
+
+    public String getMethodName() {
+        return this.methodName;
     }
 
     public boolean isAuthorized() throws IllegalAccessException, NoSuchMethodException, ClassNotFoundException {

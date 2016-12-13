@@ -6,18 +6,17 @@ import io.hawkcd.model.User;
 import java.security.Principal;
 
 public class PrincipalUser implements Principal {
+    private User user;
 
-    User user;
+    public PrincipalUser(User user) {
+        this.user = user;
+    }
 
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
-        this.user = user;
-    }
-
-    public PrincipalUser(User user) {
         this.user = user;
     }
 
