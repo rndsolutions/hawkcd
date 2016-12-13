@@ -43,9 +43,11 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
         //requestContext.
         //TODO: Consider checking the user against the database
         String api_key = pathParameters.get("api_key").stream().findFirst().orElse(null);
-        TokenInfo tokenInfo = null;
-        if (api_key != null) {
-            tokenInfo = TokenAdapter.verifyToken(api_key);
+
+        TokenInfo tokenInfo = TokenAdapter.verifyToken(api_key);
+        if (tokenInfo == null) {
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            return;
         }
 
         HttpSecurityContext httpSecurityContext = null;
@@ -62,7 +64,7 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
         // we may stop the processing here
         try {
             if (!httpSecurityContext.getMethodName().equals("logout") && !httpSecurityContext.isAuthorized()) { // if true, the user is not authorized thus stop the request processing
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+                requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
