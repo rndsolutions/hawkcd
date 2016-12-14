@@ -17,12 +17,13 @@ public class MessageDispatcher {
     public static void dispatchIncomingMessage(Message message) {
         if (Config.getConfiguration().isSingleNode()) {
             WsContractDto contractDto = null;
-            if (message.isTargetOwner()) { // if this is list
-                contractDto = MessageConverter.convert(message);
-                SessionFactory.getSessionManager().sendToAllSessions(contractDto);
-            } else if(message.isUserUpdate()){
+            //TODO: Improve flow of dispatcher to not send to all Nodes, even if isSingleNode is true
+            if (message.isUserUpdate()) {
                 List<String> ids = (List<String>) message.getEnvelope();
                 SessionFactory.getSessionManager().updateSessionLoggedUser(ids.toArray(new String[ids.size()]));
+            } else {
+                contractDto = MessageConverter.convert(message);
+                SessionFactory.getSessionManager().sendToAllSessions(contractDto);
             }
         } else {
             PublisherFactory.createPublisher().publish("global", message);
@@ -36,7 +37,7 @@ public class MessageDispatcher {
             WsContractDto contract = MessageConverter.convert(message);
 
             WSSocket session = sessionManager.getSessionByUserId(message.getOwner().getId());
-             sessionManager.send(session, contract);
+            sessionManager.send(session, contract);
         } else if (message.isUserUpdate()) { // when is message to update the logged users of sessions
             List<String> ids = (List<String>) message.getEnvelope();
             sessionManager.updateSessionLoggedUser(ids.toArray(new String[ids.size()]));

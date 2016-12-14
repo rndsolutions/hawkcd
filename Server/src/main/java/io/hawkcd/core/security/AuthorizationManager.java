@@ -112,12 +112,15 @@ public class AuthorizationManager implements IAuthorizationManager {
 
             List<AuthorizationGrant> userGrant = user.getPermissions();
 
-            Authorization authorization = entity.getClass().getAnnotation(Authorization.class);
-            AuthorizationGrant entityGrant = new AuthorizationGrant(authorization);
+            if(entity != null){
+                Authorization authorization = entity.getClass().getAnnotation(Authorization.class);
+                AuthorizationGrant entityGrant = new AuthorizationGrant(authorization);
 
-            PermissionType permissionType = this.determinePermissionTypeForUser(userGrant, entityGrant, entity.getId());
+                PermissionType permissionType = this.determinePermissionTypeForUser(userGrant, entityGrant, entity.getId());
 
-            userMap.put(user.getId(), permissionType);
+                userMap.put(user.getId(), permissionType);
+            }
+
         }
         return message;
     }

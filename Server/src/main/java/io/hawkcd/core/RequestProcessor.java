@@ -20,6 +20,7 @@ package io.hawkcd.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.hawkcd.core.config.Config;
 import io.hawkcd.core.publisher.Publisher;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.IAuthorizationManager;
@@ -29,6 +30,7 @@ import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
 import io.hawkcd.model.enums.NotificationType;
+import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.utilities.deserializers.MaterialDefinitionAdapter;
 import io.hawkcd.utilities.deserializers.TaskDefinitionAdapter;
 
@@ -85,7 +87,6 @@ public class RequestProcessor {
             Publisher.getInstance().publish("global", message);
         }
 
-        // Attach permission to object
         if (result.getEntity() instanceof List) {
             boolean isPipelineGroupDtoList = isPipelineGroupDtoList(result);
             if (isPipelineGroupDtoList) {
@@ -97,7 +98,13 @@ public class RequestProcessor {
             message.setTargetOwner(true);
             message.setEnvelope(filteredResult);
         } else {
-            message = this.authorizationManager.attachPermissionTypeMapToMessage(message, methodArgs);
+            if(Config.getConfiguration().isSingleNode()){
+                PermissionType permissionType = this.authorizationManager.determinePermissionTypeForEntity(currentUser.getPermissions(), result.getEntity());
+                ((Entity) result.getEntity()).setPermissionType(permissionType);
+                message.setEnvelope(result.getEntity());
+            } else {
+                message = this.authorizationManager.attachPermissionTypeMapToMessage(message, methodArgs);
+            }
         }
 
         MessageDispatcher.dispatchIncomingMessage(message);
