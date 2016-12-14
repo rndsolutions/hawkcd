@@ -103,7 +103,7 @@ public class HServer {
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();
-        if (!Config.getConfiguration().isSingleNode()){
+        if (!Config.getConfiguration().getIsSingleNode()){
             this.subsciber.start();
         }
         this.server.join();

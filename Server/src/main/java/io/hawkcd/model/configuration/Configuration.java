@@ -50,7 +50,7 @@ public final class Configuration {
         this.serverPort = serverPort;
     }
 
-    public boolean isSingleNode() {
+    public boolean getIsSingleNode() {
         return isSingleNode;
     }
 

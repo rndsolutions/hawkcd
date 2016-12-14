@@ -15,7 +15,7 @@ import java.util.Map;
 public class MessageDispatcher {
 
     public static void dispatchIncomingMessage(Message message) {
-        if (Config.getConfiguration().isSingleNode()) {
+        if (Config.getConfiguration().getIsSingleNode()) {
             WsContractDto contractDto = null;
             //TODO: Improve flow of dispatcher to not send to all Nodes, even if isSingleNode is true
             if (message.isUserUpdate()) {

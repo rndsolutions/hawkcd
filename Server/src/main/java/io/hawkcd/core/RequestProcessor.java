@@ -24,8 +24,6 @@ import io.hawkcd.core.config.Config;
 import io.hawkcd.core.publisher.Publisher;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.IAuthorizationManager;
-import io.hawkcd.core.subscriber.EnvelopeAdapter;
-import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineGroupDto;
 import io.hawkcd.model.dto.WsContractDto;
@@ -98,7 +96,7 @@ public class RequestProcessor {
             message.setTargetOwner(true);
             message.setEnvelope(filteredResult);
         } else {
-            if(Config.getConfiguration().isSingleNode()){
+            if(Config.getConfiguration().getIsSingleNode()){
                 PermissionType permissionType = this.authorizationManager.determinePermissionTypeForEntity(currentUser.getPermissions(), result.getEntity());
                 ((Entity) result.getEntity()).setPermissionType(permissionType);
                 message.setEnvelope(result.getEntity());
