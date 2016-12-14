@@ -16,7 +16,10 @@
 
 package io.hawkcd.services;
 
+import io.hawkcd.core.Message;
+import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
+import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.utilities.constants.NotificationMessages;
@@ -84,7 +87,17 @@ public class MaterialDefinitionService extends CrudService<MaterialDefinition> i
     @Override
     @Authorization( scope = PermissionScope.SERVER, type = PermissionType.ADMIN )
     public ServiceResult add(MaterialDefinition materialDefinition) {
-        return super.add(materialDefinition);
+        ServiceResult result = super.add(materialDefinition);
+
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        String methodName = ste[1].getMethodName();
+        String className = this.getClass().getSimpleName();
+
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
+
+        MessageDispatcher.dispatchIncomingMessage(message);
+
+        return result;
     }
 
     @Override
