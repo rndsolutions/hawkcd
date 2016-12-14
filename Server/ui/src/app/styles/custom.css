@@ -598,6 +598,7 @@ p {
 
 .job-name {
     font-size: 17px;
+    font-weight: 300;
 }
 
 .job-name:hover {
@@ -900,6 +901,10 @@ p {
     display:inline-block;
 }
 
+.display-inline {
+    display:inline!important;
+}
+
 .height-100px {
     height: 100px;
 }
@@ -966,6 +971,10 @@ p {
 
 .padding-right-5 {
     padding-right: 5%;
+}
+
+.padding-right-none {
+    padding-right: 0px!important;
 }
 
 .padding-left-1 {
@@ -1166,8 +1175,8 @@ p {
 
 @media screen and (min-width: 767px){
     .config-controls {
-        min-width: 180px;
-        width:180px;
+        min-width: 200px;
+        width:200px;
     }
 
     .config-names {
@@ -1235,4 +1244,28 @@ p {
 
 .tooltip-inner {
     white-space: pre-wrap;
+}
+
+@media (max-width: 991px) {
+    /* Override default theme behavior to be the same on phone and tablet view for the header */
+    .page-header.navbar {
+        height: 136px !important;
+    }
+
+    .page-header.navbar .page-top {
+        display: block;
+        clear: both;
+    }
+
+    .page-header.navbar {
+        background: #17C4BB;
+    }
+
+    .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle:hover {
+        background-color: #eff1f6;
+    }
+
+    .page-header.navbar .menu-toggler.responsive-toggler {
+        background-image: url(../../assets/images/sidebar-toggler.png)!important;
+    }
 }

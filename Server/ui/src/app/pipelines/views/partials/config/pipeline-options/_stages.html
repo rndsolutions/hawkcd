@@ -34,7 +34,7 @@
         <td class="text-center-all hidden-xs"> {{stage.jobDefinitions.length}} </td>
         <td class="text-center-all">
           <button class="btn red unsortable config-button" data-target="#removeStage" data-toggle="modal"
-                  ng-click="pipeConfig.getStage(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">Delete</button>
+                  ng-click="pipeConfig.setStageToDelete(stage)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions.length > 1" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->

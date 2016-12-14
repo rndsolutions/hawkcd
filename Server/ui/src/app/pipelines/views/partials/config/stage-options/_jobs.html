@@ -32,7 +32,7 @@
         </td>
         <td class="text-center-all">
           <button class="btn red config-button" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#removeJob" data-toggle="modal"
-                  ng-click="pipeConfig.getJob(job)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions.length > 1">Delete</button>
+                  ng-click="pipeConfig.setJobToDelete(job)" ng-if="pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions.length > 1">Delete</button>
         </td>
       </tr>
       <!--end ng-repeat-->
