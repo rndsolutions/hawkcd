@@ -41,7 +41,7 @@ angular
 
         vm.allPermissions = [];
         vm.allPipelineRuns = [];
-        vm.allPipelines = angular.copy(viewModel.allPipelines);;
+        vm.allPipelines = angular.copy(viewModel.allPipelines);
         vm.allJobs = [];
         vm.allTasks = [];
         vm.allStages = [];

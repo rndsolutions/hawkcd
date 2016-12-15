@@ -31,6 +31,7 @@ angular
                 automaticScheduling: 'If selected, the Pipeline will trigger automatically, creating a new run, when its Material is updated.',
                 materialPoll: 'If checked, HawkCD will poll your Material for changes automatically.',
                 materialCredentials: 'Your GitHub credentials. If the git repository is private, you will need to provide your GitHub credentials, so that HawkCD can access your repository.',
+                nugetPrerelease: 'Prerelease versions are considered less stable and not production-ready. Those include alpha, beta, RC, etc. versions.',
                 runPipeline: 'Run the Pipeline',
                 pausePipeline: 'Pause the Pipeline',
                 stopPipeline: 'Cancel the Pipeline'
@@ -273,12 +274,37 @@ angular
                     material.username = formData.material.git.username;
                     material.password = formData.material.git.password;
                 }
+
+
                 addPipelineDTO.materialDefinition = material;
                 pipeConfigService.addPipelineDefinitionWithMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
                 loggerService.log('PipelinesController.addPipelineDefinitionWithMaterial :');
                 loggerService.log(addPipelineDTO.pipelineDefinition);
                 loggerService.log(addPipelineDTO.materialDefinition);
             }
+
+            if(vm.materialType == 'nuget'){
+                var material = {
+                    "pipelineDefinitionName": vm.formData.pipeline.name,
+                    "name": vm.formData.material.nuget.name,
+                    "type": 'NUGET',
+                    "repositoryUrl": vm.formData.material.nuget.url,
+                    "packageId": vm.formData.material.nuget.nugetId,
+                    "packageVersion": vm.formData.material.nuget.version,
+                    "isPrerelease": vm.formData.material.nuget.prerelease,
+                    "isPollingForChanges": vm.formData.material.nuget.poll
+                };
+                if(formData.material.nuget.credentials) {
+                    material.username = formData.material.nuget.username;
+                    material.password = formData.materials.nuget.password;
+                }
+                addPipelineDTO.materialDefinition = material;
+                pipeConfigService.addPipelineDefinitionWithMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
+                loggerService.log('PipelinesController.addPipelineDefinitionWithMaterial :');
+                loggerService.log(addPipelineDTO.pipelineDefinition);
+                loggerService.log(addPipelineDTO.materialDefinition);
+            }
+
             if (vm.materialType == 'existing') {
                 addPipelineDTO.materialDefinition = vm.materialObject.id;
                 pipeConfigService.addPipelineDefinitionWithExistingMaterial(addPipelineDTO.pipelineDefinition, addPipelineDTO.materialDefinition);
@@ -339,8 +365,11 @@ angular
                 gitPassword: 'Enter GIT password',
                 gitBranch: 'Enter GIT branch (optional)',
                 nugetUrl: 'Enter NuGet url',
-                nugetPackage: 'Enter NuGet Package',
-                nugetPackageVersion: 'Enter NuGet Package Version'
+                nugetId: 'Enter NuGet ID',
+                nugetPackageName: 'Enter NuGet Package Name',
+                nugetPackageVersion: 'Enter NuGet Package Version',
+                nugetUsername: 'Enter NuGet username',
+                nugetPassword: 'Enter NuGet password'
             }
         };
 
