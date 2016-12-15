@@ -17,5 +17,6 @@
 package io.hawkcd.model.enums;
 
 public enum MaterialType {
-    GIT
+    GIT,
+    NUGET
 }
