@@ -16,10 +16,7 @@
 
 package io.hawkcd.services.interfaces;
 
-import io.hawkcd.model.GitMaterial;
-import io.hawkcd.model.MaterialDefinition;
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.*;
 
 public interface IPipelineDefinitionService extends ICrudService<PipelineDefinition> {
     ServiceResult getAllAutomaticallyScheduledPipelines();
@@ -27,6 +24,8 @@ public interface IPipelineDefinitionService extends ICrudService<PipelineDefinit
     ServiceResult add(PipelineDefinition pipelineDefinition, MaterialDefinition materialDefinition);
 
     ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, GitMaterial materialDefinition);
+
+    ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, NugetMaterial materialDefinition);
 
     ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId);
 

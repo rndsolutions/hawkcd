@@ -127,6 +127,12 @@ public class PipelineDefinitionService extends CrudService<PipelineDefinition> i
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
+    public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, NugetMaterial materialDefinition) {
+        return this.add(pipelineDefinition, materialDefinition);
+    }
+
+    @Override
+    @Authorization( scope = PermissionScope.PIPELINE_GROUP, type = PermissionType.ADMIN )
     public ServiceResult addWithMaterialDefinition(PipelineDefinition pipelineDefinition, String materialDefinitionId) {
         if (this.materialDefinitionService == null) {
             this.materialDefinitionService = new MaterialDefinitionService();
