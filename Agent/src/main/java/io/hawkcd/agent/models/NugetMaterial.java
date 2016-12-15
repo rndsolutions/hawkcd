@@ -23,6 +23,8 @@ public class NugetMaterial extends MaterialDefinition {
     private String packageId;
     private boolean isPrerelease;
     private String packageVersion;
+    private String username;
+    private String password;
 
     public NugetMaterial() {
         super.setType(MaterialType.NUGET);
@@ -58,5 +60,21 @@ public class NugetMaterial extends MaterialDefinition {
 
     public void setPackageVersion(String packageVersion) {
         this.packageVersion = packageVersion;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

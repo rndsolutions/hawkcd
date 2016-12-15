@@ -16,9 +16,12 @@
 
 package io.hawkcd.agent.services;
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import io.hawkcd.agent.AgentConfiguration;
 import io.hawkcd.agent.models.FetchMaterialTask;
+import io.hawkcd.agent.models.NugetMaterial;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -30,15 +33,17 @@ public class NuGetMaterialService extends MaterialService {
     public String fetchMaterial(FetchMaterialTask task) {
         String errorMessage = "";
 
+        NugetMaterial nugetMaterial = (NugetMaterial) task.getMaterialDefinition();
+
 //        HTTPBasicAuthFilter credentials = this.handleCredentials(task.getMaterialSpecificDetails());
 //        if (credentials != null) {
 //            super.restClient.addFilter(credentials);
 //        }
-//
+
 //        String resource = this.constructResource(task.getSource(), task.getMaterialSpecificDetails());
 //        WebResource webResource = super.restClient.resource(resource);
 //        ClientResponse response = webResource.get(ClientResponse.class);
-//
+
 //        int responseCode = response.getStatus();
 //        if (responseCode == 200) {
 //            String materialDir = this.createMaterialDir(task);
@@ -52,31 +57,61 @@ public class NuGetMaterialService extends MaterialService {
 //            errorMessage = this.generateErrorMessage(responseCode);
 //        }
 
+        HTTPBasicAuthFilter credentials = this.handleCredentials(nugetMaterial.getUsername(), nugetMaterial.getPassword());
+
+        if(credentials != null){
+            super.restClient.addFilter(credentials);
+        }
+
+        String resource = this.constructResource(nugetMaterial);
+        WebResource webResource = super.restClient.resource(resource);
+        ClientResponse response = webResource.get(ClientResponse.class);
+
+        int responseCode = response.getStatus();
+        if(responseCode == 200){
+            String materialDir = this.createMaterialDir(task);
+            String fileName = nugetMaterial.getPackageId() + "." + nugetMaterial.getPackageVersion();
+            String filePath = Paths.get(materialDir, fileName + ".nupkg").toString();
+            File file = new File(filePath).getAbsoluteFile();
+            errorMessage = this.fileManagementService.initiateFile(file, response.getEntityInputStream(), filePath);
+            if (errorMessage != null) {
+                return errorMessage;
+            }
+        } else {
+            errorMessage = this.generateErrorMessage(responseCode);
+        }
+
         return errorMessage;
     }
 
-    private HTTPBasicAuthFilter handleCredentials(Map<String, Object> materialSpecificDetails) {
+    private HTTPBasicAuthFilter handleCredentials(String username, String password) {
 
         HTTPBasicAuthFilter credentials = null;
 
-        if (materialSpecificDetails.containsKey("username") && materialSpecificDetails.containsKey("password")) {
-            String username = materialSpecificDetails.get("username").toString();
-            String password = super.securityService.decrypt(materialSpecificDetails.get("password").toString());
-
-            credentials = new HTTPBasicAuthFilter(username, password);
+        if(username != null && password != null){
+            super.securityService.decrypt(password);
         }
 
+        credentials = new HTTPBasicAuthFilter(username, password);
+
         return credentials;
+//        HTTPBasicAuthFilter credentials = null;
+//
+//        if (materialSpecificDetails.containsKey("username") && materialSpecificDetails.containsKey("password")) {
+//            String username = materialSpecificDetails.get("username").toString();
+//            String password = super.securityService.decrypt(materialSpecificDetails.get("password").toString());
+//
+//            credentials = new HTTPBasicAuthFilter(username, password);
+//        }
+//
+//        return credentials;
     }
 
-    private String constructResource(String source, Map<String, Object> materialSpecificDetails) {
+    private String constructResource(NugetMaterial nugetMaterial) {
         String resource = null;
 
-        if (materialSpecificDetails.containsKey("packageId") && materialSpecificDetails.containsKey("revision")) {
-            String packageId = materialSpecificDetails.get("packageId").toString();
-            String revision = materialSpecificDetails.get("revision").toString();
-
-            resource = String.format("%s/package/%s/%s", source, packageId, revision);
+        if (nugetMaterial.getPackageId() != null && nugetMaterial.getPackageVersion() != null) {
+            resource = String.format("%s/package/%s/%s", nugetMaterial.getRepositoryUrl(), nugetMaterial.getPackageId(), nugetMaterial.getPackageVersion());
         }
 
         return resource;
