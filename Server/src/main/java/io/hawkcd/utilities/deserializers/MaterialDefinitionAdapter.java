@@ -19,6 +19,7 @@ package io.hawkcd.utilities.deserializers;
 import com.google.gson.*;
 import io.hawkcd.model.GitMaterial;
 import io.hawkcd.model.MaterialDefinition;
+import io.hawkcd.model.NugetMaterial;
 import io.hawkcd.model.enums.MaterialType;
 
 import java.lang.reflect.Type;
@@ -32,6 +33,7 @@ public class MaterialDefinitionAdapter implements JsonDeserializer<MaterialDefin
     public MaterialDefinitionAdapter() {
         this.materialTypeMap = new HashMap() {{
             this.put(MaterialType.GIT.toString(), GitMaterial.class);
+            this.put(MaterialType.NUGET.toString(), NugetMaterial.class);
         }};
         this.jsonConverter = new Gson();
     }

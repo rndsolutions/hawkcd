@@ -27,7 +27,8 @@ import io.hawkcd.model.enums.MaterialType;
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT")})
+        @JsonSubTypes.Type(value = GitMaterial.class, name = "GIT"),
+        @JsonSubTypes.Type(value = NugetMaterial.class, name = "NUGET")})
 public abstract class MaterialDefinition extends Entity {
     private String errorMessage;
     private MaterialType type;
