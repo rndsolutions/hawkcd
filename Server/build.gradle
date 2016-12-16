@@ -154,6 +154,11 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
     compile group: 'com.github.kstyrc', name: 'embedded-redis', version: '0.6'
+    
+    // Mail
+    compile group: 'javax.mail', name: 'mail', version: '1.4.7'
+
+    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
 
     //File Management
     compile group: 'net.lingala.zip4j', name: 'zip4j', version: '1.3.2'
