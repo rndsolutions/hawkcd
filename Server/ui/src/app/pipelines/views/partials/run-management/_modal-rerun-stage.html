@@ -17,28 +17,28 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="pipesRunManagement.jobs=[];pipesRunManagement.deSelectAll()"></button>
-                <h4 class="modal-title">{{pipesRunManagement.selectedStage.Runs[0].Name}}</h4>
+                <h4 class="modal-title">{{pipesRunManagement.selectedStage.stageDefinitionName}}</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group form-md-checkboxes">
                     <label>Jobs</label>
+                    <button type="button" class="btn btn-default pull-right" ng-click="pipesRunManagement.selectAll()">{{pipesRunManagement.reRunStage.selectAll}}</button>
                     <div class="md-checkbox-list">
-                        <button type="button" class="btn btn-default" ng-click="pipesRunManagement.selectAll()">{{pipesRunManagement.reRunStage.selectAll}}</button>
                         <div class="clearfix"> </div>
-                        <div class="md-checkbox" ng-repeat="job in pipesRunManagement.selectedStageRunsShow.Runs[0].Jobs">
-                            <input type="checkbox" id="{{job.Id}}" class="md-check" name="jobCheck" ng-click="pipesRunManagement.selectedJobsForReRun.push(job.Name)" value="{{job.Name}}">
-                            <label for="{{job.Id}}">
+                        <div class="md-checkbox" ng-repeat="job in pipesRunManagement.selectedStage.jobs">
+                            <input type="checkbox" id="{{job.id}}" class="md-check" name="jobCheck" ng-click="pipesRunManagement.selectedJobsForReRun.push(job.name)" value="{{job.name}}">
+                            <label for="{{job.id}}">
                                 <span></span>
                                 <span class="check"></span>
-                                <span class="box"></span> {{job.Name}}
+                                <span class="box"></span> {{job.jobDefinitionName}}
                             </label>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn dark btn-outline" ng-click="pipesRunManagement.reRunStageJobs(pipesRunManagement.selectedStage);pipesRunManagement.deSelectAll()">{{pipesRunManagement.reRunStage.reRun}}</button>
-                <button type="button" data-dismiss="modal" class="btn green" ng-click="pipesRunManagement.jobs=[];pipesRunManagement.deSelectAll()">{{pipesRunManagement.reRunStage.cancel}}</button>
+                <button type="button" data-dismiss="modal" class="btn green" ng-click="pipesRunManagement.reRunStageJobs(pipesRunManagement.selectedStage);pipesRunManagement.deSelectAll()">{{pipesRunManagement.reRunStage.reRun}}</button>
+                <button type="button" data-dismiss="modal" class="btn btn-default" ng-click="pipesRunManagement.jobs=[];pipesRunManagement.deSelectAll()">{{pipesRunManagement.reRunStage.cancel}}</button>
             </div>
         </div>
     </div>

@@ -203,6 +203,10 @@ angular
             pipeExecService.stopPipeline(pipeline);
         };
 
+        vm.setSelectedStageForReRun = function (stage) {
+            vm.selectedStage = stage;
+        };
+
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {
         //     vm.allPipelineRuns = viewModel.allPipelineRuns;
         // }, true);

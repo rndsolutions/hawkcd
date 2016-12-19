@@ -97,6 +97,10 @@
                             <!--<span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>-->
                         <!--</button>-->
 
+                        <button class="btn btn-default" data-target="#rerunStage" data-toggle="modal" ng-click="pipesRunManagement.setSelectedStageForReRun(stage)">
+                            <span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>
+                        </button>
+
                         <button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || pipesRunManagement.currentPipelineRun.status == 'PAUSED' || pipesRunManagement.currentPipelineRun.status == 'PASSED' || pipesRunManagement.currentPipelineRun.status == 'FAILED' || pipesRunManagement.currentPipelineRun.status == 'CANCELED' || stage.status != 'IN_PROGRESS'}" ng-click="pipesRunManagement.pause(pipesRunManagement.currentPipelineRun)">
                             <span class="glyphicon glyphicon-pause control"></span>
                         </button>
@@ -105,10 +109,6 @@
                             <span class="glyphicon glyphicon-stop control"></span>
                         </button>
                     </div>
-
-                    <!--<button class="btn btn-default" data-target="#rerunStage" data-toggle="modal" ng-click="pipesRunManagement.setSelectedStageForReRun(stage)">-->
-                        <!--<span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>-->
-                    <!--</button>-->
 
                 </div>
             </div>
