@@ -52,5 +52,25 @@ public class MailService {
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
+
+//        Email from = new Email("hawkcdforum@gmail.com");
+//        String subject = "Hello from Hawk";
+//        Email to = new Email("spetrov@rnd-solutions.net");
+//        Content content = new Content("text/plain", "HawkCD rocks and can now send emails!");
+//        Mail mail = new Mail(from, subject, to, content);
+//
+//        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+//        Request request = new Request();
+//        try {
+//            request.method = Method.POST;
+//            request.endpoint = "mail/send";
+//            request.body = mail.build();
+//            Response response = sg.api(request);
+//            System.out.println(response.statusCode);
+//            System.out.println(response.body);
+//            System.out.println(response.headers);
+//        } catch (IOException ex) {
+//            throw ex;
+//        }
     }
 }
