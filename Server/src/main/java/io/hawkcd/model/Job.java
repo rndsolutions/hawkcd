@@ -25,13 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Job extends Entity {
+public class Job extends PipelineFamily {
     private String jobDefinitionId;
     private String jobDefinitionName;
     private String stageId;
     private String pipelineId;
-    private int executionId;
-    private List<EnvironmentVariable> environmentVariables;
     private Set<String> resources;
     private List<Task> tasks;
     private JobStatus status;
@@ -42,11 +40,19 @@ public class Job extends Entity {
     private String assignedAgentId;
 
     public Job() {
-        this.setEnvironmentVariables(new ArrayList<>());
-        this.setResources(new HashSet<>());
-        this.setTasks(new ArrayList<>());
-        this.setStatus(JobStatus.UNASSIGNED);
-        this.setReport(new StringBuilder());
+        super.environmentVariables = new ArrayList<>();
+        this.resources = new HashSet<>();
+        this.tasks = new ArrayList<>();
+        this.status = JobStatus.UNASSIGNED;
+        this.report = new StringBuilder();
+    }
+
+    public Job(JobDefinition jobDefinition, String stageId, String pipelineId) {
+        this();
+        this.jobDefinitionId = jobDefinition.getId();
+        this.jobDefinitionName = jobDefinition.getName();
+        this.stageId = stageId;
+        this.pipelineId = pipelineId;
     }
 
     public String getJobDefinitionId() {
@@ -79,14 +85,6 @@ public class Job extends Entity {
 
     public void setPipelineId(String pipelineId) {
         this.pipelineId = pipelineId;
-    }
-
-    public int getExecutionId() {
-        return this.executionId;
-    }
-
-    public void setExecutionId(int executionId) {
-        this.executionId = executionId;
     }
 
     public List<EnvironmentVariable> getEnvironmentVariables() {

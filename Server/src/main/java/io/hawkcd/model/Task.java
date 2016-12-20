@@ -24,10 +24,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Task extends Entity {
-    private TaskDefinition taskDefinition;
     private String jobId;
     private String stageId;
     private String pipelineId;
+    private TaskDefinition taskDefinition;
     private RunIf runIfCondition;
     private TaskType type;
     private TaskStatus status;
@@ -36,12 +36,15 @@ public class Task extends Entity {
     private LocalDateTime endTime;
     private Duration duration;
 
-    public TaskDefinition getTaskDefinition() {
-        return this.taskDefinition;
+    public Task() {
     }
 
-    public void setTaskDefinition(TaskDefinition taskDefinition) {
+    public Task(TaskDefinition taskDefinition, String jobId, String stageId, String pipelineId) {
+        this.jobId = jobId;
+        this.stageId = stageId;
+        this.pipelineId = pipelineId;
         this.taskDefinition = taskDefinition;
+        this.runIfCondition = taskDefinition.getRunIfCondition();
     }
 
     public String getJobId() {
@@ -70,6 +73,14 @@ public class Task extends Entity {
 
     public RunIf getRunIfCondition() {
         return this.runIfCondition;
+    }
+
+    public TaskDefinition getTaskDefinition() {
+        return this.taskDefinition;
+    }
+
+    public void setTaskDefinition(TaskDefinition taskDefinition) {
+        this.taskDefinition = taskDefinition;
     }
 
     public void setRunIfCondition(RunIf runIfCondition) {
