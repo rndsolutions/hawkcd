@@ -2,15 +2,10 @@ package io.hawkcd.model;
 
 import java.util.List;
 
-/**
- * Created by Rado @radoslavMinchev, rminchev@rnd-solutions.net on 24.11.16.
- */
 public class PipelineFamily extends Entity {
-
-    private String pipelineDefinitionId;
-    private String pipelineGroupId;
-
-    private List<EnvironmentVariable> environmentVariables;
+    protected String pipelineDefinitionId;
+    protected String pipelineGroupId;
+    protected List<EnvironmentVariable> environmentVariables;
 
     public void setPipelineGroupId(String pipelineGroupId) {
         this.pipelineGroupId = pipelineGroupId;
