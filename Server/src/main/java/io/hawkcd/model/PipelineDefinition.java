@@ -28,9 +28,9 @@ import java.util.Set;
 
 @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
 public class PipelineDefinition extends PipelineFamily {
-
     private String groupName;
     private String labelTemplate;
+    private int numberOfExecutions;
     private int revisionCount;
     private Set<String> materialDefinitionIds;
     private List<StageDefinition> stageDefinitions;
@@ -44,12 +44,28 @@ public class PipelineDefinition extends PipelineFamily {
         this.setRevisionCount(1);
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
     public String getLabelTemplate() {
         return this.labelTemplate;
     }
 
     public void setLabelTemplate(String labelTemplate) {
         this.labelTemplate = labelTemplate;
+    }
+
+    public int getNumberOfExecutions() {
+        return numberOfExecutions;
+    }
+
+    public void setNumberOfExecutions(int numberOfExecutions) {
+        this.numberOfExecutions = numberOfExecutions;
     }
 
     public int getRevisionCount() {
@@ -83,14 +99,6 @@ public class PipelineDefinition extends PipelineFamily {
     @JsonProperty("isAutoSchedulingEnabled")
     public void setAutoSchedulingEnabled(boolean autoSchedulingEnabled) {
         this.isAutoSchedulingEnabled = autoSchedulingEnabled;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
     }
 }
 
