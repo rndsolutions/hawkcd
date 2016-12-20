@@ -66,7 +66,7 @@ public class PipelineDto extends PipelineFamily {
         this.duration = pipeline.getDuration();
         this.triggerReason = pipeline.getTriggerReason();
 
-        List<Stage> stages = pipeline.getStages();
+        List<Stage> stages = pipeline.getStagesOfLastStageRun();
         for (Stage pipelineStage : stages) {
             StageDto stageDto = new StageDto();
             stageDto.constructDto(pipelineStage);

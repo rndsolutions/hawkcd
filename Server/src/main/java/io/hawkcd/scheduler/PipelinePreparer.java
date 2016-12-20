@@ -17,32 +17,19 @@
 package io.hawkcd.scheduler;
 
 import io.hawkcd.core.config.Config;
-import io.hawkcd.utilities.constants.LoggerMessages;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.PipelineStatus;
-import io.hawkcd.model.Stage;
 import io.hawkcd.model.enums.TaskType;
 import io.hawkcd.services.PipelineDefinitionService;
 import io.hawkcd.services.PipelineService;
 import io.hawkcd.services.interfaces.IPipelineDefinitionService;
 import io.hawkcd.services.interfaces.IPipelineService;
+import io.hawkcd.utilities.constants.LoggerMessages;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.hawkcd.model.EnvironmentVariable;
-import io.hawkcd.model.ExecTask;
-import io.hawkcd.model.FetchArtifactTask;
-import io.hawkcd.model.FetchMaterialTask;
-import io.hawkcd.model.Job;
-import io.hawkcd.model.JobDefinition;
-import io.hawkcd.model.Material;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.PipelineDefinition;
-import io.hawkcd.model.StageDefinition;
-import io.hawkcd.model.Task;
-import io.hawkcd.model.TaskDefinition;
 
 public class PipelinePreparer implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(PipelinePreparer.class);
@@ -107,7 +94,7 @@ public class PipelinePreparer implements Runnable {
 
         pipelineToPrepare.setPipelineDefinitionId(pipelineDefinitionId);
         pipelineToPrepare.setEnvironmentVariables(pipelineDefinitionEnvironmentVariables);
-        pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare));
+//        pipelineToPrepare.setStages(this.preparePipelineStages(stages, pipelineToPrepare));
         pipelineToPrepare.setPrepared(true);
 
         return pipelineToPrepare;
@@ -116,7 +103,7 @@ public class PipelinePreparer implements Runnable {
     public Pipeline preparePipelineEnvironmentVariables(Pipeline pipeline) {
         List<EnvironmentVariable> pipelineVariables = pipeline.getEnvironmentVariables();
 
-        for (Stage stage : pipeline.getStages()) {
+        for (Stage stage : pipeline.getStagesOfLastStageRun()) {
             List<EnvironmentVariable> stageVariables = stage.getEnvironmentVariables();
 
             for (Job job : stage.getJobs()) {
@@ -138,7 +125,7 @@ public class PipelinePreparer implements Runnable {
     }
 
     public List<Stage> preparePipelineStages(List<StageDefinition> stageDefinitions, Pipeline pipeline) {
-        List<Stage> stages = pipeline.getStages();
+        List<Stage> stages = pipeline.getStagesOfLastStageRun();
 
         int stageDefinitionCollectionSize = stageDefinitions.size();
 

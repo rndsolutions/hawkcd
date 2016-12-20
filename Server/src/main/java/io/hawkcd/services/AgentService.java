@@ -120,7 +120,7 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
             List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
             for (Pipeline pipeline : pipelines) {
                 WorkInfo workInfo = new WorkInfo();
-                Stage stageInProgress = pipeline.getStages()
+                Stage stageInProgress = pipeline.getStagesOfLastStageRun()
                         .stream()
                         .filter(s -> s.getStatus() == StageStatus.IN_PROGRESS)
                         .findFirst()
@@ -143,7 +143,6 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                 workInfo.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
                 workInfo.setPipelineExecutionID(pipeline.getExecutionId());
                 workInfo.setStageDefinitionName(stageInProgress.getStageDefinitionName());
-                workInfo.setStageExecutionID(stageInProgress.getExecutionId());
                 workInfo.setJobDefinitionName(scheduledJob.getJobDefinitionName());
                 scheduledJob.setStatus(JobStatus.RUNNING);
                 workInfo.setJob(scheduledJob);
