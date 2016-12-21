@@ -39,10 +39,12 @@
         <!--</div>-->
 
     <div class="portlet-body custom-body">
-        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRun.stages">
+        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRun.stageRuns[pipesRunManagement.currentPipelineRun.stageRuns.length - 1].stages">
             <div class="display-inline-block" ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
             <div class="height-100px display-inline-block">
-                <img class="image-vertical-center arrow-right" ng-if="$index != pipesRunManagement.currentPipelineRun.stages.length-1" src="../../../../../assets/images/right-arrow.png">
+                <img class="image-vertical-center arrow-right"
+                     ng-if="$index != pipesRunManagement.currentPipelineRun.stageRuns[pipesRunManagement.currentPipelineRun.stageRuns.length - 1].stages.length - 1"
+                     src="../../../../../assets/images/right-arrow.png">
             </div>
         </div>
     </div>

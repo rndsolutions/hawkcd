@@ -152,7 +152,7 @@ angular
                         currentPipeline.lastRun.endTime = pipeline.endTime;
                         currentPipeline.lastRun.duration = pipeline.duration;
                         currentPipeline.lastRun.triggerReason = pipeline.triggerReason;
-                        currentPipeline.lastRun.stages = pipeline.stages;
+                        currentPipeline.lastRun.stages = pipeline.stageRuns[pipeline.stageRuns.length - 1].stages;
                     }
                 });
             });
