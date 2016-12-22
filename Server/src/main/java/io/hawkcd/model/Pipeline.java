@@ -36,6 +36,7 @@ public class Pipeline extends PipelineFamily {
     private List<Material> materials;
     private List<StageRun> stageRuns;
     private PipelineStatus status;
+    private PipelineStatus rerunStatus;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
@@ -98,7 +99,19 @@ public class Pipeline extends PipelineFamily {
     }
 
     public void setStatus(PipelineStatus status) {
-        this.status = status;
+        if (this.status == PipelineStatus.PASSED || this.status == PipelineStatus.FAILED) {
+            this.rerunStatus = status;
+        } else {
+            this.status = status;
+        }
+    }
+
+    public PipelineStatus getRerunStatus() {
+        return rerunStatus;
+    }
+
+    public void setRerunStatus(PipelineStatus rerunStatus) {
+        this.rerunStatus = rerunStatus;
     }
 
     public LocalDateTime getStartTime() {
