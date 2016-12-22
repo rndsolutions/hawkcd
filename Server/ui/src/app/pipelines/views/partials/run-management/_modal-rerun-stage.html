@@ -26,7 +26,7 @@
                     <div class="md-checkbox-list">
                         <div class="clearfix"> </div>
                         <div class="md-checkbox" ng-repeat="job in pipesRunManagement.selectedStage.jobs">
-                            <input type="checkbox" id="{{job.id}}" class="md-check" name="jobCheck" ng-click="pipesRunManagement.selectedJobsForReRun.push(job.name)" value="{{job.name}}">
+                            <input type="checkbox" id="{{job.id}}" class="md-check" name="jobCheck" ng-click="pipesRunManagement.selectedJobsForReRun.push(job.id)" value="true">
                             <label for="{{job.id}}">
                                 <span></span>
                                 <span class="check"></span>
@@ -37,7 +37,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn green" ng-click="pipesRunManagement.reRunStageJobs(pipesRunManagement.selectedStage);pipesRunManagement.deSelectAll()">{{pipesRunManagement.reRunStage.reRun}}</button>
+                <!--<button type="button" data-dismiss="modal" class="btn green" ng-click="pipesRunManagement.reRunStageJobs(pipesRunManagement.selectedStage);pipesRunManagement.deSelectAll()">{{pipesRunManagement.reRunStage.reRun}}</button>-->
+                <button type="button" data-dismiss="modal" class="btn green" ng-click="pipesRunManagement.rerunStage(pipesRunManagement.selectedStage)">{{pipesRunManagement.reRunStage.reRun}}</button>
                 <button type="button" data-dismiss="modal" class="btn btn-default" ng-click="pipesRunManagement.jobs=[];pipesRunManagement.deSelectAll()">{{pipesRunManagement.reRunStage.cancel}}</button>
             </div>
         </div>
