@@ -21,6 +21,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.Stage;
 
 import java.util.HashSet;
+import java.util.List;
 
 public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getAllByDefinitionId(String pipelineDefinitionId);
@@ -29,7 +30,7 @@ public interface IPipelineService extends ICrudService<Pipeline> {
 
     ServiceResult getAllUpdatedUnpreparedPipelinesInProgress();
 
-    ServiceResult getAllPreparedPipelinesInProgress();
+    List<Pipeline> getAllPreparedPipelinesInProgress();
 
     ServiceResult getAllPreparedAwaitingPipelines();
 

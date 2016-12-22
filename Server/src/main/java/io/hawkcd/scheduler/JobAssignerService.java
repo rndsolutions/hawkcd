@@ -49,7 +49,7 @@ public class JobAssignerService {
 
     public void checkUnassignedJobs(List<Agent> agents) {
         List<Agent> filteredAgents = agents.stream().filter(a -> a.isConnected() && a.isEnabled()).collect(Collectors.toList());
-        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
+        List<Pipeline> pipelinesInProgress = this.pipelineService.getAllPreparedPipelinesInProgress();
         for (Pipeline pipeline : pipelinesInProgress) {
             boolean isSetToAwaiting = false;
             Stage stageInProgress = pipeline.getStagesOfLastStageRun().stream().filter(s -> (s.getStatus() == StageStatus.IN_PROGRESS) && !s.isTriggeredManually()).findFirst().orElse(null);
@@ -110,7 +110,7 @@ public class JobAssignerService {
 
     public void assignJobs(List<Agent> agents) {
         List<Agent> filteredAgents = agents.stream().filter(a -> a.isConnected() && a.isEnabled() && !a.isRunning()).collect(Collectors.toList());
-        List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
+        List<Pipeline> pipelines = this.pipelineService.getAllPreparedPipelinesInProgress();
         for (Pipeline pipeline : pipelines) {
             for (Stage stage : pipeline.getStagesOfLastStageRun()) {
                 if ((stage.getStatus() == StageStatus.IN_PROGRESS) && !stage.isTriggeredManually()) {

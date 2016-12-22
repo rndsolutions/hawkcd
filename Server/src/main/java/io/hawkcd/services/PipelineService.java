@@ -31,6 +31,7 @@ import io.hawkcd.services.interfaces.IPipelineService;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 /**
  * The PipelineService @class gives access to all Pipeline runs in the system
  */
+@SuppressWarnings(value = "unchecked")
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private static final Class CLASS_TYPE = Pipeline.class;
     private static final Logger LOGGER = Logger.getLogger(PipelineService.class.getName());
@@ -193,18 +195,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
-    public ServiceResult getAllPreparedPipelinesInProgress() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
-
-        List<Pipeline> updatedPipelines = pipelines
+    public List<Pipeline> getAllPreparedPipelinesInProgress() {
+        List<Pipeline> result = (List<Pipeline>) this.getAll().getEntity();
+        result = result
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS || p.getRerunStatus() == PipelineStatus.IN_PROGRESS))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
-
-        result.setEntity(updatedPipelines);
 
         return result;
     }
@@ -383,6 +380,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         }
 
         pipeline.getStageRuns().add(stageRun);
+        pipeline.setRerunStatus(PipelineStatus.IN_PROGRESS);
 
         return this.update(pipeline);
     }

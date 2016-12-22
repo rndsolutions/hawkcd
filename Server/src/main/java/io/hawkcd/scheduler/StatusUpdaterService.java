@@ -55,12 +55,11 @@ public class StatusUpdaterService {
             this.updateAgentStatus(agent);
         }
 
-        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
+        List<Pipeline> pipelinesInProgress = this.pipelineService.getAllPreparedPipelinesInProgress();
         for (Pipeline pipeline : pipelinesInProgress) {
             if (pipeline.shouldBeCanceled()) {
                 this.cancelPipeline(pipeline);
                 LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
-                ServiceResult result = new ServiceResult(null, NotificationType.WARNING, "Pipeline " + pipeline.getPipelineDefinitionName() + " was successfully canceled");
             } else if (pipeline.getStatus() == PipelineStatus.PAUSED) {
                 this.pausePipeline(pipeline);
             } else {
