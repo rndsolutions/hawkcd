@@ -92,6 +92,12 @@ angular
                 }
 
             });
+
+            if (!jQuery.isEmptyObject(viewModel.runManagementPipelineDefinition)) {
+                if (pipelineDefinition.id == viewModel.runManagementPipelineDefinition.id) {
+                    viewModel.runManagementPipelineDefinition = pipelineDefinition;
+                }
+            }
         };
 
         return pipelineDefinitionUpdater;

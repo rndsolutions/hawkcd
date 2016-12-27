@@ -31,6 +31,18 @@ angular
             websocketSenderService.call(json);
         };
 
+        pipeExecService.reRunStage = function (stage, jobDefinitionIds) {
+            var methodName = "rerunStageWithSpecificJobs";
+            var className = "PipelineService";
+            var packageName = "io.hawkcd.services";
+            var result = "";
+            var args = ["{\"packageName\": \"io.hawkcd.model.Stage\", \"object\": " + JSON.stringify(stage) + "}, " +
+            "{\"packageName\": \"java.lang.String\", \"object\": " + JSON.stringify(jobDefinitionIds) + "}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+        };
+
         //TODO: Send Pipeline to be paused
         pipeExecService.pausePipeline = function (pipeline) {
             var methodName = "pausePipeline";
