@@ -95,12 +95,9 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         int envAutoIncrement = Integer.parseInt(environmentVariable.getValue()) + 1;
 
         environmentVariable.setValue(String.valueOf(envAutoIncrement));
-        environmentVariables.stream().filter(env -> env.getKey().equals(environmentVariable.getKey())).forEach(env -> {
-            env.setValue(environmentVariable.getValue());
-        });
+        environmentVariables.stream().filter(env -> env.getKey().equals(environmentVariable.getKey())).forEach(env -> env.setValue(environmentVariable.getValue()));
         pipelineDefinition.setEnvironmentVariables(environmentVariables);
-        ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
-
+        this.pipelineDefinitionService.update(pipelineDefinition);
 
         this.addMaterialsToPipeline(pipeline);
 //        this.addStagesToPipeline(pipeline);
@@ -168,7 +165,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
                 .filter(p -> !p.areMaterialsUpdated())
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
 
         result.setEntity(updatedPipelines);
@@ -185,7 +182,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
                 .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
 
         result.setEntity(updatedPipelines);
@@ -213,8 +210,8 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING || p.getRerunStatus() == PipelineStatus.AWAITING))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
 
         result.setEntity(updatedPipelines);
@@ -362,6 +359,8 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         }
 
         StageRun stageRun = new StageRun();
+        stageRun.setExecutionId(pipeline.getStageRuns().size() + 1);
+
         boolean stageToRerunIsSet = false;
         for (StageDefinition stageDefinition : pipelineDefinition.getStageDefinitions()) {
             if (!stageDefinition.getId().equals(stageToRerun.getStageDefinitionId()) && !stageToRerunIsSet) {

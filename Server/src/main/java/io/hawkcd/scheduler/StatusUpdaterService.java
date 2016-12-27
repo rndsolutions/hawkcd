@@ -129,7 +129,7 @@ public class StatusUpdaterService {
                 currentStage.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
                 break;
-            } else if (currentStage.getStatus() == StageStatus.PASSED) {
+            } else if (currentStage.getStatus() == StageStatus.PASSED || currentStage.getStatus() == StageStatus.SKIPPED) {
                 continue;
             } else {
                 break;
@@ -200,7 +200,7 @@ public class StatusUpdaterService {
         }
 
         for (String aStatusesAsString : statusesAsString) {
-            if (!aStatusesAsString.equals("PASSED")) {
+            if (!aStatusesAsString.equals("PASSED") && !aStatusesAsString.equals("SKIPPED")) {
                 return false;
             }
         }
