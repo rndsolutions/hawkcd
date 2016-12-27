@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -350,7 +349,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     @Override
     @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN)
-    public ServiceResult rerunStageWithSpecificJobs(Stage stageToRerun, HashSet<String> jobDefinitionIds) {
+    public ServiceResult rerunStageWithSpecificJobs(Stage stageToRerun, ArrayList<String> jobDefinitionIds) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition)
                 this.pipelineDefinitionService.getById(stageToRerun.getPipelineDefinitionId()).getEntity();
         if (pipelineDefinition == null) {

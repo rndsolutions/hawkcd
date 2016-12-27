@@ -3,7 +3,6 @@ package io.hawkcd.services;
 import io.hawkcd.model.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class PipelineBuilder {
@@ -32,7 +31,7 @@ public class PipelineBuilder {
         return stage;
     }
 
-    public static Stage buildStage(StageDefinition stageDefinition, String pipelineId, HashSet<String> jobDefinitionIdsForStageRerun) {
+    public static Stage buildStage(StageDefinition stageDefinition, String pipelineId, ArrayList<String> jobDefinitionIdsForStageRerun) {
         Stage stage = new Stage(stageDefinition, pipelineId);
 
         List<JobDefinition> jobDefinitions = getJobDefinitionsForStageRerun(stageDefinition.getJobDefinitions(), jobDefinitionIdsForStageRerun);
@@ -56,7 +55,7 @@ public class PipelineBuilder {
         return job;
     }
 
-    private static List<JobDefinition> getJobDefinitionsForStageRerun(List<JobDefinition> jobDefinitions, HashSet<String> jobDefinitionIdsForStageRerun) {
+    private static List<JobDefinition> getJobDefinitionsForStageRerun(List<JobDefinition> jobDefinitions, ArrayList<String> jobDefinitionIdsForStageRerun) {
         List<JobDefinition> jobDefinitionsForStageRerun = new ArrayList<>();
         for (JobDefinition jobDefinition : jobDefinitions) {
             if (jobDefinitionIdsForStageRerun.contains(jobDefinition.getId())) {

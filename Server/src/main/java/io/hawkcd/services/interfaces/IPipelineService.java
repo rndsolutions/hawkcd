@@ -20,7 +20,7 @@ import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.Stage;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IPipelineService extends ICrudService<Pipeline> {
@@ -44,7 +44,7 @@ public interface IPipelineService extends ICrudService<Pipeline> {
 
     ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId);
 
-    ServiceResult rerunStageWithSpecificJobs(Stage stageToRerun, HashSet<String> jobDefinitionIds);
+    ServiceResult rerunStageWithSpecificJobs(Stage stageToRerun, ArrayList<String> jobDefinitionIds);
 
     ServiceResult cancelPipeline(Pipeline pipeline);
 
