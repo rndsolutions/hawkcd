@@ -10,6 +10,7 @@ public class PipelineBuilder {
         Pipeline pipeline = new Pipeline(pipelineDefinition);
 
         StageRun stageRun = new StageRun();
+        stageRun.setExecutionId(pipeline.getStageRuns().size() + 1);
         for (StageDefinition stageDefinition : pipelineDefinition.getStageDefinitions()) {
             Stage stage = buildStage(stageDefinition, pipeline.getId());
             stageRun.addStage(stage);

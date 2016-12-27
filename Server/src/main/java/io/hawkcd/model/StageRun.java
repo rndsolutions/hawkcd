@@ -9,10 +9,19 @@ import java.util.List;
  * Alternatively it can contain all Stages from a Stage rerun of the same Pipeline
  */
 public class StageRun extends Entity{
+    private int executionId;
     private List<Stage> stages;
 
     public StageRun() {
         this.stages = new ArrayList<>();
+    }
+
+    public int getExecutionId() {
+        return this.executionId;
+    }
+
+    public void setExecutionId(int executionId) {
+        this.executionId = executionId;
     }
 
     public List<Stage> getStages() {

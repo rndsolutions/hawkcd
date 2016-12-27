@@ -99,7 +99,7 @@ public class Pipeline extends PipelineFamily {
     }
 
     public void setStatus(PipelineStatus status) {
-        if (this.status == PipelineStatus.PASSED || this.status == PipelineStatus.FAILED) {
+        if (this.status == PipelineStatus.PASSED || this.status == PipelineStatus.FAILED || this.status == PipelineStatus.CANCELED) {
             this.rerunStatus = status;
         } else {
             this.status = status;
