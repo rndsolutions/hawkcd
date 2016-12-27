@@ -116,9 +116,9 @@ angular
 
         vm.allPipelineRuns = [];
 
-        vm.currentPipelineRun = [];
+        vm.currentPipelineRun = {};
 
-        vm.selectedStageRun = [];
+        vm.selectedStageRun = {};
 
         vm.currentPipelineRunStages = [];
 
@@ -129,6 +129,8 @@ angular
         vm.isFirstLoad = true;
 
         vm.isFullScreen = false;
+
+        vm.stageRerunTriggered = false;
 
         vm.runManagementPipelineDefinition = {};
 
@@ -197,12 +199,13 @@ angular
 
         vm.rerunStage = function (stage) {
             var selectedJobsForReRun = [];
-            stage.jobs.forEach(function (currentJob, jobIndex, jobArray){
-                if (currentJob.isChecked) {
-                    selectedJobsForReRun.push(currentJob.jobDefinitionId);
+            stage.jobDefinitions.forEach(function (currentJobDefinition){
+                if (currentJobDefinition.isChecked) {
+                    selectedJobsForReRun.push(currentJobDefinition.id);
                 }
             });
 
+            vm.stageRerunTriggered = true;
             pipeExecService.reRunStage(stage, selectedJobsForReRun);
         };
 
@@ -215,26 +218,51 @@ angular
         };
 
         vm.setSelectedStageForReRun = function (stage) {
-            vm.selectedStage = stage;
-        };
-
-        vm.selectAllJobs = function(){
-            vm.selectedStage.jobs.forEach(function (currentJob, jobIndex, jobArray){
-                currentJob.isChecked = true;
+            vm.runManagementPipelineDefinition.stageDefinitions.forEach(function (currentStageDefinition) {
+                if (stage.stageDefinitionId == currentStageDefinition.id)  {
+                    vm.selectedStage = stage;
+                    vm.selectedStage.jobDefinitions = [];
+                    currentStageDefinition.jobDefinitions.forEach(function (currentJobDefinition) {
+                        vm.selectedStage.jobDefinitions.push(currentJobDefinition);
+                    });
+                }
             });
         };
 
-        $scope.$watch(function () { return viewModel.runManagementPipelineDefinition }, function () {
-            vm.runManagementPipelineDefinition = angular.copy(viewModel.runManagementPipelineDefinition);
+        vm.selectAllJobs = function(){
+            vm.selectedStage.jobDefinitions.forEach(function (currentJobDefinition){
+                currentJobDefinition.isChecked = true;
+            });
+        };
+
+        $scope.$watch(function () { return viewModel.allPipelines }, function () {
+            viewModel.allPipelines.forEach(function (currentPipeline) {
+               if (viewModel.runManagementPipeline.pipelineDefinitionId && currentPipeline.id == viewModel.runManagementPipeline.pipelineDefinitionId) {
+                   vm.runManagementPipelineDefinition = angular.copy(currentPipeline);
+               }
+            });
         }, true);
 
-        $scope.$watch(function () { return viewModel.runManagementPipeline}, function (newVal, oldVal) {
-            vm.currentPipelineRun = angular.copy(viewModel.runManagementPipeline);
+        $scope.$watch(function () { return viewModel.runManagementPipeline}, function () {
+            if (viewModel.runManagementPipeline.id) {
+                vm.currentPipelineRun = angular.copy(viewModel.runManagementPipeline);
+                vm.selectedStageRun = vm.currentPipelineRun.stageRuns[vm.currentPipelineRun.stageRuns.length - 1];
+                if (vm.isFirstLoad) {
+                    viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
+                        if (viewModel.runManagementPipeline.pipelineDefinitionId && currentPipeline.id == viewModel.runManagementPipeline.pipelineDefinitionId) {
+                            vm.runManagementPipelineDefinition = angular.copy(currentPipeline);
+                        }
+                    });
 
-            if (vm.currentPipelineRun.stageRuns && vm.isFirstLoad) {
-                vm.selectedStageRun = vm.currentPipelineRun.stageRuns[vm.currentPipelineRun.stageRuns.length - 1].stages;
-                vm.selectJob(0, 0);
-                vm.isFirstLoad = false;
+
+                    vm.selectJob(0, 0);
+                    vm.isFirstLoad = false;
+                }
+
+                // if (vm.stageRerunTriggered) {
+                //     vm.selectedStageRun = vm.currentPipelineRun.stageRuns[vm.currentPipelineRun.stageRuns.length - 1];
+                //     vm.stageRerunTriggered = false;
+                // }
             }
 
             // if(!jQuery.isEmptyObject(vm.currentPipelineRun)){
@@ -324,7 +352,7 @@ angular
             // vm.selectedStageIndexInMainDB = index;
 
             // //  Get the selected stage - with LastRun + all Runs
-            vm.selectedStage = vm.selectedStageRun[index];
+            vm.selectedStage = vm.selectedStageRun.stages[index];
             // nameOfStage = vm.selectedStage.Runs[0].Name;
             //
             // //Need this variable, so the runs are displayed in the modal for re run stage

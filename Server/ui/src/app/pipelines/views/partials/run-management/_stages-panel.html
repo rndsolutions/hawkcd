@@ -16,9 +16,13 @@
         <div class="portlet-title">
             <div class="caption">
                 <i class="fa fa-cogs"></i>Stages
+                <select style="display: inline-block; width: auto; padding: 0 5px; height: 23px;" class="form-control" name="stageRunSelect" id="stageRunSelect"
+                        ng-model="pipesRunManagement.selectedStageRun"
+                        ng-options="stageRun as stageRun.executionId for stageRun in pipesRunManagement.currentPipelineRun.stageRuns">
+                </select>
             </div>
             <div class="tools right">
-                <a href="javascript:;" class="collapse"> </a>
+                <a href="javascript:" class="collapse"> </a>
             </div>
         </div>
 
@@ -39,11 +43,11 @@
         <!--</div>-->
 
     <div class="portlet-body custom-body">
-        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRun.stageRuns[pipesRunManagement.currentPipelineRun.stageRuns.length - 1].stages">
+        <div class="s-box" ng-repeat="stage in pipesRunManagement.selectedStageRun.stages">
             <div class="display-inline-block" ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
             <div class="height-100px display-inline-block">
                 <img class="image-vertical-center arrow-right"
-                     ng-if="$index != pipesRunManagement.currentPipelineRun.stageRuns[pipesRunManagement.currentPipelineRun.stageRuns.length - 1].stages.length - 1"
+                     ng-if="$index != pipesRunManagement.selectedStageRun.stages.length - 1"
                      src="../../../../../assets/images/right-arrow.png">
             </div>
         </div>

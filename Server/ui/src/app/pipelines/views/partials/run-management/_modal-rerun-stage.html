@@ -25,12 +25,12 @@
                     <button type="button" class="btn btn-default pull-right" ng-click="pipesRunManagement.selectAllJobs()">{{pipesRunManagement.reRunStage.selectAll}}</button>
                     <div class="md-checkbox-list">
                         <div class="clearfix"> </div>
-                        <div class="md-checkbox" ng-repeat="job in pipesRunManagement.selectedStage.jobs">
-                            <input type="checkbox" id="{{job.id}}" class="md-check" name="jobCheck" ng-model="job.isChecked">
-                            <label for="{{job.id}}">
+                        <div class="md-checkbox" ng-repeat="jobDefinition in pipesRunManagement.selectedStage.jobDefinitions">
+                            <input type="checkbox" id="{{jobDefinition.id}}" class="md-check" name="jobCheck" ng-model="jobDefinition.isChecked">
+                            <label for="{{jobDefinition.id}}">
                                 <span></span>
                                 <span class="check"></span>
-                                <span class="box"></span> {{job.jobDefinitionName}}
+                                <span class="box"></span> {{jobDefinition.name}}
                             </label>
                         </div>
                     </div>
