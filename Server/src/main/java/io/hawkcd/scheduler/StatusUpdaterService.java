@@ -60,7 +60,7 @@ public class StatusUpdaterService {
             if (pipeline.shouldBeCanceled()) {
                 this.cancelPipeline(pipeline);
                 LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
-            } else if (pipeline.getStatus() == PipelineStatus.PAUSED) {
+            } else if (pipeline.getStatus() == PipelineStatus.PAUSED || pipeline.getRerunStatus() == PipelineStatus.PAUSED) {
                 this.pausePipeline(pipeline);
             } else {
                 this.updateAllStatuses(pipeline);

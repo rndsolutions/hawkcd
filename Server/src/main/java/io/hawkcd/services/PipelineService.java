@@ -405,23 +405,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             return result;
         }
 
-        Pipeline pipelineToBeCanceled = (Pipeline) result.getEntity();
-        if (pipelineToBeCanceled.getStatus() == PipelineStatus.IN_PROGRESS) {
-            pipelineToBeCanceled.setStatus(PipelineStatus.PAUSED);
+        Pipeline pipelineToBePaused = (Pipeline) result.getEntity();
+        if (pipelineToBePaused.getStatus() == PipelineStatus.IN_PROGRESS || pipelineToBePaused.getRerunStatus() == PipelineStatus.IN_PROGRESS) {
+            pipelineToBePaused.setStatus(PipelineStatus.PAUSED);
             result.setNotificationType(NotificationType.WARNING);
-            String message = String.format("Pipeline %s set to PAUSED.", pipelineToBeCanceled.getPipelineDefinitionName());
+            String message = String.format("Pipeline %s set to PAUSED.", pipelineToBePaused.getPipelineDefinitionName());
             result.setMessage(message);
             LOGGER.info(message);
-            for (Stage stage : pipelineToBeCanceled.getStagesOfLastStageRun()) {
+            for (Stage stage : pipelineToBePaused.getStagesOfLastStageRun()) {
                 if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                     stage.setStatus(StageStatus.PAUSED);
                 }
             }
         } else {
-            pipelineToBeCanceled.setStatus(PipelineStatus.IN_PROGRESS);
-            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipelineToBeCanceled.getPipelineDefinitionName());
+            pipelineToBePaused.setStatus(PipelineStatus.IN_PROGRESS);
+            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipelineToBePaused.getPipelineDefinitionName());
             LOGGER.info(message);
-            for (Stage stage : pipelineToBeCanceled.getStagesOfLastStageRun()) {
+            for (Stage stage : pipelineToBePaused.getStagesOfLastStageRun()) {
                 if (stage.getStatus() == StageStatus.PAUSED) {
                     stage.setStatus(StageStatus.IN_PROGRESS);
                     stage.setTriggeredManually(false);
@@ -429,7 +429,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             }
         }
 
-        return this.update(pipelineToBeCanceled);
+        return this.update(pipelineToBePaused);
     }
 
     private void addMaterialsToPipeline(Pipeline pipeline) {

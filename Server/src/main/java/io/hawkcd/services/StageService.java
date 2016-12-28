@@ -105,34 +105,34 @@ public class StageService extends CrudService<Stage> implements IStageService {
 //        return super.createServiceResult(result, NotificationType.SUCCESS, "created successfully");
 //    }
 
-//    @Override
-//    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
-//    public ServiceResult update(Stage stage) {
-//        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getEntity();
-//        List<Stage> stages = pipeline.getStages();
-//        int stageCollectionSize = stages.size();
-//        boolean isPresent = false;
-//        for (int i = 0; i < stageCollectionSize; i++) {
-//            if (stages.get(i).getId().equals(stage.getId())) {
-//                isPresent = true;
-//                stages.set(i, stage);
-//            }
-//        }
-//
-//        if (!isPresent) {
-//            return super.createServiceResult(null, NotificationType.ERROR, "not found");
-//        }
-//
+    @Override
+    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
+    public ServiceResult update(Stage stage) {
+        Pipeline pipeline = (Pipeline) this.pipelineService.getById(stage.getPipelineId()).getEntity();
+        List<Stage> stages = pipeline.getStagesOfLastStageRun();
+        int stageCollectionSize = stages.size();
+        boolean isPresent = false;
+        for (int i = 0; i < stageCollectionSize; i++) {
+            if (stages.get(i).getId().equals(stage.getId())) {
+                isPresent = true;
+                stages.set(i, stage);
+            }
+        }
+
+        if (!isPresent) {
+            return super.createServiceResult(null, NotificationType.ERROR, "not found");
+        }
+
 //        pipeline.setStages(stages);
-//        ServiceResult serviceResult = this.pipelineService.update(pipeline);
-//
-//        if (serviceResult.getNotificationType() == NotificationType.ERROR) {
-//            serviceResult = super.createServiceResult((Stage) serviceResult.getEntity(), NotificationType.ERROR, "not updated");
-//        } else {
-//            serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "updated successfully");
-//        }
-//        return serviceResult;
-//    }
+        ServiceResult serviceResult = this.pipelineService.update(pipeline);
+
+        if (serviceResult.getNotificationType() == NotificationType.ERROR) {
+            serviceResult = super.createServiceResult((Stage) serviceResult.getEntity(), NotificationType.ERROR, "not updated");
+        } else {
+            serviceResult = super.createServiceResult(stage, NotificationType.SUCCESS, "updated successfully");
+        }
+        return serviceResult;
+    }
 
 //    @Override
 //    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
