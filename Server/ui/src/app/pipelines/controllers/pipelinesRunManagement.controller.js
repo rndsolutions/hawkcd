@@ -118,7 +118,7 @@ angular
 
         vm.currentPipelineRun = {};
 
-        vm.selectedStageRun = {};
+        vm.selectedStageRunExecutionId = 1;
 
         vm.currentPipelineRunStages = [];
 
@@ -243,10 +243,10 @@ angular
             });
         }, true);
 
-        $scope.$watch(function () { return viewModel.runManagementPipeline}, function () {
+        $scope.$watch(function () { return viewModel.runManagementPipeline}, function (newVal, oldVal) {
             if (viewModel.runManagementPipeline.id) {
                 vm.currentPipelineRun = angular.copy(viewModel.runManagementPipeline);
-                vm.selectedStageRun = vm.currentPipelineRun.stageRuns[vm.currentPipelineRun.stageRuns.length - 1];
+
                 if (vm.isFirstLoad) {
                     viewModel.allPipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                         if (viewModel.runManagementPipeline.pipelineDefinitionId && currentPipeline.id == viewModel.runManagementPipeline.pipelineDefinitionId) {
@@ -254,15 +254,12 @@ angular
                         }
                     });
 
-
+                    // vm.selectedStageRun = vm.currentPipelineRun.stageRuns[vm.currentPipelineRun.stageRuns.length - 1];
                     vm.selectJob(0, 0);
                     vm.isFirstLoad = false;
+                } else if (newVal.stageRuns.length > oldVal.stageRuns.length) {
+                    vm.selectedStageRunExecutionId = vm.currentPipelineRun.stageRuns[vm.currentPipelineRun.stageRuns.length - 1].executionId;
                 }
-
-                // if (vm.stageRerunTriggered) {
-                //     vm.selectedStageRun = vm.currentPipelineRun.stageRuns[vm.currentPipelineRun.stageRuns.length - 1];
-                //     vm.stageRerunTriggered = false;
-                // }
             }
 
             // if(!jQuery.isEmptyObject(vm.currentPipelineRun)){
@@ -352,7 +349,7 @@ angular
             // vm.selectedStageIndexInMainDB = index;
 
             // //  Get the selected stage - with LastRun + all Runs
-            vm.selectedStage = vm.selectedStageRun.stages[index];
+            vm.selectedStage = vm.currentPipelineRun.stageRuns[vm.selectedStageRunExecutionId - 1].stages[index];
             // nameOfStage = vm.selectedStage.Runs[0].Name;
             //
             // //Need this variable, so the runs are displayed in the modal for re run stage
