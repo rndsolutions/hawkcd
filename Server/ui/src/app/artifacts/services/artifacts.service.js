@@ -17,13 +17,27 @@
 
 angular
     .module('hawk.artifactManagement')
-    .factory('artifactService', ['CONSTANTS', function(CONSTANTS) {
+    .factory('artifactService', ['CONSTANTS', 'websocketSenderService', 'jsonHandlerService', function(CONSTANTS, websocketSenderService, jsonHandlerService) {
         var artifactService = this;
 
         var fileEndpoint = CONSTANTS.SERVER_URL + '/';
 
         artifactService.getFile = function (filePath) {
             window.location.replace(fileEndpoint + filePath);
+        };
+
+        //TODO: Send the search criteria, the number of Pipelines to be shown and the last Pipeline the UI has displayed
+        artifactService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
+            var methodName = "getAllPipelineArtifactDTOs";
+            var className = "PipelineService";
+            var packageName = "io.hawkcd.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + searchCriteria + "\"}",
+                "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
+                "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineId + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
         };
 
         return artifactService;

@@ -1,46 +1,30 @@
- # Copyright (C) 2016 R&D Solutions Ltd.
- #
- # Licensed under the Apache License, Version 2.0 (the "License");
- # you may not use this file except in compliance with the License.
- # You may obtain a copy of the License at
- #
- # http://www.apache.org/licenses/LICENSE-2.0
- #
- # Unless required by applicable law or agreed to in writing, software
- # distributed under the License is distributed on an "AS IS" BASIS,
- # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- # See the License for the specific language governing permissions and
- # limitations under the License.
 
-# Server settings
-serverHost: localhost
-serverPort: 8080
-
-# Database settings
-# Allowed Database Types: 'REDIS'
-databaseType: REDIS
-databaseConfigs:
-  REDIS:
-    name: hawkdb
-    host: localhost
-    port: 6379
-    username:
-    password:
-
-# Provider settings
-oAuthProviderConfigs:
-  GITHUB:
-    accessTokenUrl:
-    clientId:
-    clientSecret:
-    isEnabled: false
-
-## Folder settings
-materialsDestination: Materials
-artifactsDestination: Artifacts
-
-# Worker settings
-# Min 1 second; Max 30 seconds
-pipelineSchedulerPollInterval: 2
-materialTrackerPollInterval: 2
-
+  !!io.hawkcd.model.configuration.Configuration
+  artifactsDestination: Artifacts
+  databaseConfigs:
+    REDIS:
+      host: localhost
+      name: hawkdb
+      password:
+      port: 6379
+      username:
+    MONGODB:
+      host: localhost
+      name: hawkmongo
+      password: admin
+      port: 27017
+      username: admin
+  databaseType: MONGODB
+  materialTrackerPollInterval: 2
+  materialsDestination: Materials
+  oAuthProviderConfigs:
+    GITHUB:
+      accessTokenUrl:
+      clientId:
+      clientSecret:
+      isEnabled: false
+  pipelineSchedulerPollInterval: 2
+  serverHost: localhost
+  serverId:
+  serverPort: 8080
+  isSingleNode: true

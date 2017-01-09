@@ -17,7 +17,7 @@
 
 angular
     .module('hawk')
-    .factory('viewModelUpdater', ['viewModel', function (viewModel) {
+    .factory('viewModelUpdater', ['viewModel', 'pipeConfigService', 'agentService', 'adminService', 'adminMaterialService', 'pipeExecService', function (viewModel, pipeConfigService, agentService, adminService, adminMaterialService, pipeExecService) {
         var viewModelUpdater = this;
 
         viewModelUpdater.flushViewModel = function () {
@@ -32,6 +32,21 @@ angular
             viewModel.allMaterialDefinitions = [];
             viewModel.allPipelineGroups = [];
             viewModel.allPipelineRuns = [];
+        };
+
+        viewModelUpdater.refreshViewModel = function () {
+            pipeConfigService.getAllPipelineDefinitions();
+            pipeConfigService.getAllPipelineGroupDTOs();
+            agentService.getAllAgents();
+            adminService.getAllUserGroupDTOs();
+            adminService.getAllUsers();
+            adminMaterialService.getAllMaterialDefinitions();
+
+            viewModel.historyPipelines = [];
+
+            viewModel.runManagementPipeline = {};
+
+            viewModel.artifactPipelines = [];
         };
 
         return viewModelUpdater;

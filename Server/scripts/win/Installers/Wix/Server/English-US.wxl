@@ -261,7 +261,7 @@ Click the Finish button to exit.</String>
 <String Id="HelpFeatureTitle" Overridable="yes">Help</String>
 <String Id="HelpFeatureTitleDescription" Overridable="yes">Installs documentation for [ProductName]</String>
 <String Id="IndexesDrive" Overridable="yes">&amp;Indexes Drive</String>
-<String Id="InitialDrivesMessage" Overridable="yes">ENPS needs to know the name of this server. If this setting is incorrect, </String>
+<String Id="InitialDrivesMessage" Overridable="yes">ENPS needs to know the name of this HServer. If this setting is incorrect, </String>
 <String Id="InstallDirDescription" Overridable="yes">
 The installation wizard will install the files for in the following folder.
 

@@ -36,8 +36,48 @@ angular
             });
         };
 
+        userGroupUpdater.updateUserGroupWithoutUsers = function (userGroup) {
+            viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
+                if(currentUserGroup.id == userGroup.id){
+                    userGroup.users = [];
+                    userGroup.userIds.forEach(function (currentUserId, userIdIndex, userIdArray) {
+                        viewModel.users.forEach(function (currentUser, currentUserIndex, userArray) {
+                            if(currentUser.id == currentUserId){
+                                userGroup.users.push(currentUser);
+                            }
+                        });
+                    });
+                    viewModel.userGroups[userGroupIndex] = userGroup;
+                }
+            });
+        };
+
+        userGroupUpdater.updateUserGroupPermissions = function (userGroup) {
+            viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
+                if(currentUserGroup.id == userGroup.id){
+                    viewModel.userGroups[userGroupIndex].permissions = userGroup.permissions;
+                }
+            });
+        };
+
         userGroupUpdater.addUserGroup = function (userGroup) {
             viewModel.userGroups.push(userGroup);
+        };
+
+        userGroupUpdater.assignUsers = function (userGroup) {
+            var usersToAdd = [];
+            userGroup.userIds.forEach(function (currentUserId, userIdIndex, userIdArray) {
+                viewModel.users.forEach(function (currentUser, userIndex, userArray) {
+                    if(currentUserId == currentUser.id){
+                        usersToAdd.push(currentUser);
+                    }
+                });
+            });
+            viewModel.userGroups.forEach(function (currentUserGroup, userGroupIndex, userGroupArray) {
+                if(currentUserGroup.id == userGroup.id) {
+                    currentUserGroup.users = usersToAdd;
+                }
+            });
         };
 
         return userGroupUpdater;

@@ -28,43 +28,44 @@
                                 <tr>
                                     <th class="">Scope<span class="badge badge-default cursor-popover hidden-xs" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.permissionScope}}">?</span></th>
                                     <th class="">Type<span class="badge badge-default cursor-popover hidden-xs" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.permissionType}}">?</span></th>
-                                    <th class="">Entity<span class="badge badge-default cursor-popover hidden-xs" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.permissionEntity}}">?</span></th>
+                                    <th class="">Entity<span class="badge badge-default cursor-popover hidden-xs" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.permissionEntity}}">?</span>
+                                        <span class="fa fa-exclamation-triangle text-warning cursor-popover hidden-xs" style="margin-left:5px" onmouseenter="$(this).tooltip('show')" title="{{admin.popOverOptions.popOverTitles.permissionEntityWarning}}"></span></th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody id="userPermissionTable">
                                 <tr ng-repeat="permission in admin.selectedUser.permissions">
-                                    <td class="text-center">
+                                    <td class="text-center-all">
                                         <label for="scopeSelect">
-                                        <select name="scopeSelect" class="form-control" id="scopeSelect" ng-model="permission.permissionScope">
+                                        <select name="scopeSelect" class="form-control" id="scopeSelect" ng-change="admin.checkEntityType(permission)" ng-model="permission.permissionScope" ng-disabled="permission.isInherited" onmouseenter="$(this).tooltip('show')" title="{{permission.isInherited ? admin.popOverOptions.popOverTitles.inheritedPermissionWarning : ''}}">
                                             <option ng-repeat="option in admin.data.scopeOptions" value="{{option.value}}">
                                                 {{option.name}}
                                             </option>
                                         </select>
                                         </label>
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center-all">
 
                                         <label for="typeSelect">
-                                        <select name="typeSelect" class="form-control" id="typeSelect" ng-model="permission.permissionType">
+                                        <select name="typeSelect" class="form-control" id="typeSelect" ng-model="permission.permissionType" ng-disabled="permission.isInherited" onmouseenter="$(this).tooltip('show')" title="{{permission.isInherited ? admin.popOverOptions.popOverTitles.inheritedPermissionWarning : ''}}">
                                             <option ng-repeat="option in admin.data.typeOptions" value="{{option.value}}">
                                                 {{option.name}}
                                             </option>
                                         </select>
                                         </label>
                                     </td>
-                                    <td class="text-center">
-                                        <label for="pipelineGroupSelect">
-                                        <select name="pipelineGroupSelect" class="form-control" id="pipelineGroupSelect" ng-if="permission.permissionScope == 'PIPELINE_GROUP'" ng-model="permission.permittedEntityId">
-                                            <option value="PIPELINE_GROUP">All Pipeline Groups</option>
+                                    <td class="text-center-all">
+                                        <label for="pipelineGroupSelect" class="text-center-all" style="max-width:90%!important;">
+                                        <select name="pipelineGroupSelect" class="form-control text-center-all" id="pipelineGroupSelect" ng-change="admin.checkEntityType(permission)" ng-if="permission.permissionScope == 'PIPELINE_GROUP'" ng-model="permission.permittedEntityId" ng-disabled="permission.isInherited" onmouseenter="$(this).tooltip('show')" title="{{permission.isInherited ? admin.popOverOptions.popOverTitles.inheritedPermissionWarning : ''}}">
+                                            <option value="" selected>All Pipeline Groups</option>
                                             <option ng-repeat="pipelineGroup in admin.currentPipelineGroups" value="{{pipelineGroup.id}}">
                                                 {{pipelineGroup.name}}
                                             </option>
                                         </select>
                                         </label>
-                                        <label for="pipelineSelect">
-                                        <select name="pipelineSelect" class="form-control" id="pipelineSelect" ng-if="permission.permissionScope == 'PIPELINE'" ng-model="permission.permittedEntityId">
-                                            <option value="PIPELINE">All Pipelines</option>
+                                        <label for="pipelineSelect"  class="text-center-all" style="max-width:90%!important;">
+                                        <select name="pipelineSelect" class="form-control text-center-all" id="pipelineSelect" ng-change="admin.checkEntityType(permission)" ng-if="permission.permissionScope == 'PIPELINE'" ng-model="permission.permittedEntityId" ng-disabled="permission.isInherited" onmouseenter="$(this).tooltip('show')" title="{{permission.isInherited ? admin.popOverOptions.popOverTitles.inheritedPermissionWarning : ''}}">
+                                            <option value="" selected>All Pipelines</option>
                                             <option ng-repeat="pipeline in admin.allPipelines" value="{{pipeline.id}}">
                                                 {{pipeline.name}}
                                             </option>
@@ -73,7 +74,7 @@
                                     </td>
                                     <td>
                                         <span class="custom-hover custom-vertical-align">
-                                        <i class="fa fa-trash" ng-click="admin.removePermission($index)"></i>
+                                        <i class="fa fa-trash" ng-click="admin.removePermission($index)" ng-if="!permission.isInherited"></i>
                                         </span>
                                     </td>
                                 </tr>

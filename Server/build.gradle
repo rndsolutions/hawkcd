@@ -48,7 +48,7 @@ apply plugin: 'java'
 jar {
     manifest {
         attributes(
-                'Main-Class': 'net.hawkengine.Main',
+                'Main-Class': 'io.hawkcd.Main',
         )
     }
 }
@@ -145,7 +145,7 @@ dependencies {
 
     //Mongo
 
-    compile 'org.mongodb:mongodb-driver:3.2.2'
+    compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.3.0'
 
     compile 'com.github.fakemongo:fongo:2.0.6'
 

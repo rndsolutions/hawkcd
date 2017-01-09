@@ -10,10 +10,10 @@
 <?define MSIFactoryDrive="C:" ?>
 <?define MSIFactoryFolder="C:\Program Files (x86)\MSI Factory" ?>
 <?define MyDocuments="C:\Users\SlaviDimitrov\Documents" ?>
-<?define OutputFolder="C:\GitRepos\hawkcd\build_\win\Installers\Wix_Server\WiX" ?>
+<?define OutputFolder="C:\Users\SlaviDimitrov\Desktop\win\Installers\Wix_Server\WiX" ?>
 <?define ProductBuildGUID="52796ACA-35AD-4186-8412-FF13F7E70B68" ?>
 <?define ProgramFilesFolder="C:\Program Files (x86)" ?>
-<?define ProjectFolder="C:\GitRepos\hawkcd\build_\win\Installers" ?>
+<?define ProjectFolder="C:\Users\SlaviDimitrov\Desktop\win\Installers" ?>
 <?define RevisionNumbe="1" ?>
 <?define RevisionNumber="1" ?>
 <?define SetupFactoryDrive="C:" ?>

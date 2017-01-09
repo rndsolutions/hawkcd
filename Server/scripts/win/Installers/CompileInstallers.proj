@@ -27,7 +27,7 @@
 	
     <Target Name="CreateServerInstaller" Condition="'$(BuildServerInstaller)' == 'True'" >
 	
-	<!-- Modify the variables used in the installer project to match the proper directories on the build server-->
+	<!-- Modify the variables used in the installer project to match the proper directories on the build HServer-->
     <CreateItem Include="$(MSBuildProjectDirectory)\WiX\Server\BuildVars.wxi">
       <Output TaskParameter="Include" ItemName="BuildVars" />
     </CreateItem>
@@ -63,7 +63,7 @@
 		
     <Target Name="CreateAgentInstaller" Condition="'$(BuildAgentInstaller)' == 'True'" >
 	
-	<!-- Modify the variables used in the installer project to match the proper directories on the build server-->
+	<!-- Modify the variables used in the installer project to match the proper directories on the build HServer-->
     <CreateItem Include="$(MSBuildProjectDirectory)\WiX\Agent\BuildVars.wxi">
       <Output TaskParameter="Include" ItemName="BuildVars" />
     </CreateItem>

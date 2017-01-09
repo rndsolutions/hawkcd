@@ -18,17 +18,11 @@
 angular
     .module('hawk.pipelinesManagement')
     .controller('PipelinesRunManagement', ['$state','$scope','$stateParams','$interval','pipeExecService','authDataService',
-                                            'viewModel', 'pipelineUpdater','moment','ansi_up','$sce','commonUtitlites',
+                                            'viewModel', 'pipelineUpdater','moment','ansi_up','$sce','commonUtitlites', 'loggerService',
                                             function ($state, $scope, $stateParams, $interval, pipeExecService,
                                                     authDataService, viewModel, pipelineUpdater, moment, ansi_up, $sce,
-                                                    commonUtilities) {
+                                                    commonUtilities, loggerService) {
         var vm = this;
-
-        $scope.$on("$destroy", function () {
-            if (angular.isDefined($scope.Timer)) {
-                $interval.cancel($scope.Timer);
-            }
-        });
         vm.disabledBtn = false;
 
         vm.glued = true;
@@ -198,15 +192,15 @@ angular
 
         vm.continueStage = function (stage) {
             var currentPipelineRun = angular.copy(vm.currentPipelineRun);
-            pipeExecService.pausePipeline(currentPipelineRun.id);
+            pipeExecService.pausePipeline(currentPipelineRun);
         };
 
         vm.pause = function (pipeline) {
-            pipeExecService.pausePipeline(pipeline.id);
+            pipeExecService.pausePipeline(pipeline);
         };
                                                 
         vm.stop = function(pipeline) {
-            pipeExecService.stopPipeline(pipeline.id);
+            pipeExecService.stopPipeline(pipeline);
         };
 
         // $scope.$watch(function() { return viewModel.allPipelineRuns }, function(newVal, oldVal) {

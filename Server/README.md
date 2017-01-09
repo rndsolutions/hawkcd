@@ -6,7 +6,7 @@ The Hawkengine Server intends to be a one stop solution for managing Continuous 
 
 **Getting started:**
 * [Setup Hawk Server on Windows Environment](https://github.com/rndsolutions/hawk/wiki/Setup-Hawk-Server-on-Windows-Environment)
-* [Setup Hawk Server on Linux Environment](https://github.com/rndsolutions/hawk/wiki/Setup-Hawk-Server-on-Linux-(Ubuntu)-Environment#setup-hawk-server-on-linux-ubuntu-environment)
+* [Setup Hawk Server on Linux Environment](https://github.com/rndsolutions/hawk/wiki/Setup-Hawk-Server-on-Linux-(Ubuntu)-Environment#setup-hawk-HServer-on-linux-ubuntu-environment)
 
 ## License
 

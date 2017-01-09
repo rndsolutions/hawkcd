@@ -18,8 +18,8 @@
 angular
     .module('hawk')
     /* Setup App Main Controller */
-    .controller('AppController', ['$scope', '$rootScope', 'CONSTANTS', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', '$auth', "$location", "$http",
-        function($scope, $rootScope, CONSTANTS, loginService, viewModel, accountService, profileService, authDataService, $auth, $location, $http) {
+    .controller('AppController', ['$scope', '$rootScope', 'CONSTANTS', 'loggerService', 'loginService', 'viewModel', 'accountService', 'profileService', 'authDataService', '$auth', "$location", "$http",
+        function($scope, $rootScope, CONSTANTS, loggerService, loginService, viewModel, accountService, profileService, authDataService, $auth, $location, $http) {
             $scope.$on('$viewContentLoaded', function() {
                 //App.initComponents(); // init core components
                 Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
@@ -51,9 +51,9 @@ angular
             $scope.registerUser = function() {
                 accountService.registerUser($scope.userLoginForm)
                     .then(function(res) {
-                        console.log('User registered');
+                        loggerService.log('User registered');
                     }, function(err) {
-                        console.log(err);
+                        loggerService.log(err);
                     })
             };
 
@@ -64,11 +64,11 @@ angular
             $scope.loginUser = function() {
                 loginService.login($scope.username, $scope.password)
                     .then(function(res) {
-                        console.log(res);
+                        loggerService.log(res);
                         $rootScope.me.UserName = $scope.username;
                         $rootScope.updatedUser.Email = $scope.username;
                     }, function(err) {
-                        console.log(err);
+                        loggerService.log(err);
                     });
             }
 
@@ -79,24 +79,9 @@ angular
 
             $scope.me = {};
             $scope.me.UserName = localStorage.username;
-            //console.log($scope.me.UserName);
 
             $scope.updatedUser = {};
             $scope.updatedUser.Email = localStorage.email;
-            //        function getMe () {
-            //          profileService.getUserInfo()
-            //            .then(function (res) {
-            //              $scope.me = res;
-            //              console.log(res);
-            //              $scope.updatedUser = res;
-            //              console.log(res);
-            //            }, function (err) {
-            //              console.log(err);
-            //            })
-            //        }
-            //        getMe();
-
-
 
             $scope.updateUser = function(userName) {
                 var user = {
@@ -112,9 +97,9 @@ angular
                         localStorage.email = userName;
 
                         // window.localStorage['username'] = userName;
-                        console.log(res);
+                        loggerService.log(res);
                     }, function(err) {
-                        console.log(err);
+                        loggerService.log(err);
                     })
             };
 
@@ -163,7 +148,7 @@ angular
                         $location.path("/pipelines");
                     })
                     .catch(function(response) {
-                        console.log(response);
+                        loggerService.log(response);
                     });
             }
 
@@ -184,14 +169,14 @@ angular
 
                 $auth.login(user)
                     .then(function(response) {
-                        console.log(response.data)
+                        loggerService.log(response.data);
                         $auth.setToken(response.data);
                         $location.path("/pipelines");
                         $rootScope.startWebsocket('ws://' + CONSTANTS.HOST + '/ws/v1');
                     })
                     .catch(function(response) {
                       $scope.mismatchCredentials.errorMessage = response.data.message;
-                        console.log(response)
+                        loggerService.log(response);
                             // Handle errors here, such as displaying a notification
                             // for invalid email and/or password.
                     });
@@ -212,9 +197,9 @@ angular
                     data: user
                 }).then(function successCallback(response) {
                     $scope.showLogin();
-                    console.log("success response: " + response);
+                    loggerService.log(response);
                 }, function errorCallback(response) {
-                    console.log("error response: " + response);
+                    loggerService.log(response);
                 });
 
                 $scope.register_email = undefined;

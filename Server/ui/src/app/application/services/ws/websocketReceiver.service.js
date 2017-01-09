@@ -17,11 +17,15 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'pipeStatsService', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
-        function($rootScope, pipeStatsService, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
+    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
+        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
+
+
+                loggerService.log('Received JSON from Server:');
+                loggerService.log(data);
                 if (!validationService.isValid(data)) {
                     toaster.error('Invalid JSON format!');
                     return;
@@ -67,13 +71,21 @@ angular
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUsers], true);
                     },
-                    assignUserToGroup: function(object) {
-                        validationService.dispatcherFlow(object, [userUpdater.updateUser, adminService.getAllUserGroupDTOs], true);
-                    },
                     resetUserPassword:function(object) {
                     },
                     logout: function(object) {
                         validationService.dispatcherFlow(object, [loginService.logoutUser])
+                    }
+                },
+                UserUpdaterService: {
+                    assignUsers: function(object) {
+
+                    },
+                    updateUserPermissions: function(object) {
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
+                    },
+                    updateUserGroupPermissions: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupPermissions], true);
                     }
                 },
                 UserGroupService: {
@@ -89,14 +101,14 @@ angular
                     updateUserGroupDto: function(object) {
                         validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
                     },
-                    assignUserToGroup: function(object) {
-                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
-                    },
-                    unassignUserFromGroup: function(object) {
-                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroup], true);
+                    update: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.updateUserGroupWithoutUsers], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUserGroupDTOs], true);
+                    },
+                    assignUsers: function(object) {
+                        validationService.dispatcherFlow(object, [userGroupUpdater.assignUsers], true);
                     }
                 },
                 AgentService: {
@@ -181,16 +193,20 @@ angular
                     getAllPipelineHistoryDTOs: function (object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllHistoryPipelines]);
                     },
-                    getPipelineArtifactDTOs: function (object) {
-                        if(object.args[2].object == "\"\""){
-                            for(var i = 0; i < viewModel.artifactPipelines.length - 1; i++){
-                                if(viewModel.artifactPipelines[i].searchCriteria){
-                                    object.result[0].searchCriteria = viewModel.artifactPipelines[i].searchCriteria;
-                                    break;
+                    getAllPipelineArtifactDTOs: function (object) {
+                        if(object.result[0]){
+                            if(object.result[0].isScrollCall){
+                                for(var i = 0; i < viewModel.artifactPipelines.length - 1; i++){
+                                    if(viewModel.artifactPipelines[i].searchCriteria){
+                                        object.result[0].searchCriteria = viewModel.artifactPipelines[i].searchCriteria;
+                                        break;
+                                    }
                                 }
+                            } else {
+                                viewModel.artifactPipelines = [];
                             }
-                            viewModel.artifactPipelines = [];
                         }
+                        // viewModel.artifactPipelines = [];
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllArtifactPipelines]);
                     },
                     add: function(object) {

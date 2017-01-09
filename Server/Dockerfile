@@ -10,7 +10,7 @@ COPY . /usr/src/app/source
 WORKDIR /usr/src/app/source/src
 
 
-#compile server
+#compile HServer
 RUN nuget restore -NonInteractive
 RUN xbuild /property:Configuration=Release /property:OutDir=/usr/src/app/build/
 WORKDIR /usr/src/app/build

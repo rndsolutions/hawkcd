@@ -1088,7 +1088,7 @@ Click the Finish button to exit.</String>
 <String Id="HelpFeatureTitle">Help</String>
 <String Id="HelpFeatureTitleDescription">Installs documentation for [ProductName]</String>
 <String Id="IndexesDrive">&amp;Indexes Drive</String>
-<String Id="InitialDrivesMessage">ENPS needs to know the name of this server. If this setting is incorrect, </String>
+<String Id="InitialDrivesMessage">ENPS needs to know the name of this HServer. If this setting is incorrect, </String>
 <String Id="InstallDirDescription">
 The installation wizard will install the files for in the following folder.
 

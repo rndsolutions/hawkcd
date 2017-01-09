@@ -29,11 +29,16 @@ angular
         };
 
         agentUpdater.updateAgent = function (agent) {
+            var isAdded = false;
             viewModel.allAgents.forEach(function (currentAgent, index, array) {
                 if (currentAgent.id == agent.id) {
                     viewModel.allAgents[index] = agent;
+                    isAdded = true;
                 }
-            })
+            });
+            if(!isAdded){
+                viewModel.allAgents.push(agent);
+            }
         };
 
         return agentUpdater;

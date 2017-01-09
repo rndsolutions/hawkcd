@@ -1,5 +1,5 @@
 # You may add here your
-# server {
+# HServer {
 #	...
 # }
 # statements for each of your virtual hosts to this file
@@ -17,7 +17,7 @@
 # Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
 ##
 
-server {
+HServer {
 	listen 80 default_server;
 	listen [::]:80 default_server ipv6only=on;
 
@@ -42,14 +42,14 @@ server {
 
 	#error_page 404 /404.html;
 
-	# redirect server error pages to the static page /50x.html
+	# redirect HServer error pages to the static page /50x.html
 	#
 	#error_page 500 502 503 504 /50x.html;
 	#location = /50x.html {
 	#	root /usr/share/nginx/html;
 	#}
 
-	# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+	# pass the PHP scripts to FastCGI HServer listening on 127.0.0.1:9000
 	#
 	#location ~ \.php$ {
 	#	fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -74,7 +74,7 @@ server {
 
 # another virtual host using mix of IP-, name-, and port-based configuration
 #
-#server {
+#HServer {
 #	listen 8000;
 #	listen somename:8080;
 #	server_name somename alias another.alias;
@@ -87,9 +87,9 @@ server {
 #}
 
 
-# HTTPS server
+# HTTPS HServer
 #
-#server {
+#HServer {
 #	listen 443;
 #	server_name localhost;
 #

@@ -17,12 +17,15 @@
 
 angular
     .module('hawk')
-    .factory('loggedUserUpdater', ['viewModel', function (viewModel) {
+    .factory('loggedUserUpdater', ['viewModel', 'viewModelUpdater', 'loggerService', function (viewModel, viewModelUpdater, loggerService) {
         var loggedUserUpdater = this;
 
         loggedUserUpdater.getUser = function (user) {
             viewModel.user = user;
-            console.log(user);
+            viewModelUpdater.refreshViewModel();
+
+            loggerService.log('loggedUserUpdater.getUser : ');
+            loggerService.log(user);
         };
 
         return loggedUserUpdater;

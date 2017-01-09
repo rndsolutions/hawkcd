@@ -37,37 +37,34 @@ angular
         adminGroupService.addNewPipelineGroup = function (pipelineGroup) {
             var methodName = "add";
             var className = "PipelineGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"net.hawkengine.model.PipelineGroup\", \"object\": " + JSON.stringify(pipelineGroup) + "}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.PipelineGroup\", \"object\": " + JSON.stringify(pipelineGroup) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         adminGroupService.getAllPipelineGroups = function () {
             var methodName = "getAll";
             var className = "PipelineGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"\", \"object\": \"\"}"];
+            var args = [];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
-         adminGroupService.deletePipelineGroup = function (id) {
+         adminGroupService.deletePipelineGroup = function (pipelineGroup) {
             var methodName = "delete";
             var className = "PipelineGroupService";
-            var packageName = "net.hawkengine.services";
+            var packageName = "io.hawkcd.services";
             var result = "";
-            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + id + "\"}"];
+            var args = ["{\"packageName\": \"io.hawkcd.model.PipelineGroup\", \"object\": " + JSON.stringify(pipelineGroup) + "}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
-            console.log(json);
         };
 
         return adminGroupService;
