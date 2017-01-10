@@ -88,7 +88,7 @@ angular
         this.logout = function () {
             $http({
                 method: 'POST',
-                url: CONSTANTS.SERVER_URL + '/auth/logout',
+                url: CONSTANTS.SERVER_URL + '/auth/logout?api_key=' + $auth.getToken(),
                 data: viewModel.user.username
             })
                 .then(function(res) {

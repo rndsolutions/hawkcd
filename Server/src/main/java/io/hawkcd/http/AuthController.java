@@ -17,17 +17,18 @@
 package io.hawkcd.http;
 
 import com.google.gson.Gson;
-
 import io.hawkcd.core.security.AuthorizationGrant;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.utilities.deserializers.TokenAdapter;
+import io.hawkcd.http.security.PrincipalUser;
+import io.hawkcd.http.security.Secured;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.LoginDto;
 import io.hawkcd.model.dto.RegisterDto;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.UserService;
-
+import io.hawkcd.utilities.deserializers.TokenAdapter;
+import io.swagger.annotations.Api;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
@@ -35,6 +36,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -48,6 +51,7 @@ import java.util.List;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("auth")
+@Api(value = "/auth", description = "Web Services to browse entities")
 public class AuthController {
     private static final Logger LOGGER = Logger.getLogger(AuthController.class.getClass());
     private static final String GH_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
@@ -55,6 +59,16 @@ public class AuthController {
     private static final String GH_CLIENT_ID = "2d3dbbf586d2260cbd68";
     //TODO: move this to the config
     private static final String GH_CLIENT_SERCRET = "";
+
+    /**
+     * Holds the name of the business service PACKAGE the resource endpoints expose
+     */
+    public static final String SERVICE_PACKAGE_NAME = "io.hawkcd.services";
+
+    /**
+     * Holds the name of the business service the resource endpoints expose
+     */
+    public static final String SERVICE_CLASS_NAME = "UserService";
 
     private UserService userService;
 
@@ -79,13 +93,13 @@ public class AuthController {
 //        //read user email
 //        String email = (String) ghUserDetails.get("email");
 //
-//        ArrayList<User> all = (ArrayList<User>) this.userService.getAll().getObject();
+//        ArrayList<PrincipalUser> all = (ArrayList<PrincipalUser>) this.userService.getAll().getObject();
 //
 //        boolean isUserRegistered = false;
 //        //loop through users to check if the user already exists
 //
-//        User user = null;
-//        for(User usr:all){
+//        PrincipalUser user = null;
+//        for(PrincipalUser usr:all){
 //            String uEmail = usr.getEmail();
 //            if ( uEmail.equals(email)){
 //                isUserRegistered = true;
@@ -96,7 +110,7 @@ public class AuthController {
 //
 //        if (!isUserRegistered){
 //            //register a new user
-//            user =  new User();
+//            user =  new PrincipalUser();
 //            user.setEmail(email);
 //            user.setProvider("GitHub");
 //            userService.add(user);
@@ -115,7 +129,6 @@ public class AuthController {
     @Path("/login")
     public Response login(LoginDto login) throws IOException {
         String hashedPassword = DigestUtils.sha256Hex(login.getPassword());
-
         ServiceResult serviceResult = this.userService.getByEmailAndPassword(login.getEmail(), hashedPassword);
         if (serviceResult.getNotificationType() == NotificationType.ERROR) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -145,9 +158,13 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     @Path("/logout")
-    public Response logout(String email) throws IOException {
-        LOGGER.info("User: "+ email+ " logged out");
-        SessionFactory.getSessionManager().closeSessionByUserEmail(email);
+    @Secured
+    public Response logout(@Context ContainerRequestContext requestContext) {
+        PrincipalUser principalUser = (PrincipalUser) requestContext.getSecurityContext().getUserPrincipal();
+        String userEmail = principalUser.getUser().getEmail();
+        LOGGER.info("PrincipalUser: " + userEmail + " logged out");
+        SessionFactory.getSessionManager().closeSessionByUserEmail(userEmail);
+
         return Response.ok().build();
     }
 
@@ -156,6 +173,7 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
+    @Secured
     public Response register(RegisterDto newUser) {
 
         List<AuthorizationGrant> userPermissions = new ArrayList<>();

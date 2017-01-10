@@ -17,6 +17,7 @@
 package io.hawkcd;
 
 import io.hawkcd.core.config.Config;
+import io.hawkcd.http.PipelineController;
 import io.hawkcd.materials.MaterialTracker;
 import io.hawkcd.core.subscriber.SubscriberComponent;
 import io.hawkcd.scheduler.JobAssigner;
@@ -24,15 +25,17 @@ import io.hawkcd.scheduler.PipelinePreparer;
 import io.hawkcd.utilities.Initializer;
 import io.hawkcd.db.redis.RedisManager;
 import io.hawkcd.ws.WsServlet;
-import org.eclipse.jetty.server.Handler;
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class HServer {
@@ -58,43 +61,87 @@ public class HServer {
         this.initializer = new Initializer();
     }
 
-    public void configureJetty() {
+    public void configureJetty() throws Exception {
         // HTTP connector
         ServerConnector connector = new ServerConnector(this.server);
         int port = Config.getConfiguration().getServerPort();
         connector.setPort(port);
         this.server.addConnector(connector);
+        HandlerList handlers = new HandlerList();
 
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
+        //setup swagger
+        buildSwagger();
 
+        handlers.addHandler(swaggerUI());
+
+        handlers.addHandler(hawkUI());
+
+        // REST
+        ContextHandler context = buildContext();//new ServletContextHandler(ServletContextHandler.SESSIONS);
+//        context.setContextPath("/");
+//
+//        ServletHolder restServlet = context.addServlet(ServletContainer.class, "/*");
+//        restServlet.setInitOrder(0);
+//        restServlet.setInitParameter("jersey.config.server.provider.packages", "io.hawkcd.http");
+
+
+        // Handler for Entity Browser and Swagger
+        handlers.addHandler(context);
+
+        // *:8080/ws/v1
+        // WebSockets
+        ((ServletContextHandler) context).addServlet(WsServlet.class, "/ws/v1");
+
+        //handlers.setHandlers(new Handler[]{resourceHandler, context, new DefaultHandler()});
+        //handlers.setHandlers(handlers);
+
+        this.server.setHandler(handlers);
+    }
+
+    private ResourceHandler hawkUI() {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{"index.html"});
         resourceHandler.setResourceBase(this.getClass().getResource("/dist").toExternalForm());
+        return resourceHandler;
+    }
 
-        // REST
+    private static void buildSwagger() {
+        // This configures Swagger
+        BeanConfig beanConfig = new BeanConfig();
+        beanConfig.setVersion("1.0.0");
+        beanConfig.setResourcePackage(PipelineController.class.getPackage().getName());
+        beanConfig.setScan(true);
+        beanConfig.setBasePath("/");
+        beanConfig.setDescription("Entity Browser API to demonstrate Swagger with Jersey2 in an "
+                + "embedded Jetty instance, with no web.xml or Spring MVC.");
+        beanConfig.setTitle("HawkCD REST APIs");
+    }
 
-        ServletHolder restServlet = context.addServlet(ServletContainer.class, "/*");
-        restServlet.setInitOrder(0);
+    private static ContextHandler buildContext() {
+        ResourceConfig resourceConfig = new ResourceConfig();
+        // io.swagger.jaxrs.listing loads up Swagger resources
 
-        // Tells the Jersey Servlet which REST service/class to load.
-//        String classes = this.endpointFinder.getClasses("net.hawkengine.http");
-        restServlet.setInitParameter("jersey.config.server.provider.packages", "io.hawkcd.http");
-//        restServlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES,
-//                "com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;" + "net.hawkengine.http");
+        resourceConfig.packages(PipelineController.class.getPackage().getName(), ApiListingResource.class.getPackage().getName());
+        ServletContainer servletContainer = new ServletContainer(resourceConfig);
+        ServletHolder servletHolder = new ServletHolder(servletContainer);
+        ServletContextHandler appRootHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        appRootHandler.setContextPath("/");
+        appRootHandler.addServlet(servletHolder, "/*");
 
+        return appRootHandler;
+    }
 
-        // localhost:8080/ws/v1
+    // This starts the Swagger UI at http://localhost:9999/docs
+    private static ContextHandler swaggerUI() throws Exception {
+        final ResourceHandler swaggerUIResourceHandler = new ResourceHandler();
+        String swaggerui = HServer.class.getClassLoader().getResource("swaggerui").toURI().toString();
+        swaggerUIResourceHandler.setResourceBase(swaggerui);
+        final ContextHandler swaggerUIContext = new ContextHandler();
+        swaggerUIContext.setContextPath("/docs/");
+        swaggerUIContext.setHandler(swaggerUIResourceHandler);
 
-        // WebSockets
-
-        context.addServlet(WsServlet.class, "/ws/v1");
-
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resourceHandler, context, new DefaultHandler()});
-
-        this.server.setHandler(handlers);
+        return swaggerUIContext;
     }
 
     public void start() throws Exception {
@@ -103,7 +150,7 @@ public class HServer {
         this.pipelinePreparer.start();
         this.jobAssigner.start();
         this.materialTracker.start();
-        if (!Config.getConfiguration().getIsSingleNode()){
+        if (!Config.getConfiguration().isSingleNode()) {
             this.subsciber.start();
         }
         this.server.join();

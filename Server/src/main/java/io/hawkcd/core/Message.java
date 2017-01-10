@@ -67,7 +67,7 @@ public class Message {
         this.permissionTypeByUser = new HashMap<>();
     }
 
-    Message(String serviceCalled,
+    public Message(String serviceCalled,
             String packageName,
             String methodCalled,
             Object resultObject,
@@ -82,6 +82,18 @@ public class Message {
         this.resultMessage = resultMessage;
         this.owner = user;
         this.permissionTypeByUser = new HashMap<>();
+    }
+
+    public Message(String serviceCalled,
+            String packageName,
+            String methodCalled,
+            Object resultObject,
+            NotificationType resultNotificationType,
+            String resultMessage,
+            User user,
+            boolean isTargetOwner) {
+        this(serviceCalled, packageName, methodCalled, resultObject, resultNotificationType, resultMessage, user);
+        this.setTargetOwner(isTargetOwner);
     }
 
     @Override

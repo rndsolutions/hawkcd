@@ -22,6 +22,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.JobDefinitionService;
 import io.hawkcd.services.interfaces.IJobDefinitionService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.Response.Status;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/job-definitions")
+@Api(value = "/job-definitions", description = "Web Services to browse entities")
 public class JobDefinitionController {
     private IJobDefinitionService jobDefinitionService;
     private SchemaValidator schemaValidator;

@@ -20,6 +20,7 @@ import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.JobService;
 import io.hawkcd.services.interfaces.IJobService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,6 +31,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 @Path("/jobs")
+@Api(value = "/jobs", description = "Web Services to browse entities")
 public class JobController {
     private IJobService jobService;
 

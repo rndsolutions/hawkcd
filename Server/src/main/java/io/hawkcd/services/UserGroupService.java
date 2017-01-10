@@ -150,11 +150,11 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             this.update(userGroup);
             UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
-            ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User assigned successfully.");
+            ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "PrincipalUser assigned successfully.");
 
             userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {
-            userGroupResult = new ServiceResult(null, NotificationType.ERROR, "User already assigned to User Group.");
+            userGroupResult = new ServiceResult(null, NotificationType.ERROR, "PrincipalUser already assigned to PrincipalUser Group.");
         }
 
         return userGroupResult;
@@ -175,11 +175,11 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
             this.update(userGroup);
             UserGroupDto userGroupDtoResult = this.getUserGroupDto(userGroup);
 
-            ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "User unassigned successfully.");
+            ServiceResult userResult = new ServiceResult(user, NotificationType.SUCCESS, "PrincipalUser unassigned successfully.");
 
             userGroupResult = new ServiceResult(userGroupDtoResult, NotificationType.SUCCESS, "UserGroup updated successfully.");
         } else {
-            userGroupResult = new ServiceResult(null, NotificationType.ERROR, "User already unassigned from User Group.");
+            userGroupResult = new ServiceResult(null, NotificationType.ERROR, "PrincipalUser already unassigned from PrincipalUser Group.");
         }
 
         return userGroupResult;
@@ -206,7 +206,7 @@ public class UserGroupService extends CrudService<UserGroup> implements IUserGro
 
             userGroupDtos.add(userGroupDto);
         }
-        ServiceResult userGroupDtosServiceResult = new ServiceResult(userGroupDtos, NotificationType.SUCCESS, "User Groups retrieved successfully.");
+        ServiceResult userGroupDtosServiceResult = new ServiceResult(userGroupDtos, NotificationType.SUCCESS, "PrincipalUser Groups retrieved successfully.");
 
         return userGroupDtosServiceResult;
     }

@@ -226,7 +226,7 @@ public class JobDefinitionService extends CrudService<JobDefinition> implements 
     }
 
     /**
-     * Method return JobDefinition, accepts StageDefinition and JobDefinition Id, filters all
+     * Method return JobDefinition, accepts StageDefinition and JobDefinition Id, security all
      * JobDefinitions in the provided stage. Returns null if no JobDefinition with provided id is
      * found.
      */

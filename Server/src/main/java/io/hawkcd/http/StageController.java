@@ -21,6 +21,7 @@ import io.hawkcd.model.Stage;
 import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.services.StageService;
 import io.hawkcd.services.interfaces.IStageService;
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,6 +31,7 @@ import javax.ws.rs.core.Response.Status;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/stages")
+@Api(value = "/stages", description = "Web Services to browse entities")
 public class StageController {
     private IStageService stageService;
 

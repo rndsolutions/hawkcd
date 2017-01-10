@@ -9333,7 +9333,7 @@
 	
 	/**
 	 * Template object for the way in which DataTables holds information about
-	 * search information for the global filter and individual column filters.
+	 * search information for the global filter and individual column security.
 	 *  @namespace
 	 */
 	DataTable.models.oSearch = {
@@ -11358,7 +11358,7 @@
 	
 	
 			/**
-			 * When a user filters the information in a table, this string is appended
+			 * When a user security the information in a table, this string is appended
 			 * to the information (`info`) to give an idea of how strong the filtering
 			 * is. The variable _MAX_ is dynamically updated.
 			 *  @type string
@@ -15059,7 +15059,7 @@
 
 	/**
 	 * Search event, fired when the searching applied to the table (using the
-	 * built-in global search, or column filters) is altered.
+	 * built-in global search, or column security) is altered.
 	 *  @name DataTable#search.dt
 	 *  @event
 	 *  @param {event} e jQuery event object

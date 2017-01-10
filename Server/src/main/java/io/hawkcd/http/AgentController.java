@@ -28,6 +28,8 @@ import io.hawkcd.services.interfaces.IFileManagementService;
 import io.hawkcd.services.interfaces.IPipelineService;
 import io.hawkcd.utilities.SchemaValidator;
 import io.hawkcd.utilities.constants.ConfigurationConstants;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,6 +45,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/agents")
+@Api(value = "/agents", description = "Web Services to browse entities")
 public class AgentController {
     private AgentService agentService;
     private IFileManagementService fileManagementService;
