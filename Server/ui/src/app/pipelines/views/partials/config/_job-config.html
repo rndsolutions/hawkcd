@@ -12,9 +12,12 @@
 <!--See the License for the specific language governing permissions and-->
 <!--limitations under the License.-->
 
-<div ng-if="pipeConfig.windowWidth > 767" class="hidden-xs" ng-include src="'app/pipelines/views/partials/config/_job-config-medium.html'"></div>
+<div id="jobConfig">
+  <div ng-if="pipeConfig.windowWidth > 767" class="hidden-xs" ng-include src="'app/pipelines/views/partials/config/_job-config-medium.html'"></div>
+  <div ng-if="pipeConfig.windowWidth < 768" class="hidden-sm hidden-md hidden-lg" ng-include src="'app/pipelines/views/partials/config/_job-config-small.html'"></div>
+</div>
 
-<div ng-if="pipeConfig.windowWidth < 768" class="hidden-sm hidden-md hidden-lg" ng-include src="'app/pipelines/views/partials/config/_job-config-small.html'"></div>
+
 
 <!--<div class="col-md-9 config-tabs">-->
   <!--<div class="tabbable-custom nav-justified">-->

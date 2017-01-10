@@ -12,82 +12,94 @@
 <!--See the License for the specific language governing permissions and-->
 <!--limitations under the License.-->
 
-<h3 class="page-title"> {{pipeConfig.state.params.pipelineName}}
-  <small>Config</small>
+<h3 class="page-title clip"> {{pipeConfig.state.params.pipelineName}}
+    <small>Config</small>
 </h3>
 
 <div class="page-bar ">
-  <ul class="page-breadcrumb ">
-    <li>
-      <i class="icon-home"></i>
-      <a ui-sref="index.pipelines"> <span>Pipelines</span></a>
-    </li>
-    <li>
-      <i class="fa fa-angle-right "></i>
-      <a
-        ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName})">
-        {{pipeConfig.state.params.pipelineName}}</a>
-    </li>
-    <li ng-if="pipeConfig.state.params.stageName">
-      <i class="fa fa-angle-right "></i>
-      <a ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName, stageName:pipeConfig.state.params.stageName})">
-        {{pipeConfig.state.params.stageName}}</a>
-    </li>
-    <li ng-if="pipeConfig.state.params.jobName">
-      <i class="fa fa-angle-right "></i>
-      <a
-        ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName, stageName:pipeConfig.state.params.stageName, jobName:pipeConfig.state.params.jobName})">
-        {{pipeConfig.state.params.jobName}}</a>
-    </li>
-  </ul>
+    <ul class="page-breadcrumb width-100">
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%">
+            <i class="icon-home"></i>
+            <a ui-sref="index.pipelines"> <span>Pipelines</span></a>
+        </li>
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%">
+            <i class="fa fa-angle-right"></i>
+            <a
+                    ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName})">
+                {{pipeConfig.state.params.pipelineName}}</a>
+        </li>
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%" ng-if="pipeConfig.state.params.stageName">
+            <i class="fa fa-angle-right "></i>
+            <a ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName, stageName:pipeConfig.state.params.stageName})">
+                {{pipeConfig.state.params.stageName}}</a>
+        </li>
+        <li class="clip text-center-vertical text-nowrap" style="max-width:100%" ng-if="pipeConfig.state.params.jobName">
+            <i class="fa fa-angle-right "></i>
+            <a
+                    ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.state.params.groupName, pipelineName:pipeConfig.state.params.pipelineName, stageName:pipeConfig.state.params.stageName, jobName:pipeConfig.state.params.jobName})">
+                {{pipeConfig.state.params.jobName}}</a>
+        </li>
+    </ul>
 </div>
 
-<div class="mt-element-list col-md-3" style="padding-left: 0!important;" ng-init="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName)">
+<div class="mt-element-list col-md-3" style="padding-left: 0!important;"
+     ng-init="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.initTabView()">
 
-  <div class="mt-list-head list-simple ext-1 font-white p-config-head"
-       ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name})"
-       ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName)">
+    <div class="mt-list-head list-simple ext-1 font-white p-config-head"
+         ui-sref="index.pipelineConfig.pipeline.general({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name})"
+         ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.selectTabView('pipelineSettings')">
 
-    <div class="list-head-title-container">
-      <span class="badge badge-default pull-right bg-white font-green bold">{{pipeConfig.pipeline.stageDefinitions.length}}</span>
-      <h3 class="list-title">{{pipeConfig.state.params.pipelineName.substring(0,22)}} <span ng-if="pipeConfig.state.params.pipelineName.length > 27">...</span></h3>
-    </div>
-
-  </div>
-  <div class="mt-list-container list-simple ext-1 group">
-
-    <div ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions" ng-init="pipeConfig.getStageByName(pipeConfig.state.params.stageName)">
-      <a class="list-toggle-container" data-target="#{{stage.name}}">
-
-        <div class="list-toggle"
-             ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
-             id="{{'stage'+$index}}" ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage)">
-          <span class="clip stage-display-name">{{stage.name}}</span>
-          <span class="badge badge-default pull-right bg-white font-green bold"> {{stage.jobDefinitions.length}}</span>
+        <div class="list-head-title-container">
+            <span class="badge badge-default pull-right bg-white font-green bold">{{pipeConfig.pipeline.stageDefinitions.length}}</span>
+            <h3 class="list-title clip padding-right-none text-nowrap">{{pipeConfig.state.params.pipelineName}}</h3>
         </div>
-      </a>
 
-      <div class="panel-collapse collapse" id="{{stage.name}}"
-           ng-class="{'in': pipeConfig.currentStage.name == stage.name}">
-        <ul>
-          <li class="mt-list-item job-item" ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions" id="{{stage.name+'job'+$index}}" ng-class="{'selectedS': pipeConfig.isJobSelected(job.name)}"
-              ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name, jobName:job.name})"
-              ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage);pipeConfig.getJob(job)" ng-init="pipeConfig.getJobByName(pipeConfig.state.params.jobName)">
-            <div class="list-item-content job-padding">
-              <h3 class="clip">
-                <a class="job-name">{{job.name}}</a>
-              </h3>
+    </div>
+    <div class="mt-list-container list-simple ext-1 group">
+
+        <div ng-repeat="stage in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions"
+             ng-init="pipeConfig.getStageByName(pipeConfig.state.params.stageName)">
+            <a class="list-toggle-container" data-target="#{{stage.name}}">
+
+                <div class="list-toggle text-nowrap clip"
+                     id="{{'stage'+$index}}"
+                     ui-sref="index.pipelineConfig.stage.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name})"
+                     ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage);pipeConfig.selectTabView('stageSettings')">
+                    <span class="badge badge-default pull-right bg-white font-green bold"> {{stage.jobDefinitions.length}}</span>
+                    <span class="stage-display-name">{{stage.name}}</span>
+
+                </div>
+            </a>
+
+            <div class="panel-collapse collapse" id="{{stage.name}}"
+                 ng-class="{'in': pipeConfig.currentStage.name == stage.name}">
+                <ul>
+                    <li class="mt-list-item job-item"
+                        ng-repeat="job in pipeConfig.allPipelines[pipeConfig.pipelineIndex].stageDefinitions[pipeConfig.stageIndex].jobDefinitions"
+                        id="{{stage.name+'job'+$index}}" ng-class="{'selectedS': pipeConfig.isJobSelected(job.name)}"
+                        ui-sref="index.pipelineConfig.job.settings({groupName:pipeConfig.pipeline.groupName, pipelineName:pipeConfig.pipeline.name, stageName:stage.name, jobName:job.name})"
+                        ng-click="pipeConfig.getPipelineForConfig(pipeConfig.state.params.pipelineName);pipeConfig.getStage(stage);pipeConfig.getJob(job);pipeConfig.selectTabView('jobSettings')"
+                        ng-init="pipeConfig.getJobByName(pipeConfig.state.params.jobName)">
+                        <div class="list-item-content job-padding clip text-nowrap">
+                                <span class="badge badge-default pull-right bg-white font-green bold"> {{job.taskDefinitions.length}}</span>
+                                <span class="job-name">{{job.name}}</span>
+                        </div>
+                    </li>
+                </ul>
             </div>
-          </li>
-        </ul>
-      </div>
+
+        </div>
 
     </div>
 
-  </div>
-
 </div>
 
-<div ui-view>
+<!--<div ui-view autoscroll="true">-->
 
-</div>
+<!--</div>-->
+
+<div ng-if="pipeConfig.currentView == 'pipeline'" ng-include="'app/pipelines/views/partials/config/_pipeline-config.html'"></div>
+
+<div ng-if="pipeConfig.currentView == 'stage'" ng-include="'app/pipelines/views/partials/config/_stage-config.html'"></div>
+
+<div ng-if="pipeConfig.currentView == 'job'" ng-include="'app/pipelines/views/partials/config/_job-config.html'"></div>
