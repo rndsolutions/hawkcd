@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 #project dir
 prj_dir=pwd
@@ -102,9 +103,10 @@ function build_ui {
       exit_on_fail
   fi
   #npm --prefix ./some_project
-  npm --prefix $($prj_dir)/Server/ui install
+  #npm --prefix $($prj_dir)/Server/ui install
   exit_on_fail
   cd $($prj_dir)/Server/ui
+  npm install
   bower install
   exit_on_fail
   gulp build
