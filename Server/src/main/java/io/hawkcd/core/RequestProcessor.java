@@ -22,7 +22,7 @@ import io.hawkcd.core.config.Config;
 import io.hawkcd.core.publisher.Publisher;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.core.security.IAuthorizationManager;
-import io.hawkcd.core.subscriber.Envelopе;
+import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
@@ -61,7 +61,7 @@ public class RequestProcessor {
     public void processRequest(WsContractDto contract, User currentUser)
             throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException {
 
-        List<Envelopе> methodArgs = contract.getArgs();
+        List<Envelope> methodArgs = contract.getArgs();
         boolean isAuthorized = AuthorizationFactory.getAuthorizationManager().isAuthorized(currentUser, contract, methodArgs);
 
         if (!isAuthorized) {

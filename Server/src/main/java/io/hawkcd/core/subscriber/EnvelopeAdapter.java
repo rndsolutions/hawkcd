@@ -24,9 +24,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnvelopeAdapter implements JsonDeserializer<Envelopе> {
+public class EnvelopeAdapter implements JsonDeserializer<Envelope> {
     @Override
-    public Envelopе deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Envelope deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         if (jsonObject == null) {
             return null;
@@ -34,7 +34,7 @@ public class EnvelopeAdapter implements JsonDeserializer<Envelopе> {
         
         JsonElement objectAsJsonElement = jsonObject.get("object");
         if (objectAsJsonElement == null || !objectAsJsonElement.isJsonArray() && !objectAsJsonElement.isJsonObject() && !objectAsJsonElement.isJsonPrimitive()) {
-            return new Envelopе();
+            return new Envelope();
         }
 
         Type resultObjectType = null;
@@ -57,6 +57,6 @@ public class EnvelopeAdapter implements JsonDeserializer<Envelopе> {
             result = context.deserialize(objectAsJsonElement, resultObjectType);
         }
 
-        return new Envelopе(result);
+        return new Envelope(result);
     }
 }

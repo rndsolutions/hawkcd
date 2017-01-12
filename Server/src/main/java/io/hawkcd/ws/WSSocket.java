@@ -21,8 +21,8 @@ import com.google.gson.JsonParseException;
 import io.hawkcd.core.RequestProcessor;
 import io.hawkcd.core.session.ISessionManager;
 import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.core.subscriber.EnvelopeAdapter;
-import io.hawkcd.core.subscriber.Envelopе;
 import io.hawkcd.model.MaterialDefinition;
 import io.hawkcd.model.SessionDetails;
 import io.hawkcd.model.TaskDefinition;
@@ -54,7 +54,7 @@ public class WSSocket extends WebSocketAdapter {
     public WSSocket() {
         this.id = UUID.randomUUID().toString();
         this.jsonConverter = new GsonBuilder()
-                .registerTypeAdapter(Envelopе.class, new EnvelopeAdapter())
+                .registerTypeAdapter(Envelope.class, new EnvelopeAdapter())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();

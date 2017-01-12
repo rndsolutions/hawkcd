@@ -20,7 +20,7 @@ package io.hawkcd.core.security;
 
 import io.hawkcd.core.Message;
 import io.hawkcd.core.session.SessionFactory;
-import io.hawkcd.core.subscriber.Envelopе;
+import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineDefinitionDto;
 import io.hawkcd.model.dto.PipelineGroupDto;
@@ -57,7 +57,7 @@ public class AuthorizationManager implements IAuthorizationManager {
     }
 
     @Override
-    public boolean isAuthorized(User user, WsContractDto contract, List<Envelopе> parameters)
+    public boolean isAuthorized(User user, WsContractDto contract, List<Envelope> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
 
         Authorization authorizationAttributes = this.getMethodAuthorizationAttributes(contract, parameters);
@@ -74,7 +74,7 @@ public class AuthorizationManager implements IAuthorizationManager {
         return false;
     }
 
-    private Authorization getMethodAuthorizationAttributes(WsContractDto contractDto, List<Envelopе> parameters)
+    private Authorization getMethodAuthorizationAttributes(WsContractDto contractDto, List<Envelope> parameters)
             throws ClassNotFoundException, NoSuchMethodException {
 
         String fullyQualifiedName = String.format("%s.%s", contractDto.getPackageName(), contractDto.getClassName());
@@ -161,7 +161,7 @@ public class AuthorizationManager implements IAuthorizationManager {
     /**
      * Checks the object for minimum permissions required for the user to receive the object
      */
-    public PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Envelopе> parameters) {
+    public PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Envelope> parameters) {
         PermissionType result;
         Authorization authorization = object.getClass().getAnnotation(Authorization.class);
         AuthorizationGrant grant = new AuthorizationGrant(authorization);
@@ -218,7 +218,7 @@ public class AuthorizationManager implements IAuthorizationManager {
     /**
      * Loops through
      */
-    public Message attachPermissionTypeMapToMessage(Message message, List<Envelopе> methodArgs) {
+    public Message attachPermissionTypeMapToMessage(Message message, List<Envelope> methodArgs) {
 
         List<SessionDetails> activeSessions = SessionFactory.getSessionManager().getAllActiveSessions();
 
@@ -229,7 +229,7 @@ public class AuthorizationManager implements IAuthorizationManager {
         return message;
     }
 
-    private Map<String, PermissionType> getPermissionTypeByUser(Message message, List<Envelopе> methodArgs, List<SessionDetails> activeSessions) {
+    private Map<String, PermissionType> getPermissionTypeByUser(Message message, List<Envelope> methodArgs, List<SessionDetails> activeSessions) {
         Map<String, PermissionType> permissionTypeByUser = new HashMap<>();
 
         for (SessionDetails activeSession : activeSessions) {

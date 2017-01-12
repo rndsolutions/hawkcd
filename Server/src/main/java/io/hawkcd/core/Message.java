@@ -18,7 +18,7 @@
 
 package io.hawkcd.core;
 
-import io.hawkcd.core.subscriber.Envelopе;
+import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
 import io.hawkcd.model.enums.NotificationType;
@@ -41,7 +41,7 @@ public class Message {
     private boolean isUserUpdate;
 
     //Holds the result being returned by the service call
-    private Envelopе envelopе;
+    private Envelope envelopе;
     private NotificationType resultNotificationType;
     private String resultMessage;
 
@@ -49,7 +49,7 @@ public class Message {
     private User owner;
     private Map<String, PermissionType> permissionTypeByUser;
 
-    public Message(Envelopе envelopе) {
+    public Message(Envelope envelopе) {
         this.envelopе = envelopе;
         this.permissionTypeByUser = new HashMap<>();
     }
@@ -59,7 +59,7 @@ public class Message {
         this.methodCalled = methodCalled;
         this.owner = usr;
         if (serviceResult != null) {
-            this.envelopе = new Envelopе(serviceResult.getEntity());
+            this.envelopе = new Envelope(serviceResult.getEntity());
             this.resultNotificationType = serviceResult.getNotificationType();
             this.resultMessage = serviceResult.getMessage();
         }
@@ -77,7 +77,7 @@ public class Message {
         this.serviceCalled = serviceCalled;
         this.packageName = packageName;
         this.methodCalled = methodCalled;
-        this.envelopе = new Envelopе(resultObject);
+        this.envelopе = new Envelope(resultObject);
         this.resultNotificationType = resultNotificationType;
         this.resultMessage = resultMessage;
         this.owner = user;

@@ -40,7 +40,7 @@ public class Subscriber extends JedisPubSub {
 
     public Subscriber() {
         this.jsonConverter = new GsonBuilder()
-                .registerTypeAdapter(Envelopе.class, new EnvelopeAdapter())
+                .registerTypeAdapter(Envelope.class, new EnvelopeAdapter())
                 .registerTypeAdapter(TaskDefinition.class, new TaskDefinitionAdapter())
                 .registerTypeAdapter(MaterialDefinition.class, new MaterialDefinitionAdapter())
                 .create();

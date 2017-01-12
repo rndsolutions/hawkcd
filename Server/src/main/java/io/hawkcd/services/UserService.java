@@ -20,7 +20,7 @@ import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
-import io.hawkcd.core.subscriber.Envelopе;
+import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
 import io.hawkcd.model.ServiceResult;
@@ -88,7 +88,7 @@ public class UserService extends CrudService<User> implements IUserService {
 
         List<String> ids = new ArrayList<>();
         ids.add(user.getId());
-        Envelopе envelopе = new Envelopе(ids);
+        Envelope envelopе = new Envelope(ids);
         message = new Message(envelopе);
         message.setUserUpdate(true);
         MessageDispatcher.dispatchIncomingMessage(message);

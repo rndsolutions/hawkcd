@@ -16,7 +16,6 @@
 
 package io.hawkcd.ws;
 
-import io.hawkcd.core.subscriber.Envelopе;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

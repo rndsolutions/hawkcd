@@ -2,7 +2,8 @@ package io.hawkcd.http.security;
 
 import io.hawkcd.core.MessageConverter;
 import io.hawkcd.core.security.AuthorizationFactory;
-import io.hawkcd.core.subscriber.Envelopе;
+import io.hawkcd.core.subscriber.Envelope;
+
 import io.hawkcd.model.User;
 import io.hawkcd.model.dto.WsContractDto;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -63,7 +64,7 @@ public class HttpSecurityContext implements SecurityContext {
         WsContractDto contractDto = MessageConverter.convert(serviceClassName, servicePackageName, methodName);
 
         //TODO: Consider refactor isAuthorized to handle null as List<Object>
-        List<Envelopе> list = new ArrayList<>();
+        List<Envelope> list = new ArrayList<>();
 
         return AuthorizationFactory.getAuthorizationManager().isAuthorized(this.principalUser.getUser(), contractDto, list);
     }

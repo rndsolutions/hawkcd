@@ -16,7 +16,8 @@
 
 package io.hawkcd.model.dto;
 
-import io.hawkcd.core.subscriber.Envelopе;
+
+import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.model.enums.NotificationType;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class WsContractDto {
     private Object result;
     private NotificationType notificationType;
     private String errorMessage;
-    private List<Envelopе> args;
+    private List<Envelope> args;
     //private UserContext userContext;
 
     public WsContractDto() {
@@ -95,11 +96,11 @@ public class WsContractDto {
         this.errorMessage = errorMessage;
     }
 
-    public List<Envelopе> getArgs() {
+    public List<Envelope> getArgs() {
         return this.args;
     }
 
-    public void setArgs(List<Envelopе> args) {
+    public void setArgs(List<Envelope> args) {
         this.args = args;
     }
 

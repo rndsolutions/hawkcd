@@ -18,7 +18,7 @@
         package io.hawkcd.core.security;
 
         import io.hawkcd.core.Message;
-        import io.hawkcd.core.subscriber.Envelopе;
+        import io.hawkcd.core.subscriber.Envelope;
         import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 import io.hawkcd.model.User;
@@ -34,9 +34,9 @@ public interface IAuthorizationManager {
     * Returns true, false if the user being evaluated has rights to perform an operation
     * @param user
     */
-    boolean isAuthorized(User user, WsContractDto contract, List<Envelopе> parameters) throws ClassNotFoundException, NoSuchMethodException;
+    boolean isAuthorized(User user, WsContractDto contract, List<Envelope> parameters) throws ClassNotFoundException, NoSuchMethodException;
 
-    PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Envelopе> parameters);
+    PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object, List<Envelope> parameters);
 
     PermissionType determinePermissionTypeForEntity(List<AuthorizationGrant> userGrants, Object object);
 
@@ -46,7 +46,7 @@ public interface IAuthorizationManager {
 
     Message constructAuthorizedMessage(ServiceResult result, String className, String methodName);
 
-    Message attachPermissionTypeMapToMessage(Message message, List<Envelopе> methodArgs);
+    Message attachPermissionTypeMapToMessage(Message message, List<Envelope> methodArgs);
 
     List<Entity> attachPermissionTypeToList(List<Entity> entities, List<AuthorizationGrant> userGrants);
 
