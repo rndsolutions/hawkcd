@@ -34,8 +34,9 @@ public class Pipeline extends PipelineFamily {
     private String pipelineDefinitionName;
     private int executionId;
     private List<Material> materials;
-    private List<Stage> stages;
+    private List<StageRun> stageRuns;
     private PipelineStatus status;
+    private PipelineStatus rerunStatus;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
@@ -46,12 +47,19 @@ public class Pipeline extends PipelineFamily {
     private List<JsTreeFile> artifactsFileStructure;
 
     public Pipeline() {
-        this.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        this.setEnvironmentVariables(new ArrayList<>());
-        this.setMaterials(new ArrayList<>());
-        this.setStages(new ArrayList<>());
-        this.setArtifactsFileStructure(new ArrayList<>());
+        super.environmentVariables = new ArrayList<>();
+        this.materials = new ArrayList<>();
+        this.stageRuns = new ArrayList<>();
+        this.artifactsFileStructure = new ArrayList<>();
         this.status = PipelineStatus.IN_PROGRESS;
+        this.startTime = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
+    }
+
+    public Pipeline(PipelineDefinition pipelineDefinition) {
+        this();
+        super.pipelineDefinitionId = pipelineDefinition.getId();
+        this.pipelineDefinitionName = pipelineDefinition.getGroupName();
+        this.executionId = pipelineDefinition.getNumberOfExecutions() + 1;
     }
 
     public String getPipelineDefinitionName() {
@@ -78,20 +86,32 @@ public class Pipeline extends PipelineFamily {
         this.materials = materials;
     }
 
-    public List<Stage> getStages() {
-        return this.stages;
+    public List<StageRun> getStageRuns() {
+        return this.stageRuns;
     }
 
-    public void setStages(List<Stage> stages) {
-        this.stages = stages;
-    }
+//    public void setStages(List<List<Stage>> stages) {
+//        this.stages = stages;
+//    }
 
     public PipelineStatus getStatus() {
         return this.status;
     }
 
     public void setStatus(PipelineStatus status) {
-        this.status = status;
+        if (this.status == PipelineStatus.PASSED || this.status == PipelineStatus.FAILED || this.status == PipelineStatus.CANCELED) {
+            this.rerunStatus = status;
+        } else {
+            this.status = status;
+        }
+    }
+
+    public PipelineStatus getRerunStatus() {
+        return rerunStatus;
+    }
+
+    public void setRerunStatus(PipelineStatus rerunStatus) {
+        this.rerunStatus = rerunStatus;
     }
 
     public LocalDateTime getStartTime() {
@@ -156,5 +176,13 @@ public class Pipeline extends PipelineFamily {
 
     public void setArtifactsFileStructure(List<JsTreeFile> artifactsFileStructure) {
         this.artifactsFileStructure = artifactsFileStructure;
+    }
+
+    public void addStageRun(StageRun stageRun) {
+        this.stageRuns.add(stageRun);
+    }
+
+    public List<Stage> getStagesOfLastStageRun() {
+        return this.stageRuns.get(this.stageRuns.size() - 1).getStages();
     }
 }

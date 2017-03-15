@@ -31,15 +31,16 @@ import io.hawkcd.services.interfaces.IPipelineService;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-
-/*
-* The PipelineService @class gives access to all Pipeline runs in the system
-*/
+/**
+ * The PipelineService @class gives access to all Pipeline runs in the system
+ */
+@SuppressWarnings(value = "unchecked")
 public class PipelineService extends CrudService<Pipeline> implements IPipelineService {
     private static final Class CLASS_TYPE = Pipeline.class;
     private static final Logger LOGGER = Logger.getLogger(PipelineService.class.getName());
@@ -65,55 +66,47 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
     public ServiceResult getById(String pipelineId) {
         return super.getById(pipelineId);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.NONE)
     public ServiceResult getAll() {
         return super.getAll();
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR)
     public ServiceResult add(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
-        pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getEntity();
-        Pipeline lastPipeline = pipelines
-                .stream()
-                .filter(p -> p.getPipelineDefinitionId().equals(pipeline.getPipelineDefinitionId()))
-                .sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId()))
-                .findFirst()
-                .orElse(null);
-        if (lastPipeline == null) {
-            pipeline.setExecutionId(1);
-        } else {
-            pipeline.setExecutionId(lastPipeline.getExecutionId() + 1);
-            pipelineDefinition.setRevisionCount(pipelineDefinition.getRevisionCount() + 1);
-            List<EnvironmentVariable> environmentVariables = pipelineDefinition.getEnvironmentVariables();
-            EnvironmentVariable environmentVariable = environmentVariables.stream().filter(e -> e.getKey().equals("COUNT")).findFirst().orElse(null);
-
-            int envAutoIncrement = Integer.parseInt(environmentVariable.getValue()) + 1;
-
-            environmentVariable.setValue(String.valueOf(envAutoIncrement));
-            environmentVariables.stream().filter(env -> env.getKey().equals(environmentVariable.getKey())).forEach(env -> {
-                env.setValue(environmentVariable.getValue());
-            });
-            pipelineDefinition.setEnvironmentVariables(environmentVariables);
-            ServiceResult result = this.pipelineDefinitionService.update(pipelineDefinition);
+        if (pipelineDefinition == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "Pipeline definition not found.");
         }
 
+        pipeline = PipelineBuilder.buildPipeline(pipelineDefinition);
+
+        pipelineDefinition.setNumberOfExecutions(pipelineDefinition.getNumberOfExecutions() + 1);
+        pipelineDefinition.setRevisionCount(pipelineDefinition.getRevisionCount() + 1);
+        List<EnvironmentVariable> environmentVariables = pipelineDefinition.getEnvironmentVariables();
+        EnvironmentVariable environmentVariable = environmentVariables.stream().filter(e -> e.getKey().equals("COUNT")).findFirst().orElse(null);
+
+        int envAutoIncrement = Integer.parseInt(environmentVariable.getValue()) + 1;
+
+        environmentVariable.setValue(String.valueOf(envAutoIncrement));
+        environmentVariables.stream().filter(env -> env.getKey().equals(environmentVariable.getKey())).forEach(env -> env.setValue(environmentVariable.getValue()));
+        pipelineDefinition.setEnvironmentVariables(environmentVariables);
+        this.pipelineDefinitionService.update(pipelineDefinition);
+
         this.addMaterialsToPipeline(pipeline);
-        this.addStagesToPipeline(pipeline);
+//        this.addStagesToPipeline(pipeline);
 
         return super.add(pipeline);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN)
     public ServiceResult update(Pipeline pipeline) {
         ServiceResult result = super.update(pipeline);
 
@@ -121,7 +114,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         String methodName = ste[1].getMethodName();
         String className = this.getClass().getSimpleName();
 
-        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result,className,methodName);
+        Message message = AuthorizationFactory.getAuthorizationManager().constructAuthorizedMessage(result, className, methodName);
 
         MessageDispatcher.dispatchIncomingMessage(message);
 
@@ -134,8 +127,6 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         //if(isSingleNode){ publish } {else { sendToAllAuthorizedSEssions}}
 
 
-
-
         //AuthorizationFactory.getAuthorizationManager().
 
         //EndpointConnector.passResultToEndpoint(this.getClass().getSimpleName(), "update", result);
@@ -144,13 +135,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN)
     public ServiceResult delete(Pipeline pipeline) {
         return super.delete(pipeline);
     }
-
+    
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
     public ServiceResult getAllByDefinitionId(String pipelineDefinitionId) {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
@@ -166,7 +157,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
     public ServiceResult getAllNonupdatedPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
@@ -174,7 +165,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
                 .filter(p -> !p.areMaterialsUpdated())
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
 
         result.setEntity(updatedPipelines);
@@ -183,7 +174,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
     public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
@@ -191,7 +182,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
                 .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
 
         result.setEntity(updatedPipelines);
@@ -200,32 +191,27 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
-    public ServiceResult getAllPreparedPipelinesInProgress() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
-
-        List<Pipeline> updatedPipelines = pipelines
+    public List<Pipeline> getAllPreparedPipelinesInProgress() {
+        List<Pipeline> result = (List<Pipeline>) this.getAll().getEntity();
+        result = result
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS || p.getRerunStatus() == PipelineStatus.IN_PROGRESS))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
-
-        result.setEntity(updatedPipelines);
 
         return result;
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
     public ServiceResult getAllPreparedAwaitingPipelines() {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
         List<Pipeline> updatedPipelines = pipelines
                 .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING || p.getRerunStatus() == PipelineStatus.AWAITING))
+                .sorted(Comparator.comparing(Pipeline::getStartTime))
                 .collect(Collectors.toList());
 
         result.setEntity(updatedPipelines);
@@ -234,7 +220,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER)
     public ServiceResult getLastRun(String pipelineDefinitionId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
         List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
@@ -270,13 +256,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 //        return result;
 //    }
 
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.NONE)
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines) {
         return this.getAllPipelineHistoryDTOs(pipelineDefinitionId, numberOfPipelines, null);
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.NONE)
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
         List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
@@ -312,13 +298,13 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.NONE)
     public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
         return this.getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, "");
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.NONE)
     public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
         ServiceResult result = this.getAll();
         List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
@@ -346,7 +332,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         for (Pipeline pipeline : filteredPipelines) {
             PipelineDto pipelineDto = new PipelineDto();
             boolean isScrollCall = false;
-            if(pipelineId.length() > 0){
+            if (pipelineId.length() > 0) {
                 isScrollCall = true;
             }
             pipelineDto.constructArtifactPipelineDto(pipeline, isScrollCall);
@@ -359,7 +345,46 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.ADMIN)
+    public ServiceResult rerunStageWithSpecificJobs(Stage stageToRerun, ArrayList<String> jobDefinitionIds) {
+        PipelineDefinition pipelineDefinition = (PipelineDefinition)
+                this.pipelineDefinitionService.getById(stageToRerun.getPipelineDefinitionId()).getEntity();
+        if (pipelineDefinition == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "Pipeline Definition does not exist.");
+        }
+
+        Pipeline pipeline = (Pipeline) this.getById(stageToRerun.getPipelineId()).getEntity();
+        if (pipeline == null) {
+            return super.createServiceResult(null, NotificationType.ERROR, "Pipeline does not exist.");
+        }
+
+        StageRun stageRun = new StageRun();
+        stageRun.setExecutionId(pipeline.getStageRuns().size() + 1);
+
+        boolean stageToRerunIsSet = false;
+        for (StageDefinition stageDefinition : pipelineDefinition.getStageDefinitions()) {
+            if (!stageDefinition.getId().equals(stageToRerun.getStageDefinitionId()) && !stageToRerunIsSet) {
+                Stage stage = PipelineBuilder.buildStage(stageDefinition, pipeline.getId());
+                stage.setStatus(StageStatus.SKIPPED);
+                stageRun.addStage(stage);
+            } else if (!stageDefinition.getId().equals(stageToRerun.getStageDefinitionId()) && stageToRerunIsSet) {
+                Stage stage = PipelineBuilder.buildStage(stageDefinition, pipeline.getId());
+                stageRun.addStage(stage);
+            } else if (stageDefinition.getId().equals(stageToRerun.getStageDefinitionId())) {
+                Stage stage = PipelineBuilder.buildStage(stageDefinition, pipeline.getId(), jobDefinitionIds);
+                stageRun.addStage(stage);
+                stageToRerunIsSet = true;
+            }
+        }
+
+        pipeline.getStageRuns().add(stageRun);
+        pipeline.setRerunStatus(PipelineStatus.IN_PROGRESS);
+
+        return this.update(pipeline);
+    }
+
+    @Override
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR)
     public ServiceResult cancelPipeline(Pipeline pipeline) {
         ServiceResult result = this.getById(pipeline.getId());
         if (result.getNotificationType() == NotificationType.ERROR) {
@@ -373,32 +398,30 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     }
 
     @Override
-    @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR )
+    @Authorization(scope = PermissionScope.PIPELINE, type = PermissionType.OPERATOR)
     public ServiceResult pausePipeline(Pipeline pipeline) {
         ServiceResult result = this.getById(pipeline.getId());
         if (result.getNotificationType() == NotificationType.ERROR) {
             return result;
         }
 
-        Pipeline pipelineToBeCanceled = (Pipeline) result.getEntity();
-        if (pipelineToBeCanceled.getStatus() == PipelineStatus.IN_PROGRESS) {
-            pipelineToBeCanceled.setStatus(PipelineStatus.PAUSED);
+        Pipeline pipelineToBePaused = (Pipeline) result.getEntity();
+        if (pipelineToBePaused.getStatus() == PipelineStatus.IN_PROGRESS || pipelineToBePaused.getRerunStatus() == PipelineStatus.IN_PROGRESS) {
+            pipelineToBePaused.setStatus(PipelineStatus.PAUSED);
             result.setNotificationType(NotificationType.WARNING);
-            String message = String.format("Pipeline %s set to PAUSED.", pipelineToBeCanceled.getPipelineDefinitionName());
+            String message = String.format("Pipeline %s set to PAUSED.", pipelineToBePaused.getPipelineDefinitionName());
             result.setMessage(message);
             LOGGER.info(message);
-            List<Stage> stages = pipelineToBeCanceled.getStages();
-            for (Stage stage : stages) {
+            for (Stage stage : pipelineToBePaused.getStagesOfLastStageRun()) {
                 if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                     stage.setStatus(StageStatus.PAUSED);
                 }
             }
         } else {
-            pipelineToBeCanceled.setStatus(PipelineStatus.IN_PROGRESS);
-            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipelineToBeCanceled.getPipelineDefinitionName());
+            pipelineToBePaused.setStatus(PipelineStatus.IN_PROGRESS);
+            String message = String.format("Pipeline %s set to IN_PROGRESS.", pipelineToBePaused.getPipelineDefinitionName());
             LOGGER.info(message);
-            List<Stage> stages = pipeline.getStages();
-            for (Stage stage : stages) {
+            for (Stage stage : pipelineToBePaused.getStagesOfLastStageRun()) {
                 if (stage.getStatus() == StageStatus.PAUSED) {
                     stage.setStatus(StageStatus.IN_PROGRESS);
                     stage.setTriggeredManually(false);
@@ -406,7 +429,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
             }
         }
 
-        return this.update(pipelineToBeCanceled);
+        return this.update(pipelineToBePaused);
     }
 
     private void addMaterialsToPipeline(Pipeline pipeline) {
@@ -425,63 +448,63 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         pipeline.setMaterials(materials);
     }
 
-    private void addStagesToPipeline(Pipeline pipeline) {
-        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
-        List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
+//    private void addStagesToPipeline(Pipeline pipeline) {
+//        PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
+//        List<StageDefinition> stageDefinitions = pipelineDefinition.getStageDefinitions();
+//
+//        List<Stage> stages = new ArrayList<>();
+//        for (StageDefinition stageDefinition : stageDefinitions) {
+//            Stage stage = new Stage();
+//            stage.setPipelineId(pipeline.getId());
+//            stage.setStageDefinitionId(stageDefinition.getId());
+//            stage.setStageDefinitionName(stageDefinition.getName());
+//            stages.add(stage);
+//            this.addJobsToStage(stageDefinition, stage);
+//        }
+//
+//        pipeline.setStages(stages);
+//    }
 
-        List<Stage> stages = new ArrayList<>();
-        for (StageDefinition stageDefinition : stageDefinitions) {
-            Stage stage = new Stage();
-            stage.setPipelineId(pipeline.getId());
-            stage.setStageDefinitionId(stageDefinition.getId());
-            stage.setStageDefinitionName(stageDefinition.getName());
-            stages.add(stage);
-            this.addJobsToStage(stageDefinition, stage);
-        }
+//    private void addJobsToStage(StageDefinition stageDefinition, Stage stage) {
+//        List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
+//
+//        List<Job> jobs = new ArrayList<>();
+//        for (JobDefinition jobDefinition : jobDefinitions) {
+//            Job job = new Job();
+//            job.setPipelineId(stage.getPipelineId());
+//            job.setJobDefinitionId(jobDefinition.getId());
+//            job.setJobDefinitionName(jobDefinition.getName());
+//            job.setStageId(stage.getId());
+//            job.setJobDefinitionName(jobDefinition.getName());
+//            jobs.add(job);
+//            this.addTasksToJob(jobDefinition, job);
+//        }
+//
+//        stage.setJobs(jobs);
+//    }
 
-        pipeline.setStages(stages);
-    }
-
-    private void addJobsToStage(StageDefinition stageDefinition, Stage stage) {
-        List<JobDefinition> jobDefinitions = stageDefinition.getJobDefinitions();
-
-        List<Job> jobs = new ArrayList<>();
-        for (JobDefinition jobDefinition : jobDefinitions) {
-            Job job = new Job();
-            job.setPipelineId(stage.getPipelineId());
-            job.setJobDefinitionId(jobDefinition.getId());
-            job.setJobDefinitionName(jobDefinition.getName());
-            job.setStageId(stage.getId());
-            job.setJobDefinitionName(jobDefinition.getName());
-            jobs.add(job);
-            this.addTasksToJob(jobDefinition, job);
-        }
-
-        stage.setJobs(jobs);
-    }
-
-    private void addTasksToJob(JobDefinition jobDefinition, Job job) {
-        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
-
-        List<Task> tasks = new ArrayList<>();
-        for (TaskDefinition taskDefinition : taskDefinitions) {
-
-            Task task = new Task();
-            if (taskDefinition.getType() == TaskType.FETCH_MATERIAL) {
-                FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinition;
-                task.setTaskDefinition(fetchMaterialTask);
-            }
-
-            task.setJobId(job.getId());
-            task.setStageId(job.getStageId());
-            task.setPipelineId(job.getPipelineId());
-            task.setTaskDefinition(taskDefinition);
-            task.setRunIfCondition(taskDefinition.getRunIfCondition());
-            tasks.add(task);
-        }
-
-        job.setTasks(tasks);
-    }
+//    private void addTasksToJob(JobDefinition jobDefinition, Job job) {
+//        List<TaskDefinition> taskDefinitions = jobDefinition.getTaskDefinitions();
+//
+//        List<Task> tasks = new ArrayList<>();
+//        for (TaskDefinition taskDefinition : taskDefinitions) {
+//
+//            Task task = new Task();
+//            if (taskDefinition.getType() == TaskType.FETCH_MATERIAL) {
+//                FetchMaterialTask fetchMaterialTask = (FetchMaterialTask) taskDefinition;
+//                task.setTaskDefinition(fetchMaterialTask);
+//            }
+//
+//            task.setJobId(job.getId());
+//            task.setStageId(job.getStageId());
+//            task.setPipelineId(job.getPipelineId());
+//            task.setTaskDefinition(taskDefinition);
+//            task.setRunIfCondition(taskDefinition.getRunIfCondition());
+//            tasks.add(task);
+//        }
+//
+//        job.setTasks(tasks);
+//    }
 
     private int getIndexOfPipeline(List<Pipeline> pipelines, String pipelineId) {
         int indexOfPipeline = -1;

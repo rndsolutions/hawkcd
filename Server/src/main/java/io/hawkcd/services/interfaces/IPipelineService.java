@@ -18,6 +18,10 @@ package io.hawkcd.services.interfaces;
 
 import io.hawkcd.model.Pipeline;
 import io.hawkcd.model.ServiceResult;
+import io.hawkcd.model.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getAllByDefinitionId(String pipelineDefinitionId);
@@ -26,7 +30,7 @@ public interface IPipelineService extends ICrudService<Pipeline> {
 
     ServiceResult getAllUpdatedUnpreparedPipelinesInProgress();
 
-    ServiceResult getAllPreparedPipelinesInProgress();
+    List<Pipeline> getAllPreparedPipelinesInProgress();
 
     ServiceResult getAllPreparedAwaitingPipelines();
 
@@ -39,6 +43,8 @@ public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines);
 
     ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId);
+
+    ServiceResult rerunStageWithSpecificJobs(Stage stageToRerun, ArrayList<String> jobDefinitionIds);
 
     ServiceResult cancelPipeline(Pipeline pipeline);
 

@@ -55,13 +55,12 @@ public class StatusUpdaterService {
             this.updateAgentStatus(agent);
         }
 
-        List<Pipeline> pipelinesInProgress = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
+        List<Pipeline> pipelinesInProgress = this.pipelineService.getAllPreparedPipelinesInProgress();
         for (Pipeline pipeline : pipelinesInProgress) {
             if (pipeline.shouldBeCanceled()) {
                 this.cancelPipeline(pipeline);
                 LOGGER.info(String.format(LoggerMessages.PIPELINE_CANCELED, pipeline.getExecutionId(), pipeline.getPipelineDefinitionName()));
-                ServiceResult result = new ServiceResult(null, NotificationType.WARNING, "Pipeline " + pipeline.getPipelineDefinitionName() + " was successfully canceled");
-            } else if (pipeline.getStatus() == PipelineStatus.PAUSED) {
+            } else if (pipeline.getStatus() == PipelineStatus.PAUSED || pipeline.getRerunStatus() == PipelineStatus.PAUSED) {
                 this.pausePipeline(pipeline);
             } else {
                 this.updateAllStatuses(pipeline);
@@ -101,8 +100,8 @@ public class StatusUpdaterService {
 
             if (queueNode.getClass() == Pipeline.class) {
                 pipelineToUpdate = (Pipeline) queueNode;
-                queue.addAll(pipelineToUpdate.getStages());
-                this.updateStageStatusesInSequence(pipelineToUpdate.getStages());
+                queue.addAll(pipelineToUpdate.getStagesOfLastStageRun());
+                this.updateStageStatusesInSequence(pipelineToUpdate.getStagesOfLastStageRun());
             } else {
                 Stage stageNode = (Stage) queueNode;
                 queue.addAll(stageNode.getJobs());
@@ -130,7 +129,7 @@ public class StatusUpdaterService {
                 currentStage.setStartTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
                 currentStage.setStatus(StageStatus.IN_PROGRESS);
                 break;
-            } else if (currentStage.getStatus() == StageStatus.PASSED) {
+            } else if (currentStage.getStatus() == StageStatus.PASSED || currentStage.getStatus() == StageStatus.SKIPPED) {
                 continue;
             } else {
                 break;
@@ -159,7 +158,7 @@ public class StatusUpdaterService {
     }
 
     public void updatePipelineStatus(Pipeline pipeline) {
-        List<Stage> stages = pipeline.getStages();
+        List<Stage> stages = pipeline.getStagesOfLastStageRun();
         List<StageStatus> stageStatuses = new ArrayList<>();
         for (Stage stage : stages) {
             StageStatus stageStatus = stage.getStatus();
@@ -201,7 +200,7 @@ public class StatusUpdaterService {
         }
 
         for (String aStatusesAsString : statusesAsString) {
-            if (!aStatusesAsString.equals("PASSED")) {
+            if (!aStatusesAsString.equals("PASSED") && !aStatusesAsString.equals("SKIPPED")) {
                 return false;
             }
         }
@@ -213,7 +212,7 @@ public class StatusUpdaterService {
         pipeline.setShouldBeCanceled(false);
         pipeline.setStatus(PipelineStatus.CANCELED);
         pipeline.setEndTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        for (Stage stage : pipeline.getStages()) {
+        for (Stage stage : pipeline.getStagesOfLastStageRun()) {
             if (stage.getStatus() == StageStatus.IN_PROGRESS || stage.getStatus() == StageStatus.AWAITING) {
                 stage.setStatus(StageStatus.CANCELED);
                 for (Job job : stage.getJobs()) {
@@ -227,7 +226,7 @@ public class StatusUpdaterService {
     }
 
     private void pausePipeline(Pipeline pipeline) {
-        List<Stage> stages = pipeline.getStages();
+        List<Stage> stages = pipeline.getStagesOfLastStageRun();
         for (Stage stage : stages) {
             if (stage.getStatus() == StageStatus.IN_PROGRESS) {
                 stage.setStatus(StageStatus.PAUSED);

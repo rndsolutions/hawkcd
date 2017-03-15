@@ -23,5 +23,6 @@ public enum StageStatus {
     FAILED,
     PAUSED,
     AWAITING,
-    CANCELED
+    CANCELED,
+    SKIPPED
 }

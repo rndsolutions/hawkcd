@@ -23,12 +23,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stage extends Entity {
+public class Stage extends PipelineFamily {
     private String stageDefinitionId;
     private String pipelineId;
     private String stageDefinitionName;
-    private int executionId;
-    private List<EnvironmentVariable> environmentVariables;
     private List<Job> jobs;
     private StageStatus status;
     private LocalDateTime startTime;
@@ -37,9 +35,18 @@ public class Stage extends Entity {
     private boolean isTriggeredManually;
 
     public Stage() {
-        this.setEnvironmentVariables(new ArrayList<>());
-        this.setJobs(new ArrayList<>());
+        super.environmentVariables = new ArrayList<>();
+        this.jobs = new ArrayList<>();
         this.status = StageStatus.NOT_RUN;
+    }
+
+    public Stage(StageDefinition stageDefinition, String pipelineId) {
+        this();
+        super.pipelineDefinitionId = stageDefinition.getPipelineDefinitionId();
+        this.stageDefinitionId = stageDefinition.getId();
+        this.pipelineId = pipelineId;
+        this.stageDefinitionName = stageDefinition.getName();
+        this.isTriggeredManually = stageDefinition.isTriggeredManually();
     }
 
     public String getStageDefinitionId() {
@@ -56,14 +63,6 @@ public class Stage extends Entity {
 
     public void setStageDefinitionName(String stageDefinitionName) {
         this.stageDefinitionName = stageDefinitionName;
-    }
-
-    public int getExecutionId() {
-        return this.executionId;
-    }
-
-    public void setExecutionId(int executionId) {
-        this.executionId = executionId;
     }
 
     public String getPipelineId() {

@@ -147,7 +147,7 @@ public class AgentController {
         PipelineService.lock.lock();
         Pipeline pipeline = (Pipeline) this.pipelineService.getById(job.getPipelineId()).getEntity();
 
-        Stage stage = pipeline.getStages()
+        Stage stage = pipeline.getStagesOfLastStageRun()
                     .stream()
                     .filter(s -> s.getId().equals(job.getStageId()))
                     .findFirst()
@@ -166,13 +166,13 @@ public class AgentController {
             }
         }
 
-        List<Stage> stages = pipeline.getStages();
+        List<Stage> stages = pipeline.getStagesOfLastStageRun();
         int lengthOfStages = stages.size();
         for (int i = 0; i < lengthOfStages; i++) {
             Stage currentStage = stages.get(i);
             if (currentStage.getId().equals(stage.getId())) {
                 stages.set(i, stage);
-                pipeline.setStages(stages);
+//                pipeline.setStages(stages);
                 break;
             }
         }

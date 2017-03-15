@@ -13,36 +13,34 @@
 <!--limitations under the License.-->
 
 <div class="portlet light custom-portlet">
-        <div class="portlet-title">
-            <div class="caption">
-                <i class="fa fa-cogs"></i>Stages
-            </div>
-            <div class="tools right">
-                <a href="javascript:;" class="collapse"> </a>
-            </div>
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Stages
+            <select style="display: inline-block; width: auto; padding: 0 5px; height: auto;" class="form-control" name="stageRunSelect" id="stageRunSelect" ng-model="pipesRunManagement.selectedStageRunExecutionId">
+                <option ng-repeat="stageRun in pipesRunManagement.currentPipelineRun.stageRuns" value="{{stageRun.executionId}}"
+                        ng-selected="pipesRunManagement.currentPipelineRun.stageRuns[0].executionId">
+                    {{stageRun.executionId}}
+                </option>
+            </select>
+
+            <!--<select style="display: inline-block; width: auto; padding: 0 5px; height: auto;" class="form-control" name="stageRunSelect" id="stageRunSelect"-->
+                    <!--ng-model="pipesRunManagement.selectedStageRun.executionId"-->
+                    <!--ng-repeat="executionId in pipesRunManagement.currentPipelineRun.stageRuns.executionId"-->
+                    <!--value="{{executionId}}">{{executionId}}>-->
+                    <!--ng-options="stageRun.executionId as stageRun.executionId for stageRun in pipesRunManagement.currentPipelineRun.stageRuns">-->
+            <!--</select>-->
         </div>
-
-        <!--</div> <div class="tools right custom-tools">-->
-      <!--<div class="form-group form-md-line-input custom-drop">-->
-        <!--<select class="form-control" ng-change="pipesRunManagement.selectRun(run)" ng-model="run">-->
-          <!--<option ng-if="run.ExecutionID != 0"  ng-repeat="run in pipesRunManagement.selectedStage.Runs"-->
-                  <!--value="{{run.ExecutionID}}" ng-selected="pipesRunManagement.statesSelected[pipesRunManagement.selectedStageIndexInMainDB] == run.ExecutionID" id="selectedOptionRuns">{{run.ExecutionID}}-->
-          <!--</option>-->
-        <!--</select>-->
-      <!--</div>-->
-        <!--<div class="tools right">-->
-            <!--<div class="control-label run-label"> {{pipesRunManagement.stagePanelDefault.run}}</div>-->
-        <!--</div>-->
-        <!--<div class="pull-right btn-rerun" ng-if='pipesRunManagement.currentPipeline[0].State == "Completed"' data-target="#rerunStage"-->
-        <!--data-toggle="modal">-->
-            <!--<i class="glyphicon glyphicon-repeat"> </i>-->
-        <!--</div>-->
-
+        <div class="tools right">
+            <a href="javascript:;" class="collapse"> </a>
+        </div>
+    </div>
     <div class="portlet-body custom-body">
-        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRun.stages">
+        <div class="s-box" ng-repeat="stage in pipesRunManagement.currentPipelineRun.stageRuns[pipesRunManagement.selectedStageRunExecutionId - 1].stages">
             <div class="display-inline-block" ng-include src="'app/pipelines/views/partials/run-management/_stage.html'"></div>
             <div class="height-100px display-inline-block">
-                <img class="image-vertical-center arrow-right" ng-if="$index != pipesRunManagement.currentPipelineRun.stages.length-1" src="../../../../../assets/images/right-arrow.png">
+                <img class="image-vertical-center arrow-right"
+                     ng-if="$index != pipesRunManagement.currentPipelineRun.stageRuns[pipesRunManagement.selectedStageRunExecutionId - 1].stages.length - 1"
+                     src="../../../../../assets/images/right-arrow.png">
             </div>
         </div>
     </div>

@@ -22,11 +22,7 @@ import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
-import io.hawkcd.model.Agent;
-import io.hawkcd.model.Job;
-import io.hawkcd.model.Pipeline;
-import io.hawkcd.model.ServiceResult;
-import io.hawkcd.model.Stage;
+import io.hawkcd.model.*;
 import io.hawkcd.model.enums.*;
 import io.hawkcd.model.payload.WorkInfo;
 import io.hawkcd.services.interfaces.IAgentService;
@@ -117,10 +113,10 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
         if (agent == null) {
             result = createResult(null, NotificationType.ERROR, "This agent has no job assigned.");
         } else if (agent.isAssigned()) {
-            List<Pipeline> pipelines = (List<Pipeline>) this.pipelineService.getAllPreparedPipelinesInProgress().getEntity();
+            List<Pipeline> pipelines = this.pipelineService.getAllPreparedPipelinesInProgress();
             for (Pipeline pipeline : pipelines) {
                 WorkInfo workInfo = new WorkInfo();
-                Stage stageInProgress = pipeline.getStages()
+                Stage stageInProgress = pipeline.getStagesOfLastStageRun()
                         .stream()
                         .filter(s -> s.getStatus() == StageStatus.IN_PROGRESS)
                         .findFirst()
@@ -143,7 +139,6 @@ public class AgentService extends CrudService<Agent> implements IAgentService {
                 workInfo.setPipelineDefinitionName(pipeline.getPipelineDefinitionName());
                 workInfo.setPipelineExecutionID(pipeline.getExecutionId());
                 workInfo.setStageDefinitionName(stageInProgress.getStageDefinitionName());
-                workInfo.setStageExecutionID(stageInProgress.getExecutionId());
                 workInfo.setJobDefinitionName(scheduledJob.getJobDefinitionName());
                 scheduledJob.setStatus(JobStatus.RUNNING);
                 workInfo.setJob(scheduledJob);

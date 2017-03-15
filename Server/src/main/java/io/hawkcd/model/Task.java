@@ -28,13 +28,25 @@ public class Task extends Entity {
     private String jobId;
     private String stageId;
     private String pipelineId;
-    private RunIf runIfCondition;
     private TaskType type;
+    private RunIf runIfCondition;
     private TaskStatus status;
     private String output;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Duration duration;
+
+    public Task() {
+    }
+
+    public Task(TaskDefinition taskDefinition, String jobId, String stageId, String pipelineId) {
+        this.jobId = jobId;
+        this.stageId = stageId;
+        this.pipelineId = pipelineId;
+        this.taskDefinition = taskDefinition;
+        this.type = taskDefinition.getType();
+        this.runIfCondition = taskDefinition.getRunIfCondition();
+    }
 
     public TaskDefinition getTaskDefinition() {
         return this.taskDefinition;
@@ -68,20 +80,20 @@ public class Task extends Entity {
         this.pipelineId = pipelineId;
     }
 
-    public RunIf getRunIfCondition() {
-        return this.runIfCondition;
-    }
-
-    public void setRunIfCondition(RunIf runIfCondition) {
-        this.runIfCondition = runIfCondition;
-    }
-
     public TaskType getType() {
         return this.type;
     }
 
     public void setType(TaskType type) {
         this.type = type;
+    }
+
+    public RunIf getRunIfCondition() {
+        return this.runIfCondition;
+    }
+
+    public void setRunIfCondition(RunIf runIfCondition) {
+        this.runIfCondition = runIfCondition;
     }
 
     public TaskStatus getStatus() {

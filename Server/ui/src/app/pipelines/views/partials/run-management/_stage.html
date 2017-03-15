@@ -21,7 +21,7 @@
                         {{stage.stageDefinitionName}}
                         <!--<span ui-sref="index.pipelineConfig.stage.settings({groupName:pipesRunManagement.groupName,pipelineName:pipesRunManagement.pipelineName,stageName:stage[0].stageDefinitionName})" class="icon-settings font-lg ico"></span>-->
                         <div class="pull-right display-inline-block">
-                            <i ng-class="{'fa fa-check icon-passed vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status != 'PASSED' && stage.status != 'FAILED' && stage.status != 'NOT_RUN' && stage.status != 'CANCELED' && stage.status != 'AWAITING' && stage.status != 'PAUSED' && pipesRunManagement.currentPipelineRun.status != 'CANCELED', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED', 'fa fa-pause text-warning vertical-center-icon': stage.status == 'PAUSED'}"></i>
+                            <i ng-class="{'fa fa-check icon-passed vertical-center-icon': stage.status == 'PASSED', 'fa fa-times text-danger vertical-center-icon' : stage.status == 'FAILED', 'fa fa-refresh fa-spin text-warning vertical-center-icon' : stage.status == 'IN_PROGRESS', 'fa fa-ban vertical-center-icon' : stage.status == 'CANCELED', 'fa fa-pause text-warning vertical-center-icon': stage.status == 'PAUSED'}"></i>
                         </div>
                 </div>
             </div>
@@ -90,25 +90,23 @@
                     <!--</button>-->
 
                     <div class="controls">
-                        <button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || pipesRunManagement.currentPipelineRun.status != 'PAUSED' || stage.status != 'PAUSED'}" id="startbtn" ng-click="pipesRunManagement.pause(pipesRunManagement.currentPipelineRun)">
+                        <button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || (pipesRunManagement.currentPipelineRun.status != 'PAUSED' && pipesRunManagement.currentPipelineRun.rerunStatus != 'PAUSED') || stage.status != 'PAUSED'}" id="startbtn" ng-click="pipesRunManagement.pause(pipesRunManagement.currentPipelineRun)">
                             <span class="glyphicon glyphicon-play control"></span>
                         </button>
-                        <!--<button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || true}">-->
-                            <!--<span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>-->
-                        <!--</button>-->
 
-                        <button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || pipesRunManagement.currentPipelineRun.status == 'PAUSED' || pipesRunManagement.currentPipelineRun.status == 'PASSED' || pipesRunManagement.currentPipelineRun.status == 'FAILED' || pipesRunManagement.currentPipelineRun.status == 'CANCELED' || stage.status != 'IN_PROGRESS'}" ng-click="pipesRunManagement.pause(pipesRunManagement.currentPipelineRun)">
+                        <button class="btn btn-default" data-target="#rerunStage" data-toggle="modal" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || (pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS' || pipesRunManagement.currentPipelineRun.status == 'PAUSED' || pipesRunManagement.currentPipelineRun.status == 'AWAITING') || ((pipesRunManagement.currentPipelineRun.rerunStatus == 'IN_PROGRESS' || pipesRunManagement.currentPipelineRun.rerunStatus == 'PAUSED' || pipesRunManagement.currentPipelineRun.rerunStatus == 'AWAITING') || (stage.status == 'IN_PROGRESS'))}"
+                                ng-click="pipesRunManagement.setSelectedStageForReRun(stage);pipesRunManagement.selectAllJobs()">
+                            <span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>
+                        </button>
+
+                        <button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || stage.status != 'IN_PROGRESS'}" ng-click="pipesRunManagement.pause(pipesRunManagement.currentPipelineRun)">
                             <span class="glyphicon glyphicon-pause control"></span>
                         </button>
 
-                        <button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || pipesRunManagement.currentPipelineRun.status != 'IN_PROGRESS' && pipesRunManagement.currentPipelineRun.status != 'PAUSED' && pipesRunManagement.currentPipelineRun.status != 'AWAITING' || stage.status != 'IN_PROGRESS'}" id="stopbtn" ng-click="pipesRunManagement.stop(pipesRunManagement.currentPipelineRun)">
+                        <button class="btn btn-default" ng-class="{'disabled' : pipesRunManagement.currentPipelineRun.permissionType == 'VIEWER' || pipesRunManagement.currentPipelineRun.permissionType == '' || stage.status == 'PASSED' || stage.status == 'FAILED' || stage.status == 'NOT_RUN' || stage.status == 'SKIPPED' || stage.status == 'CANCELED'}" id="stopbtn" ng-click="pipesRunManagement.stop(pipesRunManagement.currentPipelineRun)">
                             <span class="glyphicon glyphicon-stop control"></span>
                         </button>
                     </div>
-
-                    <!--<button class="btn btn-default" data-target="#rerunStage" data-toggle="modal" ng-click="pipesRunManagement.setSelectedStageForReRun(stage)">-->
-                        <!--<span class="glyphicon glyphicon-play control"></span><i class="fa fa-plus"></i>-->
-                    <!--</button>-->
 
                 </div>
             </div>
