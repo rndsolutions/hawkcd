@@ -115,8 +115,8 @@ angular
 }])
 
 /* Setup Routing For All Pages */
-.config(['$stateProvider', '$urlRouterProvider', '$animateProvider', '$authProvider', 'CONSTANTS',
-    function($stateProvider, $urlRouterProvider, $animateProvider, $authProvider, CONSTANTS) {
+.config(['$stateProvider', '$urlRouterProvider', '$animateProvider', '$authProvider', 'CONSTANTS','$locationProvider',
+    function($stateProvider, $urlRouterProvider, $animateProvider, $authProvider, CONSTANTS, $locationProvider) {
 
         // used for debugging
         $authProvider.baseUrl = CONSTANTS.SERVER_URL;
@@ -125,6 +125,7 @@ angular
             scope: ['user:email', 'repo']
         });
 
+        $locationProvider.hashPrefix('');
 
         // Redirect any unmatched url
         $urlRouterProvider.when('', '/pipelines').when('/', '/pipelines').otherwise("/pipelines");
