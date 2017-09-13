@@ -164,7 +164,7 @@ function build_all {
   package_agent_nix
 
   compile_server
-  run_server_unit_test
+  #run_server_unit_test
   package_server_nix
 }
 
