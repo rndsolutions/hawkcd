@@ -209,5 +209,18 @@ angular
                 $scope.registerForm.$setUntouched();
             }
 
+            // Submit form on enter pressed
+            $scope.sumbmitFormOnenterPressed = function(event){
+                if(event.keyCode === 13){
+                    if($scope.showLoginForm && $scope.loginForm.username.$valid && $scope.password.length > 2){
+                        $scope.login();
+                    } else if($scope.showForgotPasswordForm){
+                        // TODO logic for forgot password
+                    } else if($scope.showRegisterForm && $scope.registerForm.$valid){
+                        $scope.register();
+                    }
+                }
+            };
+
         }
     ]);
