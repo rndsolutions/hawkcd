@@ -13,7 +13,7 @@
 <!--limitations under the License.-->
 
 <div ng-controller="AppController" class="login-body">
-    <div class="content content-custom">
+    <div class="content content-custom" ng-keypress="sumbmitFormOnenterPressed($event)">
         <!-- BEGIN LOGIN FORM -->
         <div class="logo logo-custom">
             <img src="/assets/images/logo.png">
