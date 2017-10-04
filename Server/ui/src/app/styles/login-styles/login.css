@@ -13,6 +13,11 @@
  * limitations under the License.
  */
 
+.content-custom {
+  max-width: 650px;
+  margin:0 auto!important;
+}
+
 @media screen and (max-width: 992px){
   .login-body{
     padding:10px;
