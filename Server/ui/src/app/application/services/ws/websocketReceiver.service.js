@@ -188,7 +188,7 @@ angular
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllPipelines]);
                     },
                     getById: function (object) {
-                        validationService.dispatcherFlow(object, [pipelineUpdater.getRunManagementPipeline])
+                        validationService.dispatcherFlow(object, [pipelineUpdater.getRunManagementPipeline]);
                     },
                     getAllPipelineHistoryDTOs: function (object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.getAllHistoryPipelines]);
