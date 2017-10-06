@@ -45,6 +45,8 @@
                                 <h4>{{agents.defaultText.tableHeaders.agentName}}</h4></th>
                             <th>
                                 <h4>{{agents.defaultText.tableHeaders.status}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.status}}">?</span></h4></th>
+                            <th>
+                                <h4>{{agents.defaultText.tableHeaders.availability}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.availability}}">?</span></h4></th>
                             <th class="table-element-text">
                                 <h4>{{agents.defaultText.tableHeaders.path}} <span class="badge badge-default cursor-popover" onmouseenter="$(this).tooltip('show')" title="{{agents.popOverOptions.popOverTitles.sandbox}}">?</span></h4></th>
                             <th>
@@ -71,6 +73,8 @@
                                 <div class="label label-default run-label" ng-class="{'passed': agent.status == 'Idle', 'working' : agent.status == 'Running'}"> {{agent.status}}</div></td>
                             <td ng-if="!agent.isConnected" class="text-center-vertical">
                                 <div class="label label-default run-label" ng-class="{'canceled-run' : agent.isConnected == false}"> Disconnected</div></td>
+                            <td class="table-element-text text-center-vertical">
+                                <div class="label label-default run-label" ng-class="{'passed': agent.availability == 'Enabled', 'failed' : agent.availability == 'Disabled'}"> {{agent.availability}}</div></td></td>
                             <td class="table-element-text">
                                 <h5>{{agent.rootPath}} </h5></td>
                             <td>
