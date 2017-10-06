@@ -244,6 +244,21 @@ angular
                 });
                 vm.currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                     currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
+                        
+                        if(currentJob.report && currentJob.report[0].charCodeAt() !== 27){
+                            var curentReport = String.fromCharCode(27);
+                            for(var i = 0; i < currentJob.report.length; i++){
+                                curentReport += currentJob.report[i];
+                                if(i > 0 && i < currentJob.report.length - 1 && currentJob.report[i - 1].charCodeAt() === 13){
+                                    if((i + 10 < currentJob.report.length && currentJob.report[i + 10] !== ']') || i + 10 >= currentJob.report.length) {
+                                        curentReport += String.fromCharCode(27);
+                                    }
+                                }
+                            }
+                            
+                            currentJob.report = curentReport;
+                        }
+
                         currentJob.processedReport = ansi_up.ansi_to_html(currentJob.report);
                         currentJob.processedReport = $sce.trustAsHtml(currentJob.processedReport);
                     });
