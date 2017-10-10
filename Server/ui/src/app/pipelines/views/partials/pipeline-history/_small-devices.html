@@ -25,6 +25,10 @@
                         </div>
                         <div id="right-header-container">
                             <div class="user-cell">
+                                <div class="display-inline"><i class="fa fa-trash fa-1x"></i> #{{run.executionId}}</div>
+                                <div ng-if="pipe.permissionType != 'VIEWER' && pipe.permissionType != 'OPERATOR' && pipe.permissionType != ''" aria-hidden="true" class="icon-close font-lg ico delete-run-icon_small" data-target="#removeRun" data-toggle="modal" ng-click="pipesHistory.getRunNumber(run)"></div>
+                            </div>
+                            <div class="user-cell">
                                 <div class="user-info-cell">
                                     <div class="display-inline"><i class="fa fa-user fa-1x"></i> {{run.materials[0].materialDefinition.authorName}}</div>
                                     <div class="display-inline"><i class="fa fa-refresh pull-right" ng-class="{'fa-spin fa-fw': run.status === 'IN_PROGRESS'}"></i></div>

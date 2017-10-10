@@ -170,7 +170,7 @@ angular
             restrict: 'A',
             link: function (scope, element, attributes, formCtrl) {
                 element.bind("keypress", function (event) {
-                    if (event.which === 13 && formCtrl.$invalid  || (scope.$parent.pipes.bar == 2 && scope.$parent.pipes.materialType === 'hidden') || (scope.$parent.pipes.bar == 2 && scope.$parent.pipes.materialType == 'existing' && scope.$parent.pipes.selectedMaterial.$$hashKey != null)) {
+                    if (event.which === 13 && formCtrl.$invalid || (scope.$parent.pipes.bar == 2 && scope.$parent.pipes.materialType === 'hidden') || (scope.$parent.pipes.bar == 2 && scope.$parent.pipes.materialType == 'existing' && scope.$parent.pipes.selectedMaterial.$$hashKey != null)) {
                         event.preventDefault();
                     }
                 });
@@ -192,4 +192,26 @@ angular
                 });
             }
         }
+    })
+
+    .directive('setScrollPosition', function () {
+        return {
+            restrict: 'A',
+            scope: {
+                scrollPosition: '@'
+            },
+            link: function (scope, element, attributes, formCtrl) {
+                var innerElement = element.find('div');
+                innerElement.bind('DOMSubtreeModified',elemenHasChanged);
+
+                function elemenHasChanged(e){
+                    if(scope.scrollPosition === 'bottom' || !scope.scrollPosition){
+                        element.scrollTop(innerElement.height());
+                    } else if(scope.scrollPosition === 'top'){
+                        element.scrollTop(0);
+                    }
+                }
+
+            }
+        };
     });

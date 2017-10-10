@@ -40,5 +40,18 @@ angular
             websocketSenderService.call(json);
         };
 
+        artifactService.deleteRun = function (pipelineDefinitionId, runToDelete) {
+            // var methodName = "deleteRun";
+            // var className = "PipelineService";
+            // var packageName = "io.hawkcd.services";
+            // var result = "";
+            // var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineDefinitionId + "\"}",
+            //     "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
+            //     "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineId + "\"}"];
+            // var error = "";
+            // var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            // websocketSenderService.call(json);
+        };
+
         return artifactService;
     }]);

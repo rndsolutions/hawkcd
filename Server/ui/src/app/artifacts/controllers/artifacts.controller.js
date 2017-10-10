@@ -176,6 +176,15 @@ angular
             // console.log($scope.treeData);
         };
 
+         vm.getRunNumber = function(run){
+            vm.runNumber = run.executionId;
+            vm.runToDelete = run;
+         };
+
+         vm.deleteRun = function(runToDelete){
+            artifactService.deleteRun(vm.pipelineId, runToDelete);
+         };
+
         $scope.$on("$destroy", function() {
             pipelineUpdater.flushAllArtifactPipelines();
         });
