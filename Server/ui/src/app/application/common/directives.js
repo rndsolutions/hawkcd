@@ -94,7 +94,13 @@ angular
                         scope.$apply(function () {
                             ngModel.$setViewValue(state);
                             var buffer = scope.user;
-                            adminService.updateUser(buffer);
+                            if(buffer.isEnabled){
+                                //enable user function
+                                adminService.enableUser(buffer.id); 
+                            } else {
+                                //disable user function
+                                adminService.disableUser(buffer.id);   
+                            }
                         });
                     }
                 });
