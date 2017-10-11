@@ -20,6 +20,8 @@ import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
+import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.core.session.SessionManager;
 import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
@@ -185,6 +187,9 @@ public class UserService extends CrudService<User> implements IUserService {
 
         User user = (User) result.getEntity();
         user.setEnabled(false);
+
+        SessionFactory.getSessionManager().closeSessionByUserEmail(user.getEmail());
+
         return this.update(user);
     }
 
