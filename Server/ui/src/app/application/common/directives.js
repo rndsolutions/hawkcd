@@ -206,10 +206,12 @@ angular
 
                 function elemenHasChanged(e){
                     if(scope.scrollPosition === 'bottom' || !scope.scrollPosition){
+                        //The timout is needed to prevent 'the jumping' of the screen
                         $timeout(function(){
                             element.scrollTop(innerElement.height());
                         }, 10);
                     } else if(scope.scrollPosition === 'top'){
+                        //The timout is needed to prevent 'the jumping' of the screen
                         $timeout(function(){
                             element.scrollTop(0);
                         }, 10);
