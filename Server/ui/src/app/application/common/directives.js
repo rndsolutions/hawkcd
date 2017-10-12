@@ -194,7 +194,7 @@ angular
         }
     })
 
-    .directive('setScrollPosition', function () {
+    .directive('setScrollPosition', function ($timeout) {
         return {
             restrict: 'A',
             scope: {
@@ -206,9 +206,13 @@ angular
 
                 function elemenHasChanged(e){
                     if(scope.scrollPosition === 'bottom' || !scope.scrollPosition){
-                        element.scrollTop(innerElement.height());
+                        $timeout(function(){
+                            element.scrollTop(innerElement.height());
+                        }, 10);
                     } else if(scope.scrollPosition === 'top'){
-                        element.scrollTop(0);
+                        $timeout(function(){
+                            element.scrollTop(0);
+                        }, 10);
                     }
                 }
 
