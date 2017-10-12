@@ -104,6 +104,13 @@
 #list-container {
   border: 10px solid #E1E5EC;
   margin:4px;
+  position: relative;
+}
+
+#list-container .delete-run-icon{
+  margin:0;
+  right: 0;
+  z-index: 1;
 }
 
 #run-info-container-small{

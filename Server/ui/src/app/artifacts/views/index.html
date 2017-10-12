@@ -38,6 +38,7 @@
         <div ng-repeat="pipeline in artifact.allPipelineRuns() track by $index">
             <div class="mt-element-list">
                 <div class="mt-list-container list-simple ext-1 group" id="list-container" style="">
+                    <div ng-if="pipe.permissionType != 'VIEWER' && pipe.permissionType != 'OPERATOR' && pipe.permissionType != ''" aria-hidden="true" class="icon-close font-lg ico delete-run-icon" data-target="#removeRun" data-toggle="modal" ng-click="artifact.getRunNumber(pipeline)"></div>
                         <div id="artifact-header-container" class="list-toggle done">
                             <div id="artifact-main-header" ng-class="{'status-passed' : pipeline.status == 'PASSED', 'status-failed' : pipeline.status == 'FAILED', 'status-working' : pipeline.status == 'IN_PROGRESS', 'status-canceled' : pipeline.status == 'CANCELED','vertical-center' : true}">
                                 <div id="left-container" class="vertical-center center-cell">
@@ -128,3 +129,4 @@
 
     </div>
 </div>
+<div ng-include src="'app/admin/views/partials/_removeRun.html'"></div>

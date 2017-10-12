@@ -259,7 +259,6 @@ angular
 
                         currentJob.processedReport = ansi_up.ansi_to_html(currentJob.report);
                         currentJob.processedReport = $sce.trustAsHtml(currentJob.processedReport);
-
                     });
                 });
             }

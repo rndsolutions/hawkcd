@@ -46,6 +46,12 @@
   padding-left:3px;
 }
 
+.delete-run-icon_small{
+  position: relative;
+  margin: 0;
+  margin-right: -2px;
+}
+
 .time-info-cell {
   padding-right:5px;
 }

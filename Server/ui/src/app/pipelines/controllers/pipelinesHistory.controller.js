@@ -104,6 +104,15 @@ angular
              }
          };
 
+         vm.getRunNumber = function(run){
+            vm.runNumber = run.executionId;
+            vm.runToDelete = run;
+         };
+
+         vm.deleteRun = function(runToDelete){
+            pipeHistoryService.deleteRun(vm.pipelineId, runToDelete);
+         };
+
          $scope.$on("$destroy", function() {
              pipelineUpdater.flushAllHistoryPipelines();
          });

@@ -183,13 +183,19 @@
 
 /*third-cell*/
 
+.delete-run-icon {
+    position: absolute;
+    right: -28px;
+    margin: 0;
+}
+
 .user-info {
     position: relative;
-    height: 50%;
+    height: 33%;
 }
 .additional-info {
     position: relative;
-    height: 40%;
+    height: 33%;
 }
 #time-interval {
     margin-right: -2px;
@@ -207,6 +213,7 @@
 .working-icon-right {
     position: absolute;
     margin-left: 13px;
+    margin-top: 0.4em;
 }
 .three-stages{
   justify-content: center!important;
