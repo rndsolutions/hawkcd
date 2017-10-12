@@ -635,6 +635,9 @@
 .fa-github:before {
   content: "\f09b";
 }
+.fa-code-fork:before {
+  content: "\f126";
+}
 .fa-unlock:before {
   content: "\f09c";
 }
