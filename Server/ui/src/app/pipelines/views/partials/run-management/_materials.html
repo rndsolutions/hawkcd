@@ -41,6 +41,8 @@
               <div class="display-inline-block margin-left-1">
                 <a target="_blank" href="{{material.gitLink}}">{{material.materialDefinition.commitId.substring(0, 7)}}</a> - {{material.materialDefinition.comments}}
               </div>
+              <br/>
+              <span ng-if="material.materialDefinition.branch"><i class="fa fa-code-fork"></i><span> Branch: {{material.materialDefinition.branch}}</span></span>
             </div>
           </div>
         </div>

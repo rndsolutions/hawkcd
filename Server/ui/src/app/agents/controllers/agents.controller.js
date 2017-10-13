@@ -32,7 +32,8 @@ angular
                 path: "Sandbox",
                 os: "OS",
                 ip: "IP Address",
-                status: "Status",
+                status: "State",
+                availability: "Availability",
                 freeSpace: "Free Space",
                 resources: "Resources",
                 environment: "Environments"
@@ -53,6 +54,7 @@ angular
                 agentDesc: 'Agents are the workers that execute Jobs and their Tasks',
                 agent: 'This is the host\'s hostname + the first few numbers of its ID',
                 status: 'Idle - the Agent is ready to accept Jobs. \n\n Running - the Agent is currently executing a Job. Further Jobs cannot be assigned to it until it completes the Job.',
+                availability: 'Enabled - the Agent is enabled and ready to accept Jobs. \n\n Disabled - the Agent is disabled and it will not accept any Jobs.',
                 sandbox: 'The install location of the Agent on the server',
                 os: 'The Operating System the Agent is running on',
                 ipAddress: 'The Agent\'s internal IP address',
@@ -92,10 +94,19 @@ angular
         }, function(newVal, oldVal) {
             vm.currentAgents = angular.copy(viewModel.allAgents);
             vm.currentAgents.forEach(function(currentAgent, agentIndex, agentArray) {
+                // if (currentAgent.isEnabled == false) {
+                //     vm.currentAgents[agentIndex].status = "Disabled";
+                // } else 
                 if (currentAgent.isRunning == false) {
                     vm.currentAgents[agentIndex].status = "Idle";
                 } else if (currentAgent.isRunning == true) {
                     vm.currentAgents[agentIndex].status = "Running";
+                }
+
+                if (currentAgent.isEnabled == false) {
+                    vm.currentAgents[agentIndex].availability = 'Disabled';
+                } else if(currentAgent.isEnabled == true){
+                    vm.currentAgents[agentIndex].availability = 'Enabled';
                 }
             });
             loggerService.log('Agents watcher: ');

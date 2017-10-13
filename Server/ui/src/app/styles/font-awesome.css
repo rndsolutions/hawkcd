@@ -88,6 +88,7 @@
 }
 .fa.pull-right {
   margin-left: .3em;
+  margin-top: 0.3em;
 }
 .fa-spin {
   -webkit-animation: fa-spin 2s infinite linear;
@@ -633,6 +634,9 @@
 }
 .fa-github:before {
   content: "\f09b";
+}
+.fa-code-fork:before {
+  content: "\f126";
 }
 .fa-unlock:before {
   content: "\f09c";

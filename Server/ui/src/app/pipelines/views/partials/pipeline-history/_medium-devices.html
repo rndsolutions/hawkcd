@@ -71,12 +71,16 @@
                         <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
                     <span> {{material.materialDefinition.comments}}</span>
                     <br/>
+                    <span ng-if="material.materialDefinition.branch"><i class="fa fa-code-fork"></i><span class="branch-styles"> Branch: {{material.materialDefinition.branch}}</span></span>
                     </span>
                 </div>
             </div>
         </div>
-
         <div class="user-time-cell run-cell">
+            <div class="user-info">
+                <div class="display-inline"><i class="fa fa-trash fa-1x"></i> #{{run.executionId}}</div>
+                <div ng-if="pipe.permissionType != 'VIEWER' && pipe.permissionType != 'OPERATOR' && pipe.permissionType != ''" aria-hidden="true" class="icon-close font-lg ico delete-run-icon" data-target="#removeRun" data-toggle="modal" ng-click="pipesHistory.getRunNumber(run)"></div>
+            </div>
             <div class="user-info">
                 <div class="display-inline"><i class="fa fa-user fa-1x"></i> {{run.materials[0].materialDefinition.authorName}}</div>
                 <div class="display-inline pull-right"><i class="fa fa-refresh working-icon-right" ng-class="{'fa-spin fa-fw': run.status === 'IN_PROGRESS'}"></i></div>

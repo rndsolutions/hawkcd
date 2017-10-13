@@ -10,7 +10,7 @@ cache:
 before_script:
 - npm install gulp -g
 - npm install bower -g
-script: ./build.sh
+script: ./build1.sh build_all
 jdk:
 - oraclejdk8
 deploy:

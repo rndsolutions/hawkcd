@@ -244,9 +244,21 @@ angular
                 });
                 vm.currentPipelineRun.stages.forEach(function (currentStage, stageIndex, stageArray) {
                     currentStage.jobs.forEach(function (currentJob, jobIndex, jobArray) {
+                        if(currentJob.report && currentJob.report[0].charCodeAt() !== 27){
+                            var curentReport = String.fromCharCode(27);
+                            for(var i = 0; i < currentJob.report.length; i++){
+                                curentReport += currentJob.report[i];
+                                if(i > 0 && i < currentJob.report.length - 4 && 
+                                checkIfANSICodes([currentJob.report[i + 1], currentJob.report[i + 2], currentJob.report[i + 3], currentJob.report[i + 4]])){
+                                    curentReport += String.fromCharCode(27);
+                                }
+                            }
+                            
+                            currentJob.report = curentReport;
+                        }
+
                         currentJob.processedReport = ansi_up.ansi_to_html(currentJob.report);
                         currentJob.processedReport = $sce.trustAsHtml(currentJob.processedReport);
-
                     });
                 });
             }
@@ -358,6 +370,30 @@ angular
             vm.selectedRunIndex = selectedRunIndex;
             vm.jobIndex = jobIndex;
         };
+
+        function checkIfANSICodes(elements){
+            //check if the first simbol is not '['
+            if(elements[0] !== '['){
+                return false;
+            }
+
+            //check if color empty color
+            if(elements[1] === 'm'){
+                return true;
+            }
+
+            //check if it is color with starting '1'
+            if(elements[1] === '1' && elements[2] === ';'){
+                return true;
+            }
+
+            //check if it is color with starting '0'
+            if(elements[1] === '3' && elements[3] === 'm'){
+                return true;
+            }
+
+            return false;
+        }
 
         $scope.$on("$destroy", function() {
             pipelineUpdater.flushRunManagementPipeline();

@@ -21,6 +21,7 @@ gradle
 .classpath
 .project
 config.yaml
+out
 
 # Ignore Gradle GUI config
 gradle-app.setting
