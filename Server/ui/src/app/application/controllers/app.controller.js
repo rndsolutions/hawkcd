@@ -177,6 +177,8 @@ angular
                     .catch(function(response) {
                       $scope.mismatchCredentials.errorMessage = response.data.message;
                         loggerService.log(response);
+
+                        //Error message when profile is disabled (error status 403)
                         if(response && response.status === 403){
                             $scope.mismatchCredentials.errorMessage = 'Your profile is disabled!';
                         }
