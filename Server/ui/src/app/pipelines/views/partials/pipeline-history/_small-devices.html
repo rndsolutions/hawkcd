@@ -55,6 +55,7 @@
                           <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
                         <span> {{material.materialDefinition.comments}}</span>
                         <br/>
+                        <span ng-if="material.materialDefinition.branch"><i class="fa fa-code-fork"></i><span> Branch: {{material.materialDefinition.branch}}</span></span>
                         </span>
                     </li>
                     <li class="mt-list-item done" ng-repeat="stage in run.stages track by $index" style="border:none;display:block;margin-top:5px;border-radius:10px;" ng-class="{'btn green-jungle':stage.status == 'PASSED','btn red-thunderbird':stage.status == 'FAILED', 'btn stage-cancel': stage.status == 'CANCELED',
