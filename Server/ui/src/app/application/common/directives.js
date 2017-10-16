@@ -204,25 +204,66 @@ angular
         return {
             restrict: 'A',
             scope: {
-                scrollPosition: '@'
+                // scrollPosition: '@'
             },
             link: function (scope, element, attributes, formCtrl) {
-                var innerElement = element.find('div');
-                innerElement.bind('DOMSubtreeModified',elemenHasChanged);
-
-                function elemenHasChanged(e){
-                    if(scope.scrollPosition === 'bottom' || !scope.scrollPosition){
+                $timeout(function(){
+                    var innerElement = element.find('.content-div-element');
+                    var upArrow = element.find('.scroll-to-top-custom');
+                    var downArrow = element.find('.scroll-to-bottom');
+                    downArrow.bind('click', function(){
                         //The timout is needed to prevent 'the jumping' of the screen
                         $timeout(function(){
                             element.scrollTop(innerElement.height());
-                        }, 10);
-                    } else if(scope.scrollPosition === 'top'){
+                        }, 0);
+                    });
+
+                    upArrow.bind('click', function(){
                         //The timout is needed to prevent 'the jumping' of the screen
                         $timeout(function(){
                             element.scrollTop(0);
-                        }, 10);
+                        }, 0);
+                    });
+
+                    if(element[0].scrollHeight > element[0].clientHeight){
+                        upArrow[0].style.visibility = "visible";
+                        downArrow[0].style.visibility = "visible";
+                    } else {
+                        upArrow[0].style.visibility = "hidden";
+                        downArrow[0].style.visibility = "hidden";
                     }
-                }
+
+                    innerElement.bind('DOMSubtreeModified',elemenHasChanged);
+
+                    function elemenHasChanged(e){
+                        $timeout(function(){
+                            if(element[0].scrollHeight > element[0].clientHeight){
+                                upArrow[0].style.visibility = "visible";
+                                downArrow[0].style.visibility = "visible";
+                            } else {
+                                upArrow[0].style.visibility = "hidden";
+                                downArrow[0].style.visibility = "hidden";
+                            }
+                        }, 100);
+                    }
+
+                }, 0);
+
+                // innerElement.bind('DOMSubtreeModified',elemenHasChanged);
+
+                // function elemenHasChanged(e){
+                //     if(scope.scrollPosition === 'bottom' || !scope.scrollPosition){
+                //         //The timout is needed to prevent 'the jumping' of the screen
+                //         $timeout(function(){
+                //             element.scrollTop(innerElement.height());
+                //         }, 10);
+                //     } else if(scope.scrollPosition === 'top'){
+                //         //The timout is needed to prevent 'the jumping' of the screen
+                //         $timeout(function(){
+                //             element.scrollTop(0);
+                //         }, 10);
+                //     }
+                // }
 
             }
         };
