@@ -179,6 +179,8 @@ angular
                 }
             }
 
+            $(element).find('.content-div-element').trigger('DOMSubtreeModified');
+
             vm.isFullScreen = !vm.isFullScreen;
         };
 
