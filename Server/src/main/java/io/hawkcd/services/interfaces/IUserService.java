@@ -31,4 +31,8 @@ public interface IUserService extends ICrudService<User> {
     ServiceResult changeUserPassword(UserDto user, String newPassword, String oldPassword);
 
     ServiceResult resetUserPassword(User user);
+
+    ServiceResult disableUser(String id);
+
+    ServiceResult enableUser(String id);
 }

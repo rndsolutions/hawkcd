@@ -174,4 +174,32 @@ public class UserService extends CrudService<User> implements IUserService {
         user.setPassword(hashedPassword);
         return this.update(user);
     }
+
+    @Override
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
+    public ServiceResult disableUser(String id) {
+        ServiceResult result = this.getById(id);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            return result;
+        }
+
+        User user = (User) result.getEntity();
+        user.setEnabled(false);
+        return this.update(user);
+    }
+
+    @Override
+    @Authorization(scope = PermissionScope.SERVER, type = PermissionType.ADMIN)
+    public ServiceResult enableUser(String id) {
+        ServiceResult result = this.getById(id);
+        if (result.getNotificationType() == NotificationType.ERROR) {
+            return result;
+        }
+
+        User user = (User) result.getEntity();
+        user.setEnabled(true);
+        return this.update(user);
+    }
+
+
 }
