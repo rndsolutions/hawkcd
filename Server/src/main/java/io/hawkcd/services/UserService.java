@@ -20,6 +20,9 @@ import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
+import io.hawkcd.core.session.ISessionManager;
+import io.hawkcd.core.session.SessionFactory;
+import io.hawkcd.core.session.SessionManager;
 import io.hawkcd.core.subscriber.Envelope;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
@@ -30,6 +33,7 @@ import io.hawkcd.model.enums.NotificationType;
 import io.hawkcd.model.enums.PermissionScope;
 import io.hawkcd.model.enums.PermissionType;
 import io.hawkcd.services.interfaces.IUserService;
+import io.hawkcd.ws.WSSocket;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
@@ -185,6 +189,13 @@ public class UserService extends CrudService<User> implements IUserService {
 
         User user = (User) result.getEntity();
         user.setEnabled(false);
+
+        ISessionManager sessionManager = SessionFactory.getSessionManager();
+
+        WSSocket session = sessionManager.getSessionByUserId(user.getId());
+        sessionManager.logoutUser(session);
+        sessionManager.closeSessionByUserEmail(user.getEmail());
+
         return this.update(user);
     }
 
