@@ -218,6 +218,29 @@ angular
                             element.scrollTop(0);
                         }, 0);
                     });
+
+                    if(element[0].scrollHeight > element[0].clientHeight){
+                        upArrow[0].style.visibility = "visible";
+                        downArrow[0].style.visibility = "visible";
+                    } else {
+                        upArrow[0].style.visibility = "hidden";
+                        downArrow[0].style.visibility = "hidden";
+                    }
+
+                    innerElement.bind('DOMSubtreeModified',elemenHasChanged);
+
+                    function elemenHasChanged(e){
+                        $timeout(function(){
+                            if(element[0].scrollHeight > element[0].clientHeight){
+                                upArrow[0].style.visibility = "visible";
+                                downArrow[0].style.visibility = "visible";
+                            } else {
+                                upArrow[0].style.visibility = "hidden";
+                                downArrow[0].style.visibility = "hidden";
+                            }
+                        }, 100);
+                    }
+
                 }, 0);
 
                 // innerElement.bind('DOMSubtreeModified',elemenHasChanged);
