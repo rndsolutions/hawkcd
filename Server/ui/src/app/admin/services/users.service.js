@@ -144,6 +144,28 @@ angular
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
             websocketSenderService.call(json);
         };
+        
+        adminService.enableUser = function(userId) {
+            var methodName = "enableUser";
+            var className = "UserService";
+            var packageName = "io.hawkcd.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + userId + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+        };
+        
+        adminService.disableUser = function(userId) {
+            var methodName = "disableUser";
+            var className = "UserService";
+            var packageName = "io.hawkcd.services";
+            var result = "";
+            var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + userId + "\"}"];
+            var error = "";
+            var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);
+            websocketSenderService.call(json);
+        };
 
         adminService.updateUserGroupPermissions = function(userGroupId, permissions) {
             var methodName = "updateUserGroupPermissions";

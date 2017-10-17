@@ -94,7 +94,13 @@ angular
                         scope.$apply(function () {
                             ngModel.$setViewValue(state);
                             var buffer = scope.user;
-                            adminService.updateUser(buffer);
+                            if(buffer.isEnabled){
+                                //enable user function
+                                adminService.enableUser(buffer.id); 
+                            } else {
+                                //disable user function
+                                adminService.disableUser(buffer.id);   
+                            }
                         });
                     }
                 });
@@ -222,13 +228,15 @@ angular
                     innerElement.bind('DOMSubtreeModified',elemenHasChanged);
 
                     function elemenHasChanged(e){
-                        if(element[0].scrollHeight > element[0].clientHeight){
-                            upArrow[0].style.visibility = "visible";
-                            downArrow[0].style.visibility = "visible";
-                        } else {
-                            upArrow[0].style.visibility = "hidden";
-                            downArrow[0].style.visibility = "hidden";
-                        }
+                        $timeout(function(){
+                            if(element[0].scrollHeight > element[0].clientHeight){
+                                upArrow[0].style.visibility = "visible";
+                                downArrow[0].style.visibility = "visible";
+                            } else {
+                                upArrow[0].style.visibility = "hidden";
+                                downArrow[0].style.visibility = "hidden";
+                            }
+                        }, 100);
                     }
 
                     innerElement.trigger('DOMSubtreeModified');
