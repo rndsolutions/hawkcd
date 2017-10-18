@@ -79,7 +79,8 @@ angular
                 tfsDomain: 'Domain',
                 projectPath: 'Path',
                 stageName: 'Stage Name',
-                trigger: 'Trigger option'
+                trigger: 'Trigger option',
+                newLabel: 'new'
             },
             placeholders: {
                 pipelineName: 'Enter your pipeline name',

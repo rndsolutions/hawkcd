@@ -40,7 +40,8 @@
       </tbody>
     </table>
   </div>
-  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#addJob" data-toggle="modal">Add Job</button>
+  <!-- <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#addJob" data-toggle="modal">Add Job</button> -->
+  <button class="btn green" ng-disabled="pipeConfig.allPipelines[pipeConfig.pipelineIndex].permissionType != 'ADMIN'" data-target="#addJob" data-toggle="modal">{{pipeConfig.wizardInfo.labels.newLabel}}</button>
 </div>
 
 <div ng-include src="'app/pipelines/views/partials/config/stage-options/_add-job.html'"></div>
