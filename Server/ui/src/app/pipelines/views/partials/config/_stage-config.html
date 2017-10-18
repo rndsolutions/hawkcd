@@ -15,7 +15,16 @@
 <div id="stageConfig">
     <div ng-if="pipeConfig.windowWidth > 767" class="hidden-xs" ng-include src="'app/pipelines/views/partials/config/_stage-config-medium.html'"></div>
     <div ng-if="pipeConfig.windowWidth < 768" class="hidden-sm hidden-md hidden-lg" ng-include src="'app/pipelines/views/partials/config/_stage-config-small.html'"></div>
-</div>
+    
+    <!-- Modals for edit jobs screen -->
+    <div ng-include src="'app/pipelines/views/partials/config/stage-options/_add-job.html'"></div>
+    <div ng-include src="'app/pipelines/views/partials/config/stage-options/_remove-job.html'"></div>
+
+    <!-- Modals for edit variables screen -->
+    <div ng-include src="'app/pipelines/views/partials/config/stage-options/_add-variable.html'"></div>
+    <div ng-include src="'app/pipelines/views/partials/config/stage-options/_edit-variable.html'"></div>
+    <div ng-include src="'app/pipelines/views/partials/config/stage-options/_remove-variable.html'"></div>
+  </div>
 
 
 
