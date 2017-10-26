@@ -179,6 +179,9 @@ angular
                         loggerService.log(response);
 
                         //Error message when profile is disabled (error status 403)
+                        if(response && response.status === 403){
+                            $scope.mismatchCredentials.errorMessage = 'Your profile is disabled!';
+                        }
                             // Handle errors here, such as displaying a notification
                             // for invalid email and/or password.
                     });

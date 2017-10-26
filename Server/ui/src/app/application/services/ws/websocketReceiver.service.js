@@ -66,7 +66,7 @@ angular
                         validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
                     },
                     changeUserPassword: function(object) {
-                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true)
+                        validationService.dispatcherFlow(object, [userUpdater.updateUser], true);
                     },
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [adminService.getAllUsers], true);
@@ -74,7 +74,13 @@ angular
                     resetUserPassword:function(object) {
                     },
                     logout: function(object) {
-                        validationService.dispatcherFlow(object, [loginService.logoutUser])
+                        validationService.dispatcherFlow(object, [loginService.logoutUser]);
+                    },
+                    enableUser: function(object) {
+                        validationService.dispatcherFlow(object, [adminService.getAllUsers], true);
+                    },
+                    disableUser: function(object) {
+                        validationService.dispatcherFlow(object, [adminService.getAllUsers], true);
                     }
                 },
                 UserUpdaterService: {

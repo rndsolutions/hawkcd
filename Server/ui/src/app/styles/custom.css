@@ -402,6 +402,108 @@ p {
     display: none;
 }
 
+.portlet.light .portlet-body {
+    position: relative;
+}
+
+.console-ico {
+    margin-right: 56px;
+    margin-top: -15px !important;
+}
+
+.scroll-to-bottom {
+    position: absolute;
+    right: 34px;
+    top: 40px;
+    font-size: 30px;
+    color: white;
+    opacity: 0.3;
+    cursor: pointer;
+}
+
+.bottom-tooltip {
+    visibility: hidden;
+    position: absolute;
+    right: 26px;
+    top: -10px;
+    width: 134px;
+    font-size: 18px;
+    background-color: grey;
+    text-align: center;
+    font-family: arial;
+    line-height: 1;
+    border-radius: 5px;
+    padding: 8px;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    -moz-transition: opacity 0.5s ease-in-out;
+    -ms-transition: opacity 0.5s ease-in-out;
+    -o-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.scroll-to-bottom:hover {
+    opacity: 1;
+}
+
+.scroll-to-bottom:hover .bottom-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.scroll-to-top-custom {
+    position: absolute;
+    right: 34px;
+    top: 570px;
+    font-size: 30px;
+    color: white;
+    opacity: 0.3;
+    cursor: pointer;
+}
+
+.scroll-to-top-custom:hover {
+    opacity: 1;
+}
+
+.top-tooltip {
+    visibility: hidden;
+    position: absolute;
+    right: 26px;
+    top: -10px;
+    width: 134px;
+    font-size: 18px;
+    background-color: grey;
+    text-align: center;
+    font-family: arial;
+    line-height: 1;
+    border-radius: 5px;
+    padding: 8px;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    -moz-transition: opacity 0.5s ease-in-out;
+    -ms-transition: opacity 0.5s ease-in-out;
+    -o-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.scroll-to-top-custom:hover .top-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.full-screen .scroll-to-bottom{
+    position: fixed;
+    right: 32px;
+    top: 30px;
+}
+
+.full-screen .scroll-to-top-custom{
+    position: fixed;
+    right: 32px;
+    top: unset;
+    bottom: 30px;
+}
+
 .console {
     height: 600px;
     max-height: 600px;

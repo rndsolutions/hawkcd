@@ -33,11 +33,12 @@
                 <div class="clearfix"></div>
                 <div id="console" class="tab-pane fade in active" style="padding-bottom:10px">
                     <pre class="console" 
-                        ng-class="{'full-screen' : pipesRunManagement.isFullScreen == true}" 
-                        set-scroll-position 
-                        scroll-position="bottom">
-                            <i class="ico" style="color:white" ng-class="{'fa fa-expand fa-2x' : pipesRunManagement.isFullScreen == false, 'fa fa-compress fa-2x': pipesRunManagement.isFullScreen == true}" ng-click="pipesRunManagement.toggleFullScreen()"></i>
-                        <div ng-bind-html="pipesRunManagement.currentPipelineRun.stages[pipesRunManagement.toggleRun].jobs[pipesRunManagement.jobIndex].processedReport">
+                        set-scroll-position
+                        ng-class="{'full-screen' : pipesRunManagement.isFullScreen == true}" >
+                            <div class="scroll-to-bottom glyphicon glyphicon-arrow-down"><span class="bottom-tooltip">Go to bottom</span></div>
+                            <div class="scroll-to-top-custom glyphicon glyphicon-arrow-up"><span class="top-tooltip">Go to top</span></div>
+                            <i class="ico console-ico" style="color:white" ng-class="{'fa fa-expand fa-2x' : pipesRunManagement.isFullScreen == false, 'fa fa-compress fa-2x': pipesRunManagement.isFullScreen == true}" ng-click="pipesRunManagement.toggleFullScreen()"></i>
+                        <div class="content-div-element" ng-bind-html="pipesRunManagement.currentPipelineRun.stages[pipesRunManagement.toggleRun].jobs[pipesRunManagement.jobIndex].processedReport">
 
                         </div>
                     </pre>
