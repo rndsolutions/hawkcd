@@ -177,7 +177,7 @@ angular
                             }
                         }
 
-                        artifactService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
+                        artifactService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, 0, '');
                     },
                     assignPipelineToGroup: function(object) {
                         validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
@@ -224,7 +224,7 @@ angular
                                 break;
                             }
                         }
-                        artifactService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
+                        artifactService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, 0, '');
                     },
                     pausePipeline: function(object) {
                         validationService.dispatcherFlow(object, []);

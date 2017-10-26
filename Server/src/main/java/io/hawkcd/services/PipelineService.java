@@ -22,6 +22,7 @@ import io.hawkcd.core.security.Authorization;
 import io.hawkcd.core.security.AuthorizationFactory;
 import io.hawkcd.db.DbRepositoryFactory;
 import io.hawkcd.db.IDbRepository;
+import io.hawkcd.db.mongodb.MongoDbRepository;
 import io.hawkcd.model.*;
 import io.hawkcd.model.dto.PipelineDto;
 import io.hawkcd.model.enums.*;
@@ -49,12 +50,24 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     private IPipelineDefinitionService pipelineDefinitionService;
     private IMaterialDefinitionService materialDefinitionService;
 
+    private PipelineMongoService pipelineMongoService;
+
+    public PipelineMongoService getPipelineMongoService() {
+        return this.pipelineMongoService;
+    }
+
+    public void setPipelineMongoService(PipelineMongoService pipelineMongoService) {
+        this.pipelineMongoService = pipelineMongoService;
+    }
+
     public PipelineService() {
         IDbRepository repository = DbRepositoryFactory.create(DATABASE_TYPE, CLASS_TYPE);
         super.setRepository(repository);
         super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineDefinitionService = new PipelineDefinitionService();
         this.materialDefinitionService = new MaterialDefinitionService();
+        this.setPipelineMongoService(new PipelineMongoService<Pipeline>());
+        this.getPipelineMongoService().setMongoRepository((MongoDbRepository) repository);
     }
 
     public PipelineService(IDbRepository repository, IPipelineDefinitionService pipelineDefinitionService, IMaterialDefinitionService materialDefinitionService) {
@@ -62,6 +75,8 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
         super.setObjectType(CLASS_TYPE.getSimpleName());
         this.pipelineDefinitionService = pipelineDefinitionService;
         this.materialDefinitionService = materialDefinitionService;
+        this.setPipelineMongoService(new PipelineMongoService<Pipeline>());
+        this.getPipelineMongoService().setMongoRepository((MongoDbRepository<Pipeline>) repository);
     }
 
     @Override
@@ -73,7 +88,8 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAll() {
-        return super.getAll();
+        ServiceResult result = super.getAll();
+        return result;
     }
 
     @Override
@@ -81,13 +97,21 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     public ServiceResult add(Pipeline pipeline) {
         PipelineDefinition pipelineDefinition = (PipelineDefinition) this.pipelineDefinitionService.getById(pipeline.getPipelineDefinitionId()).getEntity();
         pipeline.setPipelineDefinitionName(pipelineDefinition.getName());
-        List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getEntity();
-        Pipeline lastPipeline = pipelines
+
+        Pipeline lastPipeline = null;
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                List<Pipeline> pipelines = (List<Pipeline>) this.getAll().getEntity();
+                lastPipeline = pipelines
                 .stream()
                 .filter(p -> p.getPipelineDefinitionId().equals(pipeline.getPipelineDefinitionId()))
                 .sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId()))
                 .findFirst()
                 .orElse(null);
+            case MONGODB:
+                lastPipeline = (Pipeline) this.getPipelineMongoService().GetLastPipeline(pipeline.getPipelineDefinitionId());
+        }
+
         if (lastPipeline == null) {
             pipeline.setExecutionId(1);
         } else {
@@ -152,15 +176,22 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllByDefinitionId(String pipelineDefinitionId) {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+        ServiceResult result = null;
 
-        List<Pipeline> filteredPipelines = pipelines
-                .stream()
-                .filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId))
-                .collect(Collectors.toList());
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAll();
+                List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
-        result.setEntity(filteredPipelines);
+                List<Pipeline> filteredPipelines = pipelines
+                        .stream()
+                        .filter(p -> p.getPipelineDefinitionId().equals(pipelineDefinitionId))
+                        .collect(Collectors.toList());
+
+                result.setEntity(filteredPipelines);
+            case MONGODB:
+                result = this.getPipelineMongoService().getByDefinitionId(pipelineDefinitionId);
+        }
 
         return result;
     }
@@ -168,16 +199,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllNonupdatedPipelines() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+        ServiceResult result = null;
 
-        List<Pipeline> updatedPipelines = pipelines
-                .stream()
-                .filter(p -> !p.areMaterialsUpdated())
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-                .collect(Collectors.toList());
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAll();
+                List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
-        result.setEntity(updatedPipelines);
+                List<Pipeline> updatedPipelines = pipelines
+                        .stream()
+                        .filter(p -> !p.areMaterialsUpdated())
+                        .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                        .collect(Collectors.toList());
+
+                result.setEntity(updatedPipelines);
+            case MONGODB:
+                result = this.getPipelineMongoService().getAllNonupdatedPipelines();
+        }
 
         return result;
     }
@@ -185,16 +223,25 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+        ServiceResult result = null;
 
-        List<Pipeline> updatedPipelines = pipelines
-                .stream()
-                .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-                .collect(Collectors.toList());
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAll();
+                List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
-        result.setEntity(updatedPipelines);
+                List<Pipeline> updatedPipelines = pipelines
+                        .stream()
+                        .filter(p -> p.areMaterialsUpdated() && !p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
+                        .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                        .collect(Collectors.toList());
+
+                result.setEntity(updatedPipelines);
+
+                return result;
+            case MONGODB:
+                result = this.getPipelineMongoService().getAllUpdatedUnpreparedPipelinesInProgress();
+        }
 
         return result;
     }
@@ -202,16 +249,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPreparedPipelinesInProgress() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+        ServiceResult result = null;
 
-        List<Pipeline> updatedPipelines = pipelines
-                .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-                .collect(Collectors.toList());
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAll();
+                List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
-        result.setEntity(updatedPipelines);
+                List<Pipeline> updatedPipelines = pipelines
+                        .stream()
+                        .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.IN_PROGRESS))
+                        .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                        .collect(Collectors.toList());
+
+                result.setEntity(updatedPipelines);
+            case MONGODB:
+                result = this.getPipelineMongoService().getAllPreparedPipelinesInProgress();
+        }
 
         return result;
     }
@@ -219,16 +273,23 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getAllPreparedAwaitingPipelines() {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+        ServiceResult result = null;
 
-        List<Pipeline> updatedPipelines = pipelines
-                .stream()
-                .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING))
-                .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
-                .collect(Collectors.toList());
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAll();
+                List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
 
-        result.setEntity(updatedPipelines);
+                List<Pipeline> updatedPipelines = pipelines
+                        .stream()
+                        .filter(p -> p.isPrepared() && (p.getStatus() == PipelineStatus.AWAITING))
+                        .sorted((p1, p2) -> p1.getStartTime().compareTo(p2.getStartTime()))
+                        .collect(Collectors.toList());
+
+                result.setEntity(updatedPipelines);
+            case MONGODB:
+                result = this.getPipelineMongoService().getAllPreparedAwaitingPipelines();
+        }
 
         return result;
     }
@@ -272,74 +333,93 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines) {
-        return this.getAllPipelineHistoryDTOs(pipelineDefinitionId, numberOfPipelines, null);
+        ServiceResult result = this.getAllPipelineHistoryDTOs(pipelineDefinitionId, numberOfPipelines, null);
+        return result;
     }
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
     public ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId) {
-        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
-        List<Pipeline> filteredPipelines = pipelines
-                .stream()
-                .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
-                .collect(Collectors.toList());
+        ServiceResult result = null;
 
-        int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
-        if (indexOfPipeline == -1) {
-            filteredPipelines = filteredPipelines
-                    .stream()
-                    .limit(numberOfPipelines)
-                    .collect(Collectors.toList());
-        } else {
-            filteredPipelines = filteredPipelines
-                    .stream()
-                    .skip(indexOfPipeline + 1)
-                    .limit(numberOfPipelines)
-                    .collect(Collectors.toList());
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAllByDefinitionId(pipelineDefinitionId);
+                List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+                List<Pipeline> filteredPipelines = pipelines
+                        .stream()
+                        .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
+                        .collect(Collectors.toList());
+
+                int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
+                if (indexOfPipeline == -1) {
+                    filteredPipelines = filteredPipelines
+                            .stream()
+                            .limit(numberOfPipelines)
+                            .collect(Collectors.toList());
+                } else {
+                    filteredPipelines = filteredPipelines
+                            .stream()
+                            .skip(indexOfPipeline + 1)
+                            .limit(numberOfPipelines)
+                            .collect(Collectors.toList());
+                }
+
+                List<PipelineDto> pipelineDtos = new ArrayList<>();
+                for (Pipeline pipeline : filteredPipelines) {
+                    PipelineDto pipelineDto = new PipelineDto();
+                    pipelineDto.constructHistoryPipelineDto(pipeline);
+                    pipelineDtos.add(pipelineDto);
+                }
+
+                result.setEntity(pipelineDtos);
+            case MONGODB:
+                result = this.getPipelineMongoService().getByQuantity(pipelineDefinitionId, numberOfPipelines, pipelineId);
         }
-
-        List<PipelineDto> pipelineDtos = new ArrayList<>();
-        for (Pipeline pipeline : filteredPipelines) {
-            PipelineDto pipelineDto = new PipelineDto();
-            pipelineDto.constructHistoryPipelineDto(pipeline);
-            pipelineDtos.add(pipelineDto);
-        }
-
-        result.setEntity(pipelineDtos);
 
         return result;
     }
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
-    public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines) {
-        return this.getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, "");
+    public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, Integer skip) {
+        return this.getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, skip, "");
     }
 
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.NONE )
-    public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, String pipelineId) {
-        ServiceResult result = this.getAll();
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
-        List<Pipeline> filteredPipelines = pipelines
-                .stream()
-                .filter(p -> p.getPipelineDefinitionName().toLowerCase().contains(searchCriteria.toLowerCase()))
-                .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
-                .collect(Collectors.toList());
+    public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, Integer skip, String pipelineId) {
+        ServiceResult result = null;
+        List<Pipeline> pipelines = null;
+        List<Pipeline> filteredPipelines = null;
 
-        int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
-        if (indexOfPipeline == -1) {
-            filteredPipelines = filteredPipelines
-                    .stream()
-                    .limit(numberOfPipelines)
-                    .collect(Collectors.toList());
-        } else {
-            filteredPipelines = filteredPipelines
-                    .stream()
-                    .skip(indexOfPipeline + 1)
-                    .limit(numberOfPipelines)
-                    .collect(Collectors.toList());
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAll();
+                pipelines = (List<Pipeline>) result.getEntity();
+                filteredPipelines = pipelines
+                        .stream()
+                        .filter(p -> p.getPipelineDefinitionName().toLowerCase().contains(searchCriteria.toLowerCase()))
+                        .sorted((p1, p2) -> p2.getStartTime().compareTo(p1.getStartTime()))
+                        .collect(Collectors.toList());
+
+                int indexOfPipeline = this.getIndexOfPipeline(filteredPipelines, pipelineId);
+                if (indexOfPipeline == -1) {
+                    filteredPipelines = filteredPipelines
+                            .stream()
+                            .limit(numberOfPipelines)
+                            .collect(Collectors.toList());
+                } else {
+                    filteredPipelines = filteredPipelines
+                            .stream()
+                            .skip(indexOfPipeline + 1)
+                            .limit(numberOfPipelines)
+                            .collect(Collectors.toList());
+                }
+            case MONGODB:
+                result = this.getPipelineMongoService().getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, skip, pipelineId);
+                pipelines = (List<Pipeline>) result.getEntity();
+                filteredPipelines = pipelines;
         }
 
         List<PipelineDto> pipelineDtos = new ArrayList<>();
