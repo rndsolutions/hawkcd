@@ -258,3 +258,5 @@ rev.txt
 
 build_/win/Installers/Wix_Agent/WiX/*.txt
 build_/win/Installers/Wix_Server/WiX/*.txt
+hawkcd.iml
+Server/Server.iml
