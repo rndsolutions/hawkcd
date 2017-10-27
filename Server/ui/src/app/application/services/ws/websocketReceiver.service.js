@@ -17,8 +17,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater', 'pipeHistoryService', 'artifactService',
-        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater, pipeHistoryService, artifactService) {
+    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater', 'pipeHistoryService', 'artifactService', '$timeout',
+        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater, pipeHistoryService, artifactService, $timeout) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
@@ -243,27 +243,32 @@ angular
                                 isInHistoryScreen = false;
                             }
                             
-                            for(var i = 0; i < arrayToTraverse.length - 1; i++){
+                            for(var i = 0; i < arrayToTraverse.length; i++){
                                 if(arrayToTraverse[i].id === object.result.id){
+                                    if(arrayToTraverse.length === 10){
+                                        arrayToTraverse[0].disabled = true;
+                                    }
                                     arrayToTraverse.splice(i, 1);
                                     break;
                                 }
                             }
 
                             if(arrayToTraverse.length < 10){
-                                if(isInHistoryScreen){
-                                    pipeHistoryService.getAllHistoryPipelines(
-                                        arrayToTraverse[arrayToTraverse.length - 1].pipelineDefinitionId,
-                                         1,
-                                         arrayToTraverse[arrayToTraverse.length - 1].id
+                                $timeout(function(){
+                                    if(isInHistoryScreen){
+                                        pipeHistoryService.getAllHistoryPipelines(
+                                            arrayToTraverse[arrayToTraverse.length - 1].pipelineDefinitionId,
+                                             1,
+                                             arrayToTraverse[arrayToTraverse.length - 1].id
+                                            );
+                                    } else {
+                                        artifactService.getAllArtifactPipelines(
+                                            artifactService.artifactCriteria,
+                                            1,
+                                            arrayToTraverse[arrayToTraverse.length - 1].id
                                         );
-                                } else {
-                                    artifactService.getAllArtifactPipelines(
-                                        artifactService.artifactCriteria,
-                                        1,
-                                        arrayToTraverse[arrayToTraverse.length - 1].id
-                                    );
-                                }
+                                    }
+                                }, 0);
                             }
                         }
                     }
