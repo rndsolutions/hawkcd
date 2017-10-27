@@ -43,4 +43,6 @@ public interface IPipelineService extends ICrudService<Pipeline> {
     ServiceResult cancelPipeline(Pipeline pipeline);
 
     ServiceResult pausePipeline(Pipeline pipeline);
+
+    ServiceResult deletePipeLineById(String pipelineId);
 }

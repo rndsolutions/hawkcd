@@ -17,8 +17,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
-        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
+    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater', 'pipeHistoryService', 'artifactService',
+        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater, pipeHistoryService, artifactService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
@@ -232,8 +232,40 @@ angular
                     update: function(object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.updatePipeline]);
                     },
-                    delete: function(object) {
+                    deletePipeLineById: function(object) {
+                        validationService.dispatcherFlow(object, [], true);
+                        if(object.notificationType === 'SUCCESS'){
+                            var isInHistoryScreen = true;
+                            var arrayToTraverse = viewModel.historyPipelines;
 
+                            if(arrayToTraverse.length < 1){
+                                arrayToTraverse = viewModel.artifactPipelines;
+                                isInHistoryScreen = false;
+                            }
+                            
+                            for(var i = 0; i < arrayToTraverse.length - 1; i++){
+                                if(arrayToTraverse[i].id === object.result.id){
+                                    arrayToTraverse.splice(i, 1);
+                                    break;
+                                }
+                            }
+
+                            if(arrayToTraverse.length < 10){
+                                if(isInHistoryScreen){
+                                    pipeHistoryService.getAllHistoryPipelines(
+                                        arrayToTraverse[arrayToTraverse.length - 1].pipelineDefinitionId,
+                                         1,
+                                         arrayToTraverse[arrayToTraverse.length - 1].id
+                                        );
+                                } else {
+                                    artifactService.getAllArtifactPipelines(
+                                        artifactService.artifactCriteria,
+                                        1,
+                                        arrayToTraverse[arrayToTraverse.length - 1].id
+                                    );
+                                }
+                            }
+                        }
                     }
                 },
                 MaterialDefinitionService: {

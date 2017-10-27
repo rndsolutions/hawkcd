@@ -17,7 +17,7 @@
 
 angular
     .module('hawk.artifactManagement')
-    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, pipelineUpdater, moment, commonUtitlites, filterRuns, artifactService) {
+    .controller('ArtifactController', function($rootScope, $scope, $log, $interval, viewModel, pipelineUpdater, moment, commonUtitlites, filterRuns, artifactService, pipeHistoryService) {
         var vm = this;
 
         vm.allPipelines = [];
@@ -182,7 +182,7 @@ angular
          };
 
          vm.deleteRun = function(runToDelete){
-            artifactService.deleteRun(vm.pipelineId, runToDelete);
+            artifactService.deleteRun(runToDelete.id, vm.query);
          };
 
         $scope.$on("$destroy", function() {
