@@ -277,7 +277,7 @@ angular
                     },
                     update: function(object) {
                         validationService.dispatcherFlow(object, [jobDefinitionUpdater.updateJobDefinition], true);
-                    },
+                    }, 
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs], true);
                     }
