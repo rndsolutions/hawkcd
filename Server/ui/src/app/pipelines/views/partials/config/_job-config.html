@@ -15,6 +15,22 @@
 <div id="jobConfig">
   <div ng-if="pipeConfig.windowWidth > 767" class="hidden-xs" ng-include src="'app/pipelines/views/partials/config/_job-config-medium.html'"></div>
   <div ng-if="pipeConfig.windowWidth < 768" class="hidden-sm hidden-md hidden-lg" ng-include src="'app/pipelines/views/partials/config/_job-config-small.html'"></div>
+  
+
+  <!-- Modals for edit taks screen -->
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_add-task.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_edit-task.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_remove-task.html'"></div>
+
+  <!-- Modals for edit variable screen -->
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_add-variable.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_edit-variable.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_remove-variable.html'"></div>
+
+  <!-- Modals for edit resource screen -->
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_add-resource.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_edit-resource.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/job-options/_remove-resource.html'"></div>
 </div>
 
 

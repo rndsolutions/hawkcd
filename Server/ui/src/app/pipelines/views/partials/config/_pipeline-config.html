@@ -15,6 +15,15 @@
 <div id="pipelineConfig">
   <div ng-if="pipeConfig.windowWidth > 767" class="hidden-xs" ng-include src="'app/pipelines/views/partials/config/_pipeline-config-medium.html'"></div>
   <div ng-if="pipeConfig.windowWidth < 768" class="hidden-sm hidden-md hidden-lg" ng-include src="'app/pipelines/views/partials/config/_pipeline-config-small.html'"></div>
+
+  <!-- Modals for edit stages screen -->
+  <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_add-stage.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_remove-stage.html'"></div>
+
+  <!-- Modals for edit variables screen -->
+  <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_add-variable.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_edit-variable.html'"></div>
+  <div ng-include src="'app/pipelines/views/partials/config/pipeline-options/_remove-variable.html'"></div>
 </div>
 
 
