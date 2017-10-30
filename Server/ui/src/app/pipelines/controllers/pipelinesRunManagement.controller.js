@@ -214,7 +214,12 @@ angular
         }, true);
 
         $scope.$watch(function() { return viewModel.runManagementPipeline}, function (newVal, oldVal) {
-            vm.currentPipelineRun = angular.copy(viewModel.runManagementPipeline);
+            if((viewModel.runManagementPipeline && vm.currentPipelineRun &&
+            viewModel.runManagementPipeline.id === vm.currentPipelineRun.id) ||
+            (vm.currentPipelineRun.length < 1 || Object.keys(vm.currentPipelineRun).length === 0)
+            ){
+                vm.currentPipelineRun = angular.copy(viewModel.runManagementPipeline);
+            }
 
             if(vm.currentPipelineRun.stages && vm.isFirstLoad){
                 vm.selectJob(0, 0);
