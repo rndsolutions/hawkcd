@@ -17,8 +17,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater',
-        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater) {
+    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater', 'artifactService',
+        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater, artifactService) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
@@ -177,7 +177,7 @@ angular
                             }
                         }
 
-                        pipeExecService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
+                        artifactService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
                     },
                     assignPipelineToGroup: function(object) {
                         validationService.dispatcherFlow(object, [pipelineDefinitionUpdater.updatePipelineDefinition, pipeConfigService.getAllPipelineGroupDTOs, pipeConfigService.getAllPipelineDefinitions], true);
@@ -224,7 +224,7 @@ angular
                                 break;
                             }
                         }
-                        pipeExecService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
+                        artifactService.getAllArtifactPipelines(criteria, viewModel.artifactPipelines.length, '');
                     },
                     pausePipeline: function(object) {
                         validationService.dispatcherFlow(object, []);
@@ -277,7 +277,7 @@ angular
                     },
                     update: function(object) {
                         validationService.dispatcherFlow(object, [jobDefinitionUpdater.updateJobDefinition], true);
-                    },
+                    }, 
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs], true);
                     }
