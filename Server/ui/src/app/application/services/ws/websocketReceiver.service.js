@@ -17,8 +17,8 @@
 
 angular
     .module('hawk.pipelinesManagement')
-    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater', 'artifactService',
-        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater, artifactService) {
+    .factory('websocketReceiverService', ['$rootScope', 'agentService', 'viewModel', 'validationService', 'toaster', 'viewModelUpdater', 'adminGroupService', 'adminService', 'loggerService', 'pipeConfigService', 'loginService', 'pipeExecService', 'agentUpdater', 'jobDefinitionUpdater', 'loggedUserUpdater', 'materialDefinitionUpdater', 'pipelineDefinitionUpdater', 'pipelineGroupUpdater', 'pipelineUpdater', 'stageDefinitionUpdater', 'taskDefinitionUpdater', 'userGroupUpdater', 'userUpdater', 'pipeHistoryService', 'artifactService', '$timeout',
+        function($rootScope, agentService, viewModel, validationService, toaster, viewModelUpdater, adminGroupService, adminService, loggerService, pipeConfigService, loginService, pipeExecService, agentUpdater, jobDefinitionUpdater, loggedUserUpdater, materialDefinitionUpdater, pipelineDefinitionUpdater, pipelineGroupUpdater, pipelineUpdater, stageDefinitionUpdater, taskDefinitionUpdater, userGroupUpdater, userUpdater, pipeHistoryService, artifactService, $timeout) {
             var webSocketReceiverService = this;
 
             webSocketReceiverService.processEvent = function(data) {
@@ -232,8 +232,45 @@ angular
                     update: function(object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.updatePipeline]);
                     },
-                    delete: function(object) {
+                    deletePipeLineById: function(object) {
+                        validationService.dispatcherFlow(object, [], true);
+                        if(object.notificationType === 'SUCCESS'){
+                            var isInHistoryScreen = true;
+                            var arrayToTraverse = viewModel.historyPipelines;
 
+                            if(arrayToTraverse.length < 1){
+                                arrayToTraverse = viewModel.artifactPipelines;
+                                isInHistoryScreen = false;
+                            }
+                            
+                            for(var i = 0; i < arrayToTraverse.length; i++){
+                                if(arrayToTraverse[i].id === object.result.id){
+                                    if(arrayToTraverse.length === 10){
+                                        arrayToTraverse[0].disabled = true;
+                                    }
+                                    arrayToTraverse.splice(i, 1);
+                                    break;
+                                }
+                            }
+
+                            if(arrayToTraverse.length < 10){
+                                $timeout(function(){
+                                    if(isInHistoryScreen){
+                                        pipeHistoryService.getAllHistoryPipelines(
+                                            arrayToTraverse[arrayToTraverse.length - 1].pipelineDefinitionId,
+                                             1,
+                                             arrayToTraverse[arrayToTraverse.length - 1].id
+                                            );
+                                    } else {
+                                        artifactService.getAllArtifactPipelines(
+                                            artifactService.artifactCriteria,
+                                            1,
+                                            arrayToTraverse[arrayToTraverse.length - 1].id
+                                        );
+                                    }
+                                }, 0);
+                            }
+                        }
                     }
                 },
                 MaterialDefinitionService: {
@@ -277,7 +314,7 @@ angular
                     },
                     update: function(object) {
                         validationService.dispatcherFlow(object, [jobDefinitionUpdater.updateJobDefinition], true);
-                    },
+                    }, 
                     delete: function(object) {
                         validationService.dispatcherFlow(object, [pipeConfigService.getAllPipelineDefinitions, pipeConfigService.getAllPipelineGroupDTOs], true);
                     }

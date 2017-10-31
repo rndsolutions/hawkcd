@@ -60,7 +60,7 @@ angular
         pipeHistoryService.getAllHistoryPipelines(vm.pipelineId, 10);
 
         vm.getLastRunAction = function(pipelineRun) {
-            return moment.getLastRunAction(pipelineRun)
+            return moment.getLastRunAction(pipelineRun);
         };
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
@@ -110,7 +110,7 @@ angular
          };
 
          vm.deleteRun = function(runToDelete){
-            pipeHistoryService.deleteRun(vm.pipelineId, runToDelete);
+            pipeHistoryService.deleteRun(runToDelete.id);
          };
 
          $scope.$on("$destroy", function() {
