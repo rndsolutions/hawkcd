@@ -265,6 +265,7 @@ angular
                                         artifactService.getAllArtifactPipelines(
                                             artifactService.artifactCriteria,
                                             1,
+                                            arrayToTraverse.length,
                                             arrayToTraverse[arrayToTraverse.length - 1].id
                                         );
                                     }
