@@ -16,33 +16,23 @@
 
 package io.hawkcd.services.interfaces;
 
-import io.hawkcd.model.Pipeline;
+import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 
-public interface IPipelineService extends ICrudService<Pipeline> {
-    ServiceResult getAllByDefinitionId(String pipelineDefinitionId);
+public interface IPipelineMongoService<T extends Entity>  {
+    ServiceResult getByQuantity(String definitionId, Integer quantity, String firstId);
 
-    ServiceResult getAllNonupdatedPipelines();
+    ServiceResult getByDefinitionId(String definitionId);
 
     ServiceResult getAllUpdatedUnpreparedPipelinesInProgress();
 
-    ServiceResult getAllPreparedPipelinesInProgress();
-
     ServiceResult getAllPreparedAwaitingPipelines();
 
-    ServiceResult getLastRun(String pipelineDefinitionId);
+    ServiceResult getAllPreparedPipelinesInProgress();
 
-    ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines);
+    ServiceResult getAllNonupdatedPipelines();
 
-    ServiceResult getAllPipelineHistoryDTOs(String pipelineDefinitionId, Integer numberOfPipelines, String pipelineId);
-
-    ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, Integer skip);
+    T GetLastPipeline(String definitionId);
 
     ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, Integer skip, String pipelineId);
-
-    ServiceResult cancelPipeline(Pipeline pipeline);
-
-    ServiceResult pausePipeline(Pipeline pipeline);
-
-    ServiceResult deletePipeLineById(String pipelineId);
 }

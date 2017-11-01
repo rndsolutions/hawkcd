@@ -22,8 +22,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.eq;
+import io.hawkcd.model.enums.*;
 
 public class MongoDbRepository<T extends Entity> implements IDbRepository<T> {
     private static final Logger LOGGER = Logger.getLogger(MongoDbRepository.class);
@@ -165,4 +167,220 @@ public class MongoDbRepository<T extends Entity> implements IDbRepository<T> {
         }
     }
 
+    public List<T> getByQuantity(String definitionId, Integer quantity, String firstId) {
+        T resultElement;
+        List<T> result = new ArrayList<>();
+
+        try {
+            FindIterable documents;
+            BasicDBObject queryFilter = new BasicDBObject("pipelineDefinitionId", definitionId);
+            BasicDBObject sortFilter = new BasicDBObject("executionId", -1);
+
+            if(firstId.isEmpty() || firstId == null || firstId.equals("undefined"))
+            {
+                documents = collection.find(queryFilter).sort(sortFilter).limit(quantity);
+            }
+            else
+            {
+                Document lastPipe = (Document) collection.find(eq("id", firstId)).first();
+                Integer execId = (Integer)lastPipe.get("executionId");
+
+                List<BasicDBObject> queryExpression = new ArrayList<BasicDBObject>();
+
+                queryExpression.add(queryFilter);
+                queryExpression.add(new BasicDBObject("executionId", new BasicDBObject("$lt", execId)));
+                queryFilter = new BasicDBObject();
+                queryFilter.put("$and", queryExpression);
+
+                documents = collection.find(queryFilter).sort(sortFilter).limit(quantity);
+            }
+
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
+                result.add(resultElement);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
+
+    public List<T> getAllByDefinitionId(String definitionId) {
+        if (definitionId == null) {
+            return null;
+        }
+
+        T resultElement;
+        List<T> result = new ArrayList<>();
+        try {
+            FindIterable documents = this.collection.find(eq("pipelineDefinitionId", definitionId));
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
+                result.add(resultElement);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
+
+    public List<T> getAllUpdatedUnpreparedPipelinesInProgress() {
+        T resultElement;
+        List<T> result = new ArrayList<>();
+        try {
+            BasicDBObject queryFilter = new BasicDBObject();
+            List<BasicDBObject> queryExpression = new ArrayList<BasicDBObject>();
+            List<BasicDBObject> partialQueryExpresion = new ArrayList<BasicDBObject>();
+
+            partialQueryExpresion.add(new BasicDBObject("areMaterialsUpdated", true));
+            partialQueryExpresion.add(new BasicDBObject("isPrepared", false));
+
+            queryExpression.add(new BasicDBObject("$and", partialQueryExpresion));
+            queryExpression.add(new BasicDBObject("status", PipelineStatus.IN_PROGRESS.toString()));
+
+            queryFilter.put("$and", queryExpression);
+            BasicDBObject sortFilter = new BasicDBObject("startTime", 1);
+
+            FindIterable documents = collection.find(queryFilter).sort(sortFilter);
+
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
+                result.add(resultElement);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
+
+    public  List<T> getAllPreparedAwaitingPipelines(){
+        T resultElement;
+        List<T> result = new ArrayList<>();
+        try {
+            BasicDBObject queryFilter = new BasicDBObject();
+            List<BasicDBObject> queryExpresion = new ArrayList<BasicDBObject>();
+
+            queryExpresion.add(new BasicDBObject("isPrepared", true));
+            queryExpresion.add(new BasicDBObject("status", PipelineStatus.AWAITING.toString()));
+
+            queryFilter.put("$and", queryExpresion);
+            BasicDBObject sortFilter = new BasicDBObject("startTime", 1);
+
+            FindIterable documents = collection.find(queryFilter).sort(sortFilter);
+
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
+                result.add(resultElement);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
+
+    public List<T> getAllPreparedPipelinesInProgress(){
+        T resultElement;
+        List<T> result = new ArrayList<>();
+        try {
+            BasicDBObject queryFilter = new BasicDBObject();
+            List<BasicDBObject> queryExpresion = new ArrayList<BasicDBObject>();
+
+            queryExpresion.add(new BasicDBObject("isPrepared", true));
+            queryExpresion.add(new BasicDBObject("status", PipelineStatus.IN_PROGRESS.toString()));
+
+            queryFilter.put("$and", queryExpresion);
+            BasicDBObject sortFilter = new BasicDBObject("startTime", 1);
+
+            FindIterable documents = collection.find(queryFilter).sort(sortFilter);
+
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
+                result.add(resultElement);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
+
+    public List<T> getAllNonupdatedPipelines(){
+        T resultElement;
+        List<T> result = new ArrayList<>();
+        try {
+            BasicDBObject queryFilter = new BasicDBObject("areMaterialsUpdated", false);
+            BasicDBObject sortFilter = new BasicDBObject("startTime", 1);
+            FindIterable documents = collection.find(queryFilter).sort(sortFilter);
+
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
+                result.add(resultElement);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
+
+    public T GetLastPipeline(String definitionId){
+        T result = null;
+        try {
+            BasicDBObject queryFilter = new BasicDBObject("pipelineDefinitionId", definitionId);
+            BasicDBObject sortFilter = new BasicDBObject("executionId", -1);
+            FindIterable documents = collection.find(queryFilter).sort(sortFilter).limit(1);
+
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                result = this.jsonConverter.fromJson(documentToJson, this.entryType);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
+
+    public List<T> getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, Integer skip, String pipelineId){
+        T resultElement;
+        List<T> result = new ArrayList<>();
+
+        try {
+            FindIterable documents;
+            BasicDBObject queryFilter = new BasicDBObject();
+            queryFilter.put("pipelineDefinitionName", Pattern.compile(searchCriteria, Pattern.CASE_INSENSITIVE));
+
+            BasicDBObject sortFilter = new BasicDBObject("pipelineDefinitionId", -1);
+            sortFilter.append("executionId", -1);
+
+            if(pipelineId.isEmpty() || pipelineId == null || pipelineId.equals("undefined"))
+            {
+                documents = collection.find(queryFilter).sort(sortFilter).limit(numberOfPipelines);
+            }
+            else
+            {
+                documents = collection.find(queryFilter).sort(sortFilter).skip(skip).limit(numberOfPipelines);
+            }
+
+            for (Object document : documents) {
+                String documentToJson = JSON.serialize(document);
+                resultElement = this.jsonConverter.fromJson(documentToJson, this.entryType);
+                result.add(resultElement);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error(e);
+        }
+
+        return result;
+    }
 }

@@ -28,13 +28,14 @@ angular
         };
 
         //TODO: Send the search criteria, the number of Pipelines to be shown and the last Pipeline the UI has displayed
-        artifactService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, pipelineId) {
+        artifactService.getAllArtifactPipelines = function (searchCriteria, numberOfPipelines, skip, pipelineId) {
             var methodName = "getAllPipelineArtifactDTOs";
             var className = "PipelineService";
             var packageName = "io.hawkcd.services";
             var result = "";
             var args = ["{\"packageName\": \"java.lang.String\", \"object\": \"" + searchCriteria + "\"}",
                 "{\"packageName\": \"java.lang.Integer\", \"object\": " + numberOfPipelines + "}",
+                "{\"packageName\": \"java.lang.Integer\", \"object\": " + skip + "}",
                 "{\"packageName\": \"java.lang.String\", \"object\": \"" + pipelineId + "\"}"];
             var error = "";
             var json = jsonHandlerService.createJson(className, packageName, methodName, result, error, args);

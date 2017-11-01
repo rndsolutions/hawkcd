@@ -38,7 +38,7 @@ angular
 
         vm.isFirstLoad = true;
 
-        artifactService.getAllArtifactPipelines('', 10, '');
+        artifactService.getAllArtifactPipelines('', 10, viewModel.artifactPipelines.length, '');
 
         vm.truncateGitFromUrl = function(repoUrl, commitId) {
             return commonUtitlites.truncateGitFromUrl(repoUrl,commitId);
@@ -55,7 +55,7 @@ angular
                 viewModel.artifactPipelines[0].searchCriteria = angular.copy(vm.query);
             }
             vm.searchCriteria = angular.copy(vm.query);
-            artifactService.getAllArtifactPipelines(vm.query, 10, '');
+            artifactService.getAllArtifactPipelines(vm.query, 10, viewModel.artifactPipelines.length, '');
         };
 
         // $scope.$watch(function() {
@@ -93,7 +93,7 @@ angular
         vm.scrollCall = function() {
             if(vm.allPipelineRuns()[0]){
                 if(vm.allPipelineRuns()[0].disabled == false){
-                    artifactService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
+                    artifactService.getAllArtifactPipelines(vm.query, 10, vm.allPipelineRuns().length, vm.allPipelineRuns()[vm.allPipelineRuns().length - 1].id);
                 }
                 vm.isFirstLoad = false;
                 vm.allPipelineRuns()[0].disabled = true;
