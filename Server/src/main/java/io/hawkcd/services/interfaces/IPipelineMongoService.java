@@ -16,23 +16,17 @@
 
 package io.hawkcd.services.interfaces;
 
+import com.mongodb.BasicDBObject;
 import io.hawkcd.model.Entity;
 import io.hawkcd.model.ServiceResult;
 
 public interface IPipelineMongoService<T extends Entity>  {
-    ServiceResult getByQuantity(String definitionId, Integer quantity, String firstId);
 
-    ServiceResult getByDefinitionId(String definitionId);
+    ServiceResult QueryExecutor(BasicDBObject query);
 
-    ServiceResult getAllUpdatedUnpreparedPipelinesInProgress();
+    ServiceResult QueryExecutor(BasicDBObject query, BasicDBObject sortingFilter);
 
-    ServiceResult getAllPreparedAwaitingPipelines();
+    ServiceResult QueryExecutor(BasicDBObject query, BasicDBObject sortingFilter, Integer skip);
 
-    ServiceResult getAllPreparedPipelinesInProgress();
-
-    ServiceResult getAllNonupdatedPipelines();
-
-    T GetLastPipeline(String definitionId);
-
-    ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, Integer skip, String pipelineId);
+    ServiceResult QueryExecutor(BasicDBObject query, BasicDBObject sortingFilter, Integer skip, Integer limit);
 }

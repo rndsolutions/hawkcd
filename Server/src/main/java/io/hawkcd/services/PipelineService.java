@@ -16,6 +16,9 @@
 
 package io.hawkcd.services;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
 import io.hawkcd.core.Message;
 import io.hawkcd.core.MessageDispatcher;
 import io.hawkcd.core.security.Authorization;
@@ -35,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -108,8 +112,14 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 .sorted((p1, p2) -> Integer.compare(p2.getExecutionId(), p1.getExecutionId()))
                 .findFirst()
                 .orElse(null);
+                break;
             case MONGODB:
-                lastPipeline = (Pipeline) this.getPipelineMongoService().GetLastPipeline(pipeline.getPipelineDefinitionId());
+                BasicDBObject query = (BasicDBObject) QueryBuilder.start().put("pipelineDefinitionId").is(pipeline.getPipelineDefinitionId()).get();
+                BasicDBObject sortingFiler = new BasicDBObject("executionId", -1);
+                Integer skip = 0;
+                Integer limit = 1;
+                lastPipeline = (Pipeline) ((ArrayList) this.getPipelineMongoService().QueryExecutor(query, sortingFiler, skip, limit).getEntity()).get(0);
+                break;
         }
 
         if (lastPipeline == null) {
@@ -197,8 +207,11 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                         .collect(Collectors.toList());
 
                 result.setEntity(filteredPipelines);
+                break;
             case MONGODB:
-                result = this.getPipelineMongoService().getByDefinitionId(pipelineDefinitionId);
+                BasicDBObject query = (BasicDBObject) QueryBuilder.start().put("pipelineDefinitionId").is(pipelineDefinitionId).get();
+                result = this.getPipelineMongoService().QueryExecutor(query);
+                break;
         }
 
         return result;
@@ -221,8 +234,12 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                         .collect(Collectors.toList());
 
                 result.setEntity(updatedPipelines);
+                break;
             case MONGODB:
-                result = this.getPipelineMongoService().getAllNonupdatedPipelines();
+                BasicDBObject query = (BasicDBObject) QueryBuilder.start().put("areMaterialsUpdated").is(false).get();
+                BasicDBObject sortingFiler = new BasicDBObject("startTime", 1);
+                result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler);
+                break;
         }
 
         return result;
@@ -248,7 +265,17 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
 
                 return result;
             case MONGODB:
-                result = this.getPipelineMongoService().getAllUpdatedUnpreparedPipelinesInProgress();
+                List<DBObject> queriesArray = new ArrayList<>();
+                queriesArray.add((new QueryBuilder().start().put("areMaterialsUpdated").is(true).get()));
+                queriesArray.add((new QueryBuilder().start().put("isPrepared").is(false).get()));
+                queriesArray.add((new QueryBuilder().start().put("status").is(PipelineStatus.IN_PROGRESS.toString()).get()));
+
+                BasicDBObject query = (BasicDBObject) new QueryBuilder().start().and(
+                                    new QueryBuilder().start().and(queriesArray.get(0), queriesArray.get(1)).get(),
+                                    queriesArray.get(2)
+                                ).get();
+                BasicDBObject sortingFiler = new BasicDBObject("startTime", 1);
+                result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler);
         }
 
         return result;
@@ -271,8 +298,17 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                         .collect(Collectors.toList());
 
                 result.setEntity(updatedPipelines);
+                break;
             case MONGODB:
-                result = this.getPipelineMongoService().getAllPreparedPipelinesInProgress();
+                List<DBObject> queriesArray = new ArrayList<>();
+                queriesArray.add((new QueryBuilder().start().put("isPrepared").is(true).get()));
+                queriesArray.add((new QueryBuilder().start().put("status").is(PipelineStatus.IN_PROGRESS.toString()).get()));
+
+                BasicDBObject query = (BasicDBObject) new QueryBuilder().start().and(queriesArray.get(0), queriesArray.get(1)).get();
+                BasicDBObject sortingFiler = new BasicDBObject("startTime", 1);
+
+                result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler);
+                break;
         }
 
         return result;
@@ -295,8 +331,17 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                         .collect(Collectors.toList());
 
                 result.setEntity(updatedPipelines);
+                break;
             case MONGODB:
-                result = this.getPipelineMongoService().getAllPreparedAwaitingPipelines();
+                List<DBObject> queriesArray = new ArrayList<>();
+                queriesArray.add((new QueryBuilder().start().put("isPrepared").is(true).get()));
+                queriesArray.add((new QueryBuilder().start().put("status").is(PipelineStatus.AWAITING.toString()).get()));
+
+                BasicDBObject query = (BasicDBObject) new QueryBuilder().start().and(queriesArray.get(0), queriesArray.get(1)).get();
+                BasicDBObject sortingFiler = new BasicDBObject("startTime", 1);
+
+                result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler);
+                break;
         }
 
         return result;
@@ -305,19 +350,31 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
     @Override
     @Authorization( scope = PermissionScope.PIPELINE, type = PermissionType.VIEWER )
     public ServiceResult getLastRun(String pipelineDefinitionId) {
-        ServiceResult result = this.getAllByDefinitionId(pipelineDefinitionId);
-        List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+        ServiceResult result = null;
 
-        Pipeline lastRun = null;
-        int lastExecutionId = 0;
-        for (Pipeline pipeline : pipelines) {
-            if (pipeline.getExecutionId() > lastExecutionId) {
-                lastRun = pipeline;
-                lastExecutionId = pipeline.getExecutionId();
-            }
+        switch (super.DATABASE_TYPE) {
+            case REDIS:
+                result = this.getAllByDefinitionId(pipelineDefinitionId);
+                List<Pipeline> pipelines = (List<Pipeline>) result.getEntity();
+
+                Pipeline lastRun = null;
+                int lastExecutionId = 0;
+                for (Pipeline pipeline : pipelines) {
+                    if (pipeline.getExecutionId() > lastExecutionId) {
+                        lastRun = pipeline;
+                        lastExecutionId = pipeline.getExecutionId();
+                    }
+                }
+
+                result.setEntity(lastRun);
+                break;
+            case MONGODB:
+                BasicDBObject query = (BasicDBObject) QueryBuilder.start().put("pipelineDefinitionId").is(pipelineDefinitionId).get();
+                BasicDBObject sortingFiler = new BasicDBObject("executionId", -1);
+
+                result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler, 0, 1);
+                break;
         }
-
-        result.setEntity(lastRun);
 
         return result;
     }
@@ -381,8 +438,24 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 }
 
                 result.setEntity(pipelineDtos);
+                break;
             case MONGODB:
-                result = this.getPipelineMongoService().getByQuantity(pipelineDefinitionId, numberOfPipelines, pipelineId);
+                BasicDBObject query = (BasicDBObject) new QueryBuilder().start().put("pipelineDefinitionId").is(pipelineDefinitionId).get();
+                BasicDBObject sortingFiler = new BasicDBObject("executionId", -1);
+                if(pipelineId.isEmpty() || pipelineId == null || pipelineId.equals("undefined")){
+                    result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler, 0, numberOfPipelines);
+                } else {
+                    Pipeline lastPipeline =(Pipeline) this.getById(pipelineId).getEntity();
+                    Integer executionId = lastPipeline.getExecutionId();
+
+                    List<DBObject> queriesArray = new ArrayList<>();
+                    queriesArray.add(query);
+                    queriesArray.add((new QueryBuilder().start().put("executionId").lessThan(executionId).get()));
+
+                    query = (BasicDBObject) new QueryBuilder().start().and(queriesArray.get(0), queriesArray.get(1)).get();
+                    result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler, 0, numberOfPipelines);
+                }
+                break;
         }
 
         return result;
@@ -424,10 +497,19 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                             .limit(numberOfPipelines)
                             .collect(Collectors.toList());
                 }
+                break;
             case MONGODB:
-                result = this.getPipelineMongoService().getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, skip, pipelineId);
-                pipelines = (List<Pipeline>) result.getEntity();
-                filteredPipelines = pipelines;
+                BasicDBObject query = (BasicDBObject) new QueryBuilder().start().put("pipelineDefinitionName").regex(Pattern.compile(searchCriteria, Pattern.CASE_INSENSITIVE)).get();
+                BasicDBObject sortingFiler = new BasicDBObject("pipelineDefinitionId", -1);
+                sortingFiler.append("executionId", -1);
+                if(pipelineId.isEmpty() || pipelineId == null || pipelineId.equals("undefined")){
+                    result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler, 0, numberOfPipelines);
+                } else {
+                    result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler, skip, numberOfPipelines);
+                }
+
+                filteredPipelines = (List<Pipeline>) result.getEntity();
+                break;
         }
 
         List<PipelineDto> pipelineDtos = new ArrayList<>();

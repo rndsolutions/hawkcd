@@ -17,6 +17,7 @@
 
 package io.hawkcd.services;
 
+import com.mongodb.BasicDBObject;
 import io.hawkcd.core.config.Config;
 import io.hawkcd.db.mongodb.MongoDbRepository;
 import io.hawkcd.model.Entity;
@@ -42,8 +43,8 @@ public class PipelineMongoService<T extends Entity> extends Service<T> implement
     }
 
     @Override
-    public ServiceResult getByQuantity(String definitionId, Integer quantity, String firstId) {
-        List<T> dbObjects =  this.getMongoRepository().getByQuantity(definitionId, quantity, firstId);
+    public ServiceResult QueryExecutor(BasicDBObject query){
+        List<T> dbObjects = this.getMongoRepository().QueryExecutor(query);
 
         ServiceResult result = super.createServiceResultArray(dbObjects, NotificationType.SUCCESS, "retrieved successfully");
 
@@ -51,8 +52,8 @@ public class PipelineMongoService<T extends Entity> extends Service<T> implement
     }
 
     @Override
-    public ServiceResult getByDefinitionId(String definitionId) {
-        List<T> dbObjects =  this.getMongoRepository().getAllByDefinitionId(definitionId);
+    public ServiceResult QueryExecutor(BasicDBObject query, BasicDBObject sortingFilter){
+        List<T> dbObjects = this.getMongoRepository().QueryExecutor(query, sortingFilter);
 
         ServiceResult result = super.createServiceResultArray(dbObjects, NotificationType.SUCCESS, "retrieved successfully");
 
@@ -60,16 +61,8 @@ public class PipelineMongoService<T extends Entity> extends Service<T> implement
     }
 
     @Override
-    public ServiceResult getAllUpdatedUnpreparedPipelinesInProgress() {
-        List<T> dbObjects =  this.getMongoRepository().getAllUpdatedUnpreparedPipelinesInProgress();
-
-        ServiceResult result = super.createServiceResultArray(dbObjects, NotificationType.SUCCESS, "retrieved successfully");
-
-        return result;
-    }
-
-    public ServiceResult getAllPreparedAwaitingPipelines(){
-        List<T> dbObjects =  this.getMongoRepository().getAllPreparedAwaitingPipelines();
+    public ServiceResult QueryExecutor(BasicDBObject query, BasicDBObject sortingFilter, Integer skip){
+        List<T> dbObjects = this.getMongoRepository().QueryExecutor(query, sortingFilter, skip);
 
         ServiceResult result = super.createServiceResultArray(dbObjects, NotificationType.SUCCESS, "retrieved successfully");
 
@@ -77,33 +70,8 @@ public class PipelineMongoService<T extends Entity> extends Service<T> implement
     }
 
     @Override
-    public ServiceResult getAllPreparedPipelinesInProgress(){
-        List<T> dbObjects =  this.getMongoRepository().getAllPreparedPipelinesInProgress();
-
-        ServiceResult result = super.createServiceResultArray(dbObjects, NotificationType.SUCCESS, "retrieved successfully");
-
-        return result;
-    }
-
-    @Override
-    public ServiceResult getAllNonupdatedPipelines(){
-        List<T> dbObjects = this.getMongoRepository().getAllNonupdatedPipelines();
-
-        ServiceResult result = super.createServiceResultArray(dbObjects, NotificationType.SUCCESS, "retrieved successfully");
-
-        return result;
-    }
-
-    @Override
-    public T GetLastPipeline(String definitionId){
-        T result = this.getMongoRepository().GetLastPipeline(definitionId);
-
-        return result;
-    }
-
-    @Override
-    public ServiceResult getAllPipelineArtifactDTOs(String searchCriteria, Integer numberOfPipelines, Integer skip, String pipelineId){
-        List<T> dbObjects = this.getMongoRepository().getAllPipelineArtifactDTOs(searchCriteria, numberOfPipelines, skip, pipelineId);
+    public ServiceResult QueryExecutor(BasicDBObject query, BasicDBObject sortingFilter, Integer skip, Integer limit){
+        List<T> dbObjects = this.getMongoRepository().QueryExecutor(query, sortingFilter, skip, limit);
 
         ServiceResult result = super.createServiceResultArray(dbObjects, NotificationType.SUCCESS, "retrieved successfully");
 
