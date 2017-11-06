@@ -70,6 +70,21 @@ angular
             return viewModel.allPipelineGroups
         }, function(newVal, oldVal) {
             vm.allPipelineGroups = angular.copy(viewModel.allPipelineGroups);
+            checkPipelienStartEndTime();
+
+            vm.allPipelineGroups.sort(function(a, b) {
+                return a.name > b.name;
+            });
+            loggerService.log('Pipeline Groups watcher :');
+            loggerService.log(vm.allPipelineGroups);
+        }, true);
+
+        //Update the start/end time of the pipelines in every minute
+        $interval(function(){
+            checkPipelienStartEndTime();
+        }, 60000);
+
+        function checkPipelienStartEndTime(){
             vm.allPipelineGroups.forEach(function (currentPipelineGroup, groupIndex, groupArray) {
                 currentPipelineGroup.pipelines.forEach(function (currentPipeline, pipelineIndex, pipelineArray) {
                     if(currentPipeline.lastRun){
@@ -94,12 +109,7 @@ angular
                     return a.name > b.name;
                 });
             });
-            vm.allPipelineGroups.sort(function(a, b) {
-                return a.name > b.name;
-            });
-            loggerService.log('Pipeline Groups watcher :');
-            loggerService.log(vm.allPipelineGroups);
-        }, true);
+        }
 
         $scope.$watch(function() {
             return viewModel.allMaterialDefinitions
