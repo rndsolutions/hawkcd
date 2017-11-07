@@ -229,6 +229,9 @@ angular
                     pausePipeline: function(object) {
                         validationService.dispatcherFlow(object, []);
                     },
+                    cancelPipeline: function(object) {
+                        validationService.dispatcherFlow(object, []);
+                    },
                     update: function(object) {
                         validationService.dispatcherFlow(object, [pipelineUpdater.updatePipeline]);
                     },
