@@ -23,7 +23,7 @@
       </div>
     </div>
   <div class="portlet-body" style="display:none;padding-top:0">
-    <div class="caption width-100">
+    <div class="caption width-100" style="display: inline-block;">
         <div class="display-inline-block pull-left height-100px width-15">
       <div class="run-item-container status-passed pull-left" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'status-canceled' : pipesRunManagement.currentPipelineRun.status == 'CANCELED', 'status-awaiting' : pipesRunManagement.currentPipelineRun.status == 'AWAITING'}">
         </div>
@@ -42,7 +42,14 @@
                 <a target="_blank" href="{{material.gitLink}}">{{material.materialDefinition.commitId.substring(0, 7)}}</a> - {{material.materialDefinition.comments}}
               </div>
               <br/>
-              <span ng-if="material.materialDefinition.branch"><i class="fa fa-code-fork"></i><span> Branch: {{material.materialDefinition.branch}}</span></span>
+              <span ng-if="material.materialDefinition.branch">
+                <i class="fa fa-code-fork"></i>
+                <span> Branch: {{material.materialDefinition.branch}}</span>
+                <span style="padding-left: 10px;">
+                    <i class="fa fa-code-matrial"></i>
+                    <span> Material: {{pipesRunManagement.currentPipelineRun.materials.slice(-1)[0].materialDefinition.name}}</span>
+                </span>
+              </span>
             </div>
           </div>
         </div>

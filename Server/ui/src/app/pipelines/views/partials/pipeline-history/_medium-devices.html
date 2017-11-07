@@ -66,12 +66,19 @@
                 </div>
                 <div class="materials-block">
                     <span ng-repeat="material in run.materials track by $index">
-                      <i class="fa fa-gg"></i>
-                      <a target="_blank" href="{{material.gitLink}}" class="green-jungle">
+                        <i class="fa fa-gg"></i>
+                        <a target="_blank" href="{{material.gitLink}}" class="green-jungle">
                         <span>{{material.materialDefinition.commitId.substring(0,6)}}</span></a>
-                    <span> {{material.materialDefinition.comments}}</span>
-                    <br/>
-                    <span ng-if="material.materialDefinition.branch"><i class="fa fa-code-fork"></i><span class="branch-styles"> Branch: {{material.materialDefinition.branch}}</span></span>
+                        <span> {{material.materialDefinition.comments}}</span>
+                        <br/>
+                        <span ng-if="material.materialDefinition.branch">
+                            <i class="fa fa-code-fork"></i>
+                            <span class="branch-styles"> Branch: {{material.materialDefinition.branch}}</span>
+                            <span style="padding-left: 10px;">
+                                <i class="fa fa-code-matrial"></i>
+                                <span> Material: {{material.materialDefinition.name}}</span>
+                            </span>
+                        </span>
                     </span>
                 </div>
             </div>

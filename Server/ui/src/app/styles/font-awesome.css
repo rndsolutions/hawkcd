@@ -1007,6 +1007,9 @@
 .fa-code-fork:before {
   content: "\f126";
 }
+.fa-code-matrial:before {
+  content: "\f136";
+}
 .fa-unlink:before,
 .fa-chain-broken:before {
   content: "\f127";
