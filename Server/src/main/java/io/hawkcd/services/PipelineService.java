@@ -373,6 +373,7 @@ public class PipelineService extends CrudService<Pipeline> implements IPipelineS
                 BasicDBObject sortingFiler = new BasicDBObject("executionId", -1);
 
                 result = this.getPipelineMongoService().QueryExecutor(query, sortingFiler, 0, 1);
+                result.setEntity((Pipeline)((ArrayList) this.getPipelineMongoService().QueryExecutor(query, sortingFiler, 0, 1).getEntity()).get(0));
                 break;
         }
 
