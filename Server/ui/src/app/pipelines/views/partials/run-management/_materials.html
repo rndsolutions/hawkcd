@@ -13,26 +13,27 @@
 <!--limitations under the License.-->
 
 <div class="portlet light custom-portlet">
-    <div class="portlet-title">
-      <div class="caption" style="width:90%">
-        <i class="fa fa-cogs"></i>Pipeline Run
-        <div class="label label-default run-label vertical-center margin-left-1" ng-class="{'passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'canceled-run' : pipesRunManagement.currentPipelineRun.status == 'CANCELED', 'awaiting' : pipesRunManagement.currentPipelineRun.status == 'AWAITING'}">{{pipesRunManagement.currentPipelineRun.status}}</div>
-      </div>
-      <div class="tools right">
-        <a href="javascript:;" class="expand"> </a>
-      </div>
+  <div class="portlet-title">
+    <div class="caption" style="width:90%">
+      <i class="fa fa-cogs"></i>Pipeline Run
+      <div class="label label-default run-label vertical-center margin-left-1" ng-class="{'passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'canceled-run' : pipesRunManagement.currentPipelineRun.status == 'CANCELED', 'awaiting' : pipesRunManagement.currentPipelineRun.status == 'AWAITING'}">{{pipesRunManagement.currentPipelineRun.status}}</div>
     </div>
+    <div class="tools right">
+      <a href="javascript:;" class="expand"> </a>
+    </div>
+  </div>
   <div class="portlet-body" style="display:none;padding-top:0">
-    <div class="caption width-100" style="display: inline-block;">
-        <div class="display-inline-block pull-left height-100px width-15">
-      <div class="run-item-container status-passed pull-left" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'status-canceled' : pipesRunManagement.currentPipelineRun.status == 'CANCELED', 'status-awaiting' : pipesRunManagement.currentPipelineRun.status == 'AWAITING'}">
+    <div class="caption" style="display: flex; padding-bottom: 20px;">
+      <div class="display-inline-block width-15">
+        <div class="run-item-container status-passed pull-left" ng-class="{'status-passed': pipesRunManagement.currentPipelineRun.status == 'PASSED', 'status-failed' : pipesRunManagement.currentPipelineRun.status == 'FAILED', 'status-working' : pipesRunManagement.currentPipelineRun.status == 'IN_PROGRESS', 'status-canceled' : pipesRunManagement.currentPipelineRun.status == 'CANCELED', 'status-awaiting' : pipesRunManagement.currentPipelineRun.status == 'AWAITING'}">
         </div>
         <div class="vertical-center-static" style="padding-left:5%">
-            #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName.substring(0,22)}} <span ng-if="pipesRunManagement.currentPipelineRun.pipelineDefinitionName.length > 27">...</span>
+          #{{pipesRunManagement.currentPipelineRun.executionId}} {{pipesRunManagement.currentPipelineRun.pipelineDefinitionName.substring(0,22)}}
+          <span ng-if="pipesRunManagement.currentPipelineRun.pipelineDefinitionName.length > 27">...</span>
         </div>
-        </div>
-      <div class="display-inline-block pull-left height-100px width-40">
-        <div class="vertical-center border-left-grey pull-left height-70px"></div>
+      </div>
+      <div class="display-inline-block width-40">
+        <div class="vertical-center border-left-grey pull-left height-70"></div>
         <div class="vertical-center">
           <div class="padding-left-5">
             Materials:
@@ -46,42 +47,46 @@
                 <i class="fa fa-code-fork"></i>
                 <span> Branch: {{material.materialDefinition.branch}}</span>
                 <span style="padding-left: 10px;">
-                    <i class="fa fa-code-matrial"></i>
-                    <span> Material: {{pipesRunManagement.currentPipelineRun.materials.slice(-1)[0].materialDefinition.name}}</span>
+                  <i class="fa fa-code-matrial"></i>
+                  <span> Material: {{pipesRunManagement.currentPipelineRun.materials.slice(-1)[0].materialDefinition.name}}</span>
                 </span>
               </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="width-20 height-100px display-inline-block">
+      <div class="width-20 display-inline-block">
         <div class="width-100 vertical-center border-left-grey pull-left height-70">
           <div class="width-100 vertical-center padding-left-5">
-          Duration: <i class="fa fa-clock-o"></i>
+            Duration:
+            <i class="fa fa-clock-o"></i>
             <div class="margin-left-1 display-inline-block">
               24h 23m 22s
             </div>
-          <div class="padding-top-5">
-            Last Run: <i class="fa fa-calendar"></i>
-            <div class="margin-left-1 display-inline-block">
-              {{pipesRunManagement.currentPipelineRun.lastPipelineAction.output}}
+            <div class="padding-top-5">
+              Last Run:
+              <i class="fa fa-calendar"></i>
+              <div class="margin-left-1 display-inline-block">
+                {{pipesRunManagement.currentPipelineRun.lastPipelineAction.output}}
+              </div>
             </div>
           </div>
-            </div>
         </div>
       </div>
-      <div class="width-20 height-100px display-inline-block">
+      <div class="width-20 display-inline-block">
         <div class="border-left-grey pull-left width-100 height-70 vertical-center">
           <div class="padding-left-5 width-100 vertical-center">
-            Trigger Reason: <i class="fa fa-user"></i>
+            Trigger Reason:
+            <i class="fa fa-user"></i>
             <div class="margin-left-1 display-inline-block">
               {{pipesRunManagement.currentPipelineRun.triggerReason}}
             </div>
             <div class="padding-top-5">
-                Commit Author: <i class="fa fa-user"></i>
+              Commit Author:
+              <i class="fa fa-user"></i>
               <div class="margin-left-1 display-inline-block">
                 {{pipesRunManagement.currentPipelineRun.materials.slice(-1)[0].materialDefinition.authorName}}
-                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -89,11 +94,11 @@
     </div>
   </div>
   <!--<div class="portlet-body path-materials">-->
-    <!--<div class="row ">-->
-      <!--{{pipesRunManagement.defaultHeaders.commitId}} {{pipesRunManagement.allMaterials[0].ExecutionMaterials[0].MaterialSpecificDetails['commit-id']}}-->
-    <!--</div>-->
-    <!--<div class="row " ng-repeat="file in pipesRunManagement.allMaterials[0].ExecutionMaterials[0].MaterialSpecificDetails.ModifiedFiles">-->
-      <!--<p>{{file.Status}}<span></span> <span>{{file.Path}}</span></p>-->
-    <!--</div>-->
+  <!--<div class="row ">-->
+  <!--{{pipesRunManagement.defaultHeaders.commitId}} {{pipesRunManagement.allMaterials[0].ExecutionMaterials[0].MaterialSpecificDetails['commit-id']}}-->
+  <!--</div>-->
+  <!--<div class="row " ng-repeat="file in pipesRunManagement.allMaterials[0].ExecutionMaterials[0].MaterialSpecificDetails.ModifiedFiles">-->
+  <!--<p>{{file.Status}}<span></span> <span>{{file.Path}}</span></p>-->
+  <!--</div>-->
   <!--</div>-->
 </div>
